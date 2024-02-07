@@ -1,0 +1,49 @@
+{
+  "id": "custom-dnd5e",
+  "title": "Custom D&D 5e",
+  "description": "A Foundry VTT utility to customise the D&D 5e system",
+  "version": "This is auto replaced",
+  "library": "false",
+  "compatibility": {
+    "minimum": 11,
+    "verified": 11.315
+  },
+  "authors": [
+    {
+      "name": "Larkinabout",
+      "url": "https://github.com/Larkinabout"
+    }
+  ],
+  "esmodules": [
+    "scripts/module.js"
+  ],
+  "styles": [
+    "styles/custom-dnd5e-counters.css",
+    "styles/custom-dnd5e-form.css"
+  ],
+  "languages": [
+    {
+      "lang": "en",
+      "name": "English",
+      "path": "languages/en.json"
+    }
+  ],
+  "relationships": {
+    "systems": [
+      {
+        "id": "dnd5e",
+        "type": "system",
+        "compatibility": [
+          {
+            "minimum": "3.0.1",
+            "verified": "3.0.1"
+          }
+        ]
+      }
+    ]
+  },
+  "url": "This is auto replaced",
+  "manifest": "This is auto replaced",
+  "download": "This is auto replaced",
+  "readme": "https://github.com/Larkinabout/fvtt-custom-dnd5e#readme"
+}

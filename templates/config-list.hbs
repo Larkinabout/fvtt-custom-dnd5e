@@ -1,0 +1,28 @@
+<ul class="custom-dnd5e-list flexcol">
+    {{#each items as |item key|}}
+        <li class="custom-dnd5e-item" draggable="true" data-key="{{key}}">
+            <div class="custom-dnd5e-item-group flexrow">
+                <i class="flex0 fas fa-grip-lines"></i>
+                <input id="visible" name="visible" type="checkbox" {{#unless (boolfalse visible)}}checked{{/unless}}>
+                <div class="fields flexrow">
+                    <input id="parentKey" name="parentKey" type="hidden" value="{{../parentKey}}">
+                    <input id="key" name="key" type="hidden" value="{{key}}">
+                    <input id="system" name="system" type="hidden" value="{{#if (boolfalse system)}}false{{else}}true{{/if}}">
+                    {{#if (boolfalse system)}}
+                    <input id="label" name="label" type="text" value="{{localize label}}"> 
+                    {{else}}
+                    <input id="label" name="label" type="hidden" value="{{localize label}}">
+                    <input disabled id="disabledLabel" name="disabledLabel" type="text" value="{{localize label}}"> 
+                    {{/if}}
+                </div>
+                <button{{#unless (boolfalse system)}} class="hidden"{{/unless}} type="button" data-tooltip="Tooltip" data-action="delete" class="flex0 delete-button">
+                    <i class="fas fa-xmark"></i>
+                </button>
+                <input id="delete" name="delete" type="hidden" value="false">
+            </div>
+            {{#if item.children}}
+                {{> "modules/custom-dnd5e/templates/config-list.hbs" prefix=../prefix parentKey=key items=item.children }}
+            {{/if}}
+        </li>
+    {{/each}}
+</ul>

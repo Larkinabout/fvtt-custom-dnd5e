@@ -1,0 +1,128 @@
+.custom-dnd5e-app .window-content {
+    padding: 0;
+}
+
+.custom-dnd5e-app nav.sheet-tabs {
+    margin: 0;
+}
+
+.custom-dnd5e-form-wrapper {
+    height: 100%;
+    flex-wrap: nowrap;
+}
+
+.custom-dnd5e-form {
+    height: 100%;
+}
+
+.custom-dnd5e-form > .scrollable {
+    flex: 1;
+    padding: 0.5rem;
+    overflow: hidden auto;
+}
+
+.custom-dnd5e-form ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+.custom-dnd5e-form ul ul {
+    list-style-type: none;
+    padding-left: 25px;
+}
+
+.custom-dnd5e-form li {
+    align-items: center;
+    gap: 0.5em;
+    border-top: 1px solid rgba(0, 0, 0, 0.1);
+    padding-top: 0.25em;
+    padding-bottom: 0.25em;
+}
+
+.custom-dnd5e-form li {
+    cursor: move;
+}
+
+.custom-dnd5e-form li:first-child {
+    border-top: none;
+    padding-top: 0;
+}
+
+.custom-dnd5e-form li.dragElem {
+    opacity: 0.4;
+  }
+
+.custom-dnd5e-form li.over {
+    border-top: 2px solid red;
+}
+
+.custom-dnd5e-form .fields {
+    align-items: center;
+    display: flex;
+    gap: 0.25em;
+}
+
+.custom-dnd5e-form .field {
+    align-items: center;
+    display: flex;
+    flex: auto;
+    gap: 0.25em;
+}
+
+.custom-dnd5e-form .field.flex1 {
+    flex: 1;
+}
+
+
+.custom-dnd5e-form .field.flex2 {
+    flex: 2;
+}
+
+.custom-dnd5e-form footer {
+    display: flex;
+    flex: 0;
+    flex-direction: column;
+    gap: 0.25em;
+    margin: 1rem;
+}
+
+.custom-dnd5e-form .delete-button {
+    background: transparent;
+    border: none;
+}
+
+.custom-dnd5e-form .delete-button:hover {
+    box-shadow: none;
+}
+
+.custom-dnd5e-form .delete-button.disabled > i {
+    color: transparent;
+}
+
+.custom-dnd5e-form .delete-button:hover > i {
+    text-shadow: 0 0 5px var(--color-shadow-primary);
+    outline: none;
+}
+
+.custom-dnd5e-form .delete-button.disabled:hover > i {
+    text-shadow: none;
+}
+
+.custom-dnd5e-form .new-button {
+    background: rgba(255, 255, 240, 0.8);
+    border: 1px solid var(--color-border-light-primary);
+}
+
+.custom-dnd5e-form .hidden {
+    display: none;
+}
+
+.custom-dnd5e-item-group {
+    align-items: center;
+    display: flex;
+    gap: 0.25rem;
+}
+
+.custom-dnd5e-item-group > i {
+    color: var(--color-text-light-7)
+}

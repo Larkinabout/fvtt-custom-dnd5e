@@ -1,0 +1,30 @@
+<div class="custom-dnd5e-form-wrapper flexrow">
+    <form class="custom-dnd5e-form flexcol">
+        <nav class="sheet-tabs tabs" style="flex: none;">
+            <a class="item active" data-tab="characters">
+                <i class="fa-solid fa-user"></i>
+                {{localize "CUSTOM_DND5E.form.counters.characters"}}
+            </a>
+            <a class="item" data-tab="npcs">
+                <i class="fa-solid fa-robot"></i>
+                {{localize "CUSTOM_DND5E.form.counters.npcs"}}
+            </a>
+        </nav>
+        <div class="scrollable">
+            <section class="tab active" data-actor-type="character" data-tab="characters">
+                {{> "modules/custom-dnd5e/templates/counters-list.hbs" actorType="character" counters=characterCounters}}
+            </section>
+            <section class="tab active" data-actor-type="npc" data-tab="npcs">
+                {{> "modules/custom-dnd5e/templates/counters-list.hbs" actorType="npc" counters=npcCounters}}
+            </section>
+        </div>
+        <footer>
+            <button type="button" data-tooltip="{{localize "CUSTOM_DND5E.form.button.new.tooltip"}}" data-action="new" class="new-button">
+                <i class="fas fa-plus"></i>{{localize "CUSTOM_DND5E.form.button.new.label"}}
+            </button>
+            <button type="submit" data-tooltip="{{localize "CUSTOM_DND5E.form.button.save.tooltip"}}" class="save-button">
+                <i class="fas fa-solid fa-floppy-disk"></i>{{localize "CUSTOM_DND5E.form.button.save.label"}}
+            </button>
+        </footer>
+    </form>
+</div>

@@ -1,0 +1,18 @@
+<div class="custom-dnd5e-form-wrapper flexrow">
+    <form class="custom-dnd5e-form flexcol">
+        <div class="scrollable">
+            {{> "modules/custom-dnd5e/templates/config-list.hbs" prefix="items"}}
+        </div>
+        <footer>
+            <button type="button" data-tooltip="{{localize "CUSTOM_DND5E.form.button.new.tooltip"}}" data-action="new" class="new-button">
+                <i class="fas fa-plus"></i>{{localize "CUSTOM_DND5E.form.button.new.label"}}
+            </button>
+            <button type="button" data-tooltip="{{localize "CUSTOM_DND5E.form.button.reset.tooltip"}}" data-action="reset" class="reset-button">
+                <i class="fas fa-arrow-rotate-left"></i>{{localize "CUSTOM_DND5E.form.button.reset.label"}}
+            </button>
+            <button type="submit" data-tooltip="{{localize "CUSTOM_DND5E.form.button.save.tooltip"}}" class="save-button">
+                <i class="fas fa-solid fa-floppy-disk"></i>{{localize "CUSTOM_DND5E.form.button.save.label"}}
+            </button>
+        </footer>
+    </form>
+</div>
