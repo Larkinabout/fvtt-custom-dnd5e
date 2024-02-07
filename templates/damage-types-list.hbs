@@ -42,7 +42,7 @@
                 <input id="delete" name="delete" type="hidden" value="false">
             </div>
             {{#if item.children}}
-                {{> "modules/custom-dnd5e/templates/config-list.hbs" prefix=../prefix parentKey=key items=item.children }}
+                {{> "modules/custom-dnd5e/templates/damage-types-list.hbs" prefix=../prefix parentKey=key items=item.children }}
             {{/if}}
         </li>
     {{/each}}

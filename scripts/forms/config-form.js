@@ -1,6 +1,7 @@
 import { CONSTANTS, MODULE } from '../constants.js'
 import { getSetting, setSetting } from '../utils.js'
 import { CustomDnd5eForm } from './custom-dnd5e-form.js'
+import { setArmorTypes } from '../armor-types.js'
 import { setDamageTypes } from '../damage-types.js'
 import { setLanguages } from '../languages.js'
 import { setSenses } from '../senses.js'
@@ -150,6 +151,22 @@ class ConfigForm extends CustomDnd5eForm {
 
         await setSetting(this.setting, items)
         this.setFunction(items)
+    }
+}
+
+export class ArmorTypesForm extends ConfigForm {
+    constructor () {
+        super()
+        this.setting = CONSTANTS.ARMOR_TYPES.SETTING.KEY
+        this.setFunction = setArmorTypes
+        this.type = 'armorTypes'
+    }
+
+    static get defaultOptions () {
+        return mergeObject(super.defaultOptions, {
+            id: `${MODULE.ID}-armor-types-form`,
+            title: game.i18n.localize('CUSTOM_DND5E.form.armorTypes.title')
+        })
     }
 }
 

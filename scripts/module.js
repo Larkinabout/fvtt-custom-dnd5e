@@ -1,5 +1,7 @@
 import { CONSTANTS } from './constants.js'
 import { getSetting } from './utils.js'
+import { registerSettings as registerMiscSettings, setMaxLevel } from './misc.js'
+import { registerSettings as registerArmorTypesSettings, setArmorTypes } from './armor-types.js'
 import { registerSettings as registerDamageTypesSettings, setDamageTypes } from './damage-types.js'
 import { registerSettings as registerLanguagesSettings, setLanguages } from './languages.js'
 import { registerSettings as registerSensesSettings, setSenses } from './senses.js'
@@ -18,9 +20,11 @@ Hooks.on('ready', async () => {
     CONFIG.CUSTOM_DND5E = deepClone(CONFIG.DND5E)
 
     registerCountersSettings()
+    // registerArmorTypesSettings()
     registerDamageTypesSettings()
     registerLanguagesSettings()
     registerSensesSettings()
+    registerMiscSettings()
     registerSheetSettings()
 
     Handlebars.registerHelper({
@@ -34,7 +38,9 @@ Hooks.on('ready', async () => {
         CONSTANTS.CONFIG.TEMPLATE.LIST
     ])
 
+    // setArmorTypes(getSetting(CONSTANTS.ARMOR_TYPES.SETTING.KEY) || {})
     setDamageTypes(getSetting(CONSTANTS.DAMAGE_TYPES.SETTING.KEY) || {})
     setLanguages(getSetting(CONSTANTS.LANGUAGES.SETTING.KEY) || {})
     setSenses(getSetting(CONSTANTS.SENSES.SETTING.KEY) || {})
+    setMaxLevel(getSetting(CONSTANTS.MAX_LEVEL.SETTING.KEY))
 })

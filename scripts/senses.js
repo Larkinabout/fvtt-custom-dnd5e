@@ -1,4 +1,4 @@
-import { CONSTANTS } from './constants.js'
+import { CONSTANTS, SHEET } from './constants.js'
 import { getFlag, getSetting, setSetting, registerMenu, registerSetting } from './utils.js'
 import { SensesForm } from './forms/config-form.js'
 
@@ -25,13 +25,13 @@ export function registerSettings () {
             scope: 'world',
             config: false,
             type: Object,
-            default: CONSTANTS.SENSES.SETTING.DEFAULT
+            default: CONFIG.CUSTOM_DND5E.senses
         }
     )
 
-    const languages = getSetting(CONSTANTS.SENSES.SETTING.KEY)
-    if (!Object.keys(languages).length) {
-        setSetting(CONSTANTS.SENSES.SETTING.KEY, CONSTANTS.SENSES.SETTING.DEFAULT)
+    const senses = getSetting(CONSTANTS.SENSES.SETTING.KEY)
+    if (!Object.keys(senses).length) {
+        setSetting(CONSTANTS.SENSES.SETTING.KEY, CONFIG.CUSTOM_DND5E.senses)
     }
 }
 
@@ -75,13 +75,7 @@ Hooks.on('renderActorSensesConfig', (app, html, data) => {
  * To replace for ApplicationV2
  */
 Hooks.on('preRenderActorSheet', (app, data) => {
-    const actorSheetTypes = {
-        ActorSheet5eCharacter: { type: 'character', legacy: true },
-        ActorSheet5eCharacter2: { type: 'character', legacy: false },
-        ActorSheet5eNPC: { type: 'npc', legacy: true }
-    }
-
-    const actorSheetType = actorSheetTypes[app.constructor.name]
+    const actorSheetType = SHEET[app.constructor.name]
 
     const senses = getSetting(CONSTANTS.SENSES.SETTING.KEY)
     Object.entries(senses).forEach(([key, value]) => {

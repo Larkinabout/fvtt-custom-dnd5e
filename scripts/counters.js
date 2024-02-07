@@ -1,4 +1,4 @@
-import { CONSTANTS, MODULE } from './constants.js'
+import { CONSTANTS, MODULE, SHEET } from './constants.js'
 import { registerMenu, registerSetting } from './utils.js'
 import { CountersForm } from './forms/counters-form.js'
 
@@ -44,13 +44,7 @@ export function registerSettings () {
 }
 
 Hooks.on('renderActorSheet', (app, html, data) => {
-    const actorSheetTypes = {
-        ActorSheet5eCharacter: { type: 'character', countersSetting: CONSTANTS.COUNTERS.SETTING.CHARACTER_COUNTERS.KEY, legacy: true },
-        ActorSheet5eCharacter2: { type: 'character', countersSetting: CONSTANTS.COUNTERS.SETTING.CHARACTER_COUNTERS.KEY, legacy: false },
-        ActorSheet5eNPC: { type: 'npc', countersSetting: CONSTANTS.COUNTERS.SETTING.NPC_COUNTERS.KEY, legacy: true }
-    }
-
-    const actorSheetType = actorSheetTypes[app.constructor.name]
+    const actorSheetType = SHEET[app.constructor.name]
 
     if (actorSheetType) {
         actorSheetType.legacy

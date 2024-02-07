@@ -25,19 +25,19 @@ export function registerSettings () {
             scope: 'world',
             config: false,
             type: Object,
-            default: CONSTANTS.DAMAGE_TYPES.SETTING.DEFAULT
+            default: CONFIG.CUSTOM_DND5E.damageTypes
         }
     )
-
-    const languages = getSetting(CONSTANTS.DAMAGE_TYPES.SETTING.KEY)
-    if (!Object.keys(languages).length) {
-        setSetting(CONSTANTS.DAMAGE_TYPES.SETTING.KEY, CONSTANTS.DAMAGE_TYPES.SETTING.DEFAULT)
-    }
 
     loadTemplates([
         CONSTANTS.DAMAGE_TYPES.TEMPLATE.FORM,
         CONSTANTS.DAMAGE_TYPES.TEMPLATE.LIST
     ])
+
+    const damageTypes = getSetting(CONSTANTS.DAMAGE_TYPES.SETTING.KEY)
+    if (!Object.keys(damageTypes).length) {
+        setSetting(CONSTANTS.DAMAGE_TYPES.SETTING.KEY, CONFIG.CUSTOM_DND5E.damageTypes)
+    }
 }
 
 /**

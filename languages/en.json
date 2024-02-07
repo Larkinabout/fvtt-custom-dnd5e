@@ -30,9 +30,14 @@
     "CUSTOM_DND5E.form.counters.copyProperty.tooltip": "Copy Property to Clipboard",
     "CUSTOM_DND5E.form.counters.title": "Configure Counters",
 
+    "CUSTOM_DND5E.form.armorTypes.title": "Configure Armor Types",
     "CUSTOM_DND5E.form.damageTypes.title": "Configure Damage Types",
     "CUSTOM_DND5E.form.languages.title": "Configure Languages",
     "CUSTOM_DND5E.form.senses.title": "Configure Senses",
+
+    "CUSTOM_DND5E.menu.armorTypes.hint": "Configure Armor Types",
+    "CUSTOM_DND5E.menu.armorTypes.label": "Configure Armor Types",
+    "CUSTOM_DND5E.menu.armorTypes.name": "Configure Armor Types",
 
     "CUSTOM_DND5E.menu.counters.hint": "Configure Counters",
     "CUSTOM_DND5E.menu.counters.label": "Configure Counters",
@@ -42,7 +47,6 @@
     "CUSTOM_DND5E.menu.damageTypes.label": "Configure Damage Types",
     "CUSTOM_DND5E.menu.damageTypes.name": "Configure Damage Types",
 
-
     "CUSTOM_DND5E.menu.languages.hint": "Configure Languages",
     "CUSTOM_DND5E.menu.languages.label": "Configure Languages",
     "CUSTOM_DND5E.menu.languages.name": "Configure Languages",
@@ -51,6 +55,7 @@
     "CUSTOM_DND5E.menu.senses.label": "Configure Senses",
     "CUSTOM_DND5E.menu.senses.name": "Configure Senses",
 
+    "CUSTOM_DND5E.setting.maxLevel.name": "Max Level",
     "CUSTOM_DND5E.setting.showDeathSaves.hint": "Show Death Saves on the character sheet",
     "CUSTOM_DND5E.setting.showDeathSaves.name": "Show Death Saves",
     "CUSTOM_DND5E.setting.showExhaustion.hint": "Show Exhaustion on the character sheet",

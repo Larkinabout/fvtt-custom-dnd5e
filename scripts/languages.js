@@ -25,13 +25,13 @@ export function registerSettings () {
             scope: 'world',
             config: false,
             type: Object,
-            default: CONSTANTS.LANGUAGES.SETTING.DEFAULT
+            default: CONFIG.CUSTOM_DND5E.languages
         }
     )
 
     const languages = getSetting(CONSTANTS.LANGUAGES.SETTING.KEY)
     if (!Object.keys(languages).length) {
-        setSetting(CONSTANTS.LANGUAGES.SETTING.KEY, CONSTANTS.LANGUAGES.SETTING.DEFAULT)
+        setSetting(CONSTANTS.LANGUAGES.SETTING.KEY, CONFIG.CUSTOM_DND5E.languages)
     }
 }
 

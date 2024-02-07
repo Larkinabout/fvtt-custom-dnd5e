@@ -25,13 +25,13 @@ export function registerSettings () {
             scope: 'world',
             config: false,
             type: Object,
-            default: CONSTANTS.ARMOR_TYPES.SETTING.DEFAULT
+            default: CONFIG.CUSTOM_DND5E.armorTypes
         }
     )
 
-    const languages = getSetting(CONSTANTS.ARMOR_TYPES.SETTING.KEY)
-    if (!Object.keys(languages).length) {
-        setSetting(CONSTANTS.ARMOR_TYPES.SETTING.KEY, CONSTANTS.ARMOR_TYPES.SETTING.DEFAULT)
+    const armorTypes = getSetting(CONSTANTS.ARMOR_TYPES.SETTING.KEY)
+    if (!Object.keys(armorTypes).length) {
+        setSetting(CONSTANTS.ARMOR_TYPES.SETTING.KEY, CONFIG.CUSTOM_DND5E.armorTypes)
     }
 }
 
