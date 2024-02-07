@@ -5,8 +5,9 @@
   "version": "This is auto replaced",
   "library": "false",
   "compatibility": {
-    "minimum": 11,
-    "verified": 11.315
+    "minimum": 11.315,
+    "verified": 11.315,
+    "maximum": 11.315
   },
   "authors": [
     {
@@ -39,6 +40,12 @@
             "verified": "3.0.1"
           }
         ]
+      }
+    ],
+    "requires": [
+      {
+        "id": "lib-wrapper",
+        "type": "module"
       }
     ]
   },

@@ -5,10 +5,15 @@ import { registerSettings as registerLanguagesSettings, setLanguages } from './l
 import { registerSettings as registerSensesSettings, setSenses } from './senses.js'
 import { registerSettings as registerCountersSettings } from './counters.js'
 import { registerSettings as registerSheetSettings } from './sheet.js'
+import { patchApplicationRender } from './patches/application-render.js'
 
 /**
  * HOOKS
  */
+Hooks.on('init', async () => {
+    patchApplicationRender()
+})
+
 Hooks.on('ready', async () => {
     CONFIG.CUSTOM_DND5E = deepClone(CONFIG.DND5E)
 

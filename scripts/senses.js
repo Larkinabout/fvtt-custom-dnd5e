@@ -70,11 +70,24 @@ Hooks.on('renderActorSensesConfig', (app, html, data) => {
     })
 })
 
-// Doesn't currently exist but hopefully soon
-/* Hooks.on('getDataActorSheet5eCharacter2', (actor, data) => {
+/**
+ * This uses a hook added by the Application._render patch.
+ * To replace for ApplicationV2
+ */
+Hooks.on('preRenderActorSheet', (app, data) => {
+    const actorSheetTypes = {
+        ActorSheet5eCharacter: { type: 'character', legacy: true },
+        ActorSheet5eCharacter2: { type: 'character', legacy: false },
+        ActorSheet5eNPC: { type: 'npc', legacy: true }
+    }
+
+    const actorSheetType = actorSheetTypes[app.constructor.name]
+
     const senses = getSetting(CONSTANTS.SENSES.SETTING.KEY)
     Object.entries(senses).forEach(([key, value]) => {
-        const flag = getFlag(actor, key)
-        if (flag) data.senses[key] = { label: value.label, value: flag }
+        const flag = getFlag(app.document, key)
+        if (flag) {
+            data.senses[key] = (actorSheetType.legacy) ? `${value.label} ${flag}` : { label: value.label, value: flag }
+        }
     })
-}) */
+})
