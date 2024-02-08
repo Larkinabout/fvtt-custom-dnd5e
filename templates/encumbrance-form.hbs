@@ -1,0 +1,60 @@
+<div class="custom-dnd5e-form-wrapper flexrow">
+    <form class="custom-dnd5e-form flexcol">
+        <div class="scrollable">
+            <h2>Thresholds</h2>
+            <div class="form-group">
+                <label>{{localize "EFFECT.DND5E.StatusEncumbered"}}</label>
+                <div class="form-fields">
+                    <input id="threshold-encumbered" name="{{#if metric}}threshold.encumbered.metric{{else}}threshold.encumbered.imperial{{/if}}" type="number" value="{{#if metric}}{{threshold.encumbered.metric}}{{else}}{{threshold.encumbered.imperial}}{{/if}}"> 
+                </div>
+            </div>
+            <div class="form-group">
+                <label>{{localize "EFFECT.DND5E.StatusHeavilyEncumbered"}}</label>
+                <div class="form-fields">
+                    <input id="threshold-heavily-encumbered" name="{{#if metric}}threshold.heavilyEncumbered.metric{{else}}threshold.heavilyEncumbered.imperial{{/if}}" type="number" value="{{#if metric}}{{threshold.heavilyEncumbered.metric}}{{else}}{{threshold.heavilyEncumbered.imperial}}{{/if}}"> 
+                </div>
+            </div>
+            <div class="form-group">
+                <label>{{localize "CUSTOM_DND5E.maximum"}}</label>
+                <div class="form-fields">
+                    <input id="threshold-maximum" name="{{#if metric}}threshold.maximum.metric{{else}}threshold.maximum.imperial{{/if}}" type="number" value="{{#if metric}}{{threshold.maximum.metric}}{{else}}{{threshold.maximum.imperial}}{{/if}}"> 
+                </div>
+            </div>
+            <h2>Speed Reduction</h2>
+            <div class="form-group">
+                <label>{{localize "EFFECT.DND5E.StatusEncumbered"}}</label>
+                <div class="form-fields">
+                    <input id="speed-reduction-encumbered" name="speedReduction.encumbered" type="number" value="{{speedReduction.encumbered}}">
+                </div>
+            </div>
+            <div class="form-group">
+                <label>{{localize "EFFECT.DND5E.StatusHeavilyEncumbered"}}</label>
+                <div class="form-fields">
+                    <input id="speed-reduction-heavily-encumbered" name="speedReduction.heavilyEncumbered" type="number" value="{{speedReduction.heavilyEncumbered}}"> 
+                </div>
+            </div>
+            <h2>Currency Per Weight</h2>
+            <div class="form-group">
+                <label>Currency per Weight</label>
+                <div class="form-fields">
+                    <input id="currency-per-weight" name="{{#if metric}}currencyPerWeight.metric{{else}}currencyPerWeight.imperial{{/if}}" type="number" value="{{#if metric}}{{currencyPerWeight.metric}}{{else}}{{currencyPerWeight.imperial}}{{/if}}"> 
+                </div>
+            </div>
+            <h2>Vehicle Weight Multiplier</h2>
+            <div class="form-group">
+                <label>Vehicle Weight Multiplier</label>
+                <div class="form-fields">
+                    <input id="vehicle-weight-multiplier" name="{{#if metric}}vehicleWeightMultiplier.metric{{else}}vehicleWeightMultiplier.imperial{{/if}}" type="number" value="{{#if metric}}{{vehicleWeightMultiplier.metric}}{{else}}{{vehicleWeightMultiplier.imperial}}{{/if}}"> 
+                </div>
+            </div>
+        </div>
+        <footer>
+            <button type="button" data-tooltip="{{localize "CUSTOM_DND5E.form.button.reset.tooltip"}}" data-action="reset" class="reset-button">
+                <i class="fas fa-arrow-rotate-left"></i>{{localize "CUSTOM_DND5E.form.button.reset.label"}}
+            </button>
+            <button type="submit" data-tooltip="{{localize "CUSTOM_DND5E.form.button.save.tooltip"}}" class="save-button">
+                <i class="fas fa-solid fa-floppy-disk"></i>{{localize "CUSTOM_DND5E.form.button.save.label"}}
+            </button>
+        </footer>
+    </form>
+</div>

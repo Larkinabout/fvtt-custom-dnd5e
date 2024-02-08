@@ -75,6 +75,22 @@ export const CONSTANTS = {
             LIST: 'modules/custom-dnd5e/templates/damage-types-list.hbs'
         }
     },
+    ENCUMBRANCE: {
+        ID: 'encumbrance',
+        MENU: {
+            KEY: 'encumbrance-menu',
+            HINT: 'CUSTOM_DND5E.menu.encumbrance.hint',
+            ICON: 'fas fa-pen-to-square',
+            LABEL: 'CUSTOM_DND5E.menu.encumbrance.label',
+            NAME: 'CUSTOM_DND5E.menu.encumbrance.name'
+        },
+        SETTING: {
+            KEY: 'encumbrance'
+        },
+        TEMPLATE: {
+            FORM: 'modules/custom-dnd5e/templates/encumbrance-form.hbs'
+        }
+    },
     LANGUAGES: {
         ID: 'languages',
         MENU: {

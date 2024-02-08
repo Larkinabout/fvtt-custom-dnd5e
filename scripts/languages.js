@@ -29,8 +29,8 @@ export function registerSettings () {
         }
     )
 
-    const languages = getSetting(CONSTANTS.LANGUAGES.SETTING.KEY)
-    if (!Object.keys(languages).length) {
+    const setting = getSetting(CONSTANTS.LANGUAGES.SETTING.KEY)
+    if (!Object.keys(setting).length) {
         setSetting(CONSTANTS.LANGUAGES.SETTING.KEY, CONFIG.CUSTOM_DND5E.languages)
     }
 }
@@ -39,7 +39,7 @@ export function registerSettings () {
  * Set CONFIG.DND5E.languages
  * @param {object} data
  */
-export function setLanguages (data) {
+export function setConfig (data) {
     const buildConfig = (data) => Object.fromEntries(
         Object.entries(data)
             .filter(([_, value]) => value.visible)

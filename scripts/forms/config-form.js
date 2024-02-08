@@ -1,10 +1,10 @@
 import { CONSTANTS, MODULE } from '../constants.js'
 import { getSetting, setSetting } from '../utils.js'
 import { CustomDnd5eForm } from './custom-dnd5e-form.js'
-import { setArmorTypes } from '../armor-types.js'
-import { setDamageTypes } from '../damage-types.js'
-import { setLanguages } from '../languages.js'
-import { setSenses } from '../senses.js'
+import { setConfig as setArmorTypes } from '../armor-types.js'
+import { setConfig as setDamageTypes } from '../damage-types.js'
+import { setConfig as setLanguages } from '../languages.js'
+import { setConfig as setSenses } from '../senses.js'
 
 const itemClass = `${MODULE.ID}-item`
 const listClass = `${MODULE.ID}-list`

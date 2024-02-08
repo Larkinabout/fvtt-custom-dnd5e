@@ -34,8 +34,8 @@ export function registerSettings () {
         CONSTANTS.DAMAGE_TYPES.TEMPLATE.LIST
     ])
 
-    const damageTypes = getSetting(CONSTANTS.DAMAGE_TYPES.SETTING.KEY)
-    if (!Object.keys(damageTypes).length) {
+    const setting = getSetting(CONSTANTS.DAMAGE_TYPES.SETTING.KEY)
+    if (!Object.keys(setting).length) {
         setSetting(CONSTANTS.DAMAGE_TYPES.SETTING.KEY, CONFIG.CUSTOM_DND5E.damageTypes)
     }
 }
@@ -44,7 +44,7 @@ export function registerSettings () {
  * Set CONFIG.DND5E.damageTypes
  * @param {object} data
  */
-export function setDamageTypes (data) {
+export function setConfig (data) {
     const buildConfig = (data) => Object.fromEntries(
         Object.entries(data)
             .filter(([_, value]) => value.visible)

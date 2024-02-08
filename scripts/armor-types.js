@@ -29,8 +29,8 @@ export function registerSettings () {
         }
     )
 
-    const armorTypes = getSetting(CONSTANTS.ARMOR_TYPES.SETTING.KEY)
-    if (!Object.keys(armorTypes).length) {
+    const setting = getSetting(CONSTANTS.ARMOR_TYPES.SETTING.KEY)
+    if (!Object.keys(setting).length) {
         setSetting(CONSTANTS.ARMOR_TYPES.SETTING.KEY, CONFIG.CUSTOM_DND5E.armorTypes)
     }
 }
@@ -39,7 +39,7 @@ export function registerSettings () {
  * Set CONFIG.DND5E.armorTypes
  * @param {object} data
  */
-export function setArmorTypes (data) {
+export function setConfig (data) {
     const buildConfig = (data) => Object.fromEntries(
         Object.entries(data)
             .filter(([_, value]) => value.visible)

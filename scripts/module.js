@@ -1,10 +1,11 @@
 import { CONSTANTS } from './constants.js'
 import { getSetting } from './utils.js'
 import { registerSettings as registerMiscSettings, setMaxLevel } from './misc.js'
-import { registerSettings as registerArmorTypesSettings, setArmorTypes } from './armor-types.js'
-import { registerSettings as registerDamageTypesSettings, setDamageTypes } from './damage-types.js'
-import { registerSettings as registerLanguagesSettings, setLanguages } from './languages.js'
-import { registerSettings as registerSensesSettings, setSenses } from './senses.js'
+import { registerSettings as registerArmorTypesSettings, setConfig as setArmorTypes } from './armor-types.js'
+import { registerSettings as registerDamageTypesSettings, setConfig as setDamageTypes } from './damage-types.js'
+import { registerSettings as registerEncumbranceSettings, setConfig as setEncumbrance } from './encumbrance.js'
+import { registerSettings as registerLanguagesSettings, setConfig as setLanguages } from './languages.js'
+import { registerSettings as registerSensesSettings, setConfig as setSenses } from './senses.js'
 import { registerSettings as registerCountersSettings } from './counters.js'
 import { registerSettings as registerSheetSettings } from './sheet.js'
 import { patchApplicationRender } from './patches/application-render.js'
@@ -22,6 +23,7 @@ Hooks.on('ready', async () => {
     registerCountersSettings()
     // registerArmorTypesSettings()
     registerDamageTypesSettings()
+    registerEncumbranceSettings()
     registerLanguagesSettings()
     registerSensesSettings()
     registerMiscSettings()
@@ -40,6 +42,7 @@ Hooks.on('ready', async () => {
 
     // setArmorTypes(getSetting(CONSTANTS.ARMOR_TYPES.SETTING.KEY) || {})
     setDamageTypes(getSetting(CONSTANTS.DAMAGE_TYPES.SETTING.KEY) || {})
+    setEncumbrance(getSetting(CONSTANTS.ENCUMBRANCE.SETTING.KEY) || {})
     setLanguages(getSetting(CONSTANTS.LANGUAGES.SETTING.KEY) || {})
     setSenses(getSetting(CONSTANTS.SENSES.SETTING.KEY) || {})
     setMaxLevel(getSetting(CONSTANTS.MAX_LEVEL.SETTING.KEY))

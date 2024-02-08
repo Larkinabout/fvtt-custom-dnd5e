@@ -86,10 +86,10 @@ export class CountersForm extends CustomDnd5eForm {
                 <div class="field">
                     <label>Type</label>
                     <select id="type" name="type">
-                        <option value="checkbox">${game.i18n.localize('CUSTOM_DND5E.counters.checkbox')}</option>
-                        <option value="fraction">${game.i18n.localize('CUSTOM_DND5E.counters.fraction')}</option>
-                        <option value="number">${game.i18n.localize('CUSTOM_DND5E.counters.number')}</option>
-                        <option value="successFailure">${game.i18n.localize('CUSTOM_DND5E.counters.successFailure')}</option>
+                        <option value="checkbox">${game.i18n.localize('CUSTOM_DND5E.checkbox')}</option>
+                        <option value="fraction">${game.i18n.localize('CUSTOM_DND5E.fraction')}</option>
+                        <option value="number">${game.i18n.localize('CUSTOM_DND5E.number')}</option>
+                        <option value="successFailure">${game.i18n.localize('CUSTOM_DND5E.successFailure')}</option>
                     </select>
                 </div>
             </div>

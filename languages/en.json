@@ -1,9 +1,10 @@
 {
-    "CUSTOM_DND5E.counters.name": "Counters",
-    "CUSTOM_DND5E.counters.checkbox": "Checkbox",
-    "CUSTOM_DND5E.counters.fraction": "Fraction",
-    "CUSTOM_DND5E.counters.number": "Number",
-    "CUSTOM_DND5E.counters.successFailure": "Success/Failure",
+    "CUSTOM_DND5E.counters": "Counters",
+    "CUSTOM_DND5E.checkbox": "Checkbox",
+    "CUSTOM_DND5E.fraction": "Fraction",
+    "CUSTOM_DND5E.maximum": "Maximum",
+    "CUSTOM_DND5E.number": "Number",
+    "CUSTOM_DND5E.successFailure": "Success/Failure",
 
     "CUSTOM_DND5E.dialog.delete.content": "This will also delete the item from all actors. Do you wish to continue?",
     "CUSTOM_DND5E.dialog.delete.title": "Delete Item",
@@ -42,10 +43,15 @@
     "CUSTOM_DND5E.menu.counters.hint": "Configure Counters",
     "CUSTOM_DND5E.menu.counters.label": "Configure Counters",
     "CUSTOM_DND5E.menu.counters.name": "Configure Counters",
+    
 
     "CUSTOM_DND5E.menu.damageTypes.hint": "Configure Damage Types",
     "CUSTOM_DND5E.menu.damageTypes.label": "Configure Damage Types",
     "CUSTOM_DND5E.menu.damageTypes.name": "Configure Damage Types",
+
+    "CUSTOM_DND5E.menu.encumbrance.hint": "Configure Encumbrance",
+    "CUSTOM_DND5E.menu.encumbrance.label": "Configure Encumbrance",
+    "CUSTOM_DND5E.menu.encumbrance.name": "Configure Encumbrance",
 
     "CUSTOM_DND5E.menu.languages.hint": "Configure Languages",
     "CUSTOM_DND5E.menu.languages.label": "Configure Languages",

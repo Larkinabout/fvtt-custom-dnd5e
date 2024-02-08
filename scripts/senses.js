@@ -29,8 +29,8 @@ export function registerSettings () {
         }
     )
 
-    const senses = getSetting(CONSTANTS.SENSES.SETTING.KEY)
-    if (!Object.keys(senses).length) {
+    const setting = getSetting(CONSTANTS.SENSES.SETTING.KEY)
+    if (!Object.keys(setting).length) {
         setSetting(CONSTANTS.SENSES.SETTING.KEY, CONFIG.CUSTOM_DND5E.senses)
     }
 }
@@ -39,7 +39,7 @@ export function registerSettings () {
  * Set CONFIG.DND5E.senses
  * @param {object} data
  */
-export function setSenses (data) {
+export function setConfig (data) {
     const buildConfig = (data) => Object.fromEntries(
         Object.entries(data)
             .filter(([_, value]) => value.visible)

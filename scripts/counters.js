@@ -97,7 +97,7 @@ function createCountersDiv () {
 
     const span = document.createElement('span')
     span.setAttribute('class', 'roboto-upper')
-    span.textContent = game.i18n.localize('CUSTOM_DND5E.counters.name')
+    span.textContent = game.i18n.localize('CUSTOM_DND5E.counters')
     h3.appendChild(span)
 
     return div
