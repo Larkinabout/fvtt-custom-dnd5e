@@ -24,6 +24,7 @@ export function registerSettings () {
         {
             scope: 'world',
             config: false,
+            requiresReload: true,
             type: Object,
             default: CONFIG.CUSTOM_DND5E.skills
         }

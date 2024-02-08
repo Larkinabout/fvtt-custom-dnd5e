@@ -143,12 +143,17 @@ class ConfigForm extends CustomDnd5eForm {
 
         await setSetting(this.settingKey, this.setting)
         this.setFunction(this.setting)
+
+        if (this.requiresReload) {
+            SettingsConfig.reloadConfirm()
+        }
     }
 }
 
 export class AbilitiesForm extends ConfigForm {
     constructor () {
         super()
+        this.requiresReload = true
         this.settingKey = CONSTANTS.ABILITIES.SETTING.KEY
         this.setFunction = setAbilities
         this.type = 'abilities'
@@ -215,6 +220,7 @@ export class AbilitiesForm extends ConfigForm {
 export class ArmorTypesForm extends ConfigForm {
     constructor () {
         super()
+        this.requiresReload = false
         this.settingKey = CONSTANTS.ARMOR_TYPES.SETTING.KEY
         this.setFunction = setArmorTypes
         this.type = 'armorTypes'
@@ -231,6 +237,7 @@ export class ArmorTypesForm extends ConfigForm {
 export class DamageTypesForm extends ConfigForm {
     constructor () {
         super()
+        this.requiresReload = false
         this.settingKey = CONSTANTS.DAMAGE_TYPES.SETTING.KEY
         this.setFunction = setDamageTypes
         this.type = 'damageTypes'
@@ -276,6 +283,7 @@ export class DamageTypesForm extends ConfigForm {
 export class LanguagesForm extends ConfigForm {
     constructor () {
         super()
+        this.requiresReload = false
         this.settingKey = CONSTANTS.LANGUAGES.SETTING.KEY
         this.setFunction = setLanguages
         this.type = 'languages'
@@ -292,6 +300,7 @@ export class LanguagesForm extends ConfigForm {
 export class SensesForm extends ConfigForm {
     constructor () {
         super()
+        this.requiresReload = false
         this.settingKey = CONSTANTS.SENSES.SETTING.KEY
         this.setFunction = setSenses
         this.type = 'senses'
@@ -308,6 +317,7 @@ export class SensesForm extends ConfigForm {
 export class SkillsForm extends ConfigForm {
     constructor () {
         super()
+        this.requiresReload = true
         this.settingKey = CONSTANTS.SKILLS.SETTING.KEY
         this.setFunction = setSkills
         this.type = 'skills'
