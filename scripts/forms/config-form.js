@@ -1,10 +1,12 @@
 import { CONSTANTS, MODULE } from '../constants.js'
-import { getSetting, setSetting } from '../utils.js'
+import { deleteProperty, getSetting, setSetting } from '../utils.js'
 import { CustomDnd5eForm } from './custom-dnd5e-form.js'
+import { setConfig as setAbilities } from '../abilities.js'
 import { setConfig as setArmorTypes } from '../armor-types.js'
 import { setConfig as setDamageTypes } from '../damage-types.js'
 import { setConfig as setLanguages } from '../languages.js'
 import { setConfig as setSenses } from '../senses.js'
+import { setConfig as setSkills } from '../skills.js'
 
 const itemClass = `${MODULE.ID}-item`
 const listClass = `${MODULE.ID}-list`
@@ -22,7 +24,9 @@ class ConfigForm extends CustomDnd5eForm {
     }
 
     async getData () {
-        const data = getSetting(this.setting)
+        this.setting = getSetting(this.settingKey)
+
+        const data = deepClone(this.setting)
 
         const labelise = (data) => {
             Object.entries(data).forEach(([key, value]) => {
@@ -47,7 +51,7 @@ class ConfigForm extends CustomDnd5eForm {
 
     async _reset () {
         const reset = async () => {
-            await setSetting(this.setting, CONFIG.CUSTOM_DND5E[this.type])
+            await setSetting(this.settingKey, CONFIG.CUSTOM_DND5E[this.type])
             this.setFunction(CONFIG.CUSTOM_DND5E[this.type])
             this.render(true)
         }
@@ -93,71 +97,125 @@ class ConfigForm extends CustomDnd5eForm {
     _getInnerHtml (data) {
         return `<div class="custom-dnd5e-item-group flexrow">
         <i class="flex0 fas fa-grip-lines"></i>
-        <input id="visible" name="visible" type="checkbox" checked>
+        <input id="visible" name="${data.key}.visible" type="checkbox" checked>
         <div class="fields flexrow">
-            <input id="parentKey" name="parentKey" type="hidden" value="">
-            <input id="key" name="key" type="hidden" value="${data.key}">
-            <input id="system" name="system" type="hidden" value="false">
-            <input id="label" name="label" type="text" value="">     
+            <input id="parentKey" name="${data.key}.parentKey" type="hidden" value="">
+            <input id="key" name="${data.key}.key" type="hidden" value="${data.key}">
+            <input id="system" name="${data.key}.system" type="hidden" value="false">
+            <input id="label" name="${data.key}.label" type="text" value="">     
         </div>
         <button type="button" data-tooltip="Delete" data-action="delete" class="flex0 delete-button">
         <i class="fas fa-xmark"></i>
         </button>
-        <input id="delete" name="delete" type="hidden" value="false"
+        <input id="delete" name="${data.key}.delete" type="hidden" value="false"
         </div>`
     }
 
     async _updateObject (event, formData) {
-        const items = {}
+        const ignore = ['children', 'delete', 'key', 'parentKey']
 
-        const map = new Map()
+        // Get list of properties to delete
+        const deleteKeys = Object.entries(formData)
+            .filter(([key, value]) => key.split('.').pop() === 'delete' && value === 'true')
+            .map(([key, _]) => key.split('.').slice(0, -1).join('.'))
 
-        const keys = Object.keys(formData).filter(key => !['children', 'delete', 'parentKey'].includes(key))
-
-        for (let index = 0; index < Object.keys(formData.key).length; index++) {
-            const key = formData.key[index]
-
-            if (formData.delete[index] === 'true') {
-                for (const actor of game.actors) {
-                    // actor.unsetFlag(MODULE.ID, key)
-                }
-                continue
+        // Delete properties from formData
+        Object.keys(formData).forEach(key => {
+            if (deleteKeys.includes(key.split('.').slice(0, -1).join('.'))) {
+                delete formData[key]
             }
+        })
 
-            const parentKey = formData.parentKey[index]
+        // Delete properties from this.setting
+        deleteKeys.forEach(key => {
+            deleteProperty(this.setting, key)
+        })
 
-            const data = {}
-            keys.forEach(key => {
-                if (formData[key][index] || typeof formData[key][index] === 'boolean') {
-                    data[key] = (key === 'system') ? formData.system[index] !== 'false' : formData[key][index]
-                }
-            })
-
-            map.set(key, data)
-
-            if (parentKey) {
-                const parent = map.get(parentKey)
-                if (parent) {
-                    if (!Object.hasOwn(parent, 'children')) {
-                        parent.children = {}
-                    }
-
-                    parent.children[key] = data
-                }
-            } else {
-                items[key] = data
+        // Set properties in this.setting
+        Object.entries(formData).forEach(([key, value]) => {
+            if (ignore.includes(key.split('.').pop())) { return }
+            if (key.split('.').pop() === 'system') {
+                if (value === 'true') { return }
+                value = false
             }
-        }
+            setProperty(this.setting, key, value)
+        })
 
-        await setSetting(this.setting, items)
-        this.setFunction(items)
+        await setSetting(this.settingKey, this.setting)
+        this.setFunction(this.setting)
+    }
+}
+
+export class AbilitiesForm extends ConfigForm {
+    constructor () {
+        super()
+        this.settingKey = CONSTANTS.ABILITIES.SETTING.KEY
+        this.setFunction = setAbilities
+        this.type = 'abilities'
+    }
+
+    static get defaultOptions () {
+        return mergeObject(super.defaultOptions, {
+            id: `${MODULE.ID}-abilities-form`,
+            template: CONSTANTS.ABILITIES.TEMPLATE.FORM,
+            title: game.i18n.localize('CUSTOM_DND5E.form.abilities.title')
+        })
+    }
+
+    _getInnerHtml (data) {
+        return `<div class="custom-dnd5e-item-group flexrow">
+            <i class="flex0 fas fa-grip-lines"></i>
+            <input id="visible" name="${data.key}.visible" type="checkbox" checked>
+            <div class="flexcol">
+                <input id="key" name="${data.key}.key" type="hidden" value="${data.key}">
+                <input id="fullKey" name="${data.key}.fullKey" type="hidden" value="${data.key}">
+                <input id="system" name="${data.key}.system" type="hidden" value="false">
+                <div class="form-group">
+                    <label>${game.i18n.localize('CUSTOM_DND5E.label')}</label>
+                    <div class="form-fields">
+                        <input id="label" name="${data.key}.label" type="text" value="">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>${game.i18n.localize('CUSTOM_DND5E.abbreviation')}</label>
+                    <div class="form-fields">
+                        <input id="abbreviation" name="${data.key}.abbreviation" type="text" value="">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Include for ASI</label>
+                    <div class="form-fields">
+                        <input id="improvement" name="${data.key}.improvement" type="checkbox">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>${game.i18n.localize('CUSTOM_DND5E.type')}</label>
+                    <div class="form-fields">
+                        <select id="type" name="${data.key}.type">
+                            <option value="mental">${game.i18n.localize('CUSTOM_DND5E.mental')}</option>
+                            <option value="fraction">${game.i18n.localize('CUSTOM_DND5E.physical')}</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>${game.i18n.localize('CUSTOM_DND5E.reference')}</label>
+                    <div class="form-fields">
+                        <input id="reference" name="${data.key}.reference" type="text" value="">
+                    </div>
+                </div>
+            </div>
+            <button type="button" data-tooltip="{{localize "CUSTOM_DND5E.form.button.delete.tooltip"}}" data-action="delete" class="flex0 delete-button">
+                <i class="fas fa-xmark"></i>
+            </button>
+            <input id="delete" name="${data.key}.delete" type="hidden" value="false">
+        </div>`
     }
 }
 
 export class ArmorTypesForm extends ConfigForm {
     constructor () {
         super()
-        this.setting = CONSTANTS.ARMOR_TYPES.SETTING.KEY
+        this.settingKey = CONSTANTS.ARMOR_TYPES.SETTING.KEY
         this.setFunction = setArmorTypes
         this.type = 'armorTypes'
     }
@@ -173,7 +231,7 @@ export class ArmorTypesForm extends ConfigForm {
 export class DamageTypesForm extends ConfigForm {
     constructor () {
         super()
-        this.setting = CONSTANTS.DAMAGE_TYPES.SETTING.KEY
+        this.settingKey = CONSTANTS.DAMAGE_TYPES.SETTING.KEY
         this.setFunction = setDamageTypes
         this.type = 'damageTypes'
     }
@@ -189,28 +247,28 @@ export class DamageTypesForm extends ConfigForm {
     _getInnerHtml (data) {
         return `<div class="custom-dnd5e-item-group flexrow">
         <i class="flex0 fas fa-grip-lines"></i>
-        <input id="visible" name="visible" type="checkbox" checked>
+        <input id="visible" name="${data.key}.visible" type="checkbox" checked>
         <div class="fields flexrow">
-            <input id="parentKey" name="parentKey" type="hidden" value="">
-            <input id="key" name="key" type="hidden" value="${data.key}">
-            <input id="system" name="system" type="hidden" value="false">
+            <input id="parentKey" name="${data.key}.parentKey" type="hidden" value="">
+            <input id="key" name="${data.key}.key" type="hidden" value="${data.key}">
+            <input id="system" name="${data.key}.system" type="hidden" value="false">
             <div class="field flex1">
-                <label>Label</label>
-                <input id="label" name="label" type="text" value="">
+                <label>${game.i18n.localize('CUSTOM_DND5E.label')}</label>
+                <input id="label" name="${data.key}.label" type="text" value="">
             </div>
             <div class="field flex2">
-                <label>Icon</label>
-                <input id="icon" name="icon" type="text" value="">
+                <label>${game.i18n.localize('CUSTOM_DND5E.icon')}</label>
+                <input id="icon" name="${data.key}.icon" type="text" value="">
             </div>   
             <div class="field flex2">
-                <label>Reference</label>
-                <input id="reference" name="reference" type="text" value="">
+                <label>${game.i18n.localize('CUSTOM_DND5E.reference')}</label>
+                <input id="reference" name="${data.key}.reference" type="text" value="">
             </div>
         </div>
         <button type="button" data-tooltip="Delete" data-action="delete" class="flex0 delete-button">
         <i class="fas fa-xmark"></i>
         </button>
-        <input id="delete" name="delete" type="hidden" value="false"
+        <input id="delete" name="${data.key}.delete" type="hidden" value="false"
         </div>`
     }
 }
@@ -218,7 +276,7 @@ export class DamageTypesForm extends ConfigForm {
 export class LanguagesForm extends ConfigForm {
     constructor () {
         super()
-        this.setting = CONSTANTS.LANGUAGES.SETTING.KEY
+        this.settingKey = CONSTANTS.LANGUAGES.SETTING.KEY
         this.setFunction = setLanguages
         this.type = 'languages'
     }
@@ -234,7 +292,7 @@ export class LanguagesForm extends ConfigForm {
 export class SensesForm extends ConfigForm {
     constructor () {
         super()
-        this.setting = CONSTANTS.SENSES.SETTING.KEY
+        this.settingKey = CONSTANTS.SENSES.SETTING.KEY
         this.setFunction = setSenses
         this.type = 'senses'
     }
@@ -244,5 +302,62 @@ export class SensesForm extends ConfigForm {
             id: `${MODULE.ID}-senses-form`,
             title: game.i18n.localize('CUSTOM_DND5E.form.senses.title')
         })
+    }
+}
+
+export class SkillsForm extends ConfigForm {
+    constructor () {
+        super()
+        this.settingKey = CONSTANTS.SKILLS.SETTING.KEY
+        this.setFunction = setSkills
+        this.type = 'skills'
+    }
+
+    static get defaultOptions () {
+        return mergeObject(super.defaultOptions, {
+            id: `${MODULE.ID}-skills-form`,
+            template: CONSTANTS.SKILLS.TEMPLATE.FORM,
+            title: game.i18n.localize('CUSTOM_DND5E.form.skills.title')
+        })
+    }
+
+    _getInnerHtml (data) {
+        return `<div class="custom-dnd5e-item-group flexrow">
+            <i class="flex0 fas fa-grip-lines"></i>
+            <input id="visible" name="${data.key}.visible" type="checkbox" checked>
+            <div class="flexcol">
+                <input id="key" name="${data.key}.key" type="hidden" value="${data.key}">
+                <input id="fullKey" name="${data.key}.fullKey" type="hidden" value="${data.key}">
+                <input id="system" name="${data.key}.system" type="hidden" value="false">
+                <div class="form-group">
+                    <label>${game.i18n.localize('CUSTOM_DND5E.label')}</label>
+                    <div class="form-fields">
+                        <input id="label" name="${data.key}.label" type="text" value="">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>${game.i18n.localize('CUSTOM_DND5E.ability')}</label>
+                    <div class="form-fields">
+                        <input id="ability" name="${data.key}.ability" type="text" value="">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>${game.i18n.localize('CUSTOM_DND5E.icon')}</label>
+                    <div class="form-fields">
+                        <input id="icon" name="${data.key}.icon" type="text" value="">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>${game.i18n.localize('CUSTOM_DND5E.reference')}</label>
+                    <div class="form-fields">
+                        <input id="reference" name="${data.key}.reference" type="text" value="">
+                    </div>
+                </div>
+            </div>
+            <button type="button" data-tooltip="{{localize "CUSTOM_DND5E.form.button.delete.tooltip"}}" data-action="delete" class="flex0 delete-button">
+                <i class="fas fa-xmark"></i>
+            </button>
+            <input id="delete" name="${data.key}.delete" type="hidden" value="false">
+        </div>`
     }
 }

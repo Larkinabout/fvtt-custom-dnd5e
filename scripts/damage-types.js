@@ -47,14 +47,19 @@ export function registerSettings () {
 export function setConfig (data) {
     const buildConfig = (data) => Object.fromEntries(
         Object.entries(data)
-            .filter(([_, value]) => value.visible)
+            .filter(([_, value]) => value.visible || value.visible === undefined)
             .map(([key, value]) => [
                 key,
-                value.children
-                    ? { label: value.label, children: buildConfig(value.children) }
-                    : value.label
+                {
+                    label: value.label,
+                    icon: value.icon,
+                    reference: value.reference
+                }
             ])
     )
 
-    CONFIG.DND5E.damageTypes = buildConfig(data)
+    const damageTypes = buildConfig(data)
+    if (damageTypes) {
+        CONFIG.DND5E.damageTypes = damageTypes
+    }
 }

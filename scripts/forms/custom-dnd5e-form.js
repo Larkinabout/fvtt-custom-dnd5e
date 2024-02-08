@@ -14,7 +14,7 @@ export class CustomDnd5eForm extends FormApplication {
         return mergeObject(super.defaultOptions, {
             classes: [`${MODULE.ID}-app`, 'sheet'],
             dragDrop: [{
-                dragSelector: itemClassSelector,
+                dragSelector: '.custom-dnd5e-drag',
                 dropSelector: listClassSelector
             }],
             width: 600,
@@ -91,7 +91,7 @@ export class CustomDnd5eForm extends FormApplication {
         this.lists = Array.from(event.target.closest(listClassSelector))
         this.items = Array.from(event.target.closest(listClassSelector).querySelectorAll(itemClassSelector))
         if (!this.items) return
-        this.sourceItem = event.target
+        this.sourceItem = event.target.closest('li')
         this.sourceIndex = this.items.findIndex(item => item.dataset.key === this.sourceItem.dataset.key)
         event.dataTransfer.effectAllowed = 'move'
         event.dataTransfer.setData('text/html', this.sourceItem.innerHTML)
@@ -100,23 +100,36 @@ export class CustomDnd5eForm extends FormApplication {
 
     /** @override */
     _onDragOver (event) {
+        if (!this.sourceItem) return
         this.targetItem = event.target.closest('li')
         this.targetItem?.classList.add('over')
     }
 
     _onDragLeave (event) {
+        if (!this.sourceItem) return
         this.targetItem = event.target.closest('li')
         this.targetItem?.classList.remove('over')
     }
 
     _onDragEnd (event) {
+        if (!this.sourceItem) return
         this.sourceItem?.style.removeProperty('opacity')
         this.targetItem?.classList.remove('over')
+        this.sourceItem = null
+        this.targetItem = null
     }
 
     /** @override */
     _onDrop (event) {
+        if (!this.sourceItem) return
+
+        this.sourceItem?.style.removeProperty('opacity')
+
         this.targetItem = event.target.closest('li')
+
+        if (!this.targetItem) return
+
+        this.targetItem?.classList.remove('over')
 
         this.targetItemIndex = this.items.findIndex(item => item.dataset.key === this.targetItem.dataset.key)
 
@@ -124,10 +137,21 @@ export class CustomDnd5eForm extends FormApplication {
 
         const parentKey = this.targetItem.closest('ul')?.closest('li')?.dataset?.key
 
-        if (!parentKey) return
+        if (parentKey) {
+            const inputs = this.sourceItem?.querySelectorAll('input')
 
-        const parentKeyInput = this.sourceItem?.closest('li')?.querySelector('input[id="parentKey"]')
-        parentKeyInput.value = parentKey
+            inputs.forEach(input => {
+                if (input.id === 'parentKey') {
+                    input.value = parentKey
+                }
+                if (input.name) {
+                    input.name = `${parentKey}.children.${this.sourceItem.dataset.key}.${input.id}`
+                }
+            })
+        }
+
+        this.sourceItem = null
+        this.targetItem = null
     }
 
     async _handleButtonClick (event) {
@@ -161,10 +185,9 @@ export class CustomDnd5eForm extends FormApplication {
     async _deleteItem (key) {
         const del = async (key) => {
             const element = this.element[0].querySelector(`[data-key="${key}"]`)
-            const deleteInput = element.querySelector('input[name="delete"]')
+            const deleteInput = element.querySelector('input[id="delete"]')
             deleteInput.setAttribute('value', 'true')
             element.classList.add('hidden')
-            this.element[0].style.height = 'auto'
         }
 
         const d = new Dialog({

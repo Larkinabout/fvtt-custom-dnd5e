@@ -2,23 +2,23 @@
     {{#each counters as |item key|}}
         <li class="custom-dnd5e-item flexrow" draggable="true" data-key="{{key}}">
             <div class="custom-dnd5e-item-group flexrow">
-                <i class="flex0 fas fa-grip-lines"></i>
-                <input id="visible" name="visible" type="checkbox" {{#unless (boolfalse visible)}}checked{{/unless}}>
+                <i class="custom-dnd5e-drag flex0 fas fa-grip-lines" draggable="true"></i>
+                <input id="visible" name="visible" type="checkbox" data-tooltip="{{localize "CUSTOM_DND5E.form.checkbox.visible.tooltip"}}"{{#unless (boolfalse visible)}} checked{{/unless}}>
                 <div class="fields flexrow">
                     <input id="actorType" name="actorType" type="hidden" value="{{../actorType}}">
                     <input id="key" name="key" type="hidden" value="{{key}}">
                     <input id="system" name="system" type="hidden" value="{{#if (boolfalse system)}}false{{else}}true{{/if}}">
                     <div class="field">
-                        <label>Name</label>
+                        <label>{{localize "CUSTOM_DND5E.label"}}</label>
                         {{#if (boolfalse system)}}
                         <input id="label" name="label" type="text" value="{{localize label}}">
                         {{else}}
-                        <input id="label" name="label" type="hidden" placeholder="Label" value="{{localize label}}">
+                        <input id="label" name="label" type="hidden" placeholder="{{localize "CUSTOM_DND5E.label"}}" value="{{localize label}}">
                         <input disabled id="disabledLabel" name="disabledLabel" type="text" value="{{localize label}}">
                         {{/if}}
                     </div>
                     <div class="field">
-                        <label>Type</label>
+                        <label>{{localize "CUSTOM_DND5E.type"}}</label>
                         <select{{#unless (boolfalse system)}} disabled{{/unless}} id="type" name="type">
                             {{#select type}}
                             <option value="checkbox">{{localize "CUSTOM_DND5E.checkbox"}}</option>
@@ -32,7 +32,7 @@
                 <a alt="{{localize "CUSTOM_DND5E.form.counters.copyProperty.tooltip"}}" data-action="copy-property" data-tooltip="{{localize "CUSTOM_DND5E.form.counters.copyProperty.tooltip"}}" data-tooltip-direction="UP" class="flex0" >
                     <i class="fa-solid fa-at"></i>
                 </a>
-                <button{{#unless (boolfalse system)}} class="hidden"{{/unless}} type="button" data-tooltip="Tooltip" data-action="delete" class="flex0 delete-button">
+                <button{{#unless (boolfalse system)}} class="hidden"{{/unless}} type="button" data-tooltip="{{localize "CUSTOM_DND5E.form.button.delete.tooltip"}}" data-action="delete" class="flex0 delete-button">
                     <i class="fas fa-xmark"></i>
                 </button>
                 <input id="delete" name="delete" type="hidden" value="false">

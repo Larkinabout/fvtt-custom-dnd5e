@@ -80,11 +80,11 @@ export class CountersForm extends CustomDnd5eForm {
                 <input id="key" name="key" type="hidden" value="${key}">
                 <input id="system" name="system" type="hidden" value="false">
                 <div class="field">
-                    <label>Label</label>
+                    <label>${game.i18n.localize('CUSTOM_DND5E.label')}</label>
                     <input id="label" name="label" type="text" value="">
                 </div>
                 <div class="field">
-                    <label>Type</label>
+                    <label>${game.i18n.localize('CUSTOM_DND5E.type')}</label>
                     <select id="type" name="type">
                         <option value="checkbox">${game.i18n.localize('CUSTOM_DND5E.checkbox')}</option>
                         <option value="fraction">${game.i18n.localize('CUSTOM_DND5E.fraction')}</option>

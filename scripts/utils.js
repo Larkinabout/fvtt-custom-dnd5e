@@ -25,6 +25,28 @@ export class Logger {
 }
 
 /**
+ * Delete a property from an object using a dot notated key.
+ * @param {object} object The object to update
+ * @param {string} key    The string key
+ * @returns {boolean}     Whether the property was deleted
+ */
+export function deleteProperty (object, key) {
+    const keys = key.split('.')
+
+    for (let i = 0; i < keys.length - 1; i++) {
+        object = object[keys[i]]
+
+        if (!object) {
+            return false
+        }
+    }
+
+    const lastKey = keys[keys.length - 1]
+    delete object[lastKey]
+    return true
+}
+
+/**
  * Register menu
  * @param {string} key     The setting key
  * @param {object} options The setting options

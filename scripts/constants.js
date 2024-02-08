@@ -10,6 +10,23 @@ export const CONSTANTS = {
             LIST: 'modules/custom-dnd5e/templates/config-list.hbs'
         }
     },
+    ABILITIES: {
+        ID: 'abilities',
+        MENU: {
+            KEY: 'abilities-menu',
+            HINT: 'CUSTOM_DND5E.menu.abilities.hint',
+            ICON: 'fas fa-pen-to-square',
+            LABEL: 'CUSTOM_DND5E.menu.abilities.label',
+            NAME: 'CUSTOM_DND5E.menu.abilities.name'
+        },
+        SETTING: {
+            KEY: 'abilities'
+        },
+        TEMPLATE: {
+            FORM: 'modules/custom-dnd5e/templates/abilities-form.hbs',
+            LIST: 'modules/custom-dnd5e/templates/abilities-list.hbs'
+        }
+    },
     ARMOR_TYPES: {
         ID: 'armor-types',
         MENU: {
@@ -121,6 +138,23 @@ export const CONSTANTS = {
         },
         SETTING: {
             KEY: 'senses'
+        }
+    },
+    SKILLS: {
+        ID: 'skills',
+        MENU: {
+            KEY: 'skills-menu',
+            HINT: 'CUSTOM_DND5E.menu.skills.hint',
+            ICON: 'fas fa-pen-to-square',
+            LABEL: 'CUSTOM_DND5E.menu.skills.label',
+            NAME: 'CUSTOM_DND5E.menu.skills.name'
+        },
+        SETTING: {
+            KEY: 'skills'
+        },
+        TEMPLATE: {
+            FORM: 'modules/custom-dnd5e/templates/skills-form.hbs',
+            LIST: 'modules/custom-dnd5e/templates/skills-list.hbs'
         }
     }
 }

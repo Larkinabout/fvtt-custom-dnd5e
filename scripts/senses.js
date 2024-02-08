@@ -42,7 +42,7 @@ export function registerSettings () {
 export function setConfig (data) {
     const buildConfig = (data) => Object.fromEntries(
         Object.entries(data)
-            .filter(([_, value]) => value.visible)
+            .filter(([_, value]) => value.visible || value.visible === undefined)
             .map(([key, value]) => [
                 key,
                 value.children
@@ -51,7 +51,10 @@ export function setConfig (data) {
             ])
     )
 
-    CONFIG.DND5E.senses = buildConfig(data)
+    const senses = buildConfig(data)
+    if (senses) {
+        CONFIG.DND5E.senses = senses
+    }
 }
 
 Hooks.on('renderActorSensesConfig', (app, html, data) => {
