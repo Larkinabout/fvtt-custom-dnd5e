@@ -171,25 +171,25 @@ export class AbilitiesForm extends ConfigForm {
                 <input id="fullKey" name="${data.key}.fullKey" type="hidden" value="${data.key}">
                 <input id="system" name="${data.key}.system" type="hidden" value="false">
                 <div class="form-group">
-                    <label>${game.i18n.localize('CUSTOM_DND5E.label')}</label>
+                    <label class="flex1" style="min-width:80px; max-width:100px;">${game.i18n.localize('CUSTOM_DND5E.label')}</label>
                     <div class="form-fields">
                         <input id="label" name="${data.key}.label" type="text" value="">
                     </div>
                 </div>
                 <div class="form-group">
-                    <label>${game.i18n.localize('CUSTOM_DND5E.abbreviation')}</label>
+                    <label class="flex1" style="min-width:80px; max-width:100px;">${game.i18n.localize('CUSTOM_DND5E.abbreviation')}</label>
                     <div class="form-fields">
                         <input id="abbreviation" name="${data.key}.abbreviation" type="text" value="">
                     </div>
                 </div>
                 <div class="form-group">
-                    <label>Include for ASI</label>
+                    <label class="flex1" style="min-width:80px; max-width:100px;">Include for ASI</label>
                     <div class="form-fields">
                         <input id="improvement" name="${data.key}.improvement" type="checkbox">
                     </div>
                 </div>
                 <div class="form-group">
-                    <label>${game.i18n.localize('CUSTOM_DND5E.type')}</label>
+                    <label class="flex1" style="min-width:80px; max-width:100px;">${game.i18n.localize('CUSTOM_DND5E.type')}</label>
                     <div class="form-fields">
                         <select id="type" name="${data.key}.type">
                             <option value="mental">${game.i18n.localize('CUSTOM_DND5E.mental')}</option>
@@ -198,7 +198,7 @@ export class AbilitiesForm extends ConfigForm {
                     </div>
                 </div>
                 <div class="form-group">
-                    <label>${game.i18n.localize('CUSTOM_DND5E.reference')}</label>
+                    <label class="flex1" style="min-width:80px; max-width:100px;">${game.i18n.localize('CUSTOM_DND5E.reference')}</label>
                     <div class="form-fields">
                         <input id="reference" name="${data.key}.reference" type="text" value="">
                     </div>
@@ -330,25 +330,25 @@ export class SkillsForm extends ConfigForm {
                 <input id="fullKey" name="${data.key}.fullKey" type="hidden" value="${data.key}">
                 <input id="system" name="${data.key}.system" type="hidden" value="false">
                 <div class="form-group">
-                    <label>${game.i18n.localize('CUSTOM_DND5E.label')}</label>
+                    <label class="flex1" style="min-width:80px; max-width:100px;">${game.i18n.localize('CUSTOM_DND5E.label')}</label>
                     <div class="form-fields">
                         <input id="label" name="${data.key}.label" type="text" value="">
                     </div>
                 </div>
                 <div class="form-group">
-                    <label>${game.i18n.localize('CUSTOM_DND5E.ability')}</label>
+                    <label class="flex1" style="min-width:80px; max-width:100px;">${game.i18n.localize('CUSTOM_DND5E.ability')}</label>
                     <div class="form-fields">
                         <input id="ability" name="${data.key}.ability" type="text" value="">
                     </div>
                 </div>
                 <div class="form-group">
-                    <label>${game.i18n.localize('CUSTOM_DND5E.icon')}</label>
+                    <label class="flex1" style="min-width:80px; max-width:100px;">${game.i18n.localize('CUSTOM_DND5E.icon')}</label>
                     <div class="form-fields">
                         <input id="icon" name="${data.key}.icon" type="text" value="">
                     </div>
                 </div>
                 <div class="form-group">
-                    <label>${game.i18n.localize('CUSTOM_DND5E.reference')}</label>
+                    <label class="flex1" style="min-width:80px; max-width:100px;">${game.i18n.localize('CUSTOM_DND5E.reference')}</label>
                     <div class="form-fields">
                         <input id="reference" name="${data.key}.reference" type="text" value="">
                     </div>
