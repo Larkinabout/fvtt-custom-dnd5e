@@ -1,0 +1,54 @@
+<div class="custom-dnd5e-form-wrapper flexrow">
+    <form class="custom-dnd5e-form flexcol">
+        <div class="scrollable">
+            <div class="form-group">
+                <label>{{localize "CUSTOM_DND5E.form.sheet.bannerImage.label"}}</label>
+                <div class="form-fields">
+                    <input id="banner-image" name="bannerImage" type="text" data-dtype="text" value="{{bannerImage}}">
+                        {{filePicker target="bannerImage" type="image"}}
+                </div>
+                <p class="notes">{{localize "CUSTOM_DND5E.form.sheet.bannerImage.note"}}</p>
+            </div>
+            <div class="form-group">
+                <label>{{localize "CUSTOM_DND5E.form.sheet.showDeathSaves.label"}}</label>
+                <div class="form-fields">
+                    <input id="show-death-saves" name="showDeathSaves" type="checkbox"{{#if showDeathSaves}} checked{{/if}}> 
+                </div>
+                <p class="notes">{{localize "CUSTOM_DND5E.form.sheet.showDeathSaves.note"}}</p>
+            </div>
+            <div class="form-group">
+                <label>{{localize "CUSTOM_DND5E.form.sheet.showEncumbrance.label"}}</label>
+                <div class="form-fields">
+                    <input id="show-encumbrance" name="showEncumbrance" type="checkbox"{{#if showEncumbrance}} checked{{/if}}> 
+                </div>
+                <p class="notes">{{localize "CUSTOM_DND5E.form.sheet.showEncumbrance.note"}}</p>
+            </div>
+            <div class="form-group">
+                <label>{{localize "CUSTOM_DND5E.form.sheet.showExhaustion.label"}}</label>
+                <div class="form-fields">
+                    <input id="show-exhaustion" name="showExhaustion" type="checkbox"{{#if showExhaustion}} checked{{/if}}> 
+                </div>
+                <p class="notes">{{localize "CUSTOM_DND5E.form.sheet.showExhaustion.note"}}</p>
+            </div>
+            <div class="form-group">
+                <label>{{localize "CUSTOM_DND5E.form.sheet.showInspiration.label"}}</label>
+                <div class="form-fields">
+                    <input id="show-inspiration" name="showInspiration" type="checkbox"{{#if showInspiration}} checked{{/if}}> 
+                </div>
+                <p class="notes">{{localize "CUSTOM_DND5E.form.sheet.showInspiration.note"}}</p>
+            </div>
+            <div class="form-group">
+                <label>{{localize "CUSTOM_DND5E.form.sheet.showManageCurrency.label"}}</label>
+                <div class="form-fields">
+                    <input id="show-manage-currency" name="showManageCurrency" type="checkbox"{{#if showManageCurrency}} checked{{/if}}> 
+                </div>
+                <p class="notes">{{localize "CUSTOM_DND5E.form.sheet.showManageCurrency.note"}}</p>
+            </div>
+        </div>
+        <footer>
+            <button type="submit" data-tooltip="{{localize "CUSTOM_DND5E.form.button.save.tooltip"}}" class="save-button">
+                <i class="fas fa-solid fa-floppy-disk"></i>{{localize "CUSTOM_DND5E.form.button.save.label"}}
+            </button>
+        </footer>
+    </form>
+</div>

@@ -26,9 +26,9 @@ Hooks.on('init', async () => {
     registerEncumbranceSettings()
     registerLanguagesSettings()
     registerSensesSettings()
+    registerSheetSettings()
     registerSkillsSettings()
     registerMiscSettings()
-    registerSheetSettings()
 
     setAbilities(getSetting(CONSTANTS.ABILITIES.SETTING.KEY) || CONFIG.CUSTOM_DND5E.abilities)
     setSkills(getSetting(CONSTANTS.SKILLS.SETTING.KEY) || {})

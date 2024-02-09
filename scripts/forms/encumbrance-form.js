@@ -19,7 +19,8 @@ export class EncumbranceForm extends CustomDnd5eForm {
 
     static get defaultOptions () {
         return mergeObject(super.defaultOptions, {
-            template: CONSTANTS.ENCUMBRANCE.TEMPLATE.FORM
+            template: CONSTANTS.ENCUMBRANCE.TEMPLATE.FORM,
+            title: game.i18n.localize('CUSTOM_DND5E.form.encumbrance.title')
         })
     }
 

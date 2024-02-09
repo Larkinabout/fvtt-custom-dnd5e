@@ -1,62 +1,83 @@
-import { SHEET } from './constants.js'
-import { getSetting, registerSetting } from './utils.js'
-
-const CONSTANTS = {
-    SETTING: {
-        SHOW_DEATH_SAVES: {
-            KEY: 'show-death-saves',
-            HINT: 'CUSTOM_DND5E.setting.showDeathSaves.hint',
-            NAME: 'CUSTOM_DND5E.setting.showDeathSaves.name'
-        },
-        SHOW_EXHAUSTION: {
-            KEY: 'show-exhaustion',
-            HINT: 'CUSTOM_DND5E.setting.showExhaustion.hint',
-            NAME: 'CUSTOM_DND5E.setting.showExhaustion.name'
-        },
-        SHOW_INSPIRATION: {
-            KEY: 'show-inspiration',
-            HINT: 'CUSTOM_DND5E.setting.showInspiration.hint',
-            NAME: 'CUSTOM_DND5E.setting.showInspiration.name'
-        }
-    }
-}
+import { CONSTANTS, SHEET } from './constants.js'
+import { getSetting, registerMenu, registerSetting } from './utils.js'
+import { SheetForm } from './forms/sheet-form.js'
 
 export function registerSettings () {
-    registerSetting(
-        CONSTANTS.SETTING.SHOW_DEATH_SAVES.KEY,
+    registerMenu(
+        CONSTANTS.SHEET.MENU.KEY,
         {
-            hint: game.i18n.localize(CONSTANTS.SETTING.SHOW_DEATH_SAVES.HINT),
-            name: game.i18n.localize(CONSTANTS.SETTING.SHOW_DEATH_SAVES.NAME),
+            hint: game.i18n.localize(CONSTANTS.SHEET.MENU.HINT),
+            label: game.i18n.localize(CONSTANTS.SHEET.MENU.LABEL),
+            name: game.i18n.localize(CONSTANTS.SHEET.MENU.NAME),
+            icon: CONSTANTS.SHEET.MENU.ICON,
+            type: SheetForm,
+            restricted: true,
+            scope: 'world'
+        }
+    )
+
+    registerSetting(
+        CONSTANTS.SHEET.SETTING.BANNER_IMAGE.KEY,
+        {
             scope: 'world',
-            config: true,
+            config: false,
+            type: String
+        }
+    )
+
+    registerSetting(
+        CONSTANTS.SHEET.SETTING.SHOW_DEATH_SAVES.KEY,
+        {
+            scope: 'world',
+            config: false,
             type: Boolean,
             default: true
         }
     )
 
     registerSetting(
-        CONSTANTS.SETTING.SHOW_EXHAUSTION.KEY,
+        CONSTANTS.SHEET.SETTING.SHOW_ENCUMBRANCE.KEY,
         {
-            hint: game.i18n.localize(CONSTANTS.SETTING.SHOW_EXHAUSTION.HINT),
-            name: game.i18n.localize(CONSTANTS.SETTING.SHOW_EXHAUSTION.NAME),
             scope: 'world',
-            config: true,
+            config: false,
             type: Boolean,
             default: true
         }
     )
 
     registerSetting(
-        CONSTANTS.SETTING.SHOW_INSPIRATION.KEY,
+        CONSTANTS.SHEET.SETTING.SHOW_EXHAUSTION.KEY,
         {
-            hint: game.i18n.localize(CONSTANTS.SETTING.SHOW_INSPIRATION.HINT),
-            name: game.i18n.localize(CONSTANTS.SETTING.SHOW_INSPIRATION.NAME),
             scope: 'world',
-            config: true,
+            config: false,
             type: Boolean,
             default: true
         }
     )
+
+    registerSetting(
+        CONSTANTS.SHEET.SETTING.SHOW_INSPIRATION.KEY,
+        {
+            scope: 'world',
+            config: false,
+            type: Boolean,
+            default: true
+        }
+    )
+
+    registerSetting(
+        CONSTANTS.SHEET.SETTING.SHOW_MANAGE_CURRENCY.KEY,
+        {
+            scope: 'world',
+            config: false,
+            type: Boolean,
+            default: true
+        }
+    )
+
+    loadTemplates([
+        CONSTANTS.SHEET.TEMPLATE.FORM
+    ])
 }
 
 /**
@@ -66,11 +87,29 @@ Hooks.on('renderActorSheet', (app, html, data) => {
     const sheet = SHEET[app.constructor.name]
 
     if (sheet.character && !sheet.legacy) {
-        if (!getSetting(CONSTANTS.SETTING.SHOW_DEATH_SAVES.KEY)) { removeDeathSaves(html) }
-        if (!getSetting(CONSTANTS.SETTING.SHOW_EXHAUSTION.KEY)) { removeExhaustion(html) }
-        if (!getSetting(CONSTANTS.SETTING.SHOW_INSPIRATION.KEY)) { removeInspiration(html) }
+        setBannerImage(html)
+        if (!getSetting(CONSTANTS.SHEET.SETTING.SHOW_DEATH_SAVES.KEY)) { removeDeathSaves(html) }
+        if (!getSetting(CONSTANTS.SHEET.SETTING.SHOW_ENCUMBRANCE.KEY)) { removeEncumbrance(html) }
+        if (!getSetting(CONSTANTS.SHEET.SETTING.SHOW_EXHAUSTION.KEY)) { removeExhaustion(html) }
+        if (!getSetting(CONSTANTS.SHEET.SETTING.SHOW_INSPIRATION.KEY)) { removeInspiration(html) }
+        if (!getSetting(CONSTANTS.SHEET.SETTING.SHOW_MANAGE_CURRENCY.KEY)) { removeManageCurrency(html) }
     }
 })
+
+/**
+ * Set banner image the character sheet
+ * @param {object} html The HTML
+ */
+function setBannerImage (html) {
+    const bannerImage = getSetting(CONSTANTS.SHEET.SETTING.BANNER_IMAGE.KEY)
+
+    if (!bannerImage) return
+
+    const sheetHeader = html[0].querySelector('.sheet-header')
+    if (sheetHeader) {
+        sheetHeader.style.background = `transparent url("${bannerImage}") no-repeat center / cover`
+    }
+}
 
 /**
  * Remove Death Saves from the character sheet
@@ -80,6 +119,17 @@ function removeDeathSaves (html) {
     const deathTray = html[0].querySelector('.death-tray')
     if (deathTray) {
         deathTray.style.display = 'none'
+    }
+}
+
+/**
+ * Remove Encumbrance from the character sheet
+ * @param {object} html The HTML
+ */
+function removeEncumbrance (html) {
+    const encumbranceCard = html[0].querySelector('.encumbrance.card')
+    if (encumbranceCard) {
+        encumbranceCard?.remove()
     }
 }
 
@@ -107,5 +157,14 @@ function removeExhaustion (html) {
  */
 function removeInspiration (html) {
     const button = html[0].querySelector('button.inspiration')
+    button?.remove()
+}
+
+/**
+ * Remove Manage Currency from the character sheet
+ * @param {object} html The HTML
+ */
+function removeManageCurrency (html) {
+    const button = html[0].querySelector('.inventory .currency > button')
     button?.remove()
 }

@@ -16,6 +16,7 @@ export function registerSettings () {
             onChange: (value) => { setMaxLevel(value) }
         }
     )
+    
 }
 
 /**

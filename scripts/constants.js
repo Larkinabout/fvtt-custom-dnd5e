@@ -140,6 +140,27 @@ export const CONSTANTS = {
             KEY: 'senses'
         }
     },
+    SHEET: {
+        ID: 'sheet',
+        MENU: {
+            KEY: 'sheet-menu',
+            HINT: 'CUSTOM_DND5E.menu.sheet.hint',
+            ICON: 'fas fa-pen-to-square',
+            LABEL: 'CUSTOM_DND5E.menu.sheet.label',
+            NAME: 'CUSTOM_DND5E.menu.sheet.name'
+        },
+        SETTING: {
+            BANNER_IMAGE: { KEY: 'banner-image' },
+            SHOW_DEATH_SAVES: { KEY: 'show-death-saves' },
+            SHOW_ENCUMBRANCE: { KEY: 'show-encumbrance' },
+            SHOW_EXHAUSTION: { KEY: 'show-exhaustion' },
+            SHOW_INSPIRATION: { KEY: 'show-inspiration' },
+            SHOW_MANAGE_CURRENCY: { KEY: 'show-manage-currency' }
+        },
+        TEMPLATE: {
+            FORM: 'modules/custom-dnd5e/templates/sheet-form.hbs'
+        }
+    },
     SKILLS: {
         ID: 'skills',
         MENU: {

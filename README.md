@@ -2,16 +2,21 @@
 
 # Custom D&D 5e
 
-![Custom D&D 5e Settings](./.github/readme/custom-dnd5e-settings.png)
-
 A Foundry VTT module to customise the D&D 5e system.
+
+![Custom D&D 5e Settings](./.github/readme/custom-dnd5e-settings.png)
+![Custom D&D 5e Custom Banner](./.github/readme/custom-dnd5e-custom-banner.png)
 
 # Features
 - Add four types of counter to the character sheets: checkbox, fraction, number and success/failure.
 - Configure abilities, damage types, encumbrance, languages, senses, skills and max level.
-- Hide death saves on the character sheet.
-- Hide exhaustion on the character sheet.
-- Hide inspiration on the new character sheet.
+- Configure the character sheet:
+  - Change the banner at the top.
+  - Hide death saves.
+  - Hide encumbrance.
+  - Hide exhaustion.
+  - Hide inspiration.
+  - Hide the Manage Currency button.
 
 # Wishlist
 - Add common house rules.

@@ -1,6 +1,7 @@
 {
     "CUSTOM_DND5E.abbreviation": "Abbreviation",
     "CUSTOM_DND5E.ability": "Ability",
+    "CUSTOM_DND5E.characters": "Characters",
     "CUSTOM_DND5E.checkbox": "Checkbox",
     "CUSTOM_DND5E.counters": "Counters",
     "CUSTOM_DND5E.currencyPerWeight": "Currency per Weight",
@@ -9,6 +10,7 @@
     "CUSTOM_DND5E.label": "Label",
     "CUSTOM_DND5E.maximum": "Maximum",
     "CUSTOM_DND5E.mental": "Mental",
+    "CUSTOM_DND5E.npcs": "NPCs",
     "CUSTOM_DND5E.number": "Number",
     "CUSTOM_DND5E.physical": "Physical",
     "CUSTOM_DND5E.reference": "Reference",
@@ -38,17 +40,36 @@
     "CUSTOM_DND5E.form.button.save.tooltip": "Save and Close",
     "CUSTOM_DND5E.form.checkbox.visible.tooltip": "Visible",
 
-    "CUSTOM_DND5E.form.counters.characters": "Characters",
-    "CUSTOM_DND5E.form.counters.npcs": "NPCs",
+    "CUSTOM_DND5E.form.abilities.title": "Configure Abilities",
+
+    "CUSTOM_DND5E.form.armorTypes.title": "Configure Armor Types",
+
     "CUSTOM_DND5E.form.counters.copyProperty.message": "'Property \"{property}\" copied to clipboard.'",
     "CUSTOM_DND5E.form.counters.copyProperty.tooltip": "Copy Property to Clipboard",
     "CUSTOM_DND5E.form.counters.title": "Configure Counters",
 
-    "CUSTOM_DND5E.form.abilities.title": "Configure Abilities",
-    "CUSTOM_DND5E.form.armorTypes.title": "Configure Armor Types",
     "CUSTOM_DND5E.form.damageTypes.title": "Configure Damage Types",
+
+    "CUSTOM_DND5E.form.encumbrance.title": "Configure Encumbrance",
+
     "CUSTOM_DND5E.form.languages.title": "Configure Languages",
+
     "CUSTOM_DND5E.form.senses.title": "Configure Senses",
+
+    "CUSTOM_DND5E.form.sheet.bannerImage.note": "Select an image to use as the banner on the character sheet. Recommended image size is 800 by 170. Leave blank to use the default",
+    "CUSTOM_DND5E.form.sheet.bannerImage.label": "Banner Image",
+    "CUSTOM_DND5E.form.sheet.showDeathSaves.note": "Whether to show Death Saves on the character sheet",
+    "CUSTOM_DND5E.form.sheet.showDeathSaves.label": "Show Death Saves",
+    "CUSTOM_DND5E.form.sheet.showEncumbrance.note": "Whether to show encumbrance on the character sheet",
+    "CUSTOM_DND5E.form.sheet.showEncumbrance.label": "Show Encumbrance",
+    "CUSTOM_DND5E.form.sheet.showExhaustion.note": "Whether to show Exhaustion on the character sheet",
+    "CUSTOM_DND5E.form.sheet.showExhaustion.label": "Show Exhaustion",
+    "CUSTOM_DND5E.form.sheet.showInspiration.note": "Whether to show Inspiration on the character sheet",
+    "CUSTOM_DND5E.form.sheet.showInspiration.label": "Show Inspiration",
+    "CUSTOM_DND5E.form.sheet.showManageCurrency.note": "Whether to show Manage Currency on the character sheet",
+    "CUSTOM_DND5E.form.sheet.showManageCurrency.label": "Show Manage Currency",
+    "CUSTOM_DND5E.form.sheet.title": "Configure Sheet",
+
     "CUSTOM_DND5E.form.skills.title": "Configure Skills",
 
     "CUSTOM_DND5E.menu.abilities.hint": "Configure Abilities",
@@ -79,15 +100,13 @@
     "CUSTOM_DND5E.menu.senses.label": "Configure Senses",
     "CUSTOM_DND5E.menu.senses.name": "Configure Senses",
 
+    "CUSTOM_DND5E.menu.sheet.hint": "Configure Sheet",
+    "CUSTOM_DND5E.menu.sheet.label": "Configure Sheet",
+    "CUSTOM_DND5E.menu.sheet.name": "Configure Sheet",
+
     "CUSTOM_DND5E.menu.skills.hint": "Configure Skills",
     "CUSTOM_DND5E.menu.skills.label": "Configure Skills",
     "CUSTOM_DND5E.menu.skills.name": "Configure Skills",
 
-    "CUSTOM_DND5E.setting.maxLevel.name": "Max Level",
-    "CUSTOM_DND5E.setting.showDeathSaves.hint": "Show Death Saves on the character sheet",
-    "CUSTOM_DND5E.setting.showDeathSaves.name": "Show Death Saves",
-    "CUSTOM_DND5E.setting.showExhaustion.hint": "Show Exhaustion on the character sheet",
-    "CUSTOM_DND5E.setting.showExhaustion.name": "Show Exhaustion",
-    "CUSTOM_DND5E.setting.showInspiration.hint": "Show Inspiration on the character sheet",
-    "CUSTOM_DND5E.setting.showInspiration.name": "Show Inspiration"
+    "CUSTOM_DND5E.setting.maxLevel.name": "Max Level"
 }
