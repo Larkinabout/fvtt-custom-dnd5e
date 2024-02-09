@@ -51,7 +51,7 @@ export function setConfig (data) {
             .map(([key, value]) => [
                 key,
                 {
-                    label: value.label,
+                    label: game.i18n.localize(value.label),
                     icon: value.icon,
                     reference: value.reference
                 }

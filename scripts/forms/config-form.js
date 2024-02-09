@@ -27,8 +27,6 @@ class ConfigForm extends CustomDnd5eForm {
     async getData () {
         this.setting = getSetting(this.settingKey)
 
-        const data = deepClone(this.setting)
-
         const labelise = (data) => {
             Object.entries(data).forEach(([key, value]) => {
                 if (typeof value === 'string') {
@@ -41,9 +39,9 @@ class ConfigForm extends CustomDnd5eForm {
             })
         }
 
-        labelise(data)
+        labelise(this.setting)
 
-        return { items: data }
+        return { items: this.setting }
     }
 
     activateListeners (html) {

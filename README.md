@@ -9,9 +9,10 @@ A Foundry VTT module to customise the D&D 5e system.
 
 # Features
 - Add four types of counter to the character sheets: checkbox, fraction, number and success/failure.
-- Configure abilities, damage types, encumbrance, languages, senses, skills and max level.
+- Configure abilities, currencies, damage types, encumbrance, languages, senses, skills and max level.
 - Configure the character sheet:
-  - Change the banner at the top.
+  - Auto-fade or auto-minimise the sheet when it's not hovered over.
+  - Change the banner at the top of the sheet.
   - Hide death saves.
   - Hide encumbrance.
   - Hide exhaustion.

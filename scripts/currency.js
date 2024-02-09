@@ -51,9 +51,9 @@ export function setConfig (data) {
             .map(([key, value]) => [
                 key,
                 {
-                    abbreviation: value.abbreviation,
+                    abbreviation: game.i18n.localize(value.abbreviation),
                     conversion: value.conversion,
-                    label: value.label
+                    label: game.i18n.localize(value.label)
                 }
             ])
     )

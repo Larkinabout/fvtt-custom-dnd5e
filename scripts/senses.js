@@ -45,9 +45,7 @@ export function setConfig (data) {
             .filter(([_, value]) => value.visible || value.visible === undefined)
             .map(([key, value]) => [
                 key,
-                value.children
-                    ? { label: value.label, children: buildConfig(value.children) }
-                    : value.label
+                game.i18n.localize(value.label)
             ])
     )
 
@@ -84,6 +82,9 @@ Hooks.on('preRenderActorSheet', (app, data) => {
     Object.entries(senses).forEach(([key, value]) => {
         const flag = getFlag(app.document, key)
         if (flag) {
+            if (!Object.hasOwn(data, 'senses')) {
+                data.senses = {}
+            }
             data.senses[key] = (actorSheetType.legacy) ? `${value.label} ${flag}` : { label: value.label, value: flag }
         }
     })

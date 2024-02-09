@@ -56,7 +56,7 @@ export class CustomDnd5eForm extends FormApplication {
     }
 
     async _onChangeInput (event) {
-        if (event.target.name === 'visible') this._onToggleList(event.target)
+        if (event.target.id === 'visible') this._onToggleList(event.target)
     }
 
     _onToggleList (checkbox) {

@@ -55,7 +55,7 @@ export function setConfig (data) {
                     ability: value.ability,
                     fullKey: value.fullKey,
                     icon: value.icon,
-                    label: value.label,
+                    label: game.i18n.localize(value.label),
                     reference: value.reference
                 }
             ])

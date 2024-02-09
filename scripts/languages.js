@@ -45,7 +45,9 @@ export function setConfig (data) {
             .filter(([_, value]) => value.visible || value.visible === undefined)
             .map(([key, value]) => [
                 key,
-                value.label
+                value.children
+                    ? { label: game.i18n.localize(value.label), children: buildConfig(value.children) }
+                    : game.i18n.localize(value.label)
             ])
     )
 
