@@ -1,5 +1,5 @@
 import { CONSTANTS } from '../constants.js'
-import { getSetting, setSetting } from '../utils.js'
+import { getDnd5eSetting, getSetting, setDnd5eSetting, setSetting } from '../utils.js'
 import { CustomDnd5eForm } from './custom-dnd5e-form.js'
 
 export class SheetForm extends CustomDnd5eForm {
@@ -17,13 +17,18 @@ export class SheetForm extends CustomDnd5eForm {
     }
 
     async getData () {
+        const autoFadeSheet = getSetting(CONSTANTS.SHEET.SETTING.AUTO_FADE_SHEET.KEY)
+        const autoMinimiseSheet = getSetting(CONSTANTS.SHEET.SETTING.AUTO_MINIMISE_SHEET.KEY)
         const bannerImage = getSetting(CONSTANTS.SHEET.SETTING.BANNER_IMAGE.KEY)
         const showDeathSaves = getSetting(CONSTANTS.SHEET.SETTING.SHOW_DEATH_SAVES.KEY)
         const showEncumbrance = getSetting(CONSTANTS.SHEET.SETTING.SHOW_ENCUMBRANCE.KEY)
         const showExhaustion = getSetting(CONSTANTS.SHEET.SETTING.SHOW_EXHAUSTION.KEY)
         const showInspiration = getSetting(CONSTANTS.SHEET.SETTING.SHOW_INSPIRATION.KEY)
         const showManageCurrency = getSetting(CONSTANTS.SHEET.SETTING.SHOW_MANAGE_CURRENCY.KEY)
+
         const data = {
+            autoFadeSheet,
+            autoMinimiseSheet,
             bannerImage,
             showDeathSaves,
             showEncumbrance,
@@ -66,6 +71,8 @@ export class SheetForm extends CustomDnd5eForm {
 
     async _updateObject (event, formData) {
         await Promise.all([
+            setSetting(CONSTANTS.SHEET.SETTING.AUTO_FADE_SHEET.KEY, formData.autoFadeSheet),
+            setSetting(CONSTANTS.SHEET.SETTING.AUTO_MINIMISE_SHEET.KEY, formData.autoMinimiseSheet),
             setSetting(CONSTANTS.SHEET.SETTING.BANNER_IMAGE.KEY, formData.bannerImage),
             setSetting(CONSTANTS.SHEET.SETTING.SHOW_DEATH_SAVES.KEY, formData.showDeathSaves),
             setSetting(CONSTANTS.SHEET.SETTING.SHOW_ENCUMBRANCE.KEY, formData.showEncumbrance),

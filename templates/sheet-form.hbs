@@ -7,7 +7,24 @@
                     <input id="banner-image" name="bannerImage" type="text" data-dtype="text" value="{{bannerImage}}">
                         {{filePicker target="bannerImage" type="image"}}
                 </div>
-                <p class="notes">{{localize "CUSTOM_DND5E.form.sheet.bannerImage.note"}}</p>
+                <p class="notes">{{localize "CUSTOM_DND5E.form.sheet.bannerImage.note.1"}}</p>
+                <p class="notes"><em>{{localize "CUSTOM_DND5E.form.sheet.bannerImage.note.2"}}</em></p>
+            </div>
+            <div class="form-group">
+                <label>{{localize "CUSTOM_DND5E.form.sheet.autoFadeSheet.label"}}</label>
+                <div class="form-fields">
+                    <input id="auto-fade-sheet" name="autoFadeSheet" type="checkbox"{{#if autoFadeSheet}} checked{{/if}}> 
+                </div>
+                <p class="notes">{{localize "CUSTOM_DND5E.form.sheet.autoFadeSheet.note.1"}}</p>
+                <p class="notes"><em>{{localize "CUSTOM_DND5E.form.sheet.autoFadeSheet.note.2"}}</em></p>
+            </div>
+            <div class="form-group">
+                <label>{{localize "CUSTOM_DND5E.form.sheet.autoMinimiseSheet.label"}}</label>
+                <div class="form-fields">
+                    <input id="auto-minimise-sheet" name="autoMinimiseSheet" type="checkbox"{{#if autoMinimiseSheet}} checked{{/if}}> 
+                </div>
+                <p class="notes">{{localize "CUSTOM_DND5E.form.sheet.autoMinimiseSheet.note.1"}}</p>
+                <p class="notes"><em>{{localize "CUSTOM_DND5E.form.sheet.autoMinimiseSheet.note.2"}}</em></p>
             </div>
             <div class="form-group">
                 <label>{{localize "CUSTOM_DND5E.form.sheet.showDeathSaves.label"}}</label>

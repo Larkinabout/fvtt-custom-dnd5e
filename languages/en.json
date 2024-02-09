@@ -3,6 +3,7 @@
     "CUSTOM_DND5E.ability": "Ability",
     "CUSTOM_DND5E.characters": "Characters",
     "CUSTOM_DND5E.checkbox": "Checkbox",
+    "CUSTOM_DND5E.conversion": "Conversion",
     "CUSTOM_DND5E.counters": "Counters",
     "CUSTOM_DND5E.currencyPerWeight": "Currency per Weight",
     "CUSTOM_DND5E.fraction": "Fraction",
@@ -48,6 +49,8 @@
     "CUSTOM_DND5E.form.counters.copyProperty.tooltip": "Copy Property to Clipboard",
     "CUSTOM_DND5E.form.counters.title": "Configure Counters",
 
+    "CUSTOM_DND5E.form.currency.title": "Configure Currency",
+
     "CUSTOM_DND5E.form.damageTypes.title": "Configure Damage Types",
 
     "CUSTOM_DND5E.form.encumbrance.title": "Configure Encumbrance",
@@ -56,17 +59,24 @@
 
     "CUSTOM_DND5E.form.senses.title": "Configure Senses",
 
-    "CUSTOM_DND5E.form.sheet.bannerImage.note": "Select an image to use as the banner on the character sheet. Recommended image size is 800 by 170. Leave blank to use the default",
+    "CUSTOM_DND5E.form.sheet.autoFadeSheet.note.1": "Whether to automatically fade out the sheet when it is not hovered over.",
+    "CUSTOM_DND5E.form.sheet.autoFadeSheet.note.2": "Press CTRL to keep the faded view while moving onto the sheet, and press CTRL to keep the full view while moving off the sheet.",
+    "CUSTOM_DND5E.form.sheet.autoFadeSheet.label": "Enable Auto-Fade",
+    "CUSTOM_DND5E.form.sheet.autoMinimiseSheet.note.1": "Whether to automatically minimise the sheet when it is not hovered over.",
+    "CUSTOM_DND5E.form.sheet.autoMinimiseSheet.note.2": "Press CTRL to keep the minimized view while moving onto the sheet, and press CTRL to keep the maximized view while moving off the sheet.",
+    "CUSTOM_DND5E.form.sheet.autoMinimiseSheet.label": "Enable Auto-Minimise",
+    "CUSTOM_DND5E.form.sheet.bannerImage.note.1": "Select an image to use as the banner on the character sheet. Recommended image size is 800 by 170. Leave blank to use the default",
+    "CUSTOM_DND5E.form.sheet.bannerImage.note.2": "Recommended image size is 800 by 170. Leave blank to use the default.",
     "CUSTOM_DND5E.form.sheet.bannerImage.label": "Banner Image",
-    "CUSTOM_DND5E.form.sheet.showDeathSaves.note": "Whether to show Death Saves on the character sheet",
+    "CUSTOM_DND5E.form.sheet.showDeathSaves.note": "Whether to show death saves tracking on the character sheet.",
     "CUSTOM_DND5E.form.sheet.showDeathSaves.label": "Show Death Saves",
-    "CUSTOM_DND5E.form.sheet.showEncumbrance.note": "Whether to show encumbrance on the character sheet",
+    "CUSTOM_DND5E.form.sheet.showEncumbrance.note": "Whether to show encumbrance on the character sheet.",
     "CUSTOM_DND5E.form.sheet.showEncumbrance.label": "Show Encumbrance",
-    "CUSTOM_DND5E.form.sheet.showExhaustion.note": "Whether to show Exhaustion on the character sheet",
+    "CUSTOM_DND5E.form.sheet.showExhaustion.note": "Whether to show exhaustion tracking on the character sheet.",
     "CUSTOM_DND5E.form.sheet.showExhaustion.label": "Show Exhaustion",
-    "CUSTOM_DND5E.form.sheet.showInspiration.note": "Whether to show Inspiration on the character sheet",
+    "CUSTOM_DND5E.form.sheet.showInspiration.note": "Whether to show the Inspiration button on the character sheet.",
     "CUSTOM_DND5E.form.sheet.showInspiration.label": "Show Inspiration",
-    "CUSTOM_DND5E.form.sheet.showManageCurrency.note": "Whether to show Manage Currency on the character sheet",
+    "CUSTOM_DND5E.form.sheet.showManageCurrency.note": "Whether to show the Manage Currency button on the character sheet.",
     "CUSTOM_DND5E.form.sheet.showManageCurrency.label": "Show Manage Currency",
     "CUSTOM_DND5E.form.sheet.title": "Configure Sheet",
 
@@ -83,6 +93,10 @@
     "CUSTOM_DND5E.menu.counters.hint": "Configure Counters",
     "CUSTOM_DND5E.menu.counters.label": "Configure Counters",
     "CUSTOM_DND5E.menu.counters.name": "Configure Counters",
+
+    "CUSTOM_DND5E.menu.currency.hint": "Configure Currency",
+    "CUSTOM_DND5E.menu.currency.label": "Configure Currency",
+    "CUSTOM_DND5E.menu.currency.name": "Configure Currency",
     
     "CUSTOM_DND5E.menu.damageTypes.hint": "Configure Damage Types",
     "CUSTOM_DND5E.menu.damageTypes.label": "Configure Damage Types",

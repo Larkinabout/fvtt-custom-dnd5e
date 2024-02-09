@@ -3,6 +3,7 @@ import { getSetting } from './utils.js'
 import { registerSettings as registerMiscSettings, setMaxLevel } from './misc.js'
 import { registerSettings as registerAbilitiesSettings, setConfig as setAbilities } from './abilities.js'
 import { registerSettings as registerArmorTypesSettings, setConfig as setArmorTypes } from './armor-types.js'
+import { registerSettings as registerCurrencySettings, setConfig as setCurrency } from './currency.js'
 import { registerSettings as registerDamageTypesSettings, setConfig as setDamageTypes } from './damage-types.js'
 import { registerSettings as registerEncumbranceSettings, setConfig as setEncumbrance } from './encumbrance.js'
 import { registerSettings as registerLanguagesSettings, setConfig as setLanguages } from './languages.js'
@@ -20,8 +21,9 @@ Hooks.on('init', async () => {
 
     patchApplicationRender()
     registerAbilitiesSettings()
-    registerCountersSettings()
     // registerArmorTypesSettings()
+    registerCountersSettings()
+    registerCurrencySettings()
     registerDamageTypesSettings()
     registerEncumbranceSettings()
     registerLanguagesSettings()
@@ -53,6 +55,7 @@ Hooks.on('ready', async () => {
     ])
 
     // setArmorTypes(getSetting(CONSTANTS.ARMOR_TYPES.SETTING.KEY) || {})
+    setCurrency(getSetting(CONSTANTS.CURRENCY.SETTING.KEY) || {})
     setDamageTypes(getSetting(CONSTANTS.DAMAGE_TYPES.SETTING.KEY) || {})
     setEncumbrance(getSetting(CONSTANTS.ENCUMBRANCE.SETTING.KEY) || {})
     setLanguages(getSetting(CONSTANTS.LANGUAGES.SETTING.KEY) || {})

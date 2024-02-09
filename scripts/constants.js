@@ -75,6 +75,23 @@ export const CONSTANTS = {
             LIST: 'modules/custom-dnd5e/templates/counters-list.hbs'
         }
     },
+    CURRENCY: {
+        ID: 'currency',
+        MENU: {
+            KEY: 'currency-menu',
+            HINT: 'CUSTOM_DND5E.menu.currency.hint',
+            ICON: 'fas fa-pen-to-square',
+            LABEL: 'CUSTOM_DND5E.menu.currency.label',
+            NAME: 'CUSTOM_DND5E.menu.currency.name'
+        },
+        SETTING: {
+            KEY: 'currency'
+        },
+        TEMPLATE: {
+            FORM: 'modules/custom-dnd5e/templates/currency-form.hbs',
+            LIST: 'modules/custom-dnd5e/templates/currency-list.hbs'
+        }
+    },
     DAMAGE_TYPES: {
         ID: 'damage-types',
         MENU: {
@@ -150,6 +167,8 @@ export const CONSTANTS = {
             NAME: 'CUSTOM_DND5E.menu.sheet.name'
         },
         SETTING: {
+            AUTO_FADE_SHEET: { KEY: 'auto-fade-sheet' },
+            AUTO_MINIMISE_SHEET: { KEY: 'auto-minimise-sheet' },
             BANNER_IMAGE: { KEY: 'banner-image' },
             SHOW_DEATH_SAVES: { KEY: 'show-death-saves' },
             SHOW_ENCUMBRANCE: { KEY: 'show-encumbrance' },

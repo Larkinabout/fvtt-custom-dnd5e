@@ -92,6 +92,23 @@ export function getSetting (key, defaultValue = null) {
 }
 
 /**
+* Get dnd5e setting
+* @public
+* @param {string} key               The setting key
+* @param {string=null} defaultValue The setting default value
+* @returns {*}                      The setting value
+*/
+export function getDnd5eSetting (key, defaultValue = null) {
+    let value = defaultValue ?? null
+    try {
+        value = game.settings.get('dnd5e', key)
+    } catch {
+        Logger.debug(`Setting '${key}' not found`)
+    }
+    return value
+}
+
+/**
  * Set setting
  * @public
  * @param {string} key   The setting key
@@ -100,6 +117,21 @@ export function getSetting (key, defaultValue = null) {
 export async function setSetting (key, value) {
     if (game.settings.settings.get(`${MODULE.ID}.${key}`)) {
         await game.settings.set(MODULE.ID, key, value)
+        Logger.debug(`Setting '${key}' set to '${value}'`)
+    } else {
+        Logger.debug(`Setting '${key}' not found`)
+    }
+}
+
+/**
+ * Set dnd5e setting
+ * @public
+ * @param {string} key   The setting key
+ * @param {string} value The setting value
+ */
+export async function setDnd5eSetting (key, value) {
+    if (game.settings.settings.get(`dnd5e.${key}`)) {
+        await game.settings.set('dnd5e', key, value)
         Logger.debug(`Setting '${key}' set to '${value}'`)
     } else {
         Logger.debug(`Setting '${key}' not found`)

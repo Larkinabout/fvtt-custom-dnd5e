@@ -3,6 +3,7 @@ import { deleteProperty, getSetting, setSetting } from '../utils.js'
 import { CustomDnd5eForm } from './custom-dnd5e-form.js'
 import { setConfig as setAbilities } from '../abilities.js'
 import { setConfig as setArmorTypes } from '../armor-types.js'
+import { setConfig as setCurrency } from '../currency.js'
 import { setConfig as setDamageTypes } from '../damage-types.js'
 import { setConfig as setLanguages } from '../languages.js'
 import { setConfig as setSenses } from '../senses.js'
@@ -231,6 +232,51 @@ export class ArmorTypesForm extends ConfigForm {
             id: `${MODULE.ID}-armor-types-form`,
             title: game.i18n.localize('CUSTOM_DND5E.form.armorTypes.title')
         })
+    }
+}
+
+export class CurrencyForm extends ConfigForm {
+    constructor () {
+        super()
+        this.requiresReload = false
+        this.settingKey = CONSTANTS.CURRENCY.SETTING.KEY
+        this.setFunction = setCurrency
+        this.type = 'currency'
+    }
+
+    static get defaultOptions () {
+        return mergeObject(super.defaultOptions, {
+            id: `${MODULE.ID}-currency-form`,
+            template: CONSTANTS.CURRENCY.TEMPLATE.FORM,
+            title: game.i18n.localize('CUSTOM_DND5E.form.currency.title')
+        })
+    }
+
+    _getInnerHtml (data) {
+        return `<div class="custom-dnd5e-item-group flexrow">
+        <i class="flex0 fas fa-grip-lines"></i>
+        <input id="visible" name="${data.key}.visible" type="checkbox" checked>
+        <div class="fields flexrow">
+            <input id="key" name="${data.key}.key" type="hidden" value="${data.key}">
+            <input id="system" name="${data.key}.system" type="hidden" value="false">
+            <div class="field">
+                <label>${game.i18n.localize('CUSTOM_DND5E.label')}</label>
+                <input id="label" name="${data.key}.label" type="text" value="">
+            </div>
+            <div class="field">
+                <label>${game.i18n.localize('CUSTOM_DND5E.abbreviation')}</label>
+                <input id="abbreviation" name="${data.key}.abbreviation" type="text" value="">
+            </div>   
+            <div class="field">
+                <label>${game.i18n.localize('CUSTOM_DND5E.conversion')}</label>
+                <input id="conversion" name="${data.key}.conversion" type="number" value="">
+            </div>
+        </div>
+        <button type="button" data-tooltip="Delete" data-action="delete" class="flex0 delete-button">
+        <i class="fas fa-xmark"></i>
+        </button>
+        <input id="delete" name="${data.key}.delete" type="hidden" value="false"
+        </div>`
     }
 }
 

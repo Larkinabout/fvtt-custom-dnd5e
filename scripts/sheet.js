@@ -17,6 +17,26 @@ export function registerSettings () {
     )
 
     registerSetting(
+        CONSTANTS.SHEET.SETTING.AUTO_FADE_SHEET.KEY,
+        {
+            scope: 'world',
+            config: false,
+            type: Boolean,
+            default: false
+        }
+    )
+
+    registerSetting(
+        CONSTANTS.SHEET.SETTING.AUTO_MINIMISE_SHEET.KEY,
+        {
+            scope: 'world',
+            config: false,
+            type: Boolean,
+            default: false
+        }
+    )
+
+    registerSetting(
         CONSTANTS.SHEET.SETTING.BANNER_IMAGE.KEY,
         {
             scope: 'world',
@@ -88,6 +108,10 @@ Hooks.on('renderActorSheet', (app, html, data) => {
 
     if (sheet.character && !sheet.legacy) {
         setBannerImage(html)
+        if (html[0].classList.contains('app')) {
+            if (getSetting(CONSTANTS.SHEET.SETTING.AUTO_FADE_SHEET.KEY)) { enableAutoFade(html) }
+            if (getSetting(CONSTANTS.SHEET.SETTING.AUTO_MINIMISE_SHEET.KEY)) { enableAutoMinimise(app, html) }
+        }
         if (!getSetting(CONSTANTS.SHEET.SETTING.SHOW_DEATH_SAVES.KEY)) { removeDeathSaves(html) }
         if (!getSetting(CONSTANTS.SHEET.SETTING.SHOW_ENCUMBRANCE.KEY)) { removeEncumbrance(html) }
         if (!getSetting(CONSTANTS.SHEET.SETTING.SHOW_EXHAUSTION.KEY)) { removeExhaustion(html) }
@@ -95,6 +119,69 @@ Hooks.on('renderActorSheet', (app, html, data) => {
         if (!getSetting(CONSTANTS.SHEET.SETTING.SHOW_MANAGE_CURRENCY.KEY)) { removeManageCurrency(html) }
     }
 })
+
+/**
+ * Enable auto-fade
+ * @param {object} html The html
+ */
+function enableAutoFade (html) {
+    html[0].addEventListener('mouseleave', (event) => { reduceOpacity(event, html) })
+    html[0].addEventListener('mouseenter', (event) => { increaseOpacity(event, html) })
+}
+
+/**
+ * Reduce opacity
+ * @param {object} event The event
+ * @param {object} html  The html
+ */
+function reduceOpacity (event, html) {
+    if (event.ctrlKey) return
+    html[0].style.transition = 'opacity 0.2s ease 0s'
+    html[0].style.opacity = '0.2'
+}
+
+/**
+ * Increase opacity
+ * @param {object} event The event
+ * @param {object} html  The html
+ */
+function increaseOpacity (event, html) {
+    const id = html[0].id
+    if (!id || event.ctrlKey) return
+    if (event?.target?.closest(`#${id}`)) {
+        html[0].style.opacity = ''
+    }
+}
+
+/**
+ * Enable auto-minimise
+ * @param {object} html The html
+ */
+function enableAutoMinimise (app, html) {
+    html[0].addEventListener('mouseleave', (event) => { minimise(event, app) })
+    html[0].addEventListener('mouseenter', (event) => { maximise(event, app) })
+}
+
+/**
+ * Minimise sheet
+ * @param {object} event The event
+ * @param {object} html  The html
+ */
+function minimise (event, app) {
+    if (event.ctrlKey) return
+    app.minimize(event)
+}
+
+/**
+ * Maximise sheet
+ * @param {object} event The event
+ * @param {object} html  The html
+ */
+function maximise (event, app) {
+    if (event.ctrlKey) return
+    app.maximize(event)
+    app.bringToTop()
+}
 
 /**
  * Set banner image the character sheet
