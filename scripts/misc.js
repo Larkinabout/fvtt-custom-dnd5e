@@ -1,5 +1,5 @@
-import { CONSTANTS, SHEET } from './constants.js'
-import { getFlag, getSetting, setSetting, registerSetting } from './utils.js'
+import { CONSTANTS } from './constants.js'
+import { registerSetting } from './utils.js'
 
 /**
  * Register Settings

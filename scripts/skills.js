@@ -1,5 +1,5 @@
 import { CONSTANTS } from './constants.js'
-import { getFlag, getSetting, setSetting, registerMenu, registerSetting } from './utils.js'
+import { getSetting, setSetting, registerMenu, registerSetting } from './utils.js'
 import { SkillsForm } from './forms/config-form.js'
 
 /**

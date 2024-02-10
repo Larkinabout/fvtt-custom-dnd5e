@@ -170,11 +170,15 @@ export const CONSTANTS = {
             AUTO_FADE_SHEET: { KEY: 'auto-fade-sheet' },
             AUTO_MINIMISE_SHEET: { KEY: 'auto-minimise-sheet' },
             BANNER_IMAGE: { KEY: 'banner-image' },
+            SHEET_SCALE: { KEY: 'sheet-scale' },
             SHOW_DEATH_SAVES: { KEY: 'show-death-saves' },
             SHOW_ENCUMBRANCE: { KEY: 'show-encumbrance' },
             SHOW_EXHAUSTION: { KEY: 'show-exhaustion' },
             SHOW_INSPIRATION: { KEY: 'show-inspiration' },
-            SHOW_MANAGE_CURRENCY: { KEY: 'show-manage-currency' }
+            SHOW_LEGENDARY_ACTIONS: { KEY: 'show-legendary-actions' },
+            SHOW_LEGENDARY_RESISTANCE: { KEY: 'show-legendary-resistance' },
+            SHOW_MANAGE_CURRENCY: { KEY: 'show-manage-currency' },
+            SHOW_USE_LAIR_ACTION: { KEY: 'show-use-lair-action' }
         },
         TEMPLATE: {
             FORM: 'modules/custom-dnd5e/templates/sheet-form.hbs'
@@ -199,7 +203,7 @@ export const CONSTANTS = {
     }
 }
 
-export const SHEET = {
+export const SHEET_TYPE = {
     ActorSheet5eCharacter: {
         countersSetting: CONSTANTS.COUNTERS.SETTING.CHARACTER_COUNTERS.KEY,
         character: true,

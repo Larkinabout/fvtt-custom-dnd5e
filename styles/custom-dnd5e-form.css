@@ -126,3 +126,12 @@
 .custom-dnd5e-item-group > i {
     color: var(--color-text-light-7)
 }
+
+.custom-dnd5e-advice {
+    background: rgba(255, 255, 255, 0.5);
+    border: 1px solid var(--color-border-light-2);
+    border-radius: 3px;
+    font-style: italic;
+    margin: 0;
+    padding: 0.25rem;
+}

@@ -1,5 +1,5 @@
-import { CONSTANTS, SHEET } from './constants.js'
-import { getFlag, getSetting, setSetting, registerMenu, registerSetting } from './utils.js'
+import { CONSTANTS } from './constants.js'
+import { getSetting, setSetting, registerMenu, registerSetting } from './utils.js'
 import { EncumbranceForm } from './forms/encumbrance-form.js'
 
 /**

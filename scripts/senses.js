@@ -1,4 +1,4 @@
-import { CONSTANTS, SHEET } from './constants.js'
+import { CONSTANTS, SHEET_TYPE } from './constants.js'
 import { getFlag, getSetting, setSetting, registerMenu, registerSetting } from './utils.js'
 import { SensesForm } from './forms/config-form.js'
 
@@ -76,7 +76,7 @@ Hooks.on('renderActorSensesConfig', (app, html, data) => {
  * To replace for ApplicationV2
  */
 Hooks.on('preRenderActorSheet', (app, data) => {
-    const actorSheetType = SHEET[app.constructor.name]
+    const actorSheetType = SHEET_TYPE[app.constructor.name]
 
     const senses = getSetting(CONSTANTS.SENSES.SETTING.KEY)
     Object.entries(senses).forEach(([key, value]) => {

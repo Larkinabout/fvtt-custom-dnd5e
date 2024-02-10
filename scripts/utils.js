@@ -75,6 +75,16 @@ export function getFlag (entity, key) {
 }
 
 /**
+ * Set flag
+ * @param {object} entity The entity
+ * @param {string} key    The flag key
+ * @returns
+ */
+export async function setFlag (entity, key, value) {
+    await entity.setFlag(MODULE.ID, key, value)
+}
+
+/**
 * Get setting
 * @public
 * @param {string} key               The setting key

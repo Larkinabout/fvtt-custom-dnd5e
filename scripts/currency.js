@@ -1,4 +1,4 @@
-import { CONSTANTS, SHEET } from './constants.js'
+import { CONSTANTS, SHEET_TYPE } from './constants.js'
 import { getSetting, setSetting, registerMenu, registerSetting } from './utils.js'
 import { CurrencyForm } from './forms/config-form.js'
 
@@ -79,11 +79,11 @@ Hooks.on('renderCurrencyManager', (app, html, data) => {
 })
 
 Hooks.on('renderActorSheet', (app, html, data) => {
-    const sheet = SHEET[app.constructor.name]
+    const sheetType = SHEET_TYPE[app.constructor.name]
 
     const setting = getSetting(CONSTANTS.CURRENCY.SETTING.KEY)
 
-    if (sheet.character && !sheet.legacy) {
+    if (sheetType.character && !sheetType.legacy) {
         Object.entries(setting).forEach(([key, value]) => {
             if (value.visible === false) {
                 html[0].querySelector(`.${key}`)?.closest('label')?.remove()

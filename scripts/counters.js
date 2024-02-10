@@ -1,4 +1,4 @@
-import { CONSTANTS, MODULE, SHEET } from './constants.js'
+import { CONSTANTS, MODULE, SHEET_TYPE } from './constants.js'
 import { registerMenu, registerSetting } from './utils.js'
 import { CountersForm } from './forms/counters-form.js'
 
@@ -44,7 +44,7 @@ export function registerSettings () {
 }
 
 Hooks.on('renderActorSheet', (app, html, data) => {
-    const actorSheetType = SHEET[app.constructor.name]
+    const actorSheetType = SHEET_TYPE[app.constructor.name]
 
     if (actorSheetType) {
         actorSheetType.legacy
