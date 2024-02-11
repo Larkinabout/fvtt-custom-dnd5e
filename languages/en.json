@@ -8,6 +8,7 @@
     "CUSTOM_DND5E.conversion": "Conversion",
     "CUSTOM_DND5E.counters": "Counters",
     "CUSTOM_DND5E.currencyPerWeight": "Currency per Weight",
+    "CUSTOM_DND5E.exhaustion": "Exhaustion",
     "CUSTOM_DND5E.fraction": "Fraction",
     "CUSTOM_DND5E.icon": "Icon",
     "CUSTOM_DND5E.label": "Label",
@@ -51,6 +52,7 @@
 
     "CUSTOM_DND5E.form.counters.copyProperty.message": "'Property \"{property}\" copied to clipboard.'",
     "CUSTOM_DND5E.form.counters.copyProperty.tooltip": "Copy Property to Clipboard",
+    "CUSTOM_DND5E.form.counters.exhaustion.tooltip": "Whether this counter represents exhaustion",
     "CUSTOM_DND5E.form.counters.title": "Configure Counters",
 
     "CUSTOM_DND5E.form.currency.title": "Configure Currency",
@@ -135,5 +137,6 @@
     "CUSTOM_DND5E.menu.skills.label": "Configure Skills",
     "CUSTOM_DND5E.menu.skills.name": "Configure Skills",
 
+    "CUSTOM_DND5E.setting.debug.name": "Enable Debugging",
     "CUSTOM_DND5E.setting.maxLevel.name": "Max Level"
 }

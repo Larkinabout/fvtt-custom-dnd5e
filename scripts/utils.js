@@ -1,4 +1,4 @@
-import { MODULE } from './constants.js'
+import { CONSTANTS, MODULE } from './constants.js'
 
 /**
  * Console logger
@@ -15,12 +15,14 @@ export class Logger {
     }
 
     static debug (message, data) {
-        if (!data) {
-            console.log(`${MODULE.NAME} Debug | ${message}`)
-            return
+        if (game.settings && getSetting(CONSTANTS.DEBUG.SETTING.KEY)) {
+            if (!data) {
+                console.log(`${MODULE.NAME} Debug | ${message}`)
+                return
+            }
+            const dataClone = deepClone(data)
+            console.log(`${MODULE.NAME} Debug | ${message}`, dataClone)
         }
-        const dataClone = deepClone(data)
-        console.log(`${MODULE.NAME} Debug | ${message}`, dataClone)
     }
 }
 
@@ -82,6 +84,16 @@ export function getFlag (entity, key) {
  */
 export async function setFlag (entity, key, value) {
     await entity.setFlag(MODULE.ID, key, value)
+}
+
+/**
+ * Unset flag
+ * @param {object} entity The entity
+ * @param {string} key    The flag key
+ * @returns
+ */
+export async function unsetFlag (entity, key) {
+    await entity.unsetFlag(MODULE.ID, key)
 }
 
 /**

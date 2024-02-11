@@ -109,6 +109,12 @@ export const CONSTANTS = {
             LIST: 'modules/custom-dnd5e/templates/damage-types-list.hbs'
         }
     },
+    DEBUG: {
+        SETTING: {
+            KEY: 'debug',
+            NAME: 'CUSTOM_DND5E.setting.debug.name'
+        }
+    },
     ENCUMBRANCE: {
         ID: 'encumbrance',
         MENU: {

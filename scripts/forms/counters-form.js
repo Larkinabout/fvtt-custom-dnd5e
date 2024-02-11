@@ -1,5 +1,5 @@
 import { CONSTANTS, MODULE } from '../constants.js'
-import { getSetting } from '../utils.js'
+import { deleteProperty, unsetFlag, getSetting, setSetting } from '../utils.js'
 import { CustomDnd5eForm } from './custom-dnd5e-form.js'
 
 const id = CONSTANTS.COUNTERS.ID
@@ -27,9 +27,12 @@ export class CountersForm extends CustomDnd5eForm {
     }
 
     async getData () {
-        const characterCounters = getSetting(CONSTANTS.COUNTERS.SETTING.CHARACTER_COUNTERS.KEY)
-        const npcCounters = getSetting(CONSTANTS.COUNTERS.SETTING.NPC_COUNTERS.KEY)
-        return { characterCounters, npcCounters }
+        this.characterCountersSetting = getSetting(CONSTANTS.COUNTERS.SETTING.CHARACTER_COUNTERS.KEY)
+        this.npcCountersSetting = getSetting(CONSTANTS.COUNTERS.SETTING.NPC_COUNTERS.KEY)
+        return {
+            characterCounters: this.characterCountersSetting,
+            npcCounters: this.npcCountersSetting
+        }
     }
 
     activateListeners (html) {
@@ -74,23 +77,26 @@ export class CountersForm extends CustomDnd5eForm {
         item.innerHTML =
         `<div class="custom-dnd5e-item-group flexrow">
             <i class="flex0 fas fa-grip-lines"></i>
-            <input id="visible" name="visible" type="checkbox" checked>
+            <input id="visible" name="${key}.visible" type="checkbox" checked>
             <div class="fields flexrow">
-                <input id="actorType" name="actorType" type="hidden" value="${actorType}">
-                <input id="key" name="key" type="hidden" value="${key}">
-                <input id="system" name="system" type="hidden" value="false">
+                <input id="actorType" name="${key}.actorType" type="hidden" value="${actorType}">
+                <input id="key" name="${key}.key" type="hidden" value="${key}">
                 <div class="field">
                     <label>${game.i18n.localize('CUSTOM_DND5E.label')}</label>
-                    <input id="label" name="label" type="text" value="">
+                    <input id="label" name="${key}.label" type="text" value="">
                 </div>
                 <div class="field">
                     <label>${game.i18n.localize('CUSTOM_DND5E.type')}</label>
-                    <select id="type" name="type">
+                    <select id="type" name="${key}.type">
                         <option value="checkbox">${game.i18n.localize('CUSTOM_DND5E.checkbox')}</option>
                         <option value="fraction">${game.i18n.localize('CUSTOM_DND5E.fraction')}</option>
                         <option value="number">${game.i18n.localize('CUSTOM_DND5E.number')}</option>
                         <option value="successFailure">${game.i18n.localize('CUSTOM_DND5E.successFailure')}</option>
                     </select>
+                </div>
+                <div class="field">
+                    <label>${game.i18n.localize('CUSTOM_DND5E.exhaustion')}</label>
+                    <input id="exhaustion" name="${key}.exhaustion" type="checkbox" data-tooltip="${game.i18n.localize('CUSTOM_DND5E.form.counters.exhaustion.tooltip')}">
                 </div>
             </div>
             <a alt="${game.i18n.localize('dnd5eCustomCounters.copyProperty.tooltip')}" data-action="copy-property" data-tooltip="${game.i18n.localize('dnd5eCustomCounters.copyProperty.tooltip')}" data-tooltip-direction="UP" class="flex0" >
@@ -99,7 +105,7 @@ export class CountersForm extends CustomDnd5eForm {
             <button type="button" data-tooltip="Delete" data-action="delete" class="flex0 delete-button">
             <i class="fas fa-xmark"></i>
             </button>
-            <input id="delete" name="delete" type="hidden" value="false"
+            <input id="delete" name="${key}.delete" type="hidden" value="false"
         </div>`
 
         if (this.items[0]) { item.addEventListener('dragstart', this.items[0].ondragstart) } // Fix this for empty list
@@ -115,44 +121,40 @@ export class CountersForm extends CustomDnd5eForm {
     }
 
     async _updateObject (event, formData) {
-        const characterCounters = {}
-        const npcCounters = {}
+        const ignore = ['actorType', 'delete', 'key']
 
-        if (!Array.isArray(formData.actorType)) { formData.actorType = [formData.actorType] }
-        if (!Array.isArray(formData.key)) { formData.key = [formData.key] }
-        if (!Array.isArray(formData.label)) { formData.label = [formData.label] }
-        if (!Array.isArray(formData.type)) { formData.type = [formData.type] }
-        if (!Array.isArray(formData.system)) { formData.system = [formData.system] }
-        if (!Array.isArray(formData.visible)) { formData.visible = [formData.visible] }
-        if (!Array.isArray(formData.delete)) { formData.delete = [formData.delete] }
+        // Get list of properties to delete
+        const deleteKeys = Object.entries(formData)
+            .filter(([key, value]) => key.split('.').pop() === 'delete' && value === 'true')
+            .map(([key, _]) => key.split('.').slice(0, -1).join('.'))
 
-        for (let index = 0; index < Object.keys(formData.key).length; index++) {
-            const key = formData.key[index]
-
-            if (formData.delete[index] === 'true') {
-                for (const actor of game.actors) {
-                    actor.unsetFlag(MODULE.ID, key)
-                }
-                continue
+        // Delete properties from formData
+        Object.keys(formData).forEach(key => {
+            if (deleteKeys.includes(key.split('.').slice(0, -1).join('.'))) {
+                delete formData[key]
             }
+        })
 
-            const data = {
-                label: formData.label[index],
-                type: formData.type[index],
-                system: formData.system[index] !== 'false',
-                visible: formData.visible[index]
+        // Delete properties from this.setting
+        deleteKeys.forEach(key => {
+            const setting = (formData[`${key}.actorType`] === 'character') ? this.characterCountersSetting : this.npcCountersSetting
+            deleteProperty(setting, key)
+            for (const actor of game.actors) {
+                unsetFlag(actor, key)
             }
+        })
 
-            if (formData.actorType[index] === 'character') {
-                characterCounters[key] = data
-            } else {
-                npcCounters[key] = data
-            }
-        }
+        // Set properties in this.setting
+        Object.entries(formData).forEach(([key, value]) => {
+            if (ignore.includes(key.split('.').pop())) { return }
+            const primaryKey = key.split('.').slice(0, -1).join('.')
+            const setting = (formData[`${primaryKey}.actorType`] === 'character') ? this.characterCountersSetting : this.npcCountersSetting
+            setProperty(setting, key, value)
+        })
 
         await Promise.all([
-            game.settings.set(MODULE.ID, CONSTANTS.COUNTERS.SETTING.CHARACTER_COUNTERS.KEY, characterCounters),
-            game.settings.set(MODULE.ID, CONSTANTS.COUNTERS.SETTING.NPC_COUNTERS.KEY, npcCounters)
+            setSetting(CONSTANTS.COUNTERS.SETTING.CHARACTER_COUNTERS.KEY, this.characterCountersSetting),
+            setSetting(CONSTANTS.COUNTERS.SETTING.NPC_COUNTERS.KEY, this.npcCountersSetting)
         ])
     }
 }
