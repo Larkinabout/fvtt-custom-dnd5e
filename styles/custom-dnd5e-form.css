@@ -15,7 +15,7 @@
     height: 100%;
 }
 
-.custom-dnd5e-form > .scrollable {
+.custom-dnd5e-form .scrollable {
     flex: 1;
     padding: 0.5rem;
     overflow: hidden auto;
@@ -76,6 +76,10 @@
 
 .custom-dnd5e-form .field.flex2 {
     flex: 2;
+}
+
+.custom-dnd5e-form .flexa {
+    flex: auto;
 }
 
 .custom-dnd5e-form footer {

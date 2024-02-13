@@ -70,6 +70,10 @@
     border-radius: 0;
 }
 
+.custom-dnd5e-counters-fraction-group > input.disabled {
+    color: var(--color-text-light-7);
+}
+
 .custom-dnd5e-counters-number {
     display: grid;
     grid-template-columns: 0.75fr 1.25fr 0.75fr 1.25fr;

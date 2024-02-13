@@ -159,3 +159,65 @@ export async function setDnd5eSetting (key, value) {
         Logger.debug(`Setting '${key}' not found`)
     }
 }
+
+export function appendDeleteButton (parentElement, inputName) {
+    const button = document.createElement('button')
+    button.setAttribute('type', 'button')
+    button.setAttribute('data-tooltip', 'Delete')
+    button.setAttribute('data-action', 'delete')
+    button.classList.add('flex0', 'delete-button')
+    parentElement.appendChild(button)
+
+    const i = document.createElement('i')
+    i.classList.add('fas', 'fa-xmark')
+    button.appendChild(i)
+
+    const input = document.createElement('input')
+    input.setAttribute('id', 'delete')
+    input.setAttribute('name', inputName)
+    input.setAttribute('type', 'hidden')
+    input.setAttribute('value', 'false')
+    parentElement.appendChild(input)
+
+    return button
+}
+
+export function appendFormFields (parentElement) {
+    const div = document.createElement('div')
+    div.setAttribute('class', 'form-fields')
+    parentElement.appendChild(div)
+    return div
+}
+
+export function appendFormGroup (parentElement) {
+    const div = document.createElement('div')
+    div.classList.add('form-group')
+    parentElement.appendChild(div)
+    return div
+}
+
+export function appendFormGroupLabel (formGroupElement, labelValue) {
+    const label = document.createElement('label')
+    label.classList.add('flex1')
+    label.style.minWidth = '80px'
+    label.style.maxWidth = '100px'
+    label.textContent = labelValue
+    formGroupElement.appendChild(label)
+    return label
+}
+
+export function appendSelect (parentElement, selectId, selectName) {
+    const select = document.createElement('select')
+    select.setAttribute('id', selectId)
+    select.setAttribute('name', selectName)
+    parentElement.appendChild(select)
+    return select
+}
+
+export function appendSelectOption (selectElement, optionValue, optionTextContent) {
+    const option = document.createElement('option')
+    option.setAttribute('value', optionValue)
+    option.textContent = optionTextContent
+    selectElement.appendChild(option)
+    return option
+}

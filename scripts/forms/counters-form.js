@@ -1,6 +1,7 @@
 import { CONSTANTS, MODULE } from '../constants.js'
 import { deleteProperty, unsetFlag, getSetting, setSetting } from '../utils.js'
 import { CustomDnd5eForm } from './custom-dnd5e-form.js'
+import { CountersAdvancedOptionsForm } from './counters-advanced-options-form.js'
 
 const id = CONSTANTS.COUNTERS.ID
 const form = `${id}-form`
@@ -45,6 +46,7 @@ export class CountersForm extends CustomDnd5eForm {
         const action = clickedElement.data().action
         const key = clickedElement.parents('li')?.data()?.key
         const type = clickedElement.parent().find('#type').val()
+        const actorType = clickedElement.parent().find('#actorType').val()
         switch (action) {
         case 'delete': {
             await this._deleteItem(key)
@@ -56,6 +58,12 @@ export class CountersForm extends CustomDnd5eForm {
         }
         case 'copy-property': {
             await this._copyProperty(key, type)
+            break
+        }
+        case 'advanced-options': {
+            const setting = (actorType === 'character') ? this.characterCountersSetting : this.npcCountersSetting
+            const args = {key, actorType, setting, type}
+            await CountersAdvancedOptionsForm.open(args)
             break
         }
         }
@@ -94,11 +102,10 @@ export class CountersForm extends CustomDnd5eForm {
                         <option value="successFailure">${game.i18n.localize('CUSTOM_DND5E.successFailure')}</option>
                     </select>
                 </div>
-                <div class="field">
-                    <label>${game.i18n.localize('CUSTOM_DND5E.exhaustion')}</label>
-                    <input id="exhaustion" name="${key}.exhaustion" type="checkbox" data-tooltip="${game.i18n.localize('CUSTOM_DND5E.form.counters.exhaustion.tooltip')}">
-                </div>
             </div>
+            <a alt="${game.i18n.localize('CUSTOM_DND5E.form.counters.advancedOptions.tooltip')}'" data-action="advanced-options" data-tooltip="${game.i18n.localize('CUSTOM_DND5E.form.counters.advancedOptions.tooltip')}" data-tooltip-direction="UP" class="flex0" >
+                    <i class="fa-solid fa-gear"></i>
+                </a>
             <a alt="${game.i18n.localize('dnd5eCustomCounters.copyProperty.tooltip')}" data-action="copy-property" data-tooltip="${game.i18n.localize('dnd5eCustomCounters.copyProperty.tooltip')}" data-tooltip-direction="UP" class="flex0" >
                 <i class="fa-solid fa-at"></i>
             </a>

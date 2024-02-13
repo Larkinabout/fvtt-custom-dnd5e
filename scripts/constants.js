@@ -72,7 +72,9 @@ export const CONSTANTS = {
         },
         TEMPLATE: {
             FORM: 'modules/custom-dnd5e/templates/counters-form.hbs',
-            LIST: 'modules/custom-dnd5e/templates/counters-list.hbs'
+            LIST: 'modules/custom-dnd5e/templates/counters-list.hbs',
+            ADVANCED_OPTIONS_FORM: 'modules/custom-dnd5e/templates/counters-advanced-options-form.hbs',
+            ADVANCED_OPTIONS_LIST: 'modules/custom-dnd5e/templates/counters-advanced-options-list.hbs'
         }
     },
     CURRENCY: {

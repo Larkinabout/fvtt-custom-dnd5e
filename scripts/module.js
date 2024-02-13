@@ -39,6 +39,8 @@ Hooks.on('init', async () => {
 Hooks.on('ready', async () => {
     Handlebars.registerHelper({
         boolfalse: function (value) { return value === false },
+        eq: function (a, b) { return a === b },
+        randomId: function () { return randomID() },
         true: function (value) { return !!value },
         undef: function (value) { return typeof value === 'undefined' || value === null },
         dotNotateChild: function (parent, child) {
@@ -46,6 +48,14 @@ Hooks.on('ready', async () => {
                 return `${parent}.children.${child}`
             }
             return `${child}`
+        },
+        showActionValue: function (value) {
+            const allowed = ['increase', 'decrease']
+            return allowed.includes(value)
+        },
+        showTriggerValue: function (value) {
+            const allowed = ['counterValue']
+            return allowed.includes(value)
         }
     })
 

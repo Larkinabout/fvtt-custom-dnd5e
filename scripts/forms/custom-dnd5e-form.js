@@ -40,8 +40,8 @@ export class CustomDnd5eForm extends FormApplication {
             item.addEventListener('dragend', this._onDragEnd.bind(this))
 
             const checkbox = item.querySelector("input[type='checkbox']")
-            checkbox.addEventListener('change', this._onChangeInput.bind(this))
-            if (checkbox.checked) this._onToggleList(checkbox)
+            checkbox?.addEventListener('change', this._onChangeInput.bind(this))
+            if (checkbox?.checked) this._onToggleList(checkbox)
         })
     }
 

@@ -1,5 +1,5 @@
 import { CONSTANTS, MODULE, SHEET_TYPE } from './constants.js'
-import { registerMenu, registerSetting } from './utils.js'
+import { getSetting, registerMenu, registerSetting } from './utils.js'
 import { CountersForm } from './forms/counters-form.js'
 
 /**
@@ -39,7 +39,9 @@ export function registerSettings () {
 
     loadTemplates([
         CONSTANTS.COUNTERS.TEMPLATE.FORM,
-        CONSTANTS.COUNTERS.TEMPLATE.LIST
+        CONSTANTS.COUNTERS.TEMPLATE.LIST,
+        CONSTANTS.COUNTERS.TEMPLATE.ADVANCED_OPTIONS_FORM,
+        CONSTANTS.COUNTERS.TEMPLATE.ADVANCED_OPTIONS_LIST
     ])
 }
 
@@ -156,6 +158,8 @@ function createCheckbox (actor, key, counter) {
  * @returns {object}       The LI
  */
 function createFraction (actor, key, counter) {
+    const settingMax = getMax(actor, key)
+
     const li = document.createElement('li')
     li.classList.add('custom-dnd5e-counters-counter', 'flexrow', key)
 
@@ -177,12 +181,13 @@ function createFraction (actor, key, counter) {
     div.appendChild(divGroup)
 
     const inputValue = document.createElement('input')
-    inputValue.setAttribute('type', 'text')
+    inputValue.setAttribute('type', 'number')
     inputValue.setAttribute('name', `flags.${MODULE.ID}.${key}.value`)
-    inputValue.setAttribute('value', actor.getFlag(MODULE.ID, `${key}.value`) || 0)
+    inputValue.setAttribute('value', actor.getFlag(MODULE.ID, `${key}.value`))
     inputValue.setAttribute('placeholder', '0')
     inputValue.setAttribute('data-dtype', 'Number')
     inputValue.addEventListener('click', event => selectInputContent(event))
+    inputValue.addEventListener('keyup', () => checkValue(inputValue, actor, key))
     divGroup.appendChild(inputValue)
 
     const span = document.createElement('span')
@@ -191,11 +196,15 @@ function createFraction (actor, key, counter) {
     divGroup.appendChild(span)
 
     const inputMax = document.createElement('input')
-    inputMax.setAttribute('type', 'text')
+    inputMax.setAttribute('type', 'number')
     inputMax.setAttribute('name', `flags.${MODULE.ID}.${key}.max`)
-    inputMax.setAttribute('value', actor.getFlag(MODULE.ID, `${key}.max`) || 0)
+    inputMax.setAttribute('value', settingMax || actor.getFlag(MODULE.ID, `${key}.max`))
     inputMax.setAttribute('placeholder', '0')
     inputMax.setAttribute('data-dtype', 'Number')
+    if (settingMax) {
+        inputMax.classList.add('disabled')
+        inputMax.setAttribute('disabled', 'true')
+    }
     inputMax.addEventListener('click', event => selectInputContent(event))
     divGroup.appendChild(inputMax)
 
@@ -225,12 +234,13 @@ function createNumber (actor, key, counter) {
     div.classList.add('custom-dnd5e-counters-counter-value', 'custom-dnd5e-counters-number')
     li.appendChild(div)
     const input = document.createElement('input')
-    input.setAttribute('type', 'text')
+    input.setAttribute('type', 'number')
     input.setAttribute('name', `flags.${MODULE.ID}.${key}`)
     input.setAttribute('value', actor.getFlag(MODULE.ID, key) || 0)
     input.setAttribute('placeholder', '0')
     input.setAttribute('data-dtype', 'Number')
     input.addEventListener('click', event => selectInputContent(event))
+    input.addEventListener('keyup', () => checkValue(input, actor, key), true)
     div.appendChild(input)
 
     return li
@@ -265,12 +275,13 @@ function createSuccessFailure (actor, key, counter) {
     aSuccess.appendChild(iSuccess)
 
     const inputSuccess = document.createElement('input')
-    inputSuccess.setAttribute('type', 'text')
+    inputSuccess.setAttribute('type', 'number')
     inputSuccess.setAttribute('name', `flags.${MODULE.ID}.${key}.success`)
     inputSuccess.setAttribute('value', actor.getFlag(MODULE.ID, `${key}.success`) || 0)
     inputSuccess.setAttribute('placeholder', '0')
     inputSuccess.setAttribute('data-dtype', 'Number')
     inputSuccess.addEventListener('click', event => selectInputContent(event))
+    inputSuccess.addEventListener('keyup', () => checkValue(inputSuccess, actor, key), true)
     div.appendChild(inputSuccess)
 
     const aFailure = document.createElement('a')
@@ -283,12 +294,13 @@ function createSuccessFailure (actor, key, counter) {
     aFailure.appendChild(iFailure)
 
     const inputFailure = document.createElement('input')
-    inputFailure.setAttribute('type', 'text')
+    inputFailure.setAttribute('type', 'number')
     inputFailure.setAttribute('name', `flags.${MODULE.ID}.${key}.failure`)
     inputFailure.setAttribute('value', actor.getFlag(MODULE.ID, `${key}.failure`) || 0)
     inputFailure.setAttribute('placeholder', '0')
     inputFailure.setAttribute('data-dtype', 'Number')
     inputFailure.addEventListener('click', event => selectInputContent(event))
+    inputFailure.addEventListener('keyup', () => checkValue(inputFailure, actor, key), true)
     div.appendChild(inputFailure)
 
     return li
@@ -304,6 +316,19 @@ function selectInputContent (event) {
     input.focus()
 }
 
+/**
+ * Check input value against max
+ * @param {object} input The input
+ * @param {object} actor The actor
+ * @param {object} key   The counter key
+ */
+function checkValue (input, actor, key) {
+    const max = getMax(actor, key) || actor.getFlag(MODULE.ID, `${key}.max`)
+    if (max && input.value > max) {
+        input.value = max
+    }
+}
+
 function decreaseFraction (actor, key) {
     const value = actor.getFlag(MODULE.ID, `${key}.value`)
     if (value) {
@@ -313,8 +338,9 @@ function decreaseFraction (actor, key) {
 
 function increaseFraction (actor, key) {
     const value = actor.getFlag(MODULE.ID, `${key}.value`) || 0
-    const max = actor.getFlag(MODULE.ID, `${key}.max`) || 0
-    if (value < max) {
+    const max = getMax(actor, key) || actor.getFlag(MODULE.ID, `${key}.max`)
+
+    if (!max || value < max) {
         actor.setFlag(MODULE.ID, `${key}.value`, value + 1)
     }
 }
@@ -328,7 +354,11 @@ function decreaseNumber (actor, key) {
 
 function increaseNumber (actor, key) {
     const value = actor.getFlag(MODULE.ID, key) || 0
-    actor.setFlag(MODULE.ID, key, value + 1)
+    const max = getMax(actor, key)
+
+    if (!max || value < max) {
+        actor.setFlag(MODULE.ID, key, value + 1)
+    }
 }
 
 function decreaseSuccess (actor, key) {
@@ -340,7 +370,11 @@ function decreaseSuccess (actor, key) {
 
 function increaseSuccess (actor, key) {
     const value = actor.getFlag(MODULE.ID, `${key}.success`) || 0
-    actor.setFlag(MODULE.ID, `${key}.success`, value + 1)
+    const max = getMax(actor, key)
+
+    if (!max || value < max) {
+        actor.setFlag(MODULE.ID, `${key}.success`, value + 1)
+    }
 }
 
 function decreaseFailure (actor, key) {
@@ -352,7 +386,25 @@ function decreaseFailure (actor, key) {
 
 function increaseFailure (actor, key) {
     const value = actor.getFlag(MODULE.ID, `${key}.failure`) || 0
-    actor.setFlag(MODULE.ID, `${key}.failure`, value + 1)
+    const max = getMax(actor, key)
+
+    if (!max || value < max) {
+        actor.setFlag(MODULE.ID, `${key}.failure`, value + 1)
+    }
+}
+
+function getCounterSetting (actor, key) {
+    const settingKey = (actor.type === 'character')
+        ? CONSTANTS.COUNTERS.SETTING.CHARACTER_COUNTERS.KEY
+        : CONSTANTS.COUNTERS.SETTING.NPC_COUNTERS.KEY
+    return getSetting(settingKey)[key]
+}
+
+function getMax (actor, key) {
+    const settingKey = (actor.type === 'character')
+        ? CONSTANTS.COUNTERS.SETTING.CHARACTER_COUNTERS.KEY
+        : CONSTANTS.COUNTERS.SETTING.NPC_COUNTERS.KEY
+    return getSetting(settingKey)[key]?.max
 }
 
 /**
