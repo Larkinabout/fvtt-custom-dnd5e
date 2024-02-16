@@ -8,21 +8,26 @@ A Foundry VTT module to customise the D&D 5e system.
 ![Custom D&D 5e Custom Banner](./.github/readme/custom-dnd5e-custom-banner.png)
 
 # Features
-- Add four types of counter to the character sheets: checkbox, fraction, number and success/failure.
-- Configure abilities, currencies, damage types, encumbrance, languages, senses, skills and max level.
+## Counters
+**Counter Types:** Add four types of counter to the character sheets: checkbox, fraction, number and success/failure.
+**Triggers:** Set triggers to automatically change a counter value when an actor hits 0 HP, half HP, or when combat ends if they hit 0 HP any time during combat. Set a trigger to automatically make an actor dead when a counter hits a defined value.
+
+![Custom D&D 5e Counters](./.github/readme/custom-dnd5e-counters.gif)
+![Custom D&D 5e Counter Triggers](./.github/readme/custom-dnd5e-counter-triggers.png)
+
+
+## Configurations
+- Configure abilities, actor sizes, currencies, damage types, encumbrance, item properties, languages, senses, skills and max level.
 - Configure the character sheet:
   - Auto-fade or auto-minimise the sheet when it's not hovered over.
+  - Scale the new character sheet up or down.
   - Change the banner at the top of the sheet.
-  - Hide death saves.
-  - Hide encumbrance.
-  - Hide exhaustion.
-  - Hide inspiration.
-  - Hide the Manage Currency button.
+  - Hide death saves, encumbrance, exhaustion, inspiration, the Manage Currency button, Legendary Actions, Legendary Resistances and Use Lair Action.
 
 # Wishlist
 - Add common house rules.
 - Add more versatile encumbrance options.
-- Support all configurations.
+- Support all dnd5e configurations.
 
 ## Required Modules
 ### [libWrapper](https://foundryvtt.com/packages/lib-wrapper)
