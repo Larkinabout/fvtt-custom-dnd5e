@@ -5,41 +5,35 @@
             <input id="visible" name="{{key}}.visible" type="checkbox" data-tooltip="{{localize "CUSTOM_DND5E.form.checkbox.visible.tooltip"}}"{{#unless (boolfalse visible)}} checked{{/unless}}>
             <div class="custom-dnd5e-col-group flexcol">
                 <input id="key" name="{{key}}.key" type="hidden" value="{{key}}">
-                <input id="fullKey" name="{{key}}.fullKey" type="hidden" value="{{key}}">
                 <input id="system" name="{{key}}.system" type="hidden" value="{{#if (boolfalse system)}}false{{else}}true{{/if}}">
                 <div class="form-group">
-                    <label class="flex1" style="min-width:80px; max-width:100px;">{{localize "CUSTOM_DND5E.label"}}</label>
+                    <label class="flex1" style="min-width:80px; max-width:120px;">{{localize "CUSTOM_DND5E.label"}}</label>
                     <div class="form-fields">
                         <input id="label" name="{{key}}.label" type="text" value="{{localize label}}">
                     </div>
                 </div>
                 <div class="form-group">
-                    <label class="flex1" style="min-width:80px; max-width:100px;">{{localize "CUSTOM_DND5E.abbreviation"}}</label>
+                    <label class="flex1" style="min-width:80px; max-width:120px;">{{localize "CUSTOM_DND5E.abbreviation"}}</label>
                     <div class="form-fields">
                         <input id="abbreviation" name="{{key}}.abbreviation" type="text" value="{{localize abbreviation}}">
                     </div>
                 </div>
                 <div class="form-group">
-                    <label class="flex1" style="min-width:80px; max-width:100px;">Include for ASI</label>
+                    <label class="flex1" style="min-width:80px; max-width:120px;">{{localize "CUSTOM_DND5E.tokenSize"}}</label>
                     <div class="form-fields">
-                        <input id="improvement" name="{{key}}.improvement" type="checkbox" {{#unless (boolfalse improvement)}}checked{{/unless}}>
+                        <input id="token" name="{{key}}.token" type="number" step="0.05" value="{{token}}">
                     </div>
                 </div>
                 <div class="form-group">
-                    <label class="flex1" style="min-width:80px; max-width:100px;">{{localize "CUSTOM_DND5E.type"}}</label>
+                    <label class="flex1" style="min-width:80px; max-width:120px;">{{localize "CUSTOM_DND5E.dynamicTokenScale"}}</label>
                     <div class="form-fields">
-                        <select{{#unless (boolfalse system)}} disabled{{/unless}} id="type" name="{{key}}.type">
-                            {{#select type}}
-                            <option value="mental">{{localize "CUSTOM_DND5E.mental"}}</option>
-                            <option value="fraction">{{localize "CUSTOM_DND5E.physical"}}</option>
-                            {{/select}}
-                        </select>
+                        <input id="dynamic-token-scale" name="{{key}}.dynamicTokenScale" type="number" step="0.05" value="{{dynamicTokenScale}}">
                     </div>
                 </div>
                 <div class="form-group">
-                    <label class="flex1" style="min-width:80px; max-width:100px;">{{localize "CUSTOM_DND5E.reference"}}</label>
+                    <label class="flex1" style="min-width:80px; max-width:120px;">{{localize "CUSTOM_DND5E.capacityMultiplier"}}</label>
                     <div class="form-fields">
-                        <input id="reference" name="{{key}}.reference" type="text" value="{{reference}}">
+                        <input id="capacity-multiplier" name="{{key}}.capacityMultiplier" type="number" step="0.05" value="{{capacityMultiplier}}">
                     </div>
                 </div>
             </div>

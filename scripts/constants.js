@@ -27,6 +27,23 @@ export const CONSTANTS = {
             LIST: 'modules/custom-dnd5e/templates/abilities-list.hbs'
         }
     },
+    ACTOR_SIZES: {
+        ID: 'actor-sizes',
+        MENU: {
+            KEY: 'actor-sizes-menu',
+            HINT: 'CUSTOM_DND5E.menu.actorSizes.hint',
+            ICON: 'fas fa-pen-to-square',
+            LABEL: 'CUSTOM_DND5E.menu.actorSizes.label',
+            NAME: 'CUSTOM_DND5E.menu.actorSizes.name'
+        },
+        SETTING: {
+            KEY: 'actor-sizes'
+        },
+        TEMPLATE: {
+            FORM: 'modules/custom-dnd5e/templates/actor-sizes-form.hbs',
+            LIST: 'modules/custom-dnd5e/templates/actor-sizes-list.hbs'
+        }
+    },
     ARMOR_TYPES: {
         ID: 'armor-types',
         MENU: {
@@ -112,9 +129,21 @@ export const CONSTANTS = {
         }
     },
     DEBUG: {
+        MENU: {
+            KEY: 'debug-menu',
+            HINT: 'CUSTOM_DND5E.menu.debug.hint',
+            ICON: 'fas fa-bug',
+            LABEL: 'CUSTOM_DND5E.menu.debug.label',
+            NAME: 'CUSTOM_DND5E.menu.debug.name'
+        },
+        FORM: {
+            TITLE: 'CUSTOM_DND5E.form.debug.title'
+        },
         SETTING: {
-            KEY: 'debug',
-            NAME: 'CUSTOM_DND5E.setting.debug.name'
+            KEY: 'debug'
+        },
+        TEMPLATE: {
+            FORM: 'modules/custom-dnd5e/templates/debug-form.hbs'
         }
     },
     ENCUMBRANCE: {
@@ -131,6 +160,23 @@ export const CONSTANTS = {
         },
         TEMPLATE: {
             FORM: 'modules/custom-dnd5e/templates/encumbrance-form.hbs'
+        }
+    },
+    ITEM_PROPERTIES: {
+        ID: 'item-properties',
+        MENU: {
+            KEY: 'item-properties-menu',
+            HINT: 'CUSTOM_DND5E.menu.itemProperties.hint',
+            ICON: 'fas fa-pen-to-square',
+            LABEL: 'CUSTOM_DND5E.menu.itemProperties.label',
+            NAME: 'CUSTOM_DND5E.menu.itemProperties.name'
+        },
+        SETTING: {
+            KEY: 'item-properties'
+        },
+        TEMPLATE: {
+            FORM: 'modules/custom-dnd5e/templates/item-properties-form.hbs',
+            LIST: 'modules/custom-dnd5e/templates/item-properties-list.hbs'
         }
     },
     LANGUAGES: {

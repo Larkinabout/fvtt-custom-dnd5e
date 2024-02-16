@@ -4,21 +4,29 @@
     "CUSTOM_DND5E.action": "Action",
     "CUSTOM_DND5E.actionValue": "Action Value",
     "CUSTOM_DND5E.amount": "Amount",
+    "CUSTOM_DND5E.capacityMultiplier": "Capacity Multiplier",
     "CUSTOM_DND5E.characters": "Characters",
     "CUSTOM_DND5E.check": "Check",
     "CUSTOM_DND5E.checkbox": "Checkbox",
     "CUSTOM_DND5E.clientSettings.label": "Client Settings",
     "CUSTOM_DND5E.clientSettings.note": "These settings only affect the current user and are configurable by each user.",
+    "CUSTOM_DND5E.consumable": "Consumable",
+    "CUSTOM_DND5E.container": "Container",
     "CUSTOM_DND5E.conversion": "Conversion",
     "CUSTOM_DND5E.counters": "Counters",
     "CUSTOM_DND5E.currencyPerWeight": "Currency per Weight",
     "CUSTOM_DND5E.dead": "Dead",
     "CUSTOM_DND5E.decrease": "Decrease",
+    "CUSTOM_DND5E.dynamicTokenScale": "Dynamic Token Scale",
+    "CUSTOM_DND5E.equipment": "Equipment",
     "CUSTOM_DND5E.exhaustion": "Exhaustion",
+    "CUSTOM_DND5E.feat": "Feat",
     "CUSTOM_DND5E.fraction": "Fraction",
     "CUSTOM_DND5E.icon": "Icon",
     "CUSTOM_DND5E.increase": "Increase",
+    "CUSTOM_DND5E.itemTypes": "Item Types",
     "CUSTOM_DND5E.label": "Label",
+    "CUSTOM_DND5E.loot": "Loot",
     "CUSTOM_DND5E.maximum": "Maximum",
     "CUSTOM_DND5E.mental": "Mental",
     "CUSTOM_DND5E.npcs": "NPCs",
@@ -26,8 +34,14 @@
     "CUSTOM_DND5E.physical": "Physical",
     "CUSTOM_DND5E.reference": "Reference",
     "CUSTOM_DND5E.speedReduction": "Speed Reduction",
+    "CUSTOM_DND5E.spell": "Spell",
     "CUSTOM_DND5E.successFailure": "Success/Failure",
+    "CUSTOM_DND5E.tag": "Tag",
     "CUSTOM_DND5E.thresholds": "Thresholds",
+    "CUSTOM_DND5E.token": "Token",
+    "CUSTOM_DND5E.tokenScale": "Token Scale",
+    "CUSTOM_DND5E.tokenSize": "Token Size",
+    "CUSTOM_DND5E.tool": "Tool",
     "CUSTOM_DND5E.trigger": "Trigger",
     "CUSTOM_DND5E.triggers": "Triggers",
     "CUSTOM_DND5E.triggerValue": "Trigger Value",
@@ -35,6 +49,7 @@
     "CUSTOM_DND5E.uncheck": "Uncheck",
     "CUSTOM_DND5E.value": "Value",
     "CUSTOM_DND5E.vehicleWeightMultiplier": "Vehicle Weight Multiplier",
+    "CUSTOM_DND5E.weapon": "Weapon",
     "CUSTOM_DND5E.worldSettings.label": "World Settings",
     "CUSTOM_DND5E.worldSettings.note": "These settings affect all users and are only configurable by the GM.",
 
@@ -50,6 +65,8 @@
 
     "CUSTOM_DND5E.form.button.delete.label": "Delete",
     "CUSTOM_DND5E.form.button.delete.tooltip": "Delete",
+    "CUSTOM_DND5E.form.button.export.label": "Export Data",
+    "CUSTOM_DND5E.form.button.export.tooltip": "Export Data",
     "CUSTOM_DND5E.form.button.new.label": "Create New",
     "CUSTOM_DND5E.form.button.new.tooltip": "Create New",
     "CUSTOM_DND5E.form.button.reset.label": "Reset to Default",
@@ -60,27 +77,40 @@
 
     "CUSTOM_DND5E.form.abilities.title": "Configure Abilities",
 
+    "CUSTOM_DND5E.form.actorSizes.title": "Configure Senses",
+
     "CUSTOM_DND5E.form.armorTypes.title": "Configure Armor Types",
 
-    "CUSTOM_DND5E.form.counters.advancedOptions.tooltip": "Advanced Options",
+    "CUSTOM_DND5E.form.counters.triggers.tooltip": "Advanced Options",
     "CUSTOM_DND5E.form.counters.copyProperty.message": "'Property \"{property}\" copied to clipboard.'",
     "CUSTOM_DND5E.form.counters.copyProperty.tooltip": "Copy Property to Clipboard",
     "CUSTOM_DND5E.form.counters.max.label": "Maximum Value",
     "CUSTOM_DND5E.form.counters.max.note.1": "Restrict the maximum value for the Fraction, Number and Success/Failure counters and set the maximum value of the Fraction counter",
     "CUSTOM_DND5E.form.counters.title": "Configure Counters",
-    "CUSTOM_DND5E.form.counters.advancedOptions.title": "Advanced Options",
-    "CUSTOM_DND5E.form.counters.advancedOptions.trigger.choices.counterValue": "At counter value",
-    "CUSTOM_DND5E.form.counters.advancedOptions.trigger.choices.0hp": "At 0 HP",
-    "CUSTOM_DND5E.form.counters.advancedOptions.trigger.choices.0hpCombatEnd": "At combat end, if reached 0 HP at any time during combat",
-    "CUSTOM_DND5E.form.counters.advancedOptions.trigger.choices.halfHp": "At half HP or lower",
-    "CUSTOM_DND5E.form.counters.advancedOptions.trigger.choices.roll1": "Roll 1 on a d20",
-    "CUSTOM_DND5E.form.counters.advancedOptions.trigger.choices.roll20": "Roll 20 on a d20",
+    "CUSTOM_DND5E.form.counters.triggers.title": "Advanced Options",
+    "CUSTOM_DND5E.form.counters.triggers.trigger.choices.counterValue": "Counter value",
+    "CUSTOM_DND5E.form.counters.triggers.trigger.choices.zeroHp": "0 HP",
+    "CUSTOM_DND5E.form.counters.triggers.trigger.choices.zeroHpCombatEnd": "Combat end, if reached 0 HP during combat",
+    "CUSTOM_DND5E.form.counters.triggers.trigger.choices.halfHp": "Half HP or lower",
+    "CUSTOM_DND5E.form.counters.triggers.trigger.choices.roll1": "Roll 1 on a d20",
+    "CUSTOM_DND5E.form.counters.triggers.trigger.choices.roll20": "Roll 20 on a d20",
 
     "CUSTOM_DND5E.form.currency.title": "Configure Currency",
 
     "CUSTOM_DND5E.form.damageTypes.title": "Configure Damage Types",
 
+    "CUSTOM_DND5E.form.debug.button.exportData.label": "Export Data",
+    "CUSTOM_DND5E.form.debug.button.exportData.tooltip": "Export Data",
+    "CUSTOM_DND5E.form.debug.consoleMessages.label": "Enable Console Messages",
+    "CUSTOM_DND5E.form.debug.consoleMessages.note.1": "Enable debugging messages in the browser's console",
+    "CUSTOM_DND5E.form.debug.consoleMessages.note.2": "Make sure to disable during normal play",
+    "CUSTOM_DND5E.form.debug.exportData.label": "Export Data",
+    "CUSTOM_DND5E.form.debug.exportData.note": "Export the module's settings and configuration to file",
+    "CUSTOM_DND5E.form.debug.title": "Debug Settings",
+
     "CUSTOM_DND5E.form.encumbrance.title": "Configure Encumbrance",
+
+    "CUSTOM_DND5E.form.itemProperties.title": "Configure Item Properties",
 
     "CUSTOM_DND5E.form.languages.title": "Configure Languages",
 
@@ -122,6 +152,10 @@
     "CUSTOM_DND5E.menu.abilities.label": "Configure Abilities",
     "CUSTOM_DND5E.menu.abilities.name": "Configure Abilities",
 
+    "CUSTOM_DND5E.menu.actorSizes.hint": "Configure Actor Sizes",
+    "CUSTOM_DND5E.menu.actorSizes.label": "Configure Actor Sizes",
+    "CUSTOM_DND5E.menu.actorSizes.name": "Configure Actor Sizes",
+
     "CUSTOM_DND5E.menu.armorTypes.hint": "Configure Armor Types",
     "CUSTOM_DND5E.menu.armorTypes.label": "Configure Armor Types",
     "CUSTOM_DND5E.menu.armorTypes.name": "Configure Armor Types",
@@ -138,9 +172,17 @@
     "CUSTOM_DND5E.menu.damageTypes.label": "Configure Damage Types",
     "CUSTOM_DND5E.menu.damageTypes.name": "Configure Damage Types",
 
+    "CUSTOM_DND5E.menu.debug.hint": "Debug Settings",
+    "CUSTOM_DND5E.menu.debug.label": "Debug Settings",
+    "CUSTOM_DND5E.menu.debug.name": "Debug Settings",
+
     "CUSTOM_DND5E.menu.encumbrance.hint": "Configure Encumbrance",
     "CUSTOM_DND5E.menu.encumbrance.label": "Configure Encumbrance",
     "CUSTOM_DND5E.menu.encumbrance.name": "Configure Encumbrance",
+
+    "CUSTOM_DND5E.menu.itemProperties.hint": "Configure Item Properties",
+    "CUSTOM_DND5E.menu.itemProperties.label": "Configure Item Properties",
+    "CUSTOM_DND5E.menu.itemProperties.name": "Configure Item Properties",
 
     "CUSTOM_DND5E.menu.languages.hint": "Configure Languages",
     "CUSTOM_DND5E.menu.languages.label": "Configure Languages",
@@ -158,6 +200,5 @@
     "CUSTOM_DND5E.menu.skills.label": "Configure Skills",
     "CUSTOM_DND5E.menu.skills.name": "Configure Skills",
 
-    "CUSTOM_DND5E.setting.debug.name": "Enable Debugging",
     "CUSTOM_DND5E.setting.maxLevel.name": "Max Level"
 }

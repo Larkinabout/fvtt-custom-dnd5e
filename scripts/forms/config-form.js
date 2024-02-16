@@ -3,6 +3,7 @@ import { deleteProperty, getSetting, setSetting } from '../utils.js'
 import { CustomDnd5eForm } from './custom-dnd5e-form.js'
 import { setConfig as setAbilities } from '../abilities.js'
 import { setConfig as setArmorTypes } from '../armor-types.js'
+import { setConfig as setActorSizes } from '../actor-sizes.js'
 import { setConfig as setCurrency } from '../currency.js'
 import { setConfig as setDamageTypes } from '../damage-types.js'
 import { setConfig as setLanguages } from '../languages.js'
@@ -77,11 +78,12 @@ class ConfigForm extends CustomDnd5eForm {
 
     async _createItem () {
         const list = this.element[0].querySelector(listClassSelector)
+        const scrollable = list.closest('.scrollable')
 
         const key = randomID()
 
         const item = document.createElement('li')
-        item.classList.add(itemClass)
+        item.classList.add(itemClass, 'flexrow')
         item.setAttribute('draggable', 'true')
         item.setAttribute('data-key', key)
 
@@ -91,11 +93,12 @@ class ConfigForm extends CustomDnd5eForm {
         item.addEventListener('dragleave', this._onDragLeave)
 
         list.appendChild(item)
+
+        scrollable && (scrollable.scrollTop = scrollable.scrollHeight)
     }
 
     _getInnerHtml (data) {
-        return `<div class="custom-dnd5e-item-group flexrow">
-        <i class="flex0 fas fa-grip-lines"></i>
+        return `<i class="flex0 fas fa-grip-lines"></i>
         <input id="visible" name="${data.key}.visible" type="checkbox" checked>
         <div class="fields flexrow">
             <input id="parentKey" name="${data.key}.parentKey" type="hidden" value="">
@@ -106,8 +109,7 @@ class ConfigForm extends CustomDnd5eForm {
         <button type="button" data-tooltip="Delete" data-action="delete" class="flex0 delete-button">
         <i class="fas fa-xmark"></i>
         </button>
-        <input id="delete" name="${data.key}.delete" type="hidden" value="false"
-        </div>`
+        <input id="delete" name="${data.key}.delete" type="hidden" value="false"`
     }
 
     async _updateObject (event, formData) {
@@ -167,10 +169,9 @@ export class AbilitiesForm extends ConfigForm {
     }
 
     _getInnerHtml (data) {
-        return `<div class="custom-dnd5e-item-group flexrow">
-            <i class="flex0 fas fa-grip-lines"></i>
+        return `<i class="flex0 fas fa-grip-lines"></i>
             <input id="visible" name="${data.key}.visible" type="checkbox" checked>
-            <div class="flexcol">
+            <div class="custom-dnd5e-col-group flexcol">
                 <input id="key" name="${data.key}.key" type="hidden" value="${data.key}">
                 <input id="fullKey" name="${data.key}.fullKey" type="hidden" value="${data.key}">
                 <input id="system" name="${data.key}.system" type="hidden" value="false">
@@ -208,13 +209,74 @@ export class AbilitiesForm extends ConfigForm {
                     </div>
                 </div>
             </div>
-            <button type="button" data-tooltip="{{localize "CUSTOM_DND5E.form.button.delete.tooltip"}}" data-action="delete" class="flex0 delete-button">
+            <button type="button" data-tooltip="${game.i18n.localize('CUSTOM_DND5E.form.button.delete.tooltip')}" data-action="delete" class="flex0 delete-button">
                 <i class="fas fa-xmark"></i>
             </button>
-            <input id="delete" name="${data.key}.delete" type="hidden" value="false">
-        </div>`
+            <input id="delete" name="${data.key}.delete" type="hidden" value="false">`
     }
 }
+
+export class ActorSizesForm extends ConfigForm {
+    constructor () {
+        super()
+        this.requiresReload = false
+        this.settingKey = CONSTANTS.ACTOR_SIZES.SETTING.KEY
+        this.setFunction = setActorSizes
+        this.type = 'actorSizes'
+    }
+
+    static get defaultOptions () {
+        return mergeObject(super.defaultOptions, {
+            id: `${MODULE.ID}-actor-sizes-form`,
+            template: CONSTANTS.ACTOR_SIZES.TEMPLATE.FORM,
+            title: game.i18n.localize('CUSTOM_DND5E.form.actorSizes.title')
+        })
+    }
+
+    _getInnerHtml (data) {
+        return `<i class="custom-dnd5e-drag flex0 fas fa-grip-lines" draggable="true"></i>
+                <input id="visible" name="${data.key}.visible" type="checkbox" data-tooltip="${game.i18n.localize('CUSTOM_DND5E.form.checkbox.visible.tooltip')}"{{#unless (boolfalse visible)}} checked{{/unless}}>
+                <div class="custom-dnd5e-col-group flexcol">
+                    <input id="key" name="${data.key}.key" type="hidden" value="${data.key}">
+                    <input id="system" name="${data.key}.system" type="hidden" value="false">
+                    <div class="form-group">
+                        <label class="flex1" style="min-width:80px; max-width:120px;">${game.i18n.localize('CUSTOM_DND5E.label')}</label>
+                        <div class="form-fields">
+                            <input id="label" name="${data.key}.label" type="text">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="flex1" style="min-width:80px; max-width:120px;">${game.i18n.localize('CUSTOM_DND5E.abbreviation')}</label>
+                        <div class="form-fields">
+                            <input id="abbreviation" name="${data.key}.abbreviation" type="text">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="flex1" style="min-width:80px; max-width:120px;">${game.i18n.localize('CUSTOM_DND5E.tokenSize')}</label>
+                        <div class="form-fields">
+                            <input id="token" name="${data.key}.token" type="number" step="0.05">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="flex1" style="min-width:80px; max-width:120px;">${game.i18n.localize('CUSTOM_DND5E.dynamicTokenScale')}</label>
+                        <div class="form-fields">
+                            <input id="dynamic-token-scale" name="${data.key}.dynamicTokenScale" type="number" step="0.05">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="flex1" style="min-width:80px; max-width:120px;">${game.i18n.localize('CUSTOM_DND5E.capacityMultiplier')}</label>
+                        <div class="form-fields">
+                            <input id="capacity-multiplier" name="${data.key}.capacityMultiplier" type="number" step="0.05">
+                        </div>
+                    </div>
+                </div>
+                <button type="button" data-tooltip="${game.i18n.localize('CUSTOM_DND5E.form.button.delete.tooltip')}" data-action="delete" class="flex0 delete-button">
+                    <i class="fas fa-xmark"></i>
+                </button>
+                <input id="delete" name="${data.key}.delete" type="hidden" value="false">`
+    }
+}
+
 
 export class ArmorTypesForm extends ConfigForm {
     constructor () {
@@ -251,8 +313,7 @@ export class CurrencyForm extends ConfigForm {
     }
 
     _getInnerHtml (data) {
-        return `<div class="custom-dnd5e-item-group flexrow">
-        <i class="flex0 fas fa-grip-lines"></i>
+        return `<i class="flex0 fas fa-grip-lines"></i>
         <input id="visible" name="${data.key}.visible" type="checkbox" checked>
         <div class="fields flexrow">
             <input id="key" name="${data.key}.key" type="hidden" value="${data.key}">
@@ -273,8 +334,7 @@ export class CurrencyForm extends ConfigForm {
         <button type="button" data-tooltip="Delete" data-action="delete" class="flex0 delete-button">
         <i class="fas fa-xmark"></i>
         </button>
-        <input id="delete" name="${data.key}.delete" type="hidden" value="false"
-        </div>`
+        <input id="delete" name="${data.key}.delete" type="hidden" value="false"`
     }
 }
 
@@ -296,8 +356,7 @@ export class DamageTypesForm extends ConfigForm {
     }
 
     _getInnerHtml (data) {
-        return `<div class="custom-dnd5e-item-group flexrow">
-        <i class="flex0 fas fa-grip-lines"></i>
+        return `<i class="flex0 fas fa-grip-lines"></i>
         <input id="visible" name="${data.key}.visible" type="checkbox" checked>
         <div class="fields flexrow">
             <input id="parentKey" name="${data.key}.parentKey" type="hidden" value="">
@@ -319,8 +378,7 @@ export class DamageTypesForm extends ConfigForm {
         <button type="button" data-tooltip="Delete" data-action="delete" class="flex0 delete-button">
         <i class="fas fa-xmark"></i>
         </button>
-        <input id="delete" name="${data.key}.delete" type="hidden" value="false"
-        </div>`
+        <input id="delete" name="${data.key}.delete" type="hidden" value="false"`
     }
 }
 
@@ -376,10 +434,9 @@ export class SkillsForm extends ConfigForm {
     }
 
     _getInnerHtml (data) {
-        return `<div class="custom-dnd5e-item-group flexrow">
-            <i class="flex0 fas fa-grip-lines"></i>
+        return `<i class="flex0 fas fa-grip-lines"></i>
             <input id="visible" name="${data.key}.visible" type="checkbox" checked>
-            <div class="flexcol">
+            <div class="custom-dnd5e-col-group flexcol">
                 <input id="key" name="${data.key}.key" type="hidden" value="${data.key}">
                 <input id="fullKey" name="${data.key}.fullKey" type="hidden" value="${data.key}">
                 <input id="system" name="${data.key}.system" type="hidden" value="false">
@@ -408,10 +465,9 @@ export class SkillsForm extends ConfigForm {
                     </div>
                 </div>
             </div>
-            <button type="button" data-tooltip="{{localize "CUSTOM_DND5E.form.button.delete.tooltip"}}" data-action="delete" class="flex0 delete-button">
+            <button type="button" data-tooltip="${game.i18n.localize('CUSTOM_DND5E.form.button.delete.tooltip')}" data-action="delete" class="flex0 delete-button">
                 <i class="fas fa-xmark"></i>
             </button>
-            <input id="delete" name="${data.key}.delete" type="hidden" value="false">
-        </div>`
+            <input id="delete" name="${data.key}.delete" type="hidden" value="false">`
     }
 }

@@ -214,10 +214,37 @@ export function appendSelect (parentElement, selectId, selectName) {
     return select
 }
 
-export function appendSelectOption (selectElement, optionValue, optionTextContent) {
+export function appendSelectOption (selectElement, optionValue, optionTextContent, hidden = false) {
     const option = document.createElement('option')
+    option.setAttribute('id', optionValue)
     option.setAttribute('value', optionValue)
+    if (hidden) option.classList.add('hidden')
     option.textContent = optionTextContent
     selectElement.appendChild(option)
     return option
+}
+
+/**
+ * Make the actor dead
+ * Set HP to 0
+ * Set Death Saves failures to 3
+ * Apply 'Dead' status effect
+ * @param {object} actor The actor
+ */
+export async function makeDead (actor) {
+    const data = { 'system.attributes.hp.value': 0 }
+    if (actor.type === 'character') {
+        data['system.attributes.death.failure'] = 3
+    }
+    actor.update(data)
+    const existing = actor.effects.get('dnd5edead0000000')
+
+    if (existing) { return }
+
+    const effectData = foundry.utils.deepClone(CONFIG.statusEffects.find(ef => ef.id === 'dead'))
+    effectData.statuses = ['dead']
+    const cls = getDocumentClass('ActiveEffect')
+    const effect = await cls.fromStatusEffect(effectData)
+    effect.updateSource({ 'flags.core.overlay': true })
+    await cls.create(effect, { parent: actor, keepId: true })
 }

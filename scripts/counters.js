@@ -1,5 +1,5 @@
 import { CONSTANTS, MODULE, SHEET_TYPE } from './constants.js'
-import { getSetting, registerMenu, registerSetting } from './utils.js'
+import { getFlag, setFlag, unsetFlag, getSetting, registerMenu, registerSetting, makeDead } from './utils.js'
 import { CountersForm } from './forms/counters-form.js'
 
 /**
@@ -45,6 +45,9 @@ export function registerSettings () {
     ])
 }
 
+/**
+ * HOOKS
+ */
 Hooks.on('renderActorSheet', (app, html, data) => {
     const actorSheetType = SHEET_TYPE[app.constructor.name]
 
@@ -54,6 +57,156 @@ Hooks.on('renderActorSheet', (app, html, data) => {
             : addCounters(app, html, data, actorSheetType)
     }
 })
+
+Hooks.on('preUpdateActor', (actor, data, options) => {
+    const currentHp = getProperty(data ?? {}, 'system.attributes.hp.value')
+    const previousHp = actor.system.attributes.hp.value
+    const halfHp = actor.system.attributes.hp.max * 0.5
+
+    if (typeof currentHp !== 'undefined' && currentHp <= halfHp && previousHp > halfHp) {
+        onTriggerHalfHp(actor)
+    }
+})
+
+Hooks.on('updateActor', (actor, data, options) => {
+    const hp = getProperty(data ?? {}, 'system.attributes.hp.value')
+
+    if (hp === 0) {
+        onTriggerZeroHp(actor)
+    }
+
+    if (Object.hasOwn(data, 'flags') && data.flags[MODULE.ID]) {
+        onTriggerCounterValue(actor, data)
+    }
+})
+
+Hooks.on('deleteCombat', (combat, options, key) => {
+    const combatants = combat.combatants
+    combatants.forEach(combatant => {
+        const actor = combatant.actor
+        const flag = getFlag(actor, 'zeroHpCombatEnd')
+        if (flag) {
+            const setting = getSettingByActorType(actor)
+            Object.entries(setting).forEach(([key, value]) => {
+                const triggers = value.triggers
+                if (!triggers) return
+                triggers
+                    .filter(trigger => trigger.trigger === 'zeroHpCombatEnd')
+                    .forEach(trigger => handleAction(actor, key, trigger, value.type))
+            })
+            unsetFlag(actor, 'zeroHpCombatEnd')
+        }
+    })
+})
+
+/**
+ * Handler for 'zeroHp' trigger
+ * @param {object} actor The actor
+ */
+function onTriggerZeroHp (actor) {
+    const setting = getSettingByActorType(actor)
+    Object.entries(setting).forEach(([key, value]) => {
+        const triggers = value.triggers
+        if (!triggers) return
+        triggers
+            .filter(trigger => trigger.trigger === 'zeroHp')
+            .forEach(trigger => handleAction(actor, key, trigger, value.type))
+        const zeroHpCombatEnd = triggers.find(trigger => trigger.trigger === 'zeroHpCombatEnd')
+        if (actor.inCombat && zeroHpCombatEnd) {
+            setFlag(actor, 'zeroHpCombatEnd', true)
+        }
+    })
+}
+
+/**
+ * Handler for 'halfHp' trigger
+ * @param {object} actor The actor
+ */
+function onTriggerHalfHp (actor) {
+    const setting = getSettingByActorType(actor)
+    Object.entries(setting).forEach(([key, value]) => {
+        const triggers = value.triggers
+        if (!triggers) return
+        triggers
+            .filter(trigger => trigger.trigger === 'halfHp')
+            .forEach(trigger => handleAction(actor, key, trigger, value.type))
+    })
+}
+
+/**
+ * Handler for 'counterValue' trigger
+ * @param {object} actor The actor
+ * @param {object} data  The update data
+ */
+function onTriggerCounterValue (actor, data) {
+    const setting = getSettingByActorType(actor)
+    Object.entries(setting).forEach(([key, value]) => {
+        const counterValue = data.flags[MODULE.ID][key]
+        if (!counterValue && counterValue !== 0) return
+        const triggers = value.triggers
+        if (!triggers) return
+        triggers
+            .filter(trigger => trigger.trigger === 'counterValue' && trigger.triggerValue === counterValue)
+            .forEach(trigger => handleAction(actor, key, trigger, value.type))
+    })
+}
+
+/**
+ * Handler for a trigger action
+ * @param {object} actor   The actor
+ * @param {string} key     The counter key
+ * @param {object} trigger The trigger
+ * @param {string} type    The counter type
+ */
+function handleAction (actor, key, trigger, type) {
+    switch (trigger.action) {
+    case 'increase':
+        handleIncreaseAction(actor, key, trigger, type)
+        break
+    case 'decrease':
+        handleDecreaseAction(actor, key, trigger, type)
+        break
+    case 'dead':
+        makeDead(actor)
+        break
+    }
+}
+
+/**
+ * Handler for the 'increase' action
+ * @param {object} actor   The actor
+ * @param {string} key     The counter key
+ * @param {object} trigger The trigger
+ * @param {string} type    The counter type
+*/
+function handleIncreaseAction (actor, key, trigger, type) {
+    switch (type) {
+    case 'fraction':
+        increaseFraction(actor, key, trigger.actionValue)
+        break
+    case 'number':
+        increaseNumber(actor, key, trigger.actionValue)
+        break
+    }
+}
+
+/**
+ * Handler for the 'decrease' action
+ * @param {object} actor   The actor
+ * @param {string} key     The counter key
+ * @param {object} trigger The trigger
+ * @param {string} type    The counter type
+ */
+function handleDecreaseAction (actor, key, trigger, type) {
+    switch (type) {
+    case 'fraction':
+        decreaseFraction(actor, key, trigger.actionValue)
+        break
+    case 'number':
+        decreaseNumber(actor, key, trigger.actionValue)
+        break
+    }
+}
 
 /**
  * Add counters to the sheet
@@ -71,7 +224,7 @@ function addCounters (app, html, data, actorSheetType) {
     const ul = countersDiv.appendChild(document.createElement('ul'))
 
     for (const [key, counter] of Object.entries(counters)) {
-        if (counter.system || !counter.visible) continue
+        if (!counter.visible) continue
 
         ul.appendChild(createCounterItem(actor, key, counter))
     }
@@ -393,11 +546,11 @@ function increaseFailure (actor, key) {
     }
 }
 
-function getCounterSetting (actor, key) {
+function getSettingByActorType (actor, key = null) {
     const settingKey = (actor.type === 'character')
         ? CONSTANTS.COUNTERS.SETTING.CHARACTER_COUNTERS.KEY
         : CONSTANTS.COUNTERS.SETTING.NPC_COUNTERS.KEY
-    return getSetting(settingKey)[key]
+    return (key) ? getSetting(settingKey)[key] : getSetting(settingKey)
 }
 
 function getMax (actor, key) {
@@ -417,34 +570,8 @@ function getMax (actor, key) {
 function addCountersLegacy (app, html, data, actorSheetType) {
     const counters = game.settings.get(MODULE.ID, actorSheetType.countersSetting)
     const countersDiv = html.find('.counters')
-    let lastItem = null
 
     for (const [key, counter] of Object.entries(counters)) {
-        if (counter.system) {
-            let currentItem = null
-            switch (key) {
-            case 'legact':
-                currentItem = countersDiv.find('input[name="system.resources.legact.value"]').parent().parent()[0]
-                break
-            case 'legres':
-                currentItem = countersDiv.find('input[name="system.resources.legres.value"]').parent().parent()[0]
-                break
-            default:
-                currentItem = countersDiv.find(`.${key}`)[0]
-            }
-
-            if (counter.visible) {
-                if (lastItem) {
-                    lastItem.after(currentItem)
-                }
-                lastItem = currentItem
-            } else {
-                currentItem.remove()
-            }
-
-            continue
-        }
-
         if (!counter.visible || counter.type === 'fraction') {
             continue
         }
@@ -510,7 +637,5 @@ function addCountersLegacy (app, html, data, actorSheetType) {
         } else {
             counterValueDiv.appendChild(counterInput1)
         }
-
-        lastItem = counterDiv
     }
 }

@@ -16,17 +16,6 @@ export function registerSettings () {
             onChange: (value) => { setMaxLevel(value) }
         }
     )
-
-    registerSetting(
-        CONSTANTS.DEBUG.SETTING.KEY,
-        {
-            name: game.i18n.localize(CONSTANTS.DEBUG.SETTING.NAME),
-            scope: 'world',
-            config: true,
-            type: Boolean,
-            default: false
-        }
-    )
 }
 
 /**

@@ -4,7 +4,7 @@ export function patchApplicationRender () {
     libWrapper.register(MODULE.ID, 'Application.prototype._render', renderPatch, 'OVERRIDE')
 }
 
-async function renderPatch (wrapper, force = false, options = {}) {
+async function renderPatch (force = false, options = {}) {
     // Do not render under certain conditions
     const states = Application.RENDER_STATES
     this._priorState = this._state
