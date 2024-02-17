@@ -28,8 +28,8 @@ export class CountersForm extends CustomDnd5eForm {
     }
 
     async getData () {
-        this.characterCountersSetting = getSetting(CONSTANTS.COUNTERS.SETTING.CHARACTER_COUNTERS.KEY)
-        this.npcCountersSetting = getSetting(CONSTANTS.COUNTERS.SETTING.NPC_COUNTERS.KEY)
+        this.characterCountersSetting = getSetting(CONSTANTS.COUNTERS.SETTING.CHARACTER_COUNTERS.KEY) || {}
+        this.npcCountersSetting = getSetting(CONSTANTS.COUNTERS.SETTING.NPC_COUNTERS.KEY) || {}
         return {
             characterCounters: this.characterCountersSetting,
             npcCounters: this.npcCountersSetting

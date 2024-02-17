@@ -1,5 +1,5 @@
 import { CONSTANTS, SHEET_TYPE } from './constants.js'
-import { getSetting, setSetting, registerMenu, registerSetting } from './utils.js'
+import { checkEmpty, getSetting, registerMenu, registerSetting, resetDnd5eConfig } from './utils.js'
 import { CurrencyForm } from './forms/config-form.js'
 
 /**
@@ -25,7 +25,7 @@ export function registerSettings () {
             scope: 'world',
             config: false,
             type: Object,
-            default: CONFIG.CUSTOM_DND5E.currencies
+            default: foundry.utils.deepClone(CONFIG.CUSTOM_DND5E.currencies)
         }
     )
 
@@ -33,11 +33,6 @@ export function registerSettings () {
         CONSTANTS.CURRENCY.TEMPLATE.FORM,
         CONSTANTS.CURRENCY.TEMPLATE.LIST
     ])
-
-    const setting = getSetting(CONSTANTS.CURRENCY.SETTING.KEY)
-    if (!Object.keys(setting).length) {
-        setSetting(CONSTANTS.CURRENCY.SETTING.KEY, CONFIG.CUSTOM_DND5E.currencies)
-    }
 }
 
 /**
@@ -57,6 +52,13 @@ export function setConfig (data) {
                 }
             ])
     )
+
+    if (checkEmpty(data)) {
+        if (checkEmpty(CONFIG.DND5E.currencies)) {
+            resetDnd5eConfig('currencies')
+        }
+        return
+    }
 
     const currencies = buildConfig(data)
     if (currencies) {

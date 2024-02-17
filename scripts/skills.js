@@ -1,5 +1,5 @@
 import { CONSTANTS } from './constants.js'
-import { getSetting, setSetting, registerMenu, registerSetting } from './utils.js'
+import { checkEmpty, registerMenu, registerSetting, resetDnd5eConfig } from './utils.js'
 import { SkillsForm } from './forms/config-form.js'
 
 /**
@@ -34,11 +34,6 @@ export function registerSettings () {
         CONSTANTS.SKILLS.TEMPLATE.FORM,
         CONSTANTS.SKILLS.TEMPLATE.LIST
     ])
-
-    const setting = getSetting(CONSTANTS.SKILLS.SETTING.KEY)
-    if (!Object.keys(setting).length) {
-        setSetting(CONSTANTS.SKILLS.SETTING.KEY, CONFIG.CUSTOM_DND5E.skills)
-    }
 }
 
 /**
@@ -60,6 +55,13 @@ export function setConfig (data) {
                 }
             ])
     )
+
+    if (checkEmpty(data)) {
+        if (checkEmpty(CONFIG.DND5E.skills)) {
+            resetDnd5eConfig('skills')
+        }
+        return
+    }
 
     const skills = buildConfig(data)
     if (skills) {

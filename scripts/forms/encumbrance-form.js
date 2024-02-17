@@ -12,7 +12,7 @@ export class EncumbranceForm extends CustomDnd5eForm {
 
         this.metric = game.settings.get('dnd5e', 'metricWeightUnits') || false
         this.settingKey = CONSTANTS.ENCUMBRANCE.SETTING.KEY
-        this.setting = getSetting(this.settingKey)
+        this.setting = getSetting(this.settingKey) || foundry.utils.deepClone(CONFIG.DND5E.encumbrance)
         this.setFunction = setConfig
         this.type = 'encumbrance'
     }

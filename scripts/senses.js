@@ -1,5 +1,5 @@
 import { CONSTANTS, SHEET_TYPE } from './constants.js'
-import { getFlag, getSetting, setSetting, registerMenu, registerSetting } from './utils.js'
+import { checkEmpty, getFlag, getSetting, registerMenu, registerSetting, resetDnd5eConfig } from './utils.js'
 import { SensesForm } from './forms/config-form.js'
 
 /**
@@ -28,11 +28,6 @@ export function registerSettings () {
             default: CONFIG.CUSTOM_DND5E.senses
         }
     )
-
-    const setting = getSetting(CONSTANTS.SENSES.SETTING.KEY)
-    if (!Object.keys(setting).length) {
-        setSetting(CONSTANTS.SENSES.SETTING.KEY, CONFIG.CUSTOM_DND5E.senses)
-    }
 }
 
 /**
@@ -48,6 +43,13 @@ export function setConfig (data) {
                 game.i18n.localize(value.label)
             ])
     )
+
+    if (checkEmpty(data)) {
+        if (checkEmpty(CONFIG.DND5E.senses)) {
+            resetDnd5eConfig('senses')
+        }
+        return
+    }
 
     const senses = buildConfig(data)
     if (senses) {

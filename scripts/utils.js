@@ -15,7 +15,7 @@ export class Logger {
     }
 
     static debug (message, data) {
-        if (game.settings && getSetting(CONSTANTS.DEBUG.SETTING.KEY)) {
+        if (game.settings && game.settings.get(MODULE.ID, CONSTANTS.DEBUG.SETTING.KEY)) {
             if (!data) {
                 console.log(`${MODULE.NAME} Debug | ${message}`)
                 return
@@ -24,6 +24,15 @@ export class Logger {
             console.log(`${MODULE.NAME} Debug | ${message}`, dataClone)
         }
     }
+}
+
+/**
+ * Check whether the variable is empty
+ * @param {} data The data
+ * @returns {boolean}
+ */
+export function checkEmpty (data) {
+    return (data && typeof data === 'object' && !Object.keys(data).length) || (data !== false && !data)
 }
 
 /**
@@ -46,6 +55,16 @@ export function deleteProperty (object, key) {
     const lastKey = keys[keys.length - 1]
     delete object[lastKey]
     return true
+}
+
+/**
+ * Reset the dnd5e config to its default
+ * @param {string} property The property
+ */
+export function resetDnd5eConfig (property) {
+    CONFIG.DND5E[property] = foundry.utils.deepClone(CONFIG.CUSTOM_DND5E[property])
+    Logger.debug(`Config 'CONFIG.DND5E.${property}' reset to default`)
+    return CONFIG.DND5E[property]
 }
 
 /**

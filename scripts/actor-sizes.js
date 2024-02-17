@@ -1,5 +1,5 @@
-import { CONSTANTS, SHEET_TYPE } from './constants.js'
-import { getFlag, getSetting, setSetting, registerMenu, registerSetting } from './utils.js'
+import { CONSTANTS } from './constants.js'
+import { checkEmpty, registerMenu, registerSetting, resetDnd5eConfig } from './utils.js'
 import { ActorSizesForm } from './forms/config-form.js'
 
 /**
@@ -25,7 +25,7 @@ export function registerSettings () {
             scope: 'world',
             config: false,
             type: Object,
-            default: CONFIG.CUSTOM_DND5E.actorSizes
+            default: foundry.utils.deepClone(CONFIG.CUSTOM_DND5E.actorSizes)
         }
     )
 
@@ -33,11 +33,6 @@ export function registerSettings () {
         CONSTANTS.ACTOR_SIZES.TEMPLATE.FORM,
         CONSTANTS.ACTOR_SIZES.TEMPLATE.LIST
     ])
-
-    const setting = getSetting(CONSTANTS.ACTOR_SIZES.SETTING.KEY)
-    if (!Object.keys(setting).length) {
-        setSetting(CONSTANTS.ACTOR_SIZES.SETTING.KEY, CONFIG.CUSTOM_DND5E.actorSizes)
-    }
 }
 
 /**
@@ -59,6 +54,13 @@ export function setConfig (data) {
                 }
             ])
     )
+
+    if (checkEmpty(data)) {
+        if (checkEmpty(CONFIG.DND5E.actorSizes)) {
+            resetDnd5eConfig('actorSizes')
+        }
+        return
+    }
 
     const actorSizes = buildConfig(data)
     if (actorSizes) {

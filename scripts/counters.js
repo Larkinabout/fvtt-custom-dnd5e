@@ -1,5 +1,5 @@
 import { CONSTANTS, MODULE, SHEET_TYPE } from './constants.js'
-import { getFlag, setFlag, unsetFlag, getSetting, registerMenu, registerSetting, makeDead } from './utils.js'
+import { checkEmpty, getFlag, setFlag, unsetFlag, getSetting, registerMenu, registerSetting, makeDead } from './utils.js'
 import { CountersForm } from './forms/counters-form.js'
 
 /**
@@ -218,6 +218,9 @@ function handleDecreaseAction (actor, key, trigger, type) {
 function addCounters (app, html, data, actorSheetType) {
     const actor = app.actor
     const counters = game.settings.get(MODULE.ID, actorSheetType.countersSetting)
+
+    if (checkEmpty(counters)) return
+
     const detailsRightDiv = html[0].querySelector('.tab.details > .right')
     const detailsRightTopDiv = detailsRightDiv.querySelector('.top')
     const countersDiv = createCountersDiv()
@@ -569,6 +572,9 @@ function getMax (actor, key) {
  */
 function addCountersLegacy (app, html, data, actorSheetType) {
     const counters = game.settings.get(MODULE.ID, actorSheetType.countersSetting)
+
+    if (checkEmpty(counters)) return
+
     const countersDiv = html.find('.counters')
 
     for (const [key, counter] of Object.entries(counters)) {

@@ -38,8 +38,8 @@ Hooks.on('init', async () => {
     registerMiscSettings()
     registerDebugSettings()
 
-    setAbilities(getSetting(CONSTANTS.ABILITIES.SETTING.KEY) || CONFIG.CUSTOM_DND5E.abilities)
-    setSkills(getSetting(CONSTANTS.SKILLS.SETTING.KEY) || {})
+    setAbilities(getSetting(CONSTANTS.ABILITIES.SETTING.KEY))
+    setSkills(getSetting(CONSTANTS.SKILLS.SETTING.KEY))
 })
 
 Hooks.on('ready', async () => {

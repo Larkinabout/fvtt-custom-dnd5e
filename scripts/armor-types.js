@@ -1,5 +1,5 @@
 import { CONSTANTS } from './constants.js'
-import { getSetting, setSetting, registerMenu, registerSetting } from './utils.js'
+import { checkEmpty, registerMenu, registerSetting, resetDnd5eConfig } from './utils.js'
 import { ArmorTypesForm } from './forms/config-form.js'
 
 /**
@@ -25,14 +25,9 @@ export function registerSettings () {
             scope: 'world',
             config: false,
             type: Object,
-            default: CONFIG.CUSTOM_DND5E.armorTypes
+            default: foundry.utils.deepClone(CONFIG.CUSTOM_DND5E.armorTypes)
         }
     )
-
-    const setting = getSetting(CONSTANTS.ARMOR_TYPES.SETTING.KEY)
-    if (!Object.keys(setting).length) {
-        setSetting(CONSTANTS.ARMOR_TYPES.SETTING.KEY, CONFIG.CUSTOM_DND5E.armorTypes)
-    }
 }
 
 /**
@@ -48,6 +43,13 @@ export function setConfig (data) {
                 game.i18n.localize(value.label)
             ])
     )
+
+    if (checkEmpty(data)) {
+        if (checkEmpty(CONFIG.DND5E.armorTypes)) {
+            resetDnd5eConfig('armorTypes')
+        }
+        return
+    }
 
     const armorTypes = buildConfig(data)
     if (armorTypes) {

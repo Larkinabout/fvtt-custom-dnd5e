@@ -1,5 +1,5 @@
 import { CONSTANTS } from './constants.js'
-import { getSetting, setSetting, registerMenu, registerSetting } from './utils.js'
+import { checkEmpty, registerMenu, registerSetting, resetDnd5eConfig } from './utils.js'
 import { EncumbranceForm } from './forms/encumbrance-form.js'
 
 /**
@@ -32,11 +32,6 @@ export function registerSettings () {
     loadTemplates([
         CONSTANTS.ENCUMBRANCE.TEMPLATE.FORM
     ])
-
-    const setting = getSetting(CONSTANTS.ENCUMBRANCE.SETTING.KEY)
-    if (!Object.keys(setting).length) {
-        setSetting(CONSTANTS.ENCUMBRANCE.SETTING.KEY, CONFIG.CUSTOM_DND5E.encumbrance)
-    }
 }
 
 /**
@@ -44,5 +39,12 @@ export function registerSettings () {
  * @param {object} data
  */
 export function setConfig (data) {
+    if (checkEmpty(data)) {
+        if (checkEmpty(CONFIG.DND5E.encumbrance)) {
+            resetDnd5eConfig('encumbrance')
+        }
+        return
+    }
+
     CONFIG.DND5E.encumbrance = data
 }

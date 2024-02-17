@@ -13,6 +13,7 @@ export class ItemPropertiesForm extends CustomDnd5eForm {
 
         this.requiresReload = true
         this.settingKey = CONSTANTS.ITEM_PROPERTIES.SETTING.KEY
+        this.setting = getSetting(this.settingKey) || foundry.utils.deepClone(CONFIG.DND5E.itemProperties)
         this.setFunction = setItemProperties
         this.type = 'itemProperties'
     }
@@ -26,8 +27,6 @@ export class ItemPropertiesForm extends CustomDnd5eForm {
     }
 
     async getData () {
-        this.setting = getSetting(this.settingKey)
-
         return { items: this.setting }
     }
 

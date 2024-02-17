@@ -26,7 +26,7 @@ class ConfigForm extends CustomDnd5eForm {
     }
 
     async getData () {
-        this.setting = getSetting(this.settingKey)
+        this.setting = getSetting(this.settingKey) || foundry.utils.deepClone(CONFIG.DND5E[this.type])
 
         const labelise = (data) => {
             Object.entries(data).forEach(([key, value]) => {
@@ -51,7 +51,7 @@ class ConfigForm extends CustomDnd5eForm {
 
     async _reset () {
         const reset = async () => {
-            await setSetting(this.settingKey, CONFIG.CUSTOM_DND5E[this.type])
+            await setSetting(this.settingKey, foundry.utils.deepClone(CONFIG.CUSTOM_DND5E[this.type]))
             this.setFunction(CONFIG.CUSTOM_DND5E[this.type])
             this.render(true)
         }
@@ -235,7 +235,7 @@ export class ActorSizesForm extends ConfigForm {
 
     _getInnerHtml (data) {
         return `<i class="custom-dnd5e-drag flex0 fas fa-grip-lines" draggable="true"></i>
-                <input id="visible" name="${data.key}.visible" type="checkbox" data-tooltip="${game.i18n.localize('CUSTOM_DND5E.form.checkbox.visible.tooltip')}"{{#unless (boolfalse visible)}} checked{{/unless}}>
+                <input id="visible" name="${data.key}.visible" type="checkbox" data-tooltip="${game.i18n.localize('CUSTOM_DND5E.form.checkbox.visible.tooltip')}" checked>
                 <div class="custom-dnd5e-col-group flexcol">
                     <input id="key" name="${data.key}.key" type="hidden" value="${data.key}">
                     <input id="system" name="${data.key}.system" type="hidden" value="false">

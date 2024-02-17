@@ -1,5 +1,5 @@
-import { CONSTANTS, SHEET_TYPE } from './constants.js'
-import { getFlag, getSetting, setSetting, registerMenu, registerSetting } from './utils.js'
+import { CONSTANTS } from './constants.js'
+import { checkEmpty, registerMenu, registerSetting, resetDnd5eConfig } from './utils.js'
 import { ItemPropertiesForm } from './forms/item-properties-form.js'
 
 /**
@@ -33,11 +33,6 @@ export function registerSettings () {
         CONSTANTS.ITEM_PROPERTIES.TEMPLATE.FORM,
         CONSTANTS.ITEM_PROPERTIES.TEMPLATE.LIST
     ])
-
-    const setting = getSetting(CONSTANTS.ITEM_PROPERTIES.SETTING.KEY)
-    if (!Object.keys(setting).length) {
-        setSetting(CONSTANTS.ITEM_PROPERTIES.SETTING.KEY, getDnd5eConfig())
-    }
 }
 
 export function getDnd5eConfig () {
@@ -94,6 +89,14 @@ export function setConfig (data) {
     })
 
     const itemProperties = buildConfig(data)
+
+    if (checkEmpty(data)) {
+        if (checkEmpty(CONFIG.DND5E.itemProperties)) {
+            resetDnd5eConfig('itemProperties')
+        }
+        return
+    }
+
     if (itemProperties) {
         CONFIG.DND5E.itemProperties = itemProperties
     }
