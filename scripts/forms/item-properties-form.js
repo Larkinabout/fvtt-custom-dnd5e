@@ -11,7 +11,6 @@ export class ItemPropertiesForm extends CustomDnd5eForm {
     constructor (...args) {
         super(args)
 
-        this.requiresReload = true
         this.settingKey = CONSTANTS.ITEM_PROPERTIES.SETTING.KEY
         this.setting = getSetting(this.settingKey) || foundry.utils.deepClone(CONFIG.DND5E.itemProperties)
         this.setFunction = setItemProperties
@@ -27,6 +26,8 @@ export class ItemPropertiesForm extends CustomDnd5eForm {
     }
 
     async getData () {
+        this.setting = getSetting(this.settingKey) || foundry.utils.deepClone(CONFIG.DND5E.itemProperties)
+
         return { items: this.setting }
     }
 
@@ -139,7 +140,7 @@ export class ItemPropertiesForm extends CustomDnd5eForm {
                     ${game.i18n.localize('CUSTOM_DND5E.equipment')}
                 </label>
                 <label class="flex1" style="min-width:80px; max-width:100px;">
-                    <input id="feat" name="${data.key}.equipment" type="checkbox">
+                    <input id="feat" name="${data.key}.feat" type="checkbox">
                     ${game.i18n.localize('CUSTOM_DND5E.feat')}
                 </label>
                 <label class="flex1" style="min-width:80px; max-width:100px;">
@@ -198,9 +199,5 @@ export class ItemPropertiesForm extends CustomDnd5eForm {
 
         await setSetting(this.settingKey, this.setting)
         this.setFunction(this.setting)
-
-        if (this.requiresReload) {
-            SettingsConfig.reloadConfirm()
-        }
     }
 }
