@@ -18,11 +18,16 @@ A Foundry VTT module to customise the D&D 5e system.
 
 ## Configurations
 - Configure abilities, actor sizes, currencies, damage types, encumbrance, item properties, languages, senses, skills and max level.
-- Configure the character sheet:
-  - Auto-fade or auto-minimise the sheet when it's not hovered over.
-  - Scale the new character sheet up or down.
-  - Change the banner at the top of the sheet.
-  - Hide death saves, encumbrance, exhaustion, inspiration, the Manage Currency button, Legendary Actions, Legendary Resistances and Use Lair Action.
+
+## Configure Sheet
+- Auto-fade or auto-minimise the sheet when it's not hovered over.
+- Scale the new character sheet up or down.
+- Change the banner at the top of the sheet.
+- Hide death saves, encumbrance, exhaustion, inspiration, the Manage Currency button, Legendary Actions, Legendary Resistances and Use Lair Action.
+
+## House Rules
+- When rolling for Hit Points, automatically re-roll 1s.
+- Hide the Take Average option when rolling for Hit Points.
 
 # Wishlist
 - Add common house rules.

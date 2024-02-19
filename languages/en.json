@@ -58,10 +58,13 @@
     "CUSTOM_DND5E.dialog.delete.yes": "Yes",
     "CUSTOM_DND5E.dialog.delete.no": "No",
 
+    "CUSTOM_DND5E.dialog.levelUpHitPointsReroll1.note": "When rolling for Hit Points, 1s are automatically re-rolled",
+
     "CUSTOM_DND5E.dialog.reset.content": "This will reset everything back to the system configuration. Do you wish to continue?",
     "CUSTOM_DND5E.dialog.reset.title": "Reset Configuration",
     "CUSTOM_DND5E.dialog.reset.yes": "Yes",
     "CUSTOM_DND5E.dialog.reset.no": "No",
+    
 
     "CUSTOM_DND5E.form.button.delete.label": "Delete",
     "CUSTOM_DND5E.form.button.delete.tooltip": "Delete",
@@ -200,5 +203,9 @@
     "CUSTOM_DND5E.menu.skills.label": "Configure Skills",
     "CUSTOM_DND5E.menu.skills.name": "Configure Skills",
 
-    "CUSTOM_DND5E.setting.maxLevel.name": "Max Level"
+    "CUSTOM_DND5E.setting.maxLevel.name": "Max Level",
+    "CUSTOM_DND5E.setting.levelUpHitPointsReroll1.hint": "Automatically re-roll 1s when rolling Hit Points",
+    "CUSTOM_DND5E.setting.levelUpHitPointsReroll1.name": "Re-roll 1s when Rolling Hit Points",
+    "CUSTOM_DND5E.setting.levelUpHitPointsShowTakeAverage.hint": "Show the Take Average checkbox when rolling Hit Points",
+    "CUSTOM_DND5E.setting.levelUpHitPointsShowTakeAverage.name": "Show Take Average"
 }

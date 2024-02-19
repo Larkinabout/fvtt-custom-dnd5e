@@ -134,7 +134,7 @@ Hooks.on('renderActorSheet', (app, html, data) => {
     if (!getSetting(CONSTANTS.SHEET.SETTING.SHOW_INSPIRATION.KEY)) { removeInspiration(sheetType, html) }
     if (!getSetting(CONSTANTS.SHEET.SETTING.SHOW_LEGENDARY_ACTIONS.KEY)) { removeLegendaryActions(sheetType, html) }
     if (!getSetting(CONSTANTS.SHEET.SETTING.SHOW_LEGENDARY_RESISTANCE.KEY)) { removeLegendaryResistance(sheetType, html) }
-    if (!getSetting(CONSTANTS.SHEET.SETTING.SHOW_MANAGE_CURRENCY.KEY)) { removeManageCurrency(html) }
+    if (!getSetting(CONSTANTS.SHEET.SETTING.SHOW_MANAGE_CURRENCY.KEY)) { removeManageCurrency(sheetType, html) }
     if (!getSetting(CONSTANTS.SHEET.SETTING.SHOW_USE_LAIR_ACTION.KEY)) { removeUseLairAction(sheetType, html) }
 })
 

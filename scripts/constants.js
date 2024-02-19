@@ -192,6 +192,27 @@ export const CONSTANTS = {
             KEY: 'languages'
         }
     },
+    LEVEL_UP: {
+        HIT_POINTS: {
+            REROLL_1: {
+                DIALOG: {
+                    NOTE: 'CUSTOM_DND5E.dialog.levelUpHitPointsReroll1.note'
+                },
+                SETTING: {
+                    KEY: 'level-up-hit-points-reroll-1',
+                    HINT: 'CUSTOM_DND5E.setting.levelUpHitPointsReroll1.hint',
+                    NAME: 'CUSTOM_DND5E.setting.levelUpHitPointsReroll1.name'
+                }
+            },
+            SHOW_TAKE_AVERAGE: {
+                SETTING: {
+                    KEY: 'level-up-hit-points-show-take-average',
+                    HINT: 'CUSTOM_DND5E.setting.levelUpHitPointsShowTakeAverage.hint',
+                    NAME: 'CUSTOM_DND5E.setting.levelUpHitPointsShowTakeAverage.name'
+                }
+            }
+        }
+    },
     MAX_LEVEL: {
         SETTING: {
             KEY: 'max-level',
