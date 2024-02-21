@@ -39,6 +39,7 @@ export async function exportData () {
     data.setting = Object.fromEntries([...game.settings.settings].filter(setting => setting[0].includes('custom-dnd5e')))
     data.configDnd5e = {
         abilities: CONFIG.DND5E.abilities,
+        abilityActivationTypes: CONFIG.DND5E.abilityActivationTypes,
         actorSizes: CONFIG.DND5E.actorSizes,
         currencies: CONFIG.DND5E.currencies,
         damageTypes: CONFIG.DND5E.damageTypes,
