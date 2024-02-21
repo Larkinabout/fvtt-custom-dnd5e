@@ -9,6 +9,7 @@ import { registerSettings as registerCurrencySettings, setConfig as setCurrency 
 import { registerSettings as registerDamageTypesSettings, setConfig as setDamageTypes } from './damage-types.js'
 import { registerSettings as registerDebugSettings } from './debug.js'
 import { registerSettings as registerEncumbranceSettings, setConfig as setEncumbrance } from './encumbrance.js'
+import { registerSettings as registerItemActivationCostTypesSettings, setConfig as setItemActivationCostTypes } from './item-activation-cost-types.js'
 import { registerSettings as registerItemPropertiesSettings, setConfig as setItemProperties } from './item-properties.js'
 import { registerSettings as registerLanguagesSettings, setConfig as setLanguages } from './languages.js'
 import { registerSettings as registerSensesSettings, setConfig as setSenses } from './senses.js'
@@ -30,6 +31,7 @@ Hooks.on('init', async () => {
     registerCurrencySettings()
     registerDamageTypesSettings()
     registerEncumbranceSettings()
+    registerItemActivationCostTypesSettings()
     registerItemPropertiesSettings()
     registerLanguagesSettings()
     registerSensesSettings()
@@ -75,6 +77,7 @@ Hooks.on('ready', async () => {
     setCurrency(getSetting(CONSTANTS.CURRENCY.SETTING.KEY) || {})
     setDamageTypes(getSetting(CONSTANTS.DAMAGE_TYPES.SETTING.KEY) || {})
     setEncumbrance(getSetting(CONSTANTS.ENCUMBRANCE.SETTING.KEY) || {})
+    setItemActivationCostTypes(getSetting(CONSTANTS.ITEM_ACTIVATION_COST_TYPES.SETTING.KEY))
     setItemProperties(getSetting(CONSTANTS.ITEM_PROPERTIES.SETTING.KEY))
     setLanguages(getSetting(CONSTANTS.LANGUAGES.SETTING.KEY) || {})
     setSenses(getSetting(CONSTANTS.SENSES.SETTING.KEY) || {})

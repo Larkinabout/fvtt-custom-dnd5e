@@ -6,6 +6,7 @@ import { setConfig as setArmorTypes } from '../armor-types.js'
 import { setConfig as setActorSizes } from '../actor-sizes.js'
 import { setConfig as setCurrency } from '../currency.js'
 import { setConfig as setDamageTypes } from '../damage-types.js'
+import { setConfig as setItemActivationCostTypes } from '../item-activation-cost-types.js'
 import { setConfig as setLanguages } from '../languages.js'
 import { setConfig as setSenses } from '../senses.js'
 import { setConfig as setSkills } from '../skills.js'
@@ -127,10 +128,7 @@ class ConfigForm extends CustomDnd5eForm {
             }
         })
 
-        // Delete properties from this.setting
-        deleteKeys.forEach(key => {
-            deleteProperty(this.setting, key)
-        })
+        const data = {}
 
         // Set properties in this.setting
         Object.entries(formData).forEach(([key, value]) => {
@@ -139,11 +137,11 @@ class ConfigForm extends CustomDnd5eForm {
                 if (value === 'true') { return }
                 value = false
             }
-            setProperty(this.setting, key, value)
+            setProperty(data, key, value)
         })
 
-        await setSetting(this.settingKey, this.setting)
-        this.setFunction(this.setting)
+        await setSetting(this.settingKey, data)
+        this.setFunction(data)
 
         if (this.requiresReload) {
             SettingsConfig.reloadConfirm()
@@ -277,7 +275,6 @@ export class ActorSizesForm extends ConfigForm {
     }
 }
 
-
 export class ArmorTypesForm extends ConfigForm {
     constructor () {
         super()
@@ -379,6 +376,23 @@ export class DamageTypesForm extends ConfigForm {
         <i class="fas fa-xmark"></i>
         </button>
         <input id="delete" name="${data.key}.delete" type="hidden" value="false"`
+    }
+}
+
+export class ItemActivationCostTypesForm extends ConfigForm {
+    constructor () {
+        super()
+        this.requiresReload = false
+        this.settingKey = CONSTANTS.ITEM_ACTIVATION_COST_TYPES.SETTING.KEY
+        this.setFunction = setItemActivationCostTypes
+        this.type = 'abilityActivationCostTypes'
+    }
+
+    static get defaultOptions () {
+        return mergeObject(super.defaultOptions, {
+            id: `${MODULE.ID}-item-activation-cost-types-form`,
+            title: game.i18n.localize('CUSTOM_DND5E.form.itemActivationCostTypes.title')
+        })
     }
 }
 

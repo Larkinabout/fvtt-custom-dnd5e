@@ -147,6 +147,21 @@ export const CONSTANTS = {
         }
     },
     ENCUMBRANCE: {
+        EQUIPPED_ITEM_WEIGHT_MODIFIER: {
+            SETTING: {
+                KEY: 'equipped-item-weight-modifier'
+            }
+        },
+        PROFICIENT_EQUIPPED_ITEM_WEIGHT_MODIFIER: {
+            SETTING: {
+                KEY: 'proficient-equipped-item-weight-modifier'
+            }
+        },
+        UNEQUIPPED_ITEM_WEIGHT_MODIFIER: {
+            SETTING: {
+                KEY: 'unequipped-item-weight-modifier'
+            }
+        },
         ID: 'encumbrance',
         MENU: {
             KEY: 'encumbrance-menu',
@@ -160,6 +175,19 @@ export const CONSTANTS = {
         },
         TEMPLATE: {
             FORM: 'modules/custom-dnd5e/templates/encumbrance-form.hbs'
+        }
+    },
+    ITEM_ACTIVATION_COST_TYPES: {
+        ID: 'item-activation-cost-types',
+        MENU: {
+            KEY: 'item-activation-cost-types-menu',
+            HINT: 'CUSTOM_DND5E.menu.itemActivationCostTypes.hint',
+            ICON: 'fas fa-pen-to-square',
+            LABEL: 'CUSTOM_DND5E.menu.itemActivationCostTypes.label',
+            NAME: 'CUSTOM_DND5E.menu.itemActivationCostTypes.name'
+        },
+        SETTING: {
+            KEY: 'item-activation-cost-types'
         }
     },
     ITEM_PROPERTIES: {

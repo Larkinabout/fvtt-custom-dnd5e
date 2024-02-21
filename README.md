@@ -10,6 +10,7 @@ A Foundry VTT module to customise the D&D 5e system.
 # Features
 ## Counters
 **Counter Types:** Add four types of counter to the character sheets: checkbox, fraction, number and success/failure.
+
 **Triggers:** Set triggers to automatically change a counter value when an actor hits 0 HP, half HP, or when combat ends if they hit 0 HP any time during combat. Set a trigger to automatically make an actor dead when a counter hits a defined value.
 
 ![Custom D&D 5e Counters](./.github/readme/custom-dnd5e-counters.gif)
@@ -18,6 +19,9 @@ A Foundry VTT module to customise the D&D 5e system.
 
 ## Configurations
 - Configure abilities, actor sizes, currencies, damage types, encumbrance, item properties, languages, senses, skills and max level.
+
+## Configure Encumbrance
+![Custom D&D 5e Configure Encumbrance](./.github/readme/custom-dnd5e-configure-encumbrance.png)
 
 ## Configure Sheet
 - Auto-fade or auto-minimise the sheet when it's not hovered over.
@@ -28,6 +32,8 @@ A Foundry VTT module to customise the D&D 5e system.
 ## House Rules
 - When rolling for Hit Points, automatically re-roll 1s.
 - Hide the Take Average option when rolling for Hit Points.
+
+![Custom D&D 5e Level Up Hit Points](./.github/readme/custom-dnd5e-level-up-hit-points.png)
 
 # Wishlist
 - Add common house rules.

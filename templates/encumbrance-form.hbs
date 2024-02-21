@@ -47,6 +47,27 @@
                     <input id="vehicle-weight-multiplier" name="{{#if metric}}vehicleWeightMultiplier.metric{{else}}vehicleWeightMultiplier.imperial{{/if}}" type="number" value="{{#if metric}}{{vehicleWeightMultiplier.metric}}{{else}}{{vehicleWeightMultiplier.imperial}}{{/if}}"> 
                 </div>
             </div>
+            <h2>{{localize "CUSTOM_DND5E.weightModifiers.label"}}</h2>
+            <p>{{localize "CUSTOM_DND5E.weightModifiers.note.1"}}</p>
+            <p class="custom-dnd5e-advice notes">{{localize "CUSTOM_DND5E.weightModifiers.note.2"}}</p>
+            <div class="form-group">
+                <label>{{localize "CUSTOM_DND5E.equippedItemWeightModifier"}}</label>
+                <div class="form-fields">
+                    <input id="equipped-item-weight-modifier" name="equippedItemWeightModifier" type="number" step="0.01" value="{{equippedItemWeightModifier}}"> 
+                </div>
+            </div>
+            <div class="form-group">
+                <label>{{localize "CUSTOM_DND5E.proficientEquippedItemWeightModifier"}}</label>
+                <div class="form-fields">
+                    <input id="proficient-equipped-item-weight-modifier" name="proficientEquippedItemWeightModifier" type="number" step="0.01" value="{{proficientEquippedItemWeightModifier}}"> 
+                </div>
+            </div>
+            <div class="form-group">
+                <label>{{localize "CUSTOM_DND5E.unequippedItemWeightModifier"}}</label>
+                <div class="form-fields">
+                    <input id="unequipped-item-weight-modifier" name="unequippedItemWeightModifier" type="number" step="0.01" value="{{unequippedItemWeightModifier}}"> 
+                </div>
+            </div>
         </div>
         <footer>
             <button type="button" data-tooltip="{{localize "CUSTOM_DND5E.form.button.reset.tooltip"}}" data-action="reset" class="reset-button">

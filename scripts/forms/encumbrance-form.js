@@ -27,6 +27,9 @@ export class EncumbranceForm extends CustomDnd5eForm {
     async getData () {
         const data = this.setting
         data.metric = this.metric
+        data.equippedItemWeightModifier = getSetting(CONSTANTS.ENCUMBRANCE.EQUIPPED_ITEM_WEIGHT_MODIFIER.SETTING.KEY)
+        data.proficientEquippedItemWeightModifier = getSetting(CONSTANTS.ENCUMBRANCE.PROFICIENT_EQUIPPED_ITEM_WEIGHT_MODIFIER.SETTING.KEY)
+        data.unequippedItemWeightModifier = getSetting(CONSTANTS.ENCUMBRANCE.UNEQUIPPED_ITEM_WEIGHT_MODIFIER.SETTING.KEY)
 
         return data
     }
@@ -63,11 +66,20 @@ export class EncumbranceForm extends CustomDnd5eForm {
     }
 
     async _updateObject (event, formData) {
+        const ignore = ['equippedItemWeightModifier', 'proficientEquippedItemWeightModifier', 'unequippedItemWeightModifier']
+
         Object.entries(formData).forEach(([key, value]) => {
+            if (ignore.includes(key)) return
+
             setProperty(this.setting, key, value)
         })
 
-        await setSetting(this.settingKey, this.setting)
+        await Promise.all([
+            setSetting(this.settingKey, this.setting),
+            setSetting(CONSTANTS.ENCUMBRANCE.EQUIPPED_ITEM_WEIGHT_MODIFIER.SETTING.KEY, formData.equippedItemWeightModifier),
+            setSetting(CONSTANTS.ENCUMBRANCE.PROFICIENT_EQUIPPED_ITEM_WEIGHT_MODIFIER.SETTING.KEY, formData.proficientEquippedItemWeightModifier),
+            setSetting(CONSTANTS.ENCUMBRANCE.UNEQUIPPED_ITEM_WEIGHT_MODIFIER.SETTING.KEY, formData.unequippedItemWeightModifier)
+        ])
         this.setFunction(this.setting)
     }
 }
