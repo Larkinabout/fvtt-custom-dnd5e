@@ -83,6 +83,8 @@ export function setConfig (data) {
  * Modified from Actor5e._prepareEncumbrance
  */
 Hooks.on('preRenderActorSheet', (app, data) => {
+    const actor = data.actor;
+    if(!actor) return;
     // Sadly is to much work to check the settings on both modules 
     // the logic here is if you install 'variant-encumbrance-dnd5e' you probably want to use that behaviour
     if(game.modules.get("variant-encumbrance-dnd5e")?.active) {
@@ -97,7 +99,6 @@ Hooks.on('preRenderActorSheet', (app, data) => {
 
         if (equippedMod === 1 && proficientEquippedMod === 1 && unequippedMod === 1) return
 
-        const actor = data.actor
         const config = CONFIG.DND5E.encumbrance
         const units = game.settings.get('dnd5e', 'metricWeightUnits') ? 'metric' : 'imperial'
         // Get the total weight from items
