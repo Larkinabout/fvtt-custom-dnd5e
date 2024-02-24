@@ -6,6 +6,7 @@ import { setConfig as setArmorTypes } from '../armor-types.js'
 import { setConfig as setActorSizes } from '../actor-sizes.js'
 import { setConfig as setCurrency } from '../currency.js'
 import { setConfig as setDamageTypes } from '../damage-types.js'
+import { setConfig as setItemActionTypes } from '../item-action-types.js'
 import { setConfig as setItemActivationCostTypes } from '../item-activation-cost-types.js'
 import { setConfig as setLanguages } from '../languages.js'
 import { setConfig as setSenses } from '../senses.js'
@@ -376,6 +377,23 @@ export class DamageTypesForm extends ConfigForm {
         <i class="fas fa-xmark"></i>
         </button>
         <input id="delete" name="${data.key}.delete" type="hidden" value="false"`
+    }
+}
+
+export class ItemActionTypesForm extends ConfigForm {
+    constructor () {
+        super()
+        this.requiresReload = false
+        this.settingKey = CONSTANTS.ITEM_ACTION_TYPES.SETTING.KEY
+        this.setFunction = setItemActionTypes
+        this.type = 'itemActionTypes'
+    }
+
+    static get defaultOptions () {
+        return mergeObject(super.defaultOptions, {
+            id: `${MODULE.ID}-item-activation-cost-types-form`,
+            title: game.i18n.localize('CUSTOM_DND5E.form.itemActivationCostTypes.title')
+        })
     }
 }
 

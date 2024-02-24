@@ -91,7 +91,7 @@ export const CONSTANTS = {
             FORM: 'modules/custom-dnd5e/templates/counters-form.hbs',
             LIST: 'modules/custom-dnd5e/templates/counters-list.hbs',
             ADVANCED_OPTIONS_FORM: 'modules/custom-dnd5e/templates/counters-advanced-options-form.hbs',
-            ADVANCED_OPTIONS_LIST: 'modules/custom-dnd5e/templates/counters-advanced-options-list.hbs'
+            ADVANCED_OPTIONS_LIST: 'modules/custom-dnd5e/templates/counters-triggers-list.hbs'
         }
     },
     CURRENCY: {
@@ -177,6 +177,19 @@ export const CONSTANTS = {
             FORM: 'modules/custom-dnd5e/templates/encumbrance-form.hbs'
         }
     },
+    ITEM_ACTION_TYPES: {
+        ID: 'item-action-types',
+        MENU: {
+            KEY: 'item-action-types-menu',
+            HINT: 'CUSTOM_DND5E.menu.itemActionTypes.hint',
+            ICON: 'fas fa-pen-to-square',
+            LABEL: 'CUSTOM_DND5E.menu.itemActionTypes.label',
+            NAME: 'CUSTOM_DND5E.menu.itemActionTypes.name'
+        },
+        SETTING: {
+            KEY: 'item-action-types'
+        }
+    },
     ITEM_ACTIVATION_COST_TYPES: {
         ID: 'item-activation-cost-types',
         MENU: {
@@ -222,14 +235,23 @@ export const CONSTANTS = {
     },
     LEVEL_UP: {
         HIT_POINTS: {
-            REROLL_1: {
+            REROLL: {
                 DIALOG: {
-                    NOTE: 'CUSTOM_DND5E.dialog.levelUpHitPointsReroll1.note'
+                    NOTE: 'CUSTOM_DND5E.dialog.levelUpHitPointsRerollMinimumValue.note'
                 },
-                SETTING: {
-                    KEY: 'level-up-hit-points-reroll-1',
-                    HINT: 'CUSTOM_DND5E.setting.levelUpHitPointsReroll1.hint',
-                    NAME: 'CUSTOM_DND5E.setting.levelUpHitPointsReroll1.name'
+                MINIMUM_VALUE: {
+                    SETTING: {
+                        KEY: 'level-up-hit-points-reroll-minimum-value',
+                        HINT: 'CUSTOM_DND5E.setting.levelUpHitPointsRerollMinimumValue.hint',
+                        NAME: 'CUSTOM_DND5E.setting.levelUpHitPointsRerollMinimumValue.name'
+                    }
+                },
+                ONCE: {
+                    SETTING: {
+                        KEY: 'level-up-hit-points-reroll-once',
+                        HINT: 'CUSTOM_DND5E.setting.levelUpHitPointsRerollOnce.hint',
+                        NAME: 'CUSTOM_DND5E.setting.levelUpHitPointsRerollOnce.name'
+                    }
                 }
             },
             SHOW_TAKE_AVERAGE: {
@@ -245,6 +267,13 @@ export const CONSTANTS = {
         SETTING: {
             KEY: 'max-level',
             NAME: 'CUSTOM_DND5E.setting.maxLevel.name'
+        }
+    },
+    MIGRATION: {
+        VERSION: {
+            SETTING: {
+                KEY: 'migration-version'
+            }
         }
     },
     SENSES: {

@@ -18,7 +18,7 @@ A Foundry VTT module to customise the D&D 5e system.
 
 
 ## Configurations
-- Configure abilities, actor sizes, currencies, damage types, encumbrance, item properties, languages, senses, skills and max level.
+- Configure abilities, actor sizes, currencies, damage types, encumbrance, item activation cost types, item properties, languages, senses, skills and max level.
 
 ## Configure Encumbrance
 ![Custom D&D 5e Configure Encumbrance](./.github/readme/custom-dnd5e-configure-encumbrance.png)
