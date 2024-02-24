@@ -30,7 +30,7 @@ export class EncumbranceForm extends CustomDnd5eForm {
         data.equippedItemWeightModifier = getSetting(CONSTANTS.ENCUMBRANCE.EQUIPPED_ITEM_WEIGHT_MODIFIER.SETTING.KEY)
         data.proficientEquippedItemWeightModifier = getSetting(CONSTANTS.ENCUMBRANCE.PROFICIENT_EQUIPPED_ITEM_WEIGHT_MODIFIER.SETTING.KEY)
         data.unequippedItemWeightModifier = getSetting(CONSTANTS.ENCUMBRANCE.UNEQUIPPED_ITEM_WEIGHT_MODIFIER.SETTING.KEY)
-
+        data.isVEActive = game.modules.get("variant-encumbrance-dnd5e")?.active;
         return data
     }
 

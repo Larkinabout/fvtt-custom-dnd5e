@@ -56,6 +56,7 @@
     "CUSTOM_DND5E.weightModifiers.label": "Weight Modifiers",
     "CUSTOM_DND5E.weightModifiers.note.1": "These settings do not stack. The lower modifier will be used where multiple modifiers apply to an item.",
     "CUSTOM_DND5E.weightModifiers.note.2": "0 will reduce an item's weight by 100%, 0.5 will reduce an item's weight by 50%, 1.25 will increase an item's weight by 25%",
+    "CUSTOM_DND5E.weightModifiers.note.3": "Warning: The module 'Variant Encumbrance Dnd5e' is present and active the following settings will be override from this module",
     "CUSTOM_DND5E.worldSettings.label": "World Settings",
     "CUSTOM_DND5E.worldSettings.note": "These settings affect all users and are only configurable by the GM.",
 

@@ -46,6 +46,7 @@ Hooks.on('init', async () => {
 
 Hooks.on('ready', async () => {
     Handlebars.registerHelper({
+        booltrue: function (value) { return value === true },
         boolfalse: function (value) { return value === false },
         eq: function (a, b) { return a === b },
         randomId: function () { return randomID() },

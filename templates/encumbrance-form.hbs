@@ -1,6 +1,9 @@
 <div class="custom-dnd5e-form-wrapper flexrow">
     <form class="custom-dnd5e-form flexcol">
         <div class="scrollable">
+            {{#if (booltrue isVEActive)}}
+                <p class="custom-dnd5e-advice notes" style="color:coral">{{localize "CUSTOM_DND5E.weightModifiers.note.3"}}</p>
+            {{/if}}
             <h2>{{localize "CUSTOM_DND5E.thresholds"}}</h2>
             <div class="form-group">
                 <label>{{localize "EFFECT.DND5E.StatusEncumbered"}}</label>
