@@ -9,9 +9,11 @@ import { registerSettings as registerCurrencySettings, setConfig as setCurrency 
 import { registerSettings as registerDamageTypesSettings, setConfig as setDamageTypes } from './damage-types.js'
 import { registerSettings as registerDebugSettings } from './debug.js'
 import { registerSettings as registerEncumbranceSettings, setConfig as setEncumbrance } from './encumbrance.js'
+import { registerSettings as registerItemActionTypesSettings, setConfig as setItemActionTypes } from './item-action-types.js'
 import { registerSettings as registerItemActivationCostTypesSettings, setConfig as setItemActivationCostTypes } from './item-activation-cost-types.js'
 import { registerSettings as registerItemPropertiesSettings, setConfig as setItemProperties } from './item-properties.js'
 import { registerSettings as registerLanguagesSettings, setConfig as setLanguages } from './languages.js'
+import { registerSettings as registerMigrationSettings, migrate } from './migration.js'
 import { registerSettings as registerSensesSettings, setConfig as setSenses } from './senses.js'
 import { registerSettings as registerSheetSettings } from './sheet.js'
 import { registerSettings as registerSkillsSettings, setConfig as setSkills } from './skills.js'
@@ -24,6 +26,7 @@ Hooks.on('init', async () => {
     CONFIG.CUSTOM_DND5E = deepClone(CONFIG.DND5E)
 
     patchApplicationRender()
+    registerMigrationSettings()
     registerAbilitiesSettings()
     registerActorSizesSettings()
     // registerArmorTypesSettings()
@@ -31,6 +34,7 @@ Hooks.on('init', async () => {
     registerCurrencySettings()
     registerDamageTypesSettings()
     registerEncumbranceSettings()
+    registerItemActionTypesSettings()
     registerItemActivationCostTypesSettings()
     registerItemPropertiesSettings()
     registerLanguagesSettings()
@@ -77,9 +81,12 @@ Hooks.on('ready', async () => {
     setCurrency(getSetting(CONSTANTS.CURRENCY.SETTING.KEY) || {})
     setDamageTypes(getSetting(CONSTANTS.DAMAGE_TYPES.SETTING.KEY) || {})
     setEncumbrance(getSetting(CONSTANTS.ENCUMBRANCE.SETTING.KEY) || {})
+    setItemActionTypes(getSetting(CONSTANTS.ITEM_ACTION_TYPES.SETTING.KEY))
     setItemActivationCostTypes(getSetting(CONSTANTS.ITEM_ACTIVATION_COST_TYPES.SETTING.KEY))
     setItemProperties(getSetting(CONSTANTS.ITEM_PROPERTIES.SETTING.KEY))
     setLanguages(getSetting(CONSTANTS.LANGUAGES.SETTING.KEY) || {})
     setSenses(getSetting(CONSTANTS.SENSES.SETTING.KEY) || {})
     setMaxLevel(getSetting(CONSTANTS.MAX_LEVEL.SETTING.KEY))
+
+    migrate()
 })
