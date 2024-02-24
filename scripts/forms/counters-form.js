@@ -62,7 +62,7 @@ export class CountersForm extends CustomDnd5eForm {
         }
         case 'advanced-options': {
             const setting = (actorType === 'character') ? this.characterCountersSetting : this.npcCountersSetting
-            const args = {key, actorType, setting, type}
+            const args = { countersForm: this, key, actorType, setting, type }
             await CountersAdvancedOptionsForm.open(args)
             break
         }

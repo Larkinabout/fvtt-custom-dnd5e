@@ -1,5 +1,5 @@
 import { CONSTANTS, MODULE } from '../constants.js'
-import { appendDeleteButton, appendFormFields, appendFormGroup, appendFormGroupLabel, appendSelect, appendSelectOption, setSetting } from '../utils.js'
+import { appendDeleteButton, appendFormFields, appendFormGroup, appendFormGroupLabel, appendSelect, appendSelectOption, getFlag, setFlag, unsetFlag, setSetting } from '../utils.js'
 import { CustomDnd5eForm } from './custom-dnd5e-form.js'
 
 const id = CONSTANTS.COUNTERS.ID
@@ -12,6 +12,7 @@ export class CountersAdvancedOptionsForm extends CustomDnd5eForm {
     constructor (args) {
         super(args)
 
+        this.countersForm = args.countersForm
         this.key = args.key
         this.actorType = args.actorType
         this.setting = args.setting
@@ -29,6 +30,8 @@ export class CountersAdvancedOptionsForm extends CustomDnd5eForm {
     async getData () {
         return {
             key: this.key,
+            viewRole: this.setting[this.key]?.viewRole || 1,
+            editRole: this.setting[this.key]?.editRole || 1,
             max: this.setting[this.key]?.max,
             type: this.setting[this.key]?.type || this.type,
             triggers: this.setting[this.key]?.triggers || []
@@ -50,7 +53,7 @@ export class CountersAdvancedOptionsForm extends CustomDnd5eForm {
             el.actionIncrease = el.action.querySelector('#increase')
             el.actionDecrease = el.action.querySelector('#decrease')
             el.actionValueGroup = item.querySelector('#action-value').closest('.form-group')
-            //el.action.addEventListener('change', () => { this.#onChangeAction(el) })
+            // el.action.addEventListener('change', () => { this.#onChangeAction(el) })
         })
     }
 
@@ -84,7 +87,8 @@ export class CountersAdvancedOptionsForm extends CustomDnd5eForm {
         item.appendChild(iGrip)
 
         const divFormGroups = document.createElement('div')
-        divFormGroups.classList.add('flexcol')
+        divFormGroups.classList.add('custom-dnd5e-col-group', 'flexcol')
+        item.appendChild(divFormGroups)
 
         const divFormGroupTrigger = appendFormGroup(divFormGroups)
         appendFormGroupLabel(divFormGroupTrigger, game.i18n.localize('CUSTOM_DND5E.trigger'))
@@ -133,10 +137,10 @@ export class CountersAdvancedOptionsForm extends CustomDnd5eForm {
 
         appendDeleteButton(item, 'delete')
 
-        //el.trigger.addEventListener('change', () => this.#onChangeTrigger(el))
-        //el.action.addEventListener('change', () => this.#onChangeAction(el))
-        //if (this.items[0]) { iGrip.addEventListener('dragstart', this.items[0].ondragstart) } // Fix this for empty list
-        //item.addEventListener('dragleave', this._onDragLeave)
+        // el.trigger.addEventListener('change', () => this.#onChangeTrigger(el))
+        // el.action.addEventListener('change', () => this.#onChangeAction(el))
+        // if (this.items[0]) { iGrip.addEventListener('dragstart', this.items[0].ondragstart) } // Fix this for empty list
+        // item.addEventListener('dragleave', this._onDragLeave)
 
         list.appendChild(item)
 
@@ -167,41 +171,70 @@ export class CountersAdvancedOptionsForm extends CustomDnd5eForm {
 
     async _updateObject (event, formData) {
         const arr = []
+        const ints = ['editRole', 'viewRole']
+        const triggerProperties = ['action', 'actionValue', 'delete', 'trigger', 'triggerValue']
 
-        if (!Array.isArray(formData.action)) { formData.action = [formData.action] }
-        if (!Array.isArray(formData.actionValue)) { formData.actionValue = [formData.actionValue] }
-        if (!Array.isArray(formData.delete)) { formData.delete = [formData.delete] }
-        if (!Array.isArray(formData.trigger)) { formData.trigger = [formData.trigger] }
-        if (!Array.isArray(formData.triggerValue)) { formData.triggerValue = [formData.triggerValue] }
+        triggerProperties.forEach(property => {
+            if (!Array.isArray(formData[property])) {
+                formData[property] = [formData[property]]
+            }
+        })
 
         // Set properties in this.setting
+        let oldKey = null
+        let newKey = null
+
         Object.entries(formData).forEach(([key, value]) => {
             if (Array.isArray(value)) { return }
+            if (key.split('.').pop() === 'key') {
+                oldKey = key.split('.')[0]
+                newKey = value
+            }
+            if (ints.includes(key.split('.').pop())) { value = parseInt(value) }
             setProperty(this.setting, key, value)
         })
 
-        for (let index = 0; index < Object.keys(formData.action).length; index++) {
-            if (formData.delete[index] === 'true') {
-                continue
-            }
+        // Create new key and delete old key while keeping order of counters
+        if (oldKey !== newKey) {
+            this.setting[newKey] = foundry.utils.deepClone(this.setting[oldKey])
 
-            const data = {
-                action: formData.action[index],
-                actionValue: formData.actionValue[index],
-                trigger: formData.trigger[index],
-                triggerValue: formData.triggerValue[index]
-            }
+            const data = {}
 
-            arr.push(data)
+            Object.keys(this.setting).forEach(key => {
+                const keyToUse = (key === oldKey) ? newKey : key
+                data[keyToUse] = foundry.utils.deepClone(this.setting[key])
+            })
+
+            this.setting = data
+
+            game.actors.forEach(actor => {
+                const flag = getFlag(actor, oldKey)
+                if (typeof flag !== 'undefined') {
+                    setFlag(actor, newKey, flag)
+                    unsetFlag(actor, oldKey)
+                }
+            })
+
+            this.key = newKey
         }
 
-        this.setting[this.key].triggers = arr
+        // Map triggers into objects
+        const triggers = formData.action.map((_, index) => ({
+            action: formData.action[index],
+            actionValue: formData.actionValue[index],
+            trigger: formData.trigger[index],
+            triggerValue: formData.triggerValue[index]
+        })).filter((_, index) => formData.delete[index] !== 'true')
 
-        if (this.actorType === 'character') {
-            await setSetting(CONSTANTS.COUNTERS.SETTING.CHARACTER_COUNTERS.KEY, this.setting)
-        } else {
-            await setSetting(CONSTANTS.COUNTERS.SETTING.NPC_COUNTERS.KEY, this.setting)
-        }
+        this.setting[this.key].triggers = triggers
+
+        const settingKey = (this.actorType === 'character')
+            ? CONSTANTS.COUNTERS.SETTING.CHARACTER_COUNTERS.KEY
+            : CONSTANTS.COUNTERS.SETTING.NPC_COUNTERS.KEY
+
+        await setSetting(settingKey, this.setting)
+
+        this.countersForm.render(true)
     }
 
     /**

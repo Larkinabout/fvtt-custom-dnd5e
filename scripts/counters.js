@@ -227,7 +227,7 @@ function addCounters (app, html, data, actorSheetType) {
     const ul = countersDiv.appendChild(document.createElement('ul'))
 
     for (const [key, counter] of Object.entries(counters)) {
-        if (!counter.visible) continue
+        if (!counter.visible || (counter.viewRole && game.user.role < counter.viewRole)) continue
 
         ul.appendChild(createCounterItem(actor, key, counter))
     }
@@ -290,9 +290,13 @@ function createCheckbox (actor, key, counter) {
     const h4 = document.createElement('h4')
     label.appendChild(h4)
 
-    const a = document.createElement('a')
-    a.textContent = counter.label
-    h4.appendChild(a)
+    if (!counter.editRole || game.user.role >= counter.editRole) {
+        const a = document.createElement('a')
+        a.textContent = counter.label
+        h4.appendChild(a)
+    } else {
+        h4.textContent = counter.label
+    }
 
     const input = document.createElement('input')
     input.setAttribute('type', 'checkbox')
@@ -301,6 +305,9 @@ function createCheckbox (actor, key, counter) {
     input.setAttribute('value', actor.getFlag(MODULE.ID, key) || false)
     input.setAttribute('placeholder', 'false')
     input.setAttribute('data-dtype', 'Boolean')
+    if (counter.editRole && game.user.role < counter.editRole) {
+        input.setAttribute('disabled', 'true')
+    }
     label.appendChild(input)
 
     return li
@@ -322,11 +329,15 @@ function createFraction (actor, key, counter) {
     const h4 = document.createElement('h4')
     li.appendChild(h4)
 
-    const a = document.createElement('a')
-    a.textContent = counter.label
-    a.addEventListener('click', () => decreaseFraction(actor, key))
-    a.addEventListener('contextmenu', () => increaseFraction(actor, key))
-    h4.appendChild(a)
+    if (!counter.editRole || game.user.role >= counter.editRole) {
+        const a = document.createElement('a')
+        a.textContent = counter.label
+        a.addEventListener('click', () => decreaseFraction(actor, key))
+        a.addEventListener('contextmenu', () => increaseFraction(actor, key))
+        h4.appendChild(a)
+    } else {
+        h4.textContent = counter.label
+    }
 
     const div = document.createElement('div')
     div.classList.add('custom-dnd5e-counters-counter-value', 'custom-dnd5e-counters-fraction', key)
@@ -342,8 +353,13 @@ function createFraction (actor, key, counter) {
     inputValue.setAttribute('value', actor.getFlag(MODULE.ID, `${key}.value`))
     inputValue.setAttribute('placeholder', '0')
     inputValue.setAttribute('data-dtype', 'Number')
-    inputValue.addEventListener('click', event => selectInputContent(event))
-    inputValue.addEventListener('keyup', () => checkValue(inputValue, actor, key))
+    if (counter.editRole && game.user.role < counter.editRole) {
+        inputValue.classList.add('disabled')
+        inputValue.setAttribute('disabled', 'true')
+    } else {
+        inputValue.addEventListener('click', event => selectInputContent(event))
+        inputValue.addEventListener('keyup', () => checkValue(inputValue, actor, key))
+    }
     divGroup.appendChild(inputValue)
 
     const span = document.createElement('span')
@@ -357,11 +373,12 @@ function createFraction (actor, key, counter) {
     inputMax.setAttribute('value', settingMax || actor.getFlag(MODULE.ID, `${key}.max`))
     inputMax.setAttribute('placeholder', '0')
     inputMax.setAttribute('data-dtype', 'Number')
-    if (settingMax) {
+    if ((counter.editRole && game.user.role < counter.editRole) || settingMax) {
         inputMax.classList.add('disabled')
         inputMax.setAttribute('disabled', 'true')
+    } else {
+        inputMax.addEventListener('click', event => selectInputContent(event))
     }
-    inputMax.addEventListener('click', event => selectInputContent(event))
     divGroup.appendChild(inputMax)
 
     return li
@@ -380,11 +397,15 @@ function createNumber (actor, key, counter) {
     const h4 = document.createElement('h4')
     li.appendChild(h4)
 
-    const a = document.createElement('a')
-    a.textContent = counter.label
-    a.addEventListener('click', () => { increaseNumber(actor, key) })
-    a.addEventListener('contextmenu', () => decreaseNumber(actor, key))
-    h4.appendChild(a)
+    if (!counter.editRole || game.user.role >= counter.editRole) {
+        const a = document.createElement('a')
+        a.textContent = counter.label
+        a.addEventListener('click', () => { increaseNumber(actor, key) })
+        a.addEventListener('contextmenu', () => decreaseNumber(actor, key))
+        h4.appendChild(a)
+    } else {
+        h4.textContent = counter.label
+    }
 
     const div = document.createElement('div')
     div.classList.add('custom-dnd5e-counters-counter-value', 'custom-dnd5e-counters-number')
@@ -395,8 +416,13 @@ function createNumber (actor, key, counter) {
     input.setAttribute('value', actor.getFlag(MODULE.ID, key) || 0)
     input.setAttribute('placeholder', '0')
     input.setAttribute('data-dtype', 'Number')
-    input.addEventListener('click', event => selectInputContent(event))
-    input.addEventListener('keyup', () => checkValue(input, actor, key), true)
+    if (counter.editRole && game.user.role < counter.editRole) {
+        input.classList.add('disabled')
+        input.setAttribute('disabled', 'true')
+    } else {
+        input.addEventListener('click', event => selectInputContent(event))
+        input.addEventListener('keyup', () => checkValue(input, actor, key), true)
+    }
     div.appendChild(input)
 
     return li
@@ -421,14 +447,18 @@ function createSuccessFailure (actor, key, counter) {
     div.classList.add('custom-dnd5e-counters-counter-value', 'custom-dnd5e-counters-success-failure', key)
     li.appendChild(div)
 
-    const aSuccess = document.createElement('a')
-    aSuccess.addEventListener('click', () => increaseSuccess(actor, key))
-    aSuccess.addEventListener('contextmenu', () => decreaseSuccess(actor, key))
-    div.appendChild(aSuccess)
-
     const iSuccess = document.createElement('i')
     iSuccess.classList.add('fas', 'fa-check')
-    aSuccess.appendChild(iSuccess)
+
+    if (!counter.editRole || game.user.role >= counter.editRole) {
+        const aSuccess = document.createElement('a')
+        aSuccess.addEventListener('click', () => increaseSuccess(actor, key))
+        aSuccess.addEventListener('contextmenu', () => decreaseSuccess(actor, key))
+        div.appendChild(aSuccess)
+        aSuccess.appendChild(iSuccess)
+    } else {
+        div.appendChild(iSuccess)
+    }
 
     const inputSuccess = document.createElement('input')
     inputSuccess.setAttribute('type', 'number')
@@ -436,18 +466,29 @@ function createSuccessFailure (actor, key, counter) {
     inputSuccess.setAttribute('value', actor.getFlag(MODULE.ID, `${key}.success`) || 0)
     inputSuccess.setAttribute('placeholder', '0')
     inputSuccess.setAttribute('data-dtype', 'Number')
-    inputSuccess.addEventListener('click', event => selectInputContent(event))
-    inputSuccess.addEventListener('keyup', () => checkValue(inputSuccess, actor, key), true)
-    div.appendChild(inputSuccess)
 
-    const aFailure = document.createElement('a')
-    aFailure.addEventListener('click', () => increaseFailure(actor, key))
-    aFailure.addEventListener('contextmenu', () => decreaseFailure(actor, key))
-    div.appendChild(aFailure)
+    if (counter.editRole && game.user.role < counter.editRole) {
+        inputSuccess.classList.add('disabled')
+        inputSuccess.setAttribute('disabled', 'true')
+    } else {
+        inputSuccess.addEventListener('click', event => selectInputContent(event))
+        inputSuccess.addEventListener('keyup', () => checkValue(inputSuccess, actor, key), true)
+    }
+
+    div.appendChild(inputSuccess)
 
     const iFailure = document.createElement('i')
     iFailure.classList.add('fas', 'fa-times')
-    aFailure.appendChild(iFailure)
+
+    if (!counter.editRole || game.user.role >= counter.editRole) {
+        const aFailure = document.createElement('a')
+        aFailure.addEventListener('click', () => increaseFailure(actor, key))
+        aFailure.addEventListener('contextmenu', () => decreaseFailure(actor, key))
+        div.appendChild(aFailure)
+        aFailure.appendChild(iFailure)
+    } else {
+        div.appendChild(iFailure)
+    }
 
     const inputFailure = document.createElement('input')
     inputFailure.setAttribute('type', 'number')
@@ -455,8 +496,15 @@ function createSuccessFailure (actor, key, counter) {
     inputFailure.setAttribute('value', actor.getFlag(MODULE.ID, `${key}.failure`) || 0)
     inputFailure.setAttribute('placeholder', '0')
     inputFailure.setAttribute('data-dtype', 'Number')
-    inputFailure.addEventListener('click', event => selectInputContent(event))
-    inputFailure.addEventListener('keyup', () => checkValue(inputFailure, actor, key), true)
+
+    if (counter.editRole && game.user.role < counter.editRole) {
+        inputFailure.classList.add('disabled')
+        inputFailure.setAttribute('disabled', 'true')
+    } else {
+        inputFailure.addEventListener('click', event => selectInputContent(event))
+        inputFailure.addEventListener('keyup', () => checkValue(inputFailure, actor, key), true)
+    }
+
     div.appendChild(inputFailure)
 
     return li
@@ -578,7 +626,7 @@ function addCountersLegacy (app, html, data, actorSheetType) {
     const countersDiv = html.find('.counters')
 
     for (const [key, counter] of Object.entries(counters)) {
-        if (!counter.visible || counter.type === 'fraction') {
+        if (!counter.visible || counter.type === 'fraction' || (counter.viewRolle && game.user.role < counter.viewRole)) {
             continue
         }
 
@@ -594,6 +642,13 @@ function addCountersLegacy (app, html, data, actorSheetType) {
 
         const counterInput1 = document.createElement('input')
         const counterInput2 = document.createElement('input')
+
+        if (counter.editRole && game.user.role < counter.editRole) {
+            counterInput1.classList.add('disabled')
+            counterInput1.setAttribute('disabled', 'true')
+            counterInput2.classList.add('disabled')
+            counterInput2.setAttribute('disabled', 'true')
+        }
 
         switch (counter.type) {
         case 'checkbox':
