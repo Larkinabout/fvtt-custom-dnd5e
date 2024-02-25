@@ -8,7 +8,7 @@ import { registerSettings as registerCountersSettings } from './counters.js'
 import { registerSettings as registerCurrencySettings, setConfig as setCurrency } from './currency.js'
 import { registerSettings as registerDamageTypesSettings, setConfig as setDamageTypes } from './damage-types.js'
 import { registerSettings as registerDebugSettings } from './debug.js'
-import { registerSettings as registerEncumbranceSettings, setConfig as setEncumbrance } from './encumbrance.js'
+import { register as registerEncumbrance, setConfig as setEncumbrance } from './encumbrance.js'
 import { registerSettings as registerItemActionTypesSettings, setConfig as setItemActionTypes } from './item-action-types.js'
 import { registerSettings as registerItemActivationCostTypesSettings, setConfig as setItemActivationCostTypes } from './item-activation-cost-types.js'
 import { registerSettings as registerItemPropertiesSettings, setConfig as setItemProperties } from './item-properties.js'
@@ -33,7 +33,7 @@ Hooks.on('init', async () => {
     registerCountersSettings()
     registerCurrencySettings()
     registerDamageTypesSettings()
-    registerEncumbranceSettings()
+    registerEncumbrance()
     registerItemActionTypesSettings()
     registerItemActivationCostTypesSettings()
     registerItemPropertiesSettings()

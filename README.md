@@ -35,6 +35,10 @@ A Foundry VTT module to customise the D&D 5e system.
 
 ![Custom D&D 5e Level Up Hit Points](./.github/readme/custom-dnd5e-level-up-hit-points.png)
 
+## Compatibility
+### Variant Encumbrance + Midi
+Custom D&D 5e will defer to the [Variant Encumbrance + Midi](https://foundryvtt.com/packages/variant-encumbrance-dnd5e) module for encumbrance configuration when it is active.
+
 # Wishlist
 - Add common house rules.
 - Add more versatile encumbrance options.
