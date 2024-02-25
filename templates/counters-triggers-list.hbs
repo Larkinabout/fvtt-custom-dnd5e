@@ -1,5 +1,5 @@
 {{#each triggers}}
-<li class="custom-dnd5e-item flexrow" data-key="{{randomId}}">
+<li class="custom-dnd5e-item flexrow" data-key="{{#if key}}{{key}}{{else}}{{randomId}}{{/if}}">
     <i class="custom-dnd5e-drag flex0 fas fa-grip-lines" draggable="true"></i>
     <div class="custom-dnd5e-col-group flexcol">
         <div class="form-group">
@@ -7,7 +7,9 @@
             <div class="form-fields">
                 <select id="trigger" name="trigger">
                     {{#select trigger}}
+                    {{#unless (eq ../type "checkbox")}}
                     <option id="counterValue" value="counterValue">{{localize "CUSTOM_DND5E.form.counters.triggers.trigger.choices.counterValue"}}</option>
+                    {{/unless}}
                     <option id="zeroHp" value="zeroHp">{{localize "CUSTOM_DND5E.form.counters.triggers.trigger.choices.zeroHp"}}</option>
                     <option id="zeroHpCombatEnd" value="zeroHpCombatEnd">{{localize "CUSTOM_DND5E.form.counters.triggers.trigger.choices.zeroHpCombatEnd"}}</option>
                     <option id="halfHp" value="halfHp">{{localize "CUSTOM_DND5E.form.counters.triggers.trigger.choices.halfHp"}}</option>

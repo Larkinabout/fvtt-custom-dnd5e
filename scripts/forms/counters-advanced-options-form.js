@@ -78,94 +78,63 @@ export class CountersAdvancedOptionsForm extends CustomDnd5eForm {
         const el = {}
         const list = this.element[0].querySelector(listClassSelector)
         const scrollable = list.closest('.scrollable')
-        const item = document.createElement('li')
-        item.setAttribute('data-key', randomID())
-        item.classList.add(itemClass, 'flexrow')
 
-        const iGrip = document.createElement('i')
-        iGrip.classList.add('custom-dnd5e-drag', 'flex0', 'fas', 'fa-grip-lines')
-        item.appendChild(iGrip)
+        const key = randomID()
+        const type = this.setting[this.key]?.type || this.type
+        const trigger = (type === 'checkbox') ? 'zeroHp' : 'counterValue'
+        const action = (type === 'checkbox') ? 'check' : 'dead'
 
-        const divFormGroups = document.createElement('div')
-        divFormGroups.classList.add('custom-dnd5e-col-group', 'flexcol')
-        item.appendChild(divFormGroups)
+        const template = await this._getHtml({ type, triggers: [{ action, trigger, key, type }] })
 
-        const divFormGroupTrigger = appendFormGroup(divFormGroups)
-        appendFormGroupLabel(divFormGroupTrigger, game.i18n.localize('CUSTOM_DND5E.trigger'))
+        list.insertAdjacentHTML('beforeend', template)
 
-        const divFormFieldsTrigger = appendFormFields(divFormGroupTrigger)
-        el.trigger = appendSelect(divFormFieldsTrigger, 'trigger', 'trigger')
-        appendSelectOption(el.trigger, 'counterValue', game.i18n.localize('CUSTOM_DND5E.form.counters.triggers.trigger.choices.counterValue'))
-        appendSelectOption(el.trigger, 'halfHp', game.i18n.localize('CUSTOM_DND5E.form.counters.triggers.trigger.choices.halfHp'))
-        appendSelectOption(el.trigger, 'zeroHp', game.i18n.localize('CUSTOM_DND5E.form.counters.triggers.trigger.choices.zeroHp'))
-        appendSelectOption(el.trigger, 'zeroHpCombatEnd', game.i18n.localize('CUSTOM_DND5E.form.counters.triggers.trigger.choices.zeroHpCombatEnd'))
-        // appendSelectOption(el.trigger, 'roll1', game.i18n.localize('CUSTOM_DND5E.form.counters.triggers.trigger.choices.roll1'))
-        // appendSelectOption(el.trigger, 'roll20', game.i18n.localize('CUSTOM_DND5E.form.counters.triggers.trigger.choices.roll20'))
+        const item = list.querySelector(`[data-key="${key}"]`)
+        const dragElement = item.querySelector('.custom-dnd5e-drag')
+        el.trigger = item.querySelector('#trigger')
+        el.triggerValueGroup = item.querySelector('#trigger-value').closest('.form-group')
+        el.action = item.querySelector('#action')
+        el.actionValueGroup = item.querySelector('#action-value').closest('.form-group')
+        el.actionIncrease = el.action.querySelector('#increase')
+        el.actionDecrease = el.action.querySelector('#decrease')
 
-        el.triggerValueGroup = appendFormGroup(divFormGroups)
-        appendFormGroupLabel(el.triggerValueGroup, game.i18n.localize('CUSTOM_DND5E.triggerValue'))
-        const triggerValueFormFields = appendFormFields(el.triggerValueGroup)
-        el.triggerValue = document.createElement('input')
-        el.triggerValue.setAttribute('id', 'trigger-value')
-        el.triggerValue.setAttribute('name', 'triggerValue')
-        el.triggerValue.setAttribute('type', 'number')
-        triggerValueFormFields.appendChild(el.triggerValue)
-
-        const actionFormGroup = appendFormGroup(divFormGroups)
-        appendFormGroupLabel(actionFormGroup, game.i18n.localize('CUSTOM_DND5E.action'))
-
-        const actionFormFields = appendFormFields(actionFormGroup)
-        el.action = appendSelect(actionFormFields, 'action', 'action')
-        if (this.type === 'checkbox') {
-            appendSelectOption(el.action, 'check', game.i18n.localize('CUSTOM_DND5E.check'))
-            appendSelectOption(el.action, 'uncheck', game.i18n.localize('CUSTOM_DND5E.uncheck'))
-        } else {
-            appendSelectOption(el.action, 'dead', game.i18n.localize('CUSTOM_DND5E.dead'))
-            el.actionIncrease = appendSelectOption(el.action, 'increase', game.i18n.localize('CUSTOM_DND5E.increase'), true)
-            el.actionDecrease = appendSelectOption(el.action, 'decrease', game.i18n.localize('CUSTOM_DND5E.decrease'), true)
-        }
-
-        el.actionValueGroup = appendFormGroup(divFormGroups)
-        el.actionValueGroup.classList.add('hidden')
-        appendFormGroupLabel(el.actionValueGroup, game.i18n.localize('CUSTOM_DND5E.actionValue'))
-        const actionFormFieldsValue = appendFormFields(el.actionValueGroup)
-        el.actionValue = document.createElement('input')
-        el.actionValue.setAttribute('id', 'action-value')
-        el.actionValue.setAttribute('name', 'actionValue')
-        el.actionValue.setAttribute('type', 'number')
-        actionFormFieldsValue.appendChild(el.actionValue)
-
-        appendDeleteButton(item, 'delete')
-
-        // el.trigger.addEventListener('change', () => this.#onChangeTrigger(el))
-        // el.action.addEventListener('change', () => this.#onChangeAction(el))
-        // if (this.items[0]) { iGrip.addEventListener('dragstart', this.items[0].ondragstart) } // Fix this for empty list
-        // item.addEventListener('dragleave', this._onDragLeave)
-
-        list.appendChild(item)
+        item.addEventListener('dragend', this._onDragEnd.bind(this))
+        item.addEventListener('dragleave', this._onDragLeave.bind(this))
+        item.addEventListener('dragover', this._onDragOver.bind(this))
+        item.addEventListener('drop', this._onDrop.bind(this))
+        dragElement.addEventListener('dragstart', this._onDragStart.bind(this))
+        el.trigger.addEventListener('change', () => this.#onChangeTrigger(el))
+        el.action.addEventListener('change', () => this.#onChangeAction(el))
 
         scrollable && (scrollable.scrollTop = scrollable.scrollHeight)
     }
 
+    async _getHtml (data) {
+        const template = await renderTemplate(CONSTANTS.COUNTERS.TEMPLATE.ADVANCED_OPTIONS_LIST, data)
+        return template
+    }
+
     #onChangeTrigger (el) {
         const allowed = ['counterValue']
+
         if (el.trigger.value === 'counterValue') {
-            el.actionIncrease.classList.add('hidden')
-            el.actionDecrease.classList.add('hidden')
-            el.triggerValueGroup.classList.remove('hidden')
+            el.actionIncrease?.classList.add('hidden')
+            el.actionDecrease?.classList.add('hidden')
+            el.triggerValueGroup?.classList.remove('hidden')
+            const type = this.setting[this.key]?.type || this.type
+            el.action.value = (type === 'checkbox') ? 'check' : 'dead'
         }
         if (!allowed.includes(el.trigger.value)) {
-            el.actionIncrease.classList.remove('hidden')
-            el.actionDecrease.classList.remove('hidden')
-            el.triggerValueGroup.classList.add('hidden')
+            el.actionIncrease?.classList.remove('hidden')
+            el.actionDecrease?.classList.remove('hidden')
+            el.triggerValueGroup?.classList.add('hidden')
         }
     }
 
     #onChangeAction (el) {
         const allowed = ['increase', 'decrease']
-        el.actionValueGroup.classList.remove('hidden')
+        el.actionValueGroup?.classList.remove('hidden')
         if (!allowed.includes(el.action.value)) {
-            el.actionValueGroup.classList.add('hidden')
+            el.actionValueGroup?.classList.add('hidden')
         }
     }
 
