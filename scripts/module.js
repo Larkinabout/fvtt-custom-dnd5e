@@ -1,22 +1,23 @@
 import { CONSTANTS } from './constants.js'
 import { getSetting } from './utils.js'
-import { registerSettings as registerMiscSettings, setMaxLevel } from './misc.js'
-import { registerSettings as registerAbilitiesSettings, setConfig as setAbilities } from './abilities.js'
-import { registerSettings as registerActorSizesSettings, setConfig as setActorSizes } from './actor-sizes.js'
-import { registerSettings as registerArmorTypesSettings, setConfig as setArmorTypes } from './armor-types.js'
-import { registerSettings as registerCountersSettings } from './counters.js'
-import { registerSettings as registerCurrencySettings, setConfig as setCurrency } from './currency.js'
-import { registerSettings as registerDamageTypesSettings, setConfig as setDamageTypes } from './damage-types.js'
-import { registerSettings as registerDebugSettings } from './debug.js'
+import { register as registerAbilities, setConfig as setAbilities } from './abilities.js'
+import { register as registerActorSizes, setConfig as setActorSizes } from './actor-sizes.js'
+import { register as registerArmorTypes, setConfig as setArmorTypes } from './armor-types.js'
+import { registerSettings as registerCounters } from './counters.js'
+import { register as registerCurrency, setConfig as setCurrency } from './currency.js'
+import { register as registerDamageTypes, setConfig as setDamageTypes } from './damage-types.js'
+import { register as registerDebug } from './debug.js'
 import { register as registerEncumbrance, setConfig as setEncumbrance } from './encumbrance.js'
-import { registerSettings as registerItemActionTypesSettings, setConfig as setItemActionTypes } from './item-action-types.js'
-import { registerSettings as registerItemActivationCostTypesSettings, setConfig as setItemActivationCostTypes } from './item-activation-cost-types.js'
-import { registerSettings as registerItemPropertiesSettings, setConfig as setItemProperties } from './item-properties.js'
-import { registerSettings as registerLanguagesSettings, setConfig as setLanguages } from './languages.js'
-import { registerSettings as registerMigrationSettings, migrate } from './migration.js'
-import { registerSettings as registerSensesSettings, setConfig as setSenses } from './senses.js'
-import { registerSettings as registerSheetSettings } from './sheet.js'
-import { registerSettings as registerSkillsSettings, setConfig as setSkills } from './skills.js'
+import { register as registerItemActionTypes, setConfig as setItemActionTypes } from './item-action-types.js'
+import { register as registerItemActivationCostTypes, setConfig as setItemActivationCostTypes } from './item-activation-cost-types.js'
+import { register as registerItemProperties, setConfig as setItemProperties } from './item-properties.js'
+import { register as registerLanguages, setConfig as setLanguages } from './languages.js'
+import { register as registerMigration, migrate } from './migration.js'
+import { register as registerMisc, setMaxLevel } from './misc.js'
+import { register as registerSenses, setConfig as setSenses } from './senses.js'
+import { register as registerSheet } from './sheet.js'
+import { register as registerSkills, setConfig as setSkills } from './skills.js'
+import { register as registerSpellSchools, setConfig as setSpellSchools } from './spell-schools.js'
 import { patchApplicationRender } from './patches/application-render.js'
 
 /**
@@ -26,23 +27,24 @@ Hooks.on('init', async () => {
     CONFIG.CUSTOM_DND5E = deepClone(CONFIG.DND5E)
 
     patchApplicationRender()
-    registerMigrationSettings()
-    registerAbilitiesSettings()
-    registerActorSizesSettings()
-    // registerArmorTypesSettings()
-    registerCountersSettings()
-    registerCurrencySettings()
-    registerDamageTypesSettings()
+    registerMigration()
+    registerAbilities()
+    registerActorSizes()
+    // registerArmorTypes()
+    registerCounters()
+    registerCurrency()
+    registerDamageTypes()
     registerEncumbrance()
-    registerItemActionTypesSettings()
-    registerItemActivationCostTypesSettings()
-    registerItemPropertiesSettings()
-    registerLanguagesSettings()
-    registerSensesSettings()
-    registerSheetSettings()
-    registerSkillsSettings()
-    registerMiscSettings()
-    registerDebugSettings()
+    registerItemActionTypes()
+    registerItemActivationCostTypes()
+    registerItemProperties()
+    registerLanguages()
+    registerSenses()
+    registerSheet()
+    registerSkills()
+    registerSpellSchools()
+    registerMisc()
+    registerDebug()
 
     setAbilities(getSetting(CONSTANTS.ABILITIES.SETTING.KEY))
     setSkills(getSetting(CONSTANTS.SKILLS.SETTING.KEY))
@@ -86,6 +88,7 @@ Hooks.on('ready', async () => {
     setItemProperties(getSetting(CONSTANTS.ITEM_PROPERTIES.SETTING.KEY))
     setLanguages(getSetting(CONSTANTS.LANGUAGES.SETTING.KEY) || {})
     setSenses(getSetting(CONSTANTS.SENSES.SETTING.KEY) || {})
+    setSpellSchools(getSetting(CONSTANTS.SPELL_SCHOOLS.SETTING.KEY) || {})
     setMaxLevel(getSetting(CONSTANTS.MAX_LEVEL.SETTING.KEY))
 
     migrate()

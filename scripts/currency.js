@@ -2,10 +2,25 @@ import { CONSTANTS, SHEET_TYPE } from './constants.js'
 import { checkEmpty, getSetting, registerMenu, registerSetting, resetDnd5eConfig } from './utils.js'
 import { CurrencyForm } from './forms/config-form.js'
 
+const property = 'currencies'
+
 /**
- * Register Settings
+ * Register
  */
-export function registerSettings () {
+export function register () {
+    registerSettings()
+    registerHooks()
+
+    loadTemplates([
+        CONSTANTS.CURRENCY.TEMPLATE.FORM,
+        CONSTANTS.CURRENCY.TEMPLATE.LIST
+    ])
+}
+
+/**
+ * Register settings
+ */
+function registerSettings () {
     registerMenu(
         CONSTANTS.CURRENCY.MENU.KEY,
         {
@@ -25,14 +40,38 @@ export function registerSettings () {
             scope: 'world',
             config: false,
             type: Object,
-            default: foundry.utils.deepClone(CONFIG.CUSTOM_DND5E.currencies)
+            default: foundry.utils.deepClone(CONFIG.CUSTOM_DND5E[property])
         }
     )
+}
 
-    loadTemplates([
-        CONSTANTS.CURRENCY.TEMPLATE.FORM,
-        CONSTANTS.CURRENCY.TEMPLATE.LIST
-    ])
+/**
+ * Register hooks
+ */
+function registerHooks () {
+    Hooks.on('renderCurrencyManager', (app, html, data) => {
+        const setting = getSetting(CONSTANTS.CURRENCY.SETTING.KEY)
+
+        Object.entries(setting).forEach(([key, value]) => {
+            if (value.visible === false) {
+                html[0].querySelector(`input[name="amount.${key}"]`)?.closest('label')?.remove()
+            }
+        })
+    })
+
+    Hooks.on('renderActorSheet', (app, html, data) => {
+        const sheetType = SHEET_TYPE[app.constructor.name]
+
+        const setting = getSetting(CONSTANTS.CURRENCY.SETTING.KEY)
+
+        if (sheetType.character && !sheetType.legacy) {
+            Object.entries(setting).forEach(([key, value]) => {
+                if (value.visible === false) {
+                    html[0].querySelector(`.${key}`)?.closest('label')?.remove()
+                }
+            })
+        }
+    })
 }
 
 /**
@@ -54,42 +93,12 @@ export function setConfig (data) {
     )
 
     if (checkEmpty(data)) {
-        if (checkEmpty(CONFIG.DND5E.currencies)) {
-            resetDnd5eConfig('currencies')
+        if (checkEmpty(CONFIG.DND5E[property])) {
+            resetDnd5eConfig(property)
         }
         return
     }
 
-    const currencies = buildConfig(data)
-    if (currencies) {
-        CONFIG.DND5E.currencies = currencies
-    }
+    const config = buildConfig(data)
+    config && (CONFIG.DND5E[property] = config)
 }
-
-/**
- * HOOKS
- */
-
-Hooks.on('renderCurrencyManager', (app, html, data) => {
-    const setting = getSetting(CONSTANTS.CURRENCY.SETTING.KEY)
-
-    Object.entries(setting).forEach(([key, value]) => {
-        if (value.visible === false) {
-            html[0].querySelector(`input[name="amount.${key}"]`)?.closest('label')?.remove()
-        }
-    })
-})
-
-Hooks.on('renderActorSheet', (app, html, data) => {
-    const sheetType = SHEET_TYPE[app.constructor.name]
-
-    const setting = getSetting(CONSTANTS.CURRENCY.SETTING.KEY)
-
-    if (sheetType.character && !sheetType.legacy) {
-        Object.entries(setting).forEach(([key, value]) => {
-            if (value.visible === false) {
-                html[0].querySelector(`.${key}`)?.closest('label')?.remove()
-            }
-        })
-    }
-})

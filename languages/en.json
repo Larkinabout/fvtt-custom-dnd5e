@@ -86,7 +86,7 @@
 
     "CUSTOM_DND5E.form.abilities.title": "Configure Abilities",
 
-    "CUSTOM_DND5E.form.actorSizes.title": "Configure Senses",
+    "CUSTOM_DND5E.form.actorSizes.title": "Configure Actor Sizes",
 
     "CUSTOM_DND5E.form.armorTypes.title": "Configure Armor Types",
 
@@ -125,6 +125,10 @@
 
     "CUSTOM_DND5E.form.encumbrance.title": "Configure Encumbrance",
 
+    "CUSTOM_DND5E.form.itemActionTypes.title": "Configure Item Action Types",
+
+    "CUSTOM_DND5E.form.itemActivationCostTypes.title": "Configure Item Activation Cost Types",
+
     "CUSTOM_DND5E.form.itemProperties.title": "Configure Item Properties",
 
     "CUSTOM_DND5E.form.languages.title": "Configure Languages",
@@ -162,6 +166,8 @@
     "CUSTOM_DND5E.form.sheet.title": "Configure Sheet",
 
     "CUSTOM_DND5E.form.skills.title": "Configure Skills",
+
+    "CUSTOM_DND5E.form.spellSchools.title": "Configure Spell Schools",
 
     "CUSTOM_DND5E.menu.abilities.hint": "Configure Abilities",
     "CUSTOM_DND5E.menu.abilities.label": "Configure Abilities",
@@ -222,6 +228,10 @@
     "CUSTOM_DND5E.menu.skills.hint": "Configure Skills",
     "CUSTOM_DND5E.menu.skills.label": "Configure Skills",
     "CUSTOM_DND5E.menu.skills.name": "Configure Skills",
+
+    "CUSTOM_DND5E.menu.spellSchools.hint": "Configure Spell Schools",
+    "CUSTOM_DND5E.menu.spellSchools.label": "Configure Spell Schools",
+    "CUSTOM_DND5E.menu.spellSchools.name": "Configure Spell Schools",
 
     "CUSTOM_DND5E.setting.maxLevel.name": "Max Level",
     "CUSTOM_DND5E.setting.levelUpHitPointsRerollMinimumValue.hint": "When rolling Hit Points, automatically re-roll where result is below the minimum",

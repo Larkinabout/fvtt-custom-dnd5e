@@ -2,10 +2,24 @@ import { CONSTANTS } from './constants.js'
 import { checkEmpty, registerMenu, registerSetting, resetDnd5eConfig } from './utils.js'
 import { AbilitiesForm } from './forms/config-form.js'
 
+const property = 'abilities'
+
 /**
- * Register Settings
+ * Register
  */
-export function registerSettings () {
+export function register () {
+    registerSettings()
+
+    loadTemplates([
+        CONSTANTS.ABILITIES.TEMPLATE.FORM,
+        CONSTANTS.ABILITIES.TEMPLATE.LIST
+    ])
+}
+
+/**
+ * Register settings
+ */
+function registerSettings () {
     registerMenu(
         CONSTANTS.ABILITIES.MENU.KEY,
         {
@@ -26,14 +40,9 @@ export function registerSettings () {
             config: false,
             requiresReload: true,
             type: Object,
-            default: foundry.utils.deepClone(CONFIG.CUSTOM_DND5E.abilities)
+            default: foundry.utils.deepClone(CONFIG.CUSTOM_DND5E[property])
         }
     )
-
-    loadTemplates([
-        CONSTANTS.ABILITIES.TEMPLATE.FORM,
-        CONSTANTS.ABILITIES.TEMPLATE.LIST
-    ])
 }
 
 /**
@@ -58,14 +67,12 @@ export function setConfig (data) {
     )
 
     if (checkEmpty(data)) {
-        if (checkEmpty(CONFIG.DND5E.abilities)) {
-            resetDnd5eConfig('abilities')
+        if (checkEmpty(CONFIG.DND5E[property])) {
+            resetDnd5eConfig(property)
         }
         return
     }
 
-    const abilities = buildConfig(data)
-    if (abilities) {
-        CONFIG.DND5E.abilities = abilities
-    }
+    const config = buildConfig(data)
+    config && (CONFIG.DND5E[property] = config)
 }

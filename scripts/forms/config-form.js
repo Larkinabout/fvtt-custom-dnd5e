@@ -11,6 +11,7 @@ import { setConfig as setItemActivationCostTypes } from '../item-activation-cost
 import { setConfig as setLanguages } from '../languages.js'
 import { setConfig as setSenses } from '../senses.js'
 import { setConfig as setSkills } from '../skills.js'
+import { setConfig as setSpellSchools } from '../spell-schools.js'
 
 const itemClass = `${MODULE.ID}-item`
 const listClass = `${MODULE.ID}-list`
@@ -109,9 +110,9 @@ class ConfigForm extends CustomDnd5eForm {
             <input id="label" name="${data.key}.label" type="text" value="">     
         </div>
         <button type="button" data-tooltip="Delete" data-action="delete" class="flex0 delete-button">
-        <i class="fas fa-xmark"></i>
+            <i class="fas fa-xmark"></i>
         </button>
-        <input id="delete" name="${data.key}.delete" type="hidden" value="false"`
+        <input id="delete" name="${data.key}.delete" type="hidden" value="false">`
     }
 
     async _updateObject (event, formData) {
@@ -391,8 +392,8 @@ export class ItemActionTypesForm extends ConfigForm {
 
     static get defaultOptions () {
         return mergeObject(super.defaultOptions, {
-            id: `${MODULE.ID}-item-activation-cost-types-form`,
-            title: game.i18n.localize('CUSTOM_DND5E.form.itemActivationCostTypes.title')
+            id: `${MODULE.ID}-item-action-types-form`,
+            title: game.i18n.localize('CUSTOM_DND5E.form.itemActionTypes.title')
         })
     }
 }
@@ -482,6 +483,56 @@ export class SkillsForm extends ConfigForm {
                     <label class="flex1" style="min-width:80px; max-width:100px;">${game.i18n.localize('CUSTOM_DND5E.ability')}</label>
                     <div class="form-fields">
                         <input id="ability" name="${data.key}.ability" type="text" value="">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="flex1" style="min-width:80px; max-width:100px;">${game.i18n.localize('CUSTOM_DND5E.icon')}</label>
+                    <div class="form-fields">
+                        <input id="icon" name="${data.key}.icon" type="text" value="">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="flex1" style="min-width:80px; max-width:100px;">${game.i18n.localize('CUSTOM_DND5E.reference')}</label>
+                    <div class="form-fields">
+                        <input id="reference" name="${data.key}.reference" type="text" value="">
+                    </div>
+                </div>
+            </div>
+            <button type="button" data-tooltip="${game.i18n.localize('CUSTOM_DND5E.form.button.delete.tooltip')}" data-action="delete" class="flex0 delete-button">
+                <i class="fas fa-xmark"></i>
+            </button>
+            <input id="delete" name="${data.key}.delete" type="hidden" value="false">`
+    }
+}
+
+export class SpellSchoolsForm extends ConfigForm {
+    constructor () {
+        super()
+        this.requiresReload = false
+        this.settingKey = CONSTANTS.SPELL_SCHOOLS.SETTING.KEY
+        this.setFunction = setSpellSchools
+        this.type = 'spellSchools'
+    }
+
+    static get defaultOptions () {
+        return mergeObject(super.defaultOptions, {
+            id: `${MODULE.ID}-spell-schools-form`,
+            template: CONSTANTS.SPELL_SCHOOLS.TEMPLATE.FORM,
+            title: game.i18n.localize('CUSTOM_DND5E.form.spellSchools.title')
+        })
+    }
+
+    _getInnerHtml (data) {
+        return `<i class="flex0 fas fa-grip-lines"></i>
+            <input id="visible" name="${data.key}.visible" type="checkbox" checked>
+            <div class="custom-dnd5e-col-group flexcol">
+                <input id="key" name="${data.key}.key" type="hidden" value="${data.key}">
+                <input id="fullKey" name="${data.key}.fullKey" type="hidden" value="${data.key}">
+                <input id="system" name="${data.key}.system" type="hidden" value="false">
+                <div class="form-group">
+                    <label class="flex1" style="min-width:80px; max-width:100px;">${game.i18n.localize('CUSTOM_DND5E.label')}</label>
+                    <div class="form-fields">
+                        <input id="label" name="${data.key}.label" type="text" value="">
                     </div>
                 </div>
                 <div class="form-group">

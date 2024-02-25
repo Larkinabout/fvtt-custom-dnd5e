@@ -2,10 +2,24 @@ import { CONSTANTS } from './constants.js'
 import { checkEmpty, registerMenu, registerSetting, resetDnd5eConfig } from './utils.js'
 import { ActorSizesForm } from './forms/config-form.js'
 
+const property = 'actorSizes'
+
 /**
- * Register Settings
+ * Register
  */
-export function registerSettings () {
+export function register () {
+    registerSettings()
+
+    loadTemplates([
+        CONSTANTS.ACTOR_SIZES.TEMPLATE.FORM,
+        CONSTANTS.ACTOR_SIZES.TEMPLATE.LIST
+    ])
+}
+
+/**
+ * Register settings
+ */
+function registerSettings () {
     registerMenu(
         CONSTANTS.ACTOR_SIZES.MENU.KEY,
         {
@@ -25,18 +39,13 @@ export function registerSettings () {
             scope: 'world',
             config: false,
             type: Object,
-            default: foundry.utils.deepClone(CONFIG.CUSTOM_DND5E.actorSizes)
+            default: foundry.utils.deepClone(CONFIG.CUSTOM_DND5E[property])
         }
     )
-
-    loadTemplates([
-        CONSTANTS.ACTOR_SIZES.TEMPLATE.FORM,
-        CONSTANTS.ACTOR_SIZES.TEMPLATE.LIST
-    ])
 }
 
 /**
- * Set CONFIG.DND5E.senses
+ * Set CONFIG.DND5E.actorSizes
  * @param {object} data
  */
 export function setConfig (data) {
@@ -56,14 +65,12 @@ export function setConfig (data) {
     )
 
     if (checkEmpty(data)) {
-        if (checkEmpty(CONFIG.DND5E.actorSizes)) {
-            resetDnd5eConfig('actorSizes')
+        if (checkEmpty(CONFIG.DND5E[property])) {
+            resetDnd5eConfig(property)
         }
         return
     }
 
-    const actorSizes = buildConfig(data)
-    if (actorSizes) {
-        CONFIG.DND5E.actorSizes = actorSizes
-    }
+    const config = buildConfig(data)
+    config && (CONFIG.DND5E[property] = config)
 }

@@ -3,9 +3,21 @@ import { checkEmpty, registerMenu, registerSetting, resetDnd5eConfig } from './u
 import { ItemPropertiesForm } from './forms/item-properties-form.js'
 
 /**
- * Register Settings
+ * Register
  */
-export function registerSettings () {
+export function register () {
+    registerSettings()
+
+    loadTemplates([
+        CONSTANTS.ITEM_PROPERTIES.TEMPLATE.FORM,
+        CONSTANTS.ITEM_PROPERTIES.TEMPLATE.LIST
+    ])
+}
+
+/**
+ * Register settings
+ */
+function registerSettings () {
     registerMenu(
         CONSTANTS.ITEM_PROPERTIES.MENU.KEY,
         {
@@ -28,24 +40,23 @@ export function registerSettings () {
             default: CONFIG.CUSTOM_DND5E.itemProperties
         }
     )
-
-    loadTemplates([
-        CONSTANTS.ITEM_PROPERTIES.TEMPLATE.FORM,
-        CONSTANTS.ITEM_PROPERTIES.TEMPLATE.LIST
-    ])
 }
 
+/**
+ * Get dnd5e config
+ * @returns {object} The item properties
+ */
 export function getDnd5eConfig () {
-    const itemProperties = foundry.utils.deepClone(CONFIG.CUSTOM_DND5E.itemProperties)
+    const config = foundry.utils.deepClone(CONFIG.CUSTOM_DND5E.itemProperties)
 
     Object.entries(CONFIG.CUSTOM_DND5E.validProperties).forEach(itemType => {
         [...itemType[1]].forEach(property => {
-            const itemProperty = itemProperties[property]
+            const itemProperty = config[property]
             itemProperty && (itemProperty[itemType[0]] = true)
         })
     })
 
-    return itemProperties
+    return config
 }
 
 /**
@@ -88,8 +99,6 @@ export function setConfig (data) {
         })
     })
 
-    const itemProperties = buildConfig(data)
-
     if (checkEmpty(data)) {
         if (checkEmpty(CONFIG.DND5E.itemProperties)) {
             resetDnd5eConfig('itemProperties')
@@ -97,7 +106,6 @@ export function setConfig (data) {
         return
     }
 
-    if (itemProperties) {
-        CONFIG.DND5E.itemProperties = itemProperties
-    }
+    const config = buildConfig(data)
+    config && (CONFIG.DND5E.itemProperties = config)
 }

@@ -2,10 +2,20 @@ import { CONSTANTS, SHEET_TYPE } from './constants.js'
 import { checkEmpty, getFlag, getSetting, registerMenu, registerSetting, resetDnd5eConfig } from './utils.js'
 import { SensesForm } from './forms/config-form.js'
 
+const property = 'senses'
+
 /**
- * Register Settings
+ * Register
  */
-export function registerSettings () {
+export function register () {
+    registerSettings()
+    registerHooks()
+}
+
+/**
+ * Register settings
+ */
+function registerSettings () {
     registerMenu(
         CONSTANTS.SENSES.MENU.KEY,
         {
@@ -25,9 +35,51 @@ export function registerSettings () {
             scope: 'world',
             config: false,
             type: Object,
-            default: CONFIG.CUSTOM_DND5E.senses
+            default: CONFIG.CUSTOM_DND5E[property]
         }
     )
+}
+
+/**
+ * Register hooks
+ */
+function registerHooks () {
+    Hooks.on('renderActorSensesConfig', (app, html, data) => {
+        const actor = data.document
+        const systemSenses = ['blindsight', 'darkvision', 'tremorsense', 'truesight']
+        const inputs = html[0].querySelectorAll('input[type="number"]')
+        inputs.forEach(input => {
+            const key = input.name.split('.').pop()
+            if (!systemSenses.includes(key)) {
+                input.name = `flags.custom-dnd5e.${key}`
+                const flag = getFlag(actor, key)
+                if (flag) {
+                    input.value = flag
+                }
+            }
+        })
+    })
+
+    /**
+     * This uses a hook added by the Application._render patch.
+     * To replace for ApplicationV2
+     */
+    Hooks.on('preRenderActorSheet', (app, data) => {
+        const actorSheetType = SHEET_TYPE[app.constructor.name]
+
+        const senses = getSetting(CONSTANTS.SENSES.SETTING.KEY)
+        Object.entries(senses).forEach(([key, value]) => {
+            const flag = getFlag(app.document, key)
+            if (flag) {
+                if (!Object.hasOwn(data, 'senses')) {
+                    data.senses = {}
+                }
+                data.senses[key] = (actorSheetType.legacy)
+                    ? `${value.label} ${flag}`
+                    : { label: value.label, value: flag }
+            }
+        })
+    })
 }
 
 /**
@@ -45,49 +97,12 @@ export function setConfig (data) {
     )
 
     if (checkEmpty(data)) {
-        if (checkEmpty(CONFIG.DND5E.senses)) {
-            resetDnd5eConfig('senses')
+        if (checkEmpty(CONFIG.DND5E[property])) {
+            resetDnd5eConfig(property)
         }
         return
     }
 
-    const senses = buildConfig(data)
-    if (senses) {
-        CONFIG.DND5E.senses = senses
-    }
+    const config = buildConfig(data)
+    config && (CONFIG.DND5E[property] = config)
 }
-
-Hooks.on('renderActorSensesConfig', (app, html, data) => {
-    const actor = data.document
-    const systemSenses = ['blindsight', 'darkvision', 'tremorsense', 'truesight']
-    const inputs = html[0].querySelectorAll('input[type="number"]')
-    inputs.forEach(input => {
-        const key = input.name.split('.').pop()
-        if (!systemSenses.includes(key)) {
-            input.name = `flags.custom-dnd5e.${key}`
-            const flag = getFlag(actor, key)
-            if (flag) {
-                input.value = flag
-            }
-        }
-    })
-})
-
-/**
- * This uses a hook added by the Application._render patch.
- * To replace for ApplicationV2
- */
-Hooks.on('preRenderActorSheet', (app, data) => {
-    const actorSheetType = SHEET_TYPE[app.constructor.name]
-
-    const senses = getSetting(CONSTANTS.SENSES.SETTING.KEY)
-    Object.entries(senses).forEach(([key, value]) => {
-        const flag = getFlag(app.document, key)
-        if (flag) {
-            if (!Object.hasOwn(data, 'senses')) {
-                data.senses = {}
-            }
-            data.senses[key] = (actorSheetType.legacy) ? `${value.label} ${flag}` : { label: value.label, value: flag }
-        }
-    })
-})

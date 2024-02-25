@@ -2,10 +2,19 @@ import { CONSTANTS } from './constants.js'
 import { checkEmpty, registerMenu, registerSetting, resetDnd5eConfig } from './utils.js'
 import { LanguagesForm } from './forms/config-form.js'
 
+const property = 'languages'
+
 /**
- * Register Settings
+ * Register
  */
-export function registerSettings () {
+export function register () {
+    registerSettings()
+}
+
+/**
+ * Register settings
+ */
+function registerSettings () {
     registerMenu(
         CONSTANTS.LANGUAGES.MENU.KEY,
         {
@@ -25,7 +34,7 @@ export function registerSettings () {
             scope: 'world',
             config: false,
             type: Object,
-            default: foundry.utils.deepClone(CONFIG.CUSTOM_DND5E.languages)
+            default: foundry.utils.deepClone(CONFIG.CUSTOM_DND5E[property])
         }
     )
 }
@@ -47,11 +56,12 @@ export function setConfig (data) {
     )
 
     if (checkEmpty(data)) {
-        if (checkEmpty(CONFIG.DND5E.languages)) {
-            resetDnd5eConfig('languages')
+        if (checkEmpty(CONFIG.DND5E[property])) {
+            resetDnd5eConfig(property)
         }
         return
     }
 
-    CONFIG.DND5E.languages = buildConfig(data)
+    const config = buildConfig(data)
+    config && (CONFIG.DND5E[property] = config)
 }

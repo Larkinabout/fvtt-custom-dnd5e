@@ -2,10 +2,19 @@ import { CONSTANTS } from './constants.js'
 import { checkEmpty, registerMenu, registerSetting, resetDnd5eConfig } from './utils.js'
 import { ItemActionTypesForm } from './forms/config-form.js'
 
+const property = 'itemActionTypes'
+
 /**
- * Register Settings
+ * Register
  */
-export function registerSettings () {
+export function register () {
+    registerSettings()
+}
+
+/**
+ * Register settings
+ */
+function registerSettings () {
     registerMenu(
         CONSTANTS.ITEM_ACTION_TYPES.MENU.KEY,
         {
@@ -25,7 +34,7 @@ export function registerSettings () {
             scope: 'world',
             config: false,
             type: Object,
-            default: CONFIG.CUSTOM_DND5E.itemActionTypes
+            default: CONFIG.CUSTOM_DND5E[property]
         }
     )
 }
@@ -45,14 +54,12 @@ export function setConfig (data) {
     )
 
     if (checkEmpty(data)) {
-        if (checkEmpty(CONFIG.DND5E.itemActionTypes)) {
-            resetDnd5eConfig('itemActionTypes')
+        if (checkEmpty(CONFIG.DND5E[property])) {
+            resetDnd5eConfig(property)
         }
         return
     }
 
-    const itemActionTypes = buildConfig(data)
-    if (itemActionTypes) {
-        CONFIG.DND5E.itemActionTypes = itemActionTypes
-    }
+    const config = buildConfig(data)
+    config && (CONFIG.DND5E[property] = config)
 }

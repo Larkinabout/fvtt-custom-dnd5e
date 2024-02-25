@@ -3,9 +3,20 @@ import { registerMenu, registerSetting } from './utils.js'
 import { DebugForm } from './forms/debug-form.js'
 
 /**
- * Register Settings
+ * Register
  */
-export function registerSettings () {
+export function register () {
+    registerSettings()
+
+    loadTemplates([
+        CONSTANTS.DEBUG.TEMPLATE.FORM
+    ])
+}
+
+/**
+ * Register settings
+ */
+function registerSettings () {
     registerMenu(
         CONSTANTS.DEBUG.MENU.KEY,
         {
@@ -28,12 +39,11 @@ export function registerSettings () {
             default: false
         }
     )
-
-    loadTemplates([
-        CONSTANTS.DEBUG.TEMPLATE.FORM
-    ])
 }
 
+/**
+ * Exports settings and config data to JSON file
+ */
 export async function exportData () {
     const data = {}
     data.setting = Object.fromEntries([...game.settings.settings].filter(setting => setting[0].includes('custom-dnd5e')))
@@ -51,6 +61,7 @@ export async function exportData () {
         skills: CONFIG.DND5E.skills,
         validProperties: CONFIG.DND5E.validProperties
     }
+
     if (data) {
         saveDataToFile(JSON.stringify(data, null, 2), 'text/json', `${MODULE.ID}.json`)
     }

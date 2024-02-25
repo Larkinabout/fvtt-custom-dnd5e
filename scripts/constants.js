@@ -332,6 +332,23 @@ export const CONSTANTS = {
             FORM: 'modules/custom-dnd5e/templates/skills-form.hbs',
             LIST: 'modules/custom-dnd5e/templates/skills-list.hbs'
         }
+    },
+    SPELL_SCHOOLS: {
+        ID: 'spell-schools',
+        MENU: {
+            KEY: 'spell-schools-menu',
+            HINT: 'CUSTOM_DND5E.menu.spellSchools.hint',
+            ICON: 'fas fa-pen-to-square',
+            LABEL: 'CUSTOM_DND5E.menu.spellSchools.label',
+            NAME: 'CUSTOM_DND5E.menu.spellSchools.name'
+        },
+        SETTING: {
+            KEY: 'spell-schools'
+        },
+        TEMPLATE: {
+            FORM: 'modules/custom-dnd5e/templates/spell-schools-form.hbs',
+            LIST: 'modules/custom-dnd5e/templates/spell-schools-list.hbs'
+        }
     }
 }
 

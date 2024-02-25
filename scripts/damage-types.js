@@ -2,10 +2,24 @@ import { CONSTANTS } from './constants.js'
 import { checkEmpty, registerMenu, registerSetting, resetDnd5eConfig } from './utils.js'
 import { DamageTypesForm } from './forms/config-form.js'
 
+const property = 'damageTypes'
+
 /**
- * Register Settings
+ * Register
  */
-export function registerSettings () {
+export function register () {
+    registerSettings()
+
+    loadTemplates([
+        CONSTANTS.DAMAGE_TYPES.TEMPLATE.FORM,
+        CONSTANTS.DAMAGE_TYPES.TEMPLATE.LIST
+    ])
+}
+
+/**
+ * Register settings
+ */
+function registerSettings () {
     registerMenu(
         CONSTANTS.DAMAGE_TYPES.MENU.KEY,
         {
@@ -25,14 +39,9 @@ export function registerSettings () {
             scope: 'world',
             config: false,
             type: Object,
-            default: CONFIG.CUSTOM_DND5E.damageTypes
+            default: CONFIG.CUSTOM_DND5E[property]
         }
     )
-
-    loadTemplates([
-        CONSTANTS.DAMAGE_TYPES.TEMPLATE.FORM,
-        CONSTANTS.DAMAGE_TYPES.TEMPLATE.LIST
-    ])
 }
 
 /**
@@ -54,14 +63,12 @@ export function setConfig (data) {
     )
 
     if (checkEmpty(data)) {
-        if (checkEmpty(CONFIG.DND5E.damageTypes)) {
-            resetDnd5eConfig('damageTypes')
+        if (checkEmpty(CONFIG.DND5E[property])) {
+            resetDnd5eConfig(property)
         }
         return
     }
 
-    const damageTypes = buildConfig(data)
-    if (damageTypes) {
-        CONFIG.DND5E.damageTypes = damageTypes
-    }
+    const config = buildConfig(data)
+    config && (CONFIG.DND5E[property] = config)
 }

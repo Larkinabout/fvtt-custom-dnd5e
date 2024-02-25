@@ -1,8 +1,20 @@
 import { CONSTANTS, SHEET_TYPE } from './constants.js'
-import { getFlag, setFlag, getSetting, registerMenu, registerSetting } from './utils.js'
+import { getFlag, getSetting, registerMenu, registerSetting } from './utils.js'
 import { SheetForm } from './forms/sheet-form.js'
 
-export function registerSettings () {
+export function register () {
+    registerSettings()
+    registerHooks()
+
+    loadTemplates([
+        CONSTANTS.SHEET.TEMPLATE.FORM
+    ])
+}
+
+/**
+ * Register settings
+ */
+function registerSettings () {
     registerMenu(
         CONSTANTS.SHEET.MENU.KEY,
         {
@@ -104,39 +116,37 @@ export function registerSettings () {
             default: true
         }
     )
-
-    loadTemplates([
-        CONSTANTS.SHEET.TEMPLATE.FORM
-    ])
 }
 
 /**
- * HOOKS
+ * Register hooks
  */
-Hooks.on('preRenderActorSheet', (app, data) => {
-    const sheetType = SHEET_TYPE[app.constructor.name]
+function registerHooks () {
+    Hooks.on('preRenderActorSheet', (app, data) => {
+        const sheetType = SHEET_TYPE[app.constructor.name]
 
-    setSheetScale(sheetType, app)
-})
+        setSheetScale(sheetType, app)
+    })
 
-Hooks.on('renderActorSheet', (app, html, data) => {
-    const sheetType = SHEET_TYPE[app.constructor.name]
+    Hooks.on('renderActorSheet', (app, html, data) => {
+        const sheetType = SHEET_TYPE[app.constructor.name]
 
-    if (html[0].classList.contains('app')) {
-        if (getFlag(game.user, CONSTANTS.SHEET.SETTING.AUTO_FADE_SHEET.KEY)) { enableAutoFade(html) }
-        if (getFlag(game.user, CONSTANTS.SHEET.SETTING.AUTO_MINIMISE_SHEET.KEY)) { enableAutoMinimise(app, html) }
-    }
+        if (html[0].classList.contains('app')) {
+            if (getFlag(game.user, CONSTANTS.SHEET.SETTING.AUTO_FADE_SHEET.KEY)) { enableAutoFade(html) }
+            if (getFlag(game.user, CONSTANTS.SHEET.SETTING.AUTO_MINIMISE_SHEET.KEY)) { enableAutoMinimise(app, html) }
+        }
 
-    setBannerImage(sheetType, html)
-    if (!getSetting(CONSTANTS.SHEET.SETTING.SHOW_DEATH_SAVES.KEY)) { removeDeathSaves(sheetType, html) }
-    if (!getSetting(CONSTANTS.SHEET.SETTING.SHOW_ENCUMBRANCE.KEY)) { removeEncumbrance(sheetType, html) }
-    if (!getSetting(CONSTANTS.SHEET.SETTING.SHOW_EXHAUSTION.KEY)) { removeExhaustion(sheetType, html) }
-    if (!getSetting(CONSTANTS.SHEET.SETTING.SHOW_INSPIRATION.KEY)) { removeInspiration(sheetType, html) }
-    if (!getSetting(CONSTANTS.SHEET.SETTING.SHOW_LEGENDARY_ACTIONS.KEY)) { removeLegendaryActions(sheetType, html) }
-    if (!getSetting(CONSTANTS.SHEET.SETTING.SHOW_LEGENDARY_RESISTANCE.KEY)) { removeLegendaryResistance(sheetType, html) }
-    if (!getSetting(CONSTANTS.SHEET.SETTING.SHOW_MANAGE_CURRENCY.KEY)) { removeManageCurrency(sheetType, html) }
-    if (!getSetting(CONSTANTS.SHEET.SETTING.SHOW_USE_LAIR_ACTION.KEY)) { removeUseLairAction(sheetType, html) }
-})
+        setBannerImage(sheetType, html)
+        if (!getSetting(CONSTANTS.SHEET.SETTING.SHOW_DEATH_SAVES.KEY)) { removeDeathSaves(sheetType, html) }
+        if (!getSetting(CONSTANTS.SHEET.SETTING.SHOW_ENCUMBRANCE.KEY)) { removeEncumbrance(sheetType, html) }
+        if (!getSetting(CONSTANTS.SHEET.SETTING.SHOW_EXHAUSTION.KEY)) { removeExhaustion(sheetType, html) }
+        if (!getSetting(CONSTANTS.SHEET.SETTING.SHOW_INSPIRATION.KEY)) { removeInspiration(sheetType, html) }
+        if (!getSetting(CONSTANTS.SHEET.SETTING.SHOW_LEGENDARY_ACTIONS.KEY)) { removeLegendaryActions(sheetType, html) }
+        if (!getSetting(CONSTANTS.SHEET.SETTING.SHOW_LEGENDARY_RESISTANCE.KEY)) { removeLegendaryResistance(sheetType, html) }
+        if (!getSetting(CONSTANTS.SHEET.SETTING.SHOW_MANAGE_CURRENCY.KEY)) { removeManageCurrency(sheetType, html) }
+        if (!getSetting(CONSTANTS.SHEET.SETTING.SHOW_USE_LAIR_ACTION.KEY)) { removeUseLairAction(sheetType, html) }
+    })
+}
 
 /**
  * Enable auto-fade

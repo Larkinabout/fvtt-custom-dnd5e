@@ -3,7 +3,7 @@ import { checkEmpty, getSetting, registerMenu, registerSetting, resetDnd5eConfig
 import { EncumbranceForm } from './forms/encumbrance-form.js'
 
 /**
- * Register Settings
+ * Register
  */
 export function register () {
     // Return if the Variant Encumbrance + Midi module is active
@@ -127,5 +127,5 @@ export function setConfig (data) {
         return
     }
 
-    CONFIG.DND5E.encumbrance = data
+    data && (CONFIG.DND5E.encumbrance = data)
 }

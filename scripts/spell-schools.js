@@ -1,14 +1,19 @@
 import { CONSTANTS } from './constants.js'
 import { checkEmpty, registerMenu, registerSetting, resetDnd5eConfig } from './utils.js'
-import { ArmorTypesForm } from './forms/config-form.js'
+import { SpellSchoolsForm } from './forms/config-form.js'
 
-const property = 'armorTypes'
+const property = 'spellSchools'
 
 /**
  * Register
  */
 export function register () {
     registerSettings()
+
+    loadTemplates([
+        CONSTANTS.SPELL_SCHOOLS.TEMPLATE.FORM,
+        CONSTANTS.SPELL_SCHOOLS.TEMPLATE.LIST
+    ])
 }
 
 /**
@@ -16,31 +21,32 @@ export function register () {
  */
 function registerSettings () {
     registerMenu(
-        CONSTANTS.ARMOR_TYPES.MENU.KEY,
+        CONSTANTS.SPELL_SCHOOLS.MENU.KEY,
         {
-            hint: game.i18n.localize(CONSTANTS.ARMOR_TYPES.MENU.HINT),
-            label: game.i18n.localize(CONSTANTS.ARMOR_TYPES.MENU.LABEL),
-            name: game.i18n.localize(CONSTANTS.ARMOR_TYPES.MENU.NAME),
-            icon: CONSTANTS.ARMOR_TYPES.MENU.ICON,
-            type: ArmorTypesForm,
+            hint: game.i18n.localize(CONSTANTS.SPELL_SCHOOLS.MENU.HINT),
+            label: game.i18n.localize(CONSTANTS.SPELL_SCHOOLS.MENU.LABEL),
+            name: game.i18n.localize(CONSTANTS.SPELL_SCHOOLS.MENU.NAME),
+            icon: CONSTANTS.SPELL_SCHOOLS.MENU.ICON,
+            type: SpellSchoolsForm,
             restricted: true,
             scope: 'world'
         }
     )
 
     registerSetting(
-        CONSTANTS.ARMOR_TYPES.SETTING.KEY,
+        CONSTANTS.SPELL_SCHOOLS.SETTING.KEY,
         {
             scope: 'world',
             config: false,
+            requiresReload: true,
             type: Object,
-            default: foundry.utils.deepClone(CONFIG.CUSTOM_DND5E[property])
+            default: CONFIG.CUSTOM_DND5E[property]
         }
     )
 }
 
 /**
- * Set CONFIG.DND5E.armorTypes
+ * Set CONFIG.DND5E.spellSchools
  * @param {object} data
  */
 export function setConfig (data) {
@@ -49,7 +55,12 @@ export function setConfig (data) {
             .filter(([_, value]) => value.visible || value.visible === undefined)
             .map(([key, value]) => [
                 key,
-                game.i18n.localize(value.label)
+                {
+                    fullKey: value.fullKey,
+                    icon: value.icon,
+                    label: game.i18n.localize(value.label),
+                    reference: value.reference
+                }
             ])
     )
 
