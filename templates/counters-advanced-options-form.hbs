@@ -49,7 +49,9 @@
             </div>
             <h2 class="flex0">{{localize "CUSTOM_DND5E.triggers"}}</h2>
             <div class="flexcol flexa scrollable">
-                {{> "modules/custom-dnd5e/templates/counters-triggers-list.hbs" prefix=triggers key=key type=type}}
+                <ul class="custom-dnd5e-list">
+                    {{> "modules/custom-dnd5e/templates/counters-triggers-list.hbs" prefix=triggers key=key type=type}}
+                </ul>
             </div>
         </div>
         <footer>

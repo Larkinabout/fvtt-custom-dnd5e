@@ -85,34 +85,25 @@ class ConfigForm extends CustomDnd5eForm {
 
         const key = randomID()
 
-        const item = document.createElement('li')
-        item.classList.add(itemClass, 'flexrow')
-        item.setAttribute('draggable', 'true')
-        item.setAttribute('data-key', key)
+        const template = await this._getHtml({ items: { [key]: { system: false, visible: true } } })
 
-        item.innerHTML = this._getInnerHtml({ key })
+        list.insertAdjacentHTML('beforeend', template)
 
-        if (this.items[0]) { item.addEventListener('dragstart', this.items[0].ondragstart) } // Fix this for empty list
-        item.addEventListener('dragleave', this._onDragLeave)
+        const item = list.querySelector(`[data-key="${key}"]`)
+        const dragElement = item.querySelector('.custom-dnd5e-drag')
 
-        list.appendChild(item)
+        item.addEventListener('dragend', this._onDragEnd.bind(this))
+        item.addEventListener('dragleave', this._onDragLeave.bind(this))
+        item.addEventListener('dragover', this._onDragOver.bind(this))
+        item.addEventListener('drop', this._onDrop.bind(this))
+        dragElement.addEventListener('dragstart', this._onDragStart.bind(this))
 
         scrollable && (scrollable.scrollTop = scrollable.scrollHeight)
     }
 
-    _getInnerHtml (data) {
-        return `<i class="flex0 fas fa-grip-lines"></i>
-        <input id="visible" name="${data.key}.visible" type="checkbox" checked>
-        <div class="fields flexrow">
-            <input id="parentKey" name="${data.key}.parentKey" type="hidden" value="">
-            <input id="key" name="${data.key}.key" type="hidden" value="${data.key}">
-            <input id="system" name="${data.key}.system" type="hidden" value="false">
-            <input id="label" name="${data.key}.label" type="text" value="">     
-        </div>
-        <button type="button" data-tooltip="Delete" data-action="delete" class="flex0 delete-button">
-            <i class="fas fa-xmark"></i>
-        </button>
-        <input id="delete" name="${data.key}.delete" type="hidden" value="false">`
+    async _getHtml (data) {
+        const template = await renderTemplate(CONSTANTS.CONFIG.TEMPLATE.LIST, data)
+        return template
     }
 
     async _updateObject (event, formData) {
@@ -168,51 +159,9 @@ export class AbilitiesForm extends ConfigForm {
         })
     }
 
-    _getInnerHtml (data) {
-        return `<i class="flex0 fas fa-grip-lines"></i>
-            <input id="visible" name="${data.key}.visible" type="checkbox" checked>
-            <div class="custom-dnd5e-col-group flexcol">
-                <input id="key" name="${data.key}.key" type="hidden" value="${data.key}">
-                <input id="fullKey" name="${data.key}.fullKey" type="hidden" value="${data.key}">
-                <input id="system" name="${data.key}.system" type="hidden" value="false">
-                <div class="form-group">
-                    <label class="flex1" style="min-width:80px; max-width:100px;">${game.i18n.localize('CUSTOM_DND5E.label')}</label>
-                    <div class="form-fields">
-                        <input id="label" name="${data.key}.label" type="text" value="">
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="flex1" style="min-width:80px; max-width:100px;">${game.i18n.localize('CUSTOM_DND5E.abbreviation')}</label>
-                    <div class="form-fields">
-                        <input id="abbreviation" name="${data.key}.abbreviation" type="text" value="">
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="flex1" style="min-width:80px; max-width:100px;">Include for ASI</label>
-                    <div class="form-fields">
-                        <input id="improvement" name="${data.key}.improvement" type="checkbox">
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="flex1" style="min-width:80px; max-width:100px;">${game.i18n.localize('CUSTOM_DND5E.type')}</label>
-                    <div class="form-fields">
-                        <select id="type" name="${data.key}.type">
-                            <option value="mental">${game.i18n.localize('CUSTOM_DND5E.mental')}</option>
-                            <option value="fraction">${game.i18n.localize('CUSTOM_DND5E.physical')}</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="flex1" style="min-width:80px; max-width:100px;">${game.i18n.localize('CUSTOM_DND5E.reference')}</label>
-                    <div class="form-fields">
-                        <input id="reference" name="${data.key}.reference" type="text" value="">
-                    </div>
-                </div>
-            </div>
-            <button type="button" data-tooltip="${game.i18n.localize('CUSTOM_DND5E.form.button.delete.tooltip')}" data-action="delete" class="flex0 delete-button">
-                <i class="fas fa-xmark"></i>
-            </button>
-            <input id="delete" name="${data.key}.delete" type="hidden" value="false">`
+    async _getHtml (data) {
+        const template = await renderTemplate(CONSTANTS.ABILITIES.TEMPLATE.LIST, data)
+        return template
     }
 }
 
@@ -233,47 +182,9 @@ export class ActorSizesForm extends ConfigForm {
         })
     }
 
-    _getInnerHtml (data) {
-        return `<i class="custom-dnd5e-drag flex0 fas fa-grip-lines" draggable="true"></i>
-                <input id="visible" name="${data.key}.visible" type="checkbox" data-tooltip="${game.i18n.localize('CUSTOM_DND5E.form.checkbox.visible.tooltip')}" checked>
-                <div class="custom-dnd5e-col-group flexcol">
-                    <input id="key" name="${data.key}.key" type="hidden" value="${data.key}">
-                    <input id="system" name="${data.key}.system" type="hidden" value="false">
-                    <div class="form-group">
-                        <label class="flex1" style="min-width:80px; max-width:120px;">${game.i18n.localize('CUSTOM_DND5E.label')}</label>
-                        <div class="form-fields">
-                            <input id="label" name="${data.key}.label" type="text">
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label class="flex1" style="min-width:80px; max-width:120px;">${game.i18n.localize('CUSTOM_DND5E.abbreviation')}</label>
-                        <div class="form-fields">
-                            <input id="abbreviation" name="${data.key}.abbreviation" type="text">
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label class="flex1" style="min-width:80px; max-width:120px;">${game.i18n.localize('CUSTOM_DND5E.tokenSize')}</label>
-                        <div class="form-fields">
-                            <input id="token" name="${data.key}.token" type="number" step="0.05">
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label class="flex1" style="min-width:80px; max-width:120px;">${game.i18n.localize('CUSTOM_DND5E.dynamicTokenScale')}</label>
-                        <div class="form-fields">
-                            <input id="dynamic-token-scale" name="${data.key}.dynamicTokenScale" type="number" step="0.05">
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label class="flex1" style="min-width:80px; max-width:120px;">${game.i18n.localize('CUSTOM_DND5E.capacityMultiplier')}</label>
-                        <div class="form-fields">
-                            <input id="capacity-multiplier" name="${data.key}.capacityMultiplier" type="number" step="0.05">
-                        </div>
-                    </div>
-                </div>
-                <button type="button" data-tooltip="${game.i18n.localize('CUSTOM_DND5E.form.button.delete.tooltip')}" data-action="delete" class="flex0 delete-button">
-                    <i class="fas fa-xmark"></i>
-                </button>
-                <input id="delete" name="${data.key}.delete" type="hidden" value="false">`
+    async _getHtml (data) {
+        const template = await renderTemplate(CONSTANTS.ACTOR_SIZES.TEMPLATE.LIST, data)
+        return template
     }
 }
 
@@ -311,29 +222,9 @@ export class CurrencyForm extends ConfigForm {
         })
     }
 
-    _getInnerHtml (data) {
-        return `<i class="flex0 fas fa-grip-lines"></i>
-        <input id="visible" name="${data.key}.visible" type="checkbox" checked>
-        <div class="fields flexrow">
-            <input id="key" name="${data.key}.key" type="hidden" value="${data.key}">
-            <input id="system" name="${data.key}.system" type="hidden" value="false">
-            <div class="field">
-                <label>${game.i18n.localize('CUSTOM_DND5E.label')}</label>
-                <input id="label" name="${data.key}.label" type="text" value="">
-            </div>
-            <div class="field">
-                <label>${game.i18n.localize('CUSTOM_DND5E.abbreviation')}</label>
-                <input id="abbreviation" name="${data.key}.abbreviation" type="text" value="">
-            </div>   
-            <div class="field">
-                <label>${game.i18n.localize('CUSTOM_DND5E.conversion')}</label>
-                <input id="conversion" name="${data.key}.conversion" type="number" value="">
-            </div>
-        </div>
-        <button type="button" data-tooltip="Delete" data-action="delete" class="flex0 delete-button">
-        <i class="fas fa-xmark"></i>
-        </button>
-        <input id="delete" name="${data.key}.delete" type="hidden" value="false"`
+    async _getHtml (data) {
+        const template = await renderTemplate(CONSTANTS.CURRENCY.TEMPLATE.LIST, data)
+        return template
     }
 }
 
@@ -354,30 +245,9 @@ export class DamageTypesForm extends ConfigForm {
         })
     }
 
-    _getInnerHtml (data) {
-        return `<i class="flex0 fas fa-grip-lines"></i>
-        <input id="visible" name="${data.key}.visible" type="checkbox" checked>
-        <div class="fields flexrow">
-            <input id="parentKey" name="${data.key}.parentKey" type="hidden" value="">
-            <input id="key" name="${data.key}.key" type="hidden" value="${data.key}">
-            <input id="system" name="${data.key}.system" type="hidden" value="false">
-            <div class="field flex1">
-                <label>${game.i18n.localize('CUSTOM_DND5E.label')}</label>
-                <input id="label" name="${data.key}.label" type="text" value="">
-            </div>
-            <div class="field flex2">
-                <label>${game.i18n.localize('CUSTOM_DND5E.icon')}</label>
-                <input id="icon" name="${data.key}.icon" type="text" value="">
-            </div>   
-            <div class="field flex2">
-                <label>${game.i18n.localize('CUSTOM_DND5E.reference')}</label>
-                <input id="reference" name="${data.key}.reference" type="text" value="">
-            </div>
-        </div>
-        <button type="button" data-tooltip="Delete" data-action="delete" class="flex0 delete-button">
-        <i class="fas fa-xmark"></i>
-        </button>
-        <input id="delete" name="${data.key}.delete" type="hidden" value="false"`
+    async _getHtml (data) {
+        const template = await renderTemplate(CONSTANTS.DAMAGE_TYPES.TEMPLATE.LIST, data)
+        return template
     }
 }
 
@@ -466,42 +336,9 @@ export class SkillsForm extends ConfigForm {
         })
     }
 
-    _getInnerHtml (data) {
-        return `<i class="flex0 fas fa-grip-lines"></i>
-            <input id="visible" name="${data.key}.visible" type="checkbox" checked>
-            <div class="custom-dnd5e-col-group flexcol">
-                <input id="key" name="${data.key}.key" type="hidden" value="${data.key}">
-                <input id="fullKey" name="${data.key}.fullKey" type="hidden" value="${data.key}">
-                <input id="system" name="${data.key}.system" type="hidden" value="false">
-                <div class="form-group">
-                    <label class="flex1" style="min-width:80px; max-width:100px;">${game.i18n.localize('CUSTOM_DND5E.label')}</label>
-                    <div class="form-fields">
-                        <input id="label" name="${data.key}.label" type="text" value="">
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="flex1" style="min-width:80px; max-width:100px;">${game.i18n.localize('CUSTOM_DND5E.ability')}</label>
-                    <div class="form-fields">
-                        <input id="ability" name="${data.key}.ability" type="text" value="">
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="flex1" style="min-width:80px; max-width:100px;">${game.i18n.localize('CUSTOM_DND5E.icon')}</label>
-                    <div class="form-fields">
-                        <input id="icon" name="${data.key}.icon" type="text" value="">
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="flex1" style="min-width:80px; max-width:100px;">${game.i18n.localize('CUSTOM_DND5E.reference')}</label>
-                    <div class="form-fields">
-                        <input id="reference" name="${data.key}.reference" type="text" value="">
-                    </div>
-                </div>
-            </div>
-            <button type="button" data-tooltip="${game.i18n.localize('CUSTOM_DND5E.form.button.delete.tooltip')}" data-action="delete" class="flex0 delete-button">
-                <i class="fas fa-xmark"></i>
-            </button>
-            <input id="delete" name="${data.key}.delete" type="hidden" value="false">`
+    async _getHtml (data) {
+        const template = await renderTemplate(CONSTANTS.SKILLS.TEMPLATE.LIST, data)
+        return template
     }
 }
 
@@ -522,35 +359,8 @@ export class SpellSchoolsForm extends ConfigForm {
         })
     }
 
-    _getInnerHtml (data) {
-        return `<i class="flex0 fas fa-grip-lines"></i>
-            <input id="visible" name="${data.key}.visible" type="checkbox" checked>
-            <div class="custom-dnd5e-col-group flexcol">
-                <input id="key" name="${data.key}.key" type="hidden" value="${data.key}">
-                <input id="fullKey" name="${data.key}.fullKey" type="hidden" value="${data.key}">
-                <input id="system" name="${data.key}.system" type="hidden" value="false">
-                <div class="form-group">
-                    <label class="flex1" style="min-width:80px; max-width:100px;">${game.i18n.localize('CUSTOM_DND5E.label')}</label>
-                    <div class="form-fields">
-                        <input id="label" name="${data.key}.label" type="text" value="">
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="flex1" style="min-width:80px; max-width:100px;">${game.i18n.localize('CUSTOM_DND5E.icon')}</label>
-                    <div class="form-fields">
-                        <input id="icon" name="${data.key}.icon" type="text" value="">
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="flex1" style="min-width:80px; max-width:100px;">${game.i18n.localize('CUSTOM_DND5E.reference')}</label>
-                    <div class="form-fields">
-                        <input id="reference" name="${data.key}.reference" type="text" value="">
-                    </div>
-                </div>
-            </div>
-            <button type="button" data-tooltip="${game.i18n.localize('CUSTOM_DND5E.form.button.delete.tooltip')}" data-action="delete" class="flex0 delete-button">
-                <i class="fas fa-xmark"></i>
-            </button>
-            <input id="delete" name="${data.key}.delete" type="hidden" value="false">`
+    async _getHtml (data) {
+        const template = await renderTemplate(CONSTANTS.SPELL_SCHOOLS.TEMPLATE.LIST, data)
+        return template
     }
 }

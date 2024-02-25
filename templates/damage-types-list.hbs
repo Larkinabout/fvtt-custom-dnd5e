@@ -1,32 +1,32 @@
-<ul class="custom-dnd5e-list flexcol">
-    {{#each items as |item key|}}
-        <li class="custom-dnd5e-item flexrow" draggable="true" data-key="{{key}}">
-            <i class="custom-dnd5e-drag flex0 fas fa-grip-lines" draggable="true"></i>
-            <input id="visible" name="{{key}}.visible" type="checkbox" data-tooltip="{{localize "CUSTOM_DND5E.form.checkbox.visible.tooltip"}}"{{#unless (boolfalse visible)}} checked{{/unless}}>
-            <div class="fields flexrow">
-                <input id="parentKey" name="{{key}}.parentKey" type="hidden" value="{{../parentKey}}">
-                <input id="key" name="{{key}}.key" type="hidden" value="{{key}}">
-                <input id="system" name="{{key}}.system" type="hidden" value="{{#if (boolfalse system)}}false{{else}}true{{/if}}">
-                <div class="field flex1">
-                    <label>{{localize "CUSTOM_DND5E.label"}}</label>
-                    <input id="label" name="{{key}}.label" type="text" value="{{localize label}}">
-                </div>
-                <div class="field flex2">
-                    <label>{{localize "CUSTOM_DND5E.icon"}}</label>
-                    <input id="icon" name="{{key}}.icon" type="text" value="{{icon}}">
-                </div>
-                <div class="field flex2">
-                    <label>{{localize "CUSTOM_DND5E.reference"}}</label>
-                    <input id="reference" name="{{key}}.reference" type="text" value="{{reference}}">
-                </div>
-            </div>
-            <button{{#unless (boolfalse system)}} class="hidden"{{/unless}} type="button" data-tooltip="{{localize "CUSTOM_DND5E.form.button.delete.tooltip"}}" data-action="delete" class="flex0 delete-button">
-                <i class="fas fa-xmark"></i>
-            </button>
-            <input id="delete" name="{{key}}.delete" type="hidden" value="false">
-            {{#if item.children}}
-                {{> "modules/custom-dnd5e/templates/damage-types-list.hbs" prefix=../prefix parentKey=key items=item.children }}
-            {{/if}}
-        </li>
-    {{/each}}
-</ul>
+{{#each items as |item key|}}
+<li class="custom-dnd5e-item flexrow" draggable="true" data-key="{{key}}">
+    <i class="custom-dnd5e-drag flex0 fas fa-grip-lines" draggable="true"></i>
+    <input id="visible" name="{{key}}.visible" type="checkbox" data-tooltip="{{localize "CUSTOM_DND5E.form.checkbox.visible.tooltip"}}"{{#unless (boolfalse visible)}} checked{{/unless}}>
+    <div class="fields flexrow">
+        <input id="parentKey" name="{{key}}.parentKey" type="hidden" value="{{../parentKey}}">
+        <input id="key" name="{{key}}.key" type="hidden" value="{{key}}">
+        <input id="system" name="{{key}}.system" type="hidden" value="{{#if (boolfalse system)}}false{{else}}true{{/if}}">
+        <div class="field flex1">
+            <label>{{localize "CUSTOM_DND5E.label"}}</label>
+            <input id="label" name="{{key}}.label" type="text" value="{{localize label}}">
+        </div>
+        <div class="field flex2">
+            <label>{{localize "CUSTOM_DND5E.icon"}}</label>
+            <input id="icon" name="{{key}}.icon" type="text" value="{{icon}}">
+        </div>
+        <div class="field flex2">
+            <label>{{localize "CUSTOM_DND5E.reference"}}</label>
+            <input id="reference" name="{{key}}.reference" type="text" value="{{reference}}">
+        </div>
+    </div>
+    <button{{#unless (boolfalse system)}} class="hidden"{{/unless}} type="button" data-tooltip="{{localize "CUSTOM_DND5E.form.button.delete.tooltip"}}" data-action="delete" class="flex0 delete-button">
+        <i class="fas fa-xmark"></i>
+    </button>
+    <input id="delete" name="{{key}}.delete" type="hidden" value="false">
+    {{#if item.children}}
+    <ul class="custom-dnd5e-list flexcol">
+        {{> "modules/custom-dnd5e/templates/damage-types-list.hbs" prefix=../prefix parentKey=key items=item.children }}
+    </ul>
+    {{/if}}
+</li>
+{{/each}}

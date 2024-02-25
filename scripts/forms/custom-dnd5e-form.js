@@ -88,7 +88,6 @@ export class CustomDnd5eForm extends FormApplication {
 
     /** @override */
     _onDragStart (event) {
-        this.lists = Array.from(event.target.closest(listClassSelector))
         this.items = Array.from(event.target.closest(listClassSelector).querySelectorAll(itemClassSelector))
         if (!this.items) return
         this.sourceItem = event.target.closest('li')

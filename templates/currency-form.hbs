@@ -1,7 +1,9 @@
 <div class="custom-dnd5e-form-wrapper flexrow">
     <form class="custom-dnd5e-form flexcol">
         <div class="scrollable">
-            {{> "modules/custom-dnd5e/templates/currency-list.hbs" prefix="items"}}
+            <ul class="custom-dnd5e-list flexcol">
+                {{> "modules/custom-dnd5e/templates/currency-list.hbs" prefix="items"}}
+            </ul>
         </div>
         <footer>
             <button type="button" data-tooltip="{{localize "CUSTOM_DND5E.form.button.reset.tooltip"}}" data-action="reset" class="reset-button">

@@ -12,10 +12,14 @@
         </nav>
         <div class="scrollable">
             <section class="tab active" data-actor-type="character" data-tab="characters">
-                {{> "modules/custom-dnd5e/templates/counters-list.hbs" actorType="character" counters=characterCounters}}
+                <ul class="custom-dnd5e-list flexcol">
+                    {{> "modules/custom-dnd5e/templates/counters-list.hbs" actorType="character" counters=characterCounters}}
+                </ul>
             </section>
             <section class="tab active" data-actor-type="npc" data-tab="npcs">
-                {{> "modules/custom-dnd5e/templates/counters-list.hbs" actorType="npc" counters=npcCounters}}
+                <ul class="custom-dnd5e-list flexcol">
+                    {{> "modules/custom-dnd5e/templates/counters-list.hbs" actorType="npc" counters=npcCounters}}
+                </ul>
             </section>
         </div>
         <footer>

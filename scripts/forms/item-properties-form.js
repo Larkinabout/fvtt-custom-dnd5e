@@ -68,103 +68,25 @@ export class ItemPropertiesForm extends CustomDnd5eForm {
 
         const key = randomID()
 
-        const item = document.createElement('li')
-        item.classList.add(itemClass, 'flexrow')
-        item.setAttribute('draggable', 'true')
-        item.setAttribute('data-key', key)
+        const template = await this._getHtml({ items: { [key]: { system: false, visible: true } } })
 
-        item.innerHTML = this._getInnerHtml({ key })
+        list.insertAdjacentHTML('beforeend', template)
 
-        if (this.items[0]) { item.addEventListener('dragstart', this.items[0].ondragstart) } // Fix this for empty list
-        item.addEventListener('dragleave', this._onDragLeave)
+        const item = list.querySelector(`[data-key="${key}"]`)
+        const dragElement = item.querySelector('.custom-dnd5e-drag')
 
-        list.appendChild(item)
+        item.addEventListener('dragend', this._onDragEnd.bind(this))
+        item.addEventListener('dragleave', this._onDragLeave.bind(this))
+        item.addEventListener('dragover', this._onDragOver.bind(this))
+        item.addEventListener('drop', this._onDrop.bind(this))
+        dragElement.addEventListener('dragstart', this._onDragStart.bind(this))
 
         scrollable && (scrollable.scrollTop = scrollable.scrollHeight)
     }
 
-    _getInnerHtml (data) {
-        return `<i class="custom-dnd5e-drag flex0 fas fa-grip-lines" draggable="true"></i>
-        <input id="visible" name="${data.key}.visible" type="checkbox" data-tooltip="${game.i18n.localize('CUSTOM_DND5E.form.checkbox.visible.tooltip')}" checked>
-        <div class="custom-dnd5e-col-group flexcol">
-            <input id="key" name="${data.key}.key" type="hidden" value="${data.key}">
-            <input id="system" name="${data.key}.system" type="hidden" value="false">
-            <div class="form-group">
-                <label class="flex1" style="min-width:80px; max-width:100px;">${game.i18n.localize('CUSTOM_DND5E.label')}</label>
-                <div class="form-fields">
-                    <input id="label" name="${data.key}.label" type="text">
-                </div>
-            </div>
-            <div class="form-group">
-                <label class="flex1" style="min-width:80px; max-width:100px;">${game.i18n.localize('CUSTOM_DND5E.abbreviation')}</label>
-                <div class="form-fields">
-                    <input id="abbreviation" name="${data.key}.abbreviation" type="text">
-                </div>
-            </div>
-            <div class="form-group">
-                <label class="flex1" style="min-width:80px; max-width:100px;">${game.i18n.localize('CUSTOM_DND5E.icon')}</label>
-                <div class="form-fields">
-                    <input id="icon" name="${data.key}.icon" type="text">
-                </div>
-            </div>
-            <div class="form-group">
-                <label class="flex1" style="min-width:80px; max-width:100px;">${game.i18n.localize('CUSTOM_DND5E.physical')}</label>
-                <div class="form-fields">
-                    <input id="is-physical" name="${data.key}.isPhysical" type="checkbox">
-                </div>
-            </div>
-            <div class="form-group">
-                <label class="flex1" style="min-width:80px; max-width:100px;">${game.i18n.localize('CUSTOM_DND5E.tag')}</label>
-                <div class="form-fields">
-                    <input id="is-tag" name="${data.key}.isTag" type="checkbox">
-                </div>
-            </div>
-            <div class="form-group">
-                <label class="flex1" style="min-width:80px; max-width:100px;">${game.i18n.localize('CUSTOM_DND5E.reference')}</label>
-                <div class="form-fields">
-                    <input id="reference" name="${data.key}.reference" type="text">
-                </div>
-            </div>
-            <div class="form-group stacked">
-                <label>${game.i18n.localize('CUSTOM_DND5E.itemTypes')}</label>
-                <label class="flex1" style="min-width:80px; max-width:100px;">
-                    <input id="consumable" name="${data.key}.consumable" type="checkbox">
-                    ${game.i18n.localize('CUSTOM_DND5E.consumable')}
-                </label>
-                <label class="flex1" style="min-width:80px; max-width:100px;">
-                    <input id="container" name="${data.key}.container" type="checkbox">
-                    ${game.i18n.localize('CUSTOM_DND5E.container')}
-                </label>
-                <label class="flex1" style="min-width:80px; max-width:100px;">
-                    <input id="equipment" name="${data.key}.equipment" type="checkbox">
-                    ${game.i18n.localize('CUSTOM_DND5E.equipment')}
-                </label>
-                <label class="flex1" style="min-width:80px; max-width:100px;">
-                    <input id="feat" name="${data.key}.feat" type="checkbox">
-                    ${game.i18n.localize('CUSTOM_DND5E.feat')}
-                </label>
-                <label class="flex1" style="min-width:80px; max-width:100px;">
-                    <input id="loot" name="${data.key}.loot" type="checkbox">
-                    ${game.i18n.localize('CUSTOM_DND5E.loot')}
-                </label>
-                <label class="flex1" style="min-width:80px; max-width:100px;">
-                    <input id="spell" name="${data.key}.spell" type="checkbox">
-                    ${game.i18n.localize('CUSTOM_DND5E.spell')}
-                </label>
-                <label class="flex1" style="min-width:80px; max-width:100px;">
-                    <input id="tool" name="${data.key}.tool" type="checkbox">
-                    ${game.i18n.localize('CUSTOM_DND5E.tool')}
-                </label>
-                <label class="flex1" style="min-width:80px; max-width:100px;">
-                    <input id="weapon" name="${data.key}.weapon" type="checkbox">
-                    ${game.i18n.localize('CUSTOM_DND5E.weapon')}
-                </label>
-            </div>
-        </div>
-        <button type="button" data-tooltip="${game.i18n.localize('CUSTOM_DND5E.form.button.delete.tooltip')}" data-action="delete" class="flex0 delete-button">
-            <i class="fas fa-xmark"></i>
-        </button>
-        <input id="delete" name="${data.key}.delete" type="hidden" value="false">`
+    async _getHtml (data) {
+        const template = await renderTemplate(CONSTANTS.ITEM_PROPERTIES.TEMPLATE.LIST, data)
+        return template
     }
 
     async _updateObject (event, formData) {

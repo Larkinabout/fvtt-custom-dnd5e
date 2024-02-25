@@ -1,87 +1,85 @@
-<ul class="custom-dnd5e-list flexcol">
-    {{#each items as |item key|}}
-        <li class="custom-dnd5e-item flexrow" data-key="{{key}}">
-            <i class="custom-dnd5e-drag flex0 fas fa-grip-lines" draggable="true"></i>
-            <input id="visible" name="{{key}}.visible" type="checkbox" data-tooltip="{{localize "CUSTOM_DND5E.form.checkbox.visible.tooltip"}}"{{#unless (boolfalse visible)}} checked{{/unless}}>
-            <div class="custom-dnd5e-col-group flexcol">
-                <input id="key" name="{{key}}.key" type="hidden" value="{{key}}">
-                <input id="system" name="{{key}}.system" type="hidden" value="{{#if (boolfalse system)}}false{{else}}true{{/if}}">
-                <div class="form-group">
-                    <label class="flex1" style="min-width:80px; max-width:100px;">{{localize "CUSTOM_DND5E.label"}}</label>
-                    <div class="form-fields">
-                        <input id="label" name="{{key}}.label" type="text" value="{{localize label}}">
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="flex1" style="min-width:80px; max-width:100px;">{{localize "CUSTOM_DND5E.abbreviation"}}</label>
-                    <div class="form-fields">
-                        <input id="abbreviation" name="{{key}}.abbreviation" type="text" value="{{localize abbreviation}}">
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="flex1" style="min-width:80px; max-width:100px;">{{localize "CUSTOM_DND5E.icon"}}</label>
-                    <div class="form-fields">
-                        <input id="icon" name="{{key}}.icon" type="text" value="{{icon}}">
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="flex1" style="min-width:80px; max-width:100px;">{{localize "CUSTOM_DND5E.physical"}}</label>
-                    <div class="form-fields">
-                        <input id="is-physical" name="{{key}}.isPhysical" type="checkbox"{{#if isPhysical}} checked{{/if}}>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="flex1" style="min-width:80px; max-width:100px;">{{localize "CUSTOM_DND5E.tag"}}</label>
-                    <div class="form-fields">
-                        <input id="is-tag" name="{{key}}.isTag" type="checkbox"{{#if isTag}} checked{{/if}}>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="flex1" style="min-width:80px; max-width:100px;">{{localize "CUSTOM_DND5E.reference"}}</label>
-                    <div class="form-fields">
-                        <input id="reference" name="{{key}}.reference" type="text" value="{{reference}}">
-                    </div>
-                </div>
-                <div class="form-group stacked">
-                    <label>{{localize "CUSTOM_DND5E.itemTypes"}}</label>
-                    <label class="flex1" style="min-width:80px; max-width:100px;">
-                        <input id="consumable" name="{{key}}.consumable" type="checkbox"{{#if consumable}} checked{{/if}}>
-                        {{localize "CUSTOM_DND5E.consumable"}}
-                    </label>
-                    <label class="flex1" style="min-width:80px; max-width:100px;">
-                        <input id="container" name="{{key}}.container" type="checkbox"{{#if container}} checked{{/if}}>
-                        {{localize "CUSTOM_DND5E.container"}}
-                    </label>
-                    <label class="flex1" style="min-width:80px; max-width:100px;">
-                        <input id="equipment" name="{{key}}.equipment" type="checkbox"{{#if equipment}} checked{{/if}}>
-                        {{localize "CUSTOM_DND5E.equipment"}}
-                    </label>
-                    <label class="flex1" style="min-width:80px; max-width:100px;">
-                        <input id="feat" name="{{key}}.feat" type="checkbox"{{#if feat}} checked{{/if}}>
-                        {{localize "CUSTOM_DND5E.feat"}}
-                    </label>
-                    <label class="flex1" style="min-width:80px; max-width:100px;">
-                        <input id="loot" name="{{key}}.loot" type="checkbox"{{#if loot}} checked{{/if}}>
-                        {{localize "CUSTOM_DND5E.loot"}}
-                    </label>
-                    <label class="flex1" style="min-width:80px; max-width:100px;">
-                        <input id="spell" name="{{key}}.spell" type="checkbox"{{#if spell}} checked{{/if}}>
-                        {{localize "CUSTOM_DND5E.spell"}}
-                    </label>
-                    <label class="flex1" style="min-width:80px; max-width:100px;">
-                        <input id="tool" name="{{key}}.tool" type="checkbox"{{#if tool}} checked{{/if}}>
-                        {{localize "CUSTOM_DND5E.tool"}}
-                    </label>
-                    <label class="flex1" style="min-width:80px; max-width:100px;">
-                        <input id="weapon" name="{{key}}.weapon" type="checkbox"{{#if weapon}} checked{{/if}}>
-                        {{localize "CUSTOM_DND5E.weapon"}}
-                    </label>
-                </div>
+{{#each items as |item key|}}
+<li class="custom-dnd5e-item flexrow" data-key="{{key}}">
+    <i class="custom-dnd5e-drag flex0 fas fa-grip-lines" draggable="true"></i>
+    <input id="visible" name="{{key}}.visible" type="checkbox" data-tooltip="{{localize "CUSTOM_DND5E.form.checkbox.visible.tooltip"}}"{{#unless (boolfalse visible)}} checked{{/unless}}>
+    <div class="custom-dnd5e-col-group flexcol">
+        <input id="key" name="{{key}}.key" type="hidden" value="{{key}}">
+        <input id="system" name="{{key}}.system" type="hidden" value="{{#if (boolfalse system)}}false{{else}}true{{/if}}">
+        <div class="form-group">
+            <label class="flex1" style="min-width:80px; max-width:100px;">{{localize "CUSTOM_DND5E.label"}}</label>
+            <div class="form-fields">
+                <input id="label" name="{{key}}.label" type="text" value="{{localize label}}">
             </div>
-            <button{{#unless (boolfalse system)}} class="hidden"{{/unless}} type="button" data-tooltip="{{localize "CUSTOM_DND5E.form.button.delete.tooltip"}}" data-action="delete" class="flex0 delete-button">
-                <i class="fas fa-xmark"></i>
-            </button>
-            <input id="delete" name="{{key}}.delete" type="hidden" value="false">
-        </li>
-    {{/each}}
-</ul>
+        </div>
+        <div class="form-group">
+            <label class="flex1" style="min-width:80px; max-width:100px;">{{localize "CUSTOM_DND5E.abbreviation"}}</label>
+            <div class="form-fields">
+                <input id="abbreviation" name="{{key}}.abbreviation" type="text" value="{{localize abbreviation}}">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="flex1" style="min-width:80px; max-width:100px;">{{localize "CUSTOM_DND5E.icon"}}</label>
+            <div class="form-fields">
+                <input id="icon" name="{{key}}.icon" type="text" value="{{icon}}">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="flex1" style="min-width:80px; max-width:100px;">{{localize "CUSTOM_DND5E.physical"}}</label>
+            <div class="form-fields">
+                <input id="is-physical" name="{{key}}.isPhysical" type="checkbox"{{#if isPhysical}} checked{{/if}}>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="flex1" style="min-width:80px; max-width:100px;">{{localize "CUSTOM_DND5E.tag"}}</label>
+            <div class="form-fields">
+                <input id="is-tag" name="{{key}}.isTag" type="checkbox"{{#if isTag}} checked{{/if}}>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="flex1" style="min-width:80px; max-width:100px;">{{localize "CUSTOM_DND5E.reference"}}</label>
+            <div class="form-fields">
+                <input id="reference" name="{{key}}.reference" type="text" value="{{reference}}">
+            </div>
+        </div>
+        <div class="form-group stacked">
+            <label>{{localize "CUSTOM_DND5E.itemTypes"}}</label>
+            <label class="flex1" style="min-width:80px; max-width:100px;">
+                <input id="consumable" name="{{key}}.consumable" type="checkbox"{{#if consumable}} checked{{/if}}>
+                {{localize "CUSTOM_DND5E.consumable"}}
+            </label>
+            <label class="flex1" style="min-width:80px; max-width:100px;">
+                <input id="container" name="{{key}}.container" type="checkbox"{{#if container}} checked{{/if}}>
+                {{localize "CUSTOM_DND5E.container"}}
+            </label>
+            <label class="flex1" style="min-width:80px; max-width:100px;">
+                <input id="equipment" name="{{key}}.equipment" type="checkbox"{{#if equipment}} checked{{/if}}>
+                {{localize "CUSTOM_DND5E.equipment"}}
+            </label>
+            <label class="flex1" style="min-width:80px; max-width:100px;">
+                <input id="feat" name="{{key}}.feat" type="checkbox"{{#if feat}} checked{{/if}}>
+                {{localize "CUSTOM_DND5E.feat"}}
+            </label>
+            <label class="flex1" style="min-width:80px; max-width:100px;">
+                <input id="loot" name="{{key}}.loot" type="checkbox"{{#if loot}} checked{{/if}}>
+                {{localize "CUSTOM_DND5E.loot"}}
+            </label>
+            <label class="flex1" style="min-width:80px; max-width:100px;">
+                <input id="spell" name="{{key}}.spell" type="checkbox"{{#if spell}} checked{{/if}}>
+                {{localize "CUSTOM_DND5E.spell"}}
+            </label>
+            <label class="flex1" style="min-width:80px; max-width:100px;">
+                <input id="tool" name="{{key}}.tool" type="checkbox"{{#if tool}} checked{{/if}}>
+                {{localize "CUSTOM_DND5E.tool"}}
+            </label>
+            <label class="flex1" style="min-width:80px; max-width:100px;">
+                <input id="weapon" name="{{key}}.weapon" type="checkbox"{{#if weapon}} checked{{/if}}>
+                {{localize "CUSTOM_DND5E.weapon"}}
+            </label>
+        </div>
+    </div>
+    <button{{#unless (boolfalse system)}} class="hidden"{{/unless}} type="button" data-tooltip="{{localize "CUSTOM_DND5E.form.button.delete.tooltip"}}" data-action="delete" class="flex0 delete-button">
+        <i class="fas fa-xmark"></i>
+    </button>
+    <input id="delete" name="{{key}}.delete" type="hidden" value="false">
+</li>
+{{/each}}
