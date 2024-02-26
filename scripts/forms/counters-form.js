@@ -76,7 +76,7 @@ export class CountersForm extends CustomDnd5eForm {
         const scrollable = list.closest('.scrollable')
 
         const key = randomID()
-        const data = { counters: { [key]: { actorType } } }
+        const data = { actorType, counters: { [key]: {} } }
 
         const template = await renderTemplate(CONSTANTS.COUNTERS.TEMPLATE.LIST, data)
 
