@@ -1,4 +1,4 @@
-import { CONSTANTS } from './constants.js'
+import { CONSTANTS, SHEET_TYPE } from './constants.js'
 import { checkEmpty, getSetting, registerMenu, registerSetting, resetDnd5eConfig } from './utils.js'
 import { EncumbranceForm } from './forms/encumbrance-form.js'
 
@@ -83,6 +83,8 @@ function registerHooks () {
      * Modified from Actor5e._prepareEncumbrance
      */
     Hooks.on('preRenderActorSheet', (app, data) => {
+        if (!SHEET_TYPE[app.constructor.name]?.character) return
+
         const equippedMod = getSetting(CONSTANTS.ENCUMBRANCE.EQUIPPED_ITEM_WEIGHT_MODIFIER.SETTING.KEY) || 0
         const proficientEquippedMod = getSetting(CONSTANTS.ENCUMBRANCE.PROFICIENT_EQUIPPED_ITEM_WEIGHT_MODIFIER.SETTING.KEY) || 0
         const unequippedMod = getSetting(CONSTANTS.ENCUMBRANCE.UNEQUIPPED_ITEM_WEIGHT_MODIFIER.SETTING.KEY) || 0
