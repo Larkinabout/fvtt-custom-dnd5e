@@ -44,6 +44,23 @@ export const CONSTANTS = {
             LIST: 'modules/custom-dnd5e/templates/actor-sizes-list.hbs'
         }
     },
+    ARMOR_CALCULATIONS: {
+        ID: 'armor-calculations',
+        MENU: {
+            KEY: 'armor-calculations-menu',
+            HINT: 'CUSTOM_DND5E.menu.armorCalculations.hint',
+            ICON: 'fas fa-pen-to-square',
+            LABEL: 'CUSTOM_DND5E.menu.armorCalculations.label',
+            NAME: 'CUSTOM_DND5E.menu.armorCalculations.name'
+        },
+        SETTING: {
+            KEY: 'armor-calculations'
+        },
+        TEMPLATE: {
+            FORM: 'modules/custom-dnd5e/templates/armor-calculations-form.hbs',
+            LIST: 'modules/custom-dnd5e/templates/armor-calculations-list.hbs'
+        }
+    },
     ARMOR_TYPES: {
         ID: 'armor-types',
         MENU: {

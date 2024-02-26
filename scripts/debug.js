@@ -51,14 +51,17 @@ export async function exportData () {
         abilities: CONFIG.DND5E.abilities,
         abilityActivationTypes: CONFIG.DND5E.abilityActivationTypes,
         actorSizes: CONFIG.DND5E.actorSizes,
+        armorClasses: CONFIG.DND5E.armorClasses,
         currencies: CONFIG.DND5E.currencies,
         damageTypes: CONFIG.DND5E.damageTypes,
         encumbrance: CONFIG.DND5E.encumbrance,
+        itemActionTypes: CONFIG.DND5E.itemActionTypes,
         itemProperties: CONFIG.DND5E.itemProperties,
         languages: CONFIG.DND5E.languages,
         maxLevel: CONFIG.DND5E.maxLevel,
         senses: CONFIG.DND5E.senses,
         skills: CONFIG.DND5E.skills,
+        spellSchools: CONFIG.DND5E.spellSchools,
         validProperties: CONFIG.DND5E.validProperties
     }
 

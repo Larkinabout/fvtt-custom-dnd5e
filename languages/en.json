@@ -22,6 +22,7 @@
     "CUSTOM_DND5E.equippedItemWeightModifier": "Equipped Item Weight Modifier",
     "CUSTOM_DND5E.exhaustion": "Exhaustion",
     "CUSTOM_DND5E.feat": "Feat",
+    "CUSTOM_DND5E.formula": "Formula",
     "CUSTOM_DND5E.fraction": "Fraction",
     "CUSTOM_DND5E.icon": "Icon",
     "CUSTOM_DND5E.increase": "Increase",
@@ -87,6 +88,8 @@
     "CUSTOM_DND5E.form.abilities.title": "Configure Abilities",
 
     "CUSTOM_DND5E.form.actorSizes.title": "Configure Actor Sizes",
+
+    "CUSTOM_DND5E.form.armorCalculations.title": "Configure Armor Calculations",
 
     "CUSTOM_DND5E.form.armorTypes.title": "Configure Armor Types",
 
@@ -176,6 +179,10 @@
     "CUSTOM_DND5E.menu.actorSizes.hint": "Configure Actor Sizes",
     "CUSTOM_DND5E.menu.actorSizes.label": "Configure Actor Sizes",
     "CUSTOM_DND5E.menu.actorSizes.name": "Configure Actor Sizes",
+
+    "CUSTOM_DND5E.menu.armorCalculations.hint": "Configure Armor Calculations",
+    "CUSTOM_DND5E.menu.armorCalculations.label": "Configure Armor Calculations",
+    "CUSTOM_DND5E.menu.armorCalculations.name": "Configure Armor Calculations",
 
     "CUSTOM_DND5E.menu.armorTypes.hint": "Configure Armor Types",
     "CUSTOM_DND5E.menu.armorTypes.label": "Configure Armor Types",

@@ -2,6 +2,7 @@ import { CONSTANTS, MODULE } from '../constants.js'
 import { deleteProperty, getSetting, setSetting } from '../utils.js'
 import { CustomDnd5eForm } from './custom-dnd5e-form.js'
 import { setConfig as setAbilities } from '../abilities.js'
+import { setConfig as setArmorCalculations } from '../armor-calculations.js'
 import { setConfig as setArmorTypes } from '../armor-types.js'
 import { setConfig as setActorSizes } from '../actor-sizes.js'
 import { setConfig as setCurrency } from '../currency.js'
@@ -184,6 +185,29 @@ export class ActorSizesForm extends ConfigForm {
 
     async _getHtml (data) {
         const template = await renderTemplate(CONSTANTS.ACTOR_SIZES.TEMPLATE.LIST, data)
+        return template
+    }
+}
+
+export class ArmorCalculationsForm extends ConfigForm {
+    constructor () {
+        super()
+        this.requiresReload = false
+        this.settingKey = CONSTANTS.ARMOR_CALCULATIONS.SETTING.KEY
+        this.setFunction = setArmorCalculations
+        this.type = 'armorClasses'
+    }
+
+    static get defaultOptions () {
+        return mergeObject(super.defaultOptions, {
+            id: `${MODULE.ID}-armor-calculations-form`,
+            template: CONSTANTS.ARMOR_CALCULATIONS.TEMPLATE.FORM,
+            title: game.i18n.localize('CUSTOM_DND5E.form.armorCalculations.title')
+        })
+    }
+
+    async _getHtml (data) {
+        const template = await renderTemplate(CONSTANTS.ARMOR_CALCULATIONS.TEMPLATE.LIST, data)
         return template
     }
 }

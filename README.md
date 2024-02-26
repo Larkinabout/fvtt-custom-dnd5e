@@ -18,7 +18,7 @@ A Foundry VTT module to customise the D&D 5e system.
 
 
 ## Configurations
-- Configure abilities, actor sizes, currencies, damage types, encumbrance, item activation cost types, item properties, languages, senses, skills and max level.
+- Configure abilities, actor sizes, armor calculations, currencies, damage types, encumbrance, item action types, item activation cost types, item properties, languages, senses, skills, spell schools and max level.
 
 ## Configure Encumbrance
 ![Custom D&D 5e Configure Encumbrance](./.github/readme/custom-dnd5e-configure-encumbrance.png)
@@ -30,7 +30,7 @@ A Foundry VTT module to customise the D&D 5e system.
 - Hide death saves, encumbrance, exhaustion, inspiration, the Manage Currency button, Legendary Actions, Legendary Resistances and Use Lair Action.
 
 ## House Rules
-- When rolling for Hit Points, automatically re-roll 1s.
+- When rolling for Hit Points, automatically re-roll based on a minimum value.
 - Hide the Take Average option when rolling for Hit Points.
 
 ![Custom D&D 5e Level Up Hit Points](./.github/readme/custom-dnd5e-level-up-hit-points.png)

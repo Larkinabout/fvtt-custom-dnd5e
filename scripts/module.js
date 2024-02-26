@@ -2,6 +2,7 @@ import { CONSTANTS } from './constants.js'
 import { getSetting } from './utils.js'
 import { register as registerAbilities, setConfig as setAbilities } from './abilities.js'
 import { register as registerActorSizes, setConfig as setActorSizes } from './actor-sizes.js'
+import { register as registerArmorCalculations, setConfig as setArmorCalculations } from './armor-calculations.js'
 import { register as registerArmorTypes, setConfig as setArmorTypes } from './armor-types.js'
 import { registerSettings as registerCounters } from './counters.js'
 import { register as registerCurrency, setConfig as setCurrency } from './currency.js'
@@ -30,6 +31,7 @@ Hooks.on('init', async () => {
     registerMigration()
     registerAbilities()
     registerActorSizes()
+    registerArmorCalculations()
     // registerArmorTypes()
     registerCounters()
     registerCurrency()
@@ -79,6 +81,7 @@ Hooks.on('ready', async () => {
     ])
 
     setActorSizes(getSetting(CONSTANTS.ACTOR_SIZES.SETTING.KEY) || {})
+    setArmorCalculations(getSetting(CONSTANTS.ARMOR_CALCULATIONS.SETTING.KEY) || {})
     // setArmorTypes(getSetting(CONSTANTS.ARMOR_TYPES.SETTING.KEY) || {})
     setCurrency(getSetting(CONSTANTS.CURRENCY.SETTING.KEY) || {})
     setDamageTypes(getSetting(CONSTANTS.DAMAGE_TYPES.SETTING.KEY) || {})
