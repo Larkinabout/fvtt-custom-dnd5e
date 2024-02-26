@@ -184,7 +184,7 @@ export function appendDeleteButton (parentElement, inputName) {
     button.setAttribute('type', 'button')
     button.setAttribute('data-tooltip', 'Delete')
     button.setAttribute('data-action', 'delete')
-    button.classList.add('flex0', 'delete-button')
+    button.classList.add('flex0', 'custom-dnd5e-list-button')
     parentElement.appendChild(button)
 
     const i = document.createElement('i')

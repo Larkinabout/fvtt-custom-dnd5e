@@ -101,7 +101,7 @@
     "CUSTOM_DND5E.form.counters.viewRole.label": "Viewable By",
     "CUSTOM_DND5E.form.counters.viewRole.note.1": "Allow users with this role (and above) to view the counter",
     "CUSTOM_DND5E.form.counters.key.label": "Key",
-    "CUSTOM_DND5E.form.counters.key.note.1": "The key must be unique across all keys stored by the Custom D&D 5e module",
+    "CUSTOM_DND5E.form.counters.key.note.1": "The key must be unique across all counters of the same actor type: character or NPC",
     "CUSTOM_DND5E.form.counters.max.label": "Maximum Value",
     "CUSTOM_DND5E.form.counters.max.note.1": "Set the maximum value of counter",
     "CUSTOM_DND5E.form.counters.title": "Configure Counters",

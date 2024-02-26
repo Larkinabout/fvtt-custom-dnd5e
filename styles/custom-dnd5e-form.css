@@ -100,25 +100,36 @@
     margin: 1rem;
 }
 
-.custom-dnd5e-form .delete-button {
-    background: transparent;
-    border: none;
+.custom-dnd5e-list-buttons {
+    display: flex;
+    flex: 0;
 }
 
-.custom-dnd5e-form .delete-button:hover {
+.custom-dnd5e-list-button {
+    background: transparent;
+    border: none;
+    border-radius: 0;
+    border-right: 1px solid rgba(0, 0, 0, 0.2);
+}
+
+.custom-dnd5e-list-button:last-of-type {
+    border-right: none;
+}
+
+.custom-dnd5e-list-button:hover {
     box-shadow: none;
 }
 
-.custom-dnd5e-form .delete-button.disabled > i {
+.custom-dnd5e-list-button.disabled > i {
     color: transparent;
 }
 
-.custom-dnd5e-form .delete-button:hover > i {
+.custom-dnd5e-list-button:hover > i {
     text-shadow: 0 0 5px var(--color-shadow-primary);
     outline: none;
 }
 
-.custom-dnd5e-form .delete-button.disabled:hover > i {
+.custom-dnd5e-form .custom-dnd5e-list-button.disabled:hover > i {
     text-shadow: none;
 }
 

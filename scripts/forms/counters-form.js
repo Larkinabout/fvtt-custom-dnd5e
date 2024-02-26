@@ -123,9 +123,11 @@ export class CountersForm extends CustomDnd5eForm {
         // Set properties in this.setting
         Object.entries(formData).forEach(([key, value]) => {
             if (ignore.includes(key.split('.').pop())) { return }
-            const primaryKey = key.split('.').slice(0, -1).join('.')
-            const setting = (formData[`${primaryKey}.actorType`] === 'character') ? this.characterCountersSetting : this.npcCountersSetting
-            setProperty(setting, key, value)
+            const arr = key.split('.')
+            const actorType = arr.slice(0, 1).join('.')
+            const property = arr.slice(1, 3).join('.')
+            const setting = (actorType === 'character') ? this.characterCountersSetting : this.npcCountersSetting
+            setProperty(setting, property, value)
         })
 
         await Promise.all([

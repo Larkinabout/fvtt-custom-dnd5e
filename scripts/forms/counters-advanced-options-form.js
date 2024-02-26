@@ -1,5 +1,5 @@
 import { CONSTANTS, MODULE } from '../constants.js'
-import { appendDeleteButton, appendFormFields, appendFormGroup, appendFormGroupLabel, appendSelect, appendSelectOption, getFlag, setFlag, unsetFlag, setSetting } from '../utils.js'
+import { getFlag, setFlag, unsetFlag, setSetting, Logger } from '../utils.js'
 import { CustomDnd5eForm } from './custom-dnd5e-form.js'
 
 const id = CONSTANTS.COUNTERS.ID
@@ -55,23 +55,6 @@ export class CountersAdvancedOptionsForm extends CustomDnd5eForm {
             el.actionValueGroup = item.querySelector('#action-value').closest('.form-group')
             // el.action.addEventListener('change', () => { this.#onChangeAction(el) })
         })
-    }
-
-    async _handleButtonClick (event) {
-        event.preventDefault()
-        const clickedElement = $(event.currentTarget)
-        const key = clickedElement.parents('li')?.data()?.key
-        const action = clickedElement.data().action
-        switch (action) {
-        case 'delete': {
-            await this._deleteItem(key)
-            break
-        }
-        case 'new': {
-            await this._createItem()
-            break
-        }
-        }
     }
 
     async _createItem () {
@@ -138,6 +121,20 @@ export class CountersAdvancedOptionsForm extends CustomDnd5eForm {
         }
     }
 
+    async _validate (event, formData) {
+        const oldKey = this.key
+        const newKey = formData[`${this.key}.key`]
+
+        if (oldKey !== newKey) {
+            if (this.setting[newKey]) {
+                Logger.error(`Key '${newKey}' already exists`, true)
+                return
+            }
+        }
+
+        this.submit()
+    }
+
     async _updateObject (event, formData) {
         const arr = []
         const ints = ['editRole', 'viewRole']
@@ -149,21 +146,17 @@ export class CountersAdvancedOptionsForm extends CustomDnd5eForm {
             }
         })
 
-        // Set properties in this.setting
-        let oldKey = null
-        let newKey = null
-
         Object.entries(formData).forEach(([key, value]) => {
             if (Array.isArray(value)) { return }
-            if (key.split('.').pop() === 'key') {
-                oldKey = key.split('.')[0]
-                newKey = value
-            }
+            if (key.split('.').pop() === 'key') { return }
             if (ints.includes(key.split('.').pop())) { value = parseInt(value) }
             setProperty(this.setting, key, value)
         })
 
         // Create new key and delete old key while keeping order of counters
+        const oldKey = this.key
+        const newKey = formData[`${this.key}.key`]
+
         if (oldKey !== newKey) {
             this.setting[newKey] = foundry.utils.deepClone(this.setting[oldKey])
 

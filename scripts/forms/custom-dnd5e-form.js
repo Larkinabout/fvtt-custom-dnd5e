@@ -171,15 +171,19 @@ export class CustomDnd5eForm extends FormApplication {
             await this._reset()
             break
         }
+        case 'validate': {
+            const formData = this._getSubmitData()
+            await this._validate(event, formData)
+            break
+        }
         }
     }
 
-    async _createItem () {
-    }
+    async _createItem () {}
 
-    async _reset () {
+    async _reset () {}
 
-    }
+    async _validate () {}
 
     async _deleteItem (key) {
         const del = async (key) => {
