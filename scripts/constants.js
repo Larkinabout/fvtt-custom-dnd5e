@@ -160,7 +160,8 @@ export const CONSTANTS = {
             KEY: 'debug'
         },
         TEMPLATE: {
-            FORM: 'modules/custom-dnd5e/templates/debug-form.hbs'
+            FORM: 'modules/custom-dnd5e/templates/debug-form.hbs',
+            IMPORT_DIALOG: 'modules/custom-dnd5e/templates/import-dialog.hbs'
         }
     },
     ENCUMBRANCE: {

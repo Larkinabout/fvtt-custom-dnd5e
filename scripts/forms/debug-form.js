@@ -1,5 +1,5 @@
 import { CONSTANTS } from '../constants.js'
-import { exportData } from '../debug.js'
+import { importData, exportData } from '../debug.js'
 import { getSetting, setSetting } from '../utils.js'
 import { CustomDnd5eForm } from './custom-dnd5e-form.js'
 
@@ -32,6 +32,10 @@ export class DebugForm extends CustomDnd5eForm {
         switch (action) {
         case 'export': {
             await exportData()
+            break
+        }
+        case 'import': {
+            await importData()
             break
         }
         }

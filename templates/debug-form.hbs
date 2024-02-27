@@ -10,14 +10,24 @@
                 <p class="custom-dnd5e-advice notes">{{localize "CUSTOM_DND5E.form.debug.consoleMessages.note.2"}}</label>
             </div>
             <div class="form-group">
-                <label>{{localize "CUSTOM_DND5E.form.debug.exportData.label"}}</label>
+                <label>{{localize "CUSTOM_DND5E.exportData"}}</label>
                 <div class="form-fields">
                      <button type="button" data-action="export" data-tooltip="{{localize "CUSTOM_DND5E.form.debug.button.exportData.tooltip"}}" style="flex:1;">
-                        <i class="fas fa-solid fa-file-export"></i>{{localize "CUSTOM_DND5E.form.debug.button.exportData.label"}}
+                        <i class="fas fa-solid fa-file-export"></i>{{localize "CUSTOM_DND5E.exportData"}}
                     </button>
                 </div>
+                <p class="notes">{{localize "CUSTOM_DND5E.form.debug.exportData.note"}}</label>
             </div>
-            <p class="notes">{{localize "CUSTOM_DND5E.form.debug.exportData.note"}}</label>
+            <div class="form-group">
+                <label>{{localize "CUSTOM_DND5E.importData"}}</label>
+                <div class="form-fields">
+                     <button type="button" data-action="import" style="flex:1;">
+                        <i class="fas fa-solid fa-file-import"></i>{{localize "CUSTOM_DND5E.importData"}}
+                    </button>
+                </div>
+                <p class="notes">{{localize "CUSTOM_DND5E.form.debug.importData.note.1"}}</label>
+            </div>
+            
         </div>
         <footer>
             <button type="submit" data-tooltip="{{localize "CUSTOM_DND5E.form.button.save.tooltip"}}" class="save-button">
