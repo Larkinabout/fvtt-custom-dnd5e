@@ -105,8 +105,11 @@ export class CountersForm extends CustomDnd5eForm {
             .map(([key, _]) => key.split('.').slice(0, -1).join('.'))
 
         // Delete properties from this.setting
-        deleteKeys.forEach(key => {
-            const setting = (formData[`${key}.actorType`] === 'character') ? this.characterCountersSetting : this.npcCountersSetting
+        deleteKeys.forEach(deleteKey => {
+            const parts = deleteKey.split('.')
+            const actorType = parts.slice(0, 1).join('.')
+            const key = parts.pop()
+            const setting = (actorType === 'character') ? this.characterCountersSetting : this.npcCountersSetting
             deleteProperty(setting, key)
             for (const actor of game.actors) {
                 unsetFlag(actor, key)
