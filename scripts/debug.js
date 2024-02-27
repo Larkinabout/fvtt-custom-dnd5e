@@ -1,5 +1,5 @@
 import { MODULE, CONSTANTS } from './constants.js'
-import { registerMenu, registerSetting } from './utils.js'
+import { getSetting, registerMenu, registerSetting } from './utils.js'
 import { DebugForm } from './forms/debug-form.js'
 
 /**
@@ -45,27 +45,33 @@ function registerSettings () {
  * Exports settings and config data to JSON file
  */
 export async function exportData () {
-    const data = {}
-    data.setting = Object.fromEntries([...game.settings.settings].filter(setting => setting[0].includes('custom-dnd5e')))
-    data.configDnd5e = {
-        abilities: CONFIG.DND5E.abilities,
-        abilityActivationTypes: CONFIG.DND5E.abilityActivationTypes,
-        actorSizes: CONFIG.DND5E.actorSizes,
-        armorClasses: CONFIG.DND5E.armorClasses,
-        currencies: CONFIG.DND5E.currencies,
-        damageTypes: CONFIG.DND5E.damageTypes,
-        encumbrance: CONFIG.DND5E.encumbrance,
-        itemActionTypes: CONFIG.DND5E.itemActionTypes,
-        itemProperties: CONFIG.DND5E.itemProperties,
-        languages: CONFIG.DND5E.languages,
-        maxLevel: CONFIG.DND5E.maxLevel,
-        senses: CONFIG.DND5E.senses,
-        skills: CONFIG.DND5E.skills,
-        spellSchools: CONFIG.DND5E.spellSchools,
-        validProperties: CONFIG.DND5E.validProperties
+    const data = {
+        customDnd5eVersion: game.modules.get(MODULE.ID).version,
+        dnd5eVersion: game.system.version,
+        foundryVttVersion: game.version,
+        setting: Object.fromEntries(
+            [...game.settings.settings]
+                .filter(setting => setting[0].includes(MODULE.ID))
+                .map(setting => [setting[1].key, getSetting(setting[1].key)])
+        ),
+        configDnd5e: {
+            abilities: CONFIG.DND5E.abilities,
+            abilityActivationTypes: CONFIG.DND5E.abilityActivationTypes,
+            actorSizes: CONFIG.DND5E.actorSizes,
+            armorClasses: CONFIG.DND5E.armorClasses,
+            currencies: CONFIG.DND5E.currencies,
+            damageTypes: CONFIG.DND5E.damageTypes,
+            encumbrance: CONFIG.DND5E.encumbrance,
+            itemActionTypes: CONFIG.DND5E.itemActionTypes,
+            itemProperties: CONFIG.DND5E.itemProperties,
+            languages: CONFIG.DND5E.languages,
+            maxLevel: CONFIG.DND5E.maxLevel,
+            senses: CONFIG.DND5E.senses,
+            skills: CONFIG.DND5E.skills,
+            spellSchools: CONFIG.DND5E.spellSchools,
+            validProperties: CONFIG.DND5E.validProperties
+        }
     }
 
-    if (data) {
-        saveDataToFile(JSON.stringify(data, null, 2), 'text/json', `${MODULE.ID}.json`)
-    }
+    saveDataToFile(JSON.stringify(data, null, 2), 'text/json', `${MODULE.ID}.json`)
 }
