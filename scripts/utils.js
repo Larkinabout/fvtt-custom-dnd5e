@@ -244,6 +244,65 @@ export function appendSelectOption (selectElement, optionValue, optionTextConten
 }
 
 /**
+ * Make the actor bloodied
+ * @param {object} actor The actor
+ */
+export async function makeBloodied (actor) {
+    const existing = actor.effects.get('dnd5ebloodied000')
+
+    if (existing) { return }
+
+    const effectData = foundry.utils.deepClone(CONFIG.statusEffects.find(ef => ef.id === 'bloodied'))
+    effectData.statuses = ['bloodied']
+    const cls = getDocumentClass('ActiveEffect')
+    const effect = await cls.fromStatusEffect(effectData)
+    await cls.create(effect, { parent: actor, keepId: true })
+
+    const tokens = actor.getActiveTokens()
+    tokens.forEach(token => {
+        tintToken(token, '#ff0000')
+    })
+}
+
+/**
+ * Unmake the actor bloodied
+ * @param {object} actor The actor
+ */
+export async function unmakeBloodied (actor) {
+    const effect = actor.effects.get('dnd5ebloodied000')
+
+    await effect?.delete()
+
+    const tokens = actor.getActiveTokens()
+    tokens.forEach(token => {
+        untintToken(token)
+    })
+}
+
+/**
+ * Tint token
+ * @param {object} token The token
+ * @param {string} tint  The hex color
+ */
+export async function tintToken (token, tint) {
+    const actor = token.actor
+    if (!actor) return
+    await setFlag(actor, 'tint', token.data.texture.tint)
+    token.document.update({ tint })
+}
+
+/**
+ * Untint token
+ * @param {object} token The token
+ */
+export async function untintToken (token) {
+    const actor = token.actor
+    if (!actor) return
+    const tint = getFlag(actor, 'tint')
+    tint && token.document.update({ tint })
+}
+
+/**
  * Make the actor dead
  * Set HP to 0
  * Set Death Saves failures to 3

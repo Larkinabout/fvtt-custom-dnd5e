@@ -74,6 +74,14 @@ export const CONSTANTS = {
             KEY: 'armor-types'
         }
     },
+    BLOODIED: {
+        SETTING: {
+            KEY: 'bloodied',
+            HINT: 'CUSTOM_DND5E.setting.bloodied.hint',
+            NAME: 'CUSTOM_DND5E.setting.bloodied.name'
+        },
+        ICON: 'modules/custom-dnd5e/media/icons/bloodied.svg'
+    },
     CONDITION_TYPES: {
         SETTING: {
             KEY: 'condition-types'

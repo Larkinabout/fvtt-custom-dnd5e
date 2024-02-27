@@ -4,6 +4,7 @@
     "CUSTOM_DND5E.action": "Action",
     "CUSTOM_DND5E.actionValue": "Action Value",
     "CUSTOM_DND5E.amount": "Amount",
+    "CUSTOM_DND5E.bloodied": "Bloodied",
     "CUSTOM_DND5E.cancel": "Cancel",
     "CUSTOM_DND5E.capacityMultiplier": "Capacity Multiplier",
     "CUSTOM_DND5E.characters": "Characters",
@@ -253,6 +254,8 @@
     "CUSTOM_DND5E.menu.spellSchools.label": "Configure Spell Schools",
     "CUSTOM_DND5E.menu.spellSchools.name": "Configure Spell Schools",
 
+    "CUSTOM_DND5E.setting.bloodied.hint": "Automatically apply the Bloodied condition when a character or NPC reaches half HP or lower",
+    "CUSTOM_DND5E.setting.bloodied.name": "Enable Bloodied",
     "CUSTOM_DND5E.setting.maxLevel.name": "Max Level",
     "CUSTOM_DND5E.setting.levelUpHitPointsRerollMinimumValue.hint": "When rolling Hit Points, automatically re-roll where result is below the minimum",
     "CUSTOM_DND5E.setting.levelUpHitPointsRerollMinimumValue.name": "Minimum Value when Rolling Hit Points",

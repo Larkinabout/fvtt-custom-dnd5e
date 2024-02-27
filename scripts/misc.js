@@ -1,5 +1,5 @@
 import { CONSTANTS } from './constants.js'
-import { getSetting, registerSetting } from './utils.js'
+import { getSetting, registerSetting, makeBloodied, unmakeBloodied } from './utils.js'
 
 /**
  * Register
@@ -60,6 +60,19 @@ function registerSettings () {
             default: true
         }
     )
+
+    registerSetting(
+        CONSTANTS.BLOODIED.SETTING.KEY,
+        {
+            name: game.i18n.localize(CONSTANTS.BLOODIED.SETTING.NAME),
+            hint: game.i18n.localize(CONSTANTS.BLOODIED.SETTING.HINT),
+            scope: 'world',
+            config: true,
+            type: Boolean,
+            default: false,
+            requiresReload: true
+        }
+    )
 }
 
 /**
@@ -91,6 +104,38 @@ function registerHooks () {
             const averageLabel = html[0].querySelector('.averageLabel')
             averageLabel && (averageLabel.innerHTML = '')
         }
+    })
+
+    Hooks.on('preUpdateActor', (actor, data, options) => {
+        if (!getSetting(CONSTANTS.BLOODIED.SETTING.KEY)) return
+
+        const currentHp = getProperty(data ?? {}, 'system.attributes.hp.value')
+        const previousHp = actor.system.attributes.hp.value
+        const halfHp = Math.ceil(actor.system.attributes.hp.max * 0.5)
+
+        if (typeof currentHp === 'undefined') return
+
+        if (currentHp <= halfHp && previousHp > halfHp) {
+            makeBloodied(actor)
+            return
+        }
+
+        if (currentHp > halfHp && previousHp <= halfHp) {
+            unmakeBloodied(actor)
+        }
+    })
+}
+
+/**
+ * Add Bloodied status to CONFIG.statusEffects
+ */
+export function addBloodiedStatus () {
+    if (!getSetting(CONSTANTS.BLOODIED.SETTING.KEY)) return
+
+    CONFIG.statusEffects.push({
+        id: 'bloodied',
+        name: game.i18n.localize('CUSTOM_DND5E.bloodied'),
+        icon: CONSTANTS.BLOODIED.ICON
     })
 }
 
