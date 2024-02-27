@@ -49,7 +49,7 @@ export function setConfig (data) {
             .filter(([_, value]) => value.visible || value.visible === undefined)
             .map(([key, value]) => [
                 key,
-                game.i18n.localize(value.label)
+                game.i18n.localize(value.label || value)
             ])
     )
 
