@@ -13,10 +13,11 @@ export class CountersAdvancedOptionsForm extends CustomDnd5eForm {
         super(args)
 
         this.countersForm = args.countersForm
-        this.key = args.key
-        this.actorType = args.actorType
         this.setting = args.setting
-        this.type = args.type
+        this.key = args.data.key
+        this.actorType = args.data.actorType
+        this.label = args.data.label
+        this.type = args.data.type
     }
 
     static get defaultOptions () {
@@ -136,19 +137,21 @@ export class CountersAdvancedOptionsForm extends CustomDnd5eForm {
     }
 
     async _updateObject (event, formData) {
-        const arr = []
         const ints = ['editRole', 'viewRole']
         const triggerProperties = ['action', 'actionValue', 'delete', 'trigger', 'triggerValue']
 
-        triggerProperties.forEach(property => {
-            if (!Array.isArray(formData[property])) {
-                formData[property] = [formData[property]]
-            }
-        })
+        // Ensure trigger properties are arrays if at least one exists
+        if (formData.action) {
+            triggerProperties.forEach(property => {
+                if (!Array.isArray(formData[property])) {
+                    formData[property] = [formData[property]]
+                }
+            })
+        }
 
+        // Set properties in this.setting
         Object.entries(formData).forEach(([key, value]) => {
-            if (Array.isArray(value)) { return }
-            if (key.split('.').pop() === 'key') { return }
+            if (Array.isArray(value) || key.split('.').pop() === 'key') return
             if (ints.includes(key.split('.').pop())) { value = parseInt(value) }
             setProperty(this.setting, key, value)
         })
@@ -160,12 +163,12 @@ export class CountersAdvancedOptionsForm extends CustomDnd5eForm {
         if (oldKey !== newKey) {
             this.setting[newKey] = foundry.utils.deepClone(this.setting[oldKey])
 
-            const data = {}
-
-            Object.keys(this.setting).forEach(key => {
-                const keyToUse = (key === oldKey) ? newKey : key
-                data[keyToUse] = foundry.utils.deepClone(this.setting[key])
-            })
+            const data = Object.fromEntries(
+                Object.keys(this.setting).map(key => [
+                    (key === oldKey) ? newKey : key,
+                    foundry.utils.deepClone(this.setting[key])
+                ])
+            )
 
             this.setting = data
 
@@ -181,14 +184,19 @@ export class CountersAdvancedOptionsForm extends CustomDnd5eForm {
         }
 
         // Map triggers into objects
-        const triggers = formData.action.map((_, index) => ({
-            action: formData.action[index],
-            actionValue: formData.actionValue[index],
-            trigger: formData.trigger[index],
-            triggerValue: formData.triggerValue[index]
-        })).filter((_, index) => formData.delete[index] !== 'true')
+        if (formData.action) {
+            const triggers = formData.action.map((_, index) => ({
+                action: formData.action[index],
+                actionValue: formData.actionValue[index],
+                trigger: formData.trigger[index],
+                triggerValue: formData.triggerValue[index]
+            })).filter((_, index) => formData.delete[index] !== 'true')
 
-        this.setting[this.key].triggers = triggers
+            this.setting[this.key].triggers = triggers
+        }
+
+        this.setting[this.key].label = this.label
+        this.setting[this.key].type = this.type
 
         const settingKey = (this.actorType === 'character')
             ? CONSTANTS.COUNTERS.SETTING.CHARACTER_COUNTERS.KEY

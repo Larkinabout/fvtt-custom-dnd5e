@@ -42,11 +42,13 @@ export class CountersForm extends CustomDnd5eForm {
 
     async _handleButtonClick (event) {
         event.preventDefault()
-        const clickedElement = $(event.currentTarget)
-        const action = clickedElement.data().action
-        const key = clickedElement.parents('li')?.data()?.key
-        const type = clickedElement.parent().find('#type').val()
-        const actorType = clickedElement.parent().find('#actorType').val()
+        const clickedElement = $(event.currentTarget)[0]
+        const action = clickedElement.dataset.action
+        const item = clickedElement.closest('li')
+        const key = item?.dataset.key
+        const label = item?.querySelector('#label').value
+        const type = item?.querySelector('#type').value
+        const actorType = item?.querySelector('#actorType').value
         switch (action) {
         case 'delete': {
             await this._deleteItem(key)
@@ -62,7 +64,7 @@ export class CountersForm extends CustomDnd5eForm {
         }
         case 'advanced-options': {
             const setting = (actorType === 'character') ? this.characterCountersSetting : this.npcCountersSetting
-            const args = { countersForm: this, key, actorType, setting, type }
+            const args = { countersForm: this, data: { key, actorType, label, type }, setting }
             await CountersAdvancedOptionsForm.open(args)
             break
         }
