@@ -88,6 +88,20 @@ function registerSettings () {
         }
     )
 
+    registerSetting(
+        CONSTANTS.DEATH_SAVES.SETTING.REMOVE_DEATH_SAVES.KEY,
+        {
+            scope: 'world',
+            config: false,
+            type: Object,
+            default: {
+                regainHp: { success: 3, failure: 3 },
+                shortRest: { success: 0, failure: 0 },
+                longRest: { success: 0, failure: 0 }
+            }
+        }
+    )
+
     loadTemplates([
         CONSTANTS.HOUSE_RULES.TEMPLATE.FORM
     ])
@@ -125,22 +139,56 @@ function registerHooks () {
     })
 
     Hooks.on('preUpdateActor', (actor, data, options) => {
-        if (!getSetting(CONSTANTS.BLOODIED.SETTING.APPLY_BLOODIED.KEY)) return
-
-        const currentHp = getProperty(data ?? {}, 'system.attributes.hp.value')
+        const currentHp = data?.system?.attributes?.hp?.value
         const previousHp = actor.system.attributes.hp.value
         const halfHp = Math.ceil(actor.system.attributes.hp.max * 0.5)
 
         if (typeof currentHp === 'undefined') return
 
-        if (currentHp <= halfHp && previousHp > halfHp) {
-            makeBloodied(actor)
-            return
+        const applyBloodied = getSetting(CONSTANTS.BLOODIED.SETTING.APPLY_BLOODIED.KEY)
+
+        if (applyBloodied) {
+            if (currentHp <= halfHp && previousHp > halfHp) {
+                makeBloodied(actor)
+            } else if (currentHp > halfHp && previousHp <= halfHp) {
+                unmakeBloodied(actor)
+            }
         }
 
-        if (currentHp > halfHp && previousHp <= halfHp) {
-            unmakeBloodied(actor)
+        if (actor.type !== 'character') return
+
+        const removeDeathSaves = getSetting(CONSTANTS.DEATH_SAVES.SETTING.REMOVE_DEATH_SAVES.KEY)
+
+        const adjustDeathSaves = (type) => {
+            if (removeDeathSaves.regainHp[type] >= 3) return
+            const currentValue = data?.system?.attributes?.death?.[type]
+            if (typeof currentValue !== 'undefined') {
+                const previousValue = actor.system.attributes.death[type]
+                const newValue = (previousHp === 0) ? Math.max(previousValue - removeDeathSaves.regainHp[type], 0) : previousValue
+                data.system.attributes.death[type] = newValue
+            }
         }
+
+        adjustDeathSaves('success')
+        adjustDeathSaves('failure')
+    })
+
+    Hooks.on('dnd5e.preRestCompleted', (actor, data) => {
+        const removeDeathSaves = getSetting(CONSTANTS.DEATH_SAVES.SETTING.REMOVE_DEATH_SAVES.KEY)
+
+        const restType = (data.longRest) ? 'longRest' : 'shortRest'
+
+        const adjustDeathSaves = (type) => {
+            if (removeDeathSaves[restType][type] === 0) return
+            const currentValue = actor?.system?.attributes?.death?.[type]
+            if (typeof currentValue !== 'undefined') {
+                const newValue = Math.max(currentValue - removeDeathSaves[restType][type], 0)
+                setProperty(data.updateData, `system.attributes.death.${type}`, newValue)
+            }
+        }
+
+        adjustDeathSaves('success')
+        adjustDeathSaves('failure')
     })
 }
 

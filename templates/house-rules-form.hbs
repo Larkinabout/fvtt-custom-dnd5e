@@ -44,9 +44,51 @@
                 <div class="form-fields">
                     <input id="bloodied-tint" name="bloodiedTint" type="text" value="{{bloodiedTint}}"> 
                 </div>
+                <p class="notes">{{localize "CUSTOM_DND5E.form.houseRules.bloodied.bloodiedTint.note.1"}}</p>
+                <p class="custom-dnd5e-advice notes">{{localize "CUSTOM_DND5E.form.houseRules.bloodied.bloodiedTint.note.2"}}</p>
             </div>
-            <p class="notes">{{localize "CUSTOM_DND5E.form.houseRules.bloodied.bloodiedTint.note.1"}}</p>
-            <p class="custom-dnd5e-advice notes">{{localize "CUSTOM_DND5E.form.houseRules.bloodied.bloodiedTint.note.2"}}</p>
+            <h2>{{localize "CUSTOM_DND5E.deathSaves"}}</h2>
+            <p>{{localize "CUSTOM_DND5E.form.houseRules.deathSaves.removeDeathSaves.note.1"}}</p>
+            <p class="custom-dnd5e-advice notes">{{localize "CUSTOM_DND5E.form.houseRules.deathSaves.removeDeathSaves.note.2"}}</p>
+            <h3>{{localize "CUSTOM_DND5E.onRegainingHpFromZero"}}</h3>
+            <div class="form-group">
+                <label>{{localize "CUSTOM_DND5E.successes"}}</label>
+                <div class="form-fields">
+                    <input id="remove-death-saves-regain-hp-success" name="removeDeathSaves.regainHp.success" type="number" value="{{removeDeathSaves.regainHp.success}}"> 
+                </div>
+            </div>
+            <div class="form-group">
+                <label>{{localize "CUSTOM_DND5E.failures"}}</label>
+                <div class="form-fields">
+                    <input id="remove-death-saves-regain-hp-failure" name="removeDeathSaves.regainHp.failure" type="number" value="{{removeDeathSaves.regainHp.failure}}"> 
+                </div>
+            </div>
+            <h3>{{localize "CUSTOM_DND5E.onShortRest"}}</h3>
+            <div class="form-group">
+                <label>{{localize "CUSTOM_DND5E.successes"}}</label>
+                <div class="form-fields">
+                    <input id="remove-death-saves-short-rest-success" name="removeDeathSaves.shortRest.success" type="number" value="{{removeDeathSaves.shortRest.success}}"> 
+                </div>
+            </div>
+            <div class="form-group">
+                <label>{{localize "CUSTOM_DND5E.failures"}}</label>
+                <div class="form-fields">
+                    <input id="remove-death-saves-short-rest-failure" name="removeDeathSaves.shortRest.failure" type="number" value="{{removeDeathSaves.shortRest.failure}}"> 
+                </div>
+            </div>
+            <h3>{{localize "CUSTOM_DND5E.onLongRest"}}</h3>
+            <div class="form-group">
+                <label>{{localize "CUSTOM_DND5E.successes"}}</label>
+                <div class="form-fields">
+                    <input id="remove-death-saves-long-rest-success" name="removeDeathSaves.longRest.success" type="number" value="{{removeDeathSaves.longRest.success}}"> 
+                </div>
+            </div>
+            <div class="form-group">
+                <label>{{localize "CUSTOM_DND5E.failures"}}</label>
+                <div class="form-fields">
+                    <input id="remove-death-saves-long-rest-failure" name="removeDeathSaves.longRest.failure" type="number" value="{{removeDeathSaves.longRest.failure}}"> 
+                </div>
+            </div>
         </div>
         <footer>
             <button type="button" data-tooltip="{{localize "CUSTOM_DND5E.form.button.reset.tooltip"}}" data-action="reset" class="reset-button">

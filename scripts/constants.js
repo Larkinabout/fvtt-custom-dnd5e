@@ -159,6 +159,13 @@ export const CONSTANTS = {
             LIST: 'modules/custom-dnd5e/templates/damage-types-list.hbs'
         }
     },
+    DEATH_SAVES: {
+        SETTING: {
+            REMOVE_DEATH_SAVES: {
+                KEY: 'remove-death-saves'
+            }
+        }
+    },
     DEBUG: {
         MENU: {
             KEY: 'debug-menu',

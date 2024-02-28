@@ -159,7 +159,9 @@
     border-radius: 3px;
     font-style: italic;
     margin: 0;
+    margin-bottom: 0.25rem;
     padding: 0.25rem;
+    
 }
 
 .custom-dnd5e-warning.notes {
@@ -169,5 +171,7 @@
     color: var(--color-level-error);
     font-style: italic;
     margin: 0;
+    margin-bottom: 0.25rem;
     padding: 0.25rem;
+    
 }

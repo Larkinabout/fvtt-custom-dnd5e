@@ -26,6 +26,7 @@ export class HouseRulesForm extends CustomDnd5eForm {
         data.applyBloodied = getSetting(CONSTANTS.BLOODIED.SETTING.APPLY_BLOODIED.KEY)
         data.bloodiedIcon = getSetting(CONSTANTS.BLOODIED.SETTING.BLOODIED_ICON.KEY)
         data.bloodiedTint = getSetting(CONSTANTS.BLOODIED.SETTING.BLOODIED_TINT.KEY)
+        data.removeDeathSaves = getSetting(CONSTANTS.DEATH_SAVES.SETTING.REMOVE_DEATH_SAVES.KEY)
 
         return data
     }
@@ -42,7 +43,8 @@ export class HouseRulesForm extends CustomDnd5eForm {
                 resetSetting(CONSTANTS.LEVEL_UP.HIT_POINTS.SHOW_TAKE_AVERAGE.SETTING.KEY),
                 resetSetting(CONSTANTS.BLOODIED.SETTING.APPLY_BLOODIED.KEY),
                 resetSetting(CONSTANTS.BLOODIED.SETTING.BLOODIED_ICON.KEY),
-                resetSetting(CONSTANTS.BLOODIED.SETTING.BLOODIED_TINT.KEY)
+                resetSetting(CONSTANTS.BLOODIED.SETTING.BLOODIED_TINT.KEY),
+                resetSetting(CONSTANTS.DEATH_SAVES.SETTING.REMOVE_DEATH_SAVES.KEY)
             ])
             this.render(true)
         }
@@ -68,13 +70,22 @@ export class HouseRulesForm extends CustomDnd5eForm {
     }
 
     async _updateObject (event, formData) {
+        const removeDeathSaves = {}
+        Object.entries(formData).forEach(([key, value]) => {
+            if (key.startsWith('removeDeathSaves')) {
+                const property = key.split('.').slice(1, 3).join('.')
+                setProperty(removeDeathSaves, property, value)
+            }
+        })
+
         await Promise.all([
             setSetting(CONSTANTS.LEVEL_UP.HIT_POINTS.REROLL.MINIMUM_VALUE.SETTING.KEY, formData.levelUpHitPointsRerollMinimumValue),
             setSetting(CONSTANTS.LEVEL_UP.HIT_POINTS.REROLL.ONCE.SETTING.KEY, formData.levelUpHitPointsRerollOnce),
             setSetting(CONSTANTS.LEVEL_UP.HIT_POINTS.SHOW_TAKE_AVERAGE.SETTING.KEY, formData.levelUpHitPointsShowTakeAverage),
             setSetting(CONSTANTS.BLOODIED.SETTING.APPLY_BLOODIED.KEY, formData.applyBloodied),
             setSetting(CONSTANTS.BLOODIED.SETTING.BLOODIED_ICON.KEY, formData.bloodiedIcon),
-            setSetting(CONSTANTS.BLOODIED.SETTING.BLOODIED_TINT.KEY, formData.bloodiedTint)
+            setSetting(CONSTANTS.BLOODIED.SETTING.BLOODIED_TINT.KEY, formData.bloodiedTint),
+            setSetting(CONSTANTS.DEATH_SAVES.SETTING.REMOVE_DEATH_SAVES.KEY, removeDeathSaves)
         ])
 
         SettingsConfig.reloadConfirm()
