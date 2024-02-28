@@ -76,9 +76,15 @@ export const CONSTANTS = {
     },
     BLOODIED: {
         SETTING: {
-            KEY: 'bloodied',
-            HINT: 'CUSTOM_DND5E.setting.bloodied.hint',
-            NAME: 'CUSTOM_DND5E.setting.bloodied.name'
+            APPLY_BLOODIED: {
+                KEY: 'apply-bloodied'
+            },
+            BLOODIED_ICON: {
+                KEY: 'bloodied-icon'
+            },
+            BLOODIED_TINT: {
+                KEY: 'bloodied-tint'
+            }
         },
         ICON: 'modules/custom-dnd5e/media/icons/bloodied.svg'
     },
@@ -179,9 +185,7 @@ export const CONSTANTS = {
             }
         },
         PROFICIENT_EQUIPPED_ITEM_WEIGHT_MODIFIER: {
-            SETTING: {
-                KEY: 'proficient-equipped-item-weight-modifier'
-            }
+            SETTING: { KEY: 'proficient-equipped-item-weight-modifier'}
         },
         UNEQUIPPED_ITEM_WEIGHT_MODIFIER: {
             SETTING: {
@@ -201,6 +205,18 @@ export const CONSTANTS = {
         },
         TEMPLATE: {
             FORM: 'modules/custom-dnd5e/templates/encumbrance-form.hbs'
+        }
+    },
+    HOUSE_RULES: {
+        MENU: {
+            KEY: 'house-rules-menu',
+            HINT: 'CUSTOM_DND5E.menu.houseRules.hint',
+            ICON: 'fas fa-house-chimney',
+            LABEL: 'CUSTOM_DND5E.menu.houseRules.label',
+            NAME: 'CUSTOM_DND5E.menu.houseRules.name'
+        },
+        TEMPLATE: {
+            FORM: 'modules/custom-dnd5e/templates/house-rules-form.hbs'
         }
     },
     ITEM_ACTION_TYPES: {
@@ -267,24 +283,18 @@ export const CONSTANTS = {
                 },
                 MINIMUM_VALUE: {
                     SETTING: {
-                        KEY: 'level-up-hit-points-reroll-minimum-value',
-                        HINT: 'CUSTOM_DND5E.setting.levelUpHitPointsRerollMinimumValue.hint',
-                        NAME: 'CUSTOM_DND5E.setting.levelUpHitPointsRerollMinimumValue.name'
+                        KEY: 'level-up-hit-points-reroll-minimum-value'
                     }
                 },
                 ONCE: {
                     SETTING: {
-                        KEY: 'level-up-hit-points-reroll-once',
-                        HINT: 'CUSTOM_DND5E.setting.levelUpHitPointsRerollOnce.hint',
-                        NAME: 'CUSTOM_DND5E.setting.levelUpHitPointsRerollOnce.name'
+                        KEY: 'level-up-hit-points-reroll-once'
                     }
                 }
             },
             SHOW_TAKE_AVERAGE: {
                 SETTING: {
-                    KEY: 'level-up-hit-points-show-take-average',
-                    HINT: 'CUSTOM_DND5E.setting.levelUpHitPointsShowTakeAverage.hint',
-                    NAME: 'CUSTOM_DND5E.setting.levelUpHitPointsShowTakeAverage.name'
+                    KEY: 'level-up-hit-points-show-take-average'
                 }
             }
         }

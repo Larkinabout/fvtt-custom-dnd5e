@@ -1,12 +1,11 @@
 import { CONSTANTS } from './constants.js'
-import { getSetting, registerSetting, makeBloodied, unmakeBloodied } from './utils.js'
+import { registerSetting } from './utils.js'
 
 /**
  * Register
  */
 export function register () {
     registerSettings()
-    registerHooks()
 }
 
 /**
@@ -24,119 +23,6 @@ function registerSettings () {
             onChange: (value) => { setMaxLevel(value) }
         }
     )
-
-    registerSetting(
-        CONSTANTS.LEVEL_UP.HIT_POINTS.REROLL.MINIMUM_VALUE.SETTING.KEY,
-        {
-            name: game.i18n.localize(CONSTANTS.LEVEL_UP.HIT_POINTS.REROLL.MINIMUM_VALUE.SETTING.NAME),
-            hint: game.i18n.localize(CONSTANTS.LEVEL_UP.HIT_POINTS.REROLL.MINIMUM_VALUE.SETTING.HINT),
-            scope: 'world',
-            config: true,
-            type: Number,
-            default: 1
-        }
-    )
-
-    registerSetting(
-        CONSTANTS.LEVEL_UP.HIT_POINTS.REROLL.ONCE.SETTING.KEY,
-        {
-            name: game.i18n.localize(CONSTANTS.LEVEL_UP.HIT_POINTS.REROLL.ONCE.SETTING.NAME),
-            hint: game.i18n.localize(CONSTANTS.LEVEL_UP.HIT_POINTS.REROLL.ONCE.SETTING.HINT),
-            scope: 'world',
-            config: true,
-            type: Boolean,
-            default: false
-        }
-    )
-
-    registerSetting(
-        CONSTANTS.LEVEL_UP.HIT_POINTS.SHOW_TAKE_AVERAGE.SETTING.KEY,
-        {
-            name: game.i18n.localize(CONSTANTS.LEVEL_UP.HIT_POINTS.SHOW_TAKE_AVERAGE.SETTING.NAME),
-            hint: game.i18n.localize(CONSTANTS.LEVEL_UP.HIT_POINTS.SHOW_TAKE_AVERAGE.SETTING.HINT),
-            scope: 'world',
-            config: true,
-            type: Boolean,
-            default: true
-        }
-    )
-
-    registerSetting(
-        CONSTANTS.BLOODIED.SETTING.KEY,
-        {
-            name: game.i18n.localize(CONSTANTS.BLOODIED.SETTING.NAME),
-            hint: game.i18n.localize(CONSTANTS.BLOODIED.SETTING.HINT),
-            scope: 'world',
-            config: true,
-            type: Boolean,
-            default: false,
-            requiresReload: true
-        }
-    )
-}
-
-/**
- * Register hooks
- */
-function registerHooks () {
-    Hooks.on('dnd5e.preRollClassHitPoints', (actor, item, rollData, messageData) => {
-        const hitDieValue = item.system.advancement.find(adv => adv.type === 'HitPoints' && adv.hitDieValue)?.hitDieValue || 1
-        const minimumValue = Math.min(getSetting(CONSTANTS.LEVEL_UP.HIT_POINTS.REROLL.MINIMUM_VALUE.SETTING.KEY) || 1, hitDieValue)
-        if (!minimumValue || minimumValue === 1) return
-        const reroll = (getSetting(CONSTANTS.LEVEL_UP.HIT_POINTS.REROLL.ONCE.SETTING.KEY)) ? 'r' : 'rr'
-        const value = minimumValue - 1
-        rollData.formula = `1${item.system.hitDice}${reroll}${value}`
-    })
-
-    Hooks.on('renderHitPointsFlow', (app, html, data) => {
-        const minimumValue = getSetting(CONSTANTS.LEVEL_UP.HIT_POINTS.REROLL.MINIMUM_VALUE.SETTING.KEY)
-        if (minimumValue > 1) {
-            const rerollOnce = getSetting(CONSTANTS.LEVEL_UP.HIT_POINTS.REROLL.ONCE.SETTING.KEY)
-            const note = (rerollOnce) ? 'CUSTOM_DND5E.dialog.levelUpHitPointsRerollOnce.note' : 'CUSTOM_DND5E.dialog.levelUpHitPointsRerollForever.note'
-            const h3 = html[0].querySelector('form h3')
-            const p = document.createElement('p')
-            p.classList.add('custom-dnd5e-advice', 'notes')
-            p.textContent = game.i18n.format(note, { minimumValue })
-            h3.appendChild(p)
-        }
-
-        if (!getSetting(CONSTANTS.LEVEL_UP.HIT_POINTS.SHOW_TAKE_AVERAGE.SETTING.KEY)) {
-            const averageLabel = html[0].querySelector('.averageLabel')
-            averageLabel && (averageLabel.innerHTML = '')
-        }
-    })
-
-    Hooks.on('preUpdateActor', (actor, data, options) => {
-        if (!getSetting(CONSTANTS.BLOODIED.SETTING.KEY)) return
-
-        const currentHp = getProperty(data ?? {}, 'system.attributes.hp.value')
-        const previousHp = actor.system.attributes.hp.value
-        const halfHp = Math.ceil(actor.system.attributes.hp.max * 0.5)
-
-        if (typeof currentHp === 'undefined') return
-
-        if (currentHp <= halfHp && previousHp > halfHp) {
-            makeBloodied(actor)
-            return
-        }
-
-        if (currentHp > halfHp && previousHp <= halfHp) {
-            unmakeBloodied(actor)
-        }
-    })
-}
-
-/**
- * Add Bloodied status to CONFIG.statusEffects
- */
-export function addBloodiedStatus () {
-    if (!getSetting(CONSTANTS.BLOODIED.SETTING.KEY)) return
-
-    CONFIG.statusEffects.push({
-        id: 'bloodied',
-        name: game.i18n.localize('CUSTOM_DND5E.bloodied'),
-        icon: CONSTANTS.BLOODIED.ICON
-    })
 }
 
 /**

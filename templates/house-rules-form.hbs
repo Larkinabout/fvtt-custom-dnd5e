@@ -1,0 +1,60 @@
+<div class="custom-dnd5e-form-wrapper flexrow">
+    <form class="custom-dnd5e-form flexcol">
+        <div class="scrollable">
+            <h2>{{localize "CUSTOM_DND5E.rollingHitPoints"}}</h2>
+            <div class="form-group">
+                <label>{{localize "CUSTOM_DND5E.form.houseRules.rollingHitPoints.minimumValue.label"}}</label>
+                <div class="form-fields">
+                    <input id="level-up-hit-points-reroll-minimum-value" name="levelUpHitPointsRerollMinimumValue" type="number" value="{{levelUpHitPointsRerollMinimumValue}}"> 
+                </div>
+                <p class="notes">{{localize "CUSTOM_DND5E.form.houseRules.rollingHitPoints.minimumValue.note"}}</p>
+            </div>
+            <div class="form-group">
+                <label>{{localize "CUSTOM_DND5E.form.houseRules.rollingHitPoints.rerollOnce.label"}}</label>
+                <div class="form-fields">
+                    <input id="level-up-hit-points-reroll-once" name="levelUpHitPointsRerollOnce" type="checkbox"{{#if levelUpHitPointsRerollOnce}} checked{{/if}}> 
+                </div>
+                <p class="notes">{{localize "CUSTOM_DND5E.form.houseRules.rollingHitPoints.rerollOnce.note"}}</p>
+            </div>
+             <div class="form-group">
+                <label>{{localize "CUSTOM_DND5E.form.houseRules.rollingHitPoints.showTakeAverage.label"}}</label>
+                <div class="form-fields">
+                    <input id="level-up-hit-points-show-take-average" name="levelUpHitPointsShowTakeAverage" type="checkbox"{{#if levelUpHitPointsShowTakeAverage}} checked{{/if}}> 
+                </div>
+                <p class="notes">{{localize "CUSTOM_DND5E.form.houseRules.rollingHitPoints.showTakeAverage.note"}}</p>
+            </div>
+            <h2>{{localize "CUSTOM_DND5E.bloodied"}}</h2>
+            <div class="form-group">
+                <label>{{localize "CUSTOM_DND5E.form.houseRules.bloodied.applyBloodied.label"}}</label>
+                <div class="form-fields">
+                    <input id="apply-bloodied" name="applyBloodied" type="checkbox"{{#if applyBloodied}} checked{{/if}}>
+                </div>
+                <p class="notes">{{localize "CUSTOM_DND5E.form.houseRules.bloodied.applyBloodied.note"}}</p>
+            </div>
+            <div class="form-group">
+                <label>{{localize "CUSTOM_DND5E.form.houseRules.bloodied.bloodiedIcon.label"}}</label>
+                <div class="form-fields">
+                    <input id="bloodied-icon" name="bloodiedIcon" type="text" value="{{bloodiedIcon}}">
+                    {{filePicker target="bloodiedIcon" type="image"}}
+                </div>
+                <p class="notes">{{localize "CUSTOM_DND5E.form.houseRules.bloodied.bloodiedIcon.note"}}</p>
+            </div>
+            <div class="form-group">
+                <label>{{localize "CUSTOM_DND5E.form.houseRules.bloodied.bloodiedTint.label"}}</label>
+                <div class="form-fields">
+                    <input id="bloodied-tint" name="bloodiedTint" type="text" value="{{bloodiedTint}}"> 
+                </div>
+            </div>
+            <p class="notes">{{localize "CUSTOM_DND5E.form.houseRules.bloodied.bloodiedTint.note.1"}}</p>
+            <p class="custom-dnd5e-advice notes">{{localize "CUSTOM_DND5E.form.houseRules.bloodied.bloodiedTint.note.2"}}</p>
+        </div>
+        <footer>
+            <button type="button" data-tooltip="{{localize "CUSTOM_DND5E.form.button.reset.tooltip"}}" data-action="reset" class="reset-button">
+                <i class="fas fa-arrow-rotate-left"></i>{{localize "CUSTOM_DND5E.form.button.reset.label"}}
+            </button>
+            <button type="submit" data-tooltip="{{localize "CUSTOM_DND5E.form.button.save.tooltip"}}" class="save-button">
+                <i class="fas fa-solid fa-floppy-disk"></i>{{localize "CUSTOM_DND5E.form.button.save.label"}}
+            </button>
+        </footer>
+    </form>
+</div>

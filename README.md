@@ -30,7 +30,7 @@ A Foundry VTT module to customise the D&D 5e system.
 - Hide death saves, encumbrance, exhaustion, inspiration, the Manage Currency button, Legendary Actions, Legendary Resistances and Use Lair Action.
 
 ## House Rules
-- When rolling for Hit Points, automatically re-roll based on a minimum value.
+- When rolling for Hit Points, automatically reroll based on a minimum value.
 - Hide the Take Average option when rolling for Hit Points.
 
 ![Custom D&D 5e Level Up Hit Points](./.github/readme/custom-dnd5e-level-up-hit-points.png)

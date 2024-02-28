@@ -1,5 +1,5 @@
 import { CONSTANTS, MODULE } from '../constants.js'
-import { getSetting, setSetting } from '../utils.js'
+import { getSetting, setSetting, resetSetting } from '../utils.js'
 import { CustomDnd5eForm } from './custom-dnd5e-form.js'
 import { setConfig } from '../encumbrance.js'
 
@@ -40,7 +40,12 @@ export class EncumbranceForm extends CustomDnd5eForm {
 
     async _reset () {
         const reset = async () => {
-            await setSetting(this.settingKey, CONFIG.CUSTOM_DND5E[this.type])
+            await Promise.all([
+                setSetting(this.settingKey, CONFIG.CUSTOM_DND5E[this.type]),
+                resetSetting(CONSTANTS.ENCUMBRANCE.EQUIPPED_ITEM_WEIGHT_MODIFIER.SETTING.KEY),
+                resetSetting(CONSTANTS.ENCUMBRANCE.PROFICIENT_EQUIPPED_ITEM_WEIGHT_MODIFIER.SETTING.KEY),
+                resetSetting(CONSTANTS.ENCUMBRANCE.UNEQUIPPED_ITEM_WEIGHT_MODIFIER.SETTING.KEY)
+            ])
             this.setFunction(CONFIG.CUSTOM_DND5E[this.type])
             this.render(true)
         }

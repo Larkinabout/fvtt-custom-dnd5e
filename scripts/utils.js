@@ -165,6 +165,26 @@ export async function setSetting (key, value) {
 }
 
 /**
+ * Reset setting
+ * @public
+ * @param {string} key   The setting key
+ */
+export async function resetSetting (key) {
+    const setting = game.settings.settings.get(`${MODULE.ID}.${key}`)
+    if (setting) {
+        const value = setting.default
+        if (typeof value !== 'undefined') {
+            await game.settings.set(MODULE.ID, key, value)
+        } else {
+            Logger.debug(`Setting '${key}' default not defined`)
+        }
+        Logger.debug(`Setting '${key}' reset to '${value}'`)
+    } else {
+        Logger.debug(`Setting '${key}' not found`)
+    }
+}
+
+/**
  * Set dnd5e setting
  * @public
  * @param {string} key   The setting key
@@ -258,9 +278,13 @@ export async function makeBloodied (actor) {
     const effect = await cls.fromStatusEffect(effectData)
     await cls.create(effect, { parent: actor, keepId: true })
 
+    const tint = getSetting(CONSTANTS.BLOODIED.SETTING.BLOODIED_TINT.KEY)
+
+    if (!tint) return
+
     const tokens = actor.getActiveTokens()
     tokens.forEach(token => {
-        tintToken(token, '#ff0000')
+        tintToken(token, tint)
     })
 }
 

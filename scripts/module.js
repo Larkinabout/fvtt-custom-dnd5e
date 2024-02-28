@@ -1,5 +1,6 @@
 import { CONSTANTS } from './constants.js'
 import { getSetting } from './utils.js'
+import { register as registerHouseRules, registerBloodiedStatus } from './house-rules.js'
 import { register as registerAbilities, setConfig as setAbilities } from './abilities.js'
 import { register as registerActorSizes, setConfig as setActorSizes } from './actor-sizes.js'
 import { register as registerArmorCalculations, setConfig as setArmorCalculations } from './armor-calculations.js'
@@ -14,7 +15,7 @@ import { register as registerItemActivationCostTypes, setConfig as setItemActiva
 import { register as registerItemProperties, setConfig as setItemProperties } from './item-properties.js'
 import { register as registerLanguages, setConfig as setLanguages } from './languages.js'
 import { register as registerMigration, migrate } from './migration.js'
-import { register as registerMisc, setMaxLevel, addBloodiedStatus } from './misc.js'
+import { register as registerMisc, setMaxLevel } from './misc.js'
 import { register as registerSenses, setConfig as setSenses } from './senses.js'
 import { register as registerSheet } from './sheet.js'
 import { register as registerSkills, setConfig as setSkills } from './skills.js'
@@ -29,6 +30,7 @@ Hooks.on('init', async () => {
 
     patchApplicationRender()
     registerMigration()
+    registerHouseRules()
     registerAbilities()
     registerActorSizes()
     registerArmorCalculations()
@@ -93,7 +95,7 @@ Hooks.on('ready', async () => {
     setSenses(getSetting(CONSTANTS.SENSES.SETTING.KEY) || {})
     setSpellSchools(getSetting(CONSTANTS.SPELL_SCHOOLS.SETTING.KEY) || {})
     setMaxLevel(getSetting(CONSTANTS.MAX_LEVEL.SETTING.KEY))
-    addBloodiedStatus()
+    registerBloodiedStatus()
 
     migrate()
 })

@@ -105,6 +105,9 @@ Hooks.on('deleteCombat', (combat, options, key) => {
  */
 function onTriggerZeroHp (actor) {
     const setting = getSettingByActorType(actor)
+
+    if (!setting) return
+
     Object.entries(setting).forEach(([key, value]) => {
         const triggers = value.triggers
         if (!triggers) return
@@ -124,6 +127,9 @@ function onTriggerZeroHp (actor) {
  */
 function onTriggerHalfHp (actor) {
     const setting = getSettingByActorType(actor)
+
+    if (!setting) return
+
     Object.entries(setting).forEach(([key, value]) => {
         const triggers = value.triggers
         if (!triggers) return
@@ -140,6 +146,9 @@ function onTriggerHalfHp (actor) {
  */
 function onTriggerCounterValue (actor, data) {
     const setting = getSettingByActorType(actor)
+
+    if (!setting) return
+
     Object.entries(setting).forEach(([key, value]) => {
         const counterValue = data.flags[MODULE.ID][key]
         if (!counterValue && counterValue !== 0) return
