@@ -8,6 +8,19 @@ A Foundry VTT module to customise the D&D 5e system.
 ![Custom D&D 5e Custom Banner](./.github/readme/custom-dnd5e-custom-banner.png)
 
 # Features
+## House Rules
+### Rolling Hit Points
+- When rolling for Hit Points, automatically reroll based on a minimum value.
+- Hide the Take Average option when rolling for Hit Points.
+
+![Custom D&D 5e Level Up Hit Points](./.github/readme/custom-dnd5e-level-up-hit-points.png)
+### Bloodied
+- Apply the Bloodied condition when a character or NPC is reduced to half HP or lower.
+
+![Custom D&D 5e Bloodied](./.github/readme/custom-dnd5e-bloodied.gif)
+### Death Saves
+- Remove a number of successes or failures for each event: On Regaining HP from 0, On Short Rest and On Long Rest.
+
 ## Counters
 **Counter Types:** Add four types of counter to the character sheets: checkbox, fraction, number and success/failure.
 
@@ -28,12 +41,6 @@ A Foundry VTT module to customise the D&D 5e system.
 - Scale the new character sheet up or down.
 - Change the banner at the top of the sheet.
 - Hide death saves, encumbrance, exhaustion, inspiration, the Manage Currency button, Legendary Actions, Legendary Resistances and Use Lair Action.
-
-## House Rules
-- When rolling for Hit Points, automatically reroll based on a minimum value.
-- Hide the Take Average option when rolling for Hit Points.
-
-![Custom D&D 5e Level Up Hit Points](./.github/readme/custom-dnd5e-level-up-hit-points.png)
 
 ## Compatibility
 ### Variant Encumbrance + Midi
