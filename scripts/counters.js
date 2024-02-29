@@ -635,7 +635,7 @@ function addCountersLegacy (app, html, data, actorSheetType) {
     const countersDiv = html.find('.counters')
 
     for (const [key, counter] of Object.entries(counters)) {
-        if (!counter.visible || counter.type === 'fraction' || (counter.viewRolle && game.user.role < counter.viewRole)) {
+        if (!counter.visible || counter.type === 'fraction' || (counter.viewRole && game.user.role < counter.viewRole)) {
             continue
         }
 

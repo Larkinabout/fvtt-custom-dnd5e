@@ -51,6 +51,7 @@ Hooks.on('init', async () => {
     registerDebug()
 
     setAbilities(getSetting(CONSTANTS.ABILITIES.SETTING.KEY))
+    setDamageTypes(getSetting(CONSTANTS.DAMAGE_TYPES.SETTING.KEY))
     setSkills(getSetting(CONSTANTS.SKILLS.SETTING.KEY))
 })
 
@@ -86,7 +87,6 @@ Hooks.on('ready', async () => {
     setArmorCalculations(getSetting(CONSTANTS.ARMOR_CALCULATIONS.SETTING.KEY) || {})
     // setArmorTypes(getSetting(CONSTANTS.ARMOR_TYPES.SETTING.KEY) || {})
     setCurrency(getSetting(CONSTANTS.CURRENCY.SETTING.KEY) || {})
-    setDamageTypes(getSetting(CONSTANTS.DAMAGE_TYPES.SETTING.KEY) || {})
     setEncumbrance(getSetting(CONSTANTS.ENCUMBRANCE.SETTING.KEY) || {})
     setItemActionTypes(getSetting(CONSTANTS.ITEM_ACTION_TYPES.SETTING.KEY))
     setItemActivationCostTypes(getSetting(CONSTANTS.ITEM_ACTIVATION_COST_TYPES.SETTING.KEY))

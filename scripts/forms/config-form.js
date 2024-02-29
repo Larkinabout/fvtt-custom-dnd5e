@@ -30,7 +30,9 @@ class ConfigForm extends CustomDnd5eForm {
     }
 
     async getData () {
-        this.setting = getSetting(this.settingKey) || foundry.utils.deepClone(CONFIG.DND5E[this.type])
+        this.config = foundry.utils.deepClone(CONFIG.DND5E[this.type])
+        this.setting = getSetting(this.settingKey)
+        const data = mergeObject(this.setting, this.config)
 
         const labelise = (data) => {
             Object.entries(data).forEach(([key, value]) => {
@@ -44,9 +46,9 @@ class ConfigForm extends CustomDnd5eForm {
             })
         }
 
-        labelise(this.setting)
+        labelise(data)
 
-        return { items: this.setting }
+        return { items: data }
     }
 
     activateListeners (html) {
