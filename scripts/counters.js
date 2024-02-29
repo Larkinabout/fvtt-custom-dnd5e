@@ -628,6 +628,7 @@ function getMax (actor, key) {
  * @param {string} actorSheetType The actor sheet type
  */
 function addCountersLegacy (app, html, data, actorSheetType) {
+    const actor = app.actor
     const counters = game.settings.get(MODULE.ID, actorSheetType.countersSetting)
 
     if (checkEmpty(counters)) return
@@ -635,9 +636,11 @@ function addCountersLegacy (app, html, data, actorSheetType) {
     const countersDiv = html.find('.counters')
 
     for (const [key, counter] of Object.entries(counters)) {
-        if (!counter.visible || counter.type === 'fraction' || (counter.viewRole && game.user.role < counter.viewRole)) {
+        if (!counter.visible || (counter.viewRole && game.user.role < counter.viewRole)) {
             continue
         }
+
+        const settingMax = getMax(actor, key)
 
         const counterDiv = document.createElement('div')
         counterDiv.classList.add('counter', 'flexrow', key)
@@ -667,6 +670,31 @@ function addCountersLegacy (app, html, data, actorSheetType) {
             counterInput1.setAttribute('value', app.actor.getFlag(MODULE.ID, key) || false)
             counterInput1.setAttribute('placeholder', 'false')
             counterInput1.setAttribute('data-dtype', 'Boolean')
+            if (counter.editRole && game.user.role < counter.editRole) {
+                counterInput1.setAttribute('disabled', 'true')
+            }
+            break
+        case 'fraction':
+            counterInput1.setAttribute('type', 'text')
+            counterInput1.setAttribute('name', `flags.${MODULE.ID}.${key}.value`)
+            counterInput1.setAttribute('value', app.actor.getFlag(MODULE.ID, `${key}.value`) || 0)
+            counterInput1.setAttribute('placeholder', '0')
+            counterInput1.setAttribute('data-dtype', 'Number')
+            if (counter.editRole && game.user.role < counter.editRole) {
+                counterInput1.classList.add('disabled')
+                counterInput1.setAttribute('disabled', 'true')
+            } else {
+                counterInput1.addEventListener('keyup', () => checkValue(counterInput1, actor, key), true)
+            }
+            counterInput2.setAttribute('type', 'text')
+            counterInput2.setAttribute('name', `flags.${MODULE.ID}.${key}.max`)
+            counterInput2.setAttribute('value', settingMax || app.actor.getFlag(MODULE.ID, `${key}.max`) || 0)
+            if (settingMax || (counter.editRole && game.user.role < counter.editRole)) {
+                counterInput2.classList.add('disabled')
+                counterInput2.setAttribute('disabled', 'true')
+            }
+            counterInput2.setAttribute('placeholder', '0')
+            counterInput2.setAttribute('data-dtype', 'Number')
             break
         case 'number':
             counterInput1.setAttribute('type', 'text')
@@ -674,6 +702,12 @@ function addCountersLegacy (app, html, data, actorSheetType) {
             counterInput1.setAttribute('value', app.actor.getFlag(MODULE.ID, key) || 0)
             counterInput1.setAttribute('placeholder', '0')
             counterInput1.setAttribute('data-dtype', 'Number')
+            if (counter.editRole && game.user.role < counter.editRole) {
+                counterInput1.classList.add('disabled')
+                counterInput1.setAttribute('disabled', 'true')
+            } else {
+                counterInput1.addEventListener('keyup', () => checkValue(counterInput1, actor, key), true)
+            }
             break
         case 'successFailure':
             counterInput1.setAttribute('type', 'text')
@@ -681,11 +715,23 @@ function addCountersLegacy (app, html, data, actorSheetType) {
             counterInput1.setAttribute('value', app.actor.getFlag(MODULE.ID, `${key}.success`) || 0)
             counterInput1.setAttribute('placeholder', '0')
             counterInput1.setAttribute('data-dtype', 'Number')
+            if (counter.editRole && game.user.role < counter.editRole) {
+                counterInput1.classList.add('disabled')
+                counterInput1.setAttribute('disabled', 'true')
+            } else {
+                counterInput1.addEventListener('keyup', () => checkValue(counterInput1, actor, key), true)
+            }
             counterInput2.setAttribute('type', 'text')
             counterInput2.setAttribute('name', `flags.${MODULE.ID}.${key}.failure`)
             counterInput2.setAttribute('value', app.actor.getFlag(MODULE.ID, `${key}.failure`) || 0)
             counterInput2.setAttribute('placeholder', '0')
             counterInput2.setAttribute('data-dtype', 'Number')
+            if (counter.editRole && game.user.role < counter.editRole) {
+                counterInput2.classList.add('disabled')
+                counterInput2.setAttribute('disabled', 'true')
+            } else {
+                counterInput2.addEventListener('keyup', () => checkValue(counterInput1, actor, key), true)
+            }
             break
         }
 
@@ -703,6 +749,13 @@ function addCountersLegacy (app, html, data, actorSheetType) {
             counterValueDiv.appendChild(iSuccess)
             counterValueDiv.appendChild(counterInput1)
             counterValueDiv.appendChild(iFailure)
+            counterValueDiv.appendChild(counterInput2)
+        } else if (counter.type === 'fraction') {
+            counterValueDiv.appendChild(counterInput1)
+            const separator = document.createElement('span')
+            separator.classList.add('sep')
+            separator.textContent = '/'
+            counterValueDiv.appendChild(separator)
             counterValueDiv.appendChild(counterInput2)
         } else {
             counterValueDiv.appendChild(counterInput1)
