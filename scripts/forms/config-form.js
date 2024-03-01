@@ -1,5 +1,5 @@
 import { CONSTANTS, MODULE } from '../constants.js'
-import { deleteProperty, getSetting, setSetting } from '../utils.js'
+import { Logger, deleteProperty, getSetting, setSetting } from '../utils.js'
 import { CustomDnd5eForm } from './custom-dnd5e-form.js'
 import { setConfig as setAbilities } from '../abilities.js'
 import { setConfig as setArmorCalculations } from '../armor-calculations.js'
@@ -109,32 +109,79 @@ class ConfigForm extends CustomDnd5eForm {
         return template
     }
 
+    async _validate (event, formData) {
+        const keys = {}
+
+        Object.keys(formData)
+            .filter(key => key.split('.').slice(1, 2).pop() === 'key')
+            .forEach(key => {
+                const num = keys[formData[key]] ?? 0
+                keys[formData[key]] = num + 1
+            })
+
+        const duplicates = []
+        Object.entries(keys).forEach(([key, value]) => {
+            if (value > 1) {
+                duplicates.push(key)
+            }
+        })
+
+        if (duplicates.length === 1) {
+            Logger.error(`Key '${duplicates.pop()}' already exists`, true)
+            return
+        } else if (duplicates.length > 1) {
+            const keyString = duplicates.join(', ')
+            Logger.error(`Keys '${keyString}' already exist`, true)
+            return
+        }
+
+        this.submit()
+    }
+
     async _updateObject (event, formData) {
         const ignore = ['children', 'delete', 'key', 'parentKey']
 
-        // Get list of properties to delete
-        const deleteKeys = Object.entries(formData)
-            .filter(([key, value]) => key.split('.').pop() === 'delete' && value === 'true')
-            .map(([key, _]) => key.split('.').slice(0, -1).join('.'))
-
-        // Delete properties from formData
-        Object.keys(formData).forEach(key => {
-            if (deleteKeys.includes(key.split('.').slice(0, -1).join('.'))) {
-                delete formData[key]
-            }
-        })
-
         const data = {}
+        const keyData = {}
 
-        // Set properties in this.setting
-        Object.entries(formData).forEach(([key, value]) => {
-            if (ignore.includes(key.split('.').pop())) { return }
-            if (key.split('.').pop() === 'system') {
+        Object.entries(formData).forEach(([property, value]) => {
+            const propertyArr = property.split('.')
+            const property1 = propertyArr.slice(0, 1).pop()
+            const property2 = propertyArr.pop()
+            if (ignore.includes(property2) || formData[`${property1}.delete`] === 'true') return
+            if (property2 === 'system') {
                 if (value === 'true') { return }
                 value = false
             }
-            setProperty(data, key, value)
+            const key = formData[`${property1}.key`]
+            setProperty(data, `${key}.${property2}`, value)
+
+            if (property1 !== key) {
+                keyData[property1] = key
+            }
         })
+
+        if (Object.keys(keyData).length && this.actorProperties) {
+            game.actors.forEach(actor => {
+                const updateData = {}
+                let requiresUpdate = false
+                this.actorProperties.forEach(property => {
+                    const oldData = getProperty(actor, property)
+                    if (!Array.isArray(oldData) && !(oldData instanceof Set)) return
+                    const newData = []
+                    oldData.forEach(value => {
+                        if (keyData[value]) {
+                            requiresUpdate = true
+                        }
+                        newData.push((keyData[value] || value))
+                    })
+                    updateData[property] = newData
+                })
+                if (requiresUpdate) {
+                    actor.update(updateData)
+                }
+            })
+        }
 
         await setSetting(this.settingKey, data)
         this.setFunction(data)
@@ -261,6 +308,7 @@ export class DamageTypesForm extends ConfigForm {
         this.settingKey = CONSTANTS.DAMAGE_TYPES.SETTING.KEY
         this.setFunction = setDamageTypes
         this.type = 'damageTypes'
+        this.actorProperties = ['system.traits.di.value', 'system.traits.dr.value', 'system.traits.dv.value']
     }
 
     static get defaultOptions () {

@@ -270,7 +270,7 @@ export function appendSelectOption (selectElement, optionValue, optionTextConten
 export async function makeBloodied (actor) {
     const existing = actor.effects.get('dnd5ebloodied000')
 
-    if (existing) { return }
+    if (existing || actor.system.traits.ci.value.has('bloodied')) return
 
     const effectData = foundry.utils.deepClone(CONFIG.statusEffects.find(ef => ef.id === 'bloodied'))
     effectData.statuses = ['bloodied']
@@ -311,7 +311,7 @@ export async function unmakeBloodied (actor) {
 export async function tintToken (token, tint) {
     const actor = token.actor
     if (!actor) return
-    await setFlag(actor, 'tint', token.data.texture.tint)
+    await setFlag(actor, 'tint', token.document.texture.tint)
     token.document.update({ tint })
 }
 

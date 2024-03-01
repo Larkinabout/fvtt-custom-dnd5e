@@ -51,8 +51,20 @@ Hooks.on('init', async () => {
     registerDebug()
 
     setAbilities(getSetting(CONSTANTS.ABILITIES.SETTING.KEY))
+    setActorSizes(getSetting(CONSTANTS.ACTOR_SIZES.SETTING.KEY) || {})
+    setArmorCalculations(getSetting(CONSTANTS.ARMOR_CALCULATIONS.SETTING.KEY) || {})
+    // setArmorTypes(getSetting(CONSTANTS.ARMOR_TYPES.SETTING.KEY) || {})
+    setCurrency(getSetting(CONSTANTS.CURRENCY.SETTING.KEY) || {})
     setDamageTypes(getSetting(CONSTANTS.DAMAGE_TYPES.SETTING.KEY))
+    setEncumbrance(getSetting(CONSTANTS.ENCUMBRANCE.SETTING.KEY) || {})
+    setItemActionTypes(getSetting(CONSTANTS.ITEM_ACTION_TYPES.SETTING.KEY))
+    setItemActivationCostTypes(getSetting(CONSTANTS.ITEM_ACTIVATION_COST_TYPES.SETTING.KEY))
+    setItemProperties(getSetting(CONSTANTS.ITEM_PROPERTIES.SETTING.KEY))
+    setLanguages(getSetting(CONSTANTS.LANGUAGES.SETTING.KEY) || {})
+    setSenses(getSetting(CONSTANTS.SENSES.SETTING.KEY) || {})
     setSkills(getSetting(CONSTANTS.SKILLS.SETTING.KEY))
+    setSpellSchools(getSetting(CONSTANTS.SPELL_SCHOOLS.SETTING.KEY) || {})
+    setMaxLevel(getSetting(CONSTANTS.MAX_LEVEL.SETTING.KEY))
 })
 
 Hooks.on('ready', async () => {
@@ -83,18 +95,7 @@ Hooks.on('ready', async () => {
         CONSTANTS.CONFIG.TEMPLATE.LIST
     ])
 
-    setActorSizes(getSetting(CONSTANTS.ACTOR_SIZES.SETTING.KEY) || {})
-    setArmorCalculations(getSetting(CONSTANTS.ARMOR_CALCULATIONS.SETTING.KEY) || {})
-    // setArmorTypes(getSetting(CONSTANTS.ARMOR_TYPES.SETTING.KEY) || {})
-    setCurrency(getSetting(CONSTANTS.CURRENCY.SETTING.KEY) || {})
-    setEncumbrance(getSetting(CONSTANTS.ENCUMBRANCE.SETTING.KEY) || {})
-    setItemActionTypes(getSetting(CONSTANTS.ITEM_ACTION_TYPES.SETTING.KEY))
-    setItemActivationCostTypes(getSetting(CONSTANTS.ITEM_ACTIVATION_COST_TYPES.SETTING.KEY))
-    setItemProperties(getSetting(CONSTANTS.ITEM_PROPERTIES.SETTING.KEY))
-    setLanguages(getSetting(CONSTANTS.LANGUAGES.SETTING.KEY) || {})
-    setSenses(getSetting(CONSTANTS.SENSES.SETTING.KEY) || {})
-    setSpellSchools(getSetting(CONSTANTS.SPELL_SCHOOLS.SETTING.KEY) || {})
-    setMaxLevel(getSetting(CONSTANTS.MAX_LEVEL.SETTING.KEY))
+    
     registerBloodiedStatus()
 
     migrate()
