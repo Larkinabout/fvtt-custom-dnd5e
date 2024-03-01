@@ -99,6 +99,11 @@ Hooks.on('deleteCombat', (combat, options, key) => {
     })
 })
 
+Hooks.on('dnd5e.preRestCompleted', (actor, data) => {
+    const restType = (data.longRest) ? 'longRest' : 'shortRest'
+    onTriggerRest(restType, actor)
+})
+
 /**
  * Handler for 'zeroHp' trigger
  * @param {object} actor The actor
@@ -161,6 +166,25 @@ function onTriggerCounterValue (actor, data) {
 }
 
 /**
+ * Handler for 'longRest' and 'shortRest' triggers
+ * @param {string} restType The rest type: longRest or shortRest
+ * @param {object} actor    The actor=
+ */
+function onTriggerRest (restType, actor) {
+    const setting = getSettingByActorType(actor)
+
+    if (!setting) return
+
+    Object.entries(setting).forEach(([key, value]) => {
+        const triggers = value.triggers
+        if (!triggers) return
+        triggers
+            .filter(trigger => trigger.trigger === restType)
+            .forEach(trigger => handleAction(actor, key, trigger, value.type))
+    })
+}
+
+/**
  * Handler for a trigger action
  * @param {object} actor   The actor
  * @param {string} key     The counter key
@@ -169,6 +193,12 @@ function onTriggerCounterValue (actor, data) {
  */
 function handleAction (actor, key, trigger, type) {
     switch (trigger.action) {
+    case 'check':
+        checkCheckbox(actor, key)
+        break
+    case 'uncheck':
+        uncheckCheckbox(actor, key)
+        break
     case 'increase':
         handleIncreaseAction(actor, key, trigger, type)
         break
@@ -542,70 +572,150 @@ function checkValue (input, actor, key) {
     }
 }
 
-function decreaseFraction (actor, key) {
-    const value = actor.getFlag(MODULE.ID, `${key}.value`)
-    if (value) {
-        actor.setFlag(MODULE.ID, `${key}.value`, value - 1)
+/**
+ * Check checkbox counter
+ * @param {object} actor The actor
+ * @param {string} key   The counter key
+ */
+function checkCheckbox (actor, key) {
+    actor.setFlag(MODULE.ID, key, true)
+}
+
+/**
+ * Uncheck checkbox counter
+ * @param {object} actor The actor
+ * @param {string} key   The counter key
+ */
+function uncheckCheckbox (actor, key) {
+    actor.setFlag(MODULE.ID, key, false)
+}
+
+/**
+ * Decrease fraction counter
+ * @param {object} actor       The actor
+ * @param {string} key         The counter key
+ * @param {number} actionValue The action value
+ */
+function decreaseFraction (actor, key, actionValue = 1) {
+    const oldValue = actor.getFlag(MODULE.ID, `${key}.value`) || 0
+    const newValue = Math.max(oldValue - actionValue, 0)
+    if (oldValue > 0) {
+        actor.setFlag(MODULE.ID, `${key}.value`, newValue)
     }
 }
 
-function increaseFraction (actor, key) {
-    const value = actor.getFlag(MODULE.ID, `${key}.value`) || 0
-    const max = getMax(actor, key) || actor.getFlag(MODULE.ID, `${key}.max`)
+/**
+ * Increase fraction counter
+ * @param {object} actor       The actor
+ * @param {string} key         The counter key
+ * @param {number} actionValue The action value
+ */
+function increaseFraction (actor, key, actionValue = 1) {
+    const oldValue = actor.getFlag(MODULE.ID, `${key}.value`) || 0
+    const maxValue = getMax(actor, key) || actor.getFlag(MODULE.ID, `${key}.max`)
+    const newValue = (maxValue) ? Math.min(oldValue + actionValue, maxValue) : oldValue + actionValue
 
-    if (!max || value < max) {
-        actor.setFlag(MODULE.ID, `${key}.value`, value + 1)
+    if (!maxValue || newValue <= maxValue) {
+        actor.setFlag(MODULE.ID, `${key}.value`, newValue)
     }
 }
 
-function decreaseNumber (actor, key) {
-    const value = actor.getFlag(MODULE.ID, key)
-    if (value) {
-        actor.setFlag(MODULE.ID, key, value - 1)
+/**
+ * Decrease number counter
+ * @param {object} actor       The actor
+ * @param {string} key         The counter key
+ * @param {number} actionValue The action value
+ */
+function decreaseNumber (actor, key, actionValue = 1) {
+    const oldValue = actor.getFlag(MODULE.ID, key) || 0
+    const newValue = Math.max(oldValue - actionValue, 0)
+    if (oldValue > 0) {
+        actor.setFlag(MODULE.ID, key, newValue)
     }
 }
 
-function increaseNumber (actor, key) {
-    const value = actor.getFlag(MODULE.ID, key) || 0
-    const max = getMax(actor, key)
+/**
+ * Increase number counter
+ * @param {object} actor       The actor
+ * @param {string} key         The counter key
+ * @param {number} actionValue The action value
+ */
+function increaseNumber (actor, key, actionValue = 1) {
+    const oldValue = actor.getFlag(MODULE.ID, key) || 0
+    const maxValue = getMax(actor, key) || actor.getFlag(MODULE.ID, `${key}.max`)
+    const newValue = (maxValue) ? Math.min(oldValue + actionValue, maxValue) : oldValue + actionValue
 
-    if (!max || value < max) {
-        actor.setFlag(MODULE.ID, key, value + 1)
+    if (!maxValue || newValue <= maxValue) {
+        actor.setFlag(MODULE.ID, key, newValue)
     }
 }
 
-function decreaseSuccess (actor, key) {
-    const value = actor.getFlag(MODULE.ID, `${key}.success`)
-    if (value) {
-        actor.setFlag(MODULE.ID, `${key}.success`, value - 1)
+/**
+ * Decrease success on successFailure counter
+ * @param {object} actor       The actor
+ * @param {string} key         The counter key
+ * @param {number} actionValue The action value
+ */
+function decreaseSuccess (actor, key, actionValue = 1) {
+    const oldValue = actor.getFlag(MODULE.ID, `${key}.success`) || 0
+    const newValue = Math.max(oldValue - actionValue, 0)
+    if (oldValue > 0) {
+        actor.setFlag(MODULE.ID, `${key}.success`, newValue)
     }
 }
 
-function increaseSuccess (actor, key) {
-    const value = actor.getFlag(MODULE.ID, `${key}.success`) || 0
-    const max = getMax(actor, key)
+/**
+ * Increase success on successFailure counter
+ * @param {object} actor       The actor
+ * @param {string} key         The counter key
+ * @param {number} actionValue The action value
+ */
+function increaseSuccess (actor, key, actionValue = 1) {
+    const oldValue = actor.getFlag(MODULE.ID, `${key}.success`) || 0
+    const maxValue = getMax(actor, key) || actor.getFlag(MODULE.ID, `${key}.max`)
+    const newValue = (maxValue) ? Math.min(oldValue + actionValue, maxValue) : oldValue + actionValue
 
-    if (!max || value < max) {
-        actor.setFlag(MODULE.ID, `${key}.success`, value + 1)
+    if (!maxValue || newValue <= maxValue) {
+        actor.setFlag(MODULE.ID, `${key}.success`, newValue)
     }
 }
 
-function decreaseFailure (actor, key) {
-    const value = actor.getFlag(MODULE.ID, `${key}.failure`)
-    if (value) {
-        actor.setFlag(MODULE.ID, `${key}.failure`, value - 1)
+/**
+ * Decrease failure on successFailure counter
+ * @param {object} actor       The actor
+ * @param {string} key         The counter key
+ * @param {number} actionValue The action value
+ */
+function decreaseFailure (actor, key, actionValue = 1) {
+    const oldValue = actor.getFlag(MODULE.ID, `${key}.failure`) || 0
+    const newValue = Math.max(oldValue - actionValue, 0)
+    if (oldValue > 0) {
+        actor.setFlag(MODULE.ID, `${key}.failure`, newValue)
     }
 }
 
-function increaseFailure (actor, key) {
-    const value = actor.getFlag(MODULE.ID, `${key}.failure`) || 0
-    const max = getMax(actor, key)
+/**
+ * Increase failure on successFailure counter
+ * @param {object} actor        The actor
+ * @param {string} key          The counter key
+  * @param {number} actionValue The action value
+ */
+function increaseFailure (actor, key, actionValue = 1) {
+    const oldValue = actor.getFlag(MODULE.ID, `${key}.failure`) || 0
+    const maxValue = getMax(actor, key) || actor.getFlag(MODULE.ID, `${key}.max`)
+    const newValue = (maxValue) ? Math.min(oldValue + actionValue, maxValue) : oldValue + actionValue
 
-    if (!max || value < max) {
-        actor.setFlag(MODULE.ID, `${key}.failure`, value + 1)
+    if (!maxValue || newValue <= maxValue) {
+        actor.setFlag(MODULE.ID, `${key}.failure`, newValue)
     }
 }
 
+/**
+ * Get counter setting by the actor type
+ * @param {object} actor The actor
+ * @param {string} key   The counter key
+ * @returns {object}     The counter setting
+ */
 function getSettingByActorType (actor, key = null) {
     const settingKey = (actor.type === 'character')
         ? CONSTANTS.COUNTERS.SETTING.CHARACTER_COUNTERS.KEY
@@ -613,6 +723,12 @@ function getSettingByActorType (actor, key = null) {
     return (key) ? getSetting(settingKey)[key] : getSetting(settingKey)
 }
 
+/**
+ * Get the counter's max value
+ * @param {object} actor The actor
+ * @param {string} key   The counter key
+ * @returns {number}     The max value
+ */
 function getMax (actor, key) {
     const settingKey = (actor.type === 'character')
         ? CONSTANTS.COUNTERS.SETTING.CHARACTER_COUNTERS.KEY
