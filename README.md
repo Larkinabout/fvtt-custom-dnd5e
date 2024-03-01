@@ -11,11 +11,13 @@ A Foundry VTT module to customise the D&D 5e system.
 ## House Rules
 ### Rolling Hit Points
 - When rolling for Hit Points, automatically reroll based on a minimum value.
+- Reroll once or until the minimum value is met.
 - Hide the Take Average option when rolling for Hit Points.
 
 ![Custom D&D 5e Level Up Hit Points](./.github/readme/custom-dnd5e-level-up-hit-points.png)
 ### Bloodied
 - Apply the Bloodied condition when a character or NPC is reduced to half HP or lower.
+- To stop a character or NPC from gaining the Bloodied condition, add Bloodied to their Condition Immunities.
 
 ![Custom D&D 5e Bloodied](./.github/readme/custom-dnd5e-bloodied.gif)
 ### Death Saves
@@ -28,7 +30,6 @@ A Foundry VTT module to customise the D&D 5e system.
 
 ![Custom D&D 5e Counters](./.github/readme/custom-dnd5e-counters.gif)
 ![Custom D&D 5e Counter Triggers](./.github/readme/custom-dnd5e-counter-triggers.png)
-
 
 ## Configurations
 - Configure abilities, actor sizes, armor calculations, currencies, damage types, encumbrance, item action types, item activation cost types, item properties, languages, senses, skills, spell schools and max level.
