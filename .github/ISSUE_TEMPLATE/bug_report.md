@@ -8,7 +8,12 @@ assignees: ''
 ---
 
 **Describe the bug**
+
 A description of the bug and any screenshots.
+
+**Module Data**
+
+Go into the module's settings, open up the Debug Settings menu, click Export Data, save and attach the file here.
 
 **Steps to reproduce**
 1. Go to '...'
