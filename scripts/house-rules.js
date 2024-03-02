@@ -1,4 +1,4 @@
-import { CONSTANTS } from './constants.js'
+import { CONSTANTS, SHEET_TYPE } from './constants.js'
 import { getSetting, registerMenu, registerSetting, makeBloodied, unmakeBloodied } from './utils.js'
 import { HouseRulesForm } from './forms/house-rules-form.js'
 
@@ -85,6 +85,16 @@ function registerSettings () {
             config: false,
             type: String,
             default: '#ff0000'
+        }
+    )
+
+    registerSetting(
+        CONSTANTS.DEATH_SAVES.SETTING.DEATH_SAVES_ROLL_MODE.KEY,
+        {
+            scope: 'world',
+            config: false,
+            type: String,
+            default: 'publicroll'
         }
     )
 
@@ -190,6 +200,14 @@ function registerHooks () {
         adjustDeathSaves('success')
         adjustDeathSaves('failure')
     })
+
+    Hooks.on('renderActorSheet', (app, html, data) => {
+        makeDeathSavesBlind(app, html)
+    })
+
+    Hooks.on('dnd5e.preRollDeathSave', (actor, rollData) => {
+        setDeathSavesRollMode(rollData)
+    })
 }
 
 /**
@@ -220,4 +238,33 @@ export function registerBloodiedStatus () {
     })
 
     CONFIG.DND5E.conditionTypes = conditionTypes
+}
+
+/**
+ * Make death saves blind
+ * @param {object} app  The app
+ * @param {object} html The HTML
+ */
+function makeDeathSavesBlind (app, html) {
+    if (getSetting(CONSTANTS.DEATH_SAVES.SETTING.DEATH_SAVES_ROLL_MODE.KEY !== 'blind') || game.user.isGM) return
+
+    const sheetType = SHEET_TYPE[app.constructor.name]
+
+    if (sheetType.character) {
+        if (sheetType.legacy) {
+            html[0].querySelector('.death-saves .counter-value')?.remove()
+        } else {
+            const pips = html[0].querySelectorAll('.death-saves .pips')
+            pips && (pips.forEach(p => p.remove()))
+        }
+    }
+}
+
+/**
+ * Set the roll mode for death saves
+ * @param {object} rollData The roll data
+ */
+function setDeathSavesRollMode (rollData) {
+    const rollMode = getSetting(CONSTANTS.DEATH_SAVES.SETTING.DEATH_SAVES_ROLL_MODE.KEY) || 'publicroll'
+    rollData.rollMode = rollMode
 }

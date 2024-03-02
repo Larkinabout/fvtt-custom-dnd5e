@@ -21,6 +21,7 @@ A Foundry VTT module to customise the D&D 5e system.
 
 ![Custom D&D 5e Bloodied](./.github/readme/custom-dnd5e-bloodied.gif)
 ### Death Saves
+- Set the roll mode to Public Roll, Blind GM Roll or Private GM Roll. When using Blind GM Roll, results of death saves will not appear on the character sheet for the player.
 - Remove a number of successes or failures for each event: On Regaining HP from 0, On Short Rest and On Long Rest.
 
 ## Counters

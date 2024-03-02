@@ -161,6 +161,9 @@ export const CONSTANTS = {
     },
     DEATH_SAVES: {
         SETTING: {
+            DEATH_SAVES_ROLL_MODE: {
+                KEY: 'death-saves-roll-mode'
+            },
             REMOVE_DEATH_SAVES: {
                 KEY: 'remove-death-saves'
             }

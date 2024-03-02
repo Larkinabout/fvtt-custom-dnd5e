@@ -48,6 +48,20 @@
                 <p class="custom-dnd5e-advice notes">{{localize "CUSTOM_DND5E.form.houseRules.bloodied.bloodiedTint.note.2"}}</p>
             </div>
             <h2>{{localize "CUSTOM_DND5E.deathSaves"}}</h2>
+            <div class="form-group">
+                <label>{{localize "CUSTOM_DND5E.deathSavesRollMode"}}</label>
+                <div class="form-fields">
+                    <select id="death-saves-roll-mode" name="deathSavesRollMode">
+                        {{#select deathSavesRollMode}}
+                        <option id="publicroll" value="publicroll">{{localize "CHAT.RollPublic"}}</option>
+                        <option id="blindroll" value="blindroll">{{localize "CHAT.RollBlind"}}</option>
+                        <option id="gmroll" value="gmroll">{{localize "CHAT.RollPrivate"}}</option>
+                        {{/select}}
+                    </select>
+                </div>
+                <p class="notes">{{localize "CUSTOM_DND5E.form.houseRules.deathSaves.deathSavesRollMode.note.1"}}</p>
+                <p class="custom-dnd5e-advice notes">{{localize "CUSTOM_DND5E.form.houseRules.deathSaves.deathSavesRollMode.note.2"}}</p>
+            </div>
             <p>{{localize "CUSTOM_DND5E.form.houseRules.deathSaves.removeDeathSaves.note.1"}}</p>
             <p class="custom-dnd5e-advice notes">{{localize "CUSTOM_DND5E.form.houseRules.deathSaves.removeDeathSaves.note.2"}}</p>
             <h3>{{localize "CUSTOM_DND5E.onRegainingHpFromZero"}}</h3>

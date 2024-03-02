@@ -26,6 +26,7 @@ export class HouseRulesForm extends CustomDnd5eForm {
         data.applyBloodied = getSetting(CONSTANTS.BLOODIED.SETTING.APPLY_BLOODIED.KEY)
         data.bloodiedIcon = getSetting(CONSTANTS.BLOODIED.SETTING.BLOODIED_ICON.KEY)
         data.bloodiedTint = getSetting(CONSTANTS.BLOODIED.SETTING.BLOODIED_TINT.KEY)
+        data.deathSavesRollMode = getSetting(CONSTANTS.DEATH_SAVES.SETTING.DEATH_SAVES_ROLL_MODE.KEY)
         data.removeDeathSaves = getSetting(CONSTANTS.DEATH_SAVES.SETTING.REMOVE_DEATH_SAVES.KEY)
 
         return data
@@ -44,6 +45,7 @@ export class HouseRulesForm extends CustomDnd5eForm {
                 resetSetting(CONSTANTS.BLOODIED.SETTING.APPLY_BLOODIED.KEY),
                 resetSetting(CONSTANTS.BLOODIED.SETTING.BLOODIED_ICON.KEY),
                 resetSetting(CONSTANTS.BLOODIED.SETTING.BLOODIED_TINT.KEY),
+                resetSetting(CONSTANTS.DEATH_SAVES.SETTING.DEATH_SAVES_ROLL_MODE.KEY),
                 resetSetting(CONSTANTS.DEATH_SAVES.SETTING.REMOVE_DEATH_SAVES.KEY)
             ])
             this.render(true)
@@ -85,6 +87,7 @@ export class HouseRulesForm extends CustomDnd5eForm {
             setSetting(CONSTANTS.BLOODIED.SETTING.APPLY_BLOODIED.KEY, formData.applyBloodied),
             setSetting(CONSTANTS.BLOODIED.SETTING.BLOODIED_ICON.KEY, formData.bloodiedIcon),
             setSetting(CONSTANTS.BLOODIED.SETTING.BLOODIED_TINT.KEY, formData.bloodiedTint),
+            setSetting(CONSTANTS.DEATH_SAVES.SETTING.DEATH_SAVES_ROLL_MODE.KEY, formData.deathSavesRollMode),
             setSetting(CONSTANTS.DEATH_SAVES.SETTING.REMOVE_DEATH_SAVES.KEY, removeDeathSaves)
         ])
 
