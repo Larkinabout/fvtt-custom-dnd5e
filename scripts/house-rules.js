@@ -1,5 +1,5 @@
 import { CONSTANTS, SHEET_TYPE } from './constants.js'
-import { getSetting, registerMenu, registerSetting, makeBloodied, unmakeBloodied } from './utils.js'
+import { getSetting, registerMenu, registerSetting, makeBloodied, unmakeBloodied, tintToken, untintToken } from './utils.js'
 import { HouseRulesForm } from './forms/house-rules-form.js'
 
 /**
@@ -85,6 +85,15 @@ function registerSettings () {
             config: false,
             type: String,
             default: '#ff0000'
+        }
+    )
+
+    registerSetting(
+        CONSTANTS.DEAD.SETTING.DEAD_TINT.KEY,
+        {
+            scope: 'world',
+            config: false,
+            type: String
         }
     )
 
@@ -207,6 +216,16 @@ function registerHooks () {
 
     Hooks.on('dnd5e.preRollDeathSave', (actor, rollData) => {
         setDeathSavesRollMode(rollData)
+    })
+
+    Hooks.on('applyTokenStatusEffect', (token, statusEffect, applied) => {
+        if (statusEffect !== 'dead') return
+
+        const tint = getSetting(CONSTANTS.DEAD.SETTING.DEAD_TINT.KEY)
+
+        if (!tint) return
+
+        (applied) ? tintToken(token, tint) : untintToken(token, tint)
     })
 }
 

@@ -19,9 +19,12 @@ A Foundry VTT module to customise the D&D 5e system.
 - Apply the Bloodied condition when a character or NPC is reduced to half HP or lower.
 - To stop a character or NPC from gaining the Bloodied condition, add Bloodied to their Condition Immunities.
 
+### Dead
+- Apply a tint to the token when it gains the Dead status effect.
+
 ![Custom D&D 5e Bloodied](./.github/readme/custom-dnd5e-bloodied.gif)
 ### Death Saves
-- Set the roll mode to Public Roll, Blind GM Roll or Private GM Roll. When using Blind GM Roll, results of death saves will not appear on the character sheet for the player.
+- Set the roll mode to Public Roll, Blind GM Roll or Private GM Roll. When using Blind GM Roll, successes and failures will not appear on the character sheet for the player.
 - Remove a number of successes or failures for each event: On Regaining HP from 0, On Short Rest and On Long Rest.
 
 ## Counters

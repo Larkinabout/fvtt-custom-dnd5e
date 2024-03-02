@@ -159,6 +159,13 @@ export const CONSTANTS = {
             LIST: 'modules/custom-dnd5e/templates/damage-types-list.hbs'
         }
     },
+    DEAD: {
+        SETTING: {
+            DEAD_TINT: {
+                KEY: 'dead-tint'
+            }
+        }
+    },
     DEATH_SAVES: {
         SETTING: {
             DEATH_SAVES_ROLL_MODE: {

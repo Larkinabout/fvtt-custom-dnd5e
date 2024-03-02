@@ -309,9 +309,12 @@ export async function unmakeBloodied (actor) {
  * @param {string} tint  The hex color
  */
 export async function tintToken (token, tint) {
-    const actor = token.actor
-    if (!actor) return
-    await setFlag(actor, 'tint', token.document.texture.tint)
+    const tinted = !!getFlag(token.document, 'tint')
+
+    if (!tinted) {
+        await setFlag(token.document, 'tint', token.document.texture.tint)
+    }
+
     token.document.update({ tint })
 }
 
@@ -320,10 +323,13 @@ export async function tintToken (token, tint) {
  * @param {object} token The token
  */
 export async function untintToken (token) {
-    const actor = token.actor
-    if (!actor) return
-    const tint = getFlag(actor, 'tint')
-    tint && token.document.update({ tint })
+    const tint = getFlag(token.document, 'tint')
+
+    if (tint || tint === null) {
+        token.document.update({ tint })
+    }
+
+    await unsetFlag(token.document, 'tint')
 }
 
 /**
