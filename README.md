@@ -20,7 +20,7 @@ A Foundry VTT module to customise the D&D 5e system.
 - To stop a character or NPC from gaining the Bloodied condition, add Bloodied to their Condition Immunities.
 
 ### Dead
-- Apply a tint to the token when it gains the Dead status effect.
+- Tint and/or rotate the token when it gains the Dead status effect.
 
 ![Custom D&D 5e Bloodied](./.github/readme/custom-dnd5e-bloodied.gif)
 ### Death Saves

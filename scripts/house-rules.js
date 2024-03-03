@@ -1,5 +1,5 @@
 import { CONSTANTS, SHEET_TYPE } from './constants.js'
-import { getSetting, registerMenu, registerSetting, makeBloodied, unmakeBloodied, tintToken, untintToken } from './utils.js'
+import { getSetting, registerMenu, registerSetting, makeBloodied, unmakeBloodied, rotateToken, unrotateToken, tintToken, untintToken } from './utils.js'
 import { HouseRulesForm } from './forms/house-rules-form.js'
 
 /**
@@ -85,6 +85,15 @@ function registerSettings () {
             config: false,
             type: String,
             default: '#ff0000'
+        }
+    )
+
+    registerSetting(
+        CONSTANTS.DEAD.SETTING.DEAD_ROTATION.KEY,
+        {
+            scope: 'world',
+            config: false,
+            type: Number
         }
     )
 
@@ -221,11 +230,11 @@ function registerHooks () {
     Hooks.on('applyTokenStatusEffect', (token, statusEffect, applied) => {
         if (statusEffect !== 'dead') return
 
+        const rotation = getSetting(CONSTANTS.DEAD.SETTING.DEAD_ROTATION.KEY)
         const tint = getSetting(CONSTANTS.DEAD.SETTING.DEAD_TINT.KEY)
 
-        if (!tint) return
-
-        (applied) ? tintToken(token, tint) : untintToken(token, tint)
+        rotation && ((applied) ? rotateToken(token, rotation) : unrotateToken(token))
+        tint && ((applied) ? tintToken(token, tint) : untintToken(token))
     })
 }
 

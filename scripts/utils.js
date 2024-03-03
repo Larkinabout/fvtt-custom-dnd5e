@@ -199,80 +199,14 @@ export async function setDnd5eSetting (key, value) {
     }
 }
 
-export function appendDeleteButton (parentElement, inputName) {
-    const button = document.createElement('button')
-    button.setAttribute('type', 'button')
-    button.setAttribute('data-tooltip', 'Delete')
-    button.setAttribute('data-action', 'delete')
-    button.classList.add('flex0', 'custom-dnd5e-list-button')
-    parentElement.appendChild(button)
-
-    const i = document.createElement('i')
-    i.classList.add('fas', 'fa-xmark')
-    button.appendChild(i)
-
-    const input = document.createElement('input')
-    input.setAttribute('id', 'delete')
-    input.setAttribute('name', inputName)
-    input.setAttribute('type', 'hidden')
-    input.setAttribute('value', 'false')
-    parentElement.appendChild(input)
-
-    return button
-}
-
-export function appendFormFields (parentElement) {
-    const div = document.createElement('div')
-    div.setAttribute('class', 'form-fields')
-    parentElement.appendChild(div)
-    return div
-}
-
-export function appendFormGroup (parentElement) {
-    const div = document.createElement('div')
-    div.classList.add('form-group')
-    parentElement.appendChild(div)
-    return div
-}
-
-export function appendFormGroupLabel (formGroupElement, labelValue) {
-    const label = document.createElement('label')
-    label.classList.add('flex1')
-    label.style.minWidth = '80px'
-    label.style.maxWidth = '100px'
-    label.textContent = labelValue
-    formGroupElement.appendChild(label)
-    return label
-}
-
-export function appendSelect (parentElement, selectId, selectName) {
-    const select = document.createElement('select')
-    select.setAttribute('id', selectId)
-    select.setAttribute('name', selectName)
-    parentElement.appendChild(select)
-    return select
-}
-
-export function appendSelectOption (selectElement, optionValue, optionTextContent, hidden = false) {
-    const option = document.createElement('option')
-    option.setAttribute('id', optionValue)
-    option.setAttribute('value', optionValue)
-    if (hidden) option.classList.add('hidden')
-    option.textContent = optionTextContent
-    selectElement.appendChild(option)
-    return option
-}
-
 /**
  * Make the actor bloodied
  * @param {object} actor The actor
  */
 export async function makeBloodied (actor) {
-    const existing = actor.effects.get('dnd5ebloodied000')
+    if (actor.effects.get('dnd5ebloodied000') || actor.system.traits.ci.value.has('bloodied')) return
 
-    if (existing || actor.system.traits.ci.value.has('bloodied')) return
-
-    const effectData = foundry.utils.deepClone(CONFIG.statusEffects.find(ef => ef.id === 'bloodied'))
+    const effectData = foundry.utils.deepClone(CONFIG.statusEffects.find(effect => effect.id === 'bloodied'))
     effectData.statuses = ['bloodied']
     const cls = getDocumentClass('ActiveEffect')
     const effect = await cls.fromStatusEffect(effectData)
@@ -280,12 +214,7 @@ export async function makeBloodied (actor) {
 
     const tint = getSetting(CONSTANTS.BLOODIED.SETTING.BLOODIED_TINT.KEY)
 
-    if (!tint) return
-
-    const tokens = actor.getActiveTokens()
-    tokens.forEach(token => {
-        tintToken(token, tint)
-    })
+    if (tint) actor.getActiveTokens().forEach(token => tintToken(token, tint))
 }
 
 /**
@@ -294,13 +223,34 @@ export async function makeBloodied (actor) {
  */
 export async function unmakeBloodied (actor) {
     const effect = actor.effects.get('dnd5ebloodied000')
-
     await effect?.delete()
+    actor.getActiveTokens().forEach(untintToken)
+}
 
-    const tokens = actor.getActiveTokens()
-    tokens.forEach(token => {
-        untintToken(token)
-    })
+/**
+ * Rotate token
+ * @param {object} token    The token
+ * @param {number} rotation The angle of rotation
+ */
+export async function rotateToken (token, rotation) {
+    if (!getFlag(token.document, 'rotation')) {
+        await setFlag(token.document, 'rotation', token.document.rotation)
+    }
+
+    token.document.update({ rotation })
+}
+
+/**
+ * Unrotate token
+ * @param {object} token The token
+ */
+export async function unrotateToken (token) {
+    const rotation = getFlag(token.document, 'rotation')
+
+    if (rotation || rotation === null) {
+        token.document.update({ rotation })
+        await unsetFlag(token.document, 'rotation')
+    }
 }
 
 /**
@@ -309,9 +259,7 @@ export async function unmakeBloodied (actor) {
  * @param {string} tint  The hex color
  */
 export async function tintToken (token, tint) {
-    const tinted = !!getFlag(token.document, 'tint')
-
-    if (!tinted) {
+    if (!getFlag(token.document, 'tint')) {
         await setFlag(token.document, 'tint', token.document.texture.tint)
     }
 
@@ -327,9 +275,8 @@ export async function untintToken (token) {
 
     if (tint || tint === null) {
         token.document.update({ tint })
+        await unsetFlag(token.document, 'tint')
     }
-
-    await unsetFlag(token.document, 'tint')
 }
 
 /**
@@ -340,17 +287,18 @@ export async function untintToken (token) {
  * @param {object} actor The actor
  */
 export async function makeDead (actor) {
-    const data = { 'system.attributes.hp.value': 0 }
-    if (actor.type === 'character') {
-        data['system.attributes.death.failure'] = 3
+    const data = {
+        'system.attributes.hp.value': 0,
+        ...(actor.type === 'character' && {'system.attributes.death.failure': 3})
     }
+
     actor.update(data)
-    const existing = actor.effects.get('dnd5edead0000000')
 
-    if (existing) { return }
+    if (actor.effects.get('dnd5edead0000000')) return
 
-    const effectData = foundry.utils.deepClone(CONFIG.statusEffects.find(ef => ef.id === 'dead'))
+    const effectData = foundry.utils.deepClone(CONFIG.statusEffects.find(effect => effect.id === 'dead'))
     effectData.statuses = ['dead']
+
     const cls = getDocumentClass('ActiveEffect')
     const effect = await cls.fromStatusEffect(effectData)
     effect.updateSource({ 'flags.core.overlay': true })

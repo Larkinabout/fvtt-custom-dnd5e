@@ -161,6 +161,9 @@ export const CONSTANTS = {
     },
     DEAD: {
         SETTING: {
+            DEAD_ROTATION: {
+                KEY: 'dead-rotation'
+            },
             DEAD_TINT: {
                 KEY: 'dead-tint'
             }
