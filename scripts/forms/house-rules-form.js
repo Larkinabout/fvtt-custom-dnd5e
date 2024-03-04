@@ -30,6 +30,8 @@ export class HouseRulesForm extends CustomDnd5eForm {
         data.deadTint = getSetting(CONSTANTS.DEAD.SETTING.DEAD_TINT.KEY)
         data.deathSavesRollMode = getSetting(CONSTANTS.DEATH_SAVES.SETTING.DEATH_SAVES_ROLL_MODE.KEY)
         data.removeDeathSaves = getSetting(CONSTANTS.DEATH_SAVES.SETTING.REMOVE_DEATH_SAVES.KEY)
+        data.awardInspirationD20Value = getSetting(CONSTANTS.INSPIRATION.SETTING.AWARD_INSPIRATION_D20_VALUE.KEY)
+        data.awardInspirationRollTypes = getSetting(CONSTANTS.INSPIRATION.SETTING.AWARD_INSPIRATION_ROLL_TYPES.KEY)
 
         return data
     }
@@ -50,7 +52,9 @@ export class HouseRulesForm extends CustomDnd5eForm {
                 resetSetting(CONSTANTS.DEAD.SETTING.DEAD_ROTATION.KEY),
                 resetSetting(CONSTANTS.DEAD.SETTING.DEAD_TINT.KEY),
                 resetSetting(CONSTANTS.DEATH_SAVES.SETTING.DEATH_SAVES_ROLL_MODE.KEY),
-                resetSetting(CONSTANTS.DEATH_SAVES.SETTING.REMOVE_DEATH_SAVES.KEY)
+                resetSetting(CONSTANTS.DEATH_SAVES.SETTING.REMOVE_DEATH_SAVES.KEY),
+                resetSetting(CONSTANTS.INSPIRATION.SETTING.AWARD_INSPIRATION_D20_VALUE.KEY),
+                resetSetting(CONSTANTS.INSPIRATION.SETTING.AWARD_INSPIRATION_ROLL_TYPES.KEY)
             ])
             this.render(true)
         }
@@ -77,10 +81,14 @@ export class HouseRulesForm extends CustomDnd5eForm {
 
     async _updateObject (event, formData) {
         const removeDeathSaves = {}
+        const awardInspirationRollTypes = {}
         Object.entries(formData).forEach(([key, value]) => {
             if (key.startsWith('removeDeathSaves')) {
                 const property = key.split('.').slice(1, 3).join('.')
                 setProperty(removeDeathSaves, property, value)
+            } else if (key.startsWith('awardInspirationRollTypes')) {
+                const property = key.split('.').slice(1, 3).join('.')
+                setProperty(awardInspirationRollTypes, property, value)
             }
         })
 
@@ -94,7 +102,9 @@ export class HouseRulesForm extends CustomDnd5eForm {
             setSetting(CONSTANTS.DEAD.SETTING.DEAD_ROTATION.KEY, formData.deadRotation),
             setSetting(CONSTANTS.DEAD.SETTING.DEAD_TINT.KEY, formData.deadTint),
             setSetting(CONSTANTS.DEATH_SAVES.SETTING.DEATH_SAVES_ROLL_MODE.KEY, formData.deathSavesRollMode),
-            setSetting(CONSTANTS.DEATH_SAVES.SETTING.REMOVE_DEATH_SAVES.KEY, removeDeathSaves)
+            setSetting(CONSTANTS.DEATH_SAVES.SETTING.REMOVE_DEATH_SAVES.KEY, removeDeathSaves),
+            setSetting(CONSTANTS.INSPIRATION.SETTING.AWARD_INSPIRATION_D20_VALUE.KEY, formData.awardInspirationD20Value),
+            setSetting(CONSTANTS.INSPIRATION.SETTING.AWARD_INSPIRATION_ROLL_TYPES.KEY, awardInspirationRollTypes)
         ])
 
         SettingsConfig.reloadConfirm()

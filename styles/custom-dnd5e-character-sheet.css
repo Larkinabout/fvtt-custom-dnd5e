@@ -1,0 +1,157 @@
+.custom-dnd5e.dnd5e2.sheet.actor.character {
+    --dnd5e-sheet-header-height: 100px;
+    --dnd5e-sheet-header-right-width: 35%;
+    min-width: 520px;
+    min-height: 500px;
+}
+
+.custom-dnd5e.dnd5e2.sheet.actor.character .sheet-header {
+    padding-top: 25px;
+}
+
+.custom-dnd5e.dnd5e2.sheet.actor.character .sheet-header > .left {
+    padding: 0 .5rem 0 1em;
+    gap: 0;
+}
+
+.custom-dnd5e.dnd5e2.sheet.actor.character .sheet-body .details .pills-lg {
+    min-width: 160px;
+    max-width: var(--skills-col-width);    
+}
+
+.custom-dnd5e.dnd5e2.sheet.actor.character .sheet-header > .right {
+    --level-size: 60px;
+    --padding-right: 1rem;
+    flex-direction: row-reverse;
+}
+
+.custom-dnd5e.dnd5e2.sheet.actor.character .sheet-header > .right .level {
+    font-size: var(--font-size-23);
+    margin-left: 25px;
+    min-width: var(--level-size);
+}
+
+.custom-dnd5e.dnd5e2.sheet.actor.character .sheet-header > .right > div:last-child {
+    flex-direction: row;
+    margin-top: 0;
+    gap: 0.5rem;
+}
+
+.custom-dnd5e.dnd5e2.sheet.actor.character .sheet-header > .right > div:last-child .sheet-header-buttons {
+    position: unset;
+    gap: 0.25rem;
+}
+
+.custom-dnd5e.dnd5e2.sheet.actor.character .sheet-header > .right > div:last-child .xp-bar { 
+    display: none;
+}
+
+.custom-dnd5e.dnd5e2.sheet.actor.character .sheet-header .document-name {
+    font-size: var(--font-size-30);
+    letter-spacing: 1px;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+}
+
+.custom-dnd5e.dnd5e2.sheet.actor.character .sheet-header {
+    font-size: var(--font-size-23);
+}
+
+.custom-dnd5e.dnd5e2.sheet.actor.character .sheet-header {
+    gap: 0.375rem;
+    display: flex;
+    flex-wrap: nowrap;
+}
+
+.custom-dnd5e.dnd5e2.sheet.actor.character .tab-details .tab-body {
+    display: flex;
+    padding-top: 0;
+}
+
+.custom-dnd5e.dnd5e2.sheet.actor.character .sheet-body .main-content {
+    flex-wrap: wrap;
+}
+
+.custom-dnd5e.dnd5e2.sheet.actor.character .sheet-body .tab-body .col-2 > .left,
+.custom-dnd5e.dnd5e2.sheet.actor.character .sheet-body .tab-body .col-2 .right {
+    flex: 1 1 210px;
+}
+
+.custom-dnd5e.dnd5e2.sheet.actor.character .sheet-body .tab-body .col-2 > .left .skills {
+    min-width: var(--skills-col-width);
+}
+
+.custom-dnd5e.dnd5e2.sheet.actor.character .ability-scores {
+    position: unset;
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+    width: 100%;
+}
+
+.custom-dnd5e.dnd5e2.sheet.actor.character .ability-scores.optional-ability-0 .rows {
+    flex-direction: column-reverse;
+    padding: 0;
+    flex-wrap: wrap;
+    display: flex;
+    justify-content: space-around;
+    padding-bottom: 0.25rem;
+}
+
+.custom-dnd5e.dnd5e2.sheet.actor.character .ability-scores .rows > div {
+    row-gap: 0.5rem;
+    justify-content: space-evenly;
+    flex-wrap: wrap;
+    min-height: 0;
+}
+
+.custom-dnd5e.dnd5e2.sheet.actor.character .ability-scores .top {
+    padding-right: 0;
+}
+
+.custom-dnd5e.dnd5e2.sheet.actor.character .ability-scores .ability-score {
+    width: 60px;
+    height: 60px;
+}
+
+.custom-dnd5e.dnd5e2.sheet.actor.character .ability-scores .ability-score .mod {
+    padding: 0 0 0.1rem 0;
+    line-height: normal;
+}
+
+.custom-dnd5e.dnd5e2.sheet.actor.character .ability-scores .ability-score .score {
+    width: 40px;
+    height: 22px;
+    font-size: var(--font-size-13);
+}
+
+.custom-dnd5e.dnd5e2.sheet.actor.character .ability-scores .ability-score .score > input {
+  width: 40px;
+}
+
+.custom-dnd5e.dnd5e2.sheet.actor.character .sheet-body .tab-body .col-2 {
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: row;
+    flex: 1 1 var(--skills-col-width);
+    gap: 0.7rem;
+}
+
+.cusom-dnd5e.dnd5e2.sheet.actor.character .sheet-body .tab-body .col-2 > .left {
+    max-width: var(--skills-col-width);
+    flex-wrap: wrap;
+}
+
+.custom-dnd5e.dnd5e2.sheet.actor.character .sheet-body .saves {
+    max-width: var(--skills-col-width);
+    min-width: 210px;
+}
+
+@container (min-width: 700px) {.custom-dnd5e.dnd5e2.sheet.actor.character .ability-scores .rows {
+    justify-content: center;
+    gap: 0rem;
+    padding-top:0rem;
+    width: unset;
+    margin: 0;}
+}

@@ -19,13 +19,21 @@ A Foundry VTT module to customise the D&D 5e system.
 - Apply the Bloodied condition when a character or NPC is reduced to half HP or lower.
 - To stop a character or NPC from gaining the Bloodied condition, add Bloodied to their Condition Immunities.
 
+![Custom D&D 5e Bloodied](./.github/readme/custom-dnd5e-bloodied.gif)
+
 ### Dead
 - Tint and/or rotate the token when it gains the Dead status effect.
 
-![Custom D&D 5e Bloodied](./.github/readme/custom-dnd5e-bloodied.gif)
-### Death Saves
+![Custom D&D 5e Bloodied](./.github/readme/custom-dnd5e-dead.gif)
+
+### Death Saving Throws
 - Set the roll mode to Public Roll, Blind GM Roll or Private GM Roll. When using Blind GM Roll, successes and failures will not appear on the character sheet for the player.
 - Remove a number of successes or failures for each event: On Regaining HP from 0, On Short Rest and On Long Rest.
+
+### Inspiration
+- Award Inspiration when a set value is rolled for an ability check, attack roll, saving throw and/or skill check.
+
+![Custom D&D 5e Award Inspiration](./.github/readme/custom-dnd5e-award-inspiration.png)
 
 ## Counters
 **Counter Types:** Add four types of counter to the character sheets: checkbox, fraction, number and success/failure.
@@ -34,6 +42,10 @@ A Foundry VTT module to customise the D&D 5e system.
 
 ![Custom D&D 5e Counters](./.github/readme/custom-dnd5e-counters.gif)
 ![Custom D&D 5e Counter Triggers](./.github/readme/custom-dnd5e-counter-triggers.png)
+
+## Smaller Form Character Sheet
+Select 'Custom D&D 5e Character Sheet' from the Sheet Configuration dialog (cog on the sheet's header) to enable a smaller form character sheet.
+![Custom D&D 5e Character Sheet](./.github/readme/custom-dnd5e-character-sheet.png)
 
 ## Configurations
 - Configure abilities, actor sizes, armor calculations, currencies, damage types, encumbrance, item action types, item activation cost types, item properties, languages, senses, skills, spell schools and max level.

@@ -130,6 +130,25 @@ function registerSettings () {
         }
     )
 
+    registerSetting(
+        CONSTANTS.INSPIRATION.SETTING.AWARD_INSPIRATION_D20_VALUE.KEY,
+        {
+            scope: 'world',
+            config: false,
+            type: Number
+        }
+    )
+
+    registerSetting(
+        CONSTANTS.INSPIRATION.SETTING.AWARD_INSPIRATION_ROLL_TYPES.KEY,
+        {
+            scope: 'world',
+            config: false,
+            type: Object,
+            default: {}
+        }
+    )
+
     loadTemplates([
         CONSTANTS.HOUSE_RULES.TEMPLATE.FORM
     ])
@@ -236,6 +255,33 @@ function registerHooks () {
         rotation && ((applied) ? rotateToken(token, rotation) : unrotateToken(token))
         tint && ((applied) ? tintToken(token, tint) : untintToken(token))
     })
+
+    Hooks.on('dnd5e.rollAbilitySave', (actor, roll, ability) => { awardInspiration('rollAbilitySave', actor, roll) })
+    Hooks.on('dnd5e.rollAbilityTest', (actor, roll, ability) => { awardInspiration('rollAbilityTest', actor, roll) })
+    Hooks.on('dnd5e.rollAttack', (item, roll, ability) => { awardInspiration('rollAttack', item, roll) })
+    Hooks.on('dnd5e.rollSkill', (actor, roll, ability) => { awardInspiration('rollSkill', actor, roll) })
+}
+
+/**
+ * Award Inspiration
+ * @param {string} rollType The roll type: rollAbilitySave, rollAbilityTest, rollAttack, rollSkill
+ * @param {object} entity   The entity: actor or item
+ * @param {object} roll     The roll
+ */
+export function awardInspiration (rollType, entity, roll) {
+    const actor = (rollType === 'rollAttack') ? entity.parent : entity
+
+    if (actor.type === 'npc' || !getSetting(CONSTANTS.INSPIRATION.SETTING.AWARD_INSPIRATION_ROLL_TYPES.KEY)?.[rollType]) return
+
+    const awardInspirationD20Value = getSetting(CONSTANTS.INSPIRATION.SETTING.AWARD_INSPIRATION_D20_VALUE.KEY)
+    const d20Value = roll.terms.find(term => term.faces === 20).total
+
+    if (awardInspirationD20Value === d20Value) {
+        actor.update({ 'system.attributes.inspiration': true })
+        ChatMessage.create({
+            content: game.i18n.format('CUSTOM_DND5E.message.awardInspiration', { name: actor.name, value: awardInspirationD20Value })
+        })
+    }
 }
 
 /**

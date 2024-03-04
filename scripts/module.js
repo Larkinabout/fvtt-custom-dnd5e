@@ -21,6 +21,7 @@ import { register as registerSheet } from './sheet.js'
 import { register as registerSkills, setConfig as setSkills } from './skills.js'
 import { register as registerSpellSchools, setConfig as setSpellSchools } from './spell-schools.js'
 import { patchApplicationRender } from './patches/application-render.js'
+import { registerCharacterSheet } from './sheets/character-sheet.js'
 
 /**
  * HOOKS
@@ -49,6 +50,8 @@ Hooks.on('init', async () => {
     registerSpellSchools()
     registerMisc()
     registerDebug()
+
+    registerCharacterSheet()
 
     setAbilities(getSetting(CONSTANTS.ABILITIES.SETTING.KEY))
     setActorSizes(getSetting(CONSTANTS.ACTOR_SIZES.SETTING.KEY) || {})
@@ -92,10 +95,11 @@ Hooks.on('ready', async () => {
 
     loadTemplates([
         CONSTANTS.CONFIG.TEMPLATE.FORM,
-        CONSTANTS.CONFIG.TEMPLATE.LIST
+        CONSTANTS.CONFIG.TEMPLATE.LIST,
+        CONSTANTS.SHEET.TEMPLATE.CHARACTER_SHEET_2,
+        CONSTANTS.SHEET.TEMPLATE.CHARACTER_DETAILS
     ])
 
-    
     registerBloodiedStatus()
 
     migrate()

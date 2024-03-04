@@ -239,6 +239,16 @@ export const CONSTANTS = {
             FORM: 'modules/custom-dnd5e/templates/house-rules-form.hbs'
         }
     },
+    INSPIRATION: {
+        SETTING: {
+            AWARD_INSPIRATION_D20_VALUE: {
+                KEY: 'award-inspiration-d20-value'
+            },
+            AWARD_INSPIRATION_ROLL_TYPES: {
+                KEY: 'award-inspiration-roll-types'
+            }
+        }
+    },
     ITEM_ACTION_TYPES: {
         ID: 'item-action-types',
         MENU: {
@@ -369,7 +379,9 @@ export const CONSTANTS = {
             SHOW_USE_LAIR_ACTION: { KEY: 'show-use-lair-action' }
         },
         TEMPLATE: {
-            FORM: 'modules/custom-dnd5e/templates/sheet-form.hbs'
+            FORM: 'modules/custom-dnd5e/templates/sheet-form.hbs',
+            CHARACTER_SHEET_2: 'modules/custom-dnd5e/templates/sheet/character-sheet-2.hbs',
+            CHARACTER_DETAILS: 'modules/custom-dnd5e/templates/sheet/character-details.hbs'
         }
     },
     SKILLS: {
@@ -426,5 +438,11 @@ export const SHEET_TYPE = {
         character: false,
         legacy: true,
         npc: false
+    },
+    CustomDnd5eSheetCharacter2: {
+        countersSetting: CONSTANTS.COUNTERS.SETTING.CHARACTER_COUNTERS.KEY,
+        character: true,
+        legacy: false,
+        npc: true
     }
 }
