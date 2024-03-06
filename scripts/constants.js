@@ -230,6 +230,16 @@ export const CONSTANTS = {
             FORM: 'modules/custom-dnd5e/templates/encumbrance-form.hbs'
         }
     },
+    HIT_POINTS: {
+        SETTING: {
+            APPLY_NEGATIVE_HP: {
+                KEY: 'apply-negative-hp'
+            },
+            NEGATIVE_HP_HEAL_FROM_ZERO: {
+                KEY: 'negative-hp-heal-from-zero'
+            }
+        }
+    },
     HOUSE_RULES: {
         MENU: {
             KEY: 'house-rules-menu',

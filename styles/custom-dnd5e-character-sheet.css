@@ -173,6 +173,10 @@
     width: 40px;
 }
 
+.dnd5e2.sheet.actor.character .sheet-body .tab-body .tab:not(.details) {
+    padding-top: 0.5rem;
+}
+
 .custom-dnd5e.dnd5e2.sheet.actor.character .sheet-body .tab-body .col-2 {
     --skills-col-width: 230px;
     display: flex;
@@ -333,4 +337,10 @@
     > .middle
     .textbox-half {
     min-width: 200px;
+}
+
+.dnd5e2.sheet.actor.character .sheet-body .sidebar .card .meter.hit-points.negative .progress::before {
+    background: linear-gradient(to right, var(--dnd5e-color-maroon) -0%, var(--dnd5e-color-maroon) 100%);
+    border-right: var(--border-width) solid var(--dnd5e-color-crimson);
+    border-radius: 4px 0 0 4px;
 }

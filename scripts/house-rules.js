@@ -1,5 +1,5 @@
 import { CONSTANTS, SHEET_TYPE } from './constants.js'
-import { getSetting, registerMenu, registerSetting, makeBloodied, unmakeBloodied, rotateToken, unrotateToken, tintToken, untintToken } from './utils.js'
+import { getSetting, registerMenu, registerSetting, getFlag, setFlag, makeBloodied, unmakeBloodied, rotateToken, unrotateToken, tintToken, untintToken } from './utils.js'
 import { HouseRulesForm } from './forms/house-rules-form.js'
 
 /**
@@ -131,6 +131,26 @@ function registerSettings () {
     )
 
     registerSetting(
+        CONSTANTS.HIT_POINTS.SETTING.APPLY_NEGATIVE_HP.KEY,
+        {
+            scope: 'world',
+            config: false,
+            type: Boolean,
+            default: false
+        }
+    )
+
+    registerSetting(
+        CONSTANTS.HIT_POINTS.SETTING.NEGATIVE_HP_HEAL_FROM_ZERO.KEY,
+        {
+            scope: 'world',
+            config: false,
+            type: Boolean,
+            default: false
+        }
+    )
+
+    registerSetting(
         CONSTANTS.INSPIRATION.SETTING.AWARD_INSPIRATION_D20_VALUE.KEY,
         {
             scope: 'world',
@@ -152,6 +172,8 @@ function registerSettings () {
     loadTemplates([
         CONSTANTS.HOUSE_RULES.TEMPLATE.FORM
     ])
+
+    registerNegativeHp()
 }
 
 /**
@@ -191,6 +213,11 @@ function registerHooks () {
         if (typeof currentHp === 'undefined') return
 
         const previousHp = actor.system.attributes.hp.value
+
+        if (previousHp < 0 && currentHp > previousHp && getSetting(CONSTANTS.HIT_POINTS.SETTING.NEGATIVE_HP_HEAL_FROM_ZERO.KEY)) {
+            healFromZero(actor, data, previousHp, currentHp)
+        }
+
         const halfHp = Math.ceil(actor.system.attributes.hp.max * 0.5)
         const applyBloodied = getSetting(CONSTANTS.BLOODIED.SETTING.APPLY_BLOODIED.KEY)
 
@@ -238,13 +265,10 @@ function registerHooks () {
         adjustDeathSaves('failure')
     })
 
-    Hooks.on('renderActorSheet', (app, html, data) => {
-        makeDeathSavesBlind(app, html)
-    })
-
-    Hooks.on('dnd5e.preRollDeathSave', (actor, rollData) => {
-        setDeathSavesRollMode(rollData)
-    })
+    Hooks.on('renderActorSheet', makeDeathSavesBlind)
+    Hooks.on('renderActorSheet', updateHpBar)
+    Hooks.on('dnd5e.preApplyDamage', recalculateDamage)
+    Hooks.on('dnd5e.preRollDeathSave', setDeathSavesRollMode)
 
     Hooks.on('applyTokenStatusEffect', (token, statusEffect, applied) => {
         if (statusEffect !== 'dead') return
@@ -315,11 +339,21 @@ export function registerBloodiedStatus () {
 }
 
 /**
+ * Register negative HP
+ */
+function registerNegativeHp () {
+    if (!getSetting(CONSTANTS.HIT_POINTS.SETTING.APPLY_NEGATIVE_HP.KEY)) return
+
+    dnd5e.dataModels.actor.CharacterData.schema.fields.attributes.fields.hp.fields.value.min = undefined
+}
+
+/**
  * Make death saves blind
  * @param {object} app  The app
  * @param {object} html The HTML
+ * @param {object} data The data
  */
-function makeDeathSavesBlind (app, html) {
+function makeDeathSavesBlind (app, html, data) {
     if (getSetting(CONSTANTS.DEATH_SAVES.SETTING.DEATH_SAVES_ROLL_MODE.KEY !== 'blind') || game.user.isGM) return
 
     const sheetType = SHEET_TYPE[app.constructor.name]
@@ -336,9 +370,67 @@ function makeDeathSavesBlind (app, html) {
 
 /**
  * Set the roll mode for death saves
+ * @param {object} actor    The actor
  * @param {object} rollData The roll data
  */
-function setDeathSavesRollMode (rollData) {
+function setDeathSavesRollMode (actor, rollData) {
     const rollMode = getSetting(CONSTANTS.DEATH_SAVES.SETTING.DEATH_SAVES_ROLL_MODE.KEY) || 'publicroll'
     rollData.rollMode = rollMode
+}
+
+/**
+ * Recalculate damage for negative HP
+ * @param {object} actor   The actor
+ * @param {number} amount  The damage amount
+ * @param {object} updates The properties to update
+ * @param {object} options The damage options
+ */
+function recalculateDamage (actor, amount, updates, options) {
+    if (!getSetting(CONSTANTS.HIT_POINTS.SETTING.APPLY_NEGATIVE_HP.KEY)) return
+
+    const hpMax = actor?.system?.attributes?.hp?.max ?? 0
+    const hpTemp = actor?.system?.attributes?.hp?.temp ?? 0
+    const hpValue = actor?.system?.attributes?.hp?.value ?? 0
+    const newHpTemp = amount > 0 ? Math.max(hpTemp - amount, 0) : 0
+    const startHp = (getSetting(CONSTANTS.HIT_POINTS.SETTING.NEGATIVE_HP_HEAL_FROM_ZERO)) ? 0 : hpValue
+    const newHpValue = amount > 0
+        ? hpValue - (amount - hpTemp)
+        : Math.min(startHp - amount, hpMax)
+    updates['system.attributes.hp.temp'] = newHpTemp
+    updates['system.attributes.hp.value'] = newHpValue
+}
+
+/**
+ * Heal from zero
+ * @param {object} actor      The actor
+ * @param {object} data       The data
+ * @param {number} previousHp The previous HP
+ * @param {number} currentHp  The current HP
+ */
+function healFromZero (actor, data, previousHp, currentHp) {
+    const diff = currentHp - previousHp
+    data.system.attributes.hp.value = diff
+}
+
+/**
+ * Update the HP bar on the character sheet
+ * @param {object} app  The app
+ * @param {object} html The HTML
+ * @param {object} data The data
+ */
+function updateHpBar (app, html, data) {
+    if (SHEET_TYPE[app.constructor.name].legacy || !SHEET_TYPE[app.constructor.name].character) return
+
+    const actor = app.actor
+    const hpValue = actor.system.attributes.hp.value
+    const hpMax = actor.system.attributes.hp.max
+
+    if (hpValue >= 0) return
+
+    const meter = html[0].querySelector('.meter.hit-points')
+    meter.classList.add('negative')
+
+    const progress = html[0].querySelector('.progress.hit-points')
+    const pct = Math.abs(hpValue / hpMax) * 100
+    progress.style = `--bar-percentage: ${pct}%;`
 }

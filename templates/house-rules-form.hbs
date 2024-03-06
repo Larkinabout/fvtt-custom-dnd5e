@@ -97,6 +97,44 @@
                     <input id="remove-death-saves-long-rest-failure" name="removeDeathSaves.longRest.failure" type="number" value="{{removeDeathSaves.longRest.failure}}"> 
                 </div>
             </div>
+            <h2>{{localize "CUSTOM_DND5E.hitPoints"}}</h2>
+            <h3>{{localize "CUSTOM_DND5E.rollingHitPoints"}}</h3>
+            <div class="form-group">
+                <label>{{localize "CUSTOM_DND5E.form.houseRules.rollingHitPoints.minimumValue.label"}}</label>
+                <div class="form-fields">
+                    <input id="level-up-hit-points-reroll-minimum-value" name="levelUpHitPointsRerollMinimumValue" type="number" value="{{levelUpHitPointsRerollMinimumValue}}"> 
+                </div>
+                <p class="notes">{{localize "CUSTOM_DND5E.form.houseRules.rollingHitPoints.minimumValue.note"}}</p>
+            </div>
+            <div class="form-group">
+                <label>{{localize "CUSTOM_DND5E.form.houseRules.rollingHitPoints.rerollOnce.label"}}</label>
+                <div class="form-fields">
+                    <input id="level-up-hit-points-reroll-once" name="levelUpHitPointsRerollOnce" type="checkbox"{{#if levelUpHitPointsRerollOnce}} checked{{/if}}> 
+                </div>
+                <p class="notes">{{localize "CUSTOM_DND5E.form.houseRules.rollingHitPoints.rerollOnce.note"}}</p>
+            </div>
+             <div class="form-group">
+                <label>{{localize "CUSTOM_DND5E.form.houseRules.rollingHitPoints.showTakeAverage.label"}}</label>
+                <div class="form-fields">
+                    <input id="level-up-hit-points-show-take-average" name="levelUpHitPointsShowTakeAverage" type="checkbox"{{#if levelUpHitPointsShowTakeAverage}} checked{{/if}}> 
+                </div>
+                <p class="notes">{{localize "CUSTOM_DND5E.form.houseRules.rollingHitPoints.showTakeAverage.note"}}</p>
+            </div>
+            <h3>{{localize "CUSTOM_DND5E.negativeHitPoints"}}</h3>
+            <div class="form-group">
+                <label>{{localize "CUSTOM_DND5E.form.houseRules.hitPoints.applyNegativeHp.label"}}</label>
+                <div class="form-fields">
+                    <input id="apply-negative-hp" name="applyNegativeHp" type="checkbox"{{#if applyNegativeHp}} checked{{/if}}> 
+                </div>
+                <p class="notes">{{localize "CUSTOM_DND5E.form.houseRules.hitPoints.applyNegativeHp.note"}}</p>
+            </div>
+            <div class="form-group">
+                <label>{{localize "CUSTOM_DND5E.form.houseRules.hitPoints.negativeHpHealFromZero.label"}}</label>
+                <div class="form-fields">
+                    <input id="negative-hp-heal-from-zero" name="negativeHpHealFromZero" type="checkbox"{{#if negativeHpHealFromZero}} checked{{/if}}> 
+                </div>
+                <p class="notes">{{localize "CUSTOM_DND5E.form.houseRules.hitPoints.negativeHpHealFromZero.note"}}</p>
+            </div>
             <h2>{{localize "CUSTOM_DND5E.inspiration"}}</h2>
             <div class="form-group">
                 <label>{{localize "CUSTOM_DND5E.form.houseRules.inspiration.awardInspirationD20Value.label"}}</label>
@@ -125,28 +163,6 @@
                 {{localize "CUSTOM_DND5E.skillCheck"}}
             </label>
         </div>
-            <h2>{{localize "CUSTOM_DND5E.rollingHitPoints"}}</h2>
-            <div class="form-group">
-                <label>{{localize "CUSTOM_DND5E.form.houseRules.rollingHitPoints.minimumValue.label"}}</label>
-                <div class="form-fields">
-                    <input id="level-up-hit-points-reroll-minimum-value" name="levelUpHitPointsRerollMinimumValue" type="number" value="{{levelUpHitPointsRerollMinimumValue}}"> 
-                </div>
-                <p class="notes">{{localize "CUSTOM_DND5E.form.houseRules.rollingHitPoints.minimumValue.note"}}</p>
-            </div>
-            <div class="form-group">
-                <label>{{localize "CUSTOM_DND5E.form.houseRules.rollingHitPoints.rerollOnce.label"}}</label>
-                <div class="form-fields">
-                    <input id="level-up-hit-points-reroll-once" name="levelUpHitPointsRerollOnce" type="checkbox"{{#if levelUpHitPointsRerollOnce}} checked{{/if}}> 
-                </div>
-                <p class="notes">{{localize "CUSTOM_DND5E.form.houseRules.rollingHitPoints.rerollOnce.note"}}</p>
-            </div>
-             <div class="form-group">
-                <label>{{localize "CUSTOM_DND5E.form.houseRules.rollingHitPoints.showTakeAverage.label"}}</label>
-                <div class="form-fields">
-                    <input id="level-up-hit-points-show-take-average" name="levelUpHitPointsShowTakeAverage" type="checkbox"{{#if levelUpHitPointsShowTakeAverage}} checked{{/if}}> 
-                </div>
-                <p class="notes">{{localize "CUSTOM_DND5E.form.houseRules.rollingHitPoints.showTakeAverage.note"}}</p>
-            </div>
         </div>
         <footer>
             <button type="button" data-tooltip="{{localize "CUSTOM_DND5E.form.button.reset.tooltip"}}" data-action="reset" class="reset-button">
