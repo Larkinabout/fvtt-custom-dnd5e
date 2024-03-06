@@ -1,3 +1,14 @@
+import { SHEET_TYPE } from '../constants.js'
+
+Hooks.on('preRenderActorSheet', (app, data) => {
+    if (!SHEET_TYPE[app.constructor.name].custom) return
+
+    if (data.abilityRows?.top?.length) {
+        data.abilityRows.bottom = [...data.abilityRows.bottom, ...data.abilityRows.top]
+        data.abilityRows.top = []
+    }
+})
+
 export function registerCharacterSheet () {
     DocumentSheetConfig.registerSheet(Actor, 'dnd5e', CustomDnd5eSheetCharacter2, {
         types: ['character'],

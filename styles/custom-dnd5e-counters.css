@@ -59,7 +59,6 @@
     grid-column-start: 2;
     grid-template-columns: 1.25fr 0.75fr 1.25fr;
     grid-column-end: 5;
-
 }
 
 .custom-dnd5e-counters-fraction-group > input {
@@ -90,8 +89,11 @@
 }
 
 .dnd5e.sheet.group .custom-dnd5e-counters-success-failure > input,
-.dnd5e.sheet.group .custom-dnd5e-counters-success-failure > input:disabled:hover
-.custom-dnd5e-counters-success-failure > input,
+.dnd5e.sheet.group
+    .custom-dnd5e-counters-success-failure
+    > input:disabled:hover
+    .custom-dnd5e-counters-success-failure
+    > input,
 .custom-dnd5e-counters-success-failure > input:disabled:hover {
     border: 0;
     border-left: 1px dashed var(--color-border-light-tertiary);
@@ -99,14 +101,17 @@
 }
 
 .dnd5e.sheet.group .custom-dnd5e-counters-success-failure > input:first-of-type,
-.dnd5e.sheet.group .custom-dnd5e-counters-success-failure > input:first-of-type:disabled:hover
-.custom-dnd5e-counters-success-failure > input:first-of-type,
+.dnd5e.sheet.group
+    .custom-dnd5e-counters-success-failure
+    > input:first-of-type:disabled:hover
+    .custom-dnd5e-counters-success-failure
+    > input:first-of-type,
 .custom-dnd5e-counters-success-failure > input:first-of-type:disabled:hover {
     border-right: 1px solid var(--color-border-light-tertiary);
 }
 
 .dnd5e.sheet.group .custom-dnd5e-counters-number input[type="number"],
-.custom-dnd5e-counters-number > input { 
+.custom-dnd5e-counters-number > input {
     grid-column-start: 4;
 }
 

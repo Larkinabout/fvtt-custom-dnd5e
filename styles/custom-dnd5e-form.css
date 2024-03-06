@@ -50,7 +50,7 @@
 
 .custom-dnd5e-form li.dragElem {
     opacity: 0.4;
-  }
+}
 
 .custom-dnd5e-form li.over {
     border-top: 2px solid red;
@@ -82,7 +82,6 @@
 .custom-dnd5e-form .field.flex1 {
     flex: 1;
 }
-
 
 .custom-dnd5e-form .field.flex2 {
     flex: 2;
@@ -150,7 +149,7 @@
 }
 
 .custom-dnd5e-item > i {
-    color: var(--color-text-light-7)
+    color: var(--color-text-light-7);
 }
 
 .custom-dnd5e-advice.notes {
@@ -161,7 +160,6 @@
     margin: 0;
     margin-bottom: 0.25rem;
     padding: 0.25rem;
-    
 }
 
 .custom-dnd5e-warning.notes {
@@ -173,5 +171,4 @@
     margin: 0;
     margin-bottom: 0.25rem;
     padding: 0.25rem;
-    
 }
