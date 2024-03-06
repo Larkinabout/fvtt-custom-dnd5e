@@ -79,18 +79,23 @@
     display: none;
 }
 
+.custom-dnd5e.dnd5e2.sheet.actor.character .sheet-body .sidebar {
+    margin-top: 0.5rem;
+}
+
 .custom-dnd5e.dnd5e2.sheet.actor.character .sheet-body .main-content {
-    flex-wrap: wrap;
+    padding-top: 0;
 }
 
 .custom-dnd5e.dnd5e2.sheet.actor.character .ability-scores {
     display: flex;
     flex-wrap: wrap;
     justify-content: space-around;
-    position: unset;
+    left: 0;
+    position: relative;
+    top: -2px;
     width: 100%;
 }
-
 
 .custom-dnd5e.dnd5e2.sheet.actor.character .ability-scores .top {
     padding-right: 0;
@@ -171,7 +176,7 @@
 .custom-dnd5e.dnd5e2.sheet.actor.character .sheet-body .tab-body .col-2 {
     --skills-col-width: 230px;
     display: flex;
-    gap: 0.7rem;
+    gap: 0.5rem;
     flex: 1 1 var(--skills-col-width);
     flex-direction: row;
     flex-wrap: wrap;
