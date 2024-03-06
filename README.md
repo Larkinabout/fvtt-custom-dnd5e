@@ -33,7 +33,7 @@ A Foundry VTT module to customise the D&D 5e system.
 
 ### Negative Hit Points
 - Apply negative hit points.
-- Heal from negative HP or from 0 HP.
+- Choose to heal from negative HP or from 0 HP.
 
 ![Custom D&D 5e Negative Hit Points](./.github/readme/custom-dnd5e-negative-hit-points.png)
 
