@@ -1,4 +1,4 @@
-import { CONSTANTS, MODULE, SHEET_TYPE } from './constants.js'
+import { CONSTANTS, MODULE, SETTING_BY_ACTOR_TYPE, SHEET_TYPE } from './constants.js'
 import { checkEmpty, getFlag, setFlag, unsetFlag, getSetting, registerMenu, registerSetting, makeDead } from './utils.js'
 import { CountersForm } from './forms/counters-form.js'
 
@@ -37,6 +37,15 @@ export function registerSettings () {
         }
     )
 
+    registerSetting(
+        CONSTANTS.COUNTERS.SETTING.GROUP_COUNTERS.KEY,
+        {
+            scope: 'world',
+            config: false,
+            type: Object
+        }
+    )
+
     loadTemplates([
         CONSTANTS.COUNTERS.TEMPLATE.FORM,
         CONSTANTS.COUNTERS.TEMPLATE.LIST,
@@ -48,8 +57,13 @@ export function registerSettings () {
 /**
  * HOOKS
  */
-Hooks.on('renderActorSheet', (app, html, data) => {
+Hooks.on('renderInnerActorSheet', (app, html, data) => {
     const actorSheetType = SHEET_TYPE[app.constructor.name]
+
+    if (actorSheetType.group) {
+        addCountersGroup(app, html, data, actorSheetType)
+        return
+    }
 
     if (actorSheetType) {
         actorSheetType.legacy
@@ -60,16 +74,21 @@ Hooks.on('renderActorSheet', (app, html, data) => {
 
 Hooks.on('preUpdateActor', (actor, data, options) => {
     const currentHp = getProperty(data ?? {}, 'system.attributes.hp.value')
+
+    if (typeof currentHp === 'undefined') return
+
     const previousHp = actor.system.attributes.hp.value
     const halfHp = actor.system.attributes.hp.max * 0.5
 
-    if (typeof currentHp !== 'undefined' && currentHp <= halfHp && previousHp > halfHp) {
+    if (currentHp <= halfHp && previousHp > halfHp) {
         onTriggerHalfHp(actor)
     }
 })
 
 Hooks.on('updateActor', (actor, data, options) => {
     const hp = getProperty(data ?? {}, 'system.attributes.hp.value')
+
+    if (hp === 'undefined') return
 
     if (hp === 0) {
         onTriggerZeroHp(actor)
@@ -86,7 +105,7 @@ Hooks.on('deleteCombat', (combat, options, key) => {
         const actor = combatant.actor
         const flag = getFlag(actor, 'zeroHpCombatEnd')
         if (flag) {
-            const setting = getSettingByActorType(actor)
+            const setting = getSettingByActorType(actor.type)
             Object.entries(setting).forEach(([key, value]) => {
                 const triggers = value.triggers
                 if (!triggers) return
@@ -109,7 +128,7 @@ Hooks.on('dnd5e.preRestCompleted', (actor, data) => {
  * @param {object} actor The actor
  */
 function onTriggerZeroHp (actor) {
-    const setting = getSettingByActorType(actor)
+    const setting = getSettingByActorType(actor.type)
 
     if (!setting) return
 
@@ -131,7 +150,7 @@ function onTriggerZeroHp (actor) {
  * @param {object} actor The actor
  */
 function onTriggerHalfHp (actor) {
-    const setting = getSettingByActorType(actor)
+    const setting = getSettingByActorType(actor.type)
 
     if (!setting) return
 
@@ -150,7 +169,7 @@ function onTriggerHalfHp (actor) {
  * @param {object} data  The update data
  */
 function onTriggerCounterValue (actor, data) {
-    const setting = getSettingByActorType(actor)
+    const setting = getSettingByActorType(actor.type)
 
     if (!setting) return
 
@@ -171,7 +190,7 @@ function onTriggerCounterValue (actor, data) {
  * @param {object} actor    The actor=
  */
 function onTriggerRest (restType, actor) {
-    const setting = getSettingByActorType(actor)
+    const setting = getSettingByActorType(actor.type)
 
     if (!setting) return
 
@@ -244,6 +263,45 @@ function handleDecreaseAction (actor, key, trigger, type) {
     case 'number':
         decreaseNumber(actor, key, trigger.actionValue)
         break
+    }
+}
+
+/**
+ * Add counters to the group sheet
+ * @param {object} app            The app
+ * @param {object} html           The HTML
+ * @param {object} data           The data
+ * @param {string} actorSheetType The actor sheet type
+ */
+function addCountersGroup (app, html, data, actorSheetType) {
+    const actor = app.actor
+    const counters = game.settings.get(MODULE.ID, actorSheetType.countersSetting)
+
+    if (checkEmpty(counters)) return
+
+    const nav = html[0].querySelector('nav.sheet-navigation.tabs')
+    const navItem = document.createElement('a')
+    navItem.classList.add('item')
+    navItem.setAttribute('data-tab', 'custom-dnd5e-counters')
+    navItem.textContent = game.i18n.localize('CUSTOM_DND5E.counters')
+    nav.appendChild(navItem)
+
+    const body = html[0].querySelector('section.sheet-body')
+    const tab = document.createElement('div')
+    tab.classList.add('tab', 'custom-dnd5e-counters')
+    tab.setAttribute('data-group', 'primary')
+    tab.setAttribute('data-tab', 'custom-dnd5e-counters')
+
+    const ul = tab.appendChild(document.createElement('ul'))
+
+    for (const [key, counter] of Object.entries(counters)) {
+        if (!counter.visible || (counter.viewRole && game.user.role < counter.viewRole)) continue
+
+        ul.appendChild(createCounterItem(actor, key, counter))
+    }
+
+    if (Object.values(counters).some(c => !c.system && c.visible)) {
+        body.appendChild(tab)
     }
 }
 
@@ -402,7 +460,7 @@ function createFraction (actor, key, counter) {
     divGroup.appendChild(inputValue)
 
     const span = document.createElement('span')
-    span.classList.add('dnd5d-custom-counters-separator')
+    span.classList.add('dnd5e-custom-counters-separator')
     span.textContent = '/'
     divGroup.appendChild(span)
 
@@ -716,10 +774,8 @@ function increaseFailure (actor, key, actionValue = 1) {
  * @param {string} key   The counter key
  * @returns {object}     The counter setting
  */
-function getSettingByActorType (actor, key = null) {
-    const settingKey = (actor.type === 'character')
-        ? CONSTANTS.COUNTERS.SETTING.CHARACTER_COUNTERS.KEY
-        : CONSTANTS.COUNTERS.SETTING.NPC_COUNTERS.KEY
+function getSettingByActorType (actorType, key = null) {
+    const settingKey = SETTING_BY_ACTOR_TYPE.COUNTERS[actorType]
     return (key) ? getSetting(settingKey)[key] : getSetting(settingKey)
 }
 
@@ -730,10 +786,8 @@ function getSettingByActorType (actor, key = null) {
  * @returns {number}     The max value
  */
 function getMax (actor, key) {
-    const settingKey = (actor.type === 'character')
-        ? CONSTANTS.COUNTERS.SETTING.CHARACTER_COUNTERS.KEY
-        : CONSTANTS.COUNTERS.SETTING.NPC_COUNTERS.KEY
-    return getSetting(settingKey)[key]?.max
+    const setting = getSettingByActorType(actor.type, key)
+    return setting?.max
 }
 
 /**

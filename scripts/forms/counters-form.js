@@ -28,11 +28,13 @@ export class CountersForm extends CustomDnd5eForm {
     }
 
     async getData () {
-        this.characterCountersSetting = getSetting(CONSTANTS.COUNTERS.SETTING.CHARACTER_COUNTERS.KEY) || {}
-        this.npcCountersSetting = getSetting(CONSTANTS.COUNTERS.SETTING.NPC_COUNTERS.KEY) || {}
+        this.settings = {
+            character: getSetting(CONSTANTS.COUNTERS.SETTING.CHARACTER_COUNTERS.KEY) || {},
+            group: getSetting(CONSTANTS.COUNTERS.SETTING.GROUP_COUNTERS.KEY) || {},
+            npc: getSetting(CONSTANTS.COUNTERS.SETTING.NPC_COUNTERS.KEY) || {}
+        }
         return {
-            characterCounters: this.characterCountersSetting,
-            npcCounters: this.npcCountersSetting
+            settings: this.settings
         }
     }
 
@@ -63,7 +65,7 @@ export class CountersForm extends CustomDnd5eForm {
             break
         }
         case 'advanced-options': {
-            const setting = (actorType === 'character') ? this.characterCountersSetting : this.npcCountersSetting
+            const setting = this.settings[actorType]
             const args = { countersForm: this, data: { key, actorType, label, type }, setting }
             await CountersAdvancedOptionsForm.open(args)
             break
@@ -111,7 +113,7 @@ export class CountersForm extends CustomDnd5eForm {
             const parts = deleteKey.split('.')
             const actorType = parts.slice(0, 1).join('.')
             const key = parts.pop()
-            const setting = (actorType === 'character') ? this.characterCountersSetting : this.npcCountersSetting
+            const setting = this.settings[actorType]
             deleteProperty(setting, key)
             for (const actor of game.actors) {
                 unsetFlag(actor, key)
@@ -131,13 +133,14 @@ export class CountersForm extends CustomDnd5eForm {
             const arr = key.split('.')
             const actorType = arr.slice(0, 1).join('.')
             const property = arr.slice(1, 3).join('.')
-            const setting = (actorType === 'character') ? this.characterCountersSetting : this.npcCountersSetting
+            const setting = this.settings[actorType]
             setProperty(setting, property, value)
         })
 
         await Promise.all([
-            setSetting(CONSTANTS.COUNTERS.SETTING.CHARACTER_COUNTERS.KEY, this.characterCountersSetting),
-            setSetting(CONSTANTS.COUNTERS.SETTING.NPC_COUNTERS.KEY, this.npcCountersSetting)
+            setSetting(CONSTANTS.COUNTERS.SETTING.CHARACTER_COUNTERS.KEY, this.settings.character),
+            setSetting(CONSTANTS.COUNTERS.SETTING.GROUP_COUNTERS.KEY, this.settings.group),
+            setSetting(CONSTANTS.COUNTERS.SETTING.NPC_COUNTERS.KEY, this.settings.npc)
         ])
     }
 }

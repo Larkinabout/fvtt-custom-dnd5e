@@ -187,11 +187,11 @@ function registerHooks () {
 
     Hooks.on('preUpdateActor', (actor, data, options) => {
         const currentHp = data?.system?.attributes?.hp?.value
-        const previousHp = actor.system.attributes.hp.value
-        const halfHp = Math.ceil(actor.system.attributes.hp.max * 0.5)
 
         if (typeof currentHp === 'undefined') return
 
+        const previousHp = actor.system.attributes.hp.value
+        const halfHp = Math.ceil(actor.system.attributes.hp.max * 0.5)
         const applyBloodied = getSetting(CONSTANTS.BLOODIED.SETTING.APPLY_BLOODIED.KEY)
 
         if (applyBloodied) {

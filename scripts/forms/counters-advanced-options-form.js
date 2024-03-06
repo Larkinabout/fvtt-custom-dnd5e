@@ -1,4 +1,4 @@
-import { CONSTANTS, MODULE } from '../constants.js'
+import { CONSTANTS, MODULE, SETTING_BY_ACTOR_TYPE} from '../constants.js'
 import { getFlag, setFlag, unsetFlag, setSetting, Logger } from '../utils.js'
 import { CustomDnd5eForm } from './custom-dnd5e-form.js'
 
@@ -198,11 +198,7 @@ export class CountersAdvancedOptionsForm extends CustomDnd5eForm {
         this.setting[this.key].label = this.label
         this.setting[this.key].type = this.type
 
-        const settingKey = (this.actorType === 'character')
-            ? CONSTANTS.COUNTERS.SETTING.CHARACTER_COUNTERS.KEY
-            : CONSTANTS.COUNTERS.SETTING.NPC_COUNTERS.KEY
-
-        await setSetting(settingKey, this.setting)
+        await setSetting(SETTING_BY_ACTOR_TYPE.COUNTERS[this.actorType], this.setting)
 
         this.countersForm.render(true)
     }

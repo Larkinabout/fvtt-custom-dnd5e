@@ -38,6 +38,10 @@ async function renderPatch (force = false, options = {}) {
     const inner = await this._renderInner(data)
     let html = inner
 
+    for (const cls of this.constructor._getInheritanceChain()) {
+        Hooks.callAll(`renderInner${cls.name}`, this, html, data)
+    }
+
     // If the application already exists in the DOM, replace the inner content
     if (element.length) this._replaceHTML(element, html)
 

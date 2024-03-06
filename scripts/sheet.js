@@ -125,11 +125,15 @@ function registerHooks () {
     Hooks.on('preRenderActorSheet', (app, data) => {
         const sheetType = SHEET_TYPE[app.constructor.name]
 
+        if (!sheetType) return
+
         setSheetScale(sheetType, app)
     })
 
     Hooks.on('renderActorSheet', (app, html, data) => {
         const sheetType = SHEET_TYPE[app.constructor.name]
+
+        if (!sheetType) return
 
         if (html[0].classList.contains('app')) {
             if (getFlag(game.user, CONSTANTS.SHEET.SETTING.AUTO_FADE_SHEET.KEY)) { enableAutoFade(html) }

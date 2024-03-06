@@ -38,13 +38,11 @@
     justify-content: center;
 }
 
-.dnd5d-custom-counters-separator {
+.dnd5e-custom-counters-separator {
     align-items: center;
     display: flex;
-    flex: 0.25;
     color: var(--dnd5e-color-gold);
     font-size: var(--font-size-18);
-    font-weight: bold;
     justify-content: center;
 }
 
@@ -91,6 +89,8 @@
     grid-template-columns: 0.75fr 1.25fr 0.75fr 1.25fr;
 }
 
+.dnd5e.sheet.group .custom-dnd5e-counters-success-failure > input,
+.dnd5e.sheet.group .custom-dnd5e-counters-success-failure > input:disabled:hover
 .custom-dnd5e-counters-success-failure > input,
 .custom-dnd5e-counters-success-failure > input:disabled:hover {
     border: 0;
@@ -98,12 +98,31 @@
     border-radius: 0;
 }
 
+.dnd5e.sheet.group .custom-dnd5e-counters-success-failure > input:first-of-type,
+.dnd5e.sheet.group .custom-dnd5e-counters-success-failure > input:first-of-type:disabled:hover
 .custom-dnd5e-counters-success-failure > input:first-of-type,
 .custom-dnd5e-counters-success-failure > input:first-of-type:disabled:hover {
     border-right: 1px solid var(--color-border-light-tertiary);
 }
 
-.custom-dnd5e-counters-number > input {
+.dnd5e.sheet.group .custom-dnd5e-counters-number input[type="number"],
+.custom-dnd5e-counters-number > input { 
     grid-column-start: 4;
 }
 
+/* Group Actor Sheet */
+.dnd5e.sheet.group .custom-dnd5e-counters ul {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+.dnd5e.sheet.group .custom-dnd5e-counters-counter input[type="text"],
+.dnd5e.sheet.group .custom-dnd5e-counters-counter input[type="number"] {
+    height: var(--form-field-height);
+}
+
+.dnd5e.sheet.group .custom-dnd5e-counters-number input[type="number"] {
+    background-color: var(--dnd5e-color-parchment);
+    border: 1px solid var(--color-border-light-tertiary);
+}

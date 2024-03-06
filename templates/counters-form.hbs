@@ -9,16 +9,25 @@
                 <i class="fa-solid fa-robot"></i>
                 {{localize "CUSTOM_DND5E.npcs"}}
             </a>
+            <a class="item" data-tab="groups">
+                <i class="fa-solid fa-people-group"></i>
+                {{localize "CUSTOM_DND5E.groups"}}
+            </a>
         </nav>
         <div class="scrollable">
             <section class="tab active" data-actor-type="character" data-tab="characters">
                 <ul class="custom-dnd5e-list flexcol">
-                    {{> "modules/custom-dnd5e/templates/counters-list.hbs" actorType="character" counters=characterCounters}}
+                    {{> "modules/custom-dnd5e/templates/counters-list.hbs" actorType="character" counters=settings.character}}
                 </ul>
             </section>
-            <section class="tab active" data-actor-type="npc" data-tab="npcs">
+            <section class="tab" data-actor-type="npc" data-tab="npcs">
                 <ul class="custom-dnd5e-list flexcol">
-                    {{> "modules/custom-dnd5e/templates/counters-list.hbs" actorType="npc" counters=npcCounters}}
+                    {{> "modules/custom-dnd5e/templates/counters-list.hbs" actorType="npc" counters=settings.npc}}
+                </ul>
+            </section>
+            <section class="tab" data-actor-type="group" data-tab="groups">
+                <ul class="custom-dnd5e-list flexcol">
+                    {{> "modules/custom-dnd5e/templates/counters-list.hbs" actorType="group" counters=settings.group}}
                 </ul>
             </section>
         </div>

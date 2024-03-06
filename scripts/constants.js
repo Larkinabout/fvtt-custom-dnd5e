@@ -106,6 +106,9 @@ export const CONSTANTS = {
             CHARACTER_COUNTERS: {
                 KEY: 'character-counters'
             },
+            GROUP_COUNTERS: {
+                KEY: 'group-counters'
+            },
             NPC_COUNTERS: {
                 KEY: 'npc-counters'
             }
@@ -420,29 +423,48 @@ export const CONSTANTS = {
     }
 }
 
+export const SETTING_BY_ACTOR_TYPE = {
+    COUNTERS: {
+        character: CONSTANTS.COUNTERS.SETTING.CHARACTER_COUNTERS.KEY,
+        group: CONSTANTS.COUNTERS.SETTING.GROUP_COUNTERS.KEY,
+        npc: CONSTANTS.COUNTERS.SETTING.NPC_COUNTERS.KEY
+    }
+}
+
 export const SHEET_TYPE = {
     ActorSheet5eCharacter: {
         countersSetting: CONSTANTS.COUNTERS.SETTING.CHARACTER_COUNTERS.KEY,
         character: true,
+        group: false,
         legacy: true,
         npc: true
     },
     ActorSheet5eCharacter2: {
         countersSetting: CONSTANTS.COUNTERS.SETTING.CHARACTER_COUNTERS.KEY,
         character: true,
+        group: false,
         legacy: false,
         npc: true
     },
     ActorSheet5eNPC: {
         countersSetting: CONSTANTS.COUNTERS.SETTING.NPC_COUNTERS.KEY,
         character: false,
+        group: false,
         legacy: true,
+        npc: false
+    },
+    GroupActorSheet: {
+        countersSetting: CONSTANTS.COUNTERS.SETTING.GROUP_COUNTERS.KEY,
+        character: false,
+        group: true,
+        legacy: false,
         npc: false
     },
     CustomDnd5eSheetCharacter2: {
         countersSetting: CONSTANTS.COUNTERS.SETTING.CHARACTER_COUNTERS.KEY,
         character: true,
+        group: false,
         legacy: false,
-        npc: true
+        npc: false
     }
 }
