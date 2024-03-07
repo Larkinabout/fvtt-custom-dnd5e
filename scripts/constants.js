@@ -433,6 +433,11 @@ export const CONSTANTS = {
             FORM: 'modules/custom-dnd5e/templates/spell-schools-form.hbs',
             LIST: 'modules/custom-dnd5e/templates/spell-schools-list.hbs'
         }
+    },
+    STATUS_HALO: {
+        SETTING: {
+            KEY: 'status-halo'
+        }
     }
 }
 

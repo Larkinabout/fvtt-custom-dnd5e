@@ -20,6 +20,7 @@ import { register as registerSenses, setConfig as setSenses } from './senses.js'
 import { register as registerSheet } from './sheet.js'
 import { register as registerSkills, setConfig as setSkills } from './skills.js'
 import { register as registerSpellSchools, setConfig as setSpellSchools } from './spell-schools.js'
+import { register as registerStatusHalo } from './status-halo.js'
 import { patchApplicationRender } from './patches/application-render.js'
 import { registerCharacterSheet } from './sheets/character-sheet.js'
 
@@ -48,6 +49,7 @@ Hooks.on('init', async () => {
     registerSheet()
     registerSkills()
     registerSpellSchools()
+    registerStatusHalo()
     registerMisc()
     registerDebug()
 

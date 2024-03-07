@@ -314,6 +314,8 @@
     "CUSTOM_DND5E.message.instantDeath": "<p>{name} suffered an instant death.</p>",
 
     "CUSTOM_DND5E.setting.maxLevel.name": "Max Level",
+    "CUSTOM_DND5E.setting.statusHalo.name": "Display Status Halo",
+    "CUSTOM_DND5E.setting.statusHalo.hint": "Display status effects in a circle around the token",
 
     "CUSTOM_DND5E.sheet.characterSheet": "Custom D&D 5e Character Sheet"
 }
