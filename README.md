@@ -14,10 +14,15 @@ A Foundry VTT module to customise the D&D 5e system.
 
 ![Custom D&D 5e Bloodied](./.github/readme/custom-dnd5e-bloodied.gif)
 
-## Dead
+## Instant Death
+- Apply Instant Death when a character suffers damage equal to or greater than their remaining HP plus their max HP.
+
+![Custom D&D 5e Instant Death](./.github/readme/custom-dnd5e-instant-death.gif)
+
+## Dead Status
 - Tint and/or rotate the token when it gains the Dead status effect.
 
-![Custom D&D 5e Bloodied](./.github/readme/custom-dnd5e-dead.gif)
+![Custom D&D 5e Dead](./.github/readme/custom-dnd5e-dead.gif)
 
 ## Death Saving Throws
 - Set the roll mode to Public Roll, Blind GM Roll or Private GM Roll. When using Blind GM Roll, successes and failures will not appear on the character sheet for the player.

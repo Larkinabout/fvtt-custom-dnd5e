@@ -355,12 +355,6 @@ function recalculateDamage (actor, amount, updates, options) {
         ? hpValue - (amount - hpTemp)
         : Math.min(startHp - amount, hpMax)
 
-    if (getSetting(CONSTANTS.DEAD.SETTING.APPLY_INSTANT_DEATH.KEY)) {
-        updateInstantDeath(actor, { system: { attributes: { hp: { value: newHpValue } } } })
-    }
-
-    if (!getSetting(CONSTANTS.HIT_POINTS.SETTING.APPLY_NEGATIVE_HP.KEY)) return
-
     updates['system.attributes.hp.temp'] = newHpTemp
     updates['system.attributes.hp.value'] = newHpValue
 }
@@ -516,9 +510,10 @@ function updateHpMeter (app, html, data) {
  * Triggered by the 'preUpdateActor' hook and called by the 'recalculateDamage' function
  * @param {object} actor The actor
  * @param {object} data  The data
+ * @returns {boolean} Whether instant death is applied
  */
 function updateInstantDeath (actor, data) {
-    if (!getSetting(CONSTANTS.DEAD.SETTING.APPLY_INSTANT_DEATH.KEY)) return
+    if (actor.type !== 'character' || !getSetting(CONSTANTS.DEAD.SETTING.APPLY_INSTANT_DEATH.KEY)) return false
 
     const currentHp = data?.system?.attributes?.hp?.value
     const maxHp = actor.system.attributes.hp.max
@@ -526,8 +521,7 @@ function updateInstantDeath (actor, data) {
     if (currentHp < 0 && Math.abs(currentHp) >= maxHp) {
         makeDead(actor, data)
         ChatMessage.create({
-            content: `${actor.name} suffered an instant death.`
-            // game.i18n.format('CUSTOM_DND5E.message.awardInspiration', { name: actor.name, value: awardInspirationD20Value })
+            content: game.i18n.format('CUSTOM_DND5E.message.instantDeath', { name: actor.name })
         })
         return true
     }

@@ -311,6 +311,7 @@
     "CUSTOM_DND5E.menu.spellSchools.name": "Configure Spell Schools",
 
     "CUSTOM_DND5E.message.awardInspiration": "<p>{name} was awarded Inspiration for rolling a {value}.</p>",
+    "CUSTOM_DND5E.message.instantDeath": "<p>{name} suffered an instant death.</p>",
 
     "CUSTOM_DND5E.setting.maxLevel.name": "Max Level",
 
