@@ -1,5 +1,5 @@
 import { CONSTANTS, SHEET_TYPE } from './constants.js'
-import { getSetting, registerMenu, registerSetting, getFlag, setFlag, makeBloodied, unmakeBloodied, rotateToken, unrotateToken, tintToken, untintToken } from './utils.js'
+import { getSetting, registerMenu, registerSetting, makeBloodied, unmakeBloodied, rotateToken, unrotateToken, tintToken, untintToken, makeDead } from './utils.js'
 import { HouseRulesForm } from './forms/house-rules-form.js'
 
 /**
@@ -8,6 +8,8 @@ import { HouseRulesForm } from './forms/house-rules-form.js'
 export function register () {
     registerSettings()
     registerHooks()
+    registerBloodied()
+    registerNegativeHp()
 }
 
 /**
@@ -85,6 +87,16 @@ function registerSettings () {
             config: false,
             type: String,
             default: '#ff0000'
+        }
+    )
+
+    registerSetting(
+        CONSTANTS.DEAD.SETTING.APPLY_INSTANT_DEATH.KEY,
+        {
+            scope: 'world',
+            config: false,
+            type: Boolean,
+            default: false
         }
     )
 
@@ -172,8 +184,6 @@ function registerSettings () {
     loadTemplates([
         CONSTANTS.HOUSE_RULES.TEMPLATE.FORM
     ])
-
-    registerNegativeHp()
 }
 
 /**
@@ -207,87 +217,71 @@ function registerHooks () {
         }
     })
 
-    Hooks.on('preUpdateActor', (actor, data, options) => {
-        const currentHp = data?.system?.attributes?.hp?.value
-
-        if (typeof currentHp === 'undefined') return
-
-        const previousHp = actor.system.attributes.hp.value
-
-        if (previousHp < 0 && currentHp > previousHp && getSetting(CONSTANTS.HIT_POINTS.SETTING.NEGATIVE_HP_HEAL_FROM_ZERO.KEY)) {
-            healFromZero(actor, data, previousHp, currentHp)
-        }
-
-        const halfHp = Math.ceil(actor.system.attributes.hp.max * 0.5)
-        const applyBloodied = getSetting(CONSTANTS.BLOODIED.SETTING.APPLY_BLOODIED.KEY)
-
-        if (applyBloodied) {
-            if (currentHp <= halfHp && previousHp > halfHp) {
-                makeBloodied(actor)
-            } else if (currentHp > halfHp && previousHp <= halfHp) {
-                unmakeBloodied(actor)
-            }
-        }
-
-        if (actor.type !== 'character') return
-
-        const removeDeathSaves = getSetting(CONSTANTS.DEATH_SAVES.SETTING.REMOVE_DEATH_SAVES.KEY)
-
-        const adjustDeathSaves = (type) => {
-            if (removeDeathSaves.regainHp[type] >= 3) return
-            const currentValue = data?.system?.attributes?.death?.[type]
-            if (typeof currentValue !== 'undefined') {
-                const previousValue = actor.system.attributes.death[type]
-                const newValue = (previousHp === 0) ? Math.max(previousValue - removeDeathSaves.regainHp[type], 0) : previousValue
-                data.system.attributes.death[type] = newValue
-            }
-        }
-
-        adjustDeathSaves('success')
-        adjustDeathSaves('failure')
-    })
-
-    Hooks.on('dnd5e.preRestCompleted', (actor, data) => {
-        const removeDeathSaves = getSetting(CONSTANTS.DEATH_SAVES.SETTING.REMOVE_DEATH_SAVES.KEY)
-
-        const restType = (data.longRest) ? 'longRest' : 'shortRest'
-
-        const adjustDeathSaves = (type) => {
-            if (removeDeathSaves[restType][type] === 0) return
-            const currentValue = actor?.system?.attributes?.death?.[type]
-            if (typeof currentValue !== 'undefined') {
-                const newValue = Math.max(currentValue - removeDeathSaves[restType][type], 0)
-                setProperty(data.updateData, `system.attributes.death.${type}`, newValue)
-            }
-        }
-
-        adjustDeathSaves('success')
-        adjustDeathSaves('failure')
-    })
-
-    Hooks.on('renderActorSheet', makeDeathSavesBlind)
-    Hooks.on('renderActorSheet', updateHpBar)
+    Hooks.on('applyTokenStatusEffect', updateDead)
     Hooks.on('dnd5e.preApplyDamage', recalculateDamage)
+    Hooks.on('dnd5e.preRestCompleted', (actor, data) => updateDeathSaves('rest', actor, data))
     Hooks.on('dnd5e.preRollDeathSave', setDeathSavesRollMode)
-
-    Hooks.on('applyTokenStatusEffect', (token, statusEffect, applied) => {
-        if (statusEffect !== 'dead') return
-
-        const rotation = getSetting(CONSTANTS.DEAD.SETTING.DEAD_ROTATION.KEY)
-        const tint = getSetting(CONSTANTS.DEAD.SETTING.DEAD_TINT.KEY)
-
-        rotation && ((applied) ? rotateToken(token, rotation) : unrotateToken(token))
-        tint && ((applied) ? tintToken(token, tint) : untintToken(token))
-    })
-
     Hooks.on('dnd5e.rollAbilitySave', (actor, roll, ability) => { awardInspiration('rollAbilitySave', actor, roll) })
     Hooks.on('dnd5e.rollAbilityTest', (actor, roll, ability) => { awardInspiration('rollAbilityTest', actor, roll) })
     Hooks.on('dnd5e.rollAttack', (item, roll, ability) => { awardInspiration('rollAttack', item, roll) })
     Hooks.on('dnd5e.rollSkill', (actor, roll, ability) => { awardInspiration('rollSkill', actor, roll) })
+    Hooks.on('preUpdateActor', (actor, data, options) => {
+        const instantDeath = updateInstantDeath(actor, data)
+        updateHp(actor, data)
+        if (!instantDeath) {
+            recalculateHealing(actor, data)
+            updateBloodied(actor, data)
+            updateDeathSaves('regainHp', actor, data)
+        }
+    })
+    Hooks.on('renderActorSheet', makeDeathSavesBlind)
+    Hooks.on('renderActorSheet', updateHpMeter)
+}
+
+/**
+ * Register Bloodied
+ * If 'Apply Bloodied', addd the Bloodied status and condition
+ */
+export function registerBloodied () {
+    if (!getSetting(CONSTANTS.BLOODIED.SETTING.APPLY_BLOODIED.KEY)) return
+
+    const label = game.i18n.localize('CUSTOM_DND5E.bloodied')
+    const icon = getSetting(CONSTANTS.BLOODIED.SETTING.BLOODIED_ICON.KEY) ?? CONSTANTS.BLOODIED.ICON
+
+    // Add bloodied to CONFIG.statusEffects
+    CONFIG.statusEffects.push({
+        id: 'bloodied',
+        name: label,
+        icon
+    })
+
+    const conditionTypes = {}
+
+    Object.entries(CONFIG.DND5E.conditionTypes).forEach(([key, value]) => {
+        const conditionLabel = game.i18n.localize(value.label)
+        if (conditionLabel > label && !conditionTypes.bloodied) {
+            conditionTypes.bloodied = { label, icon }
+        }
+        conditionTypes[key] = value
+    })
+
+    CONFIG.DND5E.conditionTypes = conditionTypes
+}
+
+/**
+ * Register Negative HP
+ * If 'Apply Negative HP' is enabled, set the min HP value in the schema to undefined
+ */
+function registerNegativeHp () {
+    if (!getSetting(CONSTANTS.DEAD.SETTING.APPLY_INSTANT_DEATH.KEY) &&
+        !getSetting(CONSTANTS.HIT_POINTS.SETTING.APPLY_NEGATIVE_HP.KEY)) return
+
+    dnd5e.dataModels.actor.CharacterData.schema.fields.attributes.fields.hp.fields.value.min = undefined
 }
 
 /**
  * Award Inspiration
+ * Triggered by the 'dnd5e.rollAbilitySave', 'dnd5e.rollAbilityTest', 'dnd5e.rollAttack' and 'dnd5e.rollSkill' hooks
  * @param {string} rollType The roll type: rollAbilitySave, rollAbilityTest, rollAttack, rollSkill
  * @param {object} entity   The entity: actor or item
  * @param {object} roll     The roll
@@ -309,46 +303,9 @@ export function awardInspiration (rollType, entity, roll) {
 }
 
 /**
- * Add Bloodied status to CONFIG.statusEffects
- */
-export function registerBloodiedStatus () {
-    if (!getSetting(CONSTANTS.BLOODIED.SETTING.APPLY_BLOODIED.KEY)) return
-
-    const label = game.i18n.localize('CUSTOM_DND5E.bloodied')
-    const icon = getSetting(CONSTANTS.BLOODIED.SETTING.BLOODIED_ICON.KEY) ?? CONSTANTS.BLOODIED.ICON
-
-    // Add bloodied to CONFIG.statusEffects
-    CONFIG.statusEffects.push({
-        id: 'bloodied',
-        name: label,
-        icon
-    })
-
-    // Add bloodied to CONFIG.DND5E.conditionTypes
-    const conditionTypes = {}
-
-    Object.entries(CONFIG.DND5E.conditionTypes).forEach(([key, value]) => {
-        const conditionLabel = game.i18n.localize(value.label)
-        if (conditionLabel > label && !conditionTypes.bloodied) {
-            conditionTypes.bloodied = { label, icon }
-        }
-        conditionTypes[key] = value
-    })
-
-    CONFIG.DND5E.conditionTypes = conditionTypes
-}
-
-/**
- * Register negative HP
- */
-function registerNegativeHp () {
-    if (!getSetting(CONSTANTS.HIT_POINTS.SETTING.APPLY_NEGATIVE_HP.KEY)) return
-
-    dnd5e.dataModels.actor.CharacterData.schema.fields.attributes.fields.hp.fields.value.min = undefined
-}
-
-/**
- * Make death saves blind
+ * Make Death Saves Blind
+ * Triggered by the 'renderActorSheet' hook
+ * If the 'Death Saves Roll Mode' is set to 'blind', remove the success and failure pips from the death saves tray
  * @param {object} app  The app
  * @param {object} html The HTML
  * @param {object} data The data
@@ -369,7 +326,8 @@ function makeDeathSavesBlind (app, html, data) {
 }
 
 /**
- * Set the roll mode for death saves
+ * Set Death Saves Roll Mode
+ * Triggered by 'dnd5e.preRollDeathSave' hook
  * @param {object} actor    The actor
  * @param {object} rollData The roll data
  */
@@ -379,15 +337,15 @@ function setDeathSavesRollMode (actor, rollData) {
 }
 
 /**
- * Recalculate damage for negative HP
+ * Recalculate Damage
+ * Trigger by the 'dnd5e.preApplyDamage' hook
+ * If 'Apply Negative HP' is enabled, recalculate damage to apply a negative value to HP
  * @param {object} actor   The actor
  * @param {number} amount  The damage amount
  * @param {object} updates The properties to update
  * @param {object} options The damage options
  */
 function recalculateDamage (actor, amount, updates, options) {
-    if (!getSetting(CONSTANTS.HIT_POINTS.SETTING.APPLY_NEGATIVE_HP.KEY)) return
-
     const hpMax = actor?.system?.attributes?.hp?.max ?? 0
     const hpTemp = actor?.system?.attributes?.hp?.temp ?? 0
     const hpValue = actor?.system?.attributes?.hp?.value ?? 0
@@ -396,29 +354,147 @@ function recalculateDamage (actor, amount, updates, options) {
     const newHpValue = amount > 0
         ? hpValue - (amount - hpTemp)
         : Math.min(startHp - amount, hpMax)
+
+    if (getSetting(CONSTANTS.DEAD.SETTING.APPLY_INSTANT_DEATH.KEY)) {
+        updateInstantDeath(actor, { system: { attributes: { hp: { value: newHpValue } } } })
+    }
+
+    if (!getSetting(CONSTANTS.HIT_POINTS.SETTING.APPLY_NEGATIVE_HP.KEY)) return
+
     updates['system.attributes.hp.temp'] = newHpTemp
     updates['system.attributes.hp.value'] = newHpValue
 }
 
 /**
- * Heal from zero
- * @param {object} actor      The actor
- * @param {object} data       The data
- * @param {number} previousHp The previous HP
- * @param {number} currentHp  The current HP
+ * Recalculate Healing
+ * Triggered by the 'preUpdateActor' hook
+ * If 'Apply Negative HP' and 'Heal from 0 HP' are enabled, recalculate healing to increase HP from zero instead of the negative value
+ * @param {object} actor The actor
+ * @param {object} data  The data
  */
-function healFromZero (actor, data, previousHp, currentHp) {
-    const diff = currentHp - previousHp
-    data.system.attributes.hp.value = diff
+function recalculateHealing (actor, data) {
+    if (!getSetting(CONSTANTS.HIT_POINTS.SETTING.APPLY_NEGATIVE_HP.KEY) ||
+        !getSetting(CONSTANTS.HIT_POINTS.SETTING.NEGATIVE_HP_HEAL_FROM_ZERO.KEY)) return
+
+    const currentHp = data?.system?.attributes?.hp?.value
+
+    if (typeof currentHp === 'undefined') return
+
+    const previousHp = actor.system.attributes.hp.value
+
+    if (previousHp < 0 && currentHp > previousHp) {
+        const diff = currentHp - previousHp
+        data.system.attributes.hp.value = diff
+    }
 }
 
 /**
- * Update the HP bar on the character sheet
+ * Update Bloodied
+ * Triggered by the 'preUpdateActor' hook
+ * If 'Apply Bloodied' is enabled, apply or remove the Bloodied condition and other token effects based on the HP change
+ * @param {object} actor The actor
+ * @param {object} data  The data
+ */
+function updateBloodied (actor, data) {
+    if (!getSetting(CONSTANTS.BLOODIED.SETTING.APPLY_BLOODIED.KEY)) return
+
+    const currentHp = data?.system?.attributes?.hp?.value
+
+    if (typeof currentHp === 'undefined') return
+
+    const previousHp = actor.system.attributes.hp.value
+    const halfHp = Math.ceil(actor.system.attributes.hp.max * 0.5)
+    const deathFailures = data?.system?.attributes?.death?.failure ?? actor.system.attributes.death.failure
+
+    if (currentHp <= halfHp && previousHp > halfHp && deathFailures !== 3) {
+        makeBloodied(actor)
+    } else if (currentHp > halfHp && previousHp <= halfHp) {
+        unmakeBloodied(actor)
+    }
+}
+
+/**
+ * Update Dead
+ * Triggered by the 'applyTokenStatusEffect' hook
+ * @param {object} token The token
+ * @param {string} statusEffect The status effect
+ * @param {boolean} applied Whether the status effect is being applied
+ */
+function updateDead (token, statusEffect, applied) {
+    if (statusEffect !== 'dead') return
+
+    const rotation = getSetting(CONSTANTS.DEAD.SETTING.DEAD_ROTATION.KEY)
+    const tint = getSetting(CONSTANTS.DEAD.SETTING.DEAD_TINT.KEY)
+
+    rotation && ((applied) ? rotateToken(token, rotation) : unrotateToken(token))
+    tint && ((applied) ? tintToken(token, tint) : untintToken(token))
+}
+
+/**
+ * Update Death Saves
+ * Triggered by the 'preUpdateActor' hook
+ * @param {string} source regainHp or rest
+ * @param {object} actor  The actor
+ * @param {object} data   The data
+ */
+function updateDeathSaves (source, actor, data) {
+    if (actor.type !== 'character') return
+
+    const removeDeathSaves = getSetting(CONSTANTS.DEATH_SAVES.SETTING.REMOVE_DEATH_SAVES.KEY)
+
+    const updateDeathSavesByType = (type) => {
+        const currentValue = data?.system?.attributes?.death?.[type]
+        const previousValue = actor.system.attributes.death[type]
+
+        if (typeof currentValue === 'undefined') return
+
+        if (source === 'regainHp' && removeDeathSaves.regainHp[type] < 3 && hasProperty(data, 'system.attributes.hp.value')) {
+            const previousHp = actor.system.attributes.hp.value
+            const newValue = (previousHp === 0) ? Math.max(previousValue - removeDeathSaves.regainHp[type], 0) : previousValue
+            data.system.attributes.death[type] = newValue
+        } else if (source === 'rest') {
+            const restType = (data?.longRest) ? 'longRest' : 'shortRest'
+
+            if (removeDeathSaves[restType][type] === 0) return
+
+            const newValue = Math.max(currentValue - removeDeathSaves[restType][type], 0)
+            setProperty(data.updateData, `system.attributes.death.${type}`, newValue)
+        }
+    }
+
+    updateDeathSavesByType('success')
+    updateDeathSavesByType('failure')
+}
+
+/**
+ * Update HP
+ * Triggered by the 'preUpdateActor' hook
+ * If 'Apply Negative HP' is disabled and HP is below 0, set HP to 0.
+ * This will happen where 'Apply Instant Death' is enabled as negative HP is used to initially calculate whether Instant Death applies
+ * @param {object} actor The actor
+ * @param {object} data  The data
+ */
+function updateHp (actor, data) {
+    if (getSetting(CONSTANTS.HIT_POINTS.SETTING.APPLY_NEGATIVE_HP.KEY)) return
+
+    const currentHp = data?.system?.attributes?.hp?.value
+
+    if (typeof currentHp === 'undefined') return
+
+    if (currentHp < 0) {
+        data.system.attributes.hp.value = 0
+    }
+}
+
+/**
+ * Update HP Meter
+ * Triggered by the 'renderActorSheet' hook
+ * If the current HP is negative, update the HP meter to show a red bar
  * @param {object} app  The app
  * @param {object} html The HTML
  * @param {object} data The data
  */
-function updateHpBar (app, html, data) {
+function updateHpMeter (app, html, data) {
     if (SHEET_TYPE[app.constructor.name].legacy || !SHEET_TYPE[app.constructor.name].character) return
 
     const actor = app.actor
@@ -433,4 +509,28 @@ function updateHpBar (app, html, data) {
     const progress = html[0].querySelector('.progress.hit-points')
     const pct = Math.abs(hpValue / hpMax) * 100
     progress.style = `--bar-percentage: ${pct}%;`
+}
+
+/**
+ * Update Instant Death
+ * Triggered by the 'preUpdateActor' hook and called by the 'recalculateDamage' function
+ * @param {object} actor The actor
+ * @param {object} data  The data
+ */
+function updateInstantDeath (actor, data) {
+    if (!getSetting(CONSTANTS.DEAD.SETTING.APPLY_INSTANT_DEATH.KEY)) return
+
+    const currentHp = data?.system?.attributes?.hp?.value
+    const maxHp = actor.system.attributes.hp.max
+
+    if (currentHp < 0 && Math.abs(currentHp) >= maxHp) {
+        makeDead(actor, data)
+        ChatMessage.create({
+            content: `${actor.name} suffered an instant death.`
+            // game.i18n.format('CUSTOM_DND5E.message.awardInspiration', { name: actor.name, value: awardInspirationD20Value })
+        })
+        return true
+    }
+
+    return false
 }

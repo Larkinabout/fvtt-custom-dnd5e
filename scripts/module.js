@@ -1,6 +1,6 @@
 import { CONSTANTS } from './constants.js'
 import { getSetting } from './utils.js'
-import { register as registerHouseRules, registerBloodiedStatus } from './house-rules.js'
+import { register as registerHouseRules } from './house-rules.js'
 import { register as registerAbilities, setConfig as setAbilities } from './abilities.js'
 import { register as registerActorSizes, setConfig as setActorSizes } from './actor-sizes.js'
 import { register as registerArmorCalculations, setConfig as setArmorCalculations } from './armor-calculations.js'
@@ -54,20 +54,27 @@ Hooks.on('init', async () => {
     registerCharacterSheet()
 
     setAbilities(getSetting(CONSTANTS.ABILITIES.SETTING.KEY))
-    setActorSizes(getSetting(CONSTANTS.ACTOR_SIZES.SETTING.KEY) || {})
-    setArmorCalculations(getSetting(CONSTANTS.ARMOR_CALCULATIONS.SETTING.KEY) || {})
-    // setArmorTypes(getSetting(CONSTANTS.ARMOR_TYPES.SETTING.KEY) || {})
-    setCurrency(getSetting(CONSTANTS.CURRENCY.SETTING.KEY) || {})
+    setActorSizes(getSetting(CONSTANTS.ACTOR_SIZES.SETTING.KEY))
+    setArmorCalculations(getSetting(CONSTANTS.ARMOR_CALCULATIONS.SETTING.KEY))
+    // setArmorTypes(getSetting(CONSTANTS.ARMOR_TYPES.SETTING.KEY))
+    setCurrency(getSetting(CONSTANTS.CURRENCY.SETTING.KEY))
     setDamageTypes(getSetting(CONSTANTS.DAMAGE_TYPES.SETTING.KEY))
-    setEncumbrance(getSetting(CONSTANTS.ENCUMBRANCE.SETTING.KEY) || {})
+    setEncumbrance(getSetting(CONSTANTS.ENCUMBRANCE.SETTING.KEY))
     setItemActionTypes(getSetting(CONSTANTS.ITEM_ACTION_TYPES.SETTING.KEY))
     setItemActivationCostTypes(getSetting(CONSTANTS.ITEM_ACTIVATION_COST_TYPES.SETTING.KEY))
     setItemProperties(getSetting(CONSTANTS.ITEM_PROPERTIES.SETTING.KEY))
-    setLanguages(getSetting(CONSTANTS.LANGUAGES.SETTING.KEY) || {})
-    setSenses(getSetting(CONSTANTS.SENSES.SETTING.KEY) || {})
+    setLanguages(getSetting(CONSTANTS.LANGUAGES.SETTING.KEY))
+    setSenses(getSetting(CONSTANTS.SENSES.SETTING.KEY))
     setSkills(getSetting(CONSTANTS.SKILLS.SETTING.KEY))
-    setSpellSchools(getSetting(CONSTANTS.SPELL_SCHOOLS.SETTING.KEY) || {})
+    setSpellSchools(getSetting(CONSTANTS.SPELL_SCHOOLS.SETTING.KEY))
     setMaxLevel(getSetting(CONSTANTS.MAX_LEVEL.SETTING.KEY))
+
+    loadTemplates([
+        CONSTANTS.CONFIG.TEMPLATE.FORM,
+        CONSTANTS.CONFIG.TEMPLATE.LIST,
+        CONSTANTS.SHEET.TEMPLATE.CHARACTER_SHEET_2,
+        CONSTANTS.SHEET.TEMPLATE.CHARACTER_DETAILS
+    ])
 })
 
 Hooks.on('ready', async () => {
@@ -92,15 +99,6 @@ Hooks.on('ready', async () => {
             return allowed.includes(value)
         }
     })
-
-    loadTemplates([
-        CONSTANTS.CONFIG.TEMPLATE.FORM,
-        CONSTANTS.CONFIG.TEMPLATE.LIST,
-        CONSTANTS.SHEET.TEMPLATE.CHARACTER_SHEET_2,
-        CONSTANTS.SHEET.TEMPLATE.CHARACTER_DETAILS
-    ])
-
-    registerBloodiedStatus()
 
     migrate()
 })

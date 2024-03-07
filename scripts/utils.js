@@ -204,7 +204,8 @@ export async function setDnd5eSetting (key, value) {
  * @param {object} actor The actor
  */
 export async function makeBloodied (actor) {
-    if (actor.effects.get('dnd5ebloodied000') || actor.system.traits.ci.value.has('bloodied')) return
+    if (actor.effects.get('dnd5ebloodied000') ||
+        actor.system.traits.ci.value.has('bloodied')) return
 
     const effectData = foundry.utils.deepClone(CONFIG.statusEffects.find(effect => effect.id === 'bloodied'))
     effectData.statuses = ['bloodied']
@@ -285,14 +286,20 @@ export async function untintToken (token) {
  * Set Death Saves failures to 3
  * Apply 'Dead' status effect
  * @param {object} actor The actor
+ * @param {object} data  The data
  */
-export async function makeDead (actor) {
-    const data = {
-        'system.attributes.hp.value': 0,
-        ...(actor.type === 'character' && {'system.attributes.death.failure': 3})
+export async function makeDead (actor, data = null) {
+    const applyNegativeHp = getSetting(CONSTANTS.HIT_POINTS.SETTING.APPLY_NEGATIVE_HP.KEY)
+    if (data) {
+        if (!applyNegativeHp) { setProperty(data, 'system.attributes.hp.value', 0) }
+        setProperty(data, 'system.attributes.death.failure', 3)
+    } else {
+        const data = {
+            ...(!applyNegativeHp && { 'system.attributes.hp.value': 0 }),
+            ...(actor.type === 'character' && { 'system.attributes.death.failure': 3 })
+        }
+        actor.update(data)
     }
-
-    actor.update(data)
 
     if (actor.effects.get('dnd5edead0000000')) return
 
@@ -303,4 +310,12 @@ export async function makeDead (actor) {
     const effect = await cls.fromStatusEffect(effectData)
     effect.updateSource({ 'flags.core.overlay': true })
     await cls.create(effect, { parent: actor, keepId: true })
+
+    const tint = getSetting(CONSTANTS.DEAD.SETTING.DEAD_TINT.KEY)
+
+    if (tint) actor.getActiveTokens().forEach(token => tintToken(token, tint))
+
+    const rotation = getSetting(CONSTANTS.DEAD.SETTING.DEAD_ROTATION.KEY)
+
+    if (rotation) actor.getActiveTokens().forEach(token => rotateToken(token, rotation))
 }

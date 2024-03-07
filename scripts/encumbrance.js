@@ -121,7 +121,7 @@ function registerHooks () {
  * Set CONFIG.DND5E.encumbrance
  * @param {object} data
  */
-export function setConfig (data) {
+export function setConfig (data = null) {
     if (checkEmpty(data)) {
         if (checkEmpty(CONFIG.DND5E.encumbrance)) {
             resetDnd5eConfig('encumbrance')

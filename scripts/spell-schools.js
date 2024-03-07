@@ -49,7 +49,7 @@ function registerSettings () {
  * Set CONFIG.DND5E.spellSchools
  * @param {object} data
  */
-export function setConfig (data) {
+export function setConfig (data = null) {
     const buildConfig = (data) => Object.fromEntries(
         Object.entries(data)
             .filter(([_, value]) => value.visible || value.visible === undefined)

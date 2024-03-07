@@ -164,6 +164,9 @@ export const CONSTANTS = {
     },
     DEAD: {
         SETTING: {
+            APPLY_INSTANT_DEATH: {
+                KEY: 'apply-instant-death'
+            },
             DEAD_ROTATION: {
                 KEY: 'dead-rotation'
             },
