@@ -78,15 +78,15 @@ async function tokenDrawEffectPatch (wrapped, src, tint, overlay = false) {
     const icon = new PIXI.Sprite(texture)
 
     if (!overlay && !src.endsWith('.svg')) {
-        const radius = Math.min(icon.width, icon.height) / 2
+        const size = Math.min(icon.width, icon.height)
+        const radius = size / 2
 
         const mask = new PIXI.Graphics()
         mask.beginFill(0xffffff)
         mask.drawCircle(0, 0, radius)
         mask.endFill()
-
-        icon.mask = mask
         icon.addChild(mask)
+        icon.mask = mask
     }
 
     return this.effects.addChild(icon)
@@ -133,18 +133,19 @@ function updateEffects (token) {
         icons.forEach((icon, index, icons) => {
             if (!(icon instanceof PIXI.Sprite)) return
 
+            const isSvg = !!icon?.texture?.baseTexture?.resource?.svg ?? false
+
             icon.anchor.set(0.5)
 
             const iconScale = getIconScale(Math.min(token?.document?.height, token?.document?.width))
             const gridScale = gridSize / 100
-
             const scaledSize = 12 * iconScale * gridScale
 
             icon.width = scaledSize
             icon.height = scaledSize
 
-            updateIconPosition(icon, index, icons, token)
-            drawBackground(icon, background, gridScale)
+            updateIconPosition(icon, index, token)
+            drawBackground(icon, background, isSvg, gridScale)
         })
     }
 }
@@ -155,8 +156,8 @@ function getIconScale (size) {
     return 1.4
 }
 
-function updateIconPosition (icon, index, icons, token) {
-    const max = Math.max(Math.min(Math.ceil(Math.min(token?.document?.height, token?.document?.width) * 15), 40), icons.length)
+function updateIconPosition (icon, index, token) {
+    const max = getMaxIcons(token)
     const ratio = index / max
     const gridSize = token?.scene?.grid?.size ?? 100
     const tokenTileFactor = token?.document?.width ?? 1
@@ -171,10 +172,19 @@ function updateIconPosition (icon, index, icons, token) {
     icon.position.x = x / 2 + halfGridSize
     icon.position.y = -y / 2 + halfGridSize
 }
+
+function getMaxIcons (token) {
+    if (token?.document.width < 1) return 9
+    if (token?.document.width === 1) return 16
+    if (token?.document.width === 2) return 28
+    return 40
+}
+
 function getSizeOffset (size) {
-    if (size >= 2) return 0.925
-    if (size >= 1) return 1.2
-    return 1.4
+    if (size < 1) return 1.4
+    if (size === 1) return 1.25
+    if (size === 2) return 1.125
+    return 1.075
 }
 
 function polarToCartesian (radius, angle) {
@@ -190,12 +200,12 @@ function polarToCartesian (radius, angle) {
  * @param {*} background
  * @param {*} gridScale
  */
-function drawBackground (icon, background, gridScale) {
-    const radius = (icon.width / 2) + 1
+function drawBackground (icon, background, isSvg, gridScale) {
+    const radius = (icon.width) / 2 + (icon.width * 0.1)
     background.beginFill(0x333333)
-    background.drawCircle(icon.position.x, icon.position.y, (radius + 1.5) * gridScale)
+    background.drawCircle(icon.position.x, icon.position.y, radius * gridScale)
     background.endFill()
-    background.lineStyle((2 * gridScale) / 2, 0x9f9275, 1, 0)
-    background.drawCircle(icon.position.x, icon.position.y, (radius + 2) * gridScale)
+    background.lineStyle((2 * gridScale) / 2, 0x9f9275, 1, 0.5)
+    background.drawCircle(icon.position.x, icon.position.y, radius * gridScale)
     background.lineStyle(0)
 }
