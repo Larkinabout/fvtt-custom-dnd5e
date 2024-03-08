@@ -1,3 +1,29 @@
+/*
+MIT License
+
+Copyright (c) 2022 Dorako
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+https://github.com/Dorako/pf2e-dorako-ux/blob/main/LICENSE
+*/
+
 import { MODULE, CONSTANTS } from './constants.js'
 import { getSetting, registerSetting } from './utils.js'
 
@@ -14,10 +40,10 @@ export function register () {
  */
 function registerSettings () {
     registerSetting(
-        CONSTANTS.STATUS_HALO.SETTING.KEY,
+        CONSTANTS.RADIAL_STATUS_EFFECTS.SETTING.KEY,
         {
-            name: game.i18n.localize('CUSTOM_DND5E.setting.statusHalo.name'),
-            hint: game.i18n.localize('CUSTOM_DND5E.setting.statusHalo.hint'),
+            name: game.i18n.localize('CUSTOM_DND5E.setting.radialStatusEffects.name'),
+            hint: game.i18n.localize('CUSTOM_DND5E.setting.radialStatusEffects.hint'),
             scope: 'world',
             config: true,
             requiresReload: true,
@@ -31,9 +57,11 @@ function registerSettings () {
  * Register patches
  */
 function registerPatches () {
-    if (!getSetting(CONSTANTS.STATUS_HALO.SETTING.KEY)) return
+    if (!getSetting(CONSTANTS.RADIAL_STATUS_EFFECTS.SETTING.KEY)) return
 
     libWrapper.register(MODULE.ID, 'Token.prototype._refreshEffects', tokenRefreshEffectsPatch, 'WRAPPER')
+    libWrapper.register(MODULE.ID, 'Token.prototype._drawEffect', tokenDrawEffectPatch, 'WRAPPER')
+    libWrapper.register(MODULE.ID, 'Token.prototype._drawOverlay', tokenDrawOverlayPatch, 'WRAPPER')
 }
 
 function tokenRefreshEffectsPatch (wrapped, ...args) {
@@ -41,10 +69,41 @@ function tokenRefreshEffectsPatch (wrapped, ...args) {
     updateEffects(this)
 }
 
+async function tokenDrawEffectPatch (wrapped, src, tint, overlay = false) {
+    wrapped(null, tint)
+
+    if (!src) return
+
+    const texture = await loadTexture(src, { fallback: 'icons/svg/hazard.svg' })
+    const icon = new PIXI.Sprite(texture)
+
+    if (!overlay && !src.endsWith('.svg')) {
+        const radius = Math.min(icon.width, icon.height) / 2
+
+        const mask = new PIXI.Graphics()
+        mask.beginFill(0xffffff)
+        mask.drawCircle(0, 0, radius)
+        mask.endFill()
+
+        icon.mask = mask
+        icon.addChild(mask)
+    }
+
+    return this.effects.addChild(icon)
+}
+
+async function tokenDrawOverlayPatch (wrapped, src, tint) {
+    wrapped(null, tint)
+
+    const icon = await this._drawEffect(src, tint, true)
+    if (icon) icon.alpha = 0.8
+    return icon
+}
+
 /**
- * Count effects for halo
+ * Count effects for radial
  * @param {object} token The token
- * @returns {number}     The number of effects to include in the halo
+ * @returns {number}     The number of effects to include in the radial
  */
 function getEffectsLen (token) {
     if (!token) return 0
@@ -53,7 +112,7 @@ function getEffectsLen (token) {
     const actorEffectsLen = token?.actor?.temporaryEffects.length || 0
     const overlay = token?.actor?.temporaryEffects.some(effect => !!effect.getFlag('core', 'overlay'))
 
-    // Only exclude one overlay as the rest go into the halo
+    // Only exclude one overlay as the rest go into the radial
     return tokenEffectsLen + actorEffectsLen - ((overlay) ? 1 : 0)
 }
 
@@ -112,8 +171,6 @@ function updateIconPosition (icon, index, icons, token) {
     icon.position.x = x / 2 + halfGridSize
     icon.position.y = -y / 2 + halfGridSize
 }
-
-// Nudge icons to be on the token ring or slightly outside
 function getSizeOffset (size) {
     if (size >= 2) return 0.925
     if (size >= 1) return 1.2

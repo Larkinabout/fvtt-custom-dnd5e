@@ -358,6 +358,11 @@ export const CONSTANTS = {
             }
         }
     },
+    RADIAL_STATUS_EFFECTS: {
+        SETTING: {
+            KEY: 'radial-status-effects'
+        }
+    },
     SENSES: {
         ID: 'senses',
         MENU: {
@@ -432,11 +437,6 @@ export const CONSTANTS = {
         TEMPLATE: {
             FORM: 'modules/custom-dnd5e/templates/spell-schools-form.hbs',
             LIST: 'modules/custom-dnd5e/templates/spell-schools-list.hbs'
-        }
-    },
-    STATUS_HALO: {
-        SETTING: {
-            KEY: 'status-halo'
         }
     }
 }

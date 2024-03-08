@@ -71,11 +71,17 @@ Select 'Custom D&D 5e Character Sheet' from the Sheet Configuration dialog (cog 
 - Change the banner at the top of the sheet.
 - Hide death saves, encumbrance, exhaustion, inspiration, the Manage Currency button, Legendary Actions, Legendary Resistances and Use Lair Action.
 
+## Radial Status Effects
+- Display status effects in a circle around the token.
+
+![Custom D&D 5e Radial Status Effects](./.github/readme/custom-dnd5e-radial-status-effects.png)
+
+
 ## Compatibility
 ### Variant Encumbrance + Midi
 Custom D&D 5e will defer to the [Variant Encumbrance + Midi](https://foundryvtt.com/packages/variant-encumbrance-dnd5e) module for encumbrance configuration when it is active.
 
-# Wishlist
+## Wishlist
 - Add common house rules.
 - Add more versatile encumbrance options.
 - Support all dnd5e configurations.
@@ -83,3 +89,6 @@ Custom D&D 5e will defer to the [Variant Encumbrance + Midi](https://foundryvtt.
 ## Required Modules
 ### [libWrapper](https://foundryvtt.com/packages/lib-wrapper)
 LibWrapper is used to wrap Foundry VTT's application render method to add data to the character sheets without editing the HTML. This should no longer be required with the release of Application V2.
+
+## Credits
+The Radial Status Effects feature is a modification of code developed by [Dorako](https://github.com/Dorako) under the MIT License, which is reproduced here: [Licence](./scripts/radial-status-effects.js)

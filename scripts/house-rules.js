@@ -398,7 +398,7 @@ function updateBloodied (actor, data) {
 
     const previousHp = actor.system.attributes.hp.value
     const halfHp = Math.ceil(actor.system.attributes.hp.max * 0.5)
-    const deathFailures = data?.system?.attributes?.death?.failure ?? actor.system.attributes.death.failure
+    const deathFailures = data?.system?.attributes?.death?.failure ?? actor?.system?.attributes?.death?.failure ?? 0
 
     if (currentHp <= halfHp && previousHp > halfHp && deathFailures !== 3) {
         makeBloodied(actor)
