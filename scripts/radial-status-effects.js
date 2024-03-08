@@ -133,8 +133,6 @@ function updateEffects (token) {
         icons.forEach((icon, index, icons) => {
             if (!(icon instanceof PIXI.Sprite)) return
 
-            const isSvg = !!icon?.texture?.baseTexture?.resource?.svg ?? false
-
             icon.anchor.set(0.5)
 
             const iconScale = getIconScale(Math.min(token?.document?.height, token?.document?.width))
@@ -145,7 +143,7 @@ function updateEffects (token) {
             icon.height = scaledSize
 
             updateIconPosition(icon, index, token)
-            drawBackground(icon, background, isSvg, gridScale)
+            drawBackground(icon, background, gridScale)
         })
     }
 }
@@ -200,7 +198,7 @@ function polarToCartesian (radius, angle) {
  * @param {*} background
  * @param {*} gridScale
  */
-function drawBackground (icon, background, isSvg, gridScale) {
+function drawBackground (icon, background, gridScale) {
     const radius = (icon.width) / 2 + (icon.width * 0.1)
     background.beginFill(0x333333)
     background.drawCircle(icon.position.x, icon.position.y, radius * gridScale)
