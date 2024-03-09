@@ -37,7 +37,7 @@ function registerSettings () {
             scope: 'world',
             config: false,
             type: Object,
-            default: CONFIG.CUSTOM_DND5E.itemProperties
+            default: getSettingDefault()
         }
     )
 }
@@ -57,6 +57,26 @@ export function getDnd5eConfig () {
     })
 
     return config
+}
+
+/**
+ * Get setting degault
+ * Stores validProperties data in the itemProperties setting
+ * @returns {object} The setting
+ */
+function getSettingDefault () {
+    const itemProperties = deepClone(CONFIG.CUSTOM_DND5E.itemProperties)
+    const itemTypes = ['consumable', 'container', 'equipment', 'feat', 'loot', 'spell', 'tool', 'weapon']
+
+    Object.keys(itemProperties).forEach((key) => {
+        itemTypes.forEach(itemType => {
+            if (CONFIG.CUSTOM_DND5E.validProperties[itemType].has(key)) {
+                itemProperties[key][itemType] = true
+            }
+        })
+    })
+
+    return itemProperties
 }
 
 /**
@@ -81,10 +101,10 @@ export function setConfig (data = null) {
             ])
     )
 
-    CONFIG.DND5E.validProperties = {}
+    const validProperties = {}
 
     Object.entries(CONFIG.CUSTOM_DND5E.validProperties).forEach(property => {
-        CONFIG.DND5E.validProperties[property[0]] = new Set([...property[1]])
+        validProperties[property[0]] = new Set([...property[1]])
     })
 
     Object.entries(data).forEach(([key, value]) => {
@@ -92,12 +112,16 @@ export function setConfig (data = null) {
 
         itemTypes.forEach(itemType => {
             if (value[itemType] && (value.visible || typeof value.visible === 'undefined')) {
-                CONFIG.DND5E.validProperties[itemType].add(key)
+                validProperties[itemType].add(key)
             } else {
-                CONFIG.DND5E.validProperties[itemType].delete(key)
+                validProperties[itemType].delete(key)
             }
         })
     })
+
+    CONFIG.DND5E.validProperties = (checkEmpty(validProperties))
+        ? deepClone(CONFIG.CUSTOM_DND5E.validProperties)
+        : validProperties
 
     if (checkEmpty(data)) {
         if (checkEmpty(CONFIG.DND5E.itemProperties)) {
