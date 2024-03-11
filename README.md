@@ -47,6 +47,11 @@ A Foundry VTT module to customise the D&D 5e system.
 
 ![Custom D&D 5e Award Inspiration](./.github/readme/custom-dnd5e-award-inspiration.png)
 
+### Prone Status
+- Rotate the token when it gains the Prone status effect.
+
+![Custom D&D 5e Prone](./.github/readme/custom-dnd5e-prone-rotation.gif)
+
 ## Counters
 **Counter Types:** Add four types of counter to the character sheets: checkbox, fraction, number and success/failure.
 
@@ -76,6 +81,10 @@ Select 'Custom D&D 5e Character Sheet' from the Sheet Configuration dialog (cog 
 
 ![Custom D&D 5e Radial Status Effects](./.github/readme/custom-dnd5e-radial-status-effects.png)
 
+## Toggle Status Effects on Selected Tokens
+- Toggle status effects on all selected tokens.
+
+![Custom D&D 5e Toggle Status Effects on Selected](./.github/readme/custom-dnd5e-toggle-status-effects-on-selected.gif)
 
 ## Compatibility
 ### Variant Encumbrance + Midi
