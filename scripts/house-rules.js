@@ -181,6 +181,15 @@ function registerSettings () {
         }
     )
 
+    registerSetting(
+        CONSTANTS.PRONE.SETTING.PRONE_ROTATION.KEY,
+        {
+            scope: 'world',
+            config: false,
+            type: Number
+        }
+    )
+
     loadTemplates([
         CONSTANTS.HOUSE_RULES.TEMPLATE.FORM
     ])
@@ -218,6 +227,8 @@ function registerHooks () {
     })
 
     Hooks.on('applyTokenStatusEffect', updateDead)
+    Hooks.on('createActiveEffect', (activeEffect, options, id) => { updateProne(true, activeEffect) })
+    Hooks.on('deleteActiveEffect', (activeEffect, options, id) => { updateProne(false, activeEffect) })
     Hooks.on('dnd5e.preApplyDamage', recalculateDamage)
     Hooks.on('dnd5e.preRestCompleted', (actor, data) => updateDeathSaves('rest', actor, data))
     Hooks.on('dnd5e.preRollDeathSave', setDeathSavesRollMode)
@@ -410,9 +421,9 @@ function updateBloodied (actor, data) {
 /**
  * Update Dead
  * Triggered by the 'applyTokenStatusEffect' hook
- * @param {object} token The token
+ * @param {object} token        The token
  * @param {string} statusEffect The status effect
- * @param {boolean} applied Whether the status effect is being applied
+ * @param {boolean} applied     Whether the status effect is being applied
  */
 function updateDead (token, statusEffect, applied) {
     if (statusEffect !== 'dead') return
@@ -527,4 +538,25 @@ function updateInstantDeath (actor, data) {
     }
 
     return false
+}
+
+/**
+ * Update Prone
+ * Called by the 'updateToken' function
+ * @param {object} token        The token
+ * @param {string} statusEffect The status effect
+ * @param {boolean} applied     Whether the status effect is being applied
+ */
+function updateProne (active, activeEffect) {
+    if (![...activeEffect.statuses].includes('prone')) return
+
+    const rotation = getSetting(CONSTANTS.PRONE.SETTING.PRONE_ROTATION.KEY)
+
+    if (!rotation) return
+
+    const tokens = activeEffect.parent.getActiveTokens()
+
+    tokens.forEach(token => {
+        ((active) ? rotateToken(token, rotation) : unrotateToken(token))
+    })
 }

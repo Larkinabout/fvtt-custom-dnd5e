@@ -152,24 +152,32 @@
             </div>
             <label>{{localize "CUSTOM_DND5E.rollTypes"}}</label>
             <div class="form-group">
-            <p class="notes">{{localize "CUSTOM_DND5E.form.houseRules.inspiration.awardInspirationRollTypes.note"}}</p>
-            <label style="display:flex;">
-                <input id="rollAbilityTest" name="awardInspirationRollTypes.rollAbilityTest" type="checkbox"{{#if awardInspirationRollTypes.rollAbilityTest}} checked{{/if}}>
-                {{localize "CUSTOM_DND5E.abilityCheck"}}
-            </label>
-            <label style="display:flex;">
-                <input id="rollAttack" name="awardInspirationRollTypes.rollAttack" type="checkbox"{{#if awardInspirationRollTypes.rollAttack}} checked{{/if}}>
-                {{localize "CUSTOM_DND5E.attackRoll"}}
-            </label>
-            <label style="display:flex;">
-                <input id="rollAbilitySave" name="awardInspirationRollTypes.rollAbilitySave" type="checkbox"{{#if awardInspirationRollTypes.rollAbilitySave}} checked{{/if}}>
-                {{localize "CUSTOM_DND5E.savingThrow"}}
-            </label>
-            <label style="display:flex;">
-                <input id="rollSkill" name="awardInspirationRollTypes.rollSkill" type="checkbox"{{#if awardInspirationRollTypes.rollSkill}} checked{{/if}}>
-                {{localize "CUSTOM_DND5E.skillCheck"}}
-            </label>
-        </div>
+                <p class="notes">{{localize "CUSTOM_DND5E.form.houseRules.inspiration.awardInspirationRollTypes.note"}}</p>
+                <label style="display:flex;">
+                    <input id="rollAbilityTest" name="awardInspirationRollTypes.rollAbilityTest" type="checkbox"{{#if awardInspirationRollTypes.rollAbilityTest}} checked{{/if}}>
+                    {{localize "CUSTOM_DND5E.abilityCheck"}}
+                </label>
+                <label style="display:flex;">
+                    <input id="rollAttack" name="awardInspirationRollTypes.rollAttack" type="checkbox"{{#if awardInspirationRollTypes.rollAttack}} checked{{/if}}>
+                    {{localize "CUSTOM_DND5E.attackRoll"}}
+                </label>
+                <label style="display:flex;">
+                    <input id="rollAbilitySave" name="awardInspirationRollTypes.rollAbilitySave" type="checkbox"{{#if awardInspirationRollTypes.rollAbilitySave}} checked{{/if}}>
+                    {{localize "CUSTOM_DND5E.savingThrow"}}
+                </label>
+                <label style="display:flex;">
+                    <input id="rollSkill" name="awardInspirationRollTypes.rollSkill" type="checkbox"{{#if awardInspirationRollTypes.rollSkill}} checked{{/if}}>
+                    {{localize "CUSTOM_DND5E.skillCheck"}}
+                </label>
+            </div>
+            <h2>{{localize "CUSTOM_DND5E.prone"}}</h2>
+            <div class="form-group">
+                <label>{{localize "CUSTOM_DND5E.rotation"}}</label>
+                <div class="form-fields">
+                    <input id="prone-rotation" name="proneRotation" type="number" value="{{proneRotation}}"> 
+                </div>
+                <p class="notes">{{localize "CUSTOM_DND5E.form.houseRules.prone.proneRotation.note.1"}}</p>
+            </div>
         </div>
         <footer>
             <button type="button" data-tooltip="{{localize "CUSTOM_DND5E.form.button.reset.tooltip"}}" data-action="reset" class="reset-button">

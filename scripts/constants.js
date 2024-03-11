@@ -358,6 +358,13 @@ export const CONSTANTS = {
             }
         }
     },
+    PRONE: {
+        SETTING: {
+            PRONE_ROTATION: {
+                KEY: 'prone-rotation'
+            }
+        }
+    },
     RADIAL_STATUS_EFFECTS: {
         SETTING: {
             KEY: 'radial-status-effects'
@@ -437,6 +444,15 @@ export const CONSTANTS = {
         TEMPLATE: {
             FORM: 'modules/custom-dnd5e/templates/spell-schools-form.hbs',
             LIST: 'modules/custom-dnd5e/templates/spell-schools-list.hbs'
+        }
+    },
+    TOKEN: {
+        SETTING: {
+            TOGGLE_STATUS_EFFECT_ON_SELECTED_TOKENS: {
+                KEY: 'toggle-status-effect-on-selected-tokens',
+                HINT: 'CUSTOM_DND5E.setting.toggleStatusEffectOnSelectedTokens.hint',
+                NAME: 'CUSTOM_DND5E.setting.toggleStatusEffectOnSelectedTokens.name'
+            }
         }
     }
 }

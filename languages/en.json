@@ -52,6 +52,7 @@
     "CUSTOM_DND5E.number": "Number",
     "CUSTOM_DND5E.physical": "Physical",
     "CUSTOM_DND5E.proficientEquippedItemWeightModifier": "Proficient & Equipped Item Weight Modifier",
+    "CUSTOM_DND5E.prone": "Prone",
     "CUSTOM_DND5E.reference": "Reference",
     "CUSTOM_DND5E.rollingHitPoints": "Rolling Hit Points",
     "CUSTOM_DND5E.rollMode": "Roll Mode",
@@ -185,6 +186,7 @@
     "CUSTOM_DND5E.form.houseRules.inspiration.awardInspirationD20Value.label": "Award Inspiration d20 Value",
     "CUSTOM_DND5E.form.houseRules.inspiration.awardInspirationD20Value.note": "Value to roll on the d20 to award Inspiration",
     "CUSTOM_DND5E.form.houseRules.inspiration.awardInspirationRollTypes.note": "Roll types to award Inspiration",
+    "CUSTOM_DND5E.form.houseRules.prone.proneRotation.note.1": "Angle to rotate the token when it has the Prone status effect",
     "CUSTOM_DND5E.form.houseRules.rollingHitPoints.minimumValue.label": "Minimum Value",
     "CUSTOM_DND5E.form.houseRules.rollingHitPoints.minimumValue.note": "Automatically reroll when result is below the minimum value",
     "CUSTOM_DND5E.form.houseRules.rollingHitPoints.rerollOnce.label": "Reroll Once",
@@ -316,6 +318,8 @@
     "CUSTOM_DND5E.setting.maxLevel.name": "Max Level",
     "CUSTOM_DND5E.setting.radialStatusEffects.name": "Radial Status Effects",
     "CUSTOM_DND5E.setting.radialStatusEffects.hint": "Display status effects in a circle around the token",
+    "CUSTOM_DND5E.setting.toggleStatusEffectOnSelectedTokens.name": "Toggle Status Effects on Selected",
+    "CUSTOM_DND5E.setting.toggleStatusEffectOnSelectedTokens.hint": "When toggling a status effect via a token's HUD, toggle it for all selected tokens",
 
     "CUSTOM_DND5E.sheet.characterSheet": "Custom D&D 5e Character Sheet"
 }
