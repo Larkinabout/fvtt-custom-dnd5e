@@ -37,21 +37,38 @@ function registerSettings () {
             requiresReload: true
         }
     )
+
+    registerSetting(
+        CONSTANTS.TOKEN.SETTING.APPLY_ELEVATION_TO_SELECTED_TOKENS.KEY,
+        {
+            name: game.i18n.localize(CONSTANTS.TOKEN.SETTING.APPLY_ELEVATION_TO_SELECTED_TOKENS.NAME),
+            hint: game.i18n.localize(CONSTANTS.TOKEN.SETTING.APPLY_ELEVATION_TO_SELECTED_TOKENS.HINT),
+            scope: 'world',
+            config: true,
+            type: Boolean,
+            default: false,
+            requiresReload: true
+        }
+    )
 }
 
 function registerHooks () {
-    if (!getSetting(CONSTANTS.TOKEN.SETTING.TOGGLE_STATUS_EFFECT_ON_SELECTED_TOKENS.KEY)) return
+    if (getSetting(CONSTANTS.TOKEN.SETTING.TOGGLE_STATUS_EFFECT_ON_SELECTED_TOKENS.KEY)) {
+        Hooks.on('createActiveEffect', async (activeEffect, options, id) => {
+            toggleEffectOnSelected(true, activeEffect)
+        })
 
-    Hooks.on('createActiveEffect', async (activeEffect, options, id) => {
-        toggleEffectOnControlledTokens(true, activeEffect)
-    })
+        Hooks.on('deleteActiveEffect', async (activeEffect, options, id) => {
+            toggleEffectOnSelected(false, activeEffect)
+        })
+    }
 
-    Hooks.on('deleteActiveEffect', async (activeEffect, options, id) => {
-        toggleEffectOnControlledTokens(false, activeEffect)
-    })
+    if (getSetting(CONSTANTS.TOKEN.SETTING.APPLY_ELEVATION_TO_SELECTED_TOKENS.KEY)) {
+        Hooks.on('updateToken', applyElevationToSelected)
+    }
 }
 
-async function toggleEffectOnControlledTokens (active, activeEffect) {
+async function toggleEffectOnSelected (active, activeEffect) {
     if (canvas.tokens.controlled.length <= 1) return
 
     const effectData = foundry.utils.deepClone(CONFIG.statusEffects.find(effect => effect.id === [...activeEffect.statuses][0]))
@@ -62,6 +79,18 @@ async function toggleEffectOnControlledTokens (active, activeEffect) {
     if (!controlledTokens.length) return
 
     await controlledTokens[0].document.toggleActiveEffect(effectData, { active, overlay })
+}
+
+function applyElevationToSelected (token, data, options, id) {
+    const elevation = getProperty(data, 'elevation')
+
+    if ((!elevation && elevation !== 0) || canvas.tokens.controlled.length <= 1) return
+
+    const controlledTokens = canvas.tokens.controlled.filter(ct => ct.id !== token.id && ct.document.elevation !== elevation)
+
+    if (!controlledTokens.length) return
+
+    controlledTokens[0].document.update({ elevation })
 }
 
 /**

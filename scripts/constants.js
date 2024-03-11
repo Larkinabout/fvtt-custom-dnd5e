@@ -448,6 +448,11 @@ export const CONSTANTS = {
     },
     TOKEN: {
         SETTING: {
+            APPLY_ELEVATION_TO_SELECTED_TOKENS: {
+                KEY: 'apply-elevation-to-selected-tokens',
+                HINT: 'CUSTOM_DND5E.setting.applyElevationToSelectedTokens.hint',
+                NAME: 'CUSTOM_DND5E.setting.applyElevationToSelectedTokens.name'
+            },
             TOGGLE_STATUS_EFFECT_ON_SELECTED_TOKENS: {
                 KEY: 'toggle-status-effect-on-selected-tokens',
                 HINT: 'CUSTOM_DND5E.setting.toggleStatusEffectOnSelectedTokens.hint',

@@ -81,6 +81,11 @@ Select 'Custom D&D 5e Character Sheet' from the Sheet Configuration dialog (cog 
 
 ![Custom D&D 5e Radial Status Effects](./.github/readme/custom-dnd5e-radial-status-effects.png)
 
+## Apply Elevation to Selected Tokens
+- Apply elevation to all selected tokens.
+
+![Custom D&D 5e Apply Elevation to Selected](./.github/readme/custom-dnd5e-apply-elevation-to-selected.gif)
+
 ## Toggle Status Effects on Selected Tokens
 - Toggle status effects on all selected tokens.
 
