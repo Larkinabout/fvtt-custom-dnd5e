@@ -201,9 +201,9 @@ function polarToCartesian (radius, angle) {
 function drawBackground (icon, background, gridScale) {
     const radius = (icon.width) / 2 + (icon.width * 0.1)
     background.beginFill(0x333333)
-    background.drawCircle(icon.position.x, icon.position.y, radius * gridScale)
+    background.drawCircle(icon.position.x, icon.position.y, radius)
     background.endFill()
     background.lineStyle((2 * gridScale) / 2, 0x9f9275, 1, 0.5)
-    background.drawCircle(icon.position.x, icon.position.y, radius * gridScale)
+    background.drawCircle(icon.position.x, icon.position.y, radius)
     background.lineStyle(0)
 }
