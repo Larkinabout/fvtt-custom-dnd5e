@@ -1,6 +1,6 @@
 import { CONSTANTS } from './constants.js'
 import { getSetting } from './utils.js'
-import { register as registerHouseRules } from './house-rules.js'
+import { register as registerHouseRules, registerNegativeHp } from './house-rules.js'
 import { register as registerAbilities, setConfig as setAbilities } from './abilities.js'
 import { register as registerActorSizes, setConfig as setActorSizes } from './actor-sizes.js'
 import { register as registerArmorCalculations, setConfig as setArmorCalculations } from './armor-calculations.js'
@@ -101,6 +101,8 @@ Hooks.on('ready', async () => {
             return allowed.includes(value)
         }
     })
+
+    registerNegativeHp()
 
     migrate()
 })

@@ -235,6 +235,9 @@ export const CONSTANTS = {
     },
     HIT_POINTS: {
         SETTING: {
+            APPLY_MASSIVE_DAMAGE: {
+                KEY: 'apply-massive-damage'
+            },
             APPLY_NEGATIVE_HP: {
                 KEY: 'apply-negative-hp'
             },

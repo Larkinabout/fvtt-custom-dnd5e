@@ -9,7 +9,6 @@ export function register () {
     registerSettings()
     registerHooks()
     registerBloodied()
-    registerNegativeHp()
 }
 
 /**
@@ -139,6 +138,16 @@ function registerSettings () {
                 shortRest: { success: 0, failure: 0 },
                 longRest: { success: 0, failure: 0 }
             }
+        }
+    )
+
+    registerSetting(
+        CONSTANTS.HIT_POINTS.SETTING.APPLY_MASSIVE_DAMAGE.KEY,
+        {
+            scope: 'world',
+            config: false,
+            type: Boolean,
+            default: false
         }
     )
 
@@ -283,7 +292,7 @@ export function registerBloodied () {
  * Register Negative HP
  * If 'Apply Negative HP' is enabled, set the min HP value in the schema to undefined
  */
-function registerNegativeHp () {
+export function registerNegativeHp () {
     if (!getSetting(CONSTANTS.DEAD.SETTING.APPLY_INSTANT_DEATH.KEY) &&
         !getSetting(CONSTANTS.HIT_POINTS.SETTING.APPLY_NEGATIVE_HP.KEY)) return
 
