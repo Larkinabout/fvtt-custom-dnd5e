@@ -36,6 +36,11 @@ A Foundry VTT module to customise the D&D 5e system.
 
 ![Custom D&D 5e Level Up Hit Points](./.github/readme/custom-dnd5e-level-up-hit-points.png)
 
+### Massive Damage
+- Apply Massive Damage as per the variant rule (DMG pg. 273).
+
+![Custom D&D 5e Massive Damage](./.github/readme/custom-dnd5e-massive-damage.gif)
+
 ### Negative Hit Points
 - Apply negative hit points.
 - Choose to heal from negative HP or from 0 HP.
