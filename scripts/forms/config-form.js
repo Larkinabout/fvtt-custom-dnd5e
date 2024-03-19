@@ -145,19 +145,22 @@ class ConfigForm extends CustomDnd5eForm {
         const keyData = {}
 
         Object.entries(formData).forEach(([property, value]) => {
-            const propertyArr = property.split('.')
-            const property1 = propertyArr.slice(0, 1).pop()
-            const property2 = propertyArr.pop()
-            if (ignore.includes(property2) || formData[`${property1}.delete`] === 'true') return
-            if (property2 === 'system') {
+            const propertyParts = property.split('.')
+            const propertyKey = propertyParts.pop()
+            const propertyPath = propertyParts.join('.')
+            const propertyPathSuffix = propertyParts.pop()
+            const propertyPathPrefix = (propertyParts.length) ? `${propertyParts.join('.')}.` : ''
+
+            if (ignore.includes(propertyKey) || formData[`${propertyPath}.delete`] === 'true') return
+            if (propertyKey === 'system') {
                 if (value === 'true') { return }
                 value = false
             }
-            const key = formData[`${property1}.key`]
-            setProperty(data, `${key}.${property2}`, value)
+            const key = formData[`${propertyPath}.key`]
+            setProperty(data, `${propertyPathPrefix}${key}.${propertyKey}`, value)
 
-            if (property1 !== key) {
-                keyData[property1] = key
+            if (propertyPathSuffix !== key) {
+                keyData[propertyPath] = key
             }
         })
 
