@@ -31,6 +31,7 @@ export class HouseRulesForm extends CustomDnd5eForm {
         data.deadTint = getSetting(CONSTANTS.DEAD.SETTING.DEAD_TINT.KEY)
         data.deathSavesRollMode = getSetting(CONSTANTS.DEATH_SAVES.SETTING.DEATH_SAVES_ROLL_MODE.KEY)
         data.removeDeathSaves = getSetting(CONSTANTS.DEATH_SAVES.SETTING.REMOVE_DEATH_SAVES.KEY)
+        data.applyMassiveDamage = getSetting(CONSTANTS.HIT_POINTS.SETTING.APPLY_MASSIVE_DAMAGE.KEY)
         data.applyNegativeHp = getSetting(CONSTANTS.HIT_POINTS.SETTING.APPLY_NEGATIVE_HP.KEY)
         data.negativeHpHealFromZero = getSetting(CONSTANTS.HIT_POINTS.SETTING.NEGATIVE_HP_HEAL_FROM_ZERO.KEY)
         data.awardInspirationD20Value = getSetting(CONSTANTS.INSPIRATION.SETTING.AWARD_INSPIRATION_D20_VALUE.KEY)
@@ -58,6 +59,7 @@ export class HouseRulesForm extends CustomDnd5eForm {
                 resetSetting(CONSTANTS.DEAD.SETTING.DEAD_TINT.KEY),
                 resetSetting(CONSTANTS.DEATH_SAVES.SETTING.DEATH_SAVES_ROLL_MODE.KEY),
                 resetSetting(CONSTANTS.DEATH_SAVES.SETTING.REMOVE_DEATH_SAVES.KEY),
+                resetSetting(CONSTANTS.HIT_POINTS.SETTING.APPLY_MASSIVE_DAMAGE.KEY),
                 resetSetting(CONSTANTS.HIT_POINTS.SETTING.APPLY_NEGATIVE_HP.KEY),
                 resetSetting(CONSTANTS.HIT_POINTS.SETTING.NEGATIVE_HP_HEAL_FROM_ZERO.KEY),
                 resetSetting(CONSTANTS.INSPIRATION.SETTING.AWARD_INSPIRATION_D20_VALUE.KEY),
@@ -112,6 +114,7 @@ export class HouseRulesForm extends CustomDnd5eForm {
             setSetting(CONSTANTS.DEAD.SETTING.DEAD_TINT.KEY, formData.deadTint),
             setSetting(CONSTANTS.DEATH_SAVES.SETTING.DEATH_SAVES_ROLL_MODE.KEY, formData.deathSavesRollMode),
             setSetting(CONSTANTS.DEATH_SAVES.SETTING.REMOVE_DEATH_SAVES.KEY, removeDeathSaves),
+            setSetting(CONSTANTS.HIT_POINTS.SETTING.APPLY_MASSIVE_DAMAGE.KEY, formData.applyMassiveDamage),
             setSetting(CONSTANTS.HIT_POINTS.SETTING.APPLY_NEGATIVE_HP.KEY, formData.applyNegativeHp),
             setSetting(CONSTANTS.HIT_POINTS.SETTING.NEGATIVE_HP_HEAL_FROM_ZERO.KEY, formData.negativeHpHealFromZero),
             setSetting(CONSTANTS.INSPIRATION.SETTING.AWARD_INSPIRATION_D20_VALUE.KEY, formData.awardInspirationD20Value),

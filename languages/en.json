@@ -179,6 +179,8 @@
     "CUSTOM_DND5E.form.houseRules.deathSaves.deathSavesRollMode.note.2": "When Blind GM Roll is selected, successes and failures won't appear on the character sheet for players",
     "CUSTOM_DND5E.form.houseRules.deathSaves.removeDeathSaves.note.1": "The number of success and failures to remove for each event.",
     "CUSTOM_DND5E.form.houseRules.deathSaves.removeDeathSaves.note.2": "Use 3 to remove all, 1 to remove one and 0 to remove none",
+    "CUSTOM_DND5E.form.houseRules.hitPoints.applyMassiveDamage.label": "Apply Massive Damage",
+    "CUSTOM_DND5E.form.houseRules.hitPoints.applyMassiveDamage.note": "Apply Massive Damage when a character suffers damage equal to or greater than half their max HP",
     "CUSTOM_DND5E.form.houseRules.hitPoints.applyNegativeHp.label": "Apply Negative Hit Points",
     "CUSTOM_DND5E.form.houseRules.hitPoints.applyNegativeHp.note": "Apply negative hit points for characters",
     "CUSTOM_DND5E.form.houseRules.hitPoints.negativeHpHealFromZero.label": "Heal from 0 HP",
@@ -313,7 +315,9 @@
     "CUSTOM_DND5E.menu.spellSchools.name": "Configure Spell Schools",
 
     "CUSTOM_DND5E.message.awardInspiration": "<p>{name} was awarded Inspiration for rolling a {value}.</p>",
-    "CUSTOM_DND5E.message.instantDeath": "<p>{name} suffered an instant death.</p>",
+    "CUSTOM_DND5E.message.instantDeath": "<p>{name} suffered Instant Death.</p>",
+    "CUSTOM_DND5E.message.massiveDamage": "{name} suffered Massive Damage.",
+    
 
     "CUSTOM_DND5E.setting.maxLevel.name": "Max Level",
     "CUSTOM_DND5E.setting.radialStatusEffects.name": "Radial Status Effects",

@@ -92,6 +92,7 @@ function registerHooks () {
         if (equippedMod === 1 && proficientEquippedMod === 1 && unequippedMod === 1) return
 
         const actor = data.actor
+        const encumbrance = actor.system.attributes.encumbrance
         const config = CONFIG.DND5E.encumbrance
         const units = game.settings.get('dnd5e', 'metricWeightUnits') ? 'metric' : 'imperial'
         // Get the total weight from items
@@ -112,8 +113,14 @@ function registerHooks () {
             weight += numCoins / currencyPerWeight
         }
 
-        data.encumbrance.value = weight.toNearest(0.1)
-        data.encumbrance.pct = Math.clamped((data.encumbrance.value * 100) / data.encumbrance.max, 0, 100)
+        encumbrance.value = weight.toNearest(0.1)
+        encumbrance.pct = Math.clamped((encumbrance.value * 100) / data.encumbrance.max, 0, 100)
+        encumbrance.encumbered = encumbrance.value > encumbrance.heavilyEncumbered
+
+        data.encumbrance.value = encumbrance.value
+        data.encumbrance.pct = encumbrance.pct
+
+        actor.updateEncumbrance()
     })
 }
 

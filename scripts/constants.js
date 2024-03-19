@@ -354,6 +354,11 @@ export const CONSTANTS = {
             NAME: 'CUSTOM_DND5E.setting.maxLevel.name'
         }
     },
+    MESSAGE: {
+        TEMPLATE: {
+            ROLL_REQUEST_CARD: 'modules/custom-dnd5e/templates/roll-request-card.hbs'
+        }
+    },
     MIGRATION: {
         VERSION: {
             SETTING: {

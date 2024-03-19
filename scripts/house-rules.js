@@ -249,6 +249,7 @@ function registerHooks () {
         const instantDeath = updateInstantDeath(actor, data)
         updateHp(actor, data)
         if (!instantDeath) {
+            updateMassiveDamage(actor, data)
             recalculateHealing(actor, data)
             updateBloodied(actor, data)
             updateDeathSaves('regainHp', actor, data)
@@ -550,6 +551,33 @@ function updateInstantDeath (actor, data) {
 }
 
 /**
+ * Update Massive Damage
+ * Triggered by the 'preUpdateActor' hook and called by the 'recalculateDamage' function
+ * @param {object} actor The actor
+ * @param {object} data  The data
+ * @returns {boolean} Whether instant death is applied
+ */
+function updateMassiveDamage (actor, data) {
+    if (actor.type !== 'character' || !getSetting(CONSTANTS.HIT_POINTS.SETTING.APPLY_MASSIVE_DAMAGE.KEY)) return false
+
+    const previousHp = actor.system.attributes.hp.value
+    const currentHp = data?.system?.attributes?.hp?.value
+
+    if (previousHp <= currentHp) return
+
+    const diffHp = previousHp - currentHp
+    const maxHp = actor.system.attributes.hp.max
+    const halfMaxHp = Math.floor(maxHp / 2)
+
+    if (diffHp >= halfMaxHp) {
+        createMassiveDamageCard(actor, data)
+        return true
+    }
+
+    return false
+}
+
+/**
  * Update Prone
  * Called by the 'updateToken' function
  * @param {object} token        The token
@@ -568,4 +596,23 @@ function updateProne (active, activeEffect) {
     tokens.forEach(token => {
         ((active) ? rotateToken(token, rotation) : unrotateToken(token))
     })
+}
+
+async function createMassiveDamageCard (actor, data) {
+    const dataset = { ability: 'con', dc: '15', type: 'save' }
+    let label = game.i18n.format('EDITOR.DND5E.Inline.DC', { dc: 15, check: game.i18n.localize(CONFIG.DND5E.abilities.con.label) })
+    label = game.i18n.format('EDITOR.DND5E.Inline.SaveLong', { save: label })
+    const MessageClass = getDocumentClass('ChatMessage')
+    const chatData = {
+        user: game.user.id,
+        type: CONST.CHAT_MESSAGE_TYPES.OTHER,
+        content: await renderTemplate(CONSTANTS.MESSAGE.TEMPLATE.ROLL_REQUEST_CARD, {
+            buttonLabel: `<i class="fas fa-shield-heart"></i>${label}`,
+            hiddenLabel: `<i class="fas fa-shield-heart"></i>${label}`,
+            description: game.i18n.format('CUSTOM_DND5E.message.massiveDamage', { name: actor.name }),
+            dataset: { ...dataset, action: 'rollRequest' }
+        }),
+        speaker: MessageClass.getSpeaker({ user: game.user })
+    }
+    return MessageClass.create(chatData)
 }

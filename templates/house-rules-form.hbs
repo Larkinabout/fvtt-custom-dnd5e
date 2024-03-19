@@ -105,6 +105,13 @@
                 </div>
             </div>
             <h2>{{localize "CUSTOM_DND5E.hitPoints"}}</h2>
+            <div class="form-group">
+                <label>{{localize "CUSTOM_DND5E.form.houseRules.hitPoints.applyMassiveDamage.label"}}</label>
+                <div class="form-fields">
+                    <input id="apply-massive-damage" name="applyMassiveDamage" type="checkbox"{{#if applyMassiveDamage}} checked{{/if}}> 
+                </div>
+                <p class="notes">{{localize "CUSTOM_DND5E.form.houseRules.hitPoints.applyMassiveDamage.note"}}</p>
+            </div>
             <h3>{{localize "CUSTOM_DND5E.rollingHitPoints"}}</h3>
             <div class="form-group">
                 <label>{{localize "CUSTOM_DND5E.form.houseRules.rollingHitPoints.minimumValue.label"}}</label>
