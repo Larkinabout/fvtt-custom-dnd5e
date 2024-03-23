@@ -207,10 +207,9 @@ export async function makeBloodied (actor) {
     if (actor.effects.get('dnd5ebloodied000') ||
         actor.system.traits.ci.value.has('bloodied')) return
 
-    const effectData = foundry.utils.deepClone(CONFIG.statusEffects.find(effect => effect.id === 'bloodied'))
-    effectData.statuses = ['bloodied']
     const cls = getDocumentClass('ActiveEffect')
-    const effect = await cls.fromStatusEffect(effectData)
+    const effect = await cls.fromStatusEffect('bloodied')
+    effect.updateSource({ id: 'dnd5ebloodied000', _id: 'dnd5ebloodied000' })
     await cls.create(effect, { parent: actor, keepId: true })
 
     const tint = getSetting(CONSTANTS.BLOODIED.SETTING.BLOODIED_TINT.KEY)
@@ -303,11 +302,8 @@ export async function makeDead (actor, data = null) {
 
     if (actor.effects.get('dnd5edead0000000')) return
 
-    const effectData = foundry.utils.deepClone(CONFIG.statusEffects.find(effect => effect.id === 'dead'))
-    effectData.statuses = ['dead']
-
     const cls = getDocumentClass('ActiveEffect')
-    const effect = await cls.fromStatusEffect(effectData)
+    const effect = await cls.fromStatusEffect('dead')
     effect.updateSource({ 'flags.core.overlay': true })
     await cls.create(effect, { parent: actor, keepId: true })
 

@@ -112,6 +112,16 @@
     gap: 0.25rem;
 }
 
+
+.custom-dnd5e.dnd5e2.sheet.actor.character .sheet-body .sidebar .card .card-tab.collapser {
+  width: 10px;
+}
+
+.custom-dnd5e.dnd5e2.sheet.actor.character .sheet-body .sidebar .card .card-tab > i {
+  font-size: 12px;
+  margin-left: 1px;
+}
+
 .custom-dnd5e.dnd5e2.sheet.actor.character .sheet-body .sidebar .card .stats .top .ac {
     padding-bottom: 0.25rem;
 }
@@ -138,6 +148,10 @@
     position: relative;
     top: -2px;
     width: 100%;
+}
+
+.dnd5e-theme-dark .custom-dnd5e.dnd5e2.sheet.actor.character .ability-scores {
+    top: 0px;
 }
 
 .custom-dnd5e.dnd5e2.sheet.actor.character .ability-scores .top {
@@ -202,6 +216,16 @@
     border: 2px solid var(--dnd5e-color-gold);
     height: 44px;
 }
+
+.dnd5e-theme-dark .custom-dnd5e.dnd5e2.sheet.actor.character
+    .ability-scores
+    .ability-score::before {
+    background: unset;
+    background-color: var(--dnd5e-color-iron-gray);
+    border: 2px solid var(--dnd5e-color-blue-gray-3);
+    height: 44px;
+}
+
 
 .custom-dnd5e.dnd5e2.sheet.actor.character .ability-scores .ability-score .mod {
     line-height: normal;

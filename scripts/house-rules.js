@@ -458,15 +458,14 @@ function updateDeathSaves (source, actor, data) {
     const removeDeathSaves = getSetting(CONSTANTS.DEATH_SAVES.SETTING.REMOVE_DEATH_SAVES.KEY)
 
     const updateDeathSavesByType = (type) => {
-        const currentValue = data?.system?.attributes?.death?.[type]
-        const previousValue = actor.system.attributes.death[type]
+        const currentValue = actor.system.attributes.death[type]
 
         if (typeof currentValue === 'undefined') return
 
         if (source === 'regainHp' && removeDeathSaves.regainHp[type] < 3 && hasProperty(data, 'system.attributes.hp.value')) {
             const previousHp = actor.system.attributes.hp.value
-            const newValue = (previousHp === 0) ? Math.max(previousValue - removeDeathSaves.regainHp[type], 0) : previousValue
-            data.system.attributes.death[type] = newValue
+            const newValue = (previousHp === 0) ? Math.max(currentValue - removeDeathSaves.regainHp[type], 0) : currentValue
+            setProperty(data, `system.attributes.death.${type}`, newValue)
         } else if (source === 'rest') {
             const restType = (data?.longRest) ? 'longRest' : 'shortRest'
 
