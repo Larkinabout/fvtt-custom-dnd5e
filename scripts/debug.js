@@ -8,6 +8,14 @@ import { DebugForm } from './forms/debug-form.js'
 export function register () {
     registerSettings()
 
+    Logger.debug(
+        'Loading templates',
+        [
+            CONSTANTS.DEBUG.TEMPLATE.FORM,
+            CONSTANTS.DEBUG.TEMPLATE.IMPORT_DIALOG
+        ]
+    )
+
     loadTemplates([
         CONSTANTS.DEBUG.TEMPLATE.FORM,
         CONSTANTS.DEBUG.TEMPLATE.IMPORT_DIALOG
@@ -28,16 +36,6 @@ function registerSettings () {
             type: DebugForm,
             restricted: true,
             scope: 'world'
-        }
-    )
-
-    registerSetting(
-        CONSTANTS.DEBUG.SETTING.KEY,
-        {
-            scope: 'world',
-            config: false,
-            type: Boolean,
-            default: false
         }
     )
 }

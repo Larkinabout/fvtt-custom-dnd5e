@@ -1,7 +1,7 @@
 {{#each counters as |item key|}}
 <li class="custom-dnd5e-item flexrow" data-key="{{key}}">
     <i class="custom-dnd5e-drag flex0 fas fa-grip-lines" draggable="true"></i>
-    <input id="visible" name="{{../actorType}}.{{key}}.visible" type="checkbox" data-tooltip="{{localize "CUSTOM_DND5E.form.checkbox.visible.tooltip"}}"{{#unless (boolfalse visible)}} checked{{/unless}}>
+    <input id="visible" name="{{../actorType}}.{{key}}.visible" type="checkbox" data-tooltip="{{localize "CUSTOM_DND5E.form.checkbox.visible.tooltip"}}"{{#unless (customDnd5eBoolFalse visible)}} checked{{/unless}}>
     <div class="fields flexrow">
         <input id="actorType" name="{{../actorType}}.{{key}}.actorType" type="hidden" value="{{../actorType}}">
         <input id="key" name="{{../actorType}}.{{key}}.key" type="hidden" value="{{key}}">

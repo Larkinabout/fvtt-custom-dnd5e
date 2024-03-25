@@ -88,7 +88,7 @@ class ConfigForm extends CustomDnd5eForm {
 
         const key = randomID()
 
-        const template = await this._getHtml({ items: { [key]: { system: false, visible: true } } })
+        const template = await this._getHtml({ items: { [key]: { fullKey: key, system: false, visible: true } } })
 
         list.insertAdjacentHTML('beforeend', template)
 

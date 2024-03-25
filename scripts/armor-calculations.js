@@ -1,5 +1,5 @@
 import { CONSTANTS } from './constants.js'
-import { checkEmpty, registerMenu, registerSetting, resetDnd5eConfig } from './utils.js'
+import { Logger, checkEmpty, registerMenu, registerSetting, resetDnd5eConfig } from './utils.js'
 import { ArmorCalculationsForm } from './forms/config-form.js'
 
 const property = 'armorClasses'
@@ -9,6 +9,14 @@ const property = 'armorClasses'
  */
 export function register () {
     registerSettings()
+
+    Logger.debug(
+        'Loading templates',
+        [
+            CONSTANTS.ARMOR_CALCULATIONS.TEMPLATE.FORM,
+            CONSTANTS.ARMOR_CALCULATIONS.TEMPLATE.LIST
+        ]
+    )
 
     loadTemplates([
         CONSTANTS.ARMOR_CALCULATIONS.TEMPLATE.FORM,

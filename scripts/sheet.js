@@ -1,10 +1,17 @@
 import { CONSTANTS, SHEET_TYPE } from './constants.js'
-import { getFlag, getSetting, registerMenu, registerSetting } from './utils.js'
+import { Logger, getFlag, getSetting, registerMenu, registerSetting } from './utils.js'
 import { SheetForm } from './forms/sheet-form.js'
 
 export function register () {
     registerSettings()
     registerHooks()
+
+    Logger.debug(
+        'Loading templates',
+        [
+            CONSTANTS.SHEET.TEMPLATE.FORM
+        ]
+    )
 
     loadTemplates([
         CONSTANTS.SHEET.TEMPLATE.FORM

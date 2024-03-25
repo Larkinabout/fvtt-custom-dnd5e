@@ -1,5 +1,5 @@
 import { CONSTANTS, SHEET_TYPE } from './constants.js'
-import { checkEmpty, getSetting, registerMenu, registerSetting, resetDnd5eConfig } from './utils.js'
+import { Logger, checkEmpty, getSetting, registerMenu, registerSetting, resetDnd5eConfig } from './utils.js'
 import { CurrencyForm } from './forms/config-form.js'
 
 const property = 'currencies'
@@ -10,6 +10,14 @@ const property = 'currencies'
 export function register () {
     registerSettings()
     registerHooks()
+
+    Logger.debug(
+        'Loading templates',
+        [
+            CONSTANTS.CURRENCY.TEMPLATE.FORM,
+            CONSTANTS.CURRENCY.TEMPLATE.LIST
+        ]
+    )
 
     loadTemplates([
         CONSTANTS.CURRENCY.TEMPLATE.FORM,

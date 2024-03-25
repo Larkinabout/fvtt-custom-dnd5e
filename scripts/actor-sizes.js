@@ -1,5 +1,5 @@
 import { CONSTANTS } from './constants.js'
-import { checkEmpty, registerMenu, registerSetting, resetDnd5eConfig } from './utils.js'
+import { Logger, checkEmpty, registerMenu, registerSetting, resetDnd5eConfig } from './utils.js'
 import { ActorSizesForm } from './forms/config-form.js'
 
 const property = 'actorSizes'
@@ -9,6 +9,14 @@ const property = 'actorSizes'
  */
 export function register () {
     registerSettings()
+
+    Logger.debug(
+        'Loading templates',
+        [
+            CONSTANTS.ACTOR_SIZES.TEMPLATE.FORM,
+            CONSTANTS.ACTOR_SIZES.TEMPLATE.LIST
+        ]
+    )
 
     loadTemplates([
         CONSTANTS.ACTOR_SIZES.TEMPLATE.FORM,

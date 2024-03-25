@@ -1,5 +1,5 @@
 import { CONSTANTS } from './constants.js'
-import { getSetting } from './utils.js'
+import { Logger, getSetting, registerSetting } from './utils.js'
 import { register as registerHouseRules, registerNegativeHp } from './house-rules.js'
 import { register as registerAbilities, setConfig as setAbilities } from './abilities.js'
 import { register as registerActorSizes, setConfig as setActorSizes } from './actor-sizes.js'
@@ -29,6 +29,16 @@ import { registerCharacterSheet } from './sheets/character-sheet.js'
  */
 Hooks.on('init', async () => {
     CONFIG.CUSTOM_DND5E = deepClone(CONFIG.DND5E)
+
+    registerSetting(
+        CONSTANTS.DEBUG.SETTING.KEY,
+        {
+            scope: 'world',
+            config: false,
+            type: Boolean,
+            default: false
+        }
+    )
 
     patchApplicationRender()
     registerMigration()
@@ -71,33 +81,44 @@ Hooks.on('init', async () => {
     setSpellSchools(getSetting(CONSTANTS.SPELL_SCHOOLS.SETTING.KEY))
     setMaxLevel(getSetting(CONSTANTS.MAX_LEVEL.SETTING.KEY))
 
+    Logger.debug(
+        'Loading templates',
+        [
+            CONSTANTS.CONFIG.TEMPLATE.FORM,
+            CONSTANTS.CONFIG.TEMPLATE.LIST,
+            CONSTANTS.SHEET.TEMPLATE.CHARACTER_SHEET_2,
+            CONSTANTS.SHEET.TEMPLATE.CHARACTER_DETAILS,
+            CONSTANTS.MESSAGE.TEMPLATE.ROLL_REQUEST_CARD
+        ]
+    )
+
     loadTemplates([
         CONSTANTS.CONFIG.TEMPLATE.FORM,
         CONSTANTS.CONFIG.TEMPLATE.LIST,
         CONSTANTS.SHEET.TEMPLATE.CHARACTER_SHEET_2,
         CONSTANTS.SHEET.TEMPLATE.CHARACTER_DETAILS,
-        CONSTANTS.MESSAGE.REQUEST_CARD
+        CONSTANTS.MESSAGE.TEMPLATE.ROLL_REQUEST_CARD
     ])
 })
 
 Hooks.on('ready', async () => {
     Handlebars.registerHelper({
-        boolfalse: function (value) { return value === false },
-        eq: function (a, b) { return a === b },
-        randomId: function () { return randomID() },
-        true: function (value) { return !!value },
-        undef: function (value) { return typeof value === 'undefined' || value === null },
-        dotNotateChild: function (parent, child) {
+        customDnd5eBoolFalse: function (value) { return value === false },
+        customDnd5eEq: function (a, b) { return a === b },
+        customDnd5eRandomId: function () { return randomID() },
+        customDnd5eTrue: function (value) { return !!value },
+        customDnd5eUndef: function (value) { return typeof value === 'undefined' || value === null },
+        customDnd5eDotNotateChild: function (parent, child) {
             if (parent) {
                 return `${parent}.children.${child}`
             }
             return `${child}`
         },
-        showActionValue: function (value) {
+        customDnd5eShowActionValue: function (value) {
             const allowed = ['increase', 'decrease']
             return allowed.includes(value)
         },
-        showTriggerValue: function (value) {
+        customDnd5eShowTriggerValue: function (value) {
             const allowed = ['counterValue']
             return allowed.includes(value)
         }

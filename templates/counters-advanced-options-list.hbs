@@ -1,6 +1,6 @@
 <ul class="custom-dnd5e-list">
     {{#each triggers}}
-        <li class="custom-dnd5e-item flexrow" data-key="{{randomId}}">
+        <li class="custom-dnd5e-item flexrow" data-key="{{customDnd5eRandomId}}">
             <i class="custom-dnd5e-drag flex0 fas fa-grip-lines" draggable="true"></i>
             <div class="custom-dnd5e-col-group flexcol">
                 <div class="form-group">
@@ -20,7 +20,7 @@
                         </select>
                     </div>
                 </div>
-                <div class="form-group{{#unless (showTriggerValue trigger)}} hidden{{/unless}}">
+                <div class="form-group{{#unless (customDnd5eShowTriggerValue trigger)}} hidden{{/unless}}">
                     <label class="flex1" style="min-width:80px; max-width:100px;">{{localize "CUSTOM_DND5E.triggerValue"}}</label>
                     <div class="form-fields">
                         <input id="trigger-value" name="triggerValue" type="number" value="{{triggerValue}}">
@@ -31,12 +31,12 @@
                     <div class="form-fields">
                         <select id="action" name="action">
                             {{#select action}}
-                            {{#unless (eq ../type "checkbox")}}
-                            <option id="increase"{{#if (eq trigger "counterValue")}} class="hidden"{{/if}} value="increase">{{localize "CUSTOM_DND5E.increase"}}</option>
-                            <option id="decrease"{{#if (eq trigger "counterValue")}} class="hidden"{{/if}} value="decrease">{{localize "CUSTOM_DND5E.decrease"}}</option>
+                            {{#unless (customDnd5eEq ../type "checkbox")}}
+                            <option id="increase"{{#if (customDnd5eEq trigger "counterValue")}} class="hidden"{{/if}} value="increase">{{localize "CUSTOM_DND5E.increase"}}</option>
+                            <option id="decrease"{{#if (customDnd5eEq trigger "counterValue")}} class="hidden"{{/if}} value="decrease">{{localize "CUSTOM_DND5E.decrease"}}</option>
                             <option id="dead" value="dead">{{localize "CUSTOM_DND5E.dead"}}</option>
                             {{/unless}}
-                            {{#if (eq ../type "checkbox")}}
+                            {{#if (customDnd5eEq ../type "checkbox")}}
                             <option id="check" value="check">{{localize "CUSTOM_DND5E.check"}}</option>
                             <option id="uncheck" value="uncheck">{{localize "CUSTOM_DND5E.uncheck"}}</option>
                             {{/if}}
@@ -44,7 +44,7 @@
                         </select>
                     </div>
                 </div>
-                <div class="form-group{{#unless (showActionValue action)}} hidden{{/unless}}">
+                <div class="form-group{{#unless (customDnd5eShowActionValue action)}} hidden{{/unless}}">
                     <label class="flex1" style="min-width:80px; max-width:100px;">{{localize "CUSTOM_DND5E.actionValue"}}</label>
                     <div class="form-fields">
                         <input id="action-value" name="actionValue" type="number" value="{{actionValue}}">

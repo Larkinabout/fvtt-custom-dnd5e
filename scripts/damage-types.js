@@ -1,5 +1,5 @@
 import { CONSTANTS } from './constants.js'
-import { checkEmpty, registerMenu, registerSetting, resetDnd5eConfig } from './utils.js'
+import { Logger, checkEmpty, registerMenu, registerSetting, resetDnd5eConfig } from './utils.js'
 import { DamageTypesForm } from './forms/config-form.js'
 
 const property = 'damageTypes'
@@ -9,6 +9,14 @@ const property = 'damageTypes'
  */
 export function register () {
     registerSettings()
+
+    Logger.debug(
+        'Loading templates',
+        [
+            CONSTANTS.DAMAGE_TYPES.TEMPLATE.FORM,
+            CONSTANTS.DAMAGE_TYPES.TEMPLATE.LIST
+        ]
+    )
 
     loadTemplates([
         CONSTANTS.DAMAGE_TYPES.TEMPLATE.FORM,

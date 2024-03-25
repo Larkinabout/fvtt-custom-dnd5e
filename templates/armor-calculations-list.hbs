@@ -1,10 +1,10 @@
 {{#each items as |item key|}}
 <li class="custom-dnd5e-item flexrow" data-key="{{key}}">
     <i class="custom-dnd5e-drag flex0 fas fa-grip-lines" draggable="true"></i>
-    <input id="visible" name="{{key}}.visible" type="checkbox" data-tooltip="{{localize "CUSTOM_DND5E.form.checkbox.visible.tooltip"}}"{{#unless (boolfalse visible)}} checked{{/unless}}>
+    <input id="visible" name="{{key}}.visible" type="checkbox" data-tooltip="{{localize "CUSTOM_DND5E.form.checkbox.visible.tooltip"}}"{{#unless (customDnd5eBoolFalse visible)}} checked{{/unless}}>
     <div class="custom-dnd5e-col-group flexcol">
         <input id="key" name="{{key}}.key" type="hidden" value="{{key}}">
-        <input id="system" name="{{key}}.system" type="hidden" value="{{#if (boolfalse system)}}false{{else}}true{{/if}}">
+        <input id="system" name="{{key}}.system" type="hidden" value="{{#if (customDnd5eBoolFalse system)}}false{{else}}true{{/if}}">
         <div class="form-group">
             <label class="flex1" style="min-width:80px; max-width:100px;">{{localize "CUSTOM_DND5E.label"}}</label>
             <div class="form-fields">
@@ -18,7 +18,7 @@
             </div>
         </div>
     </div>
-    <button{{#unless (boolfalse system)}} class="hidden"{{/unless}} type="button" data-tooltip="{{localize "CUSTOM_DND5E.form.button.delete.tooltip"}}" data-action="delete" class="flex0 custom-dnd5e-list-button">
+    <button{{#unless (customDnd5eBoolFalse system)}} class="hidden"{{/unless}} type="button" data-tooltip="{{localize "CUSTOM_DND5E.form.button.delete.tooltip"}}" data-action="delete" class="flex0 custom-dnd5e-list-button">
         <i class="fas fa-xmark"></i>
     </button>
     <input id="delete" name="{{key}}.delete" type="hidden" value="false">

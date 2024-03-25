@@ -1,5 +1,5 @@
 import { CONSTANTS, SHEET_TYPE } from './constants.js'
-import { getSetting, registerMenu, registerSetting, makeBloodied, unmakeBloodied, rotateToken, unrotateToken, tintToken, untintToken, makeDead } from './utils.js'
+import { Logger, getSetting, registerMenu, registerSetting, makeBloodied, unmakeBloodied, rotateToken, unrotateToken, tintToken, untintToken, makeDead } from './utils.js'
 import { HouseRulesForm } from './forms/house-rules-form.js'
 
 /**
@@ -9,6 +9,17 @@ export function register () {
     registerSettings()
     registerHooks()
     registerBloodied()
+
+    Logger.debug(
+        'Loading templates',
+        [
+            CONSTANTS.HOUSE_RULES.TEMPLATE.FORM
+        ]
+    )
+
+    loadTemplates([
+        CONSTANTS.HOUSE_RULES.TEMPLATE.FORM
+    ])
 }
 
 /**
@@ -198,10 +209,6 @@ function registerSettings () {
             type: Number
         }
     )
-
-    loadTemplates([
-        CONSTANTS.HOUSE_RULES.TEMPLATE.FORM
-    ])
 }
 
 /**

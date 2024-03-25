@@ -1,5 +1,5 @@
 import { CONSTANTS, MODULE, SETTING_BY_ACTOR_TYPE, SHEET_TYPE } from './constants.js'
-import { checkEmpty, getFlag, setFlag, unsetFlag, getSetting, registerMenu, registerSetting, makeDead } from './utils.js'
+import { Logger, checkEmpty, getFlag, setFlag, unsetFlag, getSetting, registerMenu, registerSetting, makeDead } from './utils.js'
 import { CountersForm } from './forms/counters-form.js'
 
 /**
@@ -44,6 +44,16 @@ export function registerSettings () {
             config: false,
             type: Object
         }
+    )
+
+    Logger.debug(
+        'Loading templates',
+        [
+            CONSTANTS.COUNTERS.TEMPLATE.FORM,
+            CONSTANTS.COUNTERS.TEMPLATE.LIST,
+            CONSTANTS.COUNTERS.TEMPLATE.ADVANCED_OPTIONS_FORM,
+            CONSTANTS.COUNTERS.TEMPLATE.ADVANCED_OPTIONS_LIST
+        ]
     )
 
     loadTemplates([
