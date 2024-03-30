@@ -96,7 +96,7 @@ function registerHooks () {
         const proficientEquippedMod = getSetting(CONSTANTS.ENCUMBRANCE.PROFICIENT_EQUIPPED_ITEM_WEIGHT_MODIFIER.SETTING.KEY) || 0
         const unequippedMod = getSetting(CONSTANTS.ENCUMBRANCE.UNEQUIPPED_ITEM_WEIGHT_MODIFIER.SETTING.KEY) || 0
 
-        if (customDnd5eEquippedMod === 1 && proficientEquippedMod === 1 && unequippedMod === 1) return
+        if (equippedMod === 1 && proficientEquippedMod === 1 && unequippedMod === 1) return
 
         const actor = data.actor
         const encumbrance = actor.system.attributes.encumbrance
@@ -109,7 +109,7 @@ function registerHooks () {
                 const equipped = item.system.equipped
                 const proficient = item.system.prof?.multiplier >= 1
                 const mod = (proficient) ? Math.min(proficientEquippedMod, equippedMod) : equippedMod
-                return weight + ((customDnd5eEquipped) ? (item.system.totalWeight ?? 0) * mod : (item.system.totalWeight ?? 0) * unequippedMod || 0)
+                return weight + ((equipped) ? (item.system.totalWeight ?? 0) * mod : (item.system.totalWeight ?? 0) * unequippedMod || 0)
             }, 0)
 
         // [Optional] add Currency Weight (for non-transformed actors)

@@ -5,46 +5,46 @@
             <div class="form-group">
                 <label>{{localize "EFFECT.DND5E.StatusEncumbered"}}</label>
                 <div class="form-fields">
-                    <input id="threshold-encumbered" name="{{#if metric}}threshold.encumbered.metric{{else}}threshold.encumbered.imperial{{/if}}" type="number" value="{{#if metric}}{{threshold.encumbered.metric}}{{else}}{{threshold.encumbered.imperial}}{{/if}}"> 
+                    <input id="threshold-encumbered" name="threshold.encumbered.{{#if metric}}metric{{else}}imperial{{/if}}" type="number" value="{{#if metric}}{{threshold.encumbered.metric}}{{else}}{{threshold.encumbered.imperial}}{{/if}}"> 
                 </div>
             </div>
             <div class="form-group">
                 <label>{{localize "EFFECT.DND5E.StatusHeavilyEncumbered"}}</label>
                 <div class="form-fields">
-                    <input id="threshold-heavily-encumbered" name="{{#if metric}}threshold.heavilyEncumbered.metric{{else}}threshold.heavilyEncumbered.imperial{{/if}}" type="number" value="{{#if metric}}{{threshold.heavilyEncumbered.metric}}{{else}}{{threshold.heavilyEncumbered.imperial}}{{/if}}"> 
+                    <input id="threshold-heavily-encumbered" name="threshold.heavilyEncumbered.{{#if metric}}metric{{else}}imperial{{/if}}" type="number" value="{{#if metric}}{{threshold.heavilyEncumbered.metric}}{{else}}{{threshold.heavilyEncumbered.imperial}}{{/if}}"> 
                 </div>
             </div>
             <div class="form-group">
                 <label>{{localize "CUSTOM_DND5E.maximum"}}</label>
                 <div class="form-fields">
-                    <input id="threshold-maximum" name="{{#if metric}}threshold.maximum.metric{{else}}threshold.maximum.imperial{{/if}}" type="number" value="{{#if metric}}{{threshold.maximum.metric}}{{else}}{{threshold.maximum.imperial}}{{/if}}"> 
+                    <input id="threshold-maximum" name="threshold.maximum.{{#if metric}}metric{{else}}imperial{{/if}}" type="number" value="{{#if metric}}{{threshold.maximum.metric}}{{else}}{{threshold.maximum.imperial}}{{/if}}"> 
                 </div>
             </div>
             <h2>{{localize "CUSTOM_DND5E.speedReduction"}}</h2>
             <div class="form-group">
                 <label>{{localize "EFFECT.DND5E.StatusEncumbered"}}</label>
                 <div class="form-fields">
-                    <input id="speed-reduction-encumbered" name="speedReduction.encumbered" type="number" value="{{speedReduction.encumbered}}">
+                    <input id="speed-reduction-encumbered" name="speedReduction.encumbered.{{#if metric}}m{{else}}ft{{/if}}" type="number" value="{{#if metric}}{{speedReduction.encumbered.m}}{{else}}{{speedReduction.encumbered.ft}}{{/if}}">
                 </div>
             </div>
             <div class="form-group">
                 <label>{{localize "EFFECT.DND5E.StatusHeavilyEncumbered"}}</label>
                 <div class="form-fields">
-                    <input id="speed-reduction-heavily-encumbered" name="speedReduction.heavilyEncumbered" type="number" value="{{speedReduction.heavilyEncumbered}}"> 
+                    <input id="speed-reduction-heavily-encumbered" name="speedReduction.heavilyEncumbered.{{#if metric}}m{{else}}ft{{/if}}" type="number" value="{{#if metric}}{{speedReduction.heavilyEncumbered.m}}{{else}}{{speedReduction.heavilyEncumbered.ft}}{{/if}}"> 
                 </div>
             </div>
             <h2>{{localize "CUSTOM_DND5E.currencyPerWeight"}}</h2>
             <div class="form-group">
                 <label>{{localize "CUSTOM_DND5E.currencyPerWeight"}}</label>
                 <div class="form-fields">
-                    <input id="currency-per-weight" name="{{#if metric}}currencyPerWeight.metric{{else}}currencyPerWeight.imperial{{/if}}" type="number" value="{{#if metric}}{{currencyPerWeight.metric}}{{else}}{{currencyPerWeight.imperial}}{{/if}}"> 
+                    <input id="currency-per-weight" name="currencyPerWeight.{{#if metric}}metric{{else}}imperial{{/if}}" type="number" value="{{#if metric}}{{currencyPerWeight.metric}}{{else}}{{currencyPerWeight.imperial}}{{/if}}"> 
                 </div>
             </div>
             <h2>{{localize "CUSTOM_DND5E.vehicleWeightMultiplier"}}</h2>
             <div class="form-group">
                 <label>{{localize "CUSTOM_DND5E.vehicleWeightMultiplier"}}</label>
                 <div class="form-fields">
-                    <input id="vehicle-weight-multiplier" name="{{#if metric}}vehicleWeightMultiplier.metric{{else}}vehicleWeightMultiplier.imperial{{/if}}" type="number" value="{{#if metric}}{{vehicleWeightMultiplier.metric}}{{else}}{{vehicleWeightMultiplier.imperial}}{{/if}}"> 
+                    <input id="vehicle-weight-multiplier" name="vehicleWeightMultiplier.{{#if metric}}metric{{else}}imperial{{/if}}" type="number" value="{{#if metric}}{{vehicleWeightMultiplier.metric}}{{else}}{{vehicleWeightMultiplier.imperial}}{{/if}}"> 
                 </div>
             </div>
             <h2>{{localize "CUSTOM_DND5E.weightModifiers.label"}}</h2>
