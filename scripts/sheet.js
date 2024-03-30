@@ -248,8 +248,19 @@ function setBannerImage (sheetType, html) {
 
     if (!bannerImage) return
 
-    const sheetHeader = html[0].querySelector('.sheet-header')
-    sheetHeader && (sheetHeader.style.background = `transparent url("${bannerImage}") no-repeat center / cover`)
+    const style = document.createElement('style')
+
+    style.innerHTML = `
+    .dnd5e-theme-dark .dnd5e2.sheet.actor.character .window-content::before,
+    .dnd5e2.sheet.actor.character.dnd5e-theme-dark .window-content::before {
+        background: url("${bannerImage}") no-repeat top center / cover;
+    }
+
+    .dnd5e2.sheet.actor.character .sheet-header {
+        background: transparent url("${bannerImage}") no-repeat center / cover;
+    }
+    `
+    document.head.append(style)
 }
 
 /**
