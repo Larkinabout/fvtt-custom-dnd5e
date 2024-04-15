@@ -70,6 +70,8 @@ function registerHooks () {
     Hooks.on('renderActorSheet', (app, html, data) => {
         const sheetType = SHEET_TYPE[app.constructor.name]
 
+        if (!sheetType) return
+
         const setting = getSetting(CONSTANTS.CURRENCY.SETTING.KEY)
 
         if (sheetType.character && !sheetType.legacy) {

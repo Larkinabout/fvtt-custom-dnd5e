@@ -65,7 +65,9 @@ function registerHooks () {
      * To replace for ApplicationV2
      */
     Hooks.on('preRenderActorSheet', (app, data) => {
-        const actorSheetType = SHEET_TYPE[app.constructor.name]
+        const sheetType = SHEET_TYPE[app.constructor.name]
+
+        if (!sheetType) return
 
         const senses = getSetting(CONSTANTS.SENSES.SETTING.KEY)
         Object.entries(senses).forEach(([key, value]) => {
@@ -74,7 +76,7 @@ function registerHooks () {
                 if (!Object.hasOwn(data, 'senses')) {
                     data.senses = {}
                 }
-                data.senses[key] = (actorSheetType.legacy)
+                data.senses[key] = (sheetType.legacy)
                     ? `${value.label} ${flag}`
                     : { label: value.label, value: flag }
             }

@@ -343,6 +343,8 @@ function makeDeathSavesBlind (app, html, data) {
 
     const sheetType = SHEET_TYPE[app.constructor.name]
 
+    if (!sheetType) return
+
     if (sheetType.character) {
         if (sheetType.legacy) {
             html[0].querySelector('.death-saves .counter-value')?.remove()
@@ -516,7 +518,9 @@ function updateHp (actor, data) {
  * @param {object} data The data
  */
 function updateHpMeter (app, html, data) {
-    if (SHEET_TYPE[app.constructor.name].legacy || !SHEET_TYPE[app.constructor.name].character) return
+    const sheetType = SHEET_TYPE[app.constructor.name]
+
+    if (!sheetType || sheetType.legacy || !sheetType.character) return
 
     const actor = app.actor
     const hpValue = actor.system.attributes.hp.value

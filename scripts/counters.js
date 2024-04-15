@@ -68,17 +68,19 @@ export function registerSettings () {
  * HOOKS
  */
 Hooks.on('renderInnerActorSheet', (app, html, data) => {
-    const actorSheetType = SHEET_TYPE[app.constructor.name]
+    const sheetType = SHEET_TYPE[app.constructor.name]
 
-    if (actorSheetType.group) {
-        addCountersGroup(app, html, data, actorSheetType)
+    if (!sheetType) return
+
+    if (sheetType.group) {
+        addCountersGroup(app, html, data, sheetType)
         return
     }
 
-    if (actorSheetType) {
-        actorSheetType.legacy
-            ? addCountersLegacy(app, html, data, actorSheetType)
-            : addCounters(app, html, data, actorSheetType)
+    if (sheetType) {
+        sheetType.legacy
+            ? addCountersLegacy(app, html, data, sheetType)
+            : addCounters(app, html, data, sheetType)
     }
 })
 
@@ -278,14 +280,14 @@ function handleDecreaseAction (actor, key, trigger, type) {
 
 /**
  * Add counters to the group sheet
- * @param {object} app            The app
- * @param {object} html           The HTML
- * @param {object} data           The data
- * @param {string} actorSheetType The actor sheet type
+ * @param {object} app       The app
+ * @param {object} html      The HTML
+ * @param {object} data      The data
+ * @param {string} sheetType The actor sheet type
  */
-function addCountersGroup (app, html, data, actorSheetType) {
+function addCountersGroup (app, html, data, sheetType) {
     const actor = app.actor
-    const counters = game.settings.get(MODULE.ID, actorSheetType.countersSetting)
+    const counters = game.settings.get(MODULE.ID, sheetType.countersSetting)
 
     if (checkEmpty(counters)) return
 
@@ -317,14 +319,14 @@ function addCountersGroup (app, html, data, actorSheetType) {
 
 /**
  * Add counters to the sheet
- * @param {object} app            The app
- * @param {object} html           The HTML
- * @param {object} data           The data
- * @param {string} actorSheetType The actor sheet type
+ * @param {object} app       The app
+ * @param {object} html      The HTML
+ * @param {object} data      The data
+ * @param {string} sheetType The actor sheet type
  */
-function addCounters (app, html, data, actorSheetType) {
+function addCounters (app, html, data, sheetType) {
     const actor = app.actor
-    const counters = game.settings.get(MODULE.ID, actorSheetType.countersSetting)
+    const counters = game.settings.get(MODULE.ID, sheetType.countersSetting)
 
     if (checkEmpty(counters)) return
 
@@ -802,14 +804,14 @@ function getMax (actor, key) {
 
 /**
  * Add counters to the legacy sheet
- * @param {object} app            The app
- * @param {object} html           The HTML
- * @param {object} data           The data
- * @param {string} actorSheetType The actor sheet type
+ * @param {object} app       The app
+ * @param {object} html      The HTML
+ * @param {object} data      The data
+ * @param {string} sheetType The actor sheet type
  */
-function addCountersLegacy (app, html, data, actorSheetType) {
+function addCountersLegacy (app, html, data, sheetType) {
     const actor = app.actor
-    const counters = game.settings.get(MODULE.ID, actorSheetType.countersSetting)
+    const counters = game.settings.get(MODULE.ID, sheetType.countersSetting)
 
     if (checkEmpty(counters)) return
 

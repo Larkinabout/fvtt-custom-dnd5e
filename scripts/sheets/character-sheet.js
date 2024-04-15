@@ -1,7 +1,9 @@
 import { SHEET_TYPE } from '../constants.js'
 
 Hooks.on('preRenderActorSheet', (app, data) => {
-    if (!SHEET_TYPE[app.constructor.name].custom) return
+    const sheetType = SHEET_TYPE[app.constructor.name]
+
+    if (!sheetType || !sheetType.custom) return
 
     if (data.abilityRows?.top?.length) {
         data.abilityRows.bottom = [...data.abilityRows.bottom, ...data.abilityRows.top]

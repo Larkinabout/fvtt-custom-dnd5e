@@ -1,5 +1,5 @@
-import { MODULE, CONSTANTS, SHEET_TYPE } from './constants.js'
-import { Logger, checkEmpty, getSetting, registerMenu, registerSetting, resetDnd5eConfig } from './utils.js'
+import { CONSTANTS } from './constants.js'
+import { Logger, checkEmpty, registerMenu, registerSetting, resetDnd5eConfig } from './utils.js'
 import { EncumbranceForm } from './forms/encumbrance-form.js'
 
 /**
