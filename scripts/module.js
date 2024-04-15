@@ -22,6 +22,7 @@ import { register as registerSkills, setConfig as setSkills } from './skills.js'
 import { register as registerSpellSchools, setConfig as setSpellSchools } from './spell-schools.js'
 import { register as registerRadialStatusEffects } from './radial-status-effects.js'
 import { patchApplicationRender } from './patches/application-render.js'
+import { patchPrepareEncumbrance } from './patches/prepare-encumbrance.js'
 import { registerCharacterSheet } from './sheets/character-sheet.js'
 
 /**
@@ -41,6 +42,7 @@ Hooks.on('init', async () => {
     )
 
     patchApplicationRender()
+    patchPrepareEncumbrance()
     registerMigration()
     registerHouseRules()
     registerAbilities()

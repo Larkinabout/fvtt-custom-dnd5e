@@ -1,4 +1,4 @@
-import { CONSTANTS, SHEET_TYPE } from './constants.js'
+import { MODULE, CONSTANTS, SHEET_TYPE } from './constants.js'
 import { Logger, checkEmpty, getSetting, registerMenu, registerSetting, resetDnd5eConfig } from './utils.js'
 import { EncumbranceForm } from './forms/encumbrance-form.js'
 
@@ -10,7 +10,6 @@ export function register () {
     if (game.modules.get('variant-encumbrance-dnd5e')?.active) return
 
     registerSettings()
-    registerHooks()
 
     Logger.debug(
         'Loading templates',
@@ -80,55 +79,6 @@ function registerSettings () {
             default: 1
         }
     )
-}
-
-/**
- * Register hooks
- */
-function registerHooks () {
-    /**
-     * Modified from Actor5e._prepareEncumbrance
-     */
-    Hooks.on('preRenderActorSheet', (app, data) => {
-        if (!SHEET_TYPE[app.constructor.name]?.character) return
-
-        const equippedMod = getSetting(CONSTANTS.ENCUMBRANCE.EQUIPPED_ITEM_WEIGHT_MODIFIER.SETTING.KEY) || 0
-        const proficientEquippedMod = getSetting(CONSTANTS.ENCUMBRANCE.PROFICIENT_EQUIPPED_ITEM_WEIGHT_MODIFIER.SETTING.KEY) || 0
-        const unequippedMod = getSetting(CONSTANTS.ENCUMBRANCE.UNEQUIPPED_ITEM_WEIGHT_MODIFIER.SETTING.KEY) || 0
-
-        if (equippedMod === 1 && proficientEquippedMod === 1 && unequippedMod === 1) return
-
-        const actor = data.actor
-        const encumbrance = actor.system.attributes.encumbrance
-        const config = CONFIG.DND5E.encumbrance
-        const units = game.settings.get('dnd5e', 'metricWeightUnits') ? 'metric' : 'imperial'
-        // Get the total weight from items
-        let weight = actor.items
-            .filter(item => !item.container)
-            .reduce((weight, item) => {
-                const equipped = item.system.equipped
-                const proficient = item.system.prof?.multiplier >= 1
-                const mod = (proficient) ? Math.min(proficientEquippedMod, equippedMod) : equippedMod
-                return weight + ((equipped) ? (item.system.totalWeight ?? 0) * mod : (item.system.totalWeight ?? 0) * unequippedMod || 0)
-            }, 0)
-
-        // [Optional] add Currency Weight (for non-transformed actors)
-        const currency = actor.system.currency
-        if (game.settings.get('dnd5e', 'currencyWeight') && currency) {
-            const numCoins = Object.values(currency).reduce((val, denom) => val + Math.max(denom, 0), 0)
-            const currencyPerWeight = config.currencyPerWeight[units]
-            weight += numCoins / currencyPerWeight
-        }
-
-        encumbrance.value = weight.toNearest(0.1)
-        encumbrance.pct = Math.clamped((encumbrance.value * 100) / data.encumbrance.max, 0, 100)
-        encumbrance.encumbered = encumbrance.value > encumbrance.heavilyEncumbered
-
-        data.encumbrance.value = encumbrance.value
-        data.encumbrance.pct = encumbrance.pct
-
-        actor.updateEncumbrance()
-    })
 }
 
 /**
