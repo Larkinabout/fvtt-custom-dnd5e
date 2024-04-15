@@ -323,9 +323,16 @@ export function awardInspiration (rollType, entity, roll) {
     const d20Value = roll.terms.find(term => term.faces === 20).total
 
     if (awardInspirationD20Value === d20Value) {
-        actor.update({ 'system.attributes.inspiration': true })
+        let message = 'CUSTOM_DND5E.message.awardInspiration'
+
+        if (actor.system.attributes.inspiration) {
+            message = 'CUSTOM_DND5E.message.awardInspirationAlready'
+        } else {
+            actor.update({ 'system.attributes.inspiration': true })
+        }
+
         ChatMessage.create({
-            content: game.i18n.format('CUSTOM_DND5E.message.awardInspiration', { name: actor.name, value: awardInspirationD20Value })
+            content: game.i18n.format(message, { name: actor.name, value: awardInspirationD20Value })
         })
     }
 }
