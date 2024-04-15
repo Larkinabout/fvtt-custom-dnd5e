@@ -107,7 +107,12 @@ Custom D&D 5e will defer to the [Variant Encumbrance + Midi](https://foundryvtt.
 
 ## Required Modules
 ### [libWrapper](https://foundryvtt.com/packages/lib-wrapper)
-LibWrapper is used to wrap Foundry VTT's application render method to add data to the character sheets without editing the HTML. This should no longer be required with the release of Application V2.
+For developers, LibWrapper is used to patch:
+- **`Application.prototype._render`:** Allows adding data to the character sheets without editing the HTML. This should no longer be required with the release of Application V2.
+- **`CONFIG.Actor.documentClass.prototype._prepareEncumbrance`:** When the D&D 5e's 'Encumbrance Tracking' setting is set to 'Variant', avoids recalculating encumbrance as well as issues with encumbrance active effects applied during item updates/deletions.
+- **`Token.prototype._refreshEffects`:** When Custom D&D 5e's 'Radial Status Effects' setting is enabled.
+- **`Token.prototype._drawEffect`:** When Custom D&D 5e's 'Radial Status Effects' setting is enabled.
+- **`Token.prototype._drawOverlay`:** When Custom D&D 5e's 'Radial Status Effects' setting is enabled.
 
 ## Credits
 The Radial Status Effects feature is a modification of code developed by [Dorako](https://github.com/Dorako) under the MIT License, which is reproduced here: [Licence](./scripts/radial-status-effects.js)
