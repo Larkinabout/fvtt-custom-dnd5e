@@ -13,6 +13,7 @@ import { register as registerEncumbrance, setConfig as setEncumbrance } from './
 import { register as registerItemActionTypes, setConfig as setItemActionTypes } from './item-action-types.js'
 import { register as registerItemActivationCostTypes, setConfig as setItemActivationCostTypes } from './item-activation-cost-types.js'
 import { register as registerItemProperties, setConfig as setItemProperties } from './item-properties.js'
+import { register as registerItemRarity, setConfig as setItemRarity } from './item-rarity.js'
 import { register as registerLanguages, setConfig as setLanguages } from './languages.js'
 import { register as registerMigration, migrate } from './migration.js'
 import { register as registerMisc, setMaxLevel } from './misc.js'
@@ -56,6 +57,7 @@ Hooks.on('init', async () => {
     registerItemActionTypes()
     registerItemActivationCostTypes()
     registerItemProperties()
+    registerItemRarity()
     registerLanguages()
     registerSenses()
     registerSheet()
@@ -77,6 +79,7 @@ Hooks.on('init', async () => {
     setItemActionTypes(getSetting(CONSTANTS.ITEM_ACTION_TYPES.SETTING.KEY))
     setItemActivationCostTypes(getSetting(CONSTANTS.ITEM_ACTIVATION_COST_TYPES.SETTING.KEY))
     setItemProperties(getSetting(CONSTANTS.ITEM_PROPERTIES.SETTING.KEY))
+    setItemRarity(getSetting(CONSTANTS.ITEM_RARITY.SETTING.KEY))
     setLanguages(getSetting(CONSTANTS.LANGUAGES.SETTING.KEY))
     setSenses(getSetting(CONSTANTS.SENSES.SETTING.KEY))
     setSkills(getSetting(CONSTANTS.SKILLS.SETTING.KEY))

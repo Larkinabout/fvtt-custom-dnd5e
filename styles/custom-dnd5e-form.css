@@ -69,7 +69,7 @@
 .custom-dnd5e-form .fields {
     align-items: center;
     display: flex;
-    gap: 0.25em;
+    gap: 0.5em;
 }
 
 .custom-dnd5e-form .field {
@@ -119,7 +119,11 @@
     box-shadow: none;
 }
 
-.custom-dnd5e-list-button.disabled > i {
+.custom-dnd5e-list-button:disabled {
+    cursor: unset;
+}
+
+.custom-dnd5e-list-button:disabled > i {
     color: transparent;
 }
 
@@ -128,7 +132,7 @@
     outline: none;
 }
 
-.custom-dnd5e-form .custom-dnd5e-list-button.disabled:hover > i {
+.custom-dnd5e-form .custom-dnd5e-list-button:disabled:hover > i {
     text-shadow: none;
 }
 

@@ -205,6 +205,8 @@
 
     "CUSTOM_DND5E.form.itemProperties.title": "Configure Item Properties",
 
+    "CUSTOM_DND5E.form.itemRarity.title": "Configure Item Rarity",
+
     "CUSTOM_DND5E.form.languages.title": "Configure Languages",
 
     "CUSTOM_DND5E.form.senses.title": "Configure Senses",
@@ -294,6 +296,10 @@
     "CUSTOM_DND5E.menu.itemProperties.hint": "Configure Item Properties",
     "CUSTOM_DND5E.menu.itemProperties.label": "Configure Item Properties",
     "CUSTOM_DND5E.menu.itemProperties.name": "Configure Item Properties",
+
+    "CUSTOM_DND5E.menu.itemRarity.hint": "Configure Item Rarity",
+    "CUSTOM_DND5E.menu.itemRarity.label": "Configure Item Rarity",
+    "CUSTOM_DND5E.menu.itemRarity.name": "Configure Item Rarity",
 
     "CUSTOM_DND5E.menu.languages.hint": "Configure Languages",
     "CUSTOM_DND5E.menu.languages.label": "Configure Languages",

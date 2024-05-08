@@ -311,6 +311,19 @@ export const CONSTANTS = {
             LIST: 'modules/custom-dnd5e/templates/item-properties-list.hbs'
         }
     },
+    ITEM_RARITY: {
+        ID: 'itemRarity',
+        MENU: {
+            KEY: 'item-rarity-menu',
+            HINT: 'CUSTOM_DND5E.menu.itemRarity.hint',
+            ICON: 'fas fa-pen-to-square',
+            LABEL: 'CUSTOM_DND5E.menu.itemRarity.label',
+            NAME: 'CUSTOM_DND5E.menu.itemRarity.name'
+        },
+        SETTING: {
+            KEY: 'item-rarity'
+        }
+    },
     LANGUAGES: {
         ID: 'languages',
         MENU: {

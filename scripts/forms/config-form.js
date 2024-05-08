@@ -9,6 +9,7 @@ import { setConfig as setCurrency } from '../currency.js'
 import { setConfig as setDamageTypes } from '../damage-types.js'
 import { setConfig as setItemActionTypes } from '../item-action-types.js'
 import { setConfig as setItemActivationCostTypes } from '../item-activation-cost-types.js'
+import { setConfig as setItemRarity } from '../item-rarity.js'
 import { setConfig as setLanguages } from '../languages.js'
 import { setConfig as setSenses } from '../senses.js'
 import { setConfig as setSkills } from '../skills.js'
@@ -358,6 +359,23 @@ export class ItemActivationCostTypesForm extends ConfigForm {
         return mergeObject(super.defaultOptions, {
             id: `${MODULE.ID}-item-activation-cost-types-form`,
             title: game.i18n.localize('CUSTOM_DND5E.form.itemActivationCostTypes.title')
+        })
+    }
+}
+
+export class ItemRarityForm extends ConfigForm {
+    constructor () {
+        super()
+        this.requiresReload = false
+        this.settingKey = CONSTANTS.ITEM_RARITY.SETTING.KEY
+        this.setFunction = setItemRarity
+        this.type = 'item-rarity'
+    }
+
+    static get defaultOptions () {
+        return mergeObject(super.defaultOptions, {
+            id: `${MODULE.ID}-item-rarity-form`,
+            title: game.i18n.localize('CUSTOM_DND5E.form.itemRarity.title')
         })
     }
 }
