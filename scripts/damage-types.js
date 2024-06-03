@@ -63,8 +63,9 @@ export function setConfig (data = null) {
             .map(([key, value]) => [
                 key,
                 {
-                    label: game.i18n.localize(value.label),
+                    color: value.color,
                     icon: value.icon,
+                    label: game.i18n.localize(value.label),
                     reference: value.reference
                 }
             ])
@@ -77,6 +78,6 @@ export function setConfig (data = null) {
         return
     }
 
-    const config = buildConfig(data)
+    const config = buildConfig(foundry.utils.mergeObject(data, CONFIG.CUSTOM_DND5E[property]))
     config && (CONFIG.DND5E[property] = config)
 }

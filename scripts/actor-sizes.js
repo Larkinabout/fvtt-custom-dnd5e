@@ -65,6 +65,7 @@ export function setConfig (data = null) {
                 {
                     abbreviation: game.i18n.localize(value.abbreviation),
                     ...(value.capacityMultiplier !== undefined && { capacityMultiplier: value.capacityMultiplier }),
+                    hitDie: value.hitDie,
                     ...(value.dynamicTokenScale !== undefined && { dynamicTokenScale: value.dynamicTokenScale }),
                     label: game.i18n.localize(value.label),
                     ...(value.token !== undefined && { token: value.token })
@@ -79,6 +80,6 @@ export function setConfig (data = null) {
         return
     }
 
-    const config = buildConfig(data)
+    const config = buildConfig(foundry.utils.mergeObject(data, CONFIG.CUSTOM_DND5E[property]))
     config && (CONFIG.DND5E[property] = config)
 }

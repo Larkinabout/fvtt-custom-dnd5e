@@ -109,6 +109,6 @@ export function setConfig (data = null) {
         return
     }
 
-    const config = buildConfig(data)
+    const config = buildConfig(foundry.utils.mergeObject(data, CONFIG.CUSTOM_DND5E[property]))
     config && (CONFIG.DND5E[property] = config)
 }

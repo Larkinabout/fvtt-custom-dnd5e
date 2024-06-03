@@ -93,5 +93,5 @@ export function setConfig (data = null) {
         return
     }
 
-    data && (CONFIG.DND5E.encumbrance = data)
+    data && (CONFIG.DND5E.encumbrance = foundry.utils.mergeObject(data, CONFIG.CUSTOM_DND5E.encumbrance))
 }
