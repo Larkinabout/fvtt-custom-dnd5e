@@ -85,7 +85,7 @@ Hooks.on('renderInnerActorSheet', (app, html, data) => {
 })
 
 Hooks.on('preUpdateActor', (actor, data, options) => {
-    const currentHp = getProperty(data ?? {}, 'system.attributes.hp.value')
+    const currentHp = foundry.utils.getProperty(data ?? {}, 'system.attributes.hp.value')
 
     if (typeof currentHp === 'undefined') return
 
@@ -98,7 +98,7 @@ Hooks.on('preUpdateActor', (actor, data, options) => {
 })
 
 Hooks.on('updateActor', (actor, data, options) => {
-    const hp = getProperty(data ?? {}, 'system.attributes.hp.value')
+    const hp = foundry.utils.getProperty(data ?? {}, 'system.attributes.hp.value')
 
     if (hp === 'undefined') return
 

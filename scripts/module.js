@@ -30,7 +30,7 @@ import { registerCharacterSheet } from './sheets/character-sheet.js'
  * HOOKS
  */
 Hooks.on('init', async () => {
-    CONFIG.CUSTOM_DND5E = deepClone(CONFIG.DND5E)
+    CONFIG.CUSTOM_DND5E = foundry.utils.deepClone(CONFIG.DND5E)
 
     registerSetting(
         CONSTANTS.DEBUG.SETTING.KEY,

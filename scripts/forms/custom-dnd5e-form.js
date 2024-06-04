@@ -11,7 +11,7 @@ export class CustomDnd5eForm extends FormApplication {
     }
 
     static get defaultOptions () {
-        return mergeObject(super.defaultOptions, {
+        return foundry.utils.mergeObject(super.defaultOptions, {
             classes: [`${MODULE.ID}-app`, 'sheet'],
             dragDrop: [{
                 dragSelector: '.custom-dnd5e-drag',

@@ -21,7 +21,7 @@ export class CountersAdvancedOptionsForm extends CustomDnd5eForm {
     }
 
     static get defaultOptions () {
-        return mergeObject(super.defaultOptions, {
+        return foundry.utils.mergeObject(super.defaultOptions, {
             id: `${MODULE.ID}-${form}`,
             template: `modules/${MODULE.ID}/templates/${form}.hbs`,
             title: game.i18n.localize(`CUSTOM_DND5E.form.${id}.triggers.title`)
@@ -153,7 +153,7 @@ export class CountersAdvancedOptionsForm extends CustomDnd5eForm {
         Object.entries(formData).forEach(([key, value]) => {
             if (Array.isArray(value) || key.split('.').pop() === 'key') return
             if (ints.includes(key.split('.').pop())) { value = parseInt(value) }
-            setProperty(this.setting, key, value)
+            foundry.utils.setProperty(this.setting, key, value)
         })
 
         // Create new key and delete old key while keeping order of counters

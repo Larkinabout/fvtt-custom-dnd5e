@@ -25,7 +25,7 @@ class ConfigForm extends CustomDnd5eForm {
     }
 
     static get defaultOptions () {
-        return mergeObject(super.defaultOptions, {
+        return foundry.utils.mergeObject(super.defaultOptions, {
             template: CONSTANTS.CONFIG.TEMPLATE.FORM
         })
     }
@@ -33,7 +33,7 @@ class ConfigForm extends CustomDnd5eForm {
     async getData () {
         this.config = foundry.utils.deepClone(CONFIG.DND5E[this.type])
         this.setting = getSetting(this.settingKey)
-        const data = mergeObject(this.setting, this.config)
+        const data = foundry.utils.mergeObject(this.setting, this.config)
 
         const labelise = (data) => {
             Object.entries(data).forEach(([key, value]) => {
@@ -158,7 +158,7 @@ class ConfigForm extends CustomDnd5eForm {
                 value = false
             }
             const key = formData[`${propertyPath}.key`]
-            setProperty(data, `${propertyPathPrefix}${key}.${propertyKey}`, value)
+            foundry.utils.setProperty(data, `${propertyPathPrefix}${key}.${propertyKey}`, value)
 
             if (propertyPathSuffix !== key) {
                 keyData[propertyPath] = key
@@ -170,7 +170,7 @@ class ConfigForm extends CustomDnd5eForm {
                 const updateData = {}
                 let requiresUpdate = false
                 this.actorProperties.forEach(property => {
-                    const oldData = getProperty(actor, property)
+                    const oldData = foundry.utils.getProperty(actor, property)
                     if (!Array.isArray(oldData) && !(oldData instanceof Set)) return
                     const newData = []
                     oldData.forEach(value => {
@@ -206,7 +206,7 @@ export class AbilitiesForm extends ConfigForm {
     }
 
     static get defaultOptions () {
-        return mergeObject(super.defaultOptions, {
+        return foundry.utils.mergeObject(super.defaultOptions, {
             id: `${MODULE.ID}-abilities-form`,
             template: CONSTANTS.ABILITIES.TEMPLATE.FORM,
             title: game.i18n.localize('CUSTOM_DND5E.form.abilities.title')
@@ -229,7 +229,7 @@ export class ActorSizesForm extends ConfigForm {
     }
 
     static get defaultOptions () {
-        return mergeObject(super.defaultOptions, {
+        return foundry.utils.mergeObject(super.defaultOptions, {
             id: `${MODULE.ID}-actor-sizes-form`,
             template: CONSTANTS.ACTOR_SIZES.TEMPLATE.FORM,
             title: game.i18n.localize('CUSTOM_DND5E.form.actorSizes.title')
@@ -252,7 +252,7 @@ export class ArmorCalculationsForm extends ConfigForm {
     }
 
     static get defaultOptions () {
-        return mergeObject(super.defaultOptions, {
+        return foundry.utils.mergeObject(super.defaultOptions, {
             id: `${MODULE.ID}-armor-calculations-form`,
             template: CONSTANTS.ARMOR_CALCULATIONS.TEMPLATE.FORM,
             title: game.i18n.localize('CUSTOM_DND5E.form.armorCalculations.title')
@@ -275,7 +275,7 @@ export class ArmorTypesForm extends ConfigForm {
     }
 
     static get defaultOptions () {
-        return mergeObject(super.defaultOptions, {
+        return foundry.utils.mergeObject(super.defaultOptions, {
             id: `${MODULE.ID}-armor-types-form`,
             title: game.i18n.localize('CUSTOM_DND5E.form.armorTypes.title')
         })
@@ -292,7 +292,7 @@ export class CurrencyForm extends ConfigForm {
     }
 
     static get defaultOptions () {
-        return mergeObject(super.defaultOptions, {
+        return foundry.utils.mergeObject(super.defaultOptions, {
             id: `${MODULE.ID}-currency-form`,
             template: CONSTANTS.CURRENCY.TEMPLATE.FORM,
             title: game.i18n.localize('CUSTOM_DND5E.form.currency.title')
@@ -316,7 +316,7 @@ export class DamageTypesForm extends ConfigForm {
     }
 
     static get defaultOptions () {
-        return mergeObject(super.defaultOptions, {
+        return foundry.utils.mergeObject(super.defaultOptions, {
             id: `${MODULE.ID}-damage-types-form`,
             template: CONSTANTS.DAMAGE_TYPES.TEMPLATE.FORM,
             title: game.i18n.localize('CUSTOM_DND5E.form.damageTypes.title')
@@ -339,7 +339,7 @@ export class ItemActionTypesForm extends ConfigForm {
     }
 
     static get defaultOptions () {
-        return mergeObject(super.defaultOptions, {
+        return foundry.utils.mergeObject(super.defaultOptions, {
             id: `${MODULE.ID}-item-action-types-form`,
             title: game.i18n.localize('CUSTOM_DND5E.form.itemActionTypes.title')
         })
@@ -356,7 +356,7 @@ export class ItemActivationCostTypesForm extends ConfigForm {
     }
 
     static get defaultOptions () {
-        return mergeObject(super.defaultOptions, {
+        return foundry.utils.mergeObject(super.defaultOptions, {
             id: `${MODULE.ID}-item-activation-cost-types-form`,
             title: game.i18n.localize('CUSTOM_DND5E.form.itemActivationCostTypes.title')
         })
@@ -373,7 +373,7 @@ export class ItemRarityForm extends ConfigForm {
     }
 
     static get defaultOptions () {
-        return mergeObject(super.defaultOptions, {
+        return foundry.utils.mergeObject(super.defaultOptions, {
             id: `${MODULE.ID}-item-rarity-form`,
             title: game.i18n.localize('CUSTOM_DND5E.form.itemRarity.title')
         })
@@ -390,7 +390,7 @@ export class LanguagesForm extends ConfigForm {
     }
 
     static get defaultOptions () {
-        return mergeObject(super.defaultOptions, {
+        return foundry.utils.mergeObject(super.defaultOptions, {
             id: `${MODULE.ID}-languages-form`,
             title: game.i18n.localize('CUSTOM_DND5E.form.languages.title')
         })
@@ -407,7 +407,7 @@ export class SensesForm extends ConfigForm {
     }
 
     static get defaultOptions () {
-        return mergeObject(super.defaultOptions, {
+        return foundry.utils.mergeObject(super.defaultOptions, {
             id: `${MODULE.ID}-senses-form`,
             title: game.i18n.localize('CUSTOM_DND5E.form.senses.title')
         })
@@ -424,7 +424,7 @@ export class SkillsForm extends ConfigForm {
     }
 
     static get defaultOptions () {
-        return mergeObject(super.defaultOptions, {
+        return foundry.utils.mergeObject(super.defaultOptions, {
             id: `${MODULE.ID}-skills-form`,
             template: CONSTANTS.SKILLS.TEMPLATE.FORM,
             title: game.i18n.localize('CUSTOM_DND5E.form.skills.title')
@@ -447,7 +447,7 @@ export class SpellSchoolsForm extends ConfigForm {
     }
 
     static get defaultOptions () {
-        return mergeObject(super.defaultOptions, {
+        return foundry.utils.mergeObject(super.defaultOptions, {
             id: `${MODULE.ID}-spell-schools-form`,
             template: CONSTANTS.SPELL_SCHOOLS.TEMPLATE.FORM,
             title: game.i18n.localize('CUSTOM_DND5E.form.spellSchools.title')

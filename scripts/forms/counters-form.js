@@ -15,7 +15,7 @@ export class CountersForm extends CustomDnd5eForm {
     }
 
     static get defaultOptions () {
-        return mergeObject(super.defaultOptions, {
+        return foundry.utils.mergeObject(super.defaultOptions, {
             id: `${MODULE.ID}-${form}`,
             template: `modules/${MODULE.ID}/templates/${form}.hbs`,
             title: game.i18n.localize(`CUSTOM_DND5E.form.${id}.title`),
@@ -134,7 +134,7 @@ export class CountersForm extends CustomDnd5eForm {
             const actorType = arr.slice(0, 1).join('.')
             const property = arr.slice(1, 3).join('.')
             const setting = this.settings[actorType]
-            setProperty(setting, property, value)
+            foundry.utils.setProperty(setting, property, value)
         })
 
         await Promise.all([

@@ -66,7 +66,32 @@ function registerPatches () {
 
 function tokenRefreshEffectsPatch (wrapped, ...args) {
     wrapped(...args)
-    updateEffects(this)
+
+    let i = 0
+    const gridSize = this.scene?.grid?.size ?? 100
+    const bg = this.effects.bg.clear()
+
+    for (const effect of this.effects.children) {
+        if (effect === bg) continue
+
+        // Overlay effect
+        if (effect === this.effects.overlay) continue
+
+        // Status effect
+        else {
+            effect.anchor.set(0.5)
+            const iconScale = getIconScale(Math.min(this.document?.height, this.document?.width))
+            const gridScale = gridSize / 100
+            const scaledSize = 12 * iconScale * gridScale
+
+            effect.width = scaledSize
+            effect.height = scaledSize
+
+            updateIconPosition(effect, i, this)
+            drawBackground(effect, bg, gridScale)
+            i++
+        }
+    }
 }
 
 async function tokenDrawEffectPatch (wrapped, src, tint, overlay = false) {
@@ -74,8 +99,9 @@ async function tokenDrawEffectPatch (wrapped, src, tint, overlay = false) {
 
     if (!src) return
 
-    const texture = await loadTexture(src, { fallback: 'icons/svg/hazard.svg' })
-    const icon = new PIXI.Sprite(texture)
+    const tex = await loadTexture(src, { fallback: 'icons/svg/hazard.svg' })
+    const icon = new PIXI.Sprite(tex)
+    icon.tint = tint ?? 0xFFFFFF
 
     if (!overlay && !src.endsWith('.svg')) {
         const size = Math.min(icon.width, icon.height)
@@ -97,55 +123,8 @@ async function tokenDrawOverlayPatch (wrapped, src, tint) {
 
     const icon = await this._drawEffect(src, tint, true)
     if (icon) icon.alpha = 0.8
+    this.effects.overlay = icon ?? null
     return icon
-}
-
-/**
- * Count effects for radial
- * @param {object} token The token
- * @returns {number}     The number of effects to include in the radial
- */
-function getEffectsLen (token) {
-    if (!token) return 0
-
-    const tokenEffectsLen = token.document.effects?.length || 0
-    const actorEffectsLen = token?.actor?.temporaryEffects.length || 0
-    const overlay = token?.actor?.temporaryEffects.some(effect => !!effect.getFlag('core', 'overlay'))
-
-    // Only exclude one overlay as the rest go into the radial
-    return tokenEffectsLen + actorEffectsLen - ((overlay) ? 1 : 0)
-}
-
-function updateEffects (token) {
-    const effectsLen = getEffectsLen(token)
-
-    if (effectsLen > 0 && token.effects.children.length > 0) {
-        const background = token.effects.children[0]
-
-        if (!(background instanceof PIXI.Graphics)) return
-
-        background.clear()
-
-        const gridSize = token?.scene?.grid?.size ?? 100
-
-        const icons = token.effects.children.slice(1, 1 + effectsLen)
-
-        icons.forEach((icon, index, icons) => {
-            if (!(icon instanceof PIXI.Sprite)) return
-
-            icon.anchor.set(0.5)
-
-            const iconScale = getIconScale(Math.min(token?.document?.height, token?.document?.width))
-            const gridScale = gridSize / 100
-            const scaledSize = 12 * iconScale * gridScale
-
-            icon.width = scaledSize
-            icon.height = scaledSize
-
-            updateIconPosition(icon, index, token)
-            drawBackground(icon, background, gridScale)
-        })
-    }
 }
 
 function getIconScale (size) {

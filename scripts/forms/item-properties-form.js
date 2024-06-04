@@ -18,7 +18,7 @@ export class ItemPropertiesForm extends CustomDnd5eForm {
     }
 
     static get defaultOptions () {
-        return mergeObject(super.defaultOptions, {
+        return foundry.utils.mergeObject(super.defaultOptions, {
             id: `${MODULE.ID}-item-properties-form`,
             template: CONSTANTS.ITEM_PROPERTIES.TEMPLATE.FORM,
             title: game.i18n.localize('CUSTOM_DND5E.form.itemProperties.title')
@@ -116,7 +116,7 @@ export class ItemPropertiesForm extends CustomDnd5eForm {
                 if (value === 'true') { return }
                 value = false
             }
-            setProperty(this.setting, key, value)
+            foundry.utils.setProperty(this.setting, key, value)
         })
 
         await setSetting(this.settingKey, this.setting)
