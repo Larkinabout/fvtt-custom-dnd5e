@@ -29,7 +29,7 @@ async function renderPatch (force = false, options = {}) {
     if (this.popOut) ui.windows[this.appId] = this
     const data = await this.getData(this.options)
 
-    this._callHooks('preRender', this, data)
+    this._callHooks('preRender', data)
 
     // Store scroll positions
     if (element.length && this.options.scrollY) this._saveScrollPositions(element)
@@ -38,7 +38,7 @@ async function renderPatch (force = false, options = {}) {
     const inner = await this._renderInner(data)
     let html = inner
 
-    this._callHooks('renderInner', this, html, data)
+    this._callHooks('renderInner', html, data)
 
     // If the application already exists in the DOM, replace the inner content
     if (element.length) this._replaceHTML(element, html)

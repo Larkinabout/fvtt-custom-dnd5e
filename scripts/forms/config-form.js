@@ -49,7 +49,15 @@ class ConfigForm extends CustomDnd5eForm {
 
         labelise(data)
 
-        return { items: data }
+        const context = { items: data }
+        const selects = this._getSelects()
+        if (selects) context.selects = selects
+
+        return context
+    }
+
+    _getSelects () {
+        return null
     }
 
     activateListeners (html) {
@@ -213,7 +221,21 @@ export class AbilitiesForm extends ConfigForm {
         })
     }
 
+    _getSelects () {
+        return {
+            type: {
+                choices: {
+                    mental: 'CUSTOM_DND5E.mental',
+                    physical: 'CUSTOM_DND5E.physical'
+                }
+            }
+        }
+    }
+
     async _getHtml (data) {
+        const selects = this._getSelects()
+        if (selects) data.selects = selects
+
         const template = await renderTemplate(CONSTANTS.ABILITIES.TEMPLATE.LIST, data)
         return template
     }

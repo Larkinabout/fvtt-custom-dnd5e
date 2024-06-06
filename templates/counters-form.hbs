@@ -13,21 +13,30 @@
                 <i class="fa-solid fa-people-group"></i>
                 {{localize "CUSTOM_DND5E.groups"}}
             </a>
+            <a class="item" data-tab="items" style="gap:0.25rem; align-items: center; display:inline-flex;">
+                <dnd5e-icon src="systems/dnd5e/icons/svg/backpack.svg"></dnd5e-icon>
+                {{localize "CUSTOM_DND5E.items"}}
+            </a>
         </nav>
         <div class="scrollable">
             <section class="tab active" data-actor-type="character" data-tab="characters">
                 <ul class="custom-dnd5e-list flexcol">
-                    {{> "modules/custom-dnd5e/templates/counters-list.hbs" actorType="character" counters=settings.character}}
+                    {{> "modules/custom-dnd5e/templates/counters-list.hbs" actorType="character" counters=settings.character selects=selects}}
                 </ul>
             </section>
             <section class="tab" data-actor-type="npc" data-tab="npcs">
                 <ul class="custom-dnd5e-list flexcol">
-                    {{> "modules/custom-dnd5e/templates/counters-list.hbs" actorType="npc" counters=settings.npc}}
+                    {{> "modules/custom-dnd5e/templates/counters-list.hbs" actorType="npc" counters=settings.npc selects=selects}}
                 </ul>
             </section>
             <section class="tab" data-actor-type="group" data-tab="groups">
                 <ul class="custom-dnd5e-list flexcol">
-                    {{> "modules/custom-dnd5e/templates/counters-list.hbs" actorType="group" counters=settings.group}}
+                    {{> "modules/custom-dnd5e/templates/counters-list.hbs" actorType="group" counters=settings.group selects=selects}}
+                </ul>
+            </section>
+            <section class="tab" data-actor-type="item" data-tab="items">
+                <ul class="custom-dnd5e-list flexcol">
+                    {{> "modules/custom-dnd5e/templates/counters-list.hbs" actorType="item" counters=settings.item selects=selects}}
                 </ul>
             </section>
         </div>

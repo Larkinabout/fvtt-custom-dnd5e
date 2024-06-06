@@ -12,12 +12,7 @@
         <div class="field">
             <label>{{localize "CUSTOM_DND5E.type"}}</label>
             <select id="type" name="{{../actorType}}.{{key}}.type">
-                {{#select type}}
-                <option value="checkbox">{{localize "CUSTOM_DND5E.checkbox"}}</option>
-                <option value="fraction">{{localize "CUSTOM_DND5E.fraction"}}</option>
-                <option value="number">{{localize "CUSTOM_DND5E.number"}}</option>
-                <option value="successFailure">{{localize "CUSTOM_DND5E.successFailure"}}</option>
-                {{/select}}
+                {{selectOptions ../selects.type.choices selected=type localize=true}}
             </select>
         </div>
     </div>

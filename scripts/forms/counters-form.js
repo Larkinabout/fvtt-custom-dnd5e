@@ -27,14 +27,29 @@ export class CountersForm extends CustomDnd5eForm {
         })
     }
 
+    #getSelects () {
+        return {
+            type: {
+                choices: {
+                    checkbox: 'CUSTOM_DND5E.checkbox',
+                    fraction: 'CUSTOM_DND5E.fraction',
+                    number: 'CUSTOM_DND5E.number',
+                    successFailure: 'CUSTOM_DND5E.successFailure'
+                }
+            }
+        }
+    }
+
     async getData () {
         this.settings = {
             character: getSetting(CONSTANTS.COUNTERS.SETTING.CHARACTER_COUNTERS.KEY) || {},
             group: getSetting(CONSTANTS.COUNTERS.SETTING.GROUP_COUNTERS.KEY) || {},
+            item: getSetting(CONSTANTS.COUNTERS.SETTING.ITEM_COUNTERS.KEY) || {},
             npc: getSetting(CONSTANTS.COUNTERS.SETTING.NPC_COUNTERS.KEY) || {}
         }
         return {
-            settings: this.settings
+            settings: this.settings,
+            selects: this.#getSelects()
         }
     }
 
@@ -80,7 +95,11 @@ export class CountersForm extends CustomDnd5eForm {
         const scrollable = list.closest('.scrollable')
 
         const key = randomID()
-        const data = { actorType, counters: { [key]: {} } }
+        const data = {
+            actorType,
+            counters: { [key]: {} },
+            selects: this.#getSelects()
+        }
 
         const template = await renderTemplate(CONSTANTS.COUNTERS.TEMPLATE.LIST, data)
 
@@ -140,6 +159,7 @@ export class CountersForm extends CustomDnd5eForm {
         await Promise.all([
             setSetting(CONSTANTS.COUNTERS.SETTING.CHARACTER_COUNTERS.KEY, this.settings.character),
             setSetting(CONSTANTS.COUNTERS.SETTING.GROUP_COUNTERS.KEY, this.settings.group),
+            setSetting(CONSTANTS.COUNTERS.SETTING.ITEM_COUNTERS.KEY, this.settings.item),
             setSetting(CONSTANTS.COUNTERS.SETTING.NPC_COUNTERS.KEY, this.settings.npc)
         ])
     }

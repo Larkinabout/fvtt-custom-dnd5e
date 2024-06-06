@@ -37,6 +37,15 @@ export class HouseRulesForm extends CustomDnd5eForm {
         data.awardInspirationD20Value = getSetting(CONSTANTS.INSPIRATION.SETTING.AWARD_INSPIRATION_D20_VALUE.KEY)
         data.awardInspirationRollTypes = getSetting(CONSTANTS.INSPIRATION.SETTING.AWARD_INSPIRATION_ROLL_TYPES.KEY)
         data.proneRotation = getSetting(CONSTANTS.PRONE.SETTING.PRONE_ROTATION.KEY)
+        data.selects = {
+            deathSavesRollMode: {
+                choices: {
+                    publicroll: 'CHAT.RollPublic',
+                    blindroll: 'CHAT.RollBlind',
+                    gmroll: 'CHAT.RollPrivate'
+                }
+            }
+        }
 
         return data
     }

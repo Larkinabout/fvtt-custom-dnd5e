@@ -1,4 +1,4 @@
-import { CONSTANTS, MODULE, SETTING_BY_ACTOR_TYPE} from '../constants.js'
+import { CONSTANTS, MODULE, SETTING_BY_ENTITY_TYPE } from '../constants.js'
 import { getFlag, setFlag, unsetFlag, setSetting, Logger } from '../utils.js'
 import { CustomDnd5eForm } from './custom-dnd5e-form.js'
 
@@ -28,14 +28,61 @@ export class CountersAdvancedOptionsForm extends CustomDnd5eForm {
         })
     }
 
+    #getSelects (type) {
+        const triggerChoices = {}
+
+        if (type !== 'checkbox') {
+            triggerChoices.counterValue = 'CUSTOM_DND5E.form.counters.triggers.trigger.choices.counterValue'
+        }
+
+        triggerChoices.zeroHp = 'CUSTOM_DND5E.form.counters.triggers.trigger.choices.zeroHp'
+        triggerChoices.zeroHpCombatEnd = 'CUSTOM_DND5E.form.counters.triggers.trigger.choices.zeroHpCombatEnd'
+        triggerChoices.halfHp = 'CUSTOM_DND5E.form.counters.triggers.trigger.choices.halfHp'
+        triggerChoices.shortRest = 'CUSTOM_DND5E.shortRest'
+        triggerChoices.longRest = 'CUSTOM_DND5E.longRest'
+        // triggerChoices.roll1 = 'CUSTOM_DND5E.form.counters.triggers.trigger.choices.roll1'
+        // triggerChoices.roll20 = 'CUSTOM_DND5E.form.counters.triggers.trigger.choices.roll20'
+
+        const actionChoices = {}
+
+        if (type !== 'checkbox') {
+            actionChoices.increase = 'CUSTOM_DND5E.increase'
+            actionChoices.decrease = 'CUSTOM_DND5E.decrease'
+            actionChoices.dead = 'CUSTOM_DND5E.dead'
+        } else {
+            actionChoices.check = 'CUSTOM_DND5E.check'
+            actionChoices.uncheck = 'CUSTOM_DND5E.uncheck'
+        }
+
+        return {
+            role: {
+                choices: {
+                    1: 'USER.RolePlayer',
+                    2: 'USER.RoleTrusted',
+                    3: 'USER.RoleAssistant',
+                    4: 'USER.RoleGamemaster'
+                }
+            },
+            trigger: {
+                choices: triggerChoices
+            },
+            action: {
+                choices: actionChoices
+            }
+        }
+    }
+
     async getData () {
+        const type = this.setting[this.key]?.type || this.type
+
         return {
             key: this.key,
             viewRole: this.setting[this.key]?.viewRole || 1,
             editRole: this.setting[this.key]?.editRole || 1,
             max: this.setting[this.key]?.max,
             type: this.setting[this.key]?.type || this.type,
-            triggers: this.setting[this.key]?.triggers || []
+            triggers: this.setting[this.key]?.triggers || [],
+            selects: this.#getSelects(type)
         }
     }
 
@@ -48,13 +95,16 @@ export class CountersAdvancedOptionsForm extends CustomDnd5eForm {
             const el = {}
             el.trigger = item.querySelector('#trigger')
             el.triggerValueGroup = item.querySelector('#trigger-value').closest('.form-group')
-            // el.trigger.addEventListener('change', () => { this.#onChangeTrigger(el) })
+            el.trigger.addEventListener('change', () => { this.#onChangeTrigger(el) })
 
             el.action = item.querySelector('#action')
             el.actionIncrease = el.action.querySelector('#increase')
             el.actionDecrease = el.action.querySelector('#decrease')
             el.actionValueGroup = item.querySelector('#action-value').closest('.form-group')
-            // el.action.addEventListener('change', () => { this.#onChangeAction(el) })
+            el.action.addEventListener('change', () => { this.#onChangeAction(el) })
+
+            this.#onChangeTrigger(el)
+            this.#onChangeAction(el)
         })
     }
 
@@ -68,7 +118,7 @@ export class CountersAdvancedOptionsForm extends CustomDnd5eForm {
         const trigger = (type === 'checkbox') ? 'zeroHp' : 'counterValue'
         const action = (type === 'checkbox') ? 'check' : 'dead'
 
-        const template = await this._getHtml({ type, triggers: [{ action, trigger, key, type }] })
+        const template = await this._getHtml({ type, triggers: [{ action, trigger, key, type }], selects: this.#getSelects(type) })
 
         list.insertAdjacentHTML('beforeend', template)
 
@@ -198,7 +248,7 @@ export class CountersAdvancedOptionsForm extends CustomDnd5eForm {
         this.setting[this.key].label = this.label
         this.setting[this.key].type = this.type
 
-        await setSetting(SETTING_BY_ACTOR_TYPE.COUNTERS[this.actorType], this.setting)
+        await setSetting(SETTING_BY_ENTITY_TYPE.COUNTERS[this.actorType], this.setting)
 
         this.countersForm.render(true)
     }

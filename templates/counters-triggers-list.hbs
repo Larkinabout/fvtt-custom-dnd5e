@@ -6,20 +6,7 @@
             <label class="flex1" style="min-width:80px; max-width:100px;">{{localize "CUSTOM_DND5E.trigger"}}</label>
             <div class="form-fields">
                 <select id="trigger" name="trigger">
-                    {{#select trigger}}
-                    {{#unless (customDnd5eEq ../type "checkbox")}}
-                    <option id="counterValue" value="counterValue">{{localize "CUSTOM_DND5E.form.counters.triggers.trigger.choices.counterValue"}}</option>
-                    {{/unless}}
-                    <option id="zeroHp" value="zeroHp">{{localize "CUSTOM_DND5E.form.counters.triggers.trigger.choices.zeroHp"}}</option>
-                    <option id="zeroHpCombatEnd" value="zeroHpCombatEnd">{{localize "CUSTOM_DND5E.form.counters.triggers.trigger.choices.zeroHpCombatEnd"}}</option>
-                    <option id="halfHp" value="halfHp">{{localize "CUSTOM_DND5E.form.counters.triggers.trigger.choices.halfHp"}}</option>
-                    <option id="shortRest" value="shortRest">{{localize "CUSTOM_DND5E.shortRest"}}</option>
-                    <option id="longRest" value="longRest">{{localize "CUSTOM_DND5E.longRest"}}</option>
-                    {{!--
-                    <option id="roll1" value="roll1">{{localize "CUSTOM_DND5E.form.counters.triggers.trigger.choices.roll1"}}</option>
-                    <option id="roll20" value="roll20">{{localize "CUSTOM_DND5E.form.counters.triggers.trigger.choices.roll20"}}</option>
-                    --}}
-                    {{/select}}
+                    {{selectOptions ../selects.trigger.choices selected=trigger localize=true}}
                 </select>
             </div>
         </div>
@@ -33,17 +20,7 @@
             <label class="flex1" style="min-width:80px; max-width:100px;">{{localize "CUSTOM_DND5E.action"}}</label>
             <div class="form-fields">
                 <select id="action" name="action">
-                    {{#select action}}
-                    {{#unless (customDnd5eEq ../type "checkbox")}}
-                    <option id="increase"{{#if (customDnd5eEq trigger "counterValue")}} class="hidden"{{/if}} value="increase">{{localize "CUSTOM_DND5E.increase"}}</option>
-                    <option id="decrease"{{#if (customDnd5eEq trigger "counterValue")}} class="hidden"{{/if}} value="decrease">{{localize "CUSTOM_DND5E.decrease"}}</option>
-                    <option id="dead" value="dead">{{localize "CUSTOM_DND5E.dead"}}</option>
-                    {{/unless}}
-                    {{#if (customDnd5eEq ../type "checkbox")}}
-                    <option id="check" value="check">{{localize "CUSTOM_DND5E.check"}}</option>
-                    <option id="uncheck" value="uncheck">{{localize "CUSTOM_DND5E.uncheck"}}</option>
-                    {{/if}}
-                    {{/select}}
+                    {{selectOptions ../selects.action.choices selected=action localize=true}}
                 </select>
             </div>
         </div>
