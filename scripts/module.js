@@ -110,7 +110,7 @@ Hooks.on('ready', async () => {
     Handlebars.registerHelper({
         customDnd5eBoolFalse: function (value) { return value === false },
         customDnd5eEq: function (a, b) { return a === b },
-        customDnd5eRandomId: function () { return randomID() },
+        customDnd5eRandomId: function () { return foundry.utils.randomID() },
         customDnd5eTrue: function (value) { return !!value },
         customDnd5eUndef: function (value) { return typeof value === 'undefined' || value === null },
         customDnd5eDotNotateChild: function (parent, child) {

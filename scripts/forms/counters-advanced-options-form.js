@@ -113,7 +113,7 @@ export class CountersAdvancedOptionsForm extends CustomDnd5eForm {
         const list = this.element[0].querySelector(listClassSelector)
         const scrollable = list.closest('.scrollable')
 
-        const key = randomID()
+        const key = foundry.utils.randomID()
         const type = this.setting[this.key]?.type || this.type
         const trigger = (type === 'checkbox') ? 'zeroHp' : 'counterValue'
         const action = (type === 'checkbox') ? 'check' : 'dead'

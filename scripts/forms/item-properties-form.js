@@ -66,7 +66,7 @@ export class ItemPropertiesForm extends CustomDnd5eForm {
         const list = this.element[0].querySelector(listClassSelector)
         const scrollable = list.closest('.scrollable')
 
-        const key = randomID()
+        const key = foundry.utils.randomID()
 
         const template = await this._getHtml({ items: { [key]: { system: false, visible: true } } })
 

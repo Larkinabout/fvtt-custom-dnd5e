@@ -14,6 +14,7 @@
     "CUSTOM_DND5E.checkbox": "Checkbox",
     "CUSTOM_DND5E.clientSettings.label": "Client Settings",
     "CUSTOM_DND5E.clientSettings.note": "These settings only affect the current user and are configurable by each user.",
+    "CUSTOM_DND5E.configureCounters": "Configure Counters",
     "CUSTOM_DND5E.consumable": "Consumable",
     "CUSTOM_DND5E.container": "Container",
     "CUSTOM_DND5E.conversion": "Conversion",

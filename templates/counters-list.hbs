@@ -1,17 +1,17 @@
 {{#each counters as |item key|}}
 <li class="custom-dnd5e-item flexrow" data-key="{{key}}">
     <i class="custom-dnd5e-drag flex0 fas fa-grip-lines" draggable="true"></i>
-    <input id="visible" name="{{../actorType}}.{{key}}.visible" type="checkbox" data-tooltip="{{localize "CUSTOM_DND5E.form.checkbox.visible.tooltip"}}"{{#unless (customDnd5eBoolFalse visible)}} checked{{/unless}}>
+    <input id="visible" name="{{#if ../actorType}}{{../actorType}}.{{/if}}{{key}}.visible" type="checkbox" data-tooltip="{{localize "CUSTOM_DND5E.form.checkbox.visible.tooltip"}}"{{#unless (customDnd5eBoolFalse visible)}} checked{{/unless}}>
     <div class="fields flexrow">
-        <input id="actorType" name="{{../actorType}}.{{key}}.actorType" type="hidden" value="{{../actorType}}">
-        <input id="key" name="{{../actorType}}.{{key}}.key" type="hidden" value="{{key}}">
+        <input id="actorType" name="{{#if ../actorType}}{{../actorType}}.{{/if}}{{key}}.actorType" type="hidden" value="{{../actorType}}">
+        <input id="key" name="{{#if ../actorType}}{{../actorType}}.{{/if}}{{key}}.key" type="hidden" value="{{key}}">
         <div class="field">
             <label>{{localize "CUSTOM_DND5E.label"}}</label>
-            <input id="label" name="{{../actorType}}.{{key}}.label" type="text" value="{{localize label}}">
+            <input id="label" name="{{#if ../actorType}}{{../actorType}}.{{/if}}{{key}}.label" type="text" value="{{localize label}}">
         </div>
         <div class="field">
             <label>{{localize "CUSTOM_DND5E.type"}}</label>
-            <select id="type" name="{{../actorType}}.{{key}}.type">
+            <select id="type" name="{{#if ../actorType}}{{../actorType}}.{{/if}}{{key}}.type">
                 {{selectOptions ../selects.type.choices selected=type localize=true}}
             </select>
         </div>
@@ -26,7 +26,7 @@
         <button type="button" data-tooltip="{{localize "CUSTOM_DND5E.form.button.delete.tooltip"}}" data-action="delete" class="flex0 custom-dnd5e-list-button">
             <i class="fas fa-xmark"></i>
         </button>
-        <input id="delete" name="{{../actorType}}.{{key}}.delete" type="hidden" value="false">
+        <input id="delete" name="{{#if ../actorType}}{{../actorType}}.{{/if}}{{key}}.delete" type="hidden" value="false">
     </div>
 </li>
 {{/each}}

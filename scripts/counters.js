@@ -1,6 +1,7 @@
 import { CONSTANTS, MODULE, SETTING_BY_ENTITY_TYPE, SHEET_TYPE } from './constants.js'
 import { Logger, checkEmpty, getFlag, setFlag, unsetFlag, getSetting, registerMenu, registerSetting, makeDead } from './utils.js'
 import { CountersForm } from './forms/counters-form.js'
+import { CountersFormIndividual } from './forms/counters-form-individual.js'
 
 /**
  * Register Settings
@@ -59,6 +60,7 @@ export function registerSettings () {
         'Loading templates',
         [
             CONSTANTS.COUNTERS.TEMPLATE.FORM,
+            CONSTANTS.COUNTERS.TEMPLATE.FORM_INDIVIDUAL,
             CONSTANTS.COUNTERS.TEMPLATE.LIST,
             CONSTANTS.COUNTERS.TEMPLATE.ADVANCED_OPTIONS_FORM,
             CONSTANTS.COUNTERS.TEMPLATE.ADVANCED_OPTIONS_LIST
@@ -67,6 +69,7 @@ export function registerSettings () {
 
     loadTemplates([
         CONSTANTS.COUNTERS.TEMPLATE.FORM,
+        CONSTANTS.COUNTERS.TEMPLATE.FORM_INDIVIDUAL,
         CONSTANTS.COUNTERS.TEMPLATE.LIST,
         CONSTANTS.COUNTERS.TEMPLATE.ADVANCED_OPTIONS_FORM,
         CONSTANTS.COUNTERS.TEMPLATE.ADVANCED_OPTIONS_LIST
@@ -134,7 +137,8 @@ Hooks.on('deleteCombat', (combat, options, key) => {
         const actor = combatant.actor
         const flag = getFlag(actor, 'zeroHpCombatEnd')
         if (flag) {
-            const setting = getSettingByEntity(actor.type)
+            const setting = getCounters(actor)
+            // Sort getCounters
             Object.entries(setting).forEach(([key, value]) => {
                 const triggers = value.triggers
                 if (!triggers) return
@@ -157,20 +161,21 @@ Hooks.on('dnd5e.preRestCompleted', (actor, data) => {
  * @param {object} actor The actor
  */
 function onTriggerZeroHp (actor) {
-    const setting = getSettingByEntity(actor.type)
+    const counters = getCounters(actor)
 
-    if (!setting) return
-
-    Object.entries(setting).forEach(([key, value]) => {
-        const triggers = value.triggers
-        if (!triggers) return
-        triggers
-            .filter(trigger => trigger.trigger === 'zeroHp')
-            .forEach(trigger => handleAction(actor, key, trigger, value.type))
-        const zeroHpCombatEnd = triggers.find(trigger => trigger.trigger === 'zeroHpCombatEnd')
-        if (actor.inCombat && zeroHpCombatEnd) {
-            setFlag(actor, 'zeroHpCombatEnd', true)
-        }
+    Object.entries(counters).forEach(([source, counters2]) => {
+        Object.entries(counters2).forEach(([key, value]) => {
+            const triggers = value.triggers
+            if (!triggers) return
+            key = (source === 'entity') ? `counters.${key}` : key
+            triggers
+                .filter(trigger => trigger.trigger === 'zeroHp')
+                .forEach(trigger => handleAction(actor, key, trigger, value.type))
+            const zeroHpCombatEnd = triggers.find(trigger => trigger.trigger === 'zeroHpCombatEnd')
+            if (actor.inCombat && zeroHpCombatEnd) {
+                setFlag(actor, 'zeroHpCombatEnd', true)
+            }
+        })
     })
 }
 
@@ -179,16 +184,17 @@ function onTriggerZeroHp (actor) {
  * @param {object} actor The actor
  */
 function onTriggerHalfHp (actor) {
-    const setting = getSettingByEntity(actor.type)
+    const counters = getCounters(actor)
 
-    if (!setting) return
-
-    Object.entries(setting).forEach(([key, value]) => {
-        const triggers = value.triggers
-        if (!triggers) return
-        triggers
-            .filter(trigger => trigger.trigger === 'halfHp')
-            .forEach(trigger => handleAction(actor, key, trigger, value.type))
+    Object.entries(counters).forEach(([source, counters2]) => {
+        Object.entries(counters2).forEach(([key, value]) => {
+            const triggers = value.triggers
+            if (!triggers) return
+            key = (source === 'entity') ? `counters.${key}` : key
+            triggers
+                .filter(trigger => trigger.trigger === 'halfHp')
+                .forEach(trigger => handleAction(actor, key, trigger, value.type))
+        })
     })
 }
 
@@ -198,18 +204,19 @@ function onTriggerHalfHp (actor) {
  * @param {object} data  The update data
  */
 function onTriggerCounterValue (actor, data) {
-    const setting = getSettingByEntity(actor.type)
+    const counters = getCounters(actor)
 
-    if (!setting) return
-
-    Object.entries(setting).forEach(([key, value]) => {
-        const counterValue = data.flags[MODULE.ID][key]
-        if (!counterValue && counterValue !== 0) return
-        const triggers = value.triggers
-        if (!triggers) return
-        triggers
-            .filter(trigger => trigger.trigger === 'counterValue' && trigger.triggerValue === counterValue)
-            .forEach(trigger => handleAction(actor, key, trigger, value.type))
+    Object.entries(counters).forEach(([source, counters2]) => {
+        Object.entries(counters2).forEach(([key, value]) => {
+            key = (source === 'entity') ? `counters.${key}` : key
+            const counterValue = (source === 'entity') ? data.flags[MODULE.ID][key]?.value : data.flags[MODULE.ID][key]
+            if (!counterValue && counterValue !== 0) return
+            const triggers = value.triggers
+            if (!triggers) return
+            triggers
+                .filter(trigger => trigger.trigger === 'counterValue' && trigger.triggerValue === counterValue)
+                .forEach(trigger => handleAction(actor, key, trigger, value.type))
+        })
     })
 }
 
@@ -219,16 +226,17 @@ function onTriggerCounterValue (actor, data) {
  * @param {object} actor    The actor=
  */
 function onTriggerRest (restType, actor) {
-    const setting = getSettingByEntity(actor.type)
+    const counters = getCounters(actor)
 
-    if (!setting) return
-
-    Object.entries(setting).forEach(([key, value]) => {
-        const triggers = value.triggers
-        if (!triggers) return
-        triggers
-            .filter(trigger => trigger.trigger === restType)
-            .forEach(trigger => handleAction(actor, key, trigger, value.type))
+    Object.entries(counters).forEach(([source, counters2]) => {
+        Object.entries(counters2).forEach(([key, value]) => {
+            const triggers = value.triggers
+            if (!triggers) return
+            key = (source === 'entity') ? `counters.${key}` : key
+            triggers
+                .filter(trigger => trigger.trigger === restType)
+                .forEach(trigger => handleAction(actor, key, trigger, value.type))
+        })
     })
 }
 
@@ -382,23 +390,35 @@ function addCountersItem (app, html, data, sheetType) {
  */
 function addCounters (app, html, data, sheetType) {
     const actor = app.actor
-    const counters = game.settings.get(MODULE.ID, sheetType.countersSetting)
+    const counters = {
+        world: game.settings.get(MODULE.ID, sheetType.countersSetting),
+        entity: getFlag(actor, 'counters') ?? {}
+    }
 
-    if (checkEmpty(counters)) return
+    if (!data?.editable && checkEmpty(counters.world) && checkEmpty(counters.entity)) return
 
     const detailsRightDiv = html[0].querySelector('.tab.details > .right')
     const detailsRightTopDiv = detailsRightDiv.querySelector('.top')
-    const countersDiv = createCountersDiv()
+    const countersDiv = createCountersDiv(actor, data)
     const ul = countersDiv.appendChild(document.createElement('ul'))
+    let someCounters = false
 
-    for (const [key, counter] of Object.entries(counters)) {
-        if (!counter.visible || (counter.viewRole && game.user.role < counter.viewRole)) continue
-
-        ul.appendChild(createCounterItem(actor, key, counter))
+    for (const [source, counters2] of Object.entries(counters)) {
+        for (let [key, counter] of Object.entries(counters2)) {
+            if (!counter.visible || game.user.role < (counter.viewRole ?? 1)) continue
+            if (source === 'entity') {
+                key = `counters.${key}`
+            }
+            ul.appendChild(createCounterItem(actor, key, counter))
+            someCounters = true
+        }
     }
 
-    if (Object.values(counters).some(c => !c.system && c.visible)) {
+    if (data?.editable || someCounters) {
         detailsRightTopDiv.after(countersDiv)
+        if (!someCounters) {
+            countersDiv.classList.add('empty')
+        }
     }
 }
 
@@ -406,9 +426,9 @@ function addCounters (app, html, data, sheetType) {
  * Create the Counters section
  * @returns {object} The DIV
  */
-function createCountersDiv () {
+function createCountersDiv (actor, data) {
     const div = document.createElement('div')
-    div.classList.add('custom-dnd5e-counters-counters')
+    div.classList.add('custom-dnd5e-counters-counters', 'pills-group')
 
     const h3 = document.createElement('h3')
     h3.setAttribute('class', 'icon')
@@ -423,7 +443,26 @@ function createCountersDiv () {
     span.textContent = game.i18n.localize('CUSTOM_DND5E.counters')
     h3.appendChild(span)
 
+    if (data.editable) {
+        const a = document.createElement('a')
+        a.setAttribute('class', 'config-button')
+        a.setAttribute('data-tooltip', 'CUSTOM_DND5E.configureCounters')
+        a.setAttribute('aria-label', game.i18n.localize('CUSTOM_DND5E.configureCounters'))
+        h3.appendChild(a)
+
+        const iConfig = document.createElement('i')
+        iConfig.setAttribute('class', 'fas fa-cog')
+        a.appendChild(iConfig)
+
+        a.addEventListener('click', () => { openForm(actor) })
+    }
+
     return div
+}
+
+function openForm (entity) {
+    const form = new CountersFormIndividual(entity)
+    form.render(true)
 }
 
 /**
@@ -452,6 +491,8 @@ function createCounterItem (entity, key, counter) {
  * @returns {object}       The LI
  */
 function createCheckbox (entity, key, counter) {
+    key = (key.startsWith('counters.')) ? `${key}.value` : key
+
     const li = document.createElement('li')
     li.classList.add('custom-dnd5e-counters-counter', 'flexrow', key)
 
@@ -564,6 +605,8 @@ function createFraction (entity, key, counter) {
  * @returns {object}       The LI
  */
 function createNumber (entity, key, counter) {
+    key = (key.startsWith('counters.')) ? `${key}.value` : key
+
     const li = document.createElement('li')
     li.classList.add('custom-dnd5e-counters-counter', 'flexrow', key)
     const h4 = document.createElement('h4')
@@ -711,6 +754,7 @@ function checkValue (input, entity, key) {
  * @param {string} key    The counter key
  */
 function checkCheckbox (entity, key) {
+    key = (key.startsWith('counters.')) ? `${key}.value` : key
     entity.setFlag(MODULE.ID, key, true)
 }
 
@@ -720,6 +764,7 @@ function checkCheckbox (entity, key) {
  * @param {string} key    The counter key
  */
 function uncheckCheckbox (entity, key) {
+    key = (key.startsWith('counters.')) ? `${key}.value` : key
     entity.setFlag(MODULE.ID, key, false)
 }
 
@@ -760,6 +805,7 @@ function increaseFraction (entity, key, actionValue = 1) {
  * @param {number} actionValue The action value
  */
 function decreaseNumber (entity, key, actionValue = 1) {
+    key = (key.startsWith('counters.')) ? `${key}.value` : key
     const oldValue = entity.getFlag(MODULE.ID, key) || 0
     const newValue = Math.max(oldValue - actionValue, 0)
     if (oldValue > 0) {
@@ -774,6 +820,7 @@ function decreaseNumber (entity, key, actionValue = 1) {
  * @param {number} actionValue The action value
  */
 function increaseNumber (entity, key, actionValue = 1) {
+    key = (key.startsWith('counters.')) ? `${key}.value` : key
     const oldValue = entity.getFlag(MODULE.ID, key) || 0
     const maxValue = getMax(entity, key) || entity.getFlag(MODULE.ID, `${key}.max`)
     const newValue = (maxValue) ? Math.min(oldValue + actionValue, maxValue) : oldValue + actionValue
@@ -849,10 +896,22 @@ function increaseFailure (entity, key, actionValue = 1) {
  * @param {string} key    The counter key
  * @returns {object}      The counter setting
  */
-function getSettingByEntity (entity, key = null) {
+function getCounters (entity, key = null) {
     const type = (entity.documentName === 'Actor') ? entity.type : 'item'
     const settingKey = SETTING_BY_ENTITY_TYPE.COUNTERS[type]
-    return (key) ? getSetting(settingKey)[key] : getSetting(settingKey)
+
+    if (!key) {
+        return {
+            world: getSetting(settingKey),
+            entity: getFlag(entity, 'counters')
+        }
+    }
+
+    if (key.startsWith('counters.')) {
+        return getFlag(entity, key)
+    }
+
+    return getSetting(settingKey)[key]
 }
 
 /**
@@ -862,7 +921,7 @@ function getSettingByEntity (entity, key = null) {
  * @returns {number}      The max value
  */
 function getMax (entity, key) {
-    const setting = getSettingByEntity(entity, key)
+    const setting = getCounters(entity, key)
     return setting?.max
 }
 
