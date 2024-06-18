@@ -65,6 +65,7 @@ export function setConfig (data = null) {
                 {
                     color: value.color,
                     icon: value.icon,
+                    ...(value.isPhysical !== undefined && { isPhysical: value.isPhysical }),
                     label: game.i18n.localize(value.label),
                     reference: value.reference
                 }
