@@ -8,6 +8,8 @@ const listClassSelector = `.${listClass}`
 export class CustomDnd5eForm extends FormApplication {
     constructor (...args) {
         super(args)
+
+        this.nestable = false
     }
 
     static get defaultOptions () {
@@ -100,20 +102,26 @@ export class CustomDnd5eForm extends FormApplication {
     /** @override */
     _onDragOver (event) {
         if (!this.sourceItem) return
-        this.targetItem = event.target.closest('li')
-        this.targetItem?.classList.add('over')
+
+        this.targetItem?.classList.remove(`drag-${this.mousePos}`)
+
+        this.#getDragElement(event)
+        this.targetItem?.classList.add(`drag-${this.mousePos}`)
     }
 
     _onDragLeave (event) {
         if (!this.sourceItem) return
-        this.targetItem = event.target.closest('li')
-        this.targetItem?.classList.remove('over')
+
+        this.targetItem?.classList.remove(`drag-${this.mousePos}`)
+
+        this.#getDragElement(event)
+        this.targetItem?.classList.remove(`drag-${this.mousePos}`)
     }
 
     _onDragEnd (event) {
         if (!this.sourceItem) return
         this.sourceItem?.style.removeProperty('opacity')
-        this.targetItem?.classList.remove('over')
+        this.targetItem?.classList.remove(`drag-${this.mousePos}`)
         this.sourceItem = null
         this.targetItem = null
     }
@@ -124,33 +132,75 @@ export class CustomDnd5eForm extends FormApplication {
 
         this.sourceItem?.style.removeProperty('opacity')
 
-        this.targetItem = event.target.closest('li')
+        this.targetItem?.classList.remove(`drag-${this.mousePos}`)
+
+        this.#getDragElement(event)
 
         if (!this.targetItem) return
 
-        this.targetItem?.classList.remove('over')
+        this.targetItem?.classList.remove(`drag-${this.mousePos}`)
 
         this.targetItemIndex = this.items.findIndex(item => item.dataset.key === this.targetItem.dataset.key)
 
-        this.targetItem.before(this.sourceItem)
+        if (this.mousePos === 'top') {
+            this.targetItem.before(this.sourceItem)
+        } else if (this.mousePos === 'bottom') {
+            this.targetItem.after(this.sourceItem)
+        } else if (this.mousePos === 'middle') {
+            const list = this.targetItem.querySelector('ul')
 
-        const parentKey = this.targetItem.closest('ul')?.closest('li')?.dataset?.key
+            if (list) {
+                list.appendChild(this.sourceItem)
+            } else {
+                const ul = document.createElement('ul')
+                ul.classList.add('custom-dnd5e-list', 'flexcol')
+                this.targetItem.appendChild(ul)
+                ul.appendChild(this.sourceItem)
+            }
+        } else {
+            return
+        }
 
-        if (parentKey) {
-            const inputs = this.sourceItem?.querySelectorAll('input')
+        // Update keys with new parents
+        const items = this.sourceItem?.closest('ul').querySelectorAll('li')
+
+        items.forEach(item => {
+            const key = item.querySelector('#key')?.value
+
+            const parentKey = item.closest('ul')?.closest('li')?.dataset?.key
+
+            if (!parentKey) return
+
+            item.dataset.key = `${parentKey}.children.${key}`
+
+            const inputs = item.querySelectorAll('input')
 
             inputs.forEach(input => {
                 if (input.id === 'parentKey') {
                     input.value = parentKey
                 }
                 if (input.name) {
-                    input.name = `${parentKey}.children.${this.sourceItem.dataset.key}.${input.id}`
+                    input.name = `${parentKey}.children.${key}.${input.id}`
                 }
             })
-        }
+        })
 
         this.sourceItem = null
         this.targetItem = null
+    }
+
+    #getDragElement (event) {
+        const yPct = (event.clientY - event.target.getBoundingClientRect().top) / event.target.getBoundingClientRect().height
+        this.targetItem = event.target.closest('li')
+        const topPct = (this.nestable) ? 0.25 : 0.5
+        const bottomPct = (this.nestable) ? 0.75 : 0.5
+        if (yPct < topPct) {
+            this.mousePos = 'top'
+        } else if (yPct >= bottomPct) {
+            this.mousePos = 'bottom'
+        } else {
+            this.mousePos = (this.nestable) ? 'middle' : 'bottom'
+        }
     }
 
     async _handleButtonClick (event) {
@@ -187,10 +237,15 @@ export class CustomDnd5eForm extends FormApplication {
 
     async _deleteItem (key) {
         const del = async (key) => {
-            const element = this.element[0].querySelector(`[data-key="${key}"]`)
-            const deleteInput = element.querySelector('input[id="delete"]')
-            deleteInput.setAttribute('value', 'true')
-            element.classList.add('hidden')
+            const listItem = this.element[0].querySelector(`[data-key="${key}"]`)
+            const deleteInputs = listItem.querySelectorAll('input[id="delete"]')
+
+            // Set delete input to true against list item and all nested list items
+            deleteInputs.forEach(input => {
+                input.setAttribute('value', 'true')
+            })
+
+            listItem.classList.add('hidden')
         }
 
         const d = new Dialog({

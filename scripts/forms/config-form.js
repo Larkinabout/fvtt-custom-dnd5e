@@ -33,7 +33,7 @@ class ConfigForm extends CustomDnd5eForm {
     async getData () {
         this.config = foundry.utils.deepClone(CONFIG.DND5E[this.type])
         this.setting = getSetting(this.settingKey)
-        const data = foundry.utils.mergeObject(this.setting, this.config)
+        const data = foundry.utils.mergeObject(this.config, this.setting)
 
         const labelise = (data) => {
             Object.entries(data).forEach(([key, value]) => {
@@ -152,25 +152,32 @@ class ConfigForm extends CustomDnd5eForm {
 
         const data = {}
         const keyData = {}
+        const changedKeys = {}
+
+        Object.entries(formData).filter(([property, value]) => property.endsWith('key'))
+            .forEach(([property, value]) => {
+                const propertyParts = property.split('.')
+                const propertyPathSuffix = propertyParts.slice(-2, -1)[0]
+
+                if (propertyPathSuffix !== value) { changedKeys[propertyPathSuffix] = value }
+            })
 
         Object.entries(formData).forEach(([property, value]) => {
             const propertyParts = property.split('.')
+            propertyParts.forEach((value, index) => {
+                if (changedKeys[value]) {
+                    propertyParts[index] = changedKeys[value]
+                }
+            })
             const propertyKey = propertyParts.pop()
             const propertyPath = propertyParts.join('.')
-            const propertyPathSuffix = propertyParts.pop()
-            const propertyPathPrefix = (propertyParts.length) ? `${propertyParts.join('.')}.` : ''
 
             if (ignore.includes(propertyKey) || formData[`${propertyPath}.delete`] === 'true') return
             if (propertyKey === 'system') {
                 if (value === 'true') { return }
                 value = false
             }
-            const key = formData[`${propertyPath}.key`]
-            foundry.utils.setProperty(data, `${propertyPathPrefix}${key}.${propertyKey}`, value)
-
-            if (propertyPathSuffix !== key) {
-                keyData[propertyPath] = key
-            }
+            foundry.utils.setProperty(data, `${propertyPath}.${propertyKey}`, value)
         })
 
         if (Object.keys(keyData).length && this.actorProperties) {
@@ -405,6 +412,7 @@ export class ItemRarityForm extends ConfigForm {
 export class LanguagesForm extends ConfigForm {
     constructor () {
         super()
+        this.nestable = true
         this.requiresReload = false
         this.settingKey = CONSTANTS.LANGUAGES.SETTING.KEY
         this.setFunction = setLanguages
