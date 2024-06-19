@@ -317,7 +317,7 @@ export class CurrencyForm extends ConfigForm {
         this.requiresReload = false
         this.settingKey = CONSTANTS.CURRENCY.SETTING.KEY
         this.setFunction = setCurrency
-        this.type = 'currency'
+        this.type = 'currencies'
     }
 
     static get defaultOptions () {
@@ -398,7 +398,7 @@ export class ItemRarityForm extends ConfigForm {
         this.requiresReload = false
         this.settingKey = CONSTANTS.ITEM_RARITY.SETTING.KEY
         this.setFunction = setItemRarity
-        this.type = 'item-rarity'
+        this.type = 'itemRarity'
     }
 
     static get defaultOptions () {
