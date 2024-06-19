@@ -34,6 +34,12 @@
                 <input id="reference" name="{{key}}.reference" type="text" value="{{reference}}">
             </div>
         </div>
+        <div class="form-group">
+            <label class="flex1" style="min-width:80px; max-width:100px;">{{localize "CUSTOM_DND5E.physical"}}</label>
+            <div class="form-fields">
+                <input id="is-physical" name="{{key}}.isPhysical" type="checkbox" {{#if isPhysical}}checked{{/if}}>
+            </div>
+        </div>
     </div>
     <button{{#unless (customDnd5eBoolFalse system)}} class="hidden"{{/unless}} type="button" data-tooltip="{{localize "CUSTOM_DND5E.form.button.delete.tooltip"}}" data-action="delete" class="flex0 custom-dnd5e-list-button">
         <i class="fas fa-xmark"></i>

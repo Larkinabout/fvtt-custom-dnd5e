@@ -10,7 +10,7 @@ export class SheetForm extends CustomDnd5eForm {
     }
 
     static get defaultOptions () {
-        return mergeObject(super.defaultOptions, {
+        return foundry.utils.mergeObject(super.defaultOptions, {
             template: CONSTANTS.SHEET.TEMPLATE.FORM,
             title: game.i18n.localize('CUSTOM_DND5E.form.sheet.title')
         })

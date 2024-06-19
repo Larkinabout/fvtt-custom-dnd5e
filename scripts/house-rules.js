@@ -481,14 +481,14 @@ function updateDeathSaves (source, actor, data) {
         if (source === 'regainHp' && removeDeathSaves.regainHp[type] < 3 && hasProperty(data, 'system.attributes.hp.value')) {
             const previousHp = actor.system.attributes.hp.value
             const newValue = (previousHp === 0) ? Math.max(currentValue - removeDeathSaves.regainHp[type], 0) : currentValue
-            setProperty(data, `system.attributes.death.${type}`, newValue)
+            foundry.utils.setProperty(data, `system.attributes.death.${type}`, newValue)
         } else if (source === 'rest') {
             const restType = (data?.longRest) ? 'longRest' : 'shortRest'
 
             if (removeDeathSaves[restType][type] === 0) return
 
             const newValue = Math.max(currentValue - removeDeathSaves[restType][type], 0)
-            setProperty(data.updateData, `system.attributes.death.${type}`, newValue)
+            foundry.utils.setProperty(data.updateData, `system.attributes.death.${type}`, newValue)
         }
     }
 

@@ -1,29 +1,25 @@
 import { CONSTANTS, MODULE } from '../constants.js'
-import { deleteProperty, unsetFlag, getSetting, setSetting } from '../utils.js'
-import { CustomDnd5eForm } from './custom-dnd5e-form.js'
+import { deleteProperty, getFlag, setFlag, unsetFlag } from '../utils.js'
+import { CountersForm } from './counters-form.js'
 import { CountersAdvancedOptionsForm } from './counters-advanced-options-form.js'
 
-const id = CONSTANTS.COUNTERS.ID
-const form = `${id}-form`
+const form = 'counters-form-individual'
 const itemClass = `${MODULE.ID}-item`
 const listClass = `${MODULE.ID}-list`
 const listClassSelector = `.${listClass}`
 
-export class CountersForm extends CustomDnd5eForm {
-    constructor (...args) {
-        super(args)
+export class CountersFormIndividual extends CountersForm {
+    constructor (entity) {
+        super(entity)
+
+        this.entity = entity
     }
 
     static get defaultOptions () {
         return foundry.utils.mergeObject(super.defaultOptions, {
             id: `${MODULE.ID}-${form}`,
             template: `modules/${MODULE.ID}/templates/${form}.hbs`,
-            title: game.i18n.localize(`CUSTOM_DND5E.form.${id}.title`),
-            tabs: [{
-                navSelector: '.tabs',
-                contentSelector: 'form',
-                initial: 'characters'
-            }]
+            title: game.i18n.localize('CUSTOM_DND5E.form.counters.title')
         })
     }
 
@@ -41,14 +37,9 @@ export class CountersForm extends CustomDnd5eForm {
     }
 
     async getData () {
-        this.settings = {
-            character: getSetting(CONSTANTS.COUNTERS.SETTING.CHARACTER_COUNTERS.KEY) || {},
-            group: getSetting(CONSTANTS.COUNTERS.SETTING.GROUP_COUNTERS.KEY) || {},
-            item: getSetting(CONSTANTS.COUNTERS.SETTING.ITEM_COUNTERS.KEY) || {},
-            npc: getSetting(CONSTANTS.COUNTERS.SETTING.NPC_COUNTERS.KEY) || {}
-        }
+        this.counters = getFlag(this.entity, 'counters') || {}
         return {
-            settings: this.settings,
+            counters: this.counters,
             selects: this.#getSelects()
         }
     }
@@ -80,7 +71,7 @@ export class CountersForm extends CustomDnd5eForm {
             break
         }
         case 'advanced-options': {
-            const setting = this.settings[actorType]
+            const setting = this.counters
             const args = { countersForm: this, data: { key, actorType, label, type }, setting }
             await CountersAdvancedOptionsForm.open(args)
             break
@@ -89,14 +80,11 @@ export class CountersForm extends CustomDnd5eForm {
     }
 
     async _createItem () {
-        const activeTab = this.element[0].querySelector('.tab.active')
-        const actorType = activeTab.dataset.actorType
-        const list = activeTab.querySelector(listClassSelector)
+        const list = this.element[0].querySelector(listClassSelector)
         const scrollable = list.closest('.scrollable')
 
         const key = foundry.utils.randomID()
         const data = {
-            actorType,
             counters: { [key]: {} },
             selects: this.#getSelects()
         }
@@ -114,7 +102,7 @@ export class CountersForm extends CustomDnd5eForm {
     }
 
     async _copyProperty (key, type) {
-        const property = `@flags.${MODULE.ID}.${key}${(type === 'successFailure') ? '.success' : (type === 'fraction') ? '.value' : ''}`
+        const property = `@flags.${MODULE.ID}.counters.${key}${(type === 'successFailure') ? '.success' : (type === 'fraction') ? '.value' : ''}`
         game.clipboard.copyPlainText(property)
         ui.notifications.info(game.i18n.format('CUSTOM_DND5E.form.counters.copyProperty.message', { property }))
     }
@@ -128,20 +116,14 @@ export class CountersForm extends CustomDnd5eForm {
             .map(([key, _]) => key.split('.').slice(0, -1).join('.'))
 
         // Delete properties from this.setting
-        deleteKeys.forEach(deleteKey => {
-            const parts = deleteKey.split('.')
-            const actorType = parts.slice(0, 1).join('.')
-            const key = parts.pop()
-            const setting = this.settings[actorType]
+        deleteKeys.forEach(key => {
+            const setting = this.counters
             deleteProperty(setting, key)
-            for (const actor of game.actors) {
-                unsetFlag(actor, key)
-            }
         })
 
         // Delete properties from formData
         Object.keys(formData).forEach(key => {
-            if (deleteKeys.includes(key.split('.').slice(0, -1).join('.'))) {
+            if (deleteKeys.includes(key.split('.').slice(0, -1)[0])) {
                 delete formData[key]
             }
         })
@@ -149,18 +131,10 @@ export class CountersForm extends CustomDnd5eForm {
         // Set properties in this.setting
         Object.entries(formData).forEach(([key, value]) => {
             if (ignore.includes(key.split('.').pop())) { return }
-            const arr = key.split('.')
-            const actorType = arr.slice(0, 1).join('.')
-            const property = arr.slice(1, 3).join('.')
-            const setting = this.settings[actorType]
-            foundry.utils.setProperty(setting, property, value)
+            foundry.utils.setProperty(this.counters, key, value)
         })
 
-        await Promise.all([
-            setSetting(CONSTANTS.COUNTERS.SETTING.CHARACTER_COUNTERS.KEY, this.settings.character),
-            setSetting(CONSTANTS.COUNTERS.SETTING.GROUP_COUNTERS.KEY, this.settings.group),
-            setSetting(CONSTANTS.COUNTERS.SETTING.ITEM_COUNTERS.KEY, this.settings.item),
-            setSetting(CONSTANTS.COUNTERS.SETTING.NPC_COUNTERS.KEY, this.settings.npc)
-        ])
+        await unsetFlag(this.entity, 'counters')
+        await setFlag(this.entity, 'counters', this.counters)
     }
 }

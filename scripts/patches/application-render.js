@@ -25,11 +25,11 @@ async function renderPatch (force = false, options = {}) {
 
     // Get the existing HTML element and application data used for rendering
     const element = this.element
+    this.appId = element.data('appid') ?? ++_appId
+    if (this.popOut) ui.windows[this.appId] = this
     const data = await this.getData(this.options)
 
-    for (const cls of this.constructor._getInheritanceChain()) {
-        Hooks.callAll(`preRender${cls.name}`, this, data)
-    }
+    this._callHooks('preRender', data)
 
     // Store scroll positions
     if (element.length && this.options.scrollY) this._saveScrollPositions(element)
@@ -38,9 +38,7 @@ async function renderPatch (force = false, options = {}) {
     const inner = await this._renderInner(data)
     let html = inner
 
-    for (const cls of this.constructor._getInheritanceChain()) {
-        Hooks.callAll(`renderInner${cls.name}`, this, html, data)
-    }
+    this._callHooks('renderInner', html, data)
 
     // If the application already exists in the DOM, replace the inner content
     if (element.length) this._replaceHTML(element, html)
@@ -51,7 +49,6 @@ async function renderPatch (force = false, options = {}) {
         if (this.popOut) {
             html = await this._renderOuter()
             html.find('.window-content').append(inner)
-            ui.windows[this.appId] = this
         }
 
         // Add the HTML to the DOM and record the element
@@ -74,9 +71,7 @@ async function renderPatch (force = false, options = {}) {
     if (this.popOut && (options.focus === true)) this.maximize().then(() => this.bringToTop())
 
     // Dispatch Hooks for rendering the base and subclass applications
-    for (const cls of this.constructor._getInheritanceChain()) {
-        Hooks.callAll(`render${cls.name}`, this, html, data)
-    }
+    this._callHooks('render', html, data)
 
     // Restore prior scroll positions
     if (this.options.scrollY) this._restoreScrollPositions(html)

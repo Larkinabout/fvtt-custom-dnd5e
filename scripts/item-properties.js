@@ -73,7 +73,7 @@ export function getDnd5eConfig () {
  * @returns {object} The setting
  */
 function getSettingDefault () {
-    const itemProperties = deepClone(CONFIG.CUSTOM_DND5E.itemProperties)
+    const itemProperties = foundry.utils.deepClone(CONFIG.CUSTOM_DND5E.itemProperties)
     const itemTypes = ['consumable', 'container', 'equipment', 'feat', 'loot', 'spell', 'tool', 'weapon']
 
     Object.keys(itemProperties).forEach((key) => {
@@ -128,7 +128,7 @@ export function setConfig (data = null) {
     })
 
     CONFIG.DND5E.validProperties = (checkEmpty(validProperties))
-        ? deepClone(CONFIG.CUSTOM_DND5E.validProperties)
+        ? foundry.utils.deepClone(CONFIG.CUSTOM_DND5E.validProperties)
         : validProperties
 
     if (checkEmpty(data)) {

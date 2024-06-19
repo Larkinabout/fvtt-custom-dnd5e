@@ -27,6 +27,10 @@
     padding: 0;
 }
 
+.custom-dnd5e-form ul:empty {
+    display: none;
+}
+
 .custom-dnd5e-form ul ul {
     flex: 100%;
     list-style-type: none;
@@ -44,7 +48,7 @@
 }
 
 .custom-dnd5e-form li:first-child {
-    border-top: none;
+    border-top: 1px solid transparent;
     padding-top: 0;
 }
 
@@ -52,8 +56,16 @@
     opacity: 0.4;
 }
 
-.custom-dnd5e-form li.over {
-    border-top: 2px solid red;
+.custom-dnd5e-form li.drag-top {
+    border-top: 1px solid red;
+}
+
+.custom-dnd5e-form li.drag-middle {
+    border: 1px solid red;
+}
+
+.custom-dnd5e-form li.drag-bottom {
+    border-bottom: 1px solid red;
 }
 
 .custom-dnd5e-col-group {
@@ -147,6 +159,7 @@
 
 .custom-dnd5e-item {
     align-items: center;
+    border: 1px solid transparent;
     display: flex;
     gap: 0.25rem;
     padding-top: 0.25rem;

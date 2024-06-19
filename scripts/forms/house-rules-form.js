@@ -12,7 +12,7 @@ export class HouseRulesForm extends CustomDnd5eForm {
     }
 
     static get defaultOptions () {
-        return mergeObject(super.defaultOptions, {
+        return foundry.utils.mergeObject(super.defaultOptions, {
             template: CONSTANTS.HOUSE_RULES.TEMPLATE.FORM,
             title: game.i18n.localize('CUSTOM_DND5E.form.houseRules.title')
         })
@@ -37,6 +37,15 @@ export class HouseRulesForm extends CustomDnd5eForm {
         data.awardInspirationD20Value = getSetting(CONSTANTS.INSPIRATION.SETTING.AWARD_INSPIRATION_D20_VALUE.KEY)
         data.awardInspirationRollTypes = getSetting(CONSTANTS.INSPIRATION.SETTING.AWARD_INSPIRATION_ROLL_TYPES.KEY)
         data.proneRotation = getSetting(CONSTANTS.PRONE.SETTING.PRONE_ROTATION.KEY)
+        data.selects = {
+            deathSavesRollMode: {
+                choices: {
+                    publicroll: 'CHAT.RollPublic',
+                    blindroll: 'CHAT.RollBlind',
+                    gmroll: 'CHAT.RollPrivate'
+                }
+            }
+        }
 
         return data
     }
@@ -95,10 +104,10 @@ export class HouseRulesForm extends CustomDnd5eForm {
         Object.entries(formData).forEach(([key, value]) => {
             if (key.startsWith('removeDeathSaves')) {
                 const property = key.split('.').slice(1, 3).join('.')
-                setProperty(removeDeathSaves, property, value)
+                foundry.utils.setProperty(removeDeathSaves, property, value)
             } else if (key.startsWith('awardInspirationRollTypes')) {
                 const property = key.split('.').slice(1, 3).join('.')
-                setProperty(awardInspirationRollTypes, property, value)
+                foundry.utils.setProperty(awardInspirationRollTypes, property, value)
             }
         })
 

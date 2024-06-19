@@ -20,7 +20,7 @@ export class Logger {
                 console.log(`${MODULE.NAME} Debug | ${message}`)
                 return
             }
-            const dataClone = deepClone(data)
+            const dataClone = foundry.utils.deepClone(data)
             console.log(`${MODULE.NAME} Debug | ${message}`, dataClone)
         }
     }
@@ -263,7 +263,7 @@ export async function tintToken (token, tint) {
         await setFlag(token.document, 'tint', token.document.texture.tint)
     }
 
-    token.document.update({ tint })
+    token.document.update({ texture: { tint } })
 }
 
 /**
@@ -274,7 +274,7 @@ export async function untintToken (token) {
     const tint = getFlag(token.document, 'tint')
 
     if (tint || tint === null) {
-        token.document.update({ tint })
+        token.document.update({ texture: { tint } })
         await unsetFlag(token.document, 'tint')
     }
 }
@@ -290,8 +290,8 @@ export async function untintToken (token) {
 export async function makeDead (actor, data = null) {
     const applyNegativeHp = getSetting(CONSTANTS.HIT_POINTS.SETTING.APPLY_NEGATIVE_HP.KEY)
     if (data) {
-        if (!applyNegativeHp) { setProperty(data, 'system.attributes.hp.value', 0) }
-        setProperty(data, 'system.attributes.death.failure', 3)
+        if (!applyNegativeHp) { foundry.utils.setProperty(data, 'system.attributes.hp.value', 0) }
+        foundry.utils.setProperty(data, 'system.attributes.death.failure', 3)
     } else {
         const data = {
             ...(!applyNegativeHp && { 'system.attributes.hp.value': 0 }),

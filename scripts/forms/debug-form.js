@@ -9,7 +9,7 @@ export class DebugForm extends CustomDnd5eForm {
     }
 
     static get defaultOptions () {
-        return mergeObject(super.defaultOptions, {
+        return foundry.utils.mergeObject(super.defaultOptions, {
             template: CONSTANTS.DEBUG.TEMPLATE.FORM,
             title: CONSTANTS.DEBUG.FORM.TITLE
         })

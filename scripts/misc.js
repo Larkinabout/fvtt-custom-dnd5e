@@ -82,7 +82,7 @@ async function toggleEffectOnSelected (active, activeEffect) {
 }
 
 function applyElevationToSelected (token, data, options, id) {
-    const elevation = getProperty(data, 'elevation')
+    const elevation = foundry.utils.getProperty(data, 'elevation')
 
     if ((!elevation && elevation !== 0) || canvas.tokens.controlled.length <= 1) return
 

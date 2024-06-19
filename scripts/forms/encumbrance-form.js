@@ -18,7 +18,7 @@ export class EncumbranceForm extends CustomDnd5eForm {
     }
 
     static get defaultOptions () {
-        return mergeObject(super.defaultOptions, {
+        return foundry.utils.mergeObject(super.defaultOptions, {
             template: CONSTANTS.ENCUMBRANCE.TEMPLATE.FORM,
             title: game.i18n.localize('CUSTOM_DND5E.form.encumbrance.title')
         })
@@ -76,7 +76,7 @@ export class EncumbranceForm extends CustomDnd5eForm {
         Object.entries(formData).forEach(([key, value]) => {
             if (ignore.includes(key)) return
 
-            setProperty(this.setting, key, value)
+            foundry.utils.setProperty(this.setting, key, value)
         })
 
         await Promise.all([

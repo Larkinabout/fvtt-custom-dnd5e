@@ -2,6 +2,8 @@ import { CONSTANTS } from './constants.js'
 import { Logger, checkEmpty, registerMenu, registerSetting, resetDnd5eConfig } from './utils.js'
 import { EncumbranceForm } from './forms/encumbrance-form.js'
 
+const property = 'encumbrance'
+
 /**
  * Register
  */
@@ -87,11 +89,13 @@ function registerSettings () {
  */
 export function setConfig (data = null) {
     if (checkEmpty(data)) {
-        if (checkEmpty(CONFIG.DND5E.encumbrance)) {
-            resetDnd5eConfig('encumbrance')
+        if (checkEmpty(CONFIG.DND5E[property])) {
+            resetDnd5eConfig(property)
         }
         return
     }
 
-    data && (CONFIG.DND5E.encumbrance = foundry.utils.mergeObject(CONFIG.CUSTOM_DND5E.encumbrance, data))
+    const defaultConfig = foundry.utils.deepClone(CONFIG.CUSTOM_DND5E[property])
+    const config = foundry.utils.mergeObject(defaultConfig, data)
+    config && (CONFIG.DND5E[property] = config)
 }
