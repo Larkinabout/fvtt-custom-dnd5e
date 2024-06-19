@@ -126,7 +126,7 @@ Hooks.on('updateActor', (actor, data, options) => {
         onTriggerZeroHp(actor)
     }
 
-    if (Object.hasOwn(data, 'flags') && data.flags[MODULE.ID]) {
+    if (Object.hasOwn(data, 'flags') && data.flags[MODULE.ID] && !Object.hasOwn(data.flags[MODULE.ID], '-=counters')) {
         onTriggerCounterValue(actor, data)
     }
 })
@@ -605,6 +605,7 @@ function createFraction (entity, key, counter) {
  * @returns {object}       The LI
  */
 function createNumber (entity, key, counter) {
+    const originalKey = key
     key = (key.startsWith('counters.')) ? `${key}.value` : key
 
     const li = document.createElement('li')
@@ -615,7 +616,7 @@ function createNumber (entity, key, counter) {
     if (!counter.editRole || game.user.role >= counter.editRole) {
         const a = document.createElement('a')
         a.textContent = counter.label
-        a.addEventListener('click', () => { increaseNumber(entity, key) })
+        a.addEventListener('click', () => { increaseNumber(entity, originalKey) })
         a.addEventListener('contextmenu', () => decreaseNumber(entity, key))
         h4.appendChild(a)
     } else {
@@ -805,7 +806,6 @@ function increaseFraction (entity, key, actionValue = 1) {
  * @param {number} actionValue The action value
  */
 function decreaseNumber (entity, key, actionValue = 1) {
-    key = (key.startsWith('counters.')) ? `${key}.value` : key
     const oldValue = entity.getFlag(MODULE.ID, key) || 0
     const newValue = Math.max(oldValue - actionValue, 0)
     if (oldValue > 0) {
@@ -820,9 +820,10 @@ function decreaseNumber (entity, key, actionValue = 1) {
  * @param {number} actionValue The action value
  */
 function increaseNumber (entity, key, actionValue = 1) {
+    const originalKey = key
     key = (key.startsWith('counters.')) ? `${key}.value` : key
     const oldValue = entity.getFlag(MODULE.ID, key) || 0
-    const maxValue = getMax(entity, key) || entity.getFlag(MODULE.ID, `${key}.max`)
+    const maxValue = getMax(entity, key) || entity.getFlag(MODULE.ID, `${originalKey}.max`)
     const newValue = (maxValue) ? Math.min(oldValue + actionValue, maxValue) : oldValue + actionValue
 
     if (!maxValue || newValue <= maxValue) {
