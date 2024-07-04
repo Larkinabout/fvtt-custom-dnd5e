@@ -381,7 +381,7 @@ export class ItemActivationCostTypesForm extends ConfigForm {
         this.requiresReload = false
         this.settingKey = CONSTANTS.ITEM_ACTIVATION_COST_TYPES.SETTING.KEY
         this.setFunction = setItemActivationCostTypes
-        this.type = 'abilityActivationCostTypes'
+        this.type = 'abilityActivationTypes'
     }
 
     static get defaultOptions () {
