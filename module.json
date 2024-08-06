@@ -6,8 +6,8 @@
   "library": "false",
   "compatibility": {
     "minimum": 12.325,
-    "verified": 12.328,
-    "maximum": 12.328
+    "verified": 12.330,
+    "maximum": 12
   },
   "authors": [
     {
@@ -37,9 +37,9 @@
         "type": "system",
         "compatibility": [
           {
-            "minimum": "3.2.0",
-            "verified": "3.2.1",
-            "maximum": "3.2"
+            "minimum": "3.3.1",
+            "verified": "3.3.1",
+            "maximum": "3.3"
           }
         ]
       }

@@ -521,7 +521,16 @@ export const SHEET_TYPE = {
         group: false,
         item: false,
         legacy: true,
-        npc: false
+        npc: true
+    },
+    ActorSheet5eNPC2: {
+        countersSetting: CONSTANTS.COUNTERS.SETTING.NPC_COUNTERS.KEY,
+        character: false,
+        custom: false,
+        group: false,
+        item: false,
+        legacy: false,
+        npc: true
     },
     GroupActorSheet: {
         countersSetting: CONSTANTS.COUNTERS.SETTING.GROUP_COUNTERS.KEY,

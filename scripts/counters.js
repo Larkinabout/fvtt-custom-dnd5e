@@ -164,6 +164,8 @@ function onTriggerZeroHp (actor) {
     const counters = getCounters(actor)
 
     Object.entries(counters).forEach(([source, counters2]) => {
+        if (!counters2) return
+
         Object.entries(counters2).forEach(([key, value]) => {
             const triggers = value.triggers
             if (!triggers) return
@@ -187,6 +189,8 @@ function onTriggerHalfHp (actor) {
     const counters = getCounters(actor)
 
     Object.entries(counters).forEach(([source, counters2]) => {
+        if (!counters2) return
+
         Object.entries(counters2).forEach(([key, value]) => {
             const triggers = value.triggers
             if (!triggers) return
@@ -207,6 +211,8 @@ function onTriggerCounterValue (actor, data) {
     const counters = getCounters(actor)
 
     Object.entries(counters).forEach(([source, counters2]) => {
+        if (!counters2) return
+
         Object.entries(counters2).forEach(([key, value]) => {
             key = (source === 'entity') ? `counters.${key}` : key
             const counterValue = (source === 'entity') ? data.flags[MODULE.ID][key]?.value : data.flags[MODULE.ID][key]
@@ -229,6 +235,8 @@ function onTriggerRest (restType, actor) {
     const counters = getCounters(actor)
 
     Object.entries(counters).forEach(([source, counters2]) => {
+        if (!counters2) return
+
         Object.entries(counters2).forEach(([key, value]) => {
             const triggers = value.triggers
             if (!triggers) return
@@ -397,8 +405,6 @@ function addCounters (app, html, data, sheetType) {
 
     if (!data?.editable && checkEmpty(counters.world) && checkEmpty(counters.entity)) return
 
-    const detailsRightDiv = html[0].querySelector('.tab.details > .right')
-    const detailsRightTopDiv = detailsRightDiv.querySelector('.top')
     const countersDiv = createCountersDiv(actor, data)
     const ul = countersDiv.appendChild(document.createElement('ul'))
     let someCounters = false
@@ -415,7 +421,15 @@ function addCounters (app, html, data, sheetType) {
     }
 
     if (data?.editable || someCounters) {
-        detailsRightTopDiv.after(countersDiv)
+        if (sheetType.character) {
+            const detailsRightDiv = html[0].querySelector('.tab.details > .right')
+            const detailsRightTopDiv = detailsRightDiv.querySelector('.top')
+            detailsRightTopDiv.after(countersDiv)
+        } else {
+            const sidebarDiv = html[0].querySelector('.sidebar')
+            sidebarDiv.insertBefore(countersDiv, sidebarDiv.firstChild)
+        }
+
         if (!someCounters) {
             countersDiv.classList.add('empty')
         }

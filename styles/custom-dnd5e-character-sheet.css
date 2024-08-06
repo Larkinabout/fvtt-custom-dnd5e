@@ -122,8 +122,8 @@
   margin-left: 1px;
 }
 
-.custom-dnd5e.dnd5e2.sheet.actor.character .sheet-body .sidebar .card .stats .top .ac {
-    padding-bottom: 0.25rem;
+.custom-dnd5e.dnd5e2.sheet.actor.character .sheet-body .sidebar .card .stats .top {
+    justify-content: center;
 }
 
 .custom-dnd5e.dnd5e2 .death-saves .pips:first-child {
@@ -264,6 +264,10 @@
     flex: 1 1 var(--skills-col-width);
     flex-direction: row;
     flex-wrap: wrap;
+}
+
+.custom-dnd5e.dnd5e2.sheet.actor .sheet-body .main-content .tab-body .tab:not(.active) {
+    display: none;
 }
 
 .custom-dnd5e.dnd5e2.sheet.actor.character .tab-details .tab-body {

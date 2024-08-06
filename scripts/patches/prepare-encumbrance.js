@@ -11,8 +11,10 @@ export function patchPrepareEncumbrance () {
    * @this {CharacterData|NPCData|VehicleData}
    * @param {object} rollData  The Actor's roll data.
    */
-async function prepareEncumbrancePatch (rollData) {
+async function prepareEncumbrancePatch (rollData, { validateItem } = {}) {
+    const convertWeight = dnd5e.utils.convertWeight
     const simplifyBonus = dnd5e.utils.simplifyBonus
+
     const equippedMod = (this.parent?.type === 'character') ? getSetting(CONSTANTS.ENCUMBRANCE.EQUIPPED_ITEM_WEIGHT_MODIFIER.SETTING.KEY) || 0 : 1
     const proficientEquippedMod = (this.parent?.type === 'character') ? getSetting(CONSTANTS.ENCUMBRANCE.PROFICIENT_EQUIPPED_ITEM_WEIGHT_MODIFIER.SETTING.KEY) || 0 : 1
     const unequippedMod = (this.parent?.type === 'character') ? getSetting(CONSTANTS.ENCUMBRANCE.UNEQUIPPED_ITEM_WEIGHT_MODIFIER.SETTING.KEY) || 0 : 1
@@ -25,7 +27,7 @@ async function prepareEncumbrancePatch (rollData) {
 
     // Get the total weight from items
     let weight = this.parent.items
-        .filter(item => !item.container)
+        .filter(item => !item.container && (validateItem?.(item) ?? true))
         .reduce((weight, item) => {
             const equipped = item.system.equipped
             const proficient = item.system.prof?.multiplier >= 1
@@ -39,7 +41,11 @@ async function prepareEncumbrancePatch (rollData) {
     if (game.settings.get('dnd5e', 'currencyWeight') && currency) {
         const numCoins = Object.values(currency).reduce((val, denom) => val + Math.max(denom, 0), 0)
         const currencyPerWeight = config.currencyPerWeight[unitSystem]
-        weight += numCoins / currencyPerWeight
+        weight += convertWeight(
+            numCoins / currencyPerWeight,
+            config.baseUnits.default[unitSystem],
+            baseUnits[unitSystem]
+        )
     }
 
     // Determine the Encumbrance size class
