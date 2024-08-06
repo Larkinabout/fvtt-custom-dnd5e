@@ -13,13 +13,8 @@
                     <label>{{localize "CUSTOM_DND5E.form.counters.viewRole.label"}}</label>
                     <div class="form-fields">
                         <select id="view-role" name="{{key}}.viewRole">
-                        {{#select viewRole}}
-                        <option value="1">{{localize "USER.RolePlayer"}}</option>
-                        <option value="2">{{localize "USER.RoleTrusted"}}</option>
-                        <option value="3">{{localize "USER.RoleAssistant"}}</option>
-                        <option value="4">{{localize "USER.RoleGamemaster"}}</option>
-                        {{/select}}
-                    </select>
+                            {{selectOptions selects.role.choices selected=viewRole localize=true}}
+                        </select>
                     </div>
                     <p class="notes">{{localize "CUSTOM_DND5E.form.counters.viewRole.note.1"}}</p>
                 </div>
@@ -27,13 +22,8 @@
                     <label>{{localize "CUSTOM_DND5E.form.counters.editRole.label"}}</label>
                     <div class="form-fields">
                         <select id="edit-role" name="{{key}}.editRole">
-                        {{#select editRole}}
-                        <option value="1">{{localize "USER.RolePlayer"}}</option>
-                        <option value="2">{{localize "USER.RoleTrusted"}}</option>
-                        <option value="3">{{localize "USER.RoleAssistant"}}</option>
-                        <option value="4">{{localize "USER.RoleGamemaster"}}</option>
-                        {{/select}}
-                    </select>
+                            {{selectOptions selects.role.choices selected=editRole localize=true}}
+                        </select>
                     </div>
                     <p class="notes">{{localize "CUSTOM_DND5E.form.counters.editRole.note.1"}}</p>
                 </div>
@@ -50,7 +40,7 @@
             <h2 class="flex0">{{localize "CUSTOM_DND5E.triggers"}}</h2>
             <div class="flexcol flexa scrollable">
                 <ul class="custom-dnd5e-list">
-                    {{> "modules/custom-dnd5e/templates/counters-triggers-list.hbs" prefix=triggers key=key type=type}}
+                    {{> "modules/custom-dnd5e/templates/counters-triggers-list.hbs" prefix=triggers key=key type=type selects=selects}}
                 </ul>
             </div>
         </div>

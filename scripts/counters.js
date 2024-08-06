@@ -1,6 +1,7 @@
-import { CONSTANTS, MODULE, SETTING_BY_ACTOR_TYPE, SHEET_TYPE } from './constants.js'
+import { CONSTANTS, MODULE, SETTING_BY_ENTITY_TYPE, SHEET_TYPE } from './constants.js'
 import { Logger, checkEmpty, getFlag, setFlag, unsetFlag, getSetting, registerMenu, registerSetting, makeDead } from './utils.js'
 import { CountersForm } from './forms/counters-form.js'
+import { CountersFormIndividual } from './forms/counters-form-individual.js'
 
 /**
  * Register Settings
@@ -46,10 +47,20 @@ export function registerSettings () {
         }
     )
 
+    registerSetting(
+        CONSTANTS.COUNTERS.SETTING.ITEM_COUNTERS.KEY,
+        {
+            scope: 'world',
+            config: false,
+            type: Object
+        }
+    )
+
     Logger.debug(
         'Loading templates',
         [
             CONSTANTS.COUNTERS.TEMPLATE.FORM,
+            CONSTANTS.COUNTERS.TEMPLATE.FORM_INDIVIDUAL,
             CONSTANTS.COUNTERS.TEMPLATE.LIST,
             CONSTANTS.COUNTERS.TEMPLATE.ADVANCED_OPTIONS_FORM,
             CONSTANTS.COUNTERS.TEMPLATE.ADVANCED_OPTIONS_LIST
@@ -58,6 +69,7 @@ export function registerSettings () {
 
     loadTemplates([
         CONSTANTS.COUNTERS.TEMPLATE.FORM,
+        CONSTANTS.COUNTERS.TEMPLATE.FORM_INDIVIDUAL,
         CONSTANTS.COUNTERS.TEMPLATE.LIST,
         CONSTANTS.COUNTERS.TEMPLATE.ADVANCED_OPTIONS_FORM,
         CONSTANTS.COUNTERS.TEMPLATE.ADVANCED_OPTIONS_LIST
@@ -84,8 +96,16 @@ Hooks.on('renderInnerActorSheet', (app, html, data) => {
     }
 })
 
+Hooks.on('renderInnerItemSheet', (app, html, data) => {
+    const sheetType = SHEET_TYPE[app.constructor.name]
+
+    if (!sheetType) return
+
+    addCountersItem(app, html, data, sheetType)
+})
+
 Hooks.on('preUpdateActor', (actor, data, options) => {
-    const currentHp = getProperty(data ?? {}, 'system.attributes.hp.value')
+    const currentHp = foundry.utils.getProperty(data ?? {}, 'system.attributes.hp.value')
 
     if (typeof currentHp === 'undefined') return
 
@@ -98,7 +118,7 @@ Hooks.on('preUpdateActor', (actor, data, options) => {
 })
 
 Hooks.on('updateActor', (actor, data, options) => {
-    const hp = getProperty(data ?? {}, 'system.attributes.hp.value')
+    const hp = foundry.utils.getProperty(data ?? {}, 'system.attributes.hp.value')
 
     if (hp === 'undefined') return
 
@@ -106,7 +126,7 @@ Hooks.on('updateActor', (actor, data, options) => {
         onTriggerZeroHp(actor)
     }
 
-    if (Object.hasOwn(data, 'flags') && data.flags[MODULE.ID]) {
+    if (Object.hasOwn(data, 'flags') && data.flags[MODULE.ID] && !Object.hasOwn(data.flags[MODULE.ID], '-=counters')) {
         onTriggerCounterValue(actor, data)
     }
 })
@@ -117,7 +137,8 @@ Hooks.on('deleteCombat', (combat, options, key) => {
         const actor = combatant.actor
         const flag = getFlag(actor, 'zeroHpCombatEnd')
         if (flag) {
-            const setting = getSettingByActorType(actor.type)
+            const setting = getCounters(actor)
+            // Sort getCounters
             Object.entries(setting).forEach(([key, value]) => {
                 const triggers = value.triggers
                 if (!triggers) return
@@ -140,20 +161,23 @@ Hooks.on('dnd5e.preRestCompleted', (actor, data) => {
  * @param {object} actor The actor
  */
 function onTriggerZeroHp (actor) {
-    const setting = getSettingByActorType(actor.type)
+    const counters = getCounters(actor)
 
-    if (!setting) return
+    Object.entries(counters).forEach(([source, counters2]) => {
+        if (!counters2) return
 
-    Object.entries(setting).forEach(([key, value]) => {
-        const triggers = value.triggers
-        if (!triggers) return
-        triggers
-            .filter(trigger => trigger.trigger === 'zeroHp')
-            .forEach(trigger => handleAction(actor, key, trigger, value.type))
-        const zeroHpCombatEnd = triggers.find(trigger => trigger.trigger === 'zeroHpCombatEnd')
-        if (actor.inCombat && zeroHpCombatEnd) {
-            setFlag(actor, 'zeroHpCombatEnd', true)
-        }
+        Object.entries(counters2).forEach(([key, value]) => {
+            const triggers = value.triggers
+            if (!triggers) return
+            key = (source === 'entity') ? `counters.${key}` : key
+            triggers
+                .filter(trigger => trigger.trigger === 'zeroHp')
+                .forEach(trigger => handleAction(actor, key, trigger, value.type))
+            const zeroHpCombatEnd = triggers.find(trigger => trigger.trigger === 'zeroHpCombatEnd')
+            if (actor.inCombat && zeroHpCombatEnd) {
+                setFlag(actor, 'zeroHpCombatEnd', true)
+            }
+        })
     })
 }
 
@@ -162,16 +186,19 @@ function onTriggerZeroHp (actor) {
  * @param {object} actor The actor
  */
 function onTriggerHalfHp (actor) {
-    const setting = getSettingByActorType(actor.type)
+    const counters = getCounters(actor)
 
-    if (!setting) return
+    Object.entries(counters).forEach(([source, counters2]) => {
+        if (!counters2) return
 
-    Object.entries(setting).forEach(([key, value]) => {
-        const triggers = value.triggers
-        if (!triggers) return
-        triggers
-            .filter(trigger => trigger.trigger === 'halfHp')
-            .forEach(trigger => handleAction(actor, key, trigger, value.type))
+        Object.entries(counters2).forEach(([key, value]) => {
+            const triggers = value.triggers
+            if (!triggers) return
+            key = (source === 'entity') ? `counters.${key}` : key
+            triggers
+                .filter(trigger => trigger.trigger === 'halfHp')
+                .forEach(trigger => handleAction(actor, key, trigger, value.type))
+        })
     })
 }
 
@@ -181,18 +208,21 @@ function onTriggerHalfHp (actor) {
  * @param {object} data  The update data
  */
 function onTriggerCounterValue (actor, data) {
-    const setting = getSettingByActorType(actor.type)
+    const counters = getCounters(actor)
 
-    if (!setting) return
+    Object.entries(counters).forEach(([source, counters2]) => {
+        if (!counters2) return
 
-    Object.entries(setting).forEach(([key, value]) => {
-        const counterValue = data.flags[MODULE.ID][key]
-        if (!counterValue && counterValue !== 0) return
-        const triggers = value.triggers
-        if (!triggers) return
-        triggers
-            .filter(trigger => trigger.trigger === 'counterValue' && trigger.triggerValue === counterValue)
-            .forEach(trigger => handleAction(actor, key, trigger, value.type))
+        Object.entries(counters2).forEach(([key, value]) => {
+            key = (source === 'entity') ? `counters.${key}` : key
+            const counterValue = (source === 'entity') ? data.flags[MODULE.ID][key]?.value : data.flags[MODULE.ID][key]
+            if (!counterValue && counterValue !== 0) return
+            const triggers = value.triggers
+            if (!triggers) return
+            triggers
+                .filter(trigger => trigger.trigger === 'counterValue' && trigger.triggerValue === counterValue)
+                .forEach(trigger => handleAction(actor, key, trigger, value.type))
+        })
     })
 }
 
@@ -202,16 +232,19 @@ function onTriggerCounterValue (actor, data) {
  * @param {object} actor    The actor=
  */
 function onTriggerRest (restType, actor) {
-    const setting = getSettingByActorType(actor.type)
+    const counters = getCounters(actor)
 
-    if (!setting) return
+    Object.entries(counters).forEach(([source, counters2]) => {
+        if (!counters2) return
 
-    Object.entries(setting).forEach(([key, value]) => {
-        const triggers = value.triggers
-        if (!triggers) return
-        triggers
-            .filter(trigger => trigger.trigger === restType)
-            .forEach(trigger => handleAction(actor, key, trigger, value.type))
+        Object.entries(counters2).forEach(([key, value]) => {
+            const triggers = value.triggers
+            if (!triggers) return
+            key = (source === 'entity') ? `counters.${key}` : key
+            triggers
+                .filter(trigger => trigger.trigger === restType)
+                .forEach(trigger => handleAction(actor, key, trigger, value.type))
+        })
     })
 }
 
@@ -318,6 +351,45 @@ function addCountersGroup (app, html, data, sheetType) {
 }
 
 /**
+ * Add counters to the item sheet
+ * @param {object} app       The app
+ * @param {object} html      The HTML
+ * @param {object} data      The data
+ * @param {string} sheetType The item sheet type
+ */
+function addCountersItem (app, html, data, sheetType) {
+    const item = app.item
+    const counters = game.settings.get(MODULE.ID, sheetType.countersSetting)
+
+    if (checkEmpty(counters)) return
+
+    const nav = html[0].querySelector('nav.sheet-navigation.tabs')
+    const navItem = document.createElement('a')
+    navItem.classList.add('item')
+    navItem.setAttribute('data-tab', 'custom-dnd5e-counters')
+    navItem.textContent = game.i18n.localize('CUSTOM_DND5E.counters')
+    nav.appendChild(navItem)
+
+    const body = html[0].querySelector('section.sheet-body')
+    const tab = document.createElement('div')
+    tab.classList.add('tab', 'custom-dnd5e-counters')
+    tab.setAttribute('data-group', 'primary')
+    tab.setAttribute('data-tab', 'custom-dnd5e-counters')
+
+    const ul = tab.appendChild(document.createElement('ul'))
+
+    for (const [key, counter] of Object.entries(counters)) {
+        if (!counter.visible || (counter.viewRole && game.user.role < counter.viewRole)) continue
+
+        ul.appendChild(createCounterItem(item, key, counter))
+    }
+
+    if (Object.values(counters).some(c => !c.system && c.visible)) {
+        body.appendChild(tab)
+    }
+}
+
+/**
  * Add counters to the sheet
  * @param {object} app       The app
  * @param {object} html      The HTML
@@ -326,23 +398,41 @@ function addCountersGroup (app, html, data, sheetType) {
  */
 function addCounters (app, html, data, sheetType) {
     const actor = app.actor
-    const counters = game.settings.get(MODULE.ID, sheetType.countersSetting)
-
-    if (checkEmpty(counters)) return
-
-    const detailsRightDiv = html[0].querySelector('.tab.details > .right')
-    const detailsRightTopDiv = detailsRightDiv.querySelector('.top')
-    const countersDiv = createCountersDiv()
-    const ul = countersDiv.appendChild(document.createElement('ul'))
-
-    for (const [key, counter] of Object.entries(counters)) {
-        if (!counter.visible || (counter.viewRole && game.user.role < counter.viewRole)) continue
-
-        ul.appendChild(createCounterItem(actor, key, counter))
+    const counters = {
+        world: game.settings.get(MODULE.ID, sheetType.countersSetting),
+        entity: getFlag(actor, 'counters') ?? {}
     }
 
-    if (Object.values(counters).some(c => !c.system && c.visible)) {
-        detailsRightTopDiv.after(countersDiv)
+    if (!data?.editable && checkEmpty(counters.world) && checkEmpty(counters.entity)) return
+
+    const countersDiv = createCountersDiv(actor, data)
+    const ul = countersDiv.appendChild(document.createElement('ul'))
+    let someCounters = false
+
+    for (const [source, counters2] of Object.entries(counters)) {
+        for (let [key, counter] of Object.entries(counters2)) {
+            if (!counter.visible || game.user.role < (counter.viewRole ?? 1)) continue
+            if (source === 'entity') {
+                key = `counters.${key}`
+            }
+            ul.appendChild(createCounterItem(actor, key, counter))
+            someCounters = true
+        }
+    }
+
+    if (data?.editable || someCounters) {
+        if (sheetType.character) {
+            const detailsRightDiv = html[0].querySelector('.tab.details > .right')
+            const detailsRightTopDiv = detailsRightDiv.querySelector('.top')
+            detailsRightTopDiv.after(countersDiv)
+        } else {
+            const sidebarDiv = html[0].querySelector('.sidebar')
+            sidebarDiv.insertBefore(countersDiv, sidebarDiv.firstChild)
+        }
+
+        if (!someCounters) {
+            countersDiv.classList.add('empty')
+        }
     }
 }
 
@@ -350,9 +440,9 @@ function addCounters (app, html, data, sheetType) {
  * Create the Counters section
  * @returns {object} The DIV
  */
-function createCountersDiv () {
+function createCountersDiv (actor, data) {
     const div = document.createElement('div')
-    div.classList.add('custom-dnd5e-counters-counters')
+    div.classList.add('custom-dnd5e-counters-counters', 'pills-group')
 
     const h3 = document.createElement('h3')
     h3.setAttribute('class', 'icon')
@@ -367,28 +457,56 @@ function createCountersDiv () {
     span.textContent = game.i18n.localize('CUSTOM_DND5E.counters')
     h3.appendChild(span)
 
+    if (data.editable) {
+        const a = document.createElement('a')
+        a.setAttribute('class', 'config-button')
+        a.setAttribute('data-tooltip', 'CUSTOM_DND5E.configureCounters')
+        a.setAttribute('aria-label', game.i18n.localize('CUSTOM_DND5E.configureCounters'))
+        h3.appendChild(a)
+
+        const iConfig = document.createElement('i')
+        iConfig.setAttribute('class', 'fas fa-cog')
+        a.appendChild(iConfig)
+
+        a.addEventListener('click', () => { openForm(actor) })
+    }
+
     return div
 }
 
-function createCounterItem (actor, key, counter) {
+function openForm (entity) {
+    const form = new CountersFormIndividual(entity)
+    form.render(true)
+}
+
+/**
+ * Create a counter item
+ * @param {object} entity  The entity: actor or item
+ * @param {string} key     The counter key
+ * @param {object} counter The counter
+ * @returns {object}       The LI
+ */
+function createCounterItem (entity, key, counter) {
     let li = null
     switch (counter.type) {
-    case 'checkbox': li = createCheckbox(actor, key, counter); break
-    case 'number': li = createNumber(actor, key, counter); break
-    case 'successFailure': li = createSuccessFailure(actor, key, counter); break
-    case 'fraction': li = createFraction(actor, key, counter)
+    case 'checkbox': li = createCheckbox(entity, key, counter); break
+    case 'number': li = createNumber(entity, key, counter); break
+    case 'successFailure': li = createSuccessFailure(entity, key, counter); break
+    case 'fraction': li = createFraction(entity, key, counter)
     }
     return li
 }
 
 /**
  * Create a checkbox counter
- * @param {object} actor   The actor
+ * @param {object} entity  The entity: actor or item
  * @param {string} key     The counter key
  * @param {object} counter The counter
  * @returns {object}       The LI
  */
-function createCheckbox (actor, key, counter) {
+function createCheckbox (entity, key, counter) {
+    key = (key.startsWith('counters.')) ? `${key}.value` : key
+
     const li = document.createElement('li')
     li.classList.add('custom-dnd5e-counters-counter', 'flexrow', key)
 
@@ -410,8 +528,8 @@ function createCheckbox (actor, key, counter) {
     const input = document.createElement('input')
     input.setAttribute('type', 'checkbox')
     input.setAttribute('name', `flags.${MODULE.ID}.${key}`)
-    input.checked = actor.getFlag(MODULE.ID, key) || false
-    input.setAttribute('value', actor.getFlag(MODULE.ID, key) || false)
+    input.checked = entity.getFlag(MODULE.ID, key) || false
+    input.setAttribute('value', entity.getFlag(MODULE.ID, key) || false)
     input.setAttribute('placeholder', 'false')
     input.setAttribute('data-dtype', 'Boolean')
     if (counter.editRole && game.user.role < counter.editRole) {
@@ -424,13 +542,13 @@ function createCheckbox (actor, key, counter) {
 
 /**
  * Create a fraction counter
- * @param {object} actor   The actor
+ * @param {object} entity  The entity: actor or item
  * @param {string} key     The counter key
  * @param {object} counter The counter
  * @returns {object}       The LI
  */
-function createFraction (actor, key, counter) {
-    const settingMax = getMax(actor, key)
+function createFraction (entity, key, counter) {
+    const settingMax = getMax(entity, key)
 
     const li = document.createElement('li')
     li.classList.add('custom-dnd5e-counters-counter', 'flexrow', key)
@@ -441,8 +559,8 @@ function createFraction (actor, key, counter) {
     if (!counter.editRole || game.user.role >= counter.editRole) {
         const a = document.createElement('a')
         a.textContent = counter.label
-        a.addEventListener('click', () => decreaseFraction(actor, key))
-        a.addEventListener('contextmenu', () => increaseFraction(actor, key))
+        a.addEventListener('click', () => decreaseFraction(entity, key))
+        a.addEventListener('contextmenu', () => increaseFraction(entity, key))
         h4.appendChild(a)
     } else {
         h4.textContent = counter.label
@@ -459,7 +577,7 @@ function createFraction (actor, key, counter) {
     const inputValue = document.createElement('input')
     inputValue.setAttribute('type', 'number')
     inputValue.setAttribute('name', `flags.${MODULE.ID}.${key}.value`)
-    inputValue.setAttribute('value', actor.getFlag(MODULE.ID, `${key}.value`))
+    inputValue.setAttribute('value', entity.getFlag(MODULE.ID, `${key}.value`))
     inputValue.setAttribute('placeholder', '0')
     inputValue.setAttribute('data-dtype', 'Number')
     if (counter.editRole && game.user.role < counter.editRole) {
@@ -467,7 +585,7 @@ function createFraction (actor, key, counter) {
         inputValue.setAttribute('disabled', 'true')
     } else {
         inputValue.addEventListener('click', event => selectInputContent(event))
-        inputValue.addEventListener('keyup', () => checkValue(inputValue, actor, key))
+        inputValue.addEventListener('keyup', () => checkValue(inputValue, entity, key))
     }
     divGroup.appendChild(inputValue)
 
@@ -479,7 +597,7 @@ function createFraction (actor, key, counter) {
     const inputMax = document.createElement('input')
     inputMax.setAttribute('type', 'number')
     inputMax.setAttribute('name', `flags.${MODULE.ID}.${key}.max`)
-    inputMax.setAttribute('value', settingMax || actor.getFlag(MODULE.ID, `${key}.max`))
+    inputMax.setAttribute('value', settingMax || entity.getFlag(MODULE.ID, `${key}.max`))
     inputMax.setAttribute('placeholder', '0')
     inputMax.setAttribute('data-dtype', 'Number')
     if ((counter.editRole && game.user.role < counter.editRole) || settingMax) {
@@ -495,12 +613,15 @@ function createFraction (actor, key, counter) {
 
 /**
  * Create a number counter
- * @param {object} actor   The actor
+ * @param {object} entity  The entity: actor or item
  * @param {string} key     The counter key
  * @param {object} counter The counter
  * @returns {object}       The LI
  */
-function createNumber (actor, key, counter) {
+function createNumber (entity, key, counter) {
+    const originalKey = key
+    key = (key.startsWith('counters.')) ? `${key}.value` : key
+
     const li = document.createElement('li')
     li.classList.add('custom-dnd5e-counters-counter', 'flexrow', key)
     const h4 = document.createElement('h4')
@@ -509,8 +630,8 @@ function createNumber (actor, key, counter) {
     if (!counter.editRole || game.user.role >= counter.editRole) {
         const a = document.createElement('a')
         a.textContent = counter.label
-        a.addEventListener('click', () => { increaseNumber(actor, key) })
-        a.addEventListener('contextmenu', () => decreaseNumber(actor, key))
+        a.addEventListener('click', () => { increaseNumber(entity, originalKey) })
+        a.addEventListener('contextmenu', () => decreaseNumber(entity, key))
         h4.appendChild(a)
     } else {
         h4.textContent = counter.label
@@ -522,7 +643,7 @@ function createNumber (actor, key, counter) {
     const input = document.createElement('input')
     input.setAttribute('type', 'number')
     input.setAttribute('name', `flags.${MODULE.ID}.${key}`)
-    input.setAttribute('value', actor.getFlag(MODULE.ID, key) || 0)
+    input.setAttribute('value', entity.getFlag(MODULE.ID, key) || 0)
     input.setAttribute('placeholder', '0')
     input.setAttribute('data-dtype', 'Number')
     if (counter.editRole && game.user.role < counter.editRole) {
@@ -530,7 +651,7 @@ function createNumber (actor, key, counter) {
         input.setAttribute('disabled', 'true')
     } else {
         input.addEventListener('click', event => selectInputContent(event))
-        input.addEventListener('keyup', () => checkValue(input, actor, key), true)
+        input.addEventListener('keyup', () => checkValue(input, entity, key), true)
     }
     div.appendChild(input)
 
@@ -539,12 +660,12 @@ function createNumber (actor, key, counter) {
 
 /**
  * Create a success/failure counter
- * @param {object} actor   The actor
+ * @param {object} entity  The entity: actor or item
  * @param {string} key     The counter key
  * @param {object} counter The counter
  * @returns {object}       The LI
  */
-function createSuccessFailure (actor, key, counter) {
+function createSuccessFailure (entity, key, counter) {
     const li = document.createElement('li')
     li.classList.add('custom-dnd5e-counters-counter', 'flexrow', key)
 
@@ -561,8 +682,8 @@ function createSuccessFailure (actor, key, counter) {
 
     if (!counter.editRole || game.user.role >= counter.editRole) {
         const aSuccess = document.createElement('a')
-        aSuccess.addEventListener('click', () => increaseSuccess(actor, key))
-        aSuccess.addEventListener('contextmenu', () => decreaseSuccess(actor, key))
+        aSuccess.addEventListener('click', () => increaseSuccess(entity, key))
+        aSuccess.addEventListener('contextmenu', () => decreaseSuccess(entity, key))
         div.appendChild(aSuccess)
         aSuccess.appendChild(iSuccess)
     } else {
@@ -572,7 +693,7 @@ function createSuccessFailure (actor, key, counter) {
     const inputSuccess = document.createElement('input')
     inputSuccess.setAttribute('type', 'number')
     inputSuccess.setAttribute('name', `flags.${MODULE.ID}.${key}.success`)
-    inputSuccess.setAttribute('value', actor.getFlag(MODULE.ID, `${key}.success`) || 0)
+    inputSuccess.setAttribute('value', entity.getFlag(MODULE.ID, `${key}.success`) || 0)
     inputSuccess.setAttribute('placeholder', '0')
     inputSuccess.setAttribute('data-dtype', 'Number')
 
@@ -581,7 +702,7 @@ function createSuccessFailure (actor, key, counter) {
         inputSuccess.setAttribute('disabled', 'true')
     } else {
         inputSuccess.addEventListener('click', event => selectInputContent(event))
-        inputSuccess.addEventListener('keyup', () => checkValue(inputSuccess, actor, key), true)
+        inputSuccess.addEventListener('keyup', () => checkValue(inputSuccess, entity, key), true)
     }
 
     div.appendChild(inputSuccess)
@@ -591,8 +712,8 @@ function createSuccessFailure (actor, key, counter) {
 
     if (!counter.editRole || game.user.role >= counter.editRole) {
         const aFailure = document.createElement('a')
-        aFailure.addEventListener('click', () => increaseFailure(actor, key))
-        aFailure.addEventListener('contextmenu', () => decreaseFailure(actor, key))
+        aFailure.addEventListener('click', () => increaseFailure(entity, key))
+        aFailure.addEventListener('contextmenu', () => decreaseFailure(entity, key))
         div.appendChild(aFailure)
         aFailure.appendChild(iFailure)
     } else {
@@ -602,7 +723,7 @@ function createSuccessFailure (actor, key, counter) {
     const inputFailure = document.createElement('input')
     inputFailure.setAttribute('type', 'number')
     inputFailure.setAttribute('name', `flags.${MODULE.ID}.${key}.failure`)
-    inputFailure.setAttribute('value', actor.getFlag(MODULE.ID, `${key}.failure`) || 0)
+    inputFailure.setAttribute('value', entity.getFlag(MODULE.ID, `${key}.failure`) || 0)
     inputFailure.setAttribute('placeholder', '0')
     inputFailure.setAttribute('data-dtype', 'Number')
 
@@ -611,7 +732,7 @@ function createSuccessFailure (actor, key, counter) {
         inputFailure.setAttribute('disabled', 'true')
     } else {
         inputFailure.addEventListener('click', event => selectInputContent(event))
-        inputFailure.addEventListener('keyup', () => checkValue(inputFailure, actor, key), true)
+        inputFailure.addEventListener('keyup', () => checkValue(inputFailure, entity, key), true)
     }
 
     div.appendChild(inputFailure)
@@ -631,12 +752,12 @@ function selectInputContent (event) {
 
 /**
  * Check input value against max
- * @param {object} input The input
- * @param {object} actor The actor
- * @param {object} key   The counter key
+ * @param {object} input  The input
+ * @param {object} entity The entity: actor or item
+ * @param {object} key    The counter key
  */
-function checkValue (input, actor, key) {
-    const max = getMax(actor, key) || actor.getFlag(MODULE.ID, `${key}.max`)
+function checkValue (input, entity, key) {
+    const max = getMax(entity, key) || entity.getFlag(MODULE.ID, `${key}.max`)
     if (max && input.value > max) {
         input.value = max
     }
@@ -644,161 +765,178 @@ function checkValue (input, actor, key) {
 
 /**
  * Check checkbox counter
- * @param {object} actor The actor
- * @param {string} key   The counter key
+ * @param {object} entity The entity: actor or item
+ * @param {string} key    The counter key
  */
-function checkCheckbox (actor, key) {
-    actor.setFlag(MODULE.ID, key, true)
+function checkCheckbox (entity, key) {
+    key = (key.startsWith('counters.')) ? `${key}.value` : key
+    entity.setFlag(MODULE.ID, key, true)
 }
 
 /**
  * Uncheck checkbox counter
- * @param {object} actor The actor
- * @param {string} key   The counter key
+ * @param {object} entity The entity: actor or item
+ * @param {string} key    The counter key
  */
-function uncheckCheckbox (actor, key) {
-    actor.setFlag(MODULE.ID, key, false)
+function uncheckCheckbox (entity, key) {
+    key = (key.startsWith('counters.')) ? `${key}.value` : key
+    entity.setFlag(MODULE.ID, key, false)
 }
 
 /**
  * Decrease fraction counter
- * @param {object} actor       The actor
+ * @param {object} entity      The entity: actor or item
  * @param {string} key         The counter key
  * @param {number} actionValue The action value
  */
-function decreaseFraction (actor, key, actionValue = 1) {
-    const oldValue = actor.getFlag(MODULE.ID, `${key}.value`) || 0
+function decreaseFraction (entity, key, actionValue = 1) {
+    const oldValue = entity.getFlag(MODULE.ID, `${key}.value`) || 0
     const newValue = Math.max(oldValue - actionValue, 0)
     if (oldValue > 0) {
-        actor.setFlag(MODULE.ID, `${key}.value`, newValue)
+        entity.setFlag(MODULE.ID, `${key}.value`, newValue)
     }
 }
 
 /**
  * Increase fraction counter
- * @param {object} actor       The actor
+ * @param {object} entity      The entity: actor or item
  * @param {string} key         The counter key
  * @param {number} actionValue The action value
  */
-function increaseFraction (actor, key, actionValue = 1) {
-    const oldValue = actor.getFlag(MODULE.ID, `${key}.value`) || 0
-    const maxValue = getMax(actor, key) || actor.getFlag(MODULE.ID, `${key}.max`)
+function increaseFraction (entity, key, actionValue = 1) {
+    const oldValue = entity.getFlag(MODULE.ID, `${key}.value`) || 0
+    const maxValue = getMax(entity, key) || entity.getFlag(MODULE.ID, `${key}.max`)
     const newValue = (maxValue) ? Math.min(oldValue + actionValue, maxValue) : oldValue + actionValue
 
     if (!maxValue || newValue <= maxValue) {
-        actor.setFlag(MODULE.ID, `${key}.value`, newValue)
+        entity.setFlag(MODULE.ID, `${key}.value`, newValue)
     }
 }
 
 /**
  * Decrease number counter
- * @param {object} actor       The actor
+ * @param {object} entity      The entity: actor or item
  * @param {string} key         The counter key
  * @param {number} actionValue The action value
  */
-function decreaseNumber (actor, key, actionValue = 1) {
-    const oldValue = actor.getFlag(MODULE.ID, key) || 0
+function decreaseNumber (entity, key, actionValue = 1) {
+    const oldValue = entity.getFlag(MODULE.ID, key) || 0
     const newValue = Math.max(oldValue - actionValue, 0)
     if (oldValue > 0) {
-        actor.setFlag(MODULE.ID, key, newValue)
+        entity.setFlag(MODULE.ID, key, newValue)
     }
 }
 
 /**
  * Increase number counter
- * @param {object} actor       The actor
+ * @param {object} entity      The entity: actor or item
  * @param {string} key         The counter key
  * @param {number} actionValue The action value
  */
-function increaseNumber (actor, key, actionValue = 1) {
-    const oldValue = actor.getFlag(MODULE.ID, key) || 0
-    const maxValue = getMax(actor, key) || actor.getFlag(MODULE.ID, `${key}.max`)
+function increaseNumber (entity, key, actionValue = 1) {
+    const originalKey = key
+    key = (key.startsWith('counters.')) ? `${key}.value` : key
+    const oldValue = entity.getFlag(MODULE.ID, key) || 0
+    const maxValue = getMax(entity, key) || entity.getFlag(MODULE.ID, `${originalKey}.max`)
     const newValue = (maxValue) ? Math.min(oldValue + actionValue, maxValue) : oldValue + actionValue
 
     if (!maxValue || newValue <= maxValue) {
-        actor.setFlag(MODULE.ID, key, newValue)
+        entity.setFlag(MODULE.ID, key, newValue)
     }
 }
 
 /**
  * Decrease success on successFailure counter
- * @param {object} actor       The actor
+ * @param {object} entity      The entity: actor or item
  * @param {string} key         The counter key
  * @param {number} actionValue The action value
  */
-function decreaseSuccess (actor, key, actionValue = 1) {
-    const oldValue = actor.getFlag(MODULE.ID, `${key}.success`) || 0
+function decreaseSuccess (entity, key, actionValue = 1) {
+    const oldValue = entity.getFlag(MODULE.ID, `${key}.success`) || 0
     const newValue = Math.max(oldValue - actionValue, 0)
     if (oldValue > 0) {
-        actor.setFlag(MODULE.ID, `${key}.success`, newValue)
+        entity.setFlag(MODULE.ID, `${key}.success`, newValue)
     }
 }
 
 /**
  * Increase success on successFailure counter
- * @param {object} actor       The actor
+ * @param {object} entity      The entity: actor or item
  * @param {string} key         The counter key
  * @param {number} actionValue The action value
  */
-function increaseSuccess (actor, key, actionValue = 1) {
-    const oldValue = actor.getFlag(MODULE.ID, `${key}.success`) || 0
-    const maxValue = getMax(actor, key) || actor.getFlag(MODULE.ID, `${key}.max`)
+function increaseSuccess (entity, key, actionValue = 1) {
+    const oldValue = entity.getFlag(MODULE.ID, `${key}.success`) || 0
+    const maxValue = getMax(entity, key) || entity.getFlag(MODULE.ID, `${key}.max`)
     const newValue = (maxValue) ? Math.min(oldValue + actionValue, maxValue) : oldValue + actionValue
 
     if (!maxValue || newValue <= maxValue) {
-        actor.setFlag(MODULE.ID, `${key}.success`, newValue)
+        entity.setFlag(MODULE.ID, `${key}.success`, newValue)
     }
 }
 
 /**
  * Decrease failure on successFailure counter
- * @param {object} actor       The actor
+ * @param {object} entity      The entity: actor or item
  * @param {string} key         The counter key
  * @param {number} actionValue The action value
  */
-function decreaseFailure (actor, key, actionValue = 1) {
-    const oldValue = actor.getFlag(MODULE.ID, `${key}.failure`) || 0
+function decreaseFailure (entity, key, actionValue = 1) {
+    const oldValue = entity.getFlag(MODULE.ID, `${key}.failure`) || 0
     const newValue = Math.max(oldValue - actionValue, 0)
     if (oldValue > 0) {
-        actor.setFlag(MODULE.ID, `${key}.failure`, newValue)
+        entity.setFlag(MODULE.ID, `${key}.failure`, newValue)
     }
 }
 
 /**
  * Increase failure on successFailure counter
- * @param {object} actor        The actor
- * @param {string} key          The counter key
-  * @param {number} actionValue The action value
+ * @param {object} entity      The entity: actor or item
+ * @param {string} key         The counter key
+ * @param {number} actionValue The action value
  */
-function increaseFailure (actor, key, actionValue = 1) {
-    const oldValue = actor.getFlag(MODULE.ID, `${key}.failure`) || 0
-    const maxValue = getMax(actor, key) || actor.getFlag(MODULE.ID, `${key}.max`)
+function increaseFailure (entity, key, actionValue = 1) {
+    const oldValue = entity.getFlag(MODULE.ID, `${key}.failure`) || 0
+    const maxValue = getMax(entity, key) || entity.getFlag(MODULE.ID, `${key}.max`)
     const newValue = (maxValue) ? Math.min(oldValue + actionValue, maxValue) : oldValue + actionValue
 
     if (!maxValue || newValue <= maxValue) {
-        actor.setFlag(MODULE.ID, `${key}.failure`, newValue)
+        entity.setFlag(MODULE.ID, `${key}.failure`, newValue)
     }
 }
 
 /**
- * Get counter setting by the actor type
- * @param {object} actor The actor
- * @param {string} key   The counter key
- * @returns {object}     The counter setting
+ * Get counter setting by the entity
+ * @param {object} entity The entity: actor or item
+ * @param {string} key    The counter key
+ * @returns {object}      The counter setting
  */
-function getSettingByActorType (actorType, key = null) {
-    const settingKey = SETTING_BY_ACTOR_TYPE.COUNTERS[actorType]
-    return (key) ? getSetting(settingKey)[key] : getSetting(settingKey)
+function getCounters (entity, key = null) {
+    const type = (entity.documentName === 'Actor') ? entity.type : 'item'
+    const settingKey = SETTING_BY_ENTITY_TYPE.COUNTERS[type]
+
+    if (!key) {
+        return {
+            world: getSetting(settingKey),
+            entity: getFlag(entity, 'counters')
+        }
+    }
+
+    if (key.startsWith('counters.')) {
+        return getFlag(entity, key)
+    }
+
+    return getSetting(settingKey)[key]
 }
 
 /**
  * Get the counter's max value
- * @param {object} actor The actor
- * @param {string} key   The counter key
- * @returns {number}     The max value
+ * @param {object} entity The entity: actor or item
+ * @param {string} key    The counter key
+ * @returns {number}      The max value
  */
-function getMax (actor, key) {
-    const setting = getSettingByActorType(actor.type, key)
+function getMax (entity, key) {
+    const setting = getCounters(entity, key)
     return setting?.max
 }
 

@@ -27,7 +27,7 @@ export class CustomDnd5eSheetCharacter2 extends dnd5e.applications.actor.ActorSh
     /** @inheritDoc */
     static get defaultOptions () {
         return foundry.utils.mergeObject(super.defaultOptions, {
-            classes: ['custom-dnd5e', 'dnd5e2', 'sheet', 'actor', 'character']
+            classes: ['custom-dnd5e', 'dnd5e2', 'sheet', 'actor', 'character', 'vertical-tabs']
         })
     }
 

@@ -65,6 +65,7 @@ export function setConfig (data = null) {
                 {
                     color: value.color,
                     icon: value.icon,
+                    ...(value.isPhysical !== undefined && { isPhysical: value.isPhysical }),
                     label: game.i18n.localize(value.label),
                     reference: value.reference
                 }
@@ -78,6 +79,7 @@ export function setConfig (data = null) {
         return
     }
 
-    const config = buildConfig(foundry.utils.mergeObject(CONFIG.CUSTOM_DND5E[property], data))
+    const defaultConfig = foundry.utils.deepClone(CONFIG.CUSTOM_DND5E[property])
+    const config = buildConfig(foundry.utils.mergeObject(defaultConfig, data))
     config && (CONFIG.DND5E[property] = config)
 }

@@ -375,7 +375,7 @@ function setDeathSavesRollMode (actor, rollData) {
 
 /**
  * Recalculate Damage
- * Trigger by the 'dnd5e.preApplyDamage' hook
+ * Triggered by the 'dnd5e.preApplyDamage' hook
  * If 'Apply Negative HP' is enabled, recalculate damage to apply a negative value to HP
  * @param {object} actor   The actor
  * @param {number} amount  The damage amount
@@ -386,10 +386,10 @@ function recalculateDamage (actor, amount, updates, options) {
     const hpMax = actor?.system?.attributes?.hp?.max ?? 0
     const hpTemp = actor?.system?.attributes?.hp?.temp ?? 0
     const hpValue = actor?.system?.attributes?.hp?.value ?? 0
-    const newHpTemp = amount > 0 ? Math.max(hpTemp - amount, 0) : 0
+    const newHpTemp = amount > 0 ? Math.max(hpTemp - amount, 0) : (updates['system.attribute.hp.temp'] ?? hpTemp)
     const startHp = (getSetting(CONSTANTS.HIT_POINTS.SETTING.NEGATIVE_HP_HEAL_FROM_ZERO)) ? 0 : hpValue
     const newHpValue = amount > 0
-        ? hpValue - (amount - hpTemp)
+        ? hpValue - (amount - Math.min(amount, hpTemp))
         : Math.min(startHp - amount, hpMax)
 
     updates['system.attributes.hp.temp'] = newHpTemp
@@ -481,14 +481,14 @@ function updateDeathSaves (source, actor, data) {
         if (source === 'regainHp' && removeDeathSaves.regainHp[type] < 3 && hasProperty(data, 'system.attributes.hp.value')) {
             const previousHp = actor.system.attributes.hp.value
             const newValue = (previousHp === 0) ? Math.max(currentValue - removeDeathSaves.regainHp[type], 0) : currentValue
-            setProperty(data, `system.attributes.death.${type}`, newValue)
+            foundry.utils.setProperty(data, `system.attributes.death.${type}`, newValue)
         } else if (source === 'rest') {
             const restType = (data?.longRest) ? 'longRest' : 'shortRest'
 
             if (removeDeathSaves[restType][type] === 0) return
 
             const newValue = Math.max(currentValue - removeDeathSaves[restType][type], 0)
-            setProperty(data.updateData, `system.attributes.death.${type}`, newValue)
+            foundry.utils.setProperty(data.updateData, `system.attributes.death.${type}`, newValue)
         }
     }
 

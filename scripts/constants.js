@@ -109,6 +109,9 @@ export const CONSTANTS = {
             GROUP_COUNTERS: {
                 KEY: 'group-counters'
             },
+            ITEM_COUNTERS: {
+                KEY: 'item-counters'
+            },
             NPC_COUNTERS: {
                 KEY: 'npc-counters'
             }
@@ -123,6 +126,7 @@ export const CONSTANTS = {
         },
         TEMPLATE: {
             FORM: 'modules/custom-dnd5e/templates/counters-form.hbs',
+            FORM_INDIVIDUAL: 'modules/custom-dnd5e/templates/counters-form-individual.hbs',
             LIST: 'modules/custom-dnd5e/templates/counters-list.hbs',
             ADVANCED_OPTIONS_FORM: 'modules/custom-dnd5e/templates/counters-advanced-options-form.hbs',
             ADVANCED_OPTIONS_LIST: 'modules/custom-dnd5e/templates/counters-triggers-list.hbs'
@@ -483,10 +487,11 @@ export const CONSTANTS = {
     }
 }
 
-export const SETTING_BY_ACTOR_TYPE = {
+export const SETTING_BY_ENTITY_TYPE = {
     COUNTERS: {
         character: CONSTANTS.COUNTERS.SETTING.CHARACTER_COUNTERS.KEY,
         group: CONSTANTS.COUNTERS.SETTING.GROUP_COUNTERS.KEY,
+        item: CONSTANTS.COUNTERS.SETTING.ITEM_COUNTERS.KEY,
         npc: CONSTANTS.COUNTERS.SETTING.NPC_COUNTERS.KEY
     }
 }
@@ -505,6 +510,7 @@ export const SHEET_TYPE = {
         character: true,
         custom: false,
         group: false,
+        item: false,
         legacy: false,
         npc: true
     },
@@ -513,14 +519,25 @@ export const SHEET_TYPE = {
         character: false,
         custom: false,
         group: false,
+        item: false,
         legacy: true,
-        npc: false
+        npc: true
+    },
+    ActorSheet5eNPC2: {
+        countersSetting: CONSTANTS.COUNTERS.SETTING.NPC_COUNTERS.KEY,
+        character: false,
+        custom: false,
+        group: false,
+        item: false,
+        legacy: false,
+        npc: true
     },
     GroupActorSheet: {
         countersSetting: CONSTANTS.COUNTERS.SETTING.GROUP_COUNTERS.KEY,
         character: false,
         custom: false,
         group: true,
+        item: false,
         legacy: false,
         npc: false
     },
@@ -529,6 +546,16 @@ export const SHEET_TYPE = {
         character: true,
         custom: true,
         group: false,
+        item: false,
+        legacy: false,
+        npc: false
+    },
+    ItemSheet5e: {
+        countersSetting: CONSTANTS.COUNTERS.SETTING.ITEM_COUNTERS.KEY,
+        character: false,
+        custom: false,
+        group: false,
+        item: true,
         legacy: false,
         npc: false
     }

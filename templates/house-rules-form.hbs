@@ -53,11 +53,7 @@
                 <label>{{localize "CUSTOM_DND5E.rollMode"}}</label>
                 <div class="form-fields">
                     <select id="death-saves-roll-mode" name="deathSavesRollMode">
-                        {{#select deathSavesRollMode}}
-                        <option id="publicroll" value="publicroll">{{localize "CHAT.RollPublic"}}</option>
-                        <option id="blindroll" value="blindroll">{{localize "CHAT.RollBlind"}}</option>
-                        <option id="gmroll" value="gmroll">{{localize "CHAT.RollPrivate"}}</option>
-                        {{/select}}
+                        {{selectOptions selects.deathSavesRollMode.choices selected=deathSavesRollMode localize=true}}
                     </select>
                 </div>
                 <p class="notes">{{localize "CUSTOM_DND5E.form.houseRules.deathSaves.deathSavesRollMode.note.1"}}</p>
