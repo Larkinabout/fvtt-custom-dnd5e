@@ -86,6 +86,11 @@ Select 'Custom D&D 5e Character Sheet' from the Sheet Configuration dialog (cog 
 
 ![Custom D&D 5e Radial Status Effects](./.github/readme/custom-dnd5e-radial-status-effects.png)
 
+## Token Border Shape
+- Choose the shape of the token's border when it is selected or hovered.
+
+![Custom D&D 5e Token Border Shape](./.github/readme/custom-dnd5e-token-border-shape.png)
+
 ## Apply Elevation to Selected Tokens
 - Apply elevation to all selected tokens.
 

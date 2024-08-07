@@ -335,7 +335,7 @@
     "CUSTOM_DND5E.setting.radialStatusEffects.name": "Radial Status Effects",
     "CUSTOM_DND5E.setting.radialStatusEffects.hint": "Display status effects in a circle around the token",
     "CUSTOM_DND5E.setting.tokenBorderShape.name": "Token Border Shape",
-    "CUSTOM_DND5E.setting.tokenBorderShape.hint": "Choose the shape of the token's border when it is selected or hovered over",
+    "CUSTOM_DND5E.setting.tokenBorderShape.hint": "Choose the shape of the token's border when it is selected or hovered",
     "CUSTOM_DND5E.setting.applyElevationToSelectedTokens.name": "Apply Elevation to Selected",
     "CUSTOM_DND5E.setting.applyElevationToSelectedTokens.hint": "When applying elevation via a token's HUD, apply it to all selected tokens",
     "CUSTOM_DND5E.setting.toggleStatusEffectOnSelectedTokens.name": "Toggle Status Effects on Selected",
