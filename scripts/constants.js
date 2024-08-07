@@ -482,6 +482,11 @@ export const CONSTANTS = {
                 KEY: 'toggle-status-effect-on-selected-tokens',
                 HINT: 'CUSTOM_DND5E.setting.toggleStatusEffectOnSelectedTokens.hint',
                 NAME: 'CUSTOM_DND5E.setting.toggleStatusEffectOnSelectedTokens.name'
+            },
+            BORDER_SHAPE: {
+                KEY: 'token-border-shape',
+                HINT: 'CUSTOM_DND5E.setting.tokenBorderShape.hint',
+                NAME: 'CUSTOM_DND5E.setting.tokenBorderShape.name'
             }
         }
     }
