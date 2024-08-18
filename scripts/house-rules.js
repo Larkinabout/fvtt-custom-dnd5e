@@ -386,13 +386,11 @@ function recalculateDamage (actor, amount, updates, options) {
     const hpMax = actor?.system?.attributes?.hp?.max ?? 0
     const hpTemp = actor?.system?.attributes?.hp?.temp ?? 0
     const hpValue = actor?.system?.attributes?.hp?.value ?? 0
-    const newHpTemp = amount > 0 ? Math.max(hpTemp - amount, 0) : (updates['system.attribute.hp.temp'] ?? hpTemp)
     const startHp = (getSetting(CONSTANTS.HIT_POINTS.SETTING.NEGATIVE_HP_HEAL_FROM_ZERO)) ? 0 : hpValue
     const newHpValue = amount > 0
-        ? hpValue - (amount - Math.min(amount, hpTemp))
+        ? hpValue - (amount - hpTemp)
         : Math.min(startHp - amount, hpMax)
 
-    updates['system.attributes.hp.temp'] = newHpTemp
     updates['system.attributes.hp.value'] = newHpValue
 }
 
