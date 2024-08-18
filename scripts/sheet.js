@@ -331,10 +331,13 @@ function removeInspiration (sheetType, html) {
  * @param {object} html      The HTML
  */
 function removeLegendaryActions (sheetType, html) {
-    if (sheetType.npc && sheetType.legacy) {
-        const legendaryActions = html[0].querySelector('input[name="system.resources.legact.value"]')?.closest('div.legendary')
-        legendaryActions?.remove()
-    }
+    if (!sheetType.npc) return
+
+    const legendaryActions = (sheetType.legacy)
+        ? html[0].querySelector('input[name="system.resources.legact.value"]')?.closest('div.legendary')
+        : html[0].querySelector('.legact')
+
+    legendaryActions?.remove()
 }
 
 /**
@@ -343,10 +346,13 @@ function removeLegendaryActions (sheetType, html) {
  * @param {object} html      The HTML
  */
 function removeLegendaryResistance (sheetType, html) {
-    if (sheetType.npc && sheetType.legacy) {
-        const legendaryResistance = html[0].querySelector('input[name="system.resources.legres.value"]')?.closest('div.legendary')
-        legendaryResistance?.remove()
-    }
+    if (!sheetType.npc) return
+
+    const legendaryResistance = (sheetType.legacy)
+        ? html[0].querySelector('input[name="system.resources.legres.value"]')?.closest('div.legendary')
+        : html[0].querySelector('.legres')
+
+    legendaryResistance?.remove()
 }
 
 /**
@@ -366,8 +372,9 @@ function removeManageCurrency (sheetType, html) {
  * @param {object} html      The HTML
  */
 function removeUseLairAction (sheetType, html) {
-    if (sheetType.npc && sheetType.legacy) {
-        const useLairAction = html[0].querySelector('.lair')
-        useLairAction?.remove()
-    }
+    if (!sheetType.npc) return
+
+    const useLairAction = html[0].querySelector('.lair')
+
+    useLairAction?.remove()
 }
