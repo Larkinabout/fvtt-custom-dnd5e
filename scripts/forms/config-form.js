@@ -14,6 +14,7 @@ import { setConfig as setLanguages } from '../languages.js'
 import { setConfig as setSenses } from '../senses.js'
 import { setConfig as setSkills } from '../skills.js'
 import { setConfig as setSpellSchools } from '../spell-schools.js'
+import { setConfig as setWeaponIds } from '../weapon-ids.js'
 
 const itemClass = `${MODULE.ID}-item`
 const listClass = `${MODULE.ID}-list`
@@ -294,6 +295,29 @@ export class ArmorCalculationsForm extends ConfigForm {
     }
 }
 
+export class ArmorIdsForm extends ConfigForm {
+    constructor () {
+        super()
+        this.requiresReload = true
+        this.settingKey = CONSTANTS.ARMOR_IDS.SETTING.KEY
+        this.setFunction = setWeaponIds
+        this.type = 'weaponIds'
+    }
+
+    static get defaultOptions () {
+        return foundry.utils.mergeObject(super.defaultOptions, {
+            id: `${MODULE.ID}-armor-ids-form`,
+            template: CONSTANTS.ARMOR_IDS.TEMPLATE.FORM,
+            title: game.i18n.localize('CUSTOM_DND5E.form.armorIds.title')
+        })
+    }
+
+    async _getHtml (data) {
+        const template = await renderTemplate(CONSTANTS.ARMOR_IDS.TEMPLATE.LIST, data)
+        return template
+    }
+}
+
 export class ArmorTypesForm extends ConfigForm {
     constructor () {
         super()
@@ -486,6 +510,29 @@ export class SpellSchoolsForm extends ConfigForm {
 
     async _getHtml (data) {
         const template = await renderTemplate(CONSTANTS.SPELL_SCHOOLS.TEMPLATE.LIST, data)
+        return template
+    }
+}
+
+export class WeaponIdsForm extends ConfigForm {
+    constructor () {
+        super()
+        this.requiresReload = true
+        this.settingKey = CONSTANTS.WEAPON_IDS.SETTING.KEY
+        this.setFunction = setWeaponIds
+        this.type = 'weaponIds'
+    }
+
+    static get defaultOptions () {
+        return foundry.utils.mergeObject(super.defaultOptions, {
+            id: `${MODULE.ID}-weapon-ids-form`,
+            template: CONSTANTS.WEAPON_IDS.TEMPLATE.FORM,
+            title: game.i18n.localize('CUSTOM_DND5E.form.weaponIds.title')
+        })
+    }
+
+    async _getHtml (data) {
+        const template = await renderTemplate(CONSTANTS.WEAPON_IDS.TEMPLATE.LIST, data)
         return template
     }
 }

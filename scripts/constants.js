@@ -61,6 +61,22 @@ export const CONSTANTS = {
             LIST: 'modules/custom-dnd5e/templates/armor-calculations-list.hbs'
         }
     },
+    ARMOR_IDS: {
+        MENU: {
+            KEY: 'armor-ids-menu',
+            HINT: 'CUSTOM_DND5E.menu.armorIds.hint',
+            ICON: 'fas fa-pen-to-square',
+            LABEL: 'CUSTOM_DND5E.menu.armorIds.label',
+            NAME: 'CUSTOM_DND5E.menu.armorIds.name'
+        },
+        SETTING: {
+            KEY: 'armor-ids'
+        },
+        TEMPLATE: {
+            FORM: 'modules/custom-dnd5e/templates/uuid-form.hbs',
+            LIST: 'modules/custom-dnd5e/templates/uuid-list.hbs'
+        }
+    },
     ARMOR_TYPES: {
         ID: 'armor-types',
         MENU: {
@@ -501,6 +517,28 @@ export const CONSTANTS = {
             APPLY_UNCONSCIOUS: {
                 KEY: 'apply-unconscious'
             }
+        }
+    },
+    UUID: {
+        TEMPLATE: {
+            FORM: 'modules/custom-dnd5e/templates/uuid-form.hbs',
+            LIST: 'modules/custom-dnd5e/templates/uuid-list.hbs'
+        }
+    },
+    WEAPON_IDS: {
+        MENU: {
+            KEY: 'weapon-ids-menu',
+            HINT: 'CUSTOM_DND5E.menu.weaponIds.hint',
+            ICON: 'fas fa-pen-to-square',
+            LABEL: 'CUSTOM_DND5E.menu.weaponIds.label',
+            NAME: 'CUSTOM_DND5E.menu.weaponIds.name'
+        },
+        SETTING: {
+            KEY: 'weapon-ids'
+        },
+        TEMPLATE: {
+            FORM: 'modules/custom-dnd5e/templates/uuid-form.hbs',
+            LIST: 'modules/custom-dnd5e/templates/uuid-list.hbs'
         }
     }
 }

@@ -4,6 +4,7 @@ import { register as registerHouseRules, registerNegativeHp } from './house-rule
 import { register as registerAbilities, setConfig as setAbilities } from './abilities.js'
 import { register as registerActorSizes, setConfig as setActorSizes } from './actor-sizes.js'
 import { register as registerArmorCalculations, setConfig as setArmorCalculations } from './armor-calculations.js'
+import { register as registerArmorIds, setConfig as setArmorIds } from './armor-ids.js'
 import { register as registerArmorTypes, setConfig as setArmorTypes } from './armor-types.js'
 import { registerSettings as registerCounters } from './counters.js'
 import { register as registerCurrency, setConfig as setCurrency } from './currency.js'
@@ -23,6 +24,7 @@ import { register as registerSkills, setConfig as setSkills } from './skills.js'
 import { register as registerSpellSchools, setConfig as setSpellSchools } from './spell-schools.js'
 import { register as registerRadialStatusEffects } from './radial-status-effects.js'
 import { register as registerTokenBorder } from './token-border.js'
+import { register as registerWeaponIds, setConfig as setWeaponIds } from './weapon-ids.js'
 import { patchApplicationRender } from './patches/application-render.js'
 import { patchPrepareEncumbrance } from './patches/prepare-encumbrance.js'
 import { registerCharacterSheet } from './sheets/character-sheet.js'
@@ -50,6 +52,7 @@ Hooks.on('init', async () => {
     registerAbilities()
     registerActorSizes()
     registerArmorCalculations()
+    registerArmorIds()
     // registerArmorTypes()
     registerCounters()
     registerCurrency()
@@ -64,6 +67,7 @@ Hooks.on('init', async () => {
     registerSheet()
     registerSkills()
     registerSpellSchools()
+    registerWeaponIds()
     registerMisc()
     registerRadialStatusEffects()
     registerTokenBorder()
@@ -74,6 +78,7 @@ Hooks.on('init', async () => {
     setAbilities(getSetting(CONSTANTS.ABILITIES.SETTING.KEY))
     setActorSizes(getSetting(CONSTANTS.ACTOR_SIZES.SETTING.KEY))
     setArmorCalculations(getSetting(CONSTANTS.ARMOR_CALCULATIONS.SETTING.KEY))
+    setArmorIds(getSetting(CONSTANTS.ARMOR_IDS.SETTING.KEY))
     // setArmorTypes(getSetting(CONSTANTS.ARMOR_TYPES.SETTING.KEY))
     setCurrency(getSetting(CONSTANTS.CURRENCY.SETTING.KEY))
     setDamageTypes(getSetting(CONSTANTS.DAMAGE_TYPES.SETTING.KEY))
@@ -86,6 +91,7 @@ Hooks.on('init', async () => {
     setSenses(getSetting(CONSTANTS.SENSES.SETTING.KEY))
     setSkills(getSetting(CONSTANTS.SKILLS.SETTING.KEY))
     setSpellSchools(getSetting(CONSTANTS.SPELL_SCHOOLS.SETTING.KEY))
+    setWeaponIds(getSetting(CONSTANTS.WEAPON_IDS.SETTING.KEY))
     setMaxLevel(getSetting(CONSTANTS.MAX_LEVEL.SETTING.KEY))
 
     Logger.debug(
@@ -95,7 +101,9 @@ Hooks.on('init', async () => {
             CONSTANTS.CONFIG.TEMPLATE.LIST,
             CONSTANTS.SHEET.TEMPLATE.CHARACTER_SHEET_2,
             CONSTANTS.SHEET.TEMPLATE.CHARACTER_DETAILS,
-            CONSTANTS.MESSAGE.TEMPLATE.ROLL_REQUEST_CARD
+            CONSTANTS.MESSAGE.TEMPLATE.ROLL_REQUEST_CARD,
+            CONSTANTS.UUID.TEMPLATE.FORM,
+            CONSTANTS.UUID.TEMPLATE.LIST
         ]
     )
 
@@ -104,7 +112,9 @@ Hooks.on('init', async () => {
         CONSTANTS.CONFIG.TEMPLATE.LIST,
         CONSTANTS.SHEET.TEMPLATE.CHARACTER_SHEET_2,
         CONSTANTS.SHEET.TEMPLATE.CHARACTER_DETAILS,
-        CONSTANTS.MESSAGE.TEMPLATE.ROLL_REQUEST_CARD
+        CONSTANTS.MESSAGE.TEMPLATE.ROLL_REQUEST_CARD,
+        CONSTANTS.UUID.TEMPLATE.FORM,
+        CONSTANTS.UUID.TEMPLATE.LIST
     ])
 })
 

@@ -1,0 +1,32 @@
+{{#each items as |item key|}}
+<li class="custom-dnd5e-item flexrow" data-key="{{customDnd5eDotNotateChild ../parentKey key}}">
+    <i class="custom-dnd5e-drag flex0 fas fa-grip-lines" draggable="true"></i>
+    <input id="visible" name="{{customDnd5eDotNotateChild ../parentKey key}}.visible" type="checkbox" data-tooltip="{{localize "CUSTOM_DND5E.form.checkbox.visible.tooltip"}}"{{#unless (customDnd5eBoolFalse visible)}} checked{{/unless}}>
+    <div class="fields flexrow">
+        <input id="parentKey" name="{{customDnd5eDotNotateChild ../parentKey key}}.parentKey" type="hidden" value="{{../parentKey}}">
+        <div class="form-group">
+            <label class="flex1" style="min-width:50px; max-width:120px;">{{localize "CUSTOM_DND5E.key"}}</label>
+            <div class="form-fields">
+                <input{{#unless (customDnd5eBoolFalse system)}} disabled{{/unless}} id="key" {{#if (customDnd5eBoolFalse system)}}name="{{customDnd5eDotNotateChild ../parentKey key}}.key"{{/if}} type="text" value="{{key}}">
+                {{#unless (customDnd5eBoolFalse system)}}<input id="key" name="{{customDnd5eDotNotateChild ../parentKey key}}.key" type="hidden" value="{{key}}">{{/unless}}
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="flex1" style="min-width:50px; max-width:120px;">{{localize "CUSTOM_DND5E.uuid"}}</label>
+            <div class="form-fields">
+                <input id="label" name="{{customDnd5eDotNotateChild ../parentKey key}}.label" type="text" value="{{localize label}}">
+            </div>
+        </div>
+        <input id="system" name="{{customDnd5eDotNotateChild ../parentKey key}}.system" type="hidden" value="{{#if (customDnd5eBoolFalse system)}}false{{else}}true{{/if}}">
+    </div>
+    <button{{#unless (customDnd5eBoolFalse system)}} disabled{{/unless}} type="button" {{#if (customDnd5eBoolFalse system)}}data-tooltip="{{localize "CUSTOM_DND5E.form.button.delete.tooltip"}}" data-action="delete"{{/if}} class="flex0 custom-dnd5e-list-button">
+        <i class="fas fa-xmark"></i>
+    </button>
+    <input id="delete" name="{{customDnd5eDotNotateChild ../parentKey key}}.delete" type="hidden" value="false">
+    {{#if item.children}}
+    <ul class="custom-dnd5e-list flexcol">
+        {{> "modules/custom-dnd5e/templates/uuid-list.hbs" prefix=../prefix parentKey=(customDnd5eDotNotateChild ../parentKey key) items=item.children }}
+    </ul>
+    {{/if}}
+</li>
+{{/each}}
