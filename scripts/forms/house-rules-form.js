@@ -23,6 +23,7 @@ export class HouseRulesForm extends CustomDnd5eForm {
         data.levelUpHitPointsRerollMinimumValue = getSetting(CONSTANTS.LEVEL_UP.HIT_POINTS.REROLL.MINIMUM_VALUE.SETTING.KEY)
         data.levelUpHitPointsRerollOnce = getSetting(CONSTANTS.LEVEL_UP.HIT_POINTS.REROLL.ONCE.SETTING.KEY)
         data.levelUpHitPointsShowTakeAverage = getSetting(CONSTANTS.LEVEL_UP.HIT_POINTS.SHOW_TAKE_AVERAGE.SETTING.KEY)
+        data.rollNpcHp = getSetting(CONSTANTS.HIT_POINTS.SETTING.ROLL_NPC_HP.KEY)
         data.applyBloodied = getSetting(CONSTANTS.BLOODIED.SETTING.APPLY_BLOODIED.KEY)
         data.bloodiedIcon = getSetting(CONSTANTS.BLOODIED.SETTING.BLOODIED_ICON.KEY)
         data.bloodiedTint = getSetting(CONSTANTS.BLOODIED.SETTING.BLOODIED_TINT.KEY)
@@ -62,6 +63,7 @@ export class HouseRulesForm extends CustomDnd5eForm {
                 resetSetting(CONSTANTS.LEVEL_UP.HIT_POINTS.REROLL.MINIMUM_VALUE.SETTING.KEY),
                 resetSetting(CONSTANTS.LEVEL_UP.HIT_POINTS.REROLL.ONCE.SETTING.KEY),
                 resetSetting(CONSTANTS.LEVEL_UP.HIT_POINTS.SHOW_TAKE_AVERAGE.SETTING.KEY),
+                resetSetting(CONSTANTS.HIT_POINTS.SETTING.ROLL_NPC_HP.KEY),
                 resetSetting(CONSTANTS.BLOODIED.SETTING.APPLY_BLOODIED.KEY),
                 resetSetting(CONSTANTS.BLOODIED.SETTING.BLOODIED_ICON.KEY),
                 resetSetting(CONSTANTS.BLOODIED.SETTING.BLOODIED_TINT.KEY),
@@ -119,6 +121,7 @@ export class HouseRulesForm extends CustomDnd5eForm {
             setSetting(CONSTANTS.LEVEL_UP.HIT_POINTS.REROLL.MINIMUM_VALUE.SETTING.KEY, formData.levelUpHitPointsRerollMinimumValue),
             setSetting(CONSTANTS.LEVEL_UP.HIT_POINTS.REROLL.ONCE.SETTING.KEY, formData.levelUpHitPointsRerollOnce),
             setSetting(CONSTANTS.LEVEL_UP.HIT_POINTS.SHOW_TAKE_AVERAGE.SETTING.KEY, formData.levelUpHitPointsShowTakeAverage),
+            setSetting(CONSTANTS.HIT_POINTS.SETTING.ROLL_NPC_HP.KEY, formData.rollNpcHp),
             setSetting(CONSTANTS.BLOODIED.SETTING.APPLY_BLOODIED.KEY, formData.applyBloodied),
             setSetting(CONSTANTS.BLOODIED.SETTING.BLOODIED_ICON.KEY, formData.bloodiedIcon),
             setSetting(CONSTANTS.BLOODIED.SETTING.BLOODIED_TINT.KEY, formData.bloodiedTint),

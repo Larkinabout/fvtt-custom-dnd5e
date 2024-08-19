@@ -199,6 +199,8 @@
     "CUSTOM_DND5E.form.houseRules.prone.proneRotation.note.1": "Angle to rotate the token when it has the Prone status effect",
     "CUSTOM_DND5E.form.houseRules.rollingHitPoints.minimumValue.label": "Minimum Value",
     "CUSTOM_DND5E.form.houseRules.rollingHitPoints.minimumValue.note": "Automatically reroll when result is below the minimum value",
+    "CUSTOM_DND5E.form.houseRules.rollingHitPoints.rollNpcHp.label": "Roll HP for NPCs",
+    "CUSTOM_DND5E.form.houseRules.rollingHitPoints.rollNpcHp.note": "Roll HP for NPCs when dragging their token onto the canvas",
     "CUSTOM_DND5E.form.houseRules.rollingHitPoints.rerollOnce.label": "Reroll Once",
     "CUSTOM_DND5E.form.houseRules.rollingHitPoints.rerollOnce.note": "Reroll once, otherwise reroll until minimum is met",
     "CUSTOM_DND5E.form.houseRules.rollingHitPoints.showTakeAverage.label": "Show Take Average",

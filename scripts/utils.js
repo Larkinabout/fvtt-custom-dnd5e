@@ -92,7 +92,8 @@ export function registerSetting (key, options) {
  * @returns
  */
 export function getFlag (entity, key) {
-    return entity.getFlag(MODULE.ID, key) || null
+    const flag = entity.getFlag(MODULE.ID, key)
+    return (flag || flag === 0) ? flag : null
 }
 
 /**
@@ -266,7 +267,9 @@ export async function rotateToken (token, rotation) {
 export async function unrotateToken (token) {
     const rotation = getFlag(token.document, 'rotation')
 
-    if (rotation || rotation === null) {
+    if (token.document.rotation === rotation) return
+
+    if (rotation || rotation === 0) {
         token.document.update({ rotation })
         await unsetFlag(token.document, 'rotation')
     }
@@ -278,7 +281,7 @@ export async function unrotateToken (token) {
  * @param {string} tint  The hex color
  */
 export async function tintToken (token, tint) {
-    if (token.document.texture.tint === tint) return
+    if (token?.document?.texture?.tint === tint) return
 
     if (!getFlag(token.document, 'tint')) {
         await setFlag(token.document, 'tint', token.document.texture.tint)
@@ -293,6 +296,8 @@ export async function tintToken (token, tint) {
  */
 export async function untintToken (token) {
     const tint = getFlag(token.document, 'tint')
+
+    if (token?.document?.texture?.tint === tint) return
 
     if (tint || tint === null) {
         token.document.update({ texture: { tint } })

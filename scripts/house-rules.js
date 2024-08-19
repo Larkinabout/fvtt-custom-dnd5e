@@ -85,6 +85,16 @@ function registerSettings () {
     )
 
     registerSetting(
+        CONSTANTS.HIT_POINTS.SETTING.ROLL_NPC_HP.KEY,
+        {
+            scope: 'world',
+            config: false,
+            type: Boolean,
+            default: true
+        }
+    )
+
+    registerSetting(
         CONSTANTS.BLOODIED.SETTING.APPLY_BLOODIED.KEY,
         {
             scope: 'world',
@@ -279,6 +289,7 @@ function registerHooks () {
 
     Hooks.on('createActiveEffect', (activeEffect, options, id) => { updateTokenEffects(true, activeEffect) })
     Hooks.on('deleteActiveEffect', (activeEffect, options, id) => { updateTokenEffects(false, activeEffect) })
+    Hooks.on('createToken', (token, data, options, userId) => { rollNpcHp(token) })
     Hooks.on('dnd5e.preApplyDamage', recalculateDamage)
     Hooks.on('dnd5e.preRestCompleted', (actor, data) => updateDeathSaves('rest', actor, data))
     Hooks.on('dnd5e.preRollDeathSave', setDeathSavesRollMode)
@@ -326,7 +337,7 @@ export function registerBloodied () {
     Object.entries(CONFIG.DND5E.conditionTypes).forEach(([key, value]) => {
         const conditionLabel = game.i18n.localize(value.label)
         if (conditionLabel > label && !conditionTypes.bloodied) {
-            conditionTypes.bloodied = { label, icon }
+            conditionTypes.bloodied = { label, img }
         }
         conditionTypes[key] = value
     })
@@ -456,6 +467,29 @@ function recalculateHealing (actor, data) {
 }
 
 /**
+ * Roll NPC HP
+ * Triggered by the 'preCreateToken' hook
+ * @param {object} token The token
+ */
+async function rollNpcHp (token) {
+    const actor = token?.actor
+
+    if (actor?.type !== 'npc') return
+    if (!getSetting(CONSTANTS.HIT_POINTS.SETTING.ROLL_NPC_HP.KEY)) return
+
+    const formula = actor.system.attributes.hp.formula
+
+    if (!formula) return
+
+    const r = Roll.create(formula)
+    await r.evaluate()
+
+    if (!r.total) return
+
+    actor.update({ 'system.attributes.hp': { value: r.total, max: r.total } }, { isRest: true })
+}
+
+/**
  * Update Bloodied
  * Triggered by the 'preUpdateActor' hook
  * If 'Apply Bloodied' is enabled, apply or remove the Bloodied condition and other token effects based on the HP change
@@ -466,11 +500,12 @@ function updateBloodied (actor, data) {
     if (!getSetting(CONSTANTS.BLOODIED.SETTING.APPLY_BLOODIED.KEY)) return false
 
     const currentHp = data?.system?.attributes?.hp?.value
+    const maxHp = data?.system?.attributes?.hp?.max
 
     if (typeof currentHp === 'undefined') return null
 
     const previousHp = actor.system.attributes.hp.value
-    const halfHp = Math.ceil(actor.system.attributes.hp.max * 0.5)
+    const halfHp = Math.ceil((maxHp ?? actor.system.attributes.hp.max) * 0.5)
     const deathFailures = data?.system?.attributes?.death?.failure ?? actor?.system?.attributes?.death?.failure ?? 0
 
     if (currentHp <= halfHp && (previousHp === 0 || previousHp > halfHp) && deathFailures !== 3) {

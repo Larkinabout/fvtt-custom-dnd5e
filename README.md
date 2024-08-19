@@ -19,10 +19,16 @@ A Foundry VTT module to customise the D&D 5e system.
 
 ![Custom D&D 5e Instant Death](./.github/readme/custom-dnd5e-instant-death.gif)
 
-## Dead Status
+## Dead
+- Apply the Dead status effect when an NPC is reduced to zero HP.
 - Tint and/or rotate the token when it gains the Dead status effect.
 
 ![Custom D&D 5e Dead](./.github/readme/custom-dnd5e-dead.gif)
+
+## Unconscious
+- Apply the Unconscious status effect when a PC is reduced to zero HP.
+
+![Custom D&D 5e Unconscious](./.github/readme/custom-dnd5e-unconscious.gif)
 
 ## Death Saving Throws
 - Set the roll mode to Public Roll, Blind GM Roll or Private GM Roll. When using Blind GM Roll, successes and failures will not appear on the character sheet for the player.
@@ -33,6 +39,7 @@ A Foundry VTT module to customise the D&D 5e system.
 - When rolling for Hit Points, automatically reroll based on a minimum value.
 - Reroll once or until the minimum value is met.
 - Hide the Take Average option when rolling for Hit Points.
+- Roll Hit Points for NPCs when dragging their token onto the canvas.
 
 ![Custom D&D 5e Level Up Hit Points](./.github/readme/custom-dnd5e-level-up-hit-points.png)
 
