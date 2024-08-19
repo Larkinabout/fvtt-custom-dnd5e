@@ -204,17 +204,12 @@ export async function setDnd5eSetting (key, value) {
  * @param {object} actor The actor
  */
 export async function makeBloodied (actor) {
-    if (actor.effects.get('dnd5ebloodied000') ||
-        actor.system.traits.ci.value.has('bloodied')) return
-
-    const cls = getDocumentClass('ActiveEffect')
-    const effect = await cls.fromStatusEffect('bloodied')
-    effect.updateSource({ id: 'dnd5ebloodied000', _id: 'dnd5ebloodied000' })
-    await cls.create(effect, { parent: actor, keepId: true })
-
-    const tint = getSetting(CONSTANTS.BLOODIED.SETTING.BLOODIED_TINT.KEY)
-
-    if (tint) actor.getActiveTokens().forEach(token => tintToken(token, tint))
+    if (!actor.effects.get('dnd5ebloodied000') && !actor.system.traits.ci.value.has('bloodied')) {
+        const cls = getDocumentClass('ActiveEffect')
+        const effect = await cls.fromStatusEffect('bloodied')
+        effect.updateSource({ id: 'dnd5ebloodied000', _id: 'dnd5ebloodied000' })
+        await cls.create(effect, { parent: actor, keepId: true })
+    }
 }
 
 /**
@@ -224,7 +219,6 @@ export async function makeBloodied (actor) {
 export async function unmakeBloodied (actor) {
     const effect = actor.effects.get('dnd5ebloodied000')
     await effect?.delete()
-    actor.getActiveTokens().forEach(untintToken)
 }
 
 /**
@@ -233,7 +227,10 @@ export async function unmakeBloodied (actor) {
  * @param {number} rotation The angle of rotation
  */
 export async function rotateToken (token, rotation) {
-    if (!getFlag(token.document, 'rotation')) {
+    if (token.document.rotation === rotation) return
+
+    const flag = getFlag(token.document, 'rotation')
+    if (!flag && flag !== 0) {
         await setFlag(token.document, 'rotation', token.document.rotation)
     }
 
@@ -259,6 +256,8 @@ export async function unrotateToken (token) {
  * @param {string} tint  The hex color
  */
 export async function tintToken (token, tint) {
+    if (token.document.texture.tint === tint) return
+
     if (!getFlag(token.document, 'tint')) {
         await setFlag(token.document, 'tint', token.document.texture.tint)
     }
@@ -306,12 +305,13 @@ export async function makeDead (actor, data = null) {
     const effect = await cls.fromStatusEffect('dead')
     effect.updateSource({ 'flags.core.overlay': true })
     await cls.create(effect, { parent: actor, keepId: true })
+}
 
-    const tint = getSetting(CONSTANTS.DEAD.SETTING.DEAD_TINT.KEY)
-
-    if (tint) actor.getActiveTokens().forEach(token => tintToken(token, tint))
-
-    const rotation = getSetting(CONSTANTS.DEAD.SETTING.DEAD_ROTATION.KEY)
-
-    if (rotation) actor.getActiveTokens().forEach(token => rotateToken(token, rotation))
+/**
+ * Unmake the actor dead
+ * @param {object} actor The actor
+ */
+export async function unmakeDead (actor) {
+    const effect = actor.effects.get('dnd5edead0000000')
+    await effect?.delete()
 }

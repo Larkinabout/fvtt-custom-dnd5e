@@ -27,6 +27,13 @@
             </div>
             <h2>{{localize "CUSTOM_DND5E.dead"}}</h2>
             <div class="form-group">
+                <label>{{localize "CUSTOM_DND5E.form.houseRules.dead.applyDead.label"}}</label>
+                <div class="form-fields">
+                    <input id="apply-dead" name="applyDead" type="checkbox"{{#if applyDead}} checked{{/if}}> 
+                </div>
+                <p class="notes">{{localize "CUSTOM_DND5E.form.houseRules.dead.applyDead.note"}}</p>
+            </div>
+            <div class="form-group">
                 <label>{{localize "CUSTOM_DND5E.form.houseRules.dead.applyInstantDeath.label"}}</label>
                 <div class="form-fields">
                     <input id="apply-instant-death" name="applyInstantDeath" type="checkbox"{{#if applyInstantDeath}} checked{{/if}}> 

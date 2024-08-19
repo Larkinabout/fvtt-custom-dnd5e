@@ -26,6 +26,7 @@ export class HouseRulesForm extends CustomDnd5eForm {
         data.applyBloodied = getSetting(CONSTANTS.BLOODIED.SETTING.APPLY_BLOODIED.KEY)
         data.bloodiedIcon = getSetting(CONSTANTS.BLOODIED.SETTING.BLOODIED_ICON.KEY)
         data.bloodiedTint = getSetting(CONSTANTS.BLOODIED.SETTING.BLOODIED_TINT.KEY)
+        data.applyDead = getSetting(CONSTANTS.DEAD.SETTING.APPLY_DEAD.KEY)
         data.applyInstantDeath = getSetting(CONSTANTS.DEAD.SETTING.APPLY_INSTANT_DEATH.KEY)
         data.deadRotation = getSetting(CONSTANTS.DEAD.SETTING.DEAD_ROTATION.KEY)
         data.deadTint = getSetting(CONSTANTS.DEAD.SETTING.DEAD_TINT.KEY)
@@ -63,6 +64,7 @@ export class HouseRulesForm extends CustomDnd5eForm {
                 resetSetting(CONSTANTS.BLOODIED.SETTING.APPLY_BLOODIED.KEY),
                 resetSetting(CONSTANTS.BLOODIED.SETTING.BLOODIED_ICON.KEY),
                 resetSetting(CONSTANTS.BLOODIED.SETTING.BLOODIED_TINT.KEY),
+                resetSetting(CONSTANTS.DEAD.SETTING.APPLY_DEAD.KEY),
                 resetSetting(CONSTANTS.DEAD.SETTING.APPLY_INSTANT_DEATH.KEY),
                 resetSetting(CONSTANTS.DEAD.SETTING.DEAD_ROTATION.KEY),
                 resetSetting(CONSTANTS.DEAD.SETTING.DEAD_TINT.KEY),
@@ -118,6 +120,7 @@ export class HouseRulesForm extends CustomDnd5eForm {
             setSetting(CONSTANTS.BLOODIED.SETTING.APPLY_BLOODIED.KEY, formData.applyBloodied),
             setSetting(CONSTANTS.BLOODIED.SETTING.BLOODIED_ICON.KEY, formData.bloodiedIcon),
             setSetting(CONSTANTS.BLOODIED.SETTING.BLOODIED_TINT.KEY, formData.bloodiedTint),
+            setSetting(CONSTANTS.DEAD.SETTING.APPLY_DEAD.KEY, formData.applyDead),
             setSetting(CONSTANTS.DEAD.SETTING.APPLY_INSTANT_DEATH.KEY, formData.applyInstantDeath),
             setSetting(CONSTANTS.DEAD.SETTING.DEAD_ROTATION.KEY, formData.deadRotation),
             setSetting(CONSTANTS.DEAD.SETTING.DEAD_TINT.KEY, formData.deadTint),

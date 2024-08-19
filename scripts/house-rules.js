@@ -1,5 +1,5 @@
 import { CONSTANTS, SHEET_TYPE } from './constants.js'
-import { Logger, getSetting, registerMenu, registerSetting, makeBloodied, unmakeBloodied, rotateToken, unrotateToken, tintToken, untintToken, makeDead } from './utils.js'
+import { Logger, getSetting, registerMenu, registerSetting, makeBloodied, unmakeBloodied, makeDead, unmakeDead, rotateToken, unrotateToken, tintToken, untintToken } from './utils.js'
 import { HouseRulesForm } from './forms/house-rules-form.js'
 
 /**
@@ -97,6 +97,16 @@ function registerSettings () {
             config: false,
             type: String,
             default: '#ff0000'
+        }
+    )
+
+    registerSetting(
+        CONSTANTS.DEAD.SETTING.APPLY_DEAD.KEY,
+        {
+            scope: 'world',
+            config: false,
+            type: Boolean,
+            default: false
         }
     )
 
@@ -242,9 +252,8 @@ function registerHooks () {
         }
     })
 
-    Hooks.on('applyTokenStatusEffect', updateDead)
-    Hooks.on('createActiveEffect', (activeEffect, options, id) => { updateProne(true, activeEffect) })
-    Hooks.on('deleteActiveEffect', (activeEffect, options, id) => { updateProne(false, activeEffect) })
+    Hooks.on('createActiveEffect', (activeEffect, options, id) => { updateTokenEffects(true, activeEffect) })
+    Hooks.on('deleteActiveEffect', (activeEffect, options, id) => { updateTokenEffects(false, activeEffect) })
     Hooks.on('dnd5e.preApplyDamage', recalculateDamage)
     Hooks.on('dnd5e.preRestCompleted', (actor, data) => updateDeathSaves('rest', actor, data))
     Hooks.on('dnd5e.preRollDeathSave', setDeathSavesRollMode)
@@ -256,10 +265,13 @@ function registerHooks () {
         const instantDeath = updateInstantDeath(actor, data)
         updateHp(actor, data)
         if (!instantDeath) {
-            updateMassiveDamage(actor, data)
-            recalculateHealing(actor, data)
-            updateBloodied(actor, data)
-            updateDeathSaves('regainHp', actor, data)
+            const dead = updateDead(actor, data)
+            if (!dead) {
+                updateMassiveDamage(actor, data)
+                recalculateHealing(actor, data)
+                updateBloodied(actor, data)
+                updateDeathSaves('regainHp', actor, data)
+            }
         }
     })
     Hooks.on('renderActorSheet', makeDeathSavesBlind)
@@ -425,38 +437,48 @@ function recalculateHealing (actor, data) {
  * @param {object} data  The data
  */
 function updateBloodied (actor, data) {
-    if (!getSetting(CONSTANTS.BLOODIED.SETTING.APPLY_BLOODIED.KEY)) return
+    if (!getSetting(CONSTANTS.BLOODIED.SETTING.APPLY_BLOODIED.KEY)) return false
 
     const currentHp = data?.system?.attributes?.hp?.value
 
-    if (typeof currentHp === 'undefined') return
+    if (typeof currentHp === 'undefined') return null
 
     const previousHp = actor.system.attributes.hp.value
     const halfHp = Math.ceil(actor.system.attributes.hp.max * 0.5)
     const deathFailures = data?.system?.attributes?.death?.failure ?? actor?.system?.attributes?.death?.failure ?? 0
 
-    if (currentHp <= halfHp && previousHp > halfHp && deathFailures !== 3) {
+    if (currentHp <= halfHp && (previousHp === 0 || previousHp > halfHp) && deathFailures !== 3) {
         makeBloodied(actor)
+        return true
     } else if (currentHp > halfHp && previousHp <= halfHp) {
         unmakeBloodied(actor)
+        return false
     }
+
+    return false
 }
 
 /**
  * Update Dead
- * Triggered by the 'applyTokenStatusEffect' hook
- * @param {object} token        The token
- * @param {string} statusEffect The status effect
- * @param {boolean} applied     Whether the status effect is being applied
+ * Triggered by the 'preUpdateActor' hook
+ * @param {object} actor The actor
+ * @param {object} data  The data
  */
-function updateDead (token, statusEffect, applied) {
-    if (statusEffect !== 'dead') return
+function updateDead (actor, data) {
+    if (actor.type !== 'npc') return false
+    if (!getSetting(CONSTANTS.DEAD.SETTING.APPLY_DEAD.KEY)) return false
 
-    const rotation = getSetting(CONSTANTS.DEAD.SETTING.DEAD_ROTATION.KEY)
-    const tint = getSetting(CONSTANTS.DEAD.SETTING.DEAD_TINT.KEY)
+    const currentHp = data?.system?.attributes?.hp?.value
 
-    rotation && ((applied) ? rotateToken(token, rotation) : unrotateToken(token))
-    tint && ((applied) ? tintToken(token, tint) : untintToken(token))
+    if (typeof currentHp === 'undefined') return null
+
+    if (currentHp <= 0) {
+        makeDead(actor, data)
+        return true
+    } else {
+        unmakeDead(actor, data)
+        return false
+    }
 }
 
 /**
@@ -555,11 +577,11 @@ function updateInstantDeath (actor, data) {
     const maxHp = actor.system.attributes.hp.max
 
     if (currentHp < 0 && Math.abs(currentHp) >= maxHp) {
-        makeDead(actor, data)
+        const tokenEffects = makeDead(actor, data)
         ChatMessage.create({
             content: game.i18n.format('CUSTOM_DND5E.message.instantDeath', { name: actor.name })
         })
-        return true
+        return tokenEffects
     }
 
     return false
@@ -593,24 +615,45 @@ function updateMassiveDamage (actor, data) {
 }
 
 /**
- * Update Prone
- * Called by the 'updateToken' function
- * @param {object} token        The token
- * @param {string} statusEffect The status effect
- * @param {boolean} applied     Whether the status effect is being applied
+ * Update Token Effects
+ * Triggered by the 'createActiveEffect' and 'deleteActiveEffect' hooks
+ * @param {boolean} active      Whether the active effect is active
+ * @param {object} activeEffect The active effect
  */
-function updateProne (active, activeEffect) {
-    if (![...activeEffect.statuses].includes('prone')) return
+function updateTokenEffects (active, activeEffect) {
+    let prone = [...activeEffect.statuses].includes('prone')
+    let bloodied = [...activeEffect.statuses].includes('bloodied')
+    let dead = [...activeEffect.statuses].includes('dead')
 
-    const rotation = getSetting(CONSTANTS.PRONE.SETTING.PRONE_ROTATION.KEY)
+    if (!prone && !bloodied && !dead) return
 
-    if (!rotation) return
+    let tint = null
+    let rotation = null
 
-    const tokens = activeEffect.parent.getActiveTokens()
+    const actor = activeEffect.parent
+    prone = (active && prone) || actor.effects.has('dnd5eprone000000')
+    bloodied = (active && bloodied) || actor.effects.has('dnd5ebloodied000')
+    dead = (active && dead) || actor.effects.has('dnd5edead0000000')
 
-    tokens.forEach(token => {
-        ((active) ? rotateToken(token, rotation) : unrotateToken(token))
-    })
+    if (dead) {
+        tint = getSetting(CONSTANTS.DEAD.SETTING.DEAD_TINT.KEY)
+        rotation = getSetting(CONSTANTS.DEAD.SETTING.DEAD_ROTATION.KEY)
+    } else {
+        if (bloodied) { tint = getSetting(CONSTANTS.BLOODIED.SETTING.BLOODIED_TINT.KEY) }
+        if (prone) { rotation = getSetting(CONSTANTS.PRONE.SETTING.PRONE_ROTATION.KEY) }
+    }
+
+    if (tint) {
+        actor.getActiveTokens().forEach(token => tintToken(token, tint))
+    } else {
+        actor.getActiveTokens().forEach(token => untintToken(token, tint))
+    }
+
+    if (rotation) {
+        actor.getActiveTokens().forEach(token => rotateToken(token, rotation))
+    } else {
+        actor.getActiveTokens().forEach(token => unrotateToken(token, rotation))
+    }
 }
 
 async function createMassiveDamageCard (actor, data) {
