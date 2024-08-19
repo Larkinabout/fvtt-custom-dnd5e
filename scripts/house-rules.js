@@ -1,5 +1,20 @@
 import { CONSTANTS, SHEET_TYPE } from './constants.js'
-import { Logger, getSetting, registerMenu, registerSetting, makeBloodied, unmakeBloodied, makeDead, unmakeDead, rotateToken, unrotateToken, tintToken, untintToken } from './utils.js'
+import {
+    Logger,
+    getSetting,
+    registerMenu,
+    registerSetting,
+    makeBloodied,
+    unmakeBloodied,
+    makeDead,
+    unmakeDead,
+    makeUnconscious,
+    unmakeUnconscious,
+    rotateToken,
+    unrotateToken,
+    tintToken,
+    untintToken
+} from './utils.js'
 import { HouseRulesForm } from './forms/house-rules-form.js'
 
 /**
@@ -97,6 +112,16 @@ function registerSettings () {
             config: false,
             type: String,
             default: '#ff0000'
+        }
+    )
+
+    registerSetting(
+        CONSTANTS.UNCONSCIOUS.SETTING.APPLY_UNCONSCIOUS.KEY,
+        {
+            scope: 'world',
+            config: false,
+            type: Boolean,
+            default: false
         }
     )
 
@@ -270,6 +295,7 @@ function registerHooks () {
                 updateMassiveDamage(actor, data)
                 recalculateHealing(actor, data)
                 updateBloodied(actor, data)
+                updateUnconscious(actor, data)
                 updateDeathSaves('regainHp', actor, data)
             }
         }
@@ -286,13 +312,13 @@ export function registerBloodied () {
     if (!getSetting(CONSTANTS.BLOODIED.SETTING.APPLY_BLOODIED.KEY)) return
 
     const label = game.i18n.localize('CUSTOM_DND5E.bloodied')
-    const icon = getSetting(CONSTANTS.BLOODIED.SETTING.BLOODIED_ICON.KEY) ?? CONSTANTS.BLOODIED.ICON
+    const img = getSetting(CONSTANTS.BLOODIED.SETTING.BLOODIED_ICON.KEY) ?? CONSTANTS.BLOODIED.ICON
 
     // Add bloodied to CONFIG.statusEffects
     CONFIG.statusEffects.push({
         id: 'bloodied',
         name: label,
-        icon
+        img
     })
 
     const conditionTypes = {}
@@ -482,6 +508,29 @@ function updateDead (actor, data) {
 }
 
 /**
+ * Update Unconscious
+ * Triggered by the 'preUpdateActor' hook
+ * @param {object} actor The actor
+ * @param {object} data  The data
+ */
+function updateUnconscious (actor, data) {
+    if (actor.type !== 'character') return false
+    if (!getSetting(CONSTANTS.UNCONSCIOUS.SETTING.APPLY_UNCONSCIOUS.KEY)) return false
+
+    const currentHp = data?.system?.attributes?.hp?.value
+
+    if (typeof currentHp === 'undefined') return null
+
+    if (currentHp <= 0) {
+        makeUnconscious(actor, data)
+        return true
+    } else {
+        unmakeUnconscious(actor, data)
+        return false
+    }
+}
+
+/**
  * Update Death Saves
  * Triggered by the 'preUpdateActor' hook
  * @param {string} source regainHp or rest
@@ -663,7 +712,7 @@ async function createMassiveDamageCard (actor, data) {
     const MessageClass = getDocumentClass('ChatMessage')
     const chatData = {
         user: game.user.id,
-        type: CONST.CHAT_MESSAGE_TYPES.OTHER,
+        style: CONST.CHAT_MESSAGE_STYLES.OTHER,
         content: await renderTemplate(CONSTANTS.MESSAGE.TEMPLATE.ROLL_REQUEST_CARD, {
             buttonLabel: `<i class="fas fa-shield-heart"></i>${label}`,
             hiddenLabel: `<i class="fas fa-shield-heart"></i>${label}`,

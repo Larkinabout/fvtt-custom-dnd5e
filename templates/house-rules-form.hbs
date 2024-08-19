@@ -25,6 +25,14 @@
                 <p class="notes">{{localize "CUSTOM_DND5E.form.houseRules.bloodied.bloodiedTint.note.1"}}</p>
                 <p class="custom-dnd5e-advice notes">{{localize "CUSTOM_DND5E.form.houseRules.bloodied.bloodiedTint.note.2"}}</p>
             </div>
+            <h2>{{localize "CUSTOM_DND5E.unconscious"}}</h2>
+            <div class="form-group">
+                <label>{{localize "CUSTOM_DND5E.form.houseRules.unconscious.applyUnconscious.label"}}</label>
+                <div class="form-fields">
+                    <input id="apply-unconscious" name="applyUnconscious" type="checkbox"{{#if applyUnconscious}} checked{{/if}}> 
+                </div>
+                <p class="notes">{{localize "CUSTOM_DND5E.form.houseRules.unconscious.applyUnconscious.note"}}</p>
+            </div>
             <h2>{{localize "CUSTOM_DND5E.dead"}}</h2>
             <div class="form-group">
                 <label>{{localize "CUSTOM_DND5E.form.houseRules.dead.applyDead.label"}}</label>

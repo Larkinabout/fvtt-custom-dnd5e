@@ -82,6 +82,7 @@
     "CUSTOM_DND5E.triggerValue": "Trigger Value",
     "CUSTOM_DND5E.type": "Type",
     "CUSTOM_DND5E.uncheck": "Uncheck",
+    "CUSTOM_DND5E.unconscious": "Unconscious",
     "CUSTOM_DND5E.unequippedItemWeightModifier": "Unequipped Item Weight Modifier",
     "CUSTOM_DND5E.value": "Value",
     "CUSTOM_DND5E.vehicleWeightMultiplier": "Vehicle Weight Multiplier",
@@ -202,6 +203,8 @@
     "CUSTOM_DND5E.form.houseRules.rollingHitPoints.rerollOnce.note": "Reroll once, otherwise reroll until minimum is met",
     "CUSTOM_DND5E.form.houseRules.rollingHitPoints.showTakeAverage.label": "Show Take Average",
     "CUSTOM_DND5E.form.houseRules.rollingHitPoints.showTakeAverage.note": "Show the Take Average checkbox",
+    "CUSTOM_DND5E.form.houseRules.unconscious.applyUnconscious.label": "Apply Unconscious",
+    "CUSTOM_DND5E.form.houseRules.unconscious.applyUnconscious.note": "Apply the Unconscious status effect when a PC is reduced to 0 HP",
 
     "CUSTOM_DND5E.form.houseRules.title": "Configure House Rules",
 

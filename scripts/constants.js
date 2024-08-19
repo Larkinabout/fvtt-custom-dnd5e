@@ -492,6 +492,13 @@ export const CONSTANTS = {
                 NAME: 'CUSTOM_DND5E.setting.tokenBorderShape.name'
             }
         }
+    },
+    UNCONSCIOUS: {
+        SETTING: {
+            APPLY_UNCONSCIOUS: {
+                KEY: 'apply-unconscious'
+            }
+        }
     }
 }
 

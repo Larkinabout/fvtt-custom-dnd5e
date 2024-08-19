@@ -222,6 +222,28 @@ export async function unmakeBloodied (actor) {
 }
 
 /**
+ * Make the actor unconscious
+ * @param {object} actor The actor
+ */
+export async function makeUnconscious (actor) {
+    if (!actor.effects.get('dnd5eunconscious') && !actor.system.traits.ci.value.has('unconscious')) {
+        const cls = getDocumentClass('ActiveEffect')
+        const effect = await cls.fromStatusEffect('unconscious')
+        effect.updateSource({ id: 'dnd5eunconscious', _id: 'dnd5eunconscious', 'flags.core.overlay': true })
+        await cls.create(effect, { parent: actor, keepId: true })
+    }
+}
+
+/**
+ * Unmake the actor unconscious
+ * @param {object} actor The actor
+ */
+export async function unmakeUnconscious (actor) {
+    const effect = actor.effects.get('dnd5eunconscious')
+    await effect?.delete()
+}
+
+/**
  * Rotate token
  * @param {object} token    The token
  * @param {number} rotation The angle of rotation
