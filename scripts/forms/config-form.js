@@ -14,6 +14,7 @@ import { setConfig as setLanguages } from '../languages.js'
 import { setConfig as setSenses } from '../senses.js'
 import { setConfig as setSkills } from '../skills.js'
 import { setConfig as setSpellSchools } from '../spell-schools.js'
+import { setConfig as setToolIds } from '../tool-ids.js'
 import { setConfig as setWeaponIds } from '../weapon-ids.js'
 
 const itemClass = `${MODULE.ID}-item`
@@ -510,6 +511,29 @@ export class SpellSchoolsForm extends ConfigForm {
 
     async _getHtml (data) {
         const template = await renderTemplate(CONSTANTS.SPELL_SCHOOLS.TEMPLATE.LIST, data)
+        return template
+    }
+}
+
+export class ToolIdsForm extends ConfigForm {
+    constructor () {
+        super()
+        this.requiresReload = true
+        this.settingKey = CONSTANTS.TOOL_IDS.SETTING.KEY
+        this.setFunction = setToolIds
+        this.type = 'toolIds'
+    }
+
+    static get defaultOptions () {
+        return foundry.utils.mergeObject(super.defaultOptions, {
+            id: `${MODULE.ID}-tool-ids-form`,
+            template: CONSTANTS.TOOL_IDS.TEMPLATE.FORM,
+            title: game.i18n.localize('CUSTOM_DND5E.form.toolIds.title')
+        })
+    }
+
+    async _getHtml (data) {
+        const template = await renderTemplate(CONSTANTS.TOOL_IDS.TEMPLATE.LIST, data)
         return template
     }
 }

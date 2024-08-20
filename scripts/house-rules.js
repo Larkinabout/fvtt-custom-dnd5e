@@ -317,7 +317,7 @@ function registerHooks () {
 
 /**
  * Register Bloodied
- * If 'Apply Bloodied', addd the Bloodied status and condition
+ * If 'Apply Bloodied', add the Bloodied status and condition
  */
 export function registerBloodied () {
     if (!getSetting(CONSTANTS.BLOODIED.SETTING.APPLY_BLOODIED.KEY)) return

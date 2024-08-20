@@ -512,6 +512,22 @@ export const CONSTANTS = {
             }
         }
     },
+    TOOL_IDS: {
+        MENU: {
+            KEY: 'tool-ids-menu',
+            HINT: 'CUSTOM_DND5E.menu.toolIds.hint',
+            ICON: 'fas fa-pen-to-square',
+            LABEL: 'CUSTOM_DND5E.menu.toolIds.label',
+            NAME: 'CUSTOM_DND5E.menu.toolIds.name'
+        },
+        SETTING: {
+            KEY: 'tool-ids'
+        },
+        TEMPLATE: {
+            FORM: 'modules/custom-dnd5e/templates/uuid-form.hbs',
+            LIST: 'modules/custom-dnd5e/templates/uuid-list.hbs'
+        }
+    },
     UNCONSCIOUS: {
         SETTING: {
             APPLY_UNCONSCIOUS: {
