@@ -3,6 +3,7 @@ import { Logger, deleteProperty, getSetting, setSetting } from '../utils.js'
 import { CustomDnd5eForm } from './custom-dnd5e-form.js'
 import { setConfig as setAbilities } from '../abilities.js'
 import { setConfig as setArmorCalculations } from '../armor-calculations.js'
+import { setConfig as setArmorIds } from '../armor-ids.js'
 import { setConfig as setArmorTypes } from '../armor-types.js'
 import { setConfig as setActorSizes } from '../actor-sizes.js'
 import { setConfig as setCurrency } from '../currency.js'
@@ -301,8 +302,8 @@ export class ArmorIdsForm extends ConfigForm {
         super()
         this.requiresReload = true
         this.settingKey = CONSTANTS.ARMOR_IDS.SETTING.KEY
-        this.setFunction = setWeaponIds
-        this.type = 'weaponIds'
+        this.setFunction = setArmorIds
+        this.type = 'armorIds'
     }
 
     static get defaultOptions () {
