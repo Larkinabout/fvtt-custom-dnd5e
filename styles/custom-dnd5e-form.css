@@ -40,10 +40,10 @@
 .custom-dnd5e-form li {
     align-items: center;
     gap: 0.25rem;
-    border-top: 1px solid rgba(0, 0, 0, 0.2);
+    border-top: 1px solid var(--color-border);
 }
 
-.custom-dnd5e-form li {
+.custom-dnd5e-form .custom-dnd5e-drag {
     cursor: move;
 }
 
@@ -69,7 +69,7 @@
 }
 
 .custom-dnd5e-col-group {
-    border-left: 1px solid rgba(0, 0, 0, 0.1);
+    border-left: 1px solid var(--color-border);
     padding-left: 0.5rem;
 }
 
@@ -116,11 +116,21 @@
     flex: 0;
 }
 
-.custom-dnd5e-list-button {
+button.custom-dnd5e-list-button {
     background: transparent;
     border: none;
     border-radius: 0;
-    border-right: 1px solid rgba(0, 0, 0, 0.2);
+    border-right: 1pt solid var(--button-border-color);
+    padding: 0;
+    margin-left: 0.5rem;
+}
+
+button.custom-dnd5e-list-button:hover,
+button.custom-dnd5e-list-button:focus {
+    background: transparent;
+    border: none;
+    box-shadow: none;
+    outline: none;
 }
 
 .custom-dnd5e-list-button:last-of-type {
@@ -146,11 +156,6 @@
 
 .custom-dnd5e-form .custom-dnd5e-list-button:disabled:hover > i {
     text-shadow: none;
-}
-
-.custom-dnd5e-form .new-button {
-    background: rgba(255, 255, 240, 0.8);
-    border: 1px solid var(--color-border-light-primary);
 }
 
 .custom-dnd5e-form .hidden {

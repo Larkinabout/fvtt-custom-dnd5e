@@ -23,17 +23,25 @@ const listClass = `${MODULE.ID}-list`
 const listClassSelector = `.${listClass}`
 
 class ConfigForm extends CustomDnd5eForm {
-    constructor (...args) {
-        super(args)
+    constructor (options = {}) {
+        super(options)
     }
 
-    static get defaultOptions () {
-        return foundry.utils.mergeObject(super.defaultOptions, {
+    static DEFAULT_OPTIONS = {
+        actions: {
+            new: ConfigForm.createItem,
+            reset: ConfigForm.reset,
+            validate: ConfigForm.validate
+        }
+    }
+
+    static PARTS = {
+        form: {
             template: CONSTANTS.CONFIG.TEMPLATE.FORM
-        })
+        }
     }
 
-    async getData () {
+    async _prepareContext () {
         this.config = foundry.utils.deepClone(CONFIG.DND5E[this.type])
         this.setting = getSetting(this.settingKey)
         const data = foundry.utils.mergeObject(this.config, this.setting)
@@ -63,11 +71,7 @@ class ConfigForm extends CustomDnd5eForm {
         return null
     }
 
-    activateListeners (html) {
-        super.activateListeners(html)
-    }
-
-    async _reset () {
+    static async reset () {
         const reset = async () => {
             await setSetting(this.settingKey, foundry.utils.deepClone(CONFIG.CUSTOM_DND5E[this.type]))
             this.setFunction(CONFIG.CUSTOM_DND5E[this.type])
@@ -94,8 +98,8 @@ class ConfigForm extends CustomDnd5eForm {
         d.render(true)
     }
 
-    async _createItem () {
-        const list = this.element[0].querySelector(listClassSelector)
+    static async createItem () {
+        const list = this.element.querySelector(listClassSelector)
         const scrollable = list.closest('.scrollable')
 
         const key = foundry.utils.randomID()
@@ -223,12 +227,17 @@ export class AbilitiesForm extends ConfigForm {
         this.type = 'abilities'
     }
 
-    static get defaultOptions () {
-        return foundry.utils.mergeObject(super.defaultOptions, {
-            id: `${MODULE.ID}-abilities-form`,
-            template: CONSTANTS.ABILITIES.TEMPLATE.FORM,
-            title: game.i18n.localize('CUSTOM_DND5E.form.abilities.title')
-        })
+    static DEFAULT_OPTIONS = {
+        id: `${MODULE.ID}-abilities-form`,
+        window: {
+            title: 'CUSTOM_DND5E.form.abilities.title'
+        }
+    }
+
+    static PARTS = {
+        form: {
+            template: CONSTANTS.ABILITIES.TEMPLATE.FORM
+        }
     }
 
     _getSelects () {
@@ -260,12 +269,17 @@ export class ActorSizesForm extends ConfigForm {
         this.type = 'actorSizes'
     }
 
-    static get defaultOptions () {
-        return foundry.utils.mergeObject(super.defaultOptions, {
-            id: `${MODULE.ID}-actor-sizes-form`,
-            template: CONSTANTS.ACTOR_SIZES.TEMPLATE.FORM,
-            title: game.i18n.localize('CUSTOM_DND5E.form.actorSizes.title')
-        })
+    static DEFAULT_OPTIONS = {
+        id: `${MODULE.ID}-actor-sizes-form`,
+        window: {
+            title: 'CUSTOM_DND5E.form.actorSizes.title'
+        }
+    }
+
+    static PARTS = {
+        form: {
+            template: CONSTANTS.ACTOR_SIZES.TEMPLATE.FORM
+        }
     }
 
     async _getHtml (data) {
@@ -283,12 +297,17 @@ export class ArmorCalculationsForm extends ConfigForm {
         this.type = 'armorClasses'
     }
 
-    static get defaultOptions () {
-        return foundry.utils.mergeObject(super.defaultOptions, {
-            id: `${MODULE.ID}-armor-calculations-form`,
-            template: CONSTANTS.ARMOR_CALCULATIONS.TEMPLATE.FORM,
-            title: game.i18n.localize('CUSTOM_DND5E.form.armorCalculations.title')
-        })
+    static DEFAULT_OPTIONS = {
+        id: `${MODULE.ID}-armor-calculations-form`,
+        window: {
+            title: 'CUSTOM_DND5E.form.armorCalculations.title'
+        }
+    }
+
+    static PARTS = {
+        form: {
+            template: CONSTANTS.ARMOR_CALCULATIONS.TEMPLATE.FORM
+        }
     }
 
     async _getHtml (data) {
@@ -306,12 +325,17 @@ export class ArmorIdsForm extends ConfigForm {
         this.type = 'armorIds'
     }
 
-    static get defaultOptions () {
-        return foundry.utils.mergeObject(super.defaultOptions, {
-            id: `${MODULE.ID}-armor-ids-form`,
-            template: CONSTANTS.ARMOR_IDS.TEMPLATE.FORM,
-            title: game.i18n.localize('CUSTOM_DND5E.form.armorIds.title')
-        })
+    static DEFAULT_OPTIONS = {
+        id: `${MODULE.ID}-armor-ids-form`,
+        window: {
+            title: 'CUSTOM_DND5E.form.armorIds.title'
+        }
+    }
+
+    static PARTS = {
+        form: {
+            template: CONSTANTS.ARMOR_IDS.TEMPLATE.FORM
+        }
     }
 
     async _getHtml (data) {
@@ -329,11 +353,11 @@ export class ArmorTypesForm extends ConfigForm {
         this.type = 'armorTypes'
     }
 
-    static get defaultOptions () {
-        return foundry.utils.mergeObject(super.defaultOptions, {
-            id: `${MODULE.ID}-armor-types-form`,
-            title: game.i18n.localize('CUSTOM_DND5E.form.armorTypes.title')
-        })
+    static DEFAULT_OPTIONS = {
+        id: `${MODULE.ID}-armor-types-form`,
+        window: {
+            title: 'CUSTOM_DND5E.form.armorTypes.title'
+        }
     }
 }
 
@@ -346,12 +370,17 @@ export class CurrencyForm extends ConfigForm {
         this.type = 'currencies'
     }
 
-    static get defaultOptions () {
-        return foundry.utils.mergeObject(super.defaultOptions, {
-            id: `${MODULE.ID}-currency-form`,
-            template: CONSTANTS.CURRENCY.TEMPLATE.FORM,
-            title: game.i18n.localize('CUSTOM_DND5E.form.currency.title')
-        })
+    static DEFAULT_OPTIONS = {
+        id: `${MODULE.ID}-currency-form`,
+        window: {
+            title: 'CUSTOM_DND5E.form.currency.title'
+        }
+    }
+
+    static PARTS = {
+        form: {
+            template: CONSTANTS.CURRENCY.TEMPLATE.FORM
+        }
     }
 
     async _getHtml (data) {
@@ -370,12 +399,17 @@ export class DamageTypesForm extends ConfigForm {
         this.actorProperties = ['system.traits.di.value', 'system.traits.dr.value', 'system.traits.dv.value']
     }
 
-    static get defaultOptions () {
-        return foundry.utils.mergeObject(super.defaultOptions, {
-            id: `${MODULE.ID}-damage-types-form`,
-            template: CONSTANTS.DAMAGE_TYPES.TEMPLATE.FORM,
-            title: game.i18n.localize('CUSTOM_DND5E.form.damageTypes.title')
-        })
+    static DEFAULT_OPTIONS = {
+        id: `${MODULE.ID}-damage-types-form`,
+        window: {
+            title: 'CUSTOM_DND5E.form.damageTypes.title'
+        }
+    }
+
+    static PARTS = {
+        form: {
+            template: CONSTANTS.DAMAGE_TYPES.TEMPLATE.FORM
+        }
     }
 
     async _getHtml (data) {
@@ -393,11 +427,11 @@ export class ItemActionTypesForm extends ConfigForm {
         this.type = 'itemActionTypes'
     }
 
-    static get defaultOptions () {
-        return foundry.utils.mergeObject(super.defaultOptions, {
-            id: `${MODULE.ID}-item-action-types-form`,
-            title: game.i18n.localize('CUSTOM_DND5E.form.itemActionTypes.title')
-        })
+    static DEFAULT_OPTIONS = {
+        id: `${MODULE.ID}-item-action-types-form`,
+        window: {
+            title: 'CUSTOM_DND5E.form.itemActionTypes.title'
+        }
     }
 }
 
@@ -410,11 +444,11 @@ export class ItemActivationCostTypesForm extends ConfigForm {
         this.type = 'abilityActivationTypes'
     }
 
-    static get defaultOptions () {
-        return foundry.utils.mergeObject(super.defaultOptions, {
-            id: `${MODULE.ID}-item-activation-cost-types-form`,
-            title: game.i18n.localize('CUSTOM_DND5E.form.itemActivationCostTypes.title')
-        })
+    static DEFAULT_OPTIONS = {
+        id: `${MODULE.ID}-item-activation-cost-types-form`,
+        window: {
+            title: 'CUSTOM_DND5E.form.itemActivationCostTypes.title'
+        }
     }
 }
 
@@ -427,11 +461,11 @@ export class ItemRarityForm extends ConfigForm {
         this.type = 'itemRarity'
     }
 
-    static get defaultOptions () {
-        return foundry.utils.mergeObject(super.defaultOptions, {
-            id: `${MODULE.ID}-item-rarity-form`,
-            title: game.i18n.localize('CUSTOM_DND5E.form.itemRarity.title')
-        })
+    static DEFAULT_OPTIONS = {
+        id: `${MODULE.ID}-item-rarity-form`,
+        window: {
+            title: 'CUSTOM_DND5E.form.itemRarity.title'
+        }
     }
 }
 
@@ -445,11 +479,11 @@ export class LanguagesForm extends ConfigForm {
         this.type = 'languages'
     }
 
-    static get defaultOptions () {
-        return foundry.utils.mergeObject(super.defaultOptions, {
-            id: `${MODULE.ID}-languages-form`,
-            title: game.i18n.localize('CUSTOM_DND5E.form.languages.title')
-        })
+    static DEFAULT_OPTIONS = {
+        id: `${MODULE.ID}-languages-form`,
+        window: {
+            title: 'CUSTOM_DND5E.form.languages.title'
+        }
     }
 }
 
@@ -462,11 +496,11 @@ export class SensesForm extends ConfigForm {
         this.type = 'senses'
     }
 
-    static get defaultOptions () {
-        return foundry.utils.mergeObject(super.defaultOptions, {
-            id: `${MODULE.ID}-senses-form`,
-            title: game.i18n.localize('CUSTOM_DND5E.form.senses.title')
-        })
+    static DEFAULT_OPTIONS = {
+        id: `${MODULE.ID}-senses-form`,
+        window: {
+            title: 'CUSTOM_DND5E.form.senses.title'
+        }
     }
 }
 
@@ -479,12 +513,17 @@ export class SkillsForm extends ConfigForm {
         this.type = 'skills'
     }
 
-    static get defaultOptions () {
-        return foundry.utils.mergeObject(super.defaultOptions, {
-            id: `${MODULE.ID}-skills-form`,
-            template: CONSTANTS.SKILLS.TEMPLATE.FORM,
-            title: game.i18n.localize('CUSTOM_DND5E.form.skills.title')
-        })
+    static DEFAULT_OPTIONS = {
+        id: `${MODULE.ID}-skills-form`,
+        window: {
+            title: 'CUSTOM_DND5E.form.skills.title'
+        }
+    }
+
+    static PARTS = {
+        form: {
+            template: CONSTANTS.SKILLS.TEMPLATE.FORM
+        }
     }
 
     async _getHtml (data) {
@@ -502,12 +541,17 @@ export class SpellSchoolsForm extends ConfigForm {
         this.type = 'spellSchools'
     }
 
-    static get defaultOptions () {
-        return foundry.utils.mergeObject(super.defaultOptions, {
-            id: `${MODULE.ID}-spell-schools-form`,
-            template: CONSTANTS.SPELL_SCHOOLS.TEMPLATE.FORM,
-            title: game.i18n.localize('CUSTOM_DND5E.form.spellSchools.title')
-        })
+    static DEFAULT_OPTIONS = {
+        id: `${MODULE.ID}-spell-schools-form`,
+        window: {
+            title: 'CUSTOM_DND5E.form.spellSchools.title'
+        }
+    }
+
+    static PARTS = {
+        form: {
+            template: CONSTANTS.SPELL_SCHOOLS.TEMPLATE.FORM
+        }
     }
 
     async _getHtml (data) {
@@ -525,12 +569,17 @@ export class ToolIdsForm extends ConfigForm {
         this.type = 'toolIds'
     }
 
-    static get defaultOptions () {
-        return foundry.utils.mergeObject(super.defaultOptions, {
-            id: `${MODULE.ID}-tool-ids-form`,
-            template: CONSTANTS.TOOL_IDS.TEMPLATE.FORM,
-            title: game.i18n.localize('CUSTOM_DND5E.form.toolIds.title')
-        })
+    static DEFAULT_OPTIONS = {
+        id: `${MODULE.ID}-tool-ids-form`,
+        window: {
+            title: 'CUSTOM_DND5E.form.toolIds.title'
+        }
+    }
+
+    static PARTS = {
+        form: {
+            template: CONSTANTS.TOOL_IDS.TEMPLATE.FORM
+        }
     }
 
     async _getHtml (data) {
@@ -548,12 +597,17 @@ export class WeaponIdsForm extends ConfigForm {
         this.type = 'weaponIds'
     }
 
-    static get defaultOptions () {
-        return foundry.utils.mergeObject(super.defaultOptions, {
-            id: `${MODULE.ID}-weapon-ids-form`,
-            template: CONSTANTS.WEAPON_IDS.TEMPLATE.FORM,
-            title: game.i18n.localize('CUSTOM_DND5E.form.weaponIds.title')
-        })
+    static DEFAULT_OPTIONS = {
+        id: `${MODULE.ID}-weapon-ids-form`,
+        window: {
+            title: 'CUSTOM_DND5E.form.weaponIds.title'
+        }
+    }
+
+    static PARTS = {
+        form: {
+            template: CONSTANTS.WEAPON_IDS.TEMPLATE.FORM
+        }
     }
 
     async _getHtml (data) {

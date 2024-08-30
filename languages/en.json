@@ -180,7 +180,7 @@
     "CUSTOM_DND5E.form.houseRules.bloodied.bloodiedTint.note.1": "Color to tint the token when it has the Bloodied condition",
     "CUSTOM_DND5E.form.houseRules.bloodied.bloodiedTint.note.2": "Must be in hex color format. Leave blank for no tint",
     "CUSTOM_DND5E.form.houseRules.dead.applyDead.label": "Apply Dead",
-    "CUSTOM_DND5E.form.houseRules.dead.applyDead.note": "Apply the dead status effect when an NPC is reduced to 0 HP",
+    "CUSTOM_DND5E.form.houseRules.dead.applyDead.note": "Apply the Dead status effect when an NPC is reduced to 0 HP",
     "CUSTOM_DND5E.form.houseRules.dead.applyInstantDeath.label": "Apply Instant Death",
     "CUSTOM_DND5E.form.houseRules.dead.applyInstantDeath.note": "Apply Instant Death when a character suffers damage equal or greater than their remaining HP plus their max HP",
     "CUSTOM_DND5E.form.houseRules.dead.deadRotation.note.1": "Angle to rotate the token when it has the Dead status effect",

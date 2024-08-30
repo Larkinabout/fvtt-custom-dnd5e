@@ -5,56 +5,105 @@ const itemClassSelector = `.${itemClass}`
 const listClass = `${MODULE.ID}-list`
 const listClassSelector = `.${listClass}`
 
-export class CustomDnd5eForm extends FormApplication {
-    constructor (...args) {
-        super(args)
+const { ApplicationV2, HandlebarsApplicationMixin } = foundry.applications.api
 
+export class CustomDnd5eForm extends HandlebarsApplicationMixin(ApplicationV2) {
+    constructor (options = {}) {
+        super(options)
+        // this.#dragDrop = this.#createDragDropHandlers()
         this.nestable = false
     }
 
-    static get defaultOptions () {
-        return foundry.utils.mergeObject(super.defaultOptions, {
-            classes: [`${MODULE.ID}-app`, 'sheet'],
-            dragDrop: [{
-                dragSelector: '.custom-dnd5e-drag',
-                dropSelector: listClassSelector
-            }],
+    static DEFAULT_OPTIONS = {
+        actions: {
+            delete: CustomDnd5eForm.deleteItem,
+            new: CustomDnd5eForm.createItem,
+            reset: CustomDnd5eForm.reset,
+            validate: CustomDnd5eForm.validate
+        },
+        classes: [`${MODULE.ID}-app`, 'sheet'],
+        tag: 'form',
+        form: {
+            submitOnChange: false,
+            closeOnSubmit: true
+        },
+        dragDrop: [{
+            dragSelector: '.custom-dnd5e-drag',
+            dropSelector: listClassSelector
+        }],
+        position: {
             width: 600,
-            height: 680,
-            closeOnSubmit: true,
+            height: 680
+        },
+        window: {
             minimizable: true,
             resizable: true
-        })
+        }
     }
 
-    activateListeners (html) {
-        super.activateListeners(html)
+    static createItem (event, target) {}
 
-        html.on('click', '[data-action]', this._handleButtonClick.bind(this))
+    static reset (event, target) {}
 
-        const cancel = html.find(`#${MODULE.ID}-cancel`)
-        cancel.on('click', this.close.bind(this))
+    static validate (event, target) {
+        const formData = this._getSubmitData()
+    }
 
-        this.items = Array.from(html[0].querySelectorAll(itemClassSelector))
+    static deleteItem (event, target) {
+        const key = target.parentElement.dataset.key
+
+        if (!key) return
+
+        const del = async (key) => {
+            const listItem = this.element.querySelector(`[data-key="${key}"]`)
+            const deleteInputs = listItem.querySelectorAll('input[id="delete"]')
+
+            // Set delete input to true against list item and all nested list items
+            deleteInputs.forEach(input => {
+                input.setAttribute('value', 'true')
+            })
+
+            listItem.classList.add('hidden')
+        }
+
+        const d = new Dialog({
+            title: game.i18n.localize('CUSTOM_DND5E.dialog.delete.title'),
+            content: `<p>${game.i18n.localize('CUSTOM_DND5E.dialog.delete.content')}</p>`,
+            buttons: {
+                yes: {
+                    icon: '<i class="fas fa-check"></i>',
+                    label: game.i18n.localize('CUSTOM_DND5E.dialog.delete.yes'),
+                    callback: async () => {
+                        del(key)
+                    }
+                },
+                no: {
+                    icon: '<i class="fas fa-times"></i>',
+                    label: game.i18n.localize('CUSTOM_DND5E.dialog.delete.no')
+                }
+            }
+        })
+        d.render(true)
+    }
+
+    _onRender (context, options) {
+        // const cancel = html.find(`#${MODULE.ID}-cancel`)
+        // cancel.on('click', this.close.bind(this))
+
+        this.items = Array.from(this.element.querySelectorAll(itemClassSelector))
 
         this.items.forEach(item => {
+            // this.#dragDrop.forEach((d) => d.bind(item))
+            item.addEventListener('dragstart', this._onDragStart.bind(this))
             item.addEventListener('dragleave', this._onDragLeave.bind(this))
             item.addEventListener('dragend', this._onDragEnd.bind(this))
+            item.addEventListener('dragover', this._onDragOver.bind(this))
+            item.addEventListener('drop', this._onDrop.bind(this))
 
             const checkbox = item.querySelector("input[type='checkbox']")
             checkbox?.addEventListener('change', this._onChangeInput.bind(this))
             if (checkbox?.checked) this._onToggleList(checkbox)
         })
-    }
-
-    /** @override */
-    _canDragStart (selector) {
-        return true
-    }
-
-    /** @inheritdoc */
-    _canDragDrop (selector) {
-        return true
     }
 
     async _onChangeInput (event) {
@@ -86,6 +135,39 @@ export class CustomDnd5eForm extends FormApplication {
                 child.checked = checkbox.checked
             }
         }
+    }
+
+   /*  #createDragDropHandlers () {
+        return this.options.dragDrop.map((d) => {
+            d.permissions = {
+                dragstart: this._canDragStart.bind(this),
+                drop: this._canDragDrop.bind(this)
+            }
+            d.callbacks = {
+                dragstart: this._onDragStart.bind(this),
+                dragend: this._onDragEnd.bind(this),
+                dragleave: this._onDragLeave.bind(this),
+                dragover: this._onDragOver.bind(this),
+                drop: this._onDrop.bind(this)
+            }
+            return new DragDrop(d)
+        })
+    }
+ */
+    // #dragDrop
+
+   /*  get dragDrop () {
+        return this.#dragDrop
+    }
+ */
+    /** @override */
+    _canDragStart (selector) {
+        return true
+    }
+
+    /** @inheritdoc */
+    _canDragDrop (selector) {
+        return true
     }
 
     /** @override */
@@ -201,70 +283,5 @@ export class CustomDnd5eForm extends FormApplication {
         } else {
             this.mousePos = (this.nestable) ? 'middle' : 'bottom'
         }
-    }
-
-    async _handleButtonClick (event) {
-        event.preventDefault()
-        const clickedElement = $(event.currentTarget)
-        const action = clickedElement.data().action
-        const key = clickedElement.parents('li')?.data()?.key
-        switch (action) {
-        case 'delete': {
-            await this._deleteItem(key)
-            break
-        }
-        case 'new': {
-            await this._createItem()
-            break
-        }
-        case 'reset': {
-            await this._reset()
-            break
-        }
-        case 'validate': {
-            const formData = this._getSubmitData()
-            await this._validate(event, formData)
-            break
-        }
-        }
-    }
-
-    async _createItem () {}
-
-    async _reset () {}
-
-    async _validate () {}
-
-    async _deleteItem (key) {
-        const del = async (key) => {
-            const listItem = this.element[0].querySelector(`[data-key="${key}"]`)
-            const deleteInputs = listItem.querySelectorAll('input[id="delete"]')
-
-            // Set delete input to true against list item and all nested list items
-            deleteInputs.forEach(input => {
-                input.setAttribute('value', 'true')
-            })
-
-            listItem.classList.add('hidden')
-        }
-
-        const d = new Dialog({
-            title: game.i18n.localize('CUSTOM_DND5E.dialog.delete.title'),
-            content: `<p>${game.i18n.localize('CUSTOM_DND5E.dialog.delete.content')}</p>`,
-            buttons: {
-                yes: {
-                    icon: '<i class="fas fa-check"></i>',
-                    label: game.i18n.localize('CUSTOM_DND5E.dialog.delete.yes'),
-                    callback: async () => {
-                        del(key)
-                    }
-                },
-                no: {
-                    icon: '<i class="fas fa-times"></i>',
-                    label: game.i18n.localize('CUSTOM_DND5E.dialog.delete.no')
-                }
-            }
-        })
-        d.render(true)
     }
 }
