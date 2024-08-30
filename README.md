@@ -32,6 +32,10 @@ A Foundry VTT module to customise the D&D 5e system.
 
 ## Death Saving Throws
 - Set the roll mode to Public Roll, Blind GM Roll or Private GM Roll. When using Blind GM Roll, successes and failures will not appear on the character sheet for the player.
+- Set the target value required to succeed a death saving throw.
+
+![Custom D&D 5e Death Saves Target Value](./.github/readme/custom-dnd5e-death-saves-target-value.png)
+
 - Remove a number of successes or failures for each event: On Regaining HP from 0, On Short Rest and On Long Rest.
 
 ## Hit Points

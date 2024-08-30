@@ -198,6 +198,16 @@ function registerSettings () {
     )
 
     registerSetting(
+        CONSTANTS.DEATH_SAVES.SETTING.DEATH_SAVES_TARGET_VALUE.KEY,
+        {
+            scope: 'world',
+            config: false,
+            type: Number,
+            default: 10
+        }
+    )
+
+    registerSetting(
         CONSTANTS.HIT_POINTS.SETTING.APPLY_MASSIVE_DAMAGE.KEY,
         {
             scope: 'world',
@@ -419,7 +429,10 @@ function makeDeathSavesBlind (app, html, data) {
  */
 function setDeathSavesRollMode (actor, rollData) {
     const rollMode = getSetting(CONSTANTS.DEATH_SAVES.SETTING.DEATH_SAVES_ROLL_MODE.KEY) || 'publicroll'
+    const targetValue = getSetting(CONSTANTS.DEATH_SAVES.SETTING.DEATH_SAVES_TARGET_VALUE.KEY)
+
     rollData.rollMode = rollMode
+    if (targetValue) rollData.targetValue = targetValue
 }
 
 /**

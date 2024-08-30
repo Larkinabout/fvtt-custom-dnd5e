@@ -205,6 +205,9 @@ export const CONSTANTS = {
             },
             REMOVE_DEATH_SAVES: {
                 KEY: 'remove-death-saves'
+            },
+            DEATH_SAVES_TARGET_VALUE: {
+                KEY: 'death-saves-target-value'
             }
         }
     },
