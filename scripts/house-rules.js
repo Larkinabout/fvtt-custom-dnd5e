@@ -287,8 +287,8 @@ function registerHooks () {
         }
     })
 
-    Hooks.on('createActiveEffect', (activeEffect, options, id) => { updateTokenEffects(true, activeEffect) })
-    Hooks.on('deleteActiveEffect', (activeEffect, options, id) => { updateTokenEffects(false, activeEffect) })
+    Hooks.on('createActiveEffect', (activeEffect, options, userId) => { updateTokenEffects(true, activeEffect, userId) })
+    Hooks.on('deleteActiveEffect', (activeEffect, options, userId) => { updateTokenEffects(false, activeEffect, userId) })
     Hooks.on('createToken', (token, data, options, userId) => { rollNpcHp(token) })
     Hooks.on('dnd5e.preApplyDamage', recalculateDamage)
     Hooks.on('dnd5e.preRestCompleted', (actor, data) => updateDeathSaves('rest', actor, data))
@@ -704,7 +704,9 @@ function updateMassiveDamage (actor, data) {
  * @param {boolean} active      Whether the active effect is active
  * @param {object} activeEffect The active effect
  */
-function updateTokenEffects (active, activeEffect) {
+function updateTokenEffects (active, activeEffect, userId) {
+    if (!game.user.isGM && (game.user.id !== userId || !game.user.hasPermission('TOKEN_CONFIGURE'))) return
+
     let prone = [...activeEffect.statuses].includes('prone')
     let bloodied = [...activeEffect.statuses].includes('bloodied')
     let dead = [...activeEffect.statuses].includes('dead')
