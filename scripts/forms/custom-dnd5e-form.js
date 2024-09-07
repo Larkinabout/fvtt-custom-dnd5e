@@ -35,6 +35,7 @@ export class CustomDnd5eForm extends HandlebarsApplicationMixin(ApplicationV2) {
             width: 600,
             height: 680
         },
+        scrollable: 'custom-dnd5e-scrollable',
         window: {
             minimizable: true,
             resizable: true
@@ -46,12 +47,13 @@ export class CustomDnd5eForm extends HandlebarsApplicationMixin(ApplicationV2) {
     static reset (event, target) {}
 
     static validate (event, target) {
-        const formData = this._getSubmitData()
     }
 
-    static deleteItem (event, target) {
-        const key = target.parentElement.dataset.key
+    static async deleteItem (event, target) {
+        const item = target.closest('.custom-dnd5e-item')
+        if (!item) return
 
+        const key = item.dataset.key
         if (!key) return
 
         const del = async (key) => {
@@ -66,21 +68,20 @@ export class CustomDnd5eForm extends HandlebarsApplicationMixin(ApplicationV2) {
             listItem.classList.add('hidden')
         }
 
-        const d = new Dialog({
-            title: game.i18n.localize('CUSTOM_DND5E.dialog.delete.title'),
+        const d = await foundry.applications.api.DialogV2.confirm({
+            window: {
+                title: game.i18n.localize('CUSTOM_DND5E.dialog.delete.title')
+            },
             content: `<p>${game.i18n.localize('CUSTOM_DND5E.dialog.delete.content')}</p>`,
-            buttons: {
-                yes: {
-                    icon: '<i class="fas fa-check"></i>',
-                    label: game.i18n.localize('CUSTOM_DND5E.dialog.delete.yes'),
-                    callback: async () => {
-                        del(key)
-                    }
-                },
-                no: {
-                    icon: '<i class="fas fa-times"></i>',
-                    label: game.i18n.localize('CUSTOM_DND5E.dialog.delete.no')
+            modal: true,
+            yes: {
+                label: game.i18n.localize('CUSTOM_DND5E.yes'),
+                callback: async () => {
+                    del(key)
                 }
+            },
+            no: {
+                label: game.i18n.localize('CUSTOM_DND5E.no')
             }
         })
         d.render(true)
@@ -137,7 +138,7 @@ export class CustomDnd5eForm extends HandlebarsApplicationMixin(ApplicationV2) {
         }
     }
 
-   /*  #createDragDropHandlers () {
+    /*  #createDragDropHandlers () {
         return this.options.dragDrop.map((d) => {
             d.permissions = {
                 dragstart: this._canDragStart.bind(this),
@@ -156,7 +157,7 @@ export class CustomDnd5eForm extends HandlebarsApplicationMixin(ApplicationV2) {
  */
     // #dragDrop
 
-   /*  get dragDrop () {
+    /*  get dragDrop () {
         return this.#dragDrop
     }
  */

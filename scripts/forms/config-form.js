@@ -32,6 +32,9 @@ class ConfigForm extends CustomDnd5eForm {
             new: ConfigForm.createItem,
             reset: ConfigForm.reset,
             validate: ConfigForm.validate
+        },
+        form: {
+            handler: ConfigForm.submit
         }
     }
 
@@ -78,23 +81,23 @@ class ConfigForm extends CustomDnd5eForm {
             this.render(true)
         }
 
-        const d = new Dialog({
-            title: game.i18n.localize('CUSTOM_DND5E.dialog.reset.title'),
+        const d = await foundry.applications.api.DialogV2.confirm({
+            window: {
+                title: game.i18n.localize('CUSTOM_DND5E.dialog.reset.title')
+            },
             content: `<p>${game.i18n.localize('CUSTOM_DND5E.dialog.reset.content')}</p>`,
-            buttons: {
-                yes: {
-                    icon: '<i class="fas fa-check"></i>',
-                    label: game.i18n.localize('CUSTOM_DND5E.dialog.reset.yes'),
-                    callback: async () => {
-                        reset()
-                    }
-                },
-                no: {
-                    icon: '<i class="fas fa-times"></i>',
-                    label: game.i18n.localize('CUSTOM_DND5E.dialog.reset.no')
+            modal: true,
+            yes: {
+                label: game.i18n.localize('CUSTOM_DND5E.yes'),
+                callback: async () => {
+                    reset()
                 }
+            },
+            no: {
+                label: game.i18n.localize('CUSTOM_DND5E.no')
             }
         })
+
         d.render(true)
     }
 
@@ -125,7 +128,7 @@ class ConfigForm extends CustomDnd5eForm {
         return template
     }
 
-    async _validate (event, formData) {
+    static validate (event, formData) {
         const keys = {}
 
         Object.keys(formData)
@@ -154,14 +157,14 @@ class ConfigForm extends CustomDnd5eForm {
         this.submit()
     }
 
-    async _updateObject (event, formData) {
+    static async submit (event, form, formData) {
         const ignore = ['children', 'delete', 'key', 'parentKey']
 
         const data = {}
         const keyData = {}
         const changedKeys = {}
 
-        Object.entries(formData).filter(([property, value]) => property.endsWith('key'))
+        Object.entries(formData.object).filter(([property, value]) => property.endsWith('key'))
             .forEach(([property, value]) => {
                 const propertyParts = property.split('.')
                 const propertyPathSuffix = propertyParts.slice(-2, -1)[0]
@@ -169,7 +172,7 @@ class ConfigForm extends CustomDnd5eForm {
                 if (propertyPathSuffix !== value) { changedKeys[propertyPathSuffix] = value }
             })
 
-        Object.entries(formData).forEach(([property, value]) => {
+        Object.entries(formData.object).forEach(([property, value]) => {
             const propertyParts = property.split('.')
             propertyParts.forEach((value, index) => {
                 if (changedKeys[value]) {
@@ -179,7 +182,7 @@ class ConfigForm extends CustomDnd5eForm {
             const propertyKey = propertyParts.pop()
             const propertyPath = propertyParts.join('.')
 
-            if (ignore.includes(propertyKey) || formData[`${propertyPath}.delete`] === 'true') return
+            if (ignore.includes(propertyKey) || formData.object[`${propertyPath}.delete`] === 'true') return
             if (propertyKey === 'system') {
                 if (value === 'true') { return }
                 value = false

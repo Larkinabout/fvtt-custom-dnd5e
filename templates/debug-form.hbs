@@ -1,38 +1,36 @@
-<div class="custom-dnd5e-form-wrapper flexrow">
-    <form class="custom-dnd5e-form flexcol">
-        <div class="scrollable">
-            <div class="form-group">
-                <label>{{localize "CUSTOM_DND5E.form.debug.consoleMessages.label"}}</label>
-                <div class="form-fields">
-                    <input id="debug" name="debug" type="checkbox" {{#if debug}} checked{{/if}}> 
-                </div>
-                <p class="notes">{{localize "CUSTOM_DND5E.form.debug.consoleMessages.note.1"}}</label>
-                <p class="custom-dnd5e-advice notes">{{localize "CUSTOM_DND5E.form.debug.consoleMessages.note.2"}}</label>
+<div class="standard-form">
+    <div class="standard-form scrollable">
+        <div class="form-group">
+            <label>{{localize "CUSTOM_DND5E.form.debug.consoleMessages.label"}}</label>
+            <div class="form-fields">
+                <input id="debug" name="debug" type="checkbox" {{#if debug}} checked{{/if}}> 
             </div>
-            <div class="form-group">
-                <label>{{localize "CUSTOM_DND5E.exportData"}}</label>
-                <div class="form-fields">
-                     <button type="button" data-action="export" data-tooltip="{{localize "CUSTOM_DND5E.form.debug.button.exportData.tooltip"}}" style="flex:1;">
-                        <i class="fas fa-solid fa-file-export"></i>{{localize "CUSTOM_DND5E.exportData"}}
-                    </button>
-                </div>
-                <p class="notes">{{localize "CUSTOM_DND5E.form.debug.exportData.note"}}</label>
-            </div>
-            <div class="form-group">
-                <label>{{localize "CUSTOM_DND5E.importData"}}</label>
-                <div class="form-fields">
-                     <button type="button" data-action="import" style="flex:1;">
-                        <i class="fas fa-solid fa-file-import"></i>{{localize "CUSTOM_DND5E.importData"}}
-                    </button>
-                </div>
-                <p class="notes">{{localize "CUSTOM_DND5E.form.debug.importData.note.1"}}</label>
-            </div>
-            
+            <p class="hint">{{localize "CUSTOM_DND5E.form.debug.consoleMessages.note.1"}}</label>
+            <p class="custom-dnd5e-advice notes">{{localize "CUSTOM_DND5E.form.debug.consoleMessages.note.2"}}</label>
         </div>
-        <footer>
-            <button type="submit" class="save-button">
-                <i class="fas fa-solid fa-floppy-disk"></i>{{localize "CUSTOM_DND5E.form.button.save.label"}}
-            </button>
-        </footer>
-    </form>
+        <div class="form-group">
+            <label>{{localize "CUSTOM_DND5E.exportData"}}</label>
+            <div class="form-fields">
+                 <button type="button" data-action="export" data-tooltip="{{localize "CUSTOM_DND5E.form.debug.button.exportData.tooltip"}}" style="flex:1;">
+                    <i class="fas fa-solid fa-file-export"></i>{{localize "CUSTOM_DND5E.exportData"}}
+                </button>
+            </div>
+            <p class="hint">{{localize "CUSTOM_DND5E.form.debug.exportData.note"}}</label>
+        </div>
+        <div class="form-group">
+            <label>{{localize "CUSTOM_DND5E.importData"}}</label>
+            <div class="form-fields">
+                 <button type="button" data-action="import" style="flex:1;">
+                    <i class="fas fa-solid fa-file-import"></i>{{localize "CUSTOM_DND5E.importData"}}
+                </button>
+            </div>
+            <p class="hint">{{localize "CUSTOM_DND5E.form.debug.importData.note.1"}}</label>
+        </div>
+        
+    </div>
+    <footer class="form-footer" data-application-part="footer">
+        <button type="submit" class="save-button">
+            <i class="fas fa-solid fa-floppy-disk"></i>{{localize "CUSTOM_DND5E.form.button.save.label"}}
+        </button>
+    </footer>
 </div>

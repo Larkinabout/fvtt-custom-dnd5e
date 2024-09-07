@@ -1,4 +1,4 @@
-import { CONSTANTS } from '../constants.js'
+import { CONSTANTS, MODULE } from '../constants.js'
 import { importData, exportData } from '../debug.js'
 import { getSetting, setSetting } from '../utils.js'
 import { CustomDnd5eForm } from './custom-dnd5e-form.js'
@@ -8,40 +8,39 @@ export class DebugForm extends CustomDnd5eForm {
         super(args)
     }
 
-    static get defaultOptions () {
-        return foundry.utils.mergeObject(super.defaultOptions, {
-            template: CONSTANTS.DEBUG.TEMPLATE.FORM,
+    static DEFAULT_OPTIONS = {
+        actions: {
+            export: DebugForm.export,
+            import: DebugForm.import
+        },
+        form: {
+            handler: DebugForm.submit
+        },
+        id: `${MODULE.ID}-debug-form`,
+        window: {
             title: CONSTANTS.DEBUG.FORM.TITLE
-        })
-    }
-
-    async getData () {
-        const debug = getSetting(CONSTANTS.DEBUG.SETTING.KEY)
-
-        return { debug }
-    }
-
-    activateListeners (html) {
-        super.activateListeners(html)
-    }
-
-    async _handleButtonClick (event) {
-        event.preventDefault()
-        const clickedElement = $(event.currentTarget)
-        const action = clickedElement.data().action
-        switch (action) {
-        case 'export': {
-            await exportData()
-            break
-        }
-        case 'import': {
-            await importData()
-            break
-        }
         }
     }
 
-    async _updateObject (event, formData) {
-        setSetting(CONSTANTS.DEBUG.SETTING.KEY, formData.debug)
+    static PARTS = {
+        form: {
+            template: CONSTANTS.DEBUG.TEMPLATE.FORM
+        }
+    }
+
+    async _prepareContext () {
+        return { debug: getSetting(CONSTANTS.DEBUG.SETTING.KEY) }
+    }
+
+    static async export () {
+        await exportData()
+    }
+
+    static async import () {
+        await importData()
+    }
+
+    static async submit (event, form, formData) {
+        setSetting(CONSTANTS.DEBUG.SETTING.KEY, formData.object.debug)
     }
 }
