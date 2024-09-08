@@ -405,7 +405,7 @@ export function awardInspiration (rollType, entity, roll) {
  * @param {object} data The data
  */
 function makeDeathSavesBlind (app, html, data) {
-    if (getSetting(CONSTANTS.DEATH_SAVES.SETTING.DEATH_SAVES_ROLL_MODE.KEY !== 'blind') || game.user.isGM) return
+    if (getSetting(CONSTANTS.DEATH_SAVES.SETTING.DEATH_SAVES_ROLL_MODE.KEY) !== 'blind' || game.user.isGM) return
 
     const sheetType = SHEET_TYPE[app.constructor.name]
 
