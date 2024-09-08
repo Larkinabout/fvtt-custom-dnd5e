@@ -1,52 +1,50 @@
-<div class="custom-dnd5e-form-wrapper flexrow">
-    <form class="custom-dnd5e-form flexcol">
-        <nav class="sheet-tabs tabs" style="flex: none;">
-            <a class="item active" data-tab="characters">
-                <i class="fa-solid fa-user"></i>
-                {{localize "CUSTOM_DND5E.characters"}}
-            </a>
-            <a class="item" data-tab="npcs">
-                <i class="fa-solid fa-robot"></i>
-                {{localize "CUSTOM_DND5E.npcs"}}
-            </a>
-            <a class="item" data-tab="groups">
-                <i class="fa-solid fa-people-group"></i>
-                {{localize "CUSTOM_DND5E.groups"}}
-            </a>
-            <a class="item" data-tab="items" style="gap:0.25rem; align-items: center; display:inline-flex;">
-                <dnd5e-icon src="systems/dnd5e/icons/svg/backpack.svg"></dnd5e-icon>
-                {{localize "CUSTOM_DND5E.items"}}
-            </a>
-        </nav>
-        <div class="scrollable">
-            <section class="tab active" data-actor-type="character" data-tab="characters">
-                <ul class="custom-dnd5e-list flexcol">
-                    {{> "modules/custom-dnd5e/templates/counters-list.hbs" actorType="character" counters=settings.character selects=selects}}
-                </ul>
-            </section>
-            <section class="tab" data-actor-type="npc" data-tab="npcs">
-                <ul class="custom-dnd5e-list flexcol">
-                    {{> "modules/custom-dnd5e/templates/counters-list.hbs" actorType="npc" counters=settings.npc selects=selects}}
-                </ul>
-            </section>
-            <section class="tab" data-actor-type="group" data-tab="groups">
-                <ul class="custom-dnd5e-list flexcol">
-                    {{> "modules/custom-dnd5e/templates/counters-list.hbs" actorType="group" counters=settings.group selects=selects}}
-                </ul>
-            </section>
-            <section class="tab" data-actor-type="item" data-tab="items">
-                <ul class="custom-dnd5e-list flexcol">
-                    {{> "modules/custom-dnd5e/templates/counters-list.hbs" actorType="item" counters=settings.item selects=selects}}
-                </ul>
-            </section>
-        </div>
-        <footer>
-            <button type="button" data-tooltip="{{localize "CUSTOM_DND5E.form.button.new.tooltip"}}" data-action="new" class="new-button">
-                <i class="fas fa-plus"></i>{{localize "CUSTOM_DND5E.form.button.new.label"}}
-            </button>
-            <button type="submit" data-tooltip="{{localize "CUSTOM_DND5E.form.button.save.tooltip"}}" class="save-button">
-                <i class="fas fa-solid fa-floppy-disk"></i>{{localize "CUSTOM_DND5E.form.button.save.label"}}
-            </button>
-        </footer>
-    </form>
-</div>
+<div class="standard-form">
+    <nav class="sheet-tabs tabs" style="flex: none;">
+        <a class="item active" data-action="tab" data-group="primary" data-tab="characters">
+            <i class="fa-solid fa-user"></i>
+            {{localize "CUSTOM_DND5E.characters"}}
+        </a>
+        <a class="item" data-action="tab" data-group="primary" data-tab="npcs">
+            <i class="fa-solid fa-robot"></i>
+            {{localize "CUSTOM_DND5E.npcs"}}
+        </a>
+        <a class="item" data-action="tab" data-group="primary" data-tab="groups">
+            <i class="fa-solid fa-people-group"></i>
+            {{localize "CUSTOM_DND5E.groups"}}
+        </a>
+        <a class="item" data-action="tab" data-group="primary" data-tab="items" style="gap:0.25rem; align-items: center; display:inline-flex;">
+             <i class="fa-solid fa-shield"></i>
+            {{localize "CUSTOM_DND5E.items"}}
+        </a>
+    </nav>
+    <div class="standard-form scrollable">
+        <section class="tab active" data-actor-type="character" data-group="primary" data-tab="characters">
+            <ul class="custom-dnd5e-list flexcol">
+                {{> "modules/custom-dnd5e/templates/counters-list.hbs" actorType="character" counters=settings.character selects=selects}}
+            </ul>
+        </section>
+        <section class="tab" data-actor-type="npc" data-group="primary" data-tab="npcs">
+            <ul class="custom-dnd5e-list flexcol">
+                {{> "modules/custom-dnd5e/templates/counters-list.hbs" actorType="npc" counters=settings.npc selects=selects}}
+            </ul>
+        </section>
+        <section class="tab" data-actor-type="group" data-group="primary" data-tab="groups">
+            <ul class="custom-dnd5e-list flexcol">
+                {{> "modules/custom-dnd5e/templates/counters-list.hbs" actorType="group" counters=settings.group selects=selects}}
+            </ul>
+        </section>
+        <section class="tab" data-actor-type="item" data-group="primary" data-tab="items">
+            <ul class="custom-dnd5e-list flexcol">
+                {{> "modules/custom-dnd5e/templates/counters-list.hbs" actorType="item" counters=settings.item selects=selects}}
+            </ul>
+        </section>
+    </div>
+    <footer class="form-footer" data-application-part="footer">
+        <button type="button" data-action="new" class="new-button bright">
+            <i class="fas fa-plus"></i>{{localize "CUSTOM_DND5E.form.button.new.label"}}
+        </button>
+        <button type="submit" class="save-button">
+            <i class="fas fa-solid fa-floppy-disk"></i>{{localize "CUSTOM_DND5E.form.button.save.label"}}
+        </button>
+    </footer>
+</div> 

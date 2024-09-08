@@ -3,7 +3,6 @@ import { deleteProperty, getSetting, setSetting } from '../utils.js'
 import { CustomDnd5eForm } from './custom-dnd5e-form.js'
 import { getDnd5eConfig, setConfig as setItemProperties } from '../item-properties.js'
 
-const itemClass = `${MODULE.ID}-item`
 const listClass = `${MODULE.ID}-list`
 const listClassSelector = `.${listClass}`
 
@@ -17,53 +16,61 @@ export class ItemPropertiesForm extends CustomDnd5eForm {
         this.type = 'itemProperties'
     }
 
-    static get defaultOptions () {
-        return foundry.utils.mergeObject(super.defaultOptions, {
-            id: `${MODULE.ID}-item-properties-form`,
-            template: CONSTANTS.ITEM_PROPERTIES.TEMPLATE.FORM,
-            title: game.i18n.localize('CUSTOM_DND5E.form.itemProperties.title')
-        })
+    static DEFAULT_OPTIONS = {
+        actions: {
+            new: ItemPropertiesForm.createItem,
+            reset: ItemPropertiesForm.reset
+        },
+        form: {
+            handler: ItemPropertiesForm.submit
+        },
+        id: `${MODULE.ID}-item-properties-form`,
+        window: {
+            title: 'CUSTOM_DND5E.form.itemProperties.title'
+        }
     }
 
-    async getData () {
+    static PARTS = {
+        form: {
+            template: CONSTANTS.ITEM_PROPERTIES.TEMPLATE.FORM
+        }
+    }
+
+    async _prepareContext () {
         this.setting = getSetting(this.settingKey) || foundry.utils.deepClone(CONFIG.DND5E.itemProperties)
 
         return { items: this.setting }
     }
 
-    activateListeners (html) {
-        super.activateListeners(html)
-    }
-
-    async _reset () {
+    static async reset () {
         const reset = async () => {
             await setSetting(this.settingKey, getDnd5eConfig())
             this.setFunction(CONFIG.CUSTOM_DND5E[this.type])
             this.render(true)
         }
 
-        const d = new Dialog({
-            title: game.i18n.localize('CUSTOM_DND5E.dialog.reset.title'),
+        const d = await foundry.applications.api.DialogV2.confirm({
+            window: {
+                title: game.i18n.localize('CUSTOM_DND5E.dialog.reset.title')
+            },
             content: `<p>${game.i18n.localize('CUSTOM_DND5E.dialog.reset.content')}</p>`,
-            buttons: {
-                yes: {
-                    icon: '<i class="fas fa-check"></i>',
-                    label: game.i18n.localize('CUSTOM_DND5E.dialog.reset.yes'),
-                    callback: async () => {
-                        reset()
-                    }
-                },
-                no: {
-                    icon: '<i class="fas fa-times"></i>',
-                    label: game.i18n.localize('CUSTOM_DND5E.dialog.reset.no')
+            modal: true,
+            yes: {
+                label: game.i18n.localize('CUSTOM_DND5E.yes'),
+                callback: async () => {
+                    reset()
                 }
+            },
+            no: {
+                label: game.i18n.localize('CUSTOM_DND5E.no')
             }
         })
+
         d.render(true)
     }
 
-    async _createItem () {
-        const list = this.element[0].querySelector(listClassSelector)
+    static async createItem () {
+        const list = this.element.querySelector(listClassSelector)
         const scrollable = list.closest('.scrollable')
 
         const key = foundry.utils.randomID()
@@ -89,18 +96,18 @@ export class ItemPropertiesForm extends CustomDnd5eForm {
         return template
     }
 
-    async _updateObject (event, formData) {
+    static async submit (event, form, formData) {
         const ignore = ['children', 'delete', 'key', 'parentKey']
 
         // Get list of properties to delete
-        const deleteKeys = Object.entries(formData)
+        const deleteKeys = Object.entries(formData.object)
             .filter(([key, value]) => key.split('.').pop() === 'delete' && value === 'true')
             .map(([key, _]) => key.split('.').slice(0, -1).join('.'))
 
         // Delete properties from formData
-        Object.keys(formData).forEach(key => {
+        Object.keys(formData.object).forEach(key => {
             if (deleteKeys.includes(key.split('.').slice(0, -1).join('.'))) {
-                delete formData[key]
+                delete formData.object[key]
             }
         })
 
@@ -110,7 +117,7 @@ export class ItemPropertiesForm extends CustomDnd5eForm {
         })
 
         // Set properties in this.setting
-        Object.entries(formData).forEach(([key, value]) => {
+        Object.entries(formData.object).forEach(([key, value]) => {
             if (ignore.includes(key.split('.').pop())) { return }
             if (key.split('.').pop() === 'system') {
                 if (value === 'true') { return }

@@ -1,13 +1,13 @@
-<div class="custom-dnd5e-form-wrapper flexrow">
-    <form class="custom-dnd5e-form flexcol">
-        <div class="scrollable">
-            <h2>{{localize "CUSTOM_DND5E.bloodied"}}</h2>
+<div class="standard-form">
+    <div class="standard-form scrollable">
+        <fieldset>
+            <legend>{{localize "CUSTOM_DND5E.bloodied"}}</legend>
             <div class="form-group">
                 <label>{{localize "CUSTOM_DND5E.form.houseRules.bloodied.applyBloodied.label"}}</label>
                 <div class="form-fields">
                     <input id="apply-bloodied" name="applyBloodied" type="checkbox"{{#if applyBloodied}} checked{{/if}}>
                 </div>
-                <p class="notes">{{localize "CUSTOM_DND5E.form.houseRules.bloodied.applyBloodied.note"}}</p>
+                <p class="hint">{{localize "CUSTOM_DND5E.form.houseRules.bloodied.applyBloodied.note"}}</p>
             </div>
             <div class="form-group">
                 <label>{{localize "CUSTOM_DND5E.form.houseRules.bloodied.bloodiedIcon.label"}}</label>
@@ -15,55 +15,61 @@
                     <input id="bloodied-icon" name="bloodiedIcon" type="text" value="{{bloodiedIcon}}">
                     {{filePicker target="bloodiedIcon" type="image"}}
                 </div>
-                <p class="notes">{{localize "CUSTOM_DND5E.form.houseRules.bloodied.bloodiedIcon.note"}}</p>
+                <p class="hint">{{localize "CUSTOM_DND5E.form.houseRules.bloodied.bloodiedIcon.note"}}</p>
             </div>
             <div class="form-group">
                 <label>{{localize "CUSTOM_DND5E.tint"}}</label>
                 <div class="form-fields">
                     <input id="bloodied-tint" name="bloodiedTint" type="text" value="{{bloodiedTint}}"> 
                 </div>
-                <p class="notes">{{localize "CUSTOM_DND5E.form.houseRules.bloodied.bloodiedTint.note.1"}}</p>
+                <p class="hint">{{localize "CUSTOM_DND5E.form.houseRules.bloodied.bloodiedTint.note.1"}}</p>
                 <p class="custom-dnd5e-advice notes">{{localize "CUSTOM_DND5E.form.houseRules.bloodied.bloodiedTint.note.2"}}</p>
             </div>
-            <h2>{{localize "CUSTOM_DND5E.unconscious"}}</h2>
+        </fieldset>
+        <fieldset>
+            <legend>{{localize "CUSTOM_DND5E.unconscious"}}</legend>
             <div class="form-group">
                 <label>{{localize "CUSTOM_DND5E.form.houseRules.unconscious.applyUnconscious.label"}}</label>
                 <div class="form-fields">
                     <input id="apply-unconscious" name="applyUnconscious" type="checkbox"{{#if applyUnconscious}} checked{{/if}}> 
                 </div>
-                <p class="notes">{{localize "CUSTOM_DND5E.form.houseRules.unconscious.applyUnconscious.note"}}</p>
+                <p class="hint">{{localize "CUSTOM_DND5E.form.houseRules.unconscious.applyUnconscious.note"}}</p>
             </div>
-            <h2>{{localize "CUSTOM_DND5E.dead"}}</h2>
+        </fieldset>
+        <fieldset>
+            <legend>{{localize "CUSTOM_DND5E.dead"}}</legend>
             <div class="form-group">
                 <label>{{localize "CUSTOM_DND5E.form.houseRules.dead.applyDead.label"}}</label>
                 <div class="form-fields">
                     <input id="apply-dead" name="applyDead" type="checkbox"{{#if applyDead}} checked{{/if}}> 
                 </div>
-                <p class="notes">{{localize "CUSTOM_DND5E.form.houseRules.dead.applyDead.note"}}</p>
+                <p class="hint">{{localize "CUSTOM_DND5E.form.houseRules.dead.applyDead.note"}}</p>
             </div>
             <div class="form-group">
                 <label>{{localize "CUSTOM_DND5E.form.houseRules.dead.applyInstantDeath.label"}}</label>
                 <div class="form-fields">
                     <input id="apply-instant-death" name="applyInstantDeath" type="checkbox"{{#if applyInstantDeath}} checked{{/if}}> 
                 </div>
-                <p class="notes">{{localize "CUSTOM_DND5E.form.houseRules.dead.applyInstantDeath.note"}}</p>
+                <p class="hint">{{localize "CUSTOM_DND5E.form.houseRules.dead.applyInstantDeath.note"}}</p>
             </div>
             <div class="form-group">
                 <label>{{localize "CUSTOM_DND5E.rotation"}}</label>
                 <div class="form-fields">
                     <input id="dead-rotation" name="deadRotation" type="number" value="{{deadRotation}}"> 
                 </div>
-                <p class="notes">{{localize "CUSTOM_DND5E.form.houseRules.dead.deadRotation.note.1"}}</p>
+                <p class="hint">{{localize "CUSTOM_DND5E.form.houseRules.dead.deadRotation.note.1"}}</p>
             </div>
             <div class="form-group">
                 <label>{{localize "CUSTOM_DND5E.tint"}}</label>
                 <div class="form-fields">
                     <input id="dead-tint" name="deadTint" type="text" value="{{deadTint}}"> 
                 </div>
-                <p class="notes">{{localize "CUSTOM_DND5E.form.houseRules.dead.deadTint.note.1"}}</p>
+                <p class="hint">{{localize "CUSTOM_DND5E.form.houseRules.dead.deadTint.note.1"}}</p>
                 <p class="custom-dnd5e-advice notes">{{localize "CUSTOM_DND5E.form.houseRules.dead.deadTint.note.2"}}</p>
             </div>
-            <h2>{{localize "CUSTOM_DND5E.deathSavingThrows"}}</h2>
+        </fieldset>
+        <fieldset>
+            <legend>{{localize "CUSTOM_DND5E.deathSavingThrows"}}</legend>
             <div class="form-group">
                 <label>{{localize "CUSTOM_DND5E.rollMode"}}</label>
                 <div class="form-fields">
@@ -71,7 +77,7 @@
                         {{selectOptions selects.deathSavesRollMode.choices selected=deathSavesRollMode localize=true}}
                     </select>
                 </div>
-                <p class="notes">{{localize "CUSTOM_DND5E.form.houseRules.deathSaves.deathSavesRollMode.note.1"}}</p>
+                <p class="hint">{{localize "CUSTOM_DND5E.form.houseRules.deathSaves.deathSavesRollMode.note.1"}}</p>
                 <p class="custom-dnd5e-advice notes">{{localize "CUSTOM_DND5E.form.houseRules.deathSaves.deathSavesRollMode.note.2"}}</p>
             </div>
             <div class="form-group">
@@ -79,56 +85,64 @@
                 <div class="form-fields">
                     <input id="death-saves-target-value" name="deathSavesTargetValue" type="number" value="{{deathSavesTargetValue}}"> 
                 </div>
-                <p class="notes">{{localize "CUSTOM_DND5E.form.houseRules.deathSaves.deathSavesTargetValue.note"}}</p>
+                <p class="hint">{{localize "CUSTOM_DND5E.form.houseRules.deathSaves.deathSavesTargetValue.note"}}</p>
             </div>
-            <p>{{localize "CUSTOM_DND5E.form.houseRules.deathSaves.removeDeathSaves.note.1"}}</p>
-            <p class="custom-dnd5e-advice notes">{{localize "CUSTOM_DND5E.form.houseRules.deathSaves.removeDeathSaves.note.2"}}</p>
-            <h3>{{localize "CUSTOM_DND5E.onRegainingHpFromZero"}}</h3>
-            <div class="form-group">
-                <label>{{localize "CUSTOM_DND5E.successes"}}</label>
-                <div class="form-fields">
-                    <input id="remove-death-saves-regain-hp-success" name="removeDeathSaves.regainHp.success" type="number" value="{{removeDeathSaves.regainHp.success}}"> 
+            <h3>{{localize "CUSTOM_DND5E.form.houseRules.deathSaves.removeDeathSavesOnEvent.heading"}}</h3>
+            <p class="custom-dnd5e-advice notes">{{localize "CUSTOM_DND5E.form.houseRules.deathSaves.removeDeathSavesOnEvent.note"}}</p>
+            <fieldset>
+                <legend>{{localize "CUSTOM_DND5E.onRegainingHpFromZero"}}</legend>
+                <div class="form-group">
+                    <label>{{localize "CUSTOM_DND5E.successes"}}</label>
+                    <div class="form-fields">
+                        <input id="remove-death-saves-regain-hp-success" name="removeDeathSaves.regainHp.success" type="number" value="{{removeDeathSaves.regainHp.success}}"> 
+                    </div>
                 </div>
-            </div>
-            <div class="form-group">
-                <label>{{localize "CUSTOM_DND5E.failures"}}</label>
-                <div class="form-fields">
-                    <input id="remove-death-saves-regain-hp-failure" name="removeDeathSaves.regainHp.failure" type="number" value="{{removeDeathSaves.regainHp.failure}}"> 
+                <div class="form-group">
+                    <label>{{localize "CUSTOM_DND5E.failures"}}</label>
+                    <div class="form-fields">
+                        <input id="remove-death-saves-regain-hp-failure" name="removeDeathSaves.regainHp.failure" type="number" value="{{removeDeathSaves.regainHp.failure}}"> 
+                    </div>
                 </div>
-            </div>
-            <h3>{{localize "CUSTOM_DND5E.onShortRest"}}</h3>
-            <div class="form-group">
-                <label>{{localize "CUSTOM_DND5E.successes"}}</label>
-                <div class="form-fields">
-                    <input id="remove-death-saves-short-rest-success" name="removeDeathSaves.shortRest.success" type="number" value="{{removeDeathSaves.shortRest.success}}"> 
+            </fieldset>
+            <fieldset>
+                <legend>{{localize "CUSTOM_DND5E.onShortRest"}}</legend>
+                <div class="form-group">
+                    <label>{{localize "CUSTOM_DND5E.successes"}}</label>
+                    <div class="form-fields">
+                        <input id="remove-death-saves-short-rest-success" name="removeDeathSaves.shortRest.success" type="number" value="{{removeDeathSaves.shortRest.success}}"> 
+                    </div>
                 </div>
-            </div>
-            <div class="form-group">
-                <label>{{localize "CUSTOM_DND5E.failures"}}</label>
-                <div class="form-fields">
-                    <input id="remove-death-saves-short-rest-failure" name="removeDeathSaves.shortRest.failure" type="number" value="{{removeDeathSaves.shortRest.failure}}"> 
+                <div class="form-group">
+                    <label>{{localize "CUSTOM_DND5E.failures"}}</label>
+                    <div class="form-fields">
+                        <input id="remove-death-saves-short-rest-failure" name="removeDeathSaves.shortRest.failure" type="number" value="{{removeDeathSaves.shortRest.failure}}"> 
+                    </div>
                 </div>
-            </div>
-            <h3>{{localize "CUSTOM_DND5E.onLongRest"}}</h3>
-            <div class="form-group">
-                <label>{{localize "CUSTOM_DND5E.successes"}}</label>
-                <div class="form-fields">
-                    <input id="remove-death-saves-long-rest-success" name="removeDeathSaves.longRest.success" type="number" value="{{removeDeathSaves.longRest.success}}"> 
+            </fieldset>
+            <fieldset>
+                <legend>{{localize "CUSTOM_DND5E.onLongRest"}}</legend>
+                <div class="form-group">
+                    <label>{{localize "CUSTOM_DND5E.successes"}}</label>
+                    <div class="form-fields">
+                        <input id="remove-death-saves-long-rest-success" name="removeDeathSaves.longRest.success" type="number" value="{{removeDeathSaves.longRest.success}}"> 
+                    </div>
                 </div>
-            </div>
-            <div class="form-group">
-                <label>{{localize "CUSTOM_DND5E.failures"}}</label>
-                <div class="form-fields">
-                    <input id="remove-death-saves-long-rest-failure" name="removeDeathSaves.longRest.failure" type="number" value="{{removeDeathSaves.longRest.failure}}"> 
+                <div class="form-group">
+                    <label>{{localize "CUSTOM_DND5E.failures"}}</label>
+                    <div class="form-fields">
+                        <input id="remove-death-saves-long-rest-failure" name="removeDeathSaves.longRest.failure" type="number" value="{{removeDeathSaves.longRest.failure}}"> 
+                    </div>
                 </div>
-            </div>
-            <h2>{{localize "CUSTOM_DND5E.hitPoints"}}</h2>
+            </fieldset>
+        </fieldset>
+        <fieldset>
+            <legend>{{localize "CUSTOM_DND5E.hitPoints"}}</legend>
             <div class="form-group">
                 <label>{{localize "CUSTOM_DND5E.form.houseRules.hitPoints.applyMassiveDamage.label"}}</label>
                 <div class="form-fields">
                     <input id="apply-massive-damage" name="applyMassiveDamage" type="checkbox"{{#if applyMassiveDamage}} checked{{/if}}> 
                 </div>
-                <p class="notes">{{localize "CUSTOM_DND5E.form.houseRules.hitPoints.applyMassiveDamage.note"}}</p>
+                <p class="hint">{{localize "CUSTOM_DND5E.form.houseRules.hitPoints.applyMassiveDamage.note"}}</p>
             </div>
             <h3>{{localize "CUSTOM_DND5E.rollingHitPoints"}}</h3>
             <div class="form-group">
@@ -136,28 +150,28 @@
                 <div class="form-fields">
                     <input id="level-up-hit-points-reroll-minimum-value" name="levelUpHitPointsRerollMinimumValue" type="number" value="{{levelUpHitPointsRerollMinimumValue}}"> 
                 </div>
-                <p class="notes">{{localize "CUSTOM_DND5E.form.houseRules.rollingHitPoints.minimumValue.note"}}</p>
+                <p class="hint">{{localize "CUSTOM_DND5E.form.houseRules.rollingHitPoints.minimumValue.note"}}</p>
             </div>
             <div class="form-group">
                 <label>{{localize "CUSTOM_DND5E.form.houseRules.rollingHitPoints.rerollOnce.label"}}</label>
                 <div class="form-fields">
                     <input id="level-up-hit-points-reroll-once" name="levelUpHitPointsRerollOnce" type="checkbox"{{#if levelUpHitPointsRerollOnce}} checked{{/if}}> 
                 </div>
-                <p class="notes">{{localize "CUSTOM_DND5E.form.houseRules.rollingHitPoints.rerollOnce.note"}}</p>
+                <p class="hint">{{localize "CUSTOM_DND5E.form.houseRules.rollingHitPoints.rerollOnce.note"}}</p>
             </div>
-             <div class="form-group">
+            <div class="form-group">
                 <label>{{localize "CUSTOM_DND5E.form.houseRules.rollingHitPoints.showTakeAverage.label"}}</label>
                 <div class="form-fields">
                     <input id="level-up-hit-points-show-take-average" name="levelUpHitPointsShowTakeAverage" type="checkbox"{{#if levelUpHitPointsShowTakeAverage}} checked{{/if}}> 
                 </div>
-                <p class="notes">{{localize "CUSTOM_DND5E.form.houseRules.rollingHitPoints.showTakeAverage.note"}}</p>
+                <p class="hint">{{localize "CUSTOM_DND5E.form.houseRules.rollingHitPoints.showTakeAverage.note"}}</p>
             </div>
             <div class="form-group">
                 <label>{{localize "CUSTOM_DND5E.form.houseRules.rollingHitPoints.rollNpcHp.label"}}</label>
                 <div class="form-fields">
                     <input id="roll-npc-hp" name="rollNpcHp" type="checkbox"{{#if rollNpcHp}} checked{{/if}}> 
                 </div>
-                <p class="notes">{{localize "CUSTOM_DND5E.form.houseRules.rollingHitPoints.rollNpcHp.note"}}</p>
+                <p class="hint">{{localize "CUSTOM_DND5E.form.houseRules.rollingHitPoints.rollNpcHp.note"}}</p>
             </div>
             <h3>{{localize "CUSTOM_DND5E.negativeHitPoints"}}</h3>
             <div class="form-group">
@@ -165,26 +179,28 @@
                 <div class="form-fields">
                     <input id="apply-negative-hp" name="applyNegativeHp" type="checkbox"{{#if applyNegativeHp}} checked{{/if}}> 
                 </div>
-                <p class="notes">{{localize "CUSTOM_DND5E.form.houseRules.hitPoints.applyNegativeHp.note"}}</p>
+                <p class="hint">{{localize "CUSTOM_DND5E.form.houseRules.hitPoints.applyNegativeHp.note"}}</p>
             </div>
             <div class="form-group">
                 <label>{{localize "CUSTOM_DND5E.form.houseRules.hitPoints.negativeHpHealFromZero.label"}}</label>
                 <div class="form-fields">
                     <input id="negative-hp-heal-from-zero" name="negativeHpHealFromZero" type="checkbox"{{#if negativeHpHealFromZero}} checked{{/if}}> 
                 </div>
-                <p class="notes">{{localize "CUSTOM_DND5E.form.houseRules.hitPoints.negativeHpHealFromZero.note"}}</p>
+                <p class="hint">{{localize "CUSTOM_DND5E.form.houseRules.hitPoints.negativeHpHealFromZero.note"}}</p>
             </div>
-            <h2>{{localize "CUSTOM_DND5E.inspiration"}}</h2>
+        </fieldset>
+        <fieldset>
+            <legend>{{localize "CUSTOM_DND5E.inspiration"}}</legend>
             <div class="form-group">
                 <label>{{localize "CUSTOM_DND5E.form.houseRules.inspiration.awardInspirationD20Value.label"}}</label>
                 <div class="form-fields">
                     <input id="award-inspiration-d20-value" name="awardInspirationD20Value" type="number" min="1" max="20" value="{{awardInspirationD20Value}}"> 
                 </div>
-                <p class="notes">{{localize "CUSTOM_DND5E.form.houseRules.inspiration.awardInspirationD20Value.note"}}</p>
+                <p class="hint">{{localize "CUSTOM_DND5E.form.houseRules.inspiration.awardInspirationD20Value.note"}}</p>
             </div>
             <label>{{localize "CUSTOM_DND5E.rollTypes"}}</label>
             <div class="form-group">
-                <p class="notes">{{localize "CUSTOM_DND5E.form.houseRules.inspiration.awardInspirationRollTypes.note"}}</p>
+                <p class="hint">{{localize "CUSTOM_DND5E.form.houseRules.inspiration.awardInspirationRollTypes.note"}}</p>
                 <label style="display:flex;">
                     <input id="rollAbilityTest" name="awardInspirationRollTypes.rollAbilityTest" type="checkbox"{{#if awardInspirationRollTypes.rollAbilityTest}} checked{{/if}}>
                     {{localize "CUSTOM_DND5E.abilityCheck"}}
@@ -202,22 +218,24 @@
                     {{localize "CUSTOM_DND5E.skillCheck"}}
                 </label>
             </div>
-            <h2>{{localize "CUSTOM_DND5E.prone"}}</h2>
+        </fieldset>
+        <fieldset>
+            <legend>{{localize "CUSTOM_DND5E.prone"}}</legend>
             <div class="form-group">
                 <label>{{localize "CUSTOM_DND5E.rotation"}}</label>
                 <div class="form-fields">
                     <input id="prone-rotation" name="proneRotation" type="number" value="{{proneRotation}}"> 
                 </div>
-                <p class="notes">{{localize "CUSTOM_DND5E.form.houseRules.prone.proneRotation.note.1"}}</p>
+                <p class="hint">{{localize "CUSTOM_DND5E.form.houseRules.prone.proneRotation.note.1"}}</p>
             </div>
-        </div>
-        <footer>
-            <button type="button" data-tooltip="{{localize "CUSTOM_DND5E.form.button.reset.tooltip"}}" data-action="reset" class="reset-button">
-                <i class="fas fa-arrow-rotate-left"></i>{{localize "CUSTOM_DND5E.form.button.reset.label"}}
-            </button>
-            <button type="submit" data-tooltip="{{localize "CUSTOM_DND5E.form.button.save.tooltip"}}" class="save-button">
-                <i class="fas fa-solid fa-floppy-disk"></i>{{localize "CUSTOM_DND5E.form.button.save.label"}}
-            </button>
-        </footer>
-    </form>
+        </fieldset>
+    </div>
+    <footer class="form-footer" data-application-part="footer">
+        <button type="button" data-action="reset" class="reset-button bright">
+            <i class="fas fa-arrow-rotate-left"></i>{{localize "CUSTOM_DND5E.form.button.reset.label"}}
+        </button>
+        <button type="submit" class="save-button">
+            <i class="fas fa-solid fa-floppy-disk"></i>{{localize "CUSTOM_DND5E.form.button.save.label"}}
+        </button>
+    </footer>
 </div>

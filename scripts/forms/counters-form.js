@@ -5,42 +5,48 @@ import { CountersAdvancedOptionsForm } from './counters-advanced-options-form.js
 
 const id = CONSTANTS.COUNTERS.ID
 const form = `${id}-form`
-const itemClass = `${MODULE.ID}-item`
 const listClass = `${MODULE.ID}-list`
 const listClassSelector = `.${listClass}`
+function getSelects () {
+    return {
+        type: {
+            choices: {
+                checkbox: 'CUSTOM_DND5E.checkbox',
+                fraction: 'CUSTOM_DND5E.fraction',
+                number: 'CUSTOM_DND5E.number',
+                successFailure: 'CUSTOM_DND5E.successFailure'
+            }
+        }
+    }
+}
 
 export class CountersForm extends CustomDnd5eForm {
     constructor (...args) {
         super(args)
     }
 
-    static get defaultOptions () {
-        return foundry.utils.mergeObject(super.defaultOptions, {
-            id: `${MODULE.ID}-${form}`,
-            template: `modules/${MODULE.ID}/templates/${form}.hbs`,
-            title: game.i18n.localize(`CUSTOM_DND5E.form.${id}.title`),
-            tabs: [{
-                navSelector: '.tabs',
-                contentSelector: 'form',
-                initial: 'characters'
-            }]
-        })
-    }
-
-    #getSelects () {
-        return {
-            type: {
-                choices: {
-                    checkbox: 'CUSTOM_DND5E.checkbox',
-                    fraction: 'CUSTOM_DND5E.fraction',
-                    number: 'CUSTOM_DND5E.number',
-                    successFailure: 'CUSTOM_DND5E.successFailure'
-                }
-            }
+    static DEFAULT_OPTIONS = {
+        actions: {
+            new: CountersForm.createItem,
+            'copy-property': CountersForm.copyProperty,
+            'advanced-options': CountersForm.advancedOptions
+        },
+        form: {
+            handler: CountersForm.submit
+        },
+        id: `${MODULE.ID}-${form}`,
+        window: {
+            title: `CUSTOM_DND5E.form.${id}.title`
         }
     }
 
-    async getData () {
+    static PARTS = {
+        form: {
+            template: `modules/${MODULE.ID}/templates/${form}.hbs`
+        }
+    }
+
+    async _prepareContext () {
         this.settings = {
             character: getSetting(CONSTANTS.COUNTERS.SETTING.CHARACTER_COUNTERS.KEY) || {},
             group: getSetting(CONSTANTS.COUNTERS.SETTING.GROUP_COUNTERS.KEY) || {},
@@ -49,56 +55,21 @@ export class CountersForm extends CustomDnd5eForm {
         }
         return {
             settings: this.settings,
-            selects: this.#getSelects()
+            selects: getSelects()
         }
     }
 
-    activateListeners (html) {
-        super.activateListeners(html)
-    }
-
-    async _handleButtonClick (event) {
-        event.preventDefault()
-        const clickedElement = $(event.currentTarget)[0]
-        const action = clickedElement.dataset.action
-        const item = clickedElement.closest('li')
-        const key = item?.dataset.key
-        const label = item?.querySelector('#label').value
-        const type = item?.querySelector('#type').value
-        const actorType = item?.querySelector('#actorType').value
-        switch (action) {
-        case 'delete': {
-            await this._deleteItem(key)
-            break
-        }
-        case 'new': {
-            await this._createItem()
-            break
-        }
-        case 'copy-property': {
-            await this._copyProperty(key, type)
-            break
-        }
-        case 'advanced-options': {
-            const setting = this.settings[actorType]
-            const args = { countersForm: this, data: { key, actorType, label, type }, setting }
-            await CountersAdvancedOptionsForm.open(args)
-            break
-        }
-        }
-    }
-
-    async _createItem () {
-        const activeTab = this.element[0].querySelector('.tab.active')
-        const actorType = activeTab.dataset.actorType
-        const list = activeTab.querySelector(listClassSelector)
+    static async createItem () {
+        const activeTab = this.element.querySelector('.tab.active')
+        const actorType = (activeTab) ? activeTab.dataset.actorType : null
+        const list = (activeTab) ? activeTab.querySelector(listClassSelector) : this.element.querySelector(listClassSelector)
         const scrollable = list.closest('.scrollable')
 
         const key = foundry.utils.randomID()
         const data = {
             actorType,
             counters: { [key]: {} },
-            selects: this.#getSelects()
+            selects: getSelects()
         }
 
         const template = await renderTemplate(CONSTANTS.COUNTERS.TEMPLATE.LIST, data)
@@ -113,17 +84,41 @@ export class CountersForm extends CustomDnd5eForm {
         scrollable && (scrollable.scrollTop = scrollable.scrollHeight)
     }
 
-    async _copyProperty (key, type) {
+    static async copyProperty (event, target) {
+        const item = target.closest('.custom-dnd5e-item')
+        if (!item) return
+
+        const key = item.dataset.key
+        if (!key) return
+
+        const type = item.querySelector('#type').value
+
         const property = `@flags.${MODULE.ID}.${key}${(type === 'successFailure') ? '.success' : (type === 'fraction') ? '.value' : ''}`
         game.clipboard.copyPlainText(property)
         ui.notifications.info(game.i18n.format('CUSTOM_DND5E.form.counters.copyProperty.message', { property }))
     }
 
-    async _updateObject (event, formData) {
+    static async advancedOptions (event, target) {
+        const item = target.closest('.custom-dnd5e-item')
+        if (!item) return
+
+        const key = item.dataset.key
+        if (!key) return
+
+        const label = item.querySelector('#label').value
+        const type = item.querySelector('#type').value
+        const activeTab = this.element.querySelector('.tab.active')
+        const actorType = activeTab.dataset.actorType
+        const setting = this.settings[actorType]
+        const args = { countersForm: this, data: { key, actorType, label, type }, setting }
+        await CountersAdvancedOptionsForm.open(args)
+    }
+
+    static async submit (event, form, formData) {
         const ignore = ['actorType', 'delete', 'key']
 
         // Get list of properties to delete
-        const deleteKeys = Object.entries(formData)
+        const deleteKeys = Object.entries(formData.object)
             .filter(([key, value]) => key.split('.').pop() === 'delete' && value === 'true')
             .map(([key, _]) => key.split('.').slice(0, -1).join('.'))
 
@@ -140,14 +135,14 @@ export class CountersForm extends CustomDnd5eForm {
         })
 
         // Delete properties from formData
-        Object.keys(formData).forEach(key => {
+        Object.keys(formData.object).forEach(key => {
             if (deleteKeys.includes(key.split('.').slice(0, -1).join('.'))) {
-                delete formData[key]
+                delete formData.object[key]
             }
         })
 
         // Set properties in this.setting
-        Object.entries(formData).forEach(([key, value]) => {
+        Object.entries(formData.object).forEach(([key, value]) => {
             if (ignore.includes(key.split('.').pop())) { return }
             const arr = key.split('.')
             const actorType = arr.slice(0, 1).join('.')

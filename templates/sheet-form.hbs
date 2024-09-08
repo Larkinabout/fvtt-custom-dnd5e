@@ -1,8 +1,8 @@
-<div class="custom-dnd5e-form-wrapper flexrow">
-    <form class="custom-dnd5e-form flexcol">
-        <div class="scrollable">
+<div class="standard-form">
+    <div class="standard-form scrollable">
+        <fieldset>
+            <legend>{{localize "CUSTOM_DND5E.clientSettings.label"}}</legend>
             {{#if isGM}}
-            <h2>{{localize "CUSTOM_DND5E.clientSettings.label"}}</h2>
             <p>{{localize "CUSTOM_DND5E.clientSettings.note"}}</p>
             {{/if}}
             <div class="form-group">
@@ -10,7 +10,7 @@
                 <div class="form-fields">
                     <input id="sheet-scale" name="sheetScale" type="number" step=".05" value="{{sheetScale}}"> 
                 </div>
-                <p class="notes">{{localize "CUSTOM_DND5E.form.sheet.sheetScale.note.1"}}</p>
+                <p class="hint">{{localize "CUSTOM_DND5E.form.sheet.sheetScale.note.1"}}</p>
                 <p class="custom-dnd5e-advice notes">{{localize "CUSTOM_DND5E.form.sheet.sheetScale.note.2"}}</p>
             </div>
             <div class="form-group">
@@ -18,7 +18,7 @@
                 <div class="form-fields">
                     <input id="auto-fade-sheet" name="autoFadeSheet" type="checkbox"{{#if autoFadeSheet}} checked{{/if}}> 
                 </div>
-                <p class="notes">{{localize "CUSTOM_DND5E.form.sheet.autoFadeSheet.note.1"}}</p>
+                <p class="hint">{{localize "CUSTOM_DND5E.form.sheet.autoFadeSheet.note.1"}}</p>
                 <p class="custom-dnd5e-advice notes">{{localize "CUSTOM_DND5E.form.sheet.autoFadeSheet.note.2"}}</p>
             </div>
             <div class="form-group">
@@ -26,11 +26,13 @@
                 <div class="form-fields">
                     <input id="auto-minimise-sheet" name="autoMinimiseSheet" type="checkbox"{{#if autoMinimiseSheet}} checked{{/if}}> 
                 </div>
-                <p class="notes">{{localize "CUSTOM_DND5E.form.sheet.autoMinimiseSheet.note.1"}}</p>
+                <p class="hint">{{localize "CUSTOM_DND5E.form.sheet.autoMinimiseSheet.note.1"}}</p>
                 <p class="custom-dnd5e-advice notes">{{localize "CUSTOM_DND5E.form.sheet.autoMinimiseSheet.note.2"}}</p>
             </div>
-            {{#if isGM}}
-            <h2>{{localize "CUSTOM_DND5E.worldSettings.label"}}</h2>
+        </fieldset>
+        {{#if isGM}}
+        <fieldset>
+            <legend>{{localize "CUSTOM_DND5E.worldSettings.label"}}</legend>
             <p>{{localize "CUSTOM_DND5E.worldSettings.note"}}</p>
             <h3>{{localize "CUSTOM_DND5E.characters"}}</h3>
             <div class="form-group">
@@ -39,7 +41,7 @@
                     <input id="banner-image" name="bannerImage" type="text" data-dtype="text" value="{{bannerImage}}">
                         {{filePicker target="bannerImage" type="image"}}
                 </div>
-                <p class="notes">{{localize "CUSTOM_DND5E.form.sheet.bannerImage.note.1"}}</p>
+                <p class="hint">{{localize "CUSTOM_DND5E.form.sheet.bannerImage.note.1"}}</p>
                 <p class="custom-dnd5e-advice notes">{{localize "CUSTOM_DND5E.form.sheet.bannerImage.note.2"}}</p>
             </div>
             <div class="form-group">
@@ -47,35 +49,35 @@
                 <div class="form-fields">
                     <input id="show-death-saves" name="showDeathSaves" type="checkbox"{{#if showDeathSaves}} checked{{/if}}> 
                 </div>
-                <p class="notes">{{localize "CUSTOM_DND5E.form.sheet.showDeathSaves.note"}}</p>
+                <p class="hint">{{localize "CUSTOM_DND5E.form.sheet.showDeathSaves.note"}}</p>
             </div>
             <div class="form-group">
                 <label>{{localize "CUSTOM_DND5E.form.sheet.showEncumbrance.label"}}</label>
                 <div class="form-fields">
                     <input id="show-encumbrance" name="showEncumbrance" type="checkbox"{{#if showEncumbrance}} checked{{/if}}> 
                 </div>
-                <p class="notes">{{localize "CUSTOM_DND5E.form.sheet.showEncumbrance.note"}}</p>
+                <p class="hint">{{localize "CUSTOM_DND5E.form.sheet.showEncumbrance.note"}}</p>
             </div>
             <div class="form-group">
                 <label>{{localize "CUSTOM_DND5E.form.sheet.showExhaustion.label"}}</label>
                 <div class="form-fields">
                     <input id="show-exhaustion" name="showExhaustion" type="checkbox"{{#if showExhaustion}} checked{{/if}}> 
                 </div>
-                <p class="notes">{{localize "CUSTOM_DND5E.form.sheet.showExhaustion.note"}}</p>
+                <p class="hint">{{localize "CUSTOM_DND5E.form.sheet.showExhaustion.note"}}</p>
             </div>
             <div class="form-group">
                 <label>{{localize "CUSTOM_DND5E.form.sheet.showInspiration.label"}}</label>
                 <div class="form-fields">
                     <input id="show-inspiration" name="showInspiration" type="checkbox"{{#if showInspiration}} checked{{/if}}> 
                 </div>
-                <p class="notes">{{localize "CUSTOM_DND5E.form.sheet.showInspiration.note"}}</p>
+                <p class="hint">{{localize "CUSTOM_DND5E.form.sheet.showInspiration.note"}}</p>
             </div>
             <div class="form-group">
                 <label>{{localize "CUSTOM_DND5E.form.sheet.showManageCurrency.label"}}</label>
                 <div class="form-fields">
                     <input id="show-manage-currency" name="showManageCurrency" type="checkbox"{{#if showManageCurrency}} checked{{/if}}> 
                 </div>
-                <p class="notes">{{localize "CUSTOM_DND5E.form.sheet.showManageCurrency.note"}}</p>
+                <p class="hint">{{localize "CUSTOM_DND5E.form.sheet.showManageCurrency.note"}}</p>
             </div>
             <h3>{{localize "CUSTOM_DND5E.npcs"}}</h3>
             <div class="form-group">
@@ -83,28 +85,28 @@
                 <div class="form-fields">
                     <input id="show-legendary-actions" name="showLegendaryActions" type="checkbox"{{#if showLegendaryActions}} checked{{/if}}> 
                 </div>
-                <p class="notes">{{localize "CUSTOM_DND5E.form.sheet.showLegendaryActions.note"}}</p>
+                <p class="hint">{{localize "CUSTOM_DND5E.form.sheet.showLegendaryActions.note"}}</p>
             </div>
             <div class="form-group">
                 <label>{{localize "CUSTOM_DND5E.form.sheet.showLegendaryResistance.label"}}</label>
                 <div class="form-fields">
                     <input id="show-legendary-resistance" name="showLegendaryResistance" type="checkbox"{{#if showLegendaryResistance}} checked{{/if}}> 
                 </div>
-                <p class="notes">{{localize "CUSTOM_DND5E.form.sheet.showLegendaryResistance.note"}}</p>
+                <p class="hint">{{localize "CUSTOM_DND5E.form.sheet.showLegendaryResistance.note"}}</p>
             </div>
             <div class="form-group">
                 <label>{{localize "CUSTOM_DND5E.form.sheet.showUseLairAction.label"}}</label>
                 <div class="form-fields">
                     <input id="show-use-lair-action" name="showUseLairAction" type="checkbox"{{#if showUseLairAction}} checked{{/if}}> 
                 </div>
-                <p class="notes">{{localize "CUSTOM_DND5E.form.sheet.showUseLairAction.note"}}</p>
+                <p class="hint">{{localize "CUSTOM_DND5E.form.sheet.showUseLairAction.note"}}</p>
             </div>
-            {{/if}}
-        </div>
-        <footer>
-            <button type="submit" data-tooltip="{{localize "CUSTOM_DND5E.form.button.save.tooltip"}}" class="save-button">
-                <i class="fas fa-solid fa-floppy-disk"></i>{{localize "CUSTOM_DND5E.form.button.save.label"}}
-            </button>
-        </footer>
-    </form>
+        </fieldset>
+        {{/if}}
+    </div>
+    <footer class="form-footer" data-application-part="footer">
+        <button type="submit" class="save-button">
+            <i class="fas fa-solid fa-floppy-disk"></i>{{localize "CUSTOM_DND5E.form.button.save.label"}}
+        </button>
+    </footer>
 </div>

@@ -1,126 +1,157 @@
-.custom-dnd5e-app .window-content {
-    padding: 0;
+.flex0 {
+    flex: 0;
+}
+
+.custom-dnd5e-app {
+    height: 100%;
+}
+
+.custom-dnd5e-app .standard-form {
+    height: 100%;
+}
+
+.custom-dnd5e-app.application .flexrow {
+    display: flex;
+    flex: 1;
+    gap: 0.5rem;
 }
 
 .custom-dnd5e-app nav.sheet-tabs {
     margin: 0;
 }
 
-.custom-dnd5e-form-wrapper {
-    height: 100%;
-    flex-wrap: nowrap;
+.custom-dnd5e-app.application h2,
+.custom-dnd5e-app.application h3 {
+    margin: 0;
+    padding-bottom: 0.25rem;
 }
 
-.custom-dnd5e-form {
-    height: 100%;
+.custom-dnd5e-app.application h2 {
+    font-family: var(--font-h3);
+    font-size: 1.5rem;
 }
 
-.custom-dnd5e-form .scrollable {
-    flex: 1;
-    padding: 0.5rem;
-    overflow: hidden auto;
+.custom-dnd5e-app.application h3 {
+    font-size: 1.2rem;
 }
 
-.custom-dnd5e-form ul {
-    gap: 0.25rem;
+.custom-dnd5e-app .form-group > label {
+    line-height: 1.2rem;
+}
+
+.custom-dnd5e-app ul {
+    gap: 0rem;
     list-style-type: none;
-    padding: 0;
+    margin: 0;
+    padding: 0.25rem 0 0 0;
 }
 
-.custom-dnd5e-form ul:empty {
+.custom-dnd5e-app ul:empty {
     display: none;
 }
 
-.custom-dnd5e-form ul ul {
+.custom-dnd5e-app ul ul {
     flex: 100%;
     list-style-type: none;
     padding-left: 25px;
 }
 
-.custom-dnd5e-form li {
-    align-items: center;
-    gap: 0.25rem;
-    border-top: 1px solid rgba(0, 0, 0, 0.2);
+.custom-dnd5e-app.application ul .flexrow > ul {
+    flex: 100%;
 }
 
-.custom-dnd5e-form li {
+.custom-dnd5e-app li {
+    align-items: center;
+    gap: 0.25rem;
+    border-top: 1px solid var(--color-border);
+}
+
+.custom-dnd5e-app .custom-dnd5e-drag {
     cursor: move;
 }
 
-.custom-dnd5e-form li:first-child {
+.custom-dnd5e-app .standard-form > ul > li:first-child,
+.custom-dnd5e-app .standard-form > section > ul > li:first-child {
     border-top: 1px solid transparent;
     padding-top: 0;
 }
 
-.custom-dnd5e-form li.dragElem {
+.custom-dnd5e-app li.dragElem {
     opacity: 0.4;
 }
 
-.custom-dnd5e-form li.drag-top {
+.custom-dnd5e-app li.drag-top {
     border-top: 1px solid red;
 }
 
-.custom-dnd5e-form li.drag-middle {
+.custom-dnd5e-app li.drag-middle {
     border: 1px solid red;
 }
 
-.custom-dnd5e-form li.drag-bottom {
+.custom-dnd5e-app li.drag-bottom {
     border-bottom: 1px solid red;
 }
 
 .custom-dnd5e-col-group {
-    border-left: 1px solid rgba(0, 0, 0, 0.1);
-    padding-left: 0.5rem;
+    border-left: 1px solid var(--color-border);
+    gap: 0.5rem;
+    padding: 0.5rem 0 0 0.5rem;
 }
 
-.custom-dnd5e-form .form-group.stacked label {
+.custom-dnd5e-app .form-group.stacked label {
     align-items: center;
     display: flex;
 }
 
-.custom-dnd5e-form .fields {
+.custom-dnd5e-app .field {
     align-items: center;
     display: flex;
-    gap: 0.5em;
-}
-
-.custom-dnd5e-form .field {
-    align-items: center;
-    display: flex;
-    flex: auto;
+    flex: 1;
     gap: 0.25em;
 }
 
-.custom-dnd5e-form .field.flex1 {
+.custom-dnd5e-app .field.flex1 {
     flex: 1;
 }
 
-.custom-dnd5e-form .field.flex2 {
+.custom-dnd5e-app .field.flex2 {
     flex: 2;
 }
 
-.custom-dnd5e-form .flexa {
+.custom-dnd5e-app .flexa {
     flex: auto;
 }
 
-.custom-dnd5e-form footer {
-    display: flex;
-    flex: 0;
-    flex-direction: column;
-    gap: 0.25em;
-    margin: 1rem;
+.custom-dnd5e-app .standard-form .form-footer > button.new-button {
+    flex: 100%;
+}
+
+.custom-dnd5e-app button.new-button {
+    height: calc(1.25 * var(--input-height));
+    min-width: 180px;
+    margin-bottom: 0.5rem;
 }
 
 .custom-dnd5e-list-buttons {
     display: flex;
     flex: 0;
+    justify-content: center;
 }
 
-.custom-dnd5e-list-button {
+button.custom-dnd5e-list-button {
     background: transparent;
     border: none;
     border-radius: 0;
-    border-right: 1px solid rgba(0, 0, 0, 0.2);
+    padding: 0 0.5rem;
+    margin: 0;
+}
+
+button.custom-dnd5e-list-button:hover,
+button.custom-dnd5e-list-button:focus {
+    background: transparent;
+    border: none;
+    box-shadow: none;
+    outline: none;
 }
 
 .custom-dnd5e-list-button:last-of-type {
@@ -144,16 +175,11 @@
     outline: none;
 }
 
-.custom-dnd5e-form .custom-dnd5e-list-button:disabled:hover > i {
+.custom-dnd5e-app .custom-dnd5e-list-button:disabled:hover > i {
     text-shadow: none;
 }
 
-.custom-dnd5e-form .new-button {
-    background: rgba(255, 255, 240, 0.8);
-    border: 1px solid var(--color-border-light-primary);
-}
-
-.custom-dnd5e-form .hidden {
+.custom-dnd5e-app .hidden {
     display: none;
 }
 
@@ -162,7 +188,7 @@
     border: 1px solid transparent;
     display: flex;
     gap: 0.25rem;
-    padding-top: 0.25rem;
+    padding: 0.5rem 0 0.5rem 0;
 }
 
 .custom-dnd5e-item > i {
@@ -170,13 +196,12 @@
 }
 
 .custom-dnd5e-advice.notes {
-    background: rgba(255, 255, 255, 0.5);
-    border: 1px solid var(--color-border-light-2);
+    background: rgba(255, 255, 255, 0.6);
     border-radius: 3px;
     font-style: italic;
-    margin: 0;
-    margin-bottom: 0.25rem;
+    margin: 0;;
     padding: 0.25rem;
+    flex: 0 1 100%;
 }
 
 .custom-dnd5e-warning.notes {

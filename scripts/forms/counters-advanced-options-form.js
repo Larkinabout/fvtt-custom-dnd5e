@@ -4,7 +4,6 @@ import { CustomDnd5eForm } from './custom-dnd5e-form.js'
 
 const id = CONSTANTS.COUNTERS.ID
 const form = `${id}-advanced-options-form`
-const itemClass = `${MODULE.ID}-item`
 const listClass = `${MODULE.ID}-list`
 const listClassSelector = `.${listClass}`
 
@@ -20,12 +19,24 @@ export class CountersAdvancedOptionsForm extends CustomDnd5eForm {
         this.type = args.data.type
     }
 
-    static get defaultOptions () {
-        return foundry.utils.mergeObject(super.defaultOptions, {
-            id: `${MODULE.ID}-${form}`,
-            template: `modules/${MODULE.ID}/templates/${form}.hbs`,
-            title: game.i18n.localize(`CUSTOM_DND5E.form.${id}.triggers.title`)
-        })
+    static DEFAULT_OPTIONS = {
+        actions: {
+            new: CountersAdvancedOptionsForm.createItem
+        },
+        form: {
+            handler: CountersAdvancedOptionsForm.submit,
+            closeOnSubmit: false
+        },
+        id: `${MODULE.ID}-${form}`,
+        window: {
+            title: `CUSTOM_DND5E.form.${id}.triggers.title`
+        }
+    }
+
+    static PARTS = {
+        form: {
+            template: `modules/${MODULE.ID}/templates/${form}.hbs`
+        }
     }
 
     #getSelects (type) {
@@ -72,7 +83,7 @@ export class CountersAdvancedOptionsForm extends CustomDnd5eForm {
         }
     }
 
-    async getData () {
+    async _prepareContext () {
         const type = this.setting[this.key]?.type || this.type
 
         return {
@@ -86,12 +97,10 @@ export class CountersAdvancedOptionsForm extends CustomDnd5eForm {
         }
     }
 
-    activateListeners (html) {
-        super.activateListeners(html)
+    _onRender (context, options) {
+        super._onRender(context, options)
 
-        const items = html[0].querySelectorAll('.custom-dnd5e-item')
-
-        items.forEach(item => {
+        this.items.forEach(item => {
             const el = {}
             el.trigger = item.querySelector('#trigger')
             el.triggerValueGroup = item.querySelector('#trigger-value').closest('.form-group')
@@ -108,9 +117,9 @@ export class CountersAdvancedOptionsForm extends CustomDnd5eForm {
         })
     }
 
-    async _createItem () {
+    static async createItem () {
         const el = {}
-        const list = this.element[0].querySelector(listClassSelector)
+        const list = this.element.querySelector(listClassSelector)
         const scrollable = list.closest('.scrollable')
 
         const key = foundry.utils.randomID()
@@ -172,9 +181,9 @@ export class CountersAdvancedOptionsForm extends CustomDnd5eForm {
         }
     }
 
-    async _validate (event, formData) {
+    static async submit (event, form, formData) {
         const oldKey = this.key
-        const newKey = formData[`${this.key}.key`]
+        const newKey = formData.object[`${this.key}.key`]
 
         if (oldKey !== newKey) {
             if (this.setting[newKey]) {
@@ -183,33 +192,26 @@ export class CountersAdvancedOptionsForm extends CustomDnd5eForm {
             }
         }
 
-        this.submit()
-    }
-
-    async _updateObject (event, formData) {
         const ints = ['editRole', 'viewRole']
         const triggerProperties = ['action', 'actionValue', 'delete', 'trigger', 'triggerValue']
 
         // Ensure trigger properties are arrays if at least one exists
-        if (formData.action) {
+        if (formData.object.action) {
             triggerProperties.forEach(property => {
-                if (!Array.isArray(formData[property])) {
-                    formData[property] = [formData[property]]
+                if (!Array.isArray(formData.object[property])) {
+                    formData.object[property] = [formData.object[property]]
                 }
             })
         }
 
         // Set properties in this.setting
-        Object.entries(formData).forEach(([key, value]) => {
+        Object.entries(formData.object).forEach(([key, value]) => {
             if (Array.isArray(value) || key.split('.').pop() === 'key') return
             if (ints.includes(key.split('.').pop())) { value = parseInt(value) }
             foundry.utils.setProperty(this.setting, key, value)
         })
 
         // Create new key and delete old key while keeping order of counters
-        const oldKey = this.key
-        const newKey = formData[`${this.key}.key`]
-
         if (oldKey !== newKey) {
             this.setting[newKey] = foundry.utils.deepClone(this.setting[oldKey])
 
@@ -234,13 +236,13 @@ export class CountersAdvancedOptionsForm extends CustomDnd5eForm {
         }
 
         // Map triggers into objects
-        if (formData.action) {
-            const triggers = formData.action.map((_, index) => ({
-                action: formData.action[index],
-                actionValue: formData.actionValue[index],
-                trigger: formData.trigger[index],
-                triggerValue: formData.triggerValue[index]
-            })).filter((_, index) => formData.delete[index] !== 'true')
+        if (formData.object.action) {
+            const triggers = formData.object.action.map((_, index) => ({
+                action: formData.object.action[index],
+                actionValue: formData.object.actionValue[index],
+                trigger: formData.object.trigger[index],
+                triggerValue: formData.object.triggerValue[index]
+            })).filter((_, index) => formData.object.delete[index] !== 'true')
 
             this.setting[this.key].triggers = triggers
         }
@@ -249,6 +251,8 @@ export class CountersAdvancedOptionsForm extends CustomDnd5eForm {
         this.setting[this.key].type = this.type
 
         await setSetting(SETTING_BY_ENTITY_TYPE.COUNTERS[this.actorType], this.setting)
+
+        this.close()
 
         this.countersForm.render(true)
     }
