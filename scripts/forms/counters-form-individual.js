@@ -3,7 +3,6 @@ import { deleteProperty, getFlag, setFlag, unsetFlag } from '../utils.js'
 import { CountersForm } from './counters-form.js'
 
 const form = 'counters-form-individual'
-const listClass = `${MODULE.ID}-list`
 
 export class CountersFormIndividual extends CountersForm {
     constructor (entity) {
@@ -12,9 +11,6 @@ export class CountersFormIndividual extends CountersForm {
     }
 
     static DEFAULT_OPTIONS = {
-    /*      actions: {
-            new: CountersForm.createItem,
-        }, */
         form: {
             handler: CountersFormIndividual.submit
         },
@@ -50,59 +46,6 @@ export class CountersFormIndividual extends CountersForm {
             selects: this.#getSelects()
         }
     }
-
-    /* async _handleButtonClick (event) {
-        event.preventDefault()
-        const clickedElement = $(event.currentTarget)[0]
-        const action = clickedElement.dataset.action
-        const item = clickedElement.closest('li')
-        const key = item?.dataset.key
-        const label = item?.querySelector('#label').value
-        const type = item?.querySelector('#type').value
-        const actorType = item?.querySelector('#actorType').value
-        switch (action) {
-        case 'delete': {
-            await this._deleteItem(key)
-            break
-        }
-        case 'new': {
-            await this._createItem()
-            break
-        }
-        case 'copy-property': {
-            await this._copyProperty(key, type)
-            break
-        }
-        case 'advanced-options': {
-            const setting = this.counters
-            const args = { countersForm: this, data: { key, actorType, label, type }, setting }
-            await CountersAdvancedOptionsForm.open(args)
-            break
-        }
-        }
-    } */
-
-  /*   async _createItem () {
-        const list = this.element[0].querySelector(listClassSelector)
-        const scrollable = list.closest('.scrollable')
-
-        const key = foundry.utils.randomID()
-        const data = {
-            counters: { [key]: {} },
-            selects: this.#getSelects()
-        }
-
-        const template = await renderTemplate(CONSTANTS.COUNTERS.TEMPLATE.LIST, data)
-
-        list.insertAdjacentHTML('beforeend', template)
-
-        const item = list.querySelector(`[data-key="${key}"]`)
-
-        if (this.items[0]) { item.addEventListener('dragstart', this.items[0].ondragstart) } // Fix this for empty list
-        item.addEventListener('dragleave', this._onDragLeave)
-
-        scrollable && (scrollable.scrollTop = scrollable.scrollHeight)
-    } */
 
     static async submit (event, form, formData) {
         const ignore = ['actorType', 'delete', 'key']
