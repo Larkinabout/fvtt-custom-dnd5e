@@ -70,7 +70,8 @@
     cursor: move;
 }
 
-.custom-dnd5e-app .standard-form > ul > li:first-child {
+.custom-dnd5e-app .standard-form > ul > li:first-child,
+.custom-dnd5e-app .standard-form > section > ul > li:first-child {
     border-top: 1px solid transparent;
     padding-top: 0;
 }
@@ -128,6 +129,7 @@
 .custom-dnd5e-app button.new-button {
     height: calc(1.25 * var(--input-height));
     min-width: 180px;
+    margin-bottom: 0.5rem;
 }
 
 .custom-dnd5e-list-buttons {

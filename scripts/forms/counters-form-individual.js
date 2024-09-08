@@ -1,26 +1,33 @@
 import { CONSTANTS, MODULE } from '../constants.js'
 import { deleteProperty, getFlag, setFlag, unsetFlag } from '../utils.js'
 import { CountersForm } from './counters-form.js'
-import { CountersAdvancedOptionsForm } from './counters-advanced-options-form.js'
 
 const form = 'counters-form-individual'
-const itemClass = `${MODULE.ID}-item`
 const listClass = `${MODULE.ID}-list`
-const listClassSelector = `.${listClass}`
 
 export class CountersFormIndividual extends CountersForm {
     constructor (entity) {
         super(entity)
-
         this.entity = entity
     }
 
-    static get defaultOptions () {
-        return foundry.utils.mergeObject(super.defaultOptions, {
-            id: `${MODULE.ID}-${form}`,
-            template: `modules/${MODULE.ID}/templates/${form}.hbs`,
-            title: game.i18n.localize('CUSTOM_DND5E.form.counters.title')
-        })
+    static DEFAULT_OPTIONS = {
+    /*      actions: {
+            new: CountersForm.createItem,
+        }, */
+        form: {
+            handler: CountersFormIndividual.submit
+        },
+        id: `${MODULE.ID}-${form}`,
+        window: {
+            title: 'CUSTOM_DND5E.form.counters.title'
+        }
+    }
+
+    static PARTS = {
+        form: {
+            template: `modules/${MODULE.ID}/templates/${form}.hbs`
+        }
     }
 
     #getSelects () {
@@ -36,7 +43,7 @@ export class CountersFormIndividual extends CountersForm {
         }
     }
 
-    async getData () {
+    async _prepareContext () {
         this.counters = getFlag(this.entity, 'counters') || {}
         return {
             counters: this.counters,
@@ -44,11 +51,7 @@ export class CountersFormIndividual extends CountersForm {
         }
     }
 
-    activateListeners (html) {
-        super.activateListeners(html)
-    }
-
-    async _handleButtonClick (event) {
+    /* async _handleButtonClick (event) {
         event.preventDefault()
         const clickedElement = $(event.currentTarget)[0]
         const action = clickedElement.dataset.action
@@ -77,9 +80,9 @@ export class CountersFormIndividual extends CountersForm {
             break
         }
         }
-    }
+    } */
 
-    async _createItem () {
+  /*   async _createItem () {
         const list = this.element[0].querySelector(listClassSelector)
         const scrollable = list.closest('.scrollable')
 
@@ -99,19 +102,13 @@ export class CountersFormIndividual extends CountersForm {
         item.addEventListener('dragleave', this._onDragLeave)
 
         scrollable && (scrollable.scrollTop = scrollable.scrollHeight)
-    }
+    } */
 
-    async _copyProperty (key, type) {
-        const property = `@flags.${MODULE.ID}.counters.${key}${(type === 'successFailure') ? '.success' : (type === 'fraction') ? '.value' : ''}`
-        game.clipboard.copyPlainText(property)
-        ui.notifications.info(game.i18n.format('CUSTOM_DND5E.form.counters.copyProperty.message', { property }))
-    }
-
-    async _updateObject (event, formData) {
+    static async submit (event, form, formData) {
         const ignore = ['actorType', 'delete', 'key']
 
         // Get list of properties to delete
-        const deleteKeys = Object.entries(formData)
+        const deleteKeys = Object.entries(formData.object)
             .filter(([key, value]) => key.split('.').pop() === 'delete' && value === 'true')
             .map(([key, _]) => key.split('.').slice(0, -1).join('.'))
 
@@ -122,14 +119,14 @@ export class CountersFormIndividual extends CountersForm {
         })
 
         // Delete properties from formData
-        Object.keys(formData).forEach(key => {
+        Object.keys(formData.object).forEach(key => {
             if (deleteKeys.includes(key.split('.').slice(0, -1)[0])) {
-                delete formData[key]
+                delete formData.object[key]
             }
         })
 
         // Set properties in this.setting
-        Object.entries(formData).forEach(([key, value]) => {
+        Object.entries(formData.object).forEach(([key, value]) => {
             if (ignore.includes(key.split('.').pop())) { return }
             foundry.utils.setProperty(this.counters, key, value)
         })

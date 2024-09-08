@@ -61,8 +61,8 @@ export class CountersForm extends CustomDnd5eForm {
 
     static async createItem () {
         const activeTab = this.element.querySelector('.tab.active')
-        const actorType = activeTab.dataset.actorType
-        const list = activeTab.querySelector(listClassSelector)
+        const actorType = (activeTab) ? activeTab.dataset.actorType : null
+        const list = (activeTab) ? activeTab.querySelector(listClassSelector) : this.element.querySelector(listClassSelector)
         const scrollable = list.closest('.scrollable')
 
         const key = foundry.utils.randomID()
