@@ -68,7 +68,7 @@ export function getDnd5eConfig () {
 }
 
 /**
- * Get setting degault
+ * Get setting default
  * Stores validProperties data in the itemProperties setting
  * @returns {object} The setting
  */

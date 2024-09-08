@@ -18,11 +18,10 @@ import { setConfig as setSpellSchools } from '../spell-schools.js'
 import { setConfig as setToolIds } from '../tool-ids.js'
 import { setConfig as setWeaponIds } from '../weapon-ids.js'
 
-const itemClass = `${MODULE.ID}-item`
 const listClass = `${MODULE.ID}-list`
 const listClassSelector = `.${listClass}`
 
-class ConfigForm extends CustomDnd5eForm {
+export class ConfigForm extends CustomDnd5eForm {
     constructor (options = {}) {
         super(options)
     }

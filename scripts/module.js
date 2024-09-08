@@ -26,6 +26,7 @@ import { register as registerRadialStatusEffects } from './radial-status-effects
 import { register as registerTokenBorder } from './token-border.js'
 import { register as registerToolIds, setConfig as setToolIds } from './tool-ids.js'
 import { register as registerWeaponIds, setConfig as setWeaponIds } from './weapon-ids.js'
+import { register as registerWeaponProficiencies, setConfig as setWeaponProficiencies } from './weapon-proficiencies.js'
 import { patchApplicationRender } from './patches/application-render.js'
 import { patchPrepareEncumbrance } from './patches/prepare-encumbrance.js'
 import { registerCharacterSheet } from './sheets/character-sheet.js'
@@ -70,6 +71,7 @@ Hooks.on('init', async () => {
     registerSpellSchools()
     registerToolIds()
     registerWeaponIds()
+    registerWeaponProficiencies()
     registerMisc()
     registerRadialStatusEffects()
     registerTokenBorder()
@@ -95,6 +97,7 @@ Hooks.on('init', async () => {
     setSpellSchools(getSetting(CONSTANTS.SPELL_SCHOOLS.SETTING.KEY))
     setToolIds(getSetting(CONSTANTS.TOOL_IDS.SETTING.KEY))
     setWeaponIds(getSetting(CONSTANTS.WEAPON_IDS.SETTING.KEY))
+    setWeaponProficiencies(getSetting(CONSTANTS.WEAPON_PROFICIENCIES.SETTING.KEY))
     setMaxLevel(getSetting(CONSTANTS.MAX_LEVEL.SETTING.KEY))
 
     Logger.debug(

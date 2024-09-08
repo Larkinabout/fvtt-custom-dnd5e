@@ -264,6 +264,8 @@
 
     "CUSTOM_DND5E.form.weaponIds.title": "Configure Weapons",
 
+    "CUSTOM_DND5E.form.weaponProficiencies.title": "Configure Weapon Proficiencies",
+
     "CUSTOM_DND5E.menu.abilities.hint": "Configure Abilities",
     "CUSTOM_DND5E.menu.abilities.label": "Configure Abilities",
     "CUSTOM_DND5E.menu.abilities.name": "Configure Abilities",
@@ -352,12 +354,15 @@
     "CUSTOM_DND5E.menu.weaponIds.label": "Configure Weapons",
     "CUSTOM_DND5E.menu.weaponIds.name": "Configure Weapons",
 
+    "CUSTOM_DND5E.menu.weaponProficiencies.hint": "Configure Weapon Proficiencies",
+    "CUSTOM_DND5E.menu.weaponProficiencies.label": "Configure Weapon Proficiencies",
+    "CUSTOM_DND5E.menu.weaponProficiencies.name": "Configure Weapons Proficiencies",
+
     "CUSTOM_DND5E.message.awardInspiration": "<p>{name} was awarded Inspiration for rolling a {value}.</p>",
     "CUSTOM_DND5E.message.awardInspirationAlready": "<p>{name} rolled a {value}, but already has Inspiration.</p>",
     "CUSTOM_DND5E.message.instantDeath": "<p>{name} suffered Instant Death.</p>",
     "CUSTOM_DND5E.message.massiveDamage": "{name} suffered Massive Damage.",
     
-
     "CUSTOM_DND5E.setting.maxLevel.name": "Max Level",
     "CUSTOM_DND5E.setting.radialStatusEffects.name": "Radial Status Effects",
     "CUSTOM_DND5E.setting.radialStatusEffects.hint": "Display status effects in a circle around the token",

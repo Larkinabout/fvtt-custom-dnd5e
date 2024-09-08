@@ -559,6 +559,22 @@ export const CONSTANTS = {
             FORM: 'modules/custom-dnd5e/templates/uuid-form.hbs',
             LIST: 'modules/custom-dnd5e/templates/uuid-list.hbs'
         }
+    },
+    WEAPON_PROFICIENCIES: {
+        MENU: {
+            KEY: 'weapon-proficiencies-menu',
+            HINT: 'CUSTOM_DND5E.menu.weaponProficiencies.hint',
+            ICON: 'fas fa-pen-to-square',
+            LABEL: 'CUSTOM_DND5E.menu.weaponProficiencies.label',
+            NAME: 'CUSTOM_DND5E.menu.weaponProficiencies.name'
+        },
+        SETTING: {
+            KEY: 'weapon-proficiencies'
+        },
+        TEMPLATE: {
+            FORM: 'modules/custom-dnd5e/templates/config-form.hbs',
+            LIST: 'modules/custom-dnd5e/templates/config-list.hbs'
+        }
     }
 }
 
