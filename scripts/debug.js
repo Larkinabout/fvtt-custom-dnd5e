@@ -59,6 +59,9 @@ export async function exportData () {
             actorSizes: CONFIG.DND5E.actorSizes,
             armorClasses: CONFIG.DND5E.armorClasses,
             armorIds: CONFIG.DND5E.armorIds,
+            armorProficiencies: CONFIG.DND5E.armorProficiencies,
+            armorProficienciesMap: CONFIG.DND5E.armorProficienciesMap,
+            armorTypes: CONFIG.DND5E.armorTypes,
             currencies: CONFIG.DND5E.currencies,
             damageTypes: CONFIG.DND5E.damageTypes,
             encumbrance: CONFIG.DND5E.encumbrance,
@@ -72,7 +75,10 @@ export async function exportData () {
             spellSchools: CONFIG.DND5E.spellSchools,
             toolIds: CONFIG.DND5E.toolIds,
             validProperties: CONFIG.DND5E.validProperties,
-            weaponIds: CONFIG.DND5E.weaponIds
+            weaponIds: CONFIG.DND5E.weaponIds,
+            weaponProficiencies: CONFIG.DND5E.weaponProficiencies,
+            weaponProficienciesMap: CONFIG.DND5E.weaponProficienciesMap,
+            weaponTypes: CONFIG.DND5E.weaponTypes
         }
     }
 

@@ -438,13 +438,16 @@ function setDeathSavesRollMode (actor, rollData) {
 /**
  * Recalculate Damage
  * Triggered by the 'dnd5e.preApplyDamage' hook
- * If 'Apply Negative HP' is enabled, recalculate damage to apply a negative value to HP
+ * If 'Apply Negative HP' or 'Apply Instant Death' is enabled, recalculate damage to apply a negative value to HP
  * @param {object} actor   The actor
  * @param {number} amount  The damage amount
  * @param {object} updates The properties to update
  * @param {object} options The damage options
  */
 function recalculateDamage (actor, amount, updates, options) {
+    if (!getSetting(CONSTANTS.HIT_POINTS.SETTING.APPLY_NEGATIVE_HP.KEY) &&
+        !getSetting(CONSTANTS.DEAD.SETTING.APPLY_INSTANT_DEATH.KEY)) return
+
     const hpMax = actor?.system?.attributes?.hp?.max ?? 0
     const hpTemp = actor?.system?.attributes?.hp?.temp ?? 0
     const hpValue = actor?.system?.attributes?.hp?.value ?? 0
