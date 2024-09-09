@@ -58,6 +58,10 @@
     min-width: var(--level-size);
 }
 
+.custom-dnd5e.dnd5e2.sheet.actor.character .sheet-header > .right .level-badge {
+    margin-left: 1rem;
+}
+
 .custom-dnd5e.dnd5e2.sheet.actor.character
     .sheet-header
     > .right
