@@ -5,7 +5,7 @@ import { register as registerAbilities, setConfig as setAbilities } from './abil
 import { register as registerActorSizes, setConfig as setActorSizes } from './actor-sizes.js'
 import { register as registerArmorCalculations, setConfig as setArmorCalculations } from './armor-calculations.js'
 import { register as registerArmorIds, setConfig as setArmorIds } from './armor-ids.js'
-import { register as registerArmorTypes, setConfig as setArmorTypes } from './armor-types.js'
+import { register as registerArmorProficiencies, setConfig as setArmorProficiencies } from './armor-proficiencies.js'
 import { registerSettings as registerCounters } from './counters.js'
 import { register as registerCurrency, setConfig as setCurrency } from './currency.js'
 import { register as registerDamageTypes, setConfig as setDamageTypes } from './damage-types.js'
@@ -55,7 +55,7 @@ Hooks.on('init', async () => {
     registerActorSizes()
     registerArmorCalculations()
     registerArmorIds()
-    // registerArmorTypes()
+    registerArmorProficiencies()
     registerCounters()
     registerCurrency()
     registerDamageTypes()
@@ -83,7 +83,7 @@ Hooks.on('init', async () => {
     setActorSizes(getSetting(CONSTANTS.ACTOR_SIZES.SETTING.KEY))
     setArmorCalculations(getSetting(CONSTANTS.ARMOR_CALCULATIONS.SETTING.KEY))
     setArmorIds(getSetting(CONSTANTS.ARMOR_IDS.SETTING.KEY))
-    // setArmorTypes(getSetting(CONSTANTS.ARMOR_TYPES.SETTING.KEY))
+    setArmorProficiencies(getSetting(CONSTANTS.ARMOR_PROFICIENCIES.SETTING.KEY))
     setCurrency(getSetting(CONSTANTS.CURRENCY.SETTING.KEY))
     setDamageTypes(getSetting(CONSTANTS.DAMAGE_TYPES.SETTING.KEY))
     setEncumbrance(getSetting(CONSTANTS.ENCUMBRANCE.SETTING.KEY))

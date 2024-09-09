@@ -134,7 +134,7 @@
 
     "CUSTOM_DND5E.form.armorIds.title": "Configure Armor",
 
-    "CUSTOM_DND5E.form.armorTypes.title": "Configure Armor Types",
+    "CUSTOM_DND5E.form.armorProficiencies.title": "Configure Armor Proficiencies",
 
     "CUSTOM_DND5E.form.counters.triggers.tooltip": "Advanced Options",
     "CUSTOM_DND5E.form.counters.copyProperty.message": "'Property \"{property}\" copied to clipboard.'",
@@ -282,9 +282,9 @@
     "CUSTOM_DND5E.menu.armorIds.label": "Configure Armor",
     "CUSTOM_DND5E.menu.armorIds.name": "Configure Armor",
 
-    "CUSTOM_DND5E.menu.armorTypes.hint": "Configure Armor Types",
-    "CUSTOM_DND5E.menu.armorTypes.label": "Configure Armor Types",
-    "CUSTOM_DND5E.menu.armorTypes.name": "Configure Armor Types",
+    "CUSTOM_DND5E.menu.armorProficiencies.hint": "Configure Armor Proficiencies",
+    "CUSTOM_DND5E.menu.armorProficiencies.label": "Configure Armor Proficiencies",
+    "CUSTOM_DND5E.menu.armorProficiencies.name": "Configure Armor Proficiencies",
 
     "CUSTOM_DND5E.menu.counters.hint": "Configure Counters",
     "CUSTOM_DND5E.menu.counters.label": "Configure Counters",

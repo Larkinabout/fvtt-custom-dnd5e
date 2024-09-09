@@ -77,17 +77,20 @@ export const CONSTANTS = {
             LIST: 'modules/custom-dnd5e/templates/uuid-list.hbs'
         }
     },
-    ARMOR_TYPES: {
-        ID: 'armor-types',
+    ARMOR_PROFICIENCIES: {
         MENU: {
-            KEY: 'armor-types-menu',
-            HINT: 'CUSTOM_DND5E.menu.armorTypes.hint',
+            KEY: 'armor-proficiencies-menu',
+            HINT: 'CUSTOM_DND5E.menu.armorProficiencies.hint',
             ICON: 'fas fa-pen-to-square',
-            LABEL: 'CUSTOM_DND5E.menu.armorTypes.label',
-            NAME: 'CUSTOM_DND5E.menu.armorTypes.name'
+            LABEL: 'CUSTOM_DND5E.menu.armorProficiencies.label',
+            NAME: 'CUSTOM_DND5E.menu.armorProficiencies.name'
         },
         SETTING: {
-            KEY: 'armor-types'
+            KEY: 'armor-proficiencies'
+        },
+        TEMPLATE: {
+            FORM: 'modules/custom-dnd5e/templates/config-form.hbs',
+            LIST: 'modules/custom-dnd5e/templates/config-list.hbs'
         }
     },
     BLOODIED: {
