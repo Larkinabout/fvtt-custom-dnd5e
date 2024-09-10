@@ -172,7 +172,7 @@
     "CUSTOM_DND5E.form.houseRules.dead.deadTint.note.2": "Deve estar em formato de cor hexadecimal. Deixe em branco para não alterar",
     "CUSTOM_DND5E.form.houseRules.deathSaves.deathSavesRollMode.note.1": "Modo rolagem ao rolar Salvaguardas Contra Morte",
     "CUSTOM_DND5E.form.houseRules.deathSaves.deathSavesRollMode.note.2": "Quando Rolagem Cega do MJ estiver selecionada, sucessos e falhas não apareceram na ficha de personagem para os jogadores",
-    "CUSTOM_DND5E.form.houseRules.deathSaves.deathSavesTargetValue.label": "Valor do Alvo",
+    "CUSTOM_DND5E.form.houseRules.deathSaves.deathSavesTargetValue.label": "Valor Alvo",
     "CUSTOM_DND5E.form.houseRules.deathSaves.deathSavesTargetValue.note": "O valor necessário para ter sucesso na salvaguarda contra morte",
     "CUSTOM_DND5E.form.houseRules.deathSaves.removeDeathSavesOnEvent.heading": "Remover Salvaguardas Contra Morte no Evento",
     "CUSTOM_DND5E.form.houseRules.deathSaves.removeDeathSavesOnEvent.note": "Use 3 para remover todos, 1 para remover um e 0 para não remover nenhum",
