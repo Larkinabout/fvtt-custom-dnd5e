@@ -28,7 +28,12 @@
       "lang": "en",
       "name": "English",
       "path": "languages/en.json"
-    }
+    },
+	{
+		"lang": "pt-BR",
+		"name": "Português (Brasil)",
+		"path": "languages/pt-BR.json"
+	}
   ],
   "relationships": {
     "systems": [
