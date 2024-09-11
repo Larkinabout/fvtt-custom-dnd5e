@@ -30,7 +30,7 @@ async function prepareEncumbrancePatch (rollData, { validateItem } = {}) {
         .filter(item => !item.container && (validateItem?.(item) ?? true))
         .reduce((weight, item) => {
             const equipped = item.system.equipped
-            const proficient = item.system.prof?.multiplier >= 1
+            const proficient = item.system.proficiencyMultiplier >= 1
             const mod = (proficient) ? Math.min(proficientEquippedMod, equippedMod) : equippedMod
             const totalWeight = item.system.totalWeightIn?.(baseUnits[unitSystem])
             return weight + ((equipped) ? (totalWeight ?? 0) * mod : (totalWeight ?? 0) * unequippedMod || 0)
