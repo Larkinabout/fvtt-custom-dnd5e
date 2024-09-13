@@ -84,7 +84,6 @@ export class CustomDnd5eForm extends HandlebarsApplicationMixin(ApplicationV2) {
                 label: game.i18n.localize('CUSTOM_DND5E.no')
             }
         })
-        d.render(true)
     }
 
     _onRender (context, options) {

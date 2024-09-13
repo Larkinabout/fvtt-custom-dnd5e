@@ -1,6 +1,7 @@
 import { CONSTANTS, MODULE } from '../constants.js'
 import { setSetting, Logger } from '../utils.js'
 import { CustomDnd5eForm } from './custom-dnd5e-form.js'
+import { getDnd5eConfig, setConfig } from '../conditions.js'
 
 export class ConditionsEditForm extends CustomDnd5eForm {
     constructor (args) {
@@ -9,9 +10,13 @@ export class ConditionsEditForm extends CustomDnd5eForm {
         this.conditionsForm = args.conditionsForm
         this.key = args.data.key
         this.setting = args.setting
+        this.setFunction = setConfig
     }
 
     static DEFAULT_OPTIONS = {
+        actions: {
+            reset: ConditionsEditForm.reset
+        },
         form: {
             handler: ConditionsEditForm.submit,
             closeOnSubmit: false
@@ -44,6 +49,33 @@ export class ConditionsEditForm extends CustomDnd5eForm {
 
     _onRender (context, options) {
         super._onRender(context, options)
+    }
+
+    static async reset () {
+        const reset = async () => {
+            const condition = getDnd5eConfig(this.key)
+            this.setting[this.key] = condition
+            await setSetting(this.settingKey, this.setting)
+            this.setFunction(this.setting)
+            this.render(true)
+        }
+
+        const d = await foundry.applications.api.DialogV2.confirm({
+            window: {
+                title: game.i18n.localize('CUSTOM_DND5E.dialog.reset.title')
+            },
+            content: `<p>${game.i18n.localize('CUSTOM_DND5E.dialog.reset.content')}</p>`,
+            modal: true,
+            yes: {
+                label: game.i18n.localize('CUSTOM_DND5E.yes'),
+                callback: async () => {
+                    reset()
+                }
+            },
+            no: {
+                label: game.i18n.localize('CUSTOM_DND5E.no')
+            }
+        })
     }
 
     static async submit (event, form, formData) {

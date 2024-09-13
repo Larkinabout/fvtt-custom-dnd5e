@@ -102,14 +102,14 @@ export class CountersAdvancedOptionsForm extends CustomDnd5eForm {
 
         this.items.forEach(item => {
             const el = {}
-            el.trigger = item.querySelector('#trigger')
-            el.triggerValueGroup = item.querySelector('#trigger-value').closest('.form-group')
+            el.trigger = item.querySelector('#custom-dnd5e-trigger')
+            el.triggerValueGroup = item.querySelector('#custom-dnd5e-trigger-value').closest('.form-group')
             el.trigger.addEventListener('change', () => { this.#onChangeTrigger(el) })
 
-            el.action = item.querySelector('#action')
-            el.actionIncrease = el.action.querySelector('#increase')
-            el.actionDecrease = el.action.querySelector('#decrease')
-            el.actionValueGroup = item.querySelector('#action-value').closest('.form-group')
+            el.action = item.querySelector('#custom-dnd5e-action')
+            el.actionIncrease = el.action.querySelector('#custom-dnd5e-increase')
+            el.actionDecrease = el.action.querySelector('#custom-dnd5e-decrease')
+            el.actionValueGroup = item.querySelector('#custom-dnd5e-action-value').closest('.form-group')
             el.action.addEventListener('change', () => { this.#onChangeAction(el) })
 
             this.#onChangeTrigger(el)
@@ -133,12 +133,12 @@ export class CountersAdvancedOptionsForm extends CustomDnd5eForm {
 
         const item = list.querySelector(`[data-key="${key}"]`)
         const dragElement = item.querySelector('.custom-dnd5e-drag')
-        el.trigger = item.querySelector('#trigger')
-        el.triggerValueGroup = item.querySelector('#trigger-value').closest('.form-group')
-        el.action = item.querySelector('#action')
-        el.actionValueGroup = item.querySelector('#action-value').closest('.form-group')
-        el.actionIncrease = el.action.querySelector('#increase')
-        el.actionDecrease = el.action.querySelector('#decrease')
+        el.trigger = item.querySelector('#custom-dnd5e-trigger')
+        el.triggerValueGroup = item.querySelector('#custom-dnd5e-trigger-value').closest('.form-group')
+        el.action = item.querySelector('#custom-dnd5e-action')
+        el.actionValueGroup = item.querySelector('#custom-dnd5e-action-value').closest('.form-group')
+        el.actionIncrease = el.action.querySelector('#custom-dnd5e-increase')
+        el.actionDecrease = el.action.querySelector('#custom-dnd5e-decrease')
 
         item.addEventListener('dragend', this._onDragEnd.bind(this))
         item.addEventListener('dragleave', this._onDragLeave.bind(this))

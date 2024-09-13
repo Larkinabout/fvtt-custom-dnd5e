@@ -5,10 +5,7 @@
     <div class="custom-dnd5e-col-group flexcol">
         <input id="custom-dnd5e-system" name="{{key}}.system" type="hidden" value="{{#if (customDnd5eBoolFalse system)}}false{{else}}true{{/if}}">
         <div class="form-group">
-            <label class="flex1" style="min-width:80px; max-width:120px;">{{localize "CUSTOM_DND5E.label"}}</label>
-            <div class="form-fields">
-                <input id="custom-dnd5e-label" name="{{key}}.label" type="text" value="{{localize label}}">
-            </div>
+            <label class="flex1">{{localize label}}</label>
         </div>
     </div>
     <div class="custom-dnd5e-list-buttons">

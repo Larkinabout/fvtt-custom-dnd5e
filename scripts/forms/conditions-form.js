@@ -65,8 +65,6 @@ export class ConditionsForm extends CustomDnd5eForm {
                 label: game.i18n.localize('CUSTOM_DND5E.no')
             }
         })
-
-        d.render(true)
     }
 
     static async edit (event, target) {

@@ -11,7 +11,7 @@
         </div>
         <div class="field">
             <label>{{localize "CUSTOM_DND5E.type"}}</label>
-            <select id="type" name="{{#if ../actorType}}{{../actorType}}.{{/if}}{{key}}.type">
+            <select id="custom-dnd5e-type" name="{{#if ../actorType}}{{../actorType}}.{{/if}}{{key}}.type">
                 {{selectOptions ../selects.type.choices selected=type localize=true}}
             </select>
         </div>

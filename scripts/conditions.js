@@ -51,10 +51,11 @@ function registerSettings () {
 
 /**
  * Get dnd5e config
- * @returns {object} The weapon proficiencies and weapon types
+ * @param {string=null} key The key
+ * @returns {object}        The conditions and status effects
  */
-export function getDnd5eConfig () {
-    return buildData({ conditionTypes: CONFIG.CUSTOM_DND5E.conditionTypes, statusEffects: CONFIG.CUSTOM_DND5E.coreStatusEffects })
+export function getDnd5eConfig (key = null) {
+    return buildData({ key, conditionTypes: CONFIG.CUSTOM_DND5E.conditionTypes, statusEffects: CONFIG.CUSTOM_DND5E.coreStatusEffects })
 }
 
 /**
@@ -67,13 +68,13 @@ function getDefault () {
 
 /**
  * Build setting data
- * @param {object=null} config The config data
+ * @param {object} config The config data
  * @returns {object}           The setting data
  */
 function buildData (config) {
-    const data = foundry.utils.deepClone(config.conditionTypes)
+    const data = foundry.utils.deepClone((config.key) ? { [config.key]: config.conditionTypes[config.key] } : config.conditionTypes) ?? {}
 
-    config.statusEffects.forEach((statusEffect) => {
+    const setStatusEffect = (data, statusEffect) => {
         if (data[statusEffect.id]) {
             if (statusEffect._id) { data[statusEffect.id]._id = statusEffect._id }
             if (statusEffect.hud) { data[statusEffect.id].hud = statusEffect.hud }
@@ -91,9 +92,21 @@ function buildData (config) {
                 ...(statusEffect.statuses !== undefined && { statuses: statusEffect.statuses })
             }
         }
-    })
+    }
 
-    return data
+    if (config.key) {
+        const statusEffect = config.statusEffects.filter(statusEffect => statusEffect.id === config.key)
+
+        if (statusEffect.length) {
+            setStatusEffect(data, statusEffect[0])
+        }
+    } else {
+        config.statusEffects.forEach((statusEffect) => {
+            setStatusEffect(data, statusEffect)
+        })
+    }
+
+    return (config.key) ? data[config.key] : data
 }
 
 /**
