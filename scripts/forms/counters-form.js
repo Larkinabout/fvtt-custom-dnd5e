@@ -105,8 +105,8 @@ export class CountersForm extends CustomDnd5eForm {
         const key = item.dataset.key
         if (!key) return
 
-        const label = item.querySelector('#label').value
-        const type = item.querySelector('#type').value
+        const label = item.querySelector('#custom-dnd5e-label').value
+        const type = item.querySelector('#custom-dnd5e-type').value
         const activeTab = this.element.querySelector('.tab.active')
         const actorType = activeTab.dataset.actorType
         const setting = this.settings[actorType]

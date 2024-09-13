@@ -6,6 +6,7 @@ import { register as registerActorSizes, setConfig as setActorSizes } from './ac
 import { register as registerArmorCalculations, setConfig as setArmorCalculations } from './armor-calculations.js'
 import { register as registerArmorIds, setConfig as setArmorIds } from './armor-ids.js'
 import { register as registerArmorProficiencies, setConfig as setArmorProficiencies } from './armor-proficiencies.js'
+import { register as registerConditions, setConfig as setConditions } from './conditions.js'
 import { registerSettings as registerCounters } from './counters.js'
 import { register as registerCurrency, setConfig as setCurrency } from './currency.js'
 import { register as registerDamageTypes, setConfig as setDamageTypes } from './damage-types.js'
@@ -36,6 +37,7 @@ import { registerCharacterSheet } from './sheets/character-sheet.js'
  */
 Hooks.on('init', async () => {
     CONFIG.CUSTOM_DND5E = foundry.utils.deepClone(CONFIG.DND5E)
+    CONFIG.CUSTOM_DND5E.coreStatusEffects = foundry.utils.deepClone(CONFIG.statusEffects)
 
     registerSetting(
         CONSTANTS.DEBUG.SETTING.KEY,
@@ -56,6 +58,7 @@ Hooks.on('init', async () => {
     registerArmorCalculations()
     registerArmorIds()
     registerArmorProficiencies()
+    registerConditions()
     registerCounters()
     registerCurrency()
     registerDamageTypes()
@@ -84,6 +87,7 @@ Hooks.on('init', async () => {
     setArmorCalculations(getSetting(CONSTANTS.ARMOR_CALCULATIONS.SETTING.KEY))
     setArmorIds(getSetting(CONSTANTS.ARMOR_IDS.SETTING.KEY))
     setArmorProficiencies(getSetting(CONSTANTS.ARMOR_PROFICIENCIES.SETTING.KEY))
+    setConditions(getSetting(CONSTANTS.CONDITIONS.SETTING.KEY))
     setCurrency(getSetting(CONSTANTS.CURRENCY.SETTING.KEY))
     setDamageTypes(getSetting(CONSTANTS.DAMAGE_TYPES.SETTING.KEY))
     setEncumbrance(getSetting(CONSTANTS.ENCUMBRANCE.SETTING.KEY))

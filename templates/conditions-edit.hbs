@@ -1,0 +1,90 @@
+<div class="standard-form">
+    <div class="standard-form scrollable">
+        <input id="custom-dnd5e-system" name="{{key}}.system" type="hidden" value="{{#if (customDnd5eBoolFalse system)}}false{{else}}true{{/if}}">
+        <div class="form-group">
+            <label class="flex1" style="min-width:80px; max-width:120px;">{{localize "CUSTOM_DND5E.key"}}</label>
+            <div class="form-fields">
+                {{#if (customDnd5eBoolFalse system)}}
+                <input id="custom-dnd5e-key" name="{{key}}.key" type="text" value="{{localize key}}">
+                {{else}}
+                <input id="custom-dnd5e-disabled-key" disabled name="{{key}}.disabledKey" type="text" value="{{localize key}}">
+                <input id="custom-dnd5e-key" name="{{key}}.key" type="hidden" value="{{localize key}}">
+                {{/if}}
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="flex1" style="min-width:80px; max-width:120px;">{{localize "CUSTOM_DND5E.label"}}</label>
+            <div class="form-fields">
+                <input id="custom-dnd5e-label" name="{{key}}.label" type="text" value="{{localize label}}">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="flex1" style="min-width:80px; max-width:120px;">{{localize "CUSTOM_DND5E.icon"}}</label>
+            <div class="form-fields">
+                <input id="custom-dnd5e-icon" name="{{key}}.icon" type="text" value="{{icon}}">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="flex1" style="min-width:80px; max-width:120px;">{{localize "CUSTOM_DND5E.reference"}}</label>
+            <div class="form-fields">
+                <input id="custom-dnd5e-reference" name="{{key}}.reference" type="text" value="{{reference}}">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="flex1" style="min-width:80px; max-width:120px;">{{localize "CUSTOM_DND5E.levels"}}</label>
+            <div class="form-fields">
+                <input id="custom-dnd5e-levels" name="{{key}}.levels" type="number" value="{{levels}}">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="flex1" style="min-width:80px; max-width:120px;">{{localize "CUSTOM_DND5E.special"}}</label>
+            <div class="form-fields">
+                <input id="custom-dnd5e-special" name="{{key}}.special" type="text" value="{{special}}">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="flex1" style="min-width:80px; max-width:120px;">{{localize "CUSTOM_DND5E.includeOnHud"}}</label>
+            <div class="form-fields">
+                <input id="custom-dnd5e-hud" name="{{key}}.hud" type="checkbox"{{#if hud}} checked{{/if}}>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="flex1" style="min-width:80px; max-width:120px;">{{localize "CUSTOM_DND5E.includeOnSheet"}}</label>
+            <div class="form-fields">
+                <input id="custom-dnd5e-sheet" name="{{key}}.sheet" type="checkbox"{{#if sheet}} checked{{/if}}>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="flex1" style="min-width:80px; max-width:120px;">{{localize "CUSTOM_DND5E.pseudo"}}</label>
+            <div class="form-fields">
+                <input id="custom-dnd5e-pseudo" name="{{key}}.pseudo" type="checkbox"{{#if pseudo}} checked{{/if}}>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="flex1" style="min-width:80px; max-width:120px;">{{localize "CUSTOM_DND5E.riders"}}</label>
+            <div class="form-fields">
+                <multi-select name="{{key}}.riders">
+                    {{selectOptions choices.riders selected=riders}}
+                </multi-select>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="flex1" style="min-width:80px; max-width:120px;">{{localize "CUSTOM_DND5E.statuses"}}</label>
+            <div class="form-fields">
+                <multi-select name="{{key}}.statuses">
+                    {{selectOptions choices.statuses selected=statuses}}
+                </multi-select>
+            </div>
+        </div>
+    </div>
+    <footer class="form-footer" data-application-part="footer">
+        {{#unless (customDnd5eBoolFalse system)}}
+        <button type="button" data-action="reset" class="reset-button">
+            <i class="fas fa-arrow-rotate-left"></i>{{localize "CUSTOM_DND5E.form.button.reset.label"}}
+        </button>
+        {{/unless}}
+        <button type="submit" class="save-button">
+            <i class="fas fa-solid fa-floppy-disk"></i>{{localize "CUSTOM_DND5E.form.button.save.label"}}
+        </button>
+    </footer>
+</div>

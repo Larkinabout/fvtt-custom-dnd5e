@@ -138,29 +138,6 @@ export class CustomDnd5eForm extends HandlebarsApplicationMixin(ApplicationV2) {
         }
     }
 
-    /*  #createDragDropHandlers () {
-        return this.options.dragDrop.map((d) => {
-            d.permissions = {
-                dragstart: this._canDragStart.bind(this),
-                drop: this._canDragDrop.bind(this)
-            }
-            d.callbacks = {
-                dragstart: this._onDragStart.bind(this),
-                dragend: this._onDragEnd.bind(this),
-                dragleave: this._onDragLeave.bind(this),
-                dragover: this._onDragOver.bind(this),
-                drop: this._onDrop.bind(this)
-            }
-            return new DragDrop(d)
-        })
-    }
- */
-    // #dragDrop
-
-    /*  get dragDrop () {
-        return this.#dragDrop
-    }
- */
     /** @override */
     _canDragStart (selector) {
         return true

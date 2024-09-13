@@ -112,6 +112,23 @@ export const CONSTANTS = {
             KEY: 'condition-types'
         }
     },
+    CONDITIONS: {
+        MENU: {
+            KEY: 'conditions-menu',
+            HINT: 'CUSTOM_DND5E.menu.conditions.hint',
+            ICON: 'fas fa-pen-to-square',
+            LABEL: 'CUSTOM_DND5E.menu.conditions.label',
+            NAME: 'CUSTOM_DND5E.menu.conditions.name'
+        },
+        SETTING: {
+            KEY: 'conditions'
+        },
+        TEMPLATE: {
+            FORM: 'modules/custom-dnd5e/templates/conditions-form.hbs',
+            LIST: 'modules/custom-dnd5e/templates/conditions-list.hbs',
+            EDIT: 'modules/custom-dnd5e/templates/conditions-edit.hbs'
+        }
+    },
     COUNTERS: {
         ID: 'counters',
         MENU: {
