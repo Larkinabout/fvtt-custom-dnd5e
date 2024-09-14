@@ -14,14 +14,14 @@
             <div class="form-group">
                 <label>{{localize "CUSTOM_DND5E.key"}}</label>
                 <div class="form-fields">
-                    <input id="key" name="{{key}}.key" type="text" value="{{key}}"> 
+                    <input id="custom-dnd5e-key" name="{{key}}.key" type="text" value="{{key}}"> 
                 </div>
                 <p class="custom-dnd5e-advice notes">{{localize "CUSTOM_DND5E.form.counters.key.note.1"}}</p>
             </div>
             <div class="form-group flex0">
                 <label>{{localize "CUSTOM_DND5E.form.counters.viewRole.label"}}</label>
                 <div class="form-fields">
-                    <select id="view-role" name="{{key}}.viewRole">
+                    <select id="custom-dnd5e-view-role" name="{{key}}.viewRole">
                         {{selectOptions selects.role.choices selected=viewRole localize=true}}
                     </select>
                 </div>
@@ -30,7 +30,7 @@
             <div class="form-group">
                 <label>{{localize "CUSTOM_DND5E.form.counters.editRole.label"}}</label>
                 <div class="form-fields">
-                    <select id="edit-role" name="{{key}}.editRole">
+                    <select id="custom-dnd5e-edit-role" name="{{key}}.editRole">
                         {{selectOptions selects.role.choices selected=editRole localize=true}}
                     </select>
                 </div>
@@ -40,7 +40,7 @@
             <div class="form-group">
                 <label>{{localize "CUSTOM_DND5E.form.counters.max.label"}}</label>
                 <div class="form-fields">
-                    <input id="max" name="{{key}}.max" type="number" value="{{max}}"> 
+                    <input id="custom-dnd5e-max" name="{{key}}.max" type="number" value="{{max}}"> 
                 </div>
                 <p class="hint">{{localize "CUSTOM_DND5E.form.counters.max.note.1"}}</p>
             </div>

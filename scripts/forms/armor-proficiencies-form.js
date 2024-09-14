@@ -9,8 +9,8 @@ export class ArmorProficienciesForm extends ConfigForm {
 
         this.nestable = true
         this.settingKey = CONSTANTS.ARMOR_PROFICIENCIES.SETTING.KEY
-        this.setting = getSetting(this.settingKey) || getDnd5eConfig()
-        this.setFunction = setConfig
+        this.dnd5eConfig = getDnd5eConfig()
+        this.setting = getSetting(this.settingKey) || this.dnd5eConfig
     }
 
     static DEFAULT_OPTIONS = {
@@ -24,7 +24,7 @@ export class ArmorProficienciesForm extends ConfigForm {
     }
 
     async _prepareContext () {
-        this.setting = getSetting(this.settingKey) || getDnd5eConfig()
+        this.setting = getSetting(this.settingKey) || this.dnd5eConfig
 
         const labelise = (data) => {
             Object.entries(data).forEach(([key, value]) => {
@@ -45,9 +45,8 @@ export class ArmorProficienciesForm extends ConfigForm {
 
     static async reset () {
         const reset = async () => {
-            const dnd5eConfig = getDnd5eConfig()
-            await setSetting(this.settingKey, dnd5eConfig)
-            this.setFunction(dnd5eConfig)
+            await setSetting(this.settingKey, this.dnd5eConfig)
+            setConfig(this.dnd5eConfig)
             this.render(true)
         }
 

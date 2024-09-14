@@ -9,8 +9,9 @@ export class WeaponProficienciesForm extends ConfigForm {
 
         this.nestable = true
         this.settingKey = CONSTANTS.WEAPON_PROFICIENCIES.SETTING.KEY
-        this.setting = getSetting(this.settingKey) || getDnd5eConfig()
-        this.setFunction = setConfig
+        this.dnd5eConfig = getDnd5eConfig()
+        this.setting = getSetting(this.settingKey) || this.dnd5eConfig
+        this.setConfig = setConfig
         this.type = 'itemProperties'
     }
 
@@ -25,7 +26,7 @@ export class WeaponProficienciesForm extends ConfigForm {
     }
 
     async _prepareContext () {
-        this.setting = getSetting(this.settingKey) || getDnd5eConfig()
+        this.setting = getSetting(this.settingKey) || this.dnd5eConfig
 
         const labelise = (data) => {
             Object.entries(data).forEach(([key, value]) => {
@@ -46,9 +47,8 @@ export class WeaponProficienciesForm extends ConfigForm {
 
     static async reset () {
         const reset = async () => {
-            const dnd5eConfig = getDnd5eConfig()
-            await setSetting(this.settingKey, dnd5eConfig)
-            this.setFunction(dnd5eConfig)
+            await setSetting(this.settingKey, this.dnd5eConfig)
+            this.setConfig(this.dnd5eConfig)
             this.render(true)
         }
 

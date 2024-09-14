@@ -1,5 +1,5 @@
 import { CONSTANTS, MODULE } from '../constants.js'
-import { Logger, deleteProperty, getSetting, setSetting } from '../utils.js'
+import { Logger, getSetting, setSetting } from '../utils.js'
 import { CustomDnd5eForm } from './custom-dnd5e-form.js'
 import { setConfig as setAbilities } from '../abilities.js'
 import { setConfig as setArmorCalculations } from '../armor-calculations.js'
@@ -33,6 +33,7 @@ export class ConfigForm extends CustomDnd5eForm {
             validate: ConfigForm.validate
         },
         form: {
+            closeOnSubmit: false,
             handler: ConfigForm.submit
         }
     }
@@ -76,11 +77,11 @@ export class ConfigForm extends CustomDnd5eForm {
     static async reset () {
         const reset = async () => {
             await setSetting(this.settingKey, foundry.utils.deepClone(CONFIG.CUSTOM_DND5E[this.type]))
-            this.setFunction(CONFIG.CUSTOM_DND5E[this.type])
+            this.setConfig(CONFIG.CUSTOM_DND5E[this.type])
             this.render(true)
         }
 
-        const d = await foundry.applications.api.DialogV2.confirm({
+        await foundry.applications.api.DialogV2.confirm({
             window: {
                 title: game.i18n.localize('CUSTOM_DND5E.dialog.reset.title')
             },
@@ -96,8 +97,6 @@ export class ConfigForm extends CustomDnd5eForm {
                 label: game.i18n.localize('CUSTOM_DND5E.no')
             }
         })
-
-        d.render(true)
     }
 
     static async createItem () {
@@ -127,96 +126,16 @@ export class ConfigForm extends CustomDnd5eForm {
         return template
     }
 
-    static validate (event, formData) {
-        const keys = {}
-
-        Object.keys(formData)
-            .filter(key => key.split('.').slice(1, 2).pop() === 'key')
-            .forEach(key => {
-                const num = keys[formData[key]] ?? 0
-                keys[formData[key]] = num + 1
-            })
-
-        const duplicates = []
-        Object.entries(keys).forEach(([key, value]) => {
-            if (value > 1) {
-                duplicates.push(key)
-            }
-        })
-
-        if (duplicates.length === 1) {
-            Logger.error(`Key '${duplicates.pop()}' already exists`, true)
-            return
-        } else if (duplicates.length > 1) {
-            const keyString = duplicates.join(', ')
-            Logger.error(`Keys '${keyString}' already exist`, true)
-            return
-        }
-
-        this.submit()
-    }
-
     static async submit (event, form, formData) {
-        const ignore = ['children', 'delete', 'key', 'parentKey']
+        if (!this.validateFormData(formData)) return
 
-        const data = {}
-        const keyData = {}
-        const changedKeys = {}
+        const propertiesToIgnore = ['children', 'delete', 'key', 'parentKey']
+        const changedKeys = this.getChangedKeys(formData)
+        const processedFormData = this.processFormData({ formData, changedKeys, propertiesToIgnore })
 
-        Object.entries(formData.object).filter(([property, value]) => property.endsWith('key'))
-            .forEach(([property, value]) => {
-                const propertyParts = property.split('.')
-                const propertyPathSuffix = propertyParts.slice(-2, -1)[0]
+        this.updateActorKeys({ changedKeys, actorProperties: this.actorProperties })
 
-                if (propertyPathSuffix !== value) { changedKeys[propertyPathSuffix] = value }
-            })
-
-        Object.entries(formData.object).forEach(([property, value]) => {
-            const propertyParts = property.split('.')
-            propertyParts.forEach((value, index) => {
-                if (changedKeys[value]) {
-                    propertyParts[index] = changedKeys[value]
-                }
-            })
-            const propertyKey = propertyParts.pop()
-            const propertyPath = propertyParts.join('.')
-
-            if (ignore.includes(propertyKey) || formData.object[`${propertyPath}.delete`] === 'true') return
-            if (propertyKey === 'system') {
-                if (value === 'true') { return }
-                value = false
-            }
-            foundry.utils.setProperty(data, `${propertyPath}.${propertyKey}`, value)
-        })
-
-        if (Object.keys(keyData).length && this.actorProperties) {
-            game.actors.forEach(actor => {
-                const updateData = {}
-                let requiresUpdate = false
-                this.actorProperties.forEach(property => {
-                    const oldData = foundry.utils.getProperty(actor, property)
-                    if (!Array.isArray(oldData) && !(oldData instanceof Set)) return
-                    const newData = []
-                    oldData.forEach(value => {
-                        if (keyData[value]) {
-                            requiresUpdate = true
-                        }
-                        newData.push((keyData[value] || value))
-                    })
-                    updateData[property] = newData
-                })
-                if (requiresUpdate) {
-                    actor.update(updateData)
-                }
-            })
-        }
-
-        await setSetting(this.settingKey, data)
-        this.setFunction(data)
-
-        if (this.requiresReload) {
-            SettingsConfig.reloadConfirm()
-        }
+        this.handleSubmit(processedFormData, this.settingKey, this.setConfig, this.requiresReload)
     }
 }
 
@@ -225,7 +144,7 @@ export class AbilitiesForm extends ConfigForm {
         super()
         this.requiresReload = true
         this.settingKey = CONSTANTS.ABILITIES.SETTING.KEY
-        this.setFunction = setAbilities
+        this.setConfig = setAbilities
         this.type = 'abilities'
     }
 
@@ -267,7 +186,7 @@ export class ActorSizesForm extends ConfigForm {
         super()
         this.requiresReload = false
         this.settingKey = CONSTANTS.ACTOR_SIZES.SETTING.KEY
-        this.setFunction = setActorSizes
+        this.setConfig = setActorSizes
         this.type = 'actorSizes'
     }
 
@@ -295,7 +214,7 @@ export class ArmorCalculationsForm extends ConfigForm {
         super()
         this.requiresReload = false
         this.settingKey = CONSTANTS.ARMOR_CALCULATIONS.SETTING.KEY
-        this.setFunction = setArmorCalculations
+        this.setConfig = setArmorCalculations
         this.type = 'armorClasses'
     }
 
@@ -323,7 +242,7 @@ export class ArmorIdsForm extends ConfigForm {
         super()
         this.requiresReload = true
         this.settingKey = CONSTANTS.ARMOR_IDS.SETTING.KEY
-        this.setFunction = setArmorIds
+        this.setConfig = setArmorIds
         this.type = 'armorIds'
     }
 
@@ -351,7 +270,7 @@ export class ArmorTypesForm extends ConfigForm {
         super()
         this.requiresReload = false
         this.settingKey = CONSTANTS.ARMOR_TYPES.SETTING.KEY
-        this.setFunction = setArmorTypes
+        this.setConfig = setArmorTypes
         this.type = 'armorTypes'
     }
 
@@ -368,7 +287,7 @@ export class CurrencyForm extends ConfigForm {
         super()
         this.requiresReload = false
         this.settingKey = CONSTANTS.CURRENCY.SETTING.KEY
-        this.setFunction = setCurrency
+        this.setConfig = setCurrency
         this.type = 'currencies'
     }
 
@@ -396,7 +315,7 @@ export class DamageTypesForm extends ConfigForm {
         super()
         this.requiresReload = false
         this.settingKey = CONSTANTS.DAMAGE_TYPES.SETTING.KEY
-        this.setFunction = setDamageTypes
+        this.setConfig = setDamageTypes
         this.type = 'damageTypes'
         this.actorProperties = ['system.traits.di.value', 'system.traits.dr.value', 'system.traits.dv.value']
     }
@@ -425,7 +344,7 @@ export class ItemActionTypesForm extends ConfigForm {
         super()
         this.requiresReload = false
         this.settingKey = CONSTANTS.ITEM_ACTION_TYPES.SETTING.KEY
-        this.setFunction = setItemActionTypes
+        this.setConfig = setItemActionTypes
         this.type = 'itemActionTypes'
     }
 
@@ -442,7 +361,7 @@ export class ItemActivationCostTypesForm extends ConfigForm {
         super()
         this.requiresReload = false
         this.settingKey = CONSTANTS.ITEM_ACTIVATION_COST_TYPES.SETTING.KEY
-        this.setFunction = setItemActivationCostTypes
+        this.setConfig = setItemActivationCostTypes
         this.type = 'abilityActivationTypes'
     }
 
@@ -459,7 +378,7 @@ export class ItemRarityForm extends ConfigForm {
         super()
         this.requiresReload = false
         this.settingKey = CONSTANTS.ITEM_RARITY.SETTING.KEY
-        this.setFunction = setItemRarity
+        this.setConfig = setItemRarity
         this.type = 'itemRarity'
     }
 
@@ -477,7 +396,7 @@ export class LanguagesForm extends ConfigForm {
         this.nestable = true
         this.requiresReload = false
         this.settingKey = CONSTANTS.LANGUAGES.SETTING.KEY
-        this.setFunction = setLanguages
+        this.setConfig = setLanguages
         this.type = 'languages'
     }
 
@@ -494,7 +413,7 @@ export class SensesForm extends ConfigForm {
         super()
         this.requiresReload = false
         this.settingKey = CONSTANTS.SENSES.SETTING.KEY
-        this.setFunction = setSenses
+        this.setConfig = setSenses
         this.type = 'senses'
     }
 
@@ -511,7 +430,7 @@ export class SkillsForm extends ConfigForm {
         super()
         this.requiresReload = true
         this.settingKey = CONSTANTS.SKILLS.SETTING.KEY
-        this.setFunction = setSkills
+        this.setConfig = setSkills
         this.type = 'skills'
     }
 
@@ -539,7 +458,7 @@ export class SpellSchoolsForm extends ConfigForm {
         super()
         this.requiresReload = false
         this.settingKey = CONSTANTS.SPELL_SCHOOLS.SETTING.KEY
-        this.setFunction = setSpellSchools
+        this.setConfig = setSpellSchools
         this.type = 'spellSchools'
     }
 
@@ -567,7 +486,7 @@ export class ToolIdsForm extends ConfigForm {
         super()
         this.requiresReload = true
         this.settingKey = CONSTANTS.TOOL_IDS.SETTING.KEY
-        this.setFunction = setToolIds
+        this.setConfig = setToolIds
         this.type = 'toolIds'
     }
 
@@ -595,7 +514,7 @@ export class WeaponIdsForm extends ConfigForm {
         super()
         this.requiresReload = true
         this.settingKey = CONSTANTS.WEAPON_IDS.SETTING.KEY
-        this.setFunction = setWeaponIds
+        this.setConfig = setWeaponIds
         this.type = 'weaponIds'
     }
 

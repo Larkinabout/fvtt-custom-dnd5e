@@ -53,6 +53,9 @@ export async function exportData () {
                 .filter(setting => setting[0].includes(MODULE.ID))
                 .map(setting => [setting[1].key, getSetting(setting[1].key)])
         ),
+        config: {
+            statusEffects: CONFIG.statusEffects
+        },
         configDnd5e: {
             abilities: CONFIG.DND5E.abilities,
             abilityActivationTypes: CONFIG.DND5E.abilityActivationTypes,
@@ -136,7 +139,8 @@ async function processImport (file) {
     try {
         await Promise.all([
             overwriteSettings(jsonData.setting),
-            overwriteConfig(jsonData.configDnd5e)
+            overwriteConfig(jsonData.config),
+            overwriteConfigDnd5e(jsonData.configDnd5e)
         ])
     } catch (error) {
         Logger.error(`An error occurred while importing data: ${error.message}`)
@@ -167,10 +171,22 @@ async function overwriteSettings (setting) {
 }
 
 /**
+ * Overwrite properties in CONFIG
+ * @param {object} config The config
+ */
+async function overwriteConfig (config) {
+    if (!config) return
+
+    Object.entries(config).forEach(([key, value]) => {
+        CONFIG[key] = value
+    })
+}
+
+/**
  * Overwrite properties in CONFIG.DND5E
  * @param {object} config The config
  */
-async function overwriteConfig (configDnd5e) {
+async function overwriteConfigDnd5e (configDnd5e) {
     if (!configDnd5e) {
         Logger.info(game.i18n.localize('CUSTOM_DND5E.dialog.importData.configNotFound'), true)
         return

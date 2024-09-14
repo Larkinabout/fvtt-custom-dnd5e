@@ -73,7 +73,7 @@
 .custom-dnd5e-app .standard-form > ul > li:first-child,
 .custom-dnd5e-app .standard-form > section > ul > li:first-child {
     border-top: 1px solid transparent;
-    padding-top: 0;
+    padding: 0;
 }
 
 .custom-dnd5e-app li.dragElem {
@@ -95,7 +95,7 @@
 .custom-dnd5e-col-group {
     border-left: 1px solid var(--color-border);
     gap: 0.5rem;
-    padding: 0.5rem 0 0 0.5rem;
+    padding: 0 0 0 0.5rem;
 }
 
 .custom-dnd5e-app .form-group.stacked label {
@@ -132,6 +132,7 @@
     margin-bottom: 0.5rem;
 }
 
+.application .flexrow > .custom-dnd5e-list-buttons,
 .custom-dnd5e-list-buttons {
     display: flex;
     flex: 0;

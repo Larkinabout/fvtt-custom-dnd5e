@@ -1,4 +1,5 @@
 import { MODULE } from '../constants.js'
+import { Logger, setSetting } from '../utils.js'
 
 const itemClass = `${MODULE.ID}-item`
 const itemClassSelector = `.${itemClass}`
@@ -10,7 +11,6 @@ const { ApplicationV2, HandlebarsApplicationMixin } = foundry.applications.api
 export class CustomDnd5eForm extends HandlebarsApplicationMixin(ApplicationV2) {
     constructor (options = {}) {
         super(options)
-        // this.#dragDrop = this.#createDragDropHandlers()
         this.nestable = false
     }
 
@@ -18,8 +18,7 @@ export class CustomDnd5eForm extends HandlebarsApplicationMixin(ApplicationV2) {
         actions: {
             delete: CustomDnd5eForm.deleteItem,
             new: CustomDnd5eForm.createItem,
-            reset: CustomDnd5eForm.reset,
-            validate: CustomDnd5eForm.validate
+            reset: CustomDnd5eForm.reset
         },
         classes: [`${MODULE.ID}-app`, 'sheet'],
         tag: 'form',
@@ -46,9 +45,6 @@ export class CustomDnd5eForm extends HandlebarsApplicationMixin(ApplicationV2) {
 
     static reset (event, target) {}
 
-    static validate (event, target) {
-    }
-
     static async deleteItem (event, target) {
         const item = target.closest('.custom-dnd5e-item')
         if (!item) return
@@ -58,7 +54,7 @@ export class CustomDnd5eForm extends HandlebarsApplicationMixin(ApplicationV2) {
 
         const del = async (key) => {
             const listItem = this.element.querySelector(`[data-key="${key}"]`)
-            const deleteInputs = listItem.querySelectorAll('input[id="delete"]')
+            const deleteInputs = listItem.querySelectorAll('input[id="custom-dnd5e-delete"]')
 
             // Set delete input to true against list item and all nested list items
             deleteInputs.forEach(input => {
@@ -68,7 +64,7 @@ export class CustomDnd5eForm extends HandlebarsApplicationMixin(ApplicationV2) {
             listItem.classList.add('hidden')
         }
 
-        const d = await foundry.applications.api.DialogV2.confirm({
+        await foundry.applications.api.DialogV2.confirm({
             window: {
                 title: game.i18n.localize('CUSTOM_DND5E.dialog.delete.title')
             },
@@ -84,7 +80,6 @@ export class CustomDnd5eForm extends HandlebarsApplicationMixin(ApplicationV2) {
                 label: game.i18n.localize('CUSTOM_DND5E.no')
             }
         })
-        d.render(true)
     }
 
     _onRender (context, options) {
@@ -108,7 +103,7 @@ export class CustomDnd5eForm extends HandlebarsApplicationMixin(ApplicationV2) {
     }
 
     async _onChangeInput (event) {
-        if (event.target.id === 'visible') this._onToggleList(event.target)
+        if (event.target.id === 'custom-dnd5e-visible') this._onToggleList(event.target)
     }
 
     _onToggleList (checkbox) {
@@ -138,29 +133,6 @@ export class CustomDnd5eForm extends HandlebarsApplicationMixin(ApplicationV2) {
         }
     }
 
-    /*  #createDragDropHandlers () {
-        return this.options.dragDrop.map((d) => {
-            d.permissions = {
-                dragstart: this._canDragStart.bind(this),
-                drop: this._canDragDrop.bind(this)
-            }
-            d.callbacks = {
-                dragstart: this._onDragStart.bind(this),
-                dragend: this._onDragEnd.bind(this),
-                dragleave: this._onDragLeave.bind(this),
-                dragover: this._onDragOver.bind(this),
-                drop: this._onDrop.bind(this)
-            }
-            return new DragDrop(d)
-        })
-    }
- */
-    // #dragDrop
-
-    /*  get dragDrop () {
-        return this.#dragDrop
-    }
- */
     /** @override */
     _canDragStart (selector) {
         return true
@@ -263,7 +235,8 @@ export class CustomDnd5eForm extends HandlebarsApplicationMixin(ApplicationV2) {
                     input.value = parentKey
                 }
                 if (input.name) {
-                    input.name = `${parentKey}.children.${key}.${input.id}`
+                    const inputName = input.name.split('.').pop()
+                    input.name = `${parentKey}.children.${key}.${inputName}`
                 }
             })
         })
@@ -284,5 +257,156 @@ export class CustomDnd5eForm extends HandlebarsApplicationMixin(ApplicationV2) {
         } else {
             this.mousePos = (this.nestable) ? 'middle' : 'bottom'
         }
+    }
+
+    /**
+     * Get the changed keys from the form data
+     * @param {object} formData The form data
+     * @returns {object}        The changed keys
+     */
+    getChangedKeys (formData) {
+        const changedKeys = {}
+
+        for (const [key, value] of Object.entries(formData.object).filter(([property]) => property.endsWith('key'))) {
+            const keyPart = key.split('.').slice(-2, -1)[0]
+            if (keyPart !== value) { changedKeys[keyPart] = value }
+        }
+
+        return changedKeys
+    }
+
+    /**
+     * Validate the form data
+     * @param {object} formData The form data
+     * @returns {boolean}       Whether the form data passed validation
+     */
+    validateFormData (formData) {
+        const keys = {}
+
+        Object.keys(formData.object)
+            .filter(key => key.split('.').slice(1, 2).pop() === 'key')
+            .forEach(key => {
+                const num = keys[formData.object[key]] ?? 0
+                keys[formData.object[key]] = num + 1
+            })
+
+        const duplicates = []
+        Object.entries(keys).forEach(([key, value]) => {
+            if (value > 1) {
+                duplicates.push(key)
+            }
+        })
+
+        if (duplicates.length === 1) {
+            Logger.error(`Key '${duplicates.pop()}' already exists`, true)
+            return false
+        } else if (duplicates.length > 1) {
+            const keyString = duplicates.join(', ')
+            Logger.error(`Keys '${keyString}' already exist`, true)
+            return false
+        }
+
+        return true
+    }
+
+    /**
+     * Process the form data for storing into settings
+     * @param {object} args The arguments
+     * @returns {objects}   The processed form data
+     */
+    processFormData (args) {
+        const { formData, changedKeys, propertiesToIgnore, setting } = args
+        const processedFormData = {}
+
+        // Helper function to set properties
+        const setProperty = ([key, value]) => {
+            const keyParts = key.split('.')
+
+            // Replace original key with new key
+            keyParts.forEach((part, index) => {
+                if (changedKeys[part]) {
+                    keyParts[index] = changedKeys[part]
+                }
+            })
+
+            const lastProperty = keyParts.pop()
+            const propertyPath = keyParts.join('.')
+
+            // Don't set ignored properties or any properties where the associated 'delete' property is true
+            if (propertiesToIgnore.includes(lastProperty) || formData.object[`${propertyPath}.delete`] === 'true') return
+
+            if (lastProperty === 'system') {
+                value = (value === 'true') // Convert value to boolean
+                if (value) return // Don't set the 'system' value if it is true
+            }
+
+            // If setting passed, initialise property with setting data
+            if (setting) {
+                if (!processedFormData[propertyPath]) {
+                    foundry.utils.setProperty(processedFormData, propertyPath, setting[propertyPath])
+                }
+            }
+
+            foundry.utils.setProperty(processedFormData, `${propertyPath}.${lastProperty}`, value)
+        }
+
+        // Process the form data
+        for (const entry of Object.entries(formData.object)) {
+            setProperty(entry)
+        }
+
+        return processedFormData
+    }
+
+    /**
+     * Update the properties for all actors to the changed keys
+     * @param {object} args The arguments
+     */
+    updateActorKeys (args) {
+        const { changedKeys, actorProperties } = args
+
+        if (Object.keys(changedKeys).length && actorProperties) {
+            game.actors.forEach(actor => {
+                const updateData = {}
+                let requiresUpdate = false
+                this.actorProperties.forEach(property => {
+                    const oldData = foundry.utils.getProperty(actor, property)
+                    if (!Array.isArray(oldData) && !(oldData instanceof Set)) return
+                    const newData = []
+                    oldData.forEach(value => {
+                        if (changedKeys[value]) {
+                            requiresUpdate = true
+                        }
+                        newData.push((changedKeys[value] || value))
+                    })
+                    updateData[property] = newData
+                })
+                if (requiresUpdate) {
+                    actor.update(updateData)
+                }
+            })
+        }
+    }
+
+    /**
+     * Handle the form submission
+     * @param {object} processedFormData The processed form data
+     * @param {string} settingKey        The setting key
+     * @param {function} setConfig       The function to set the config
+     * @param {boolean} requiresReload   Whether a reload is required
+     */
+    async handleSubmit (processedFormData, settingKey, setConfig, requiresReload = false) {
+        try {
+            await setSetting(settingKey, processedFormData)
+            setConfig(processedFormData)
+
+            if (requiresReload) {
+                SettingsConfig.reloadConfirm()
+            }
+        } catch (err) {
+            Logger.error(`Failed to save configuration: ${err.message}`, true)
+        }
+
+        this.close()
     }
 }

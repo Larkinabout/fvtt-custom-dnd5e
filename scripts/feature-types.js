@@ -44,14 +44,13 @@ function registerSettings () {
  * @param {object} data
  */
 export function setConfig (data = null) {
-    const buildConfig = (data) => Object.fromEntries(
-        Object.entries(data)
-            .filter(([_, value]) => value.visible || value.visible === undefined)
-            .map(([key, value]) => [
+    const buildConfig = (keys, data) => Object.fromEntries(
+        keys.filter((key) => data[key].visible || data[key].visible === undefined)
+            .map((key) => [
                 key,
-                value.children
-                    ? { label: game.i18n.localize(value.label), children: buildConfig(value.children) }
-                    : game.i18n.localize(value?.label || value)
+                data[key].children
+                    ? { label: game.i18n.localize(data[key].label), children: buildConfig(Object.keys(data[key].children), data[key].children) }
+                    : game.i18n.localize(data[key]?.label || data[key])
             ])
     )
 
@@ -63,6 +62,6 @@ export function setConfig (data = null) {
     }
 
     const defaultConfig = foundry.utils.deepClone(CONFIG.CUSTOM_DND5E[property])
-    const config = buildConfig(foundry.utils.mergeObject(defaultConfig, data))
+    const config = buildConfig(Object.keys(data), foundry.utils.mergeObject(defaultConfig, data))
     config && (CONFIG.DND5E[property] = config)
 }

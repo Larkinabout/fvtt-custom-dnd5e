@@ -1,7 +1,7 @@
 import { CONSTANTS, MODULE } from '../constants.js'
 import { deleteProperty, getSetting, setSetting } from '../utils.js'
 import { CustomDnd5eForm } from './custom-dnd5e-form.js'
-import { getDnd5eConfig, setConfig as setItemProperties } from '../item-properties.js'
+import { getDnd5eConfig, setConfig } from '../item-properties.js'
 
 const listClass = `${MODULE.ID}-list`
 const listClassSelector = `.${listClass}`
@@ -11,8 +11,9 @@ export class ItemPropertiesForm extends CustomDnd5eForm {
         super(args)
 
         this.settingKey = CONSTANTS.ITEM_PROPERTIES.SETTING.KEY
+        this.dnd5eConfig = getDnd5eConfig()
         this.setting = getSetting(this.settingKey) || foundry.utils.deepClone(CONFIG.DND5E.itemProperties)
-        this.setFunction = setItemProperties
+        this.setConfig = setConfig
         this.type = 'itemProperties'
     }
 
@@ -44,12 +45,12 @@ export class ItemPropertiesForm extends CustomDnd5eForm {
 
     static async reset () {
         const reset = async () => {
-            await setSetting(this.settingKey, getDnd5eConfig())
-            this.setFunction(CONFIG.CUSTOM_DND5E[this.type])
+            await setSetting(this.settingKey, this.dnd5eConfig)
+            this.setConfig(CONFIG.CUSTOM_DND5E[this.type])
             this.render(true)
         }
 
-        const d = await foundry.applications.api.DialogV2.confirm({
+        await foundry.applications.api.DialogV2.confirm({
             window: {
                 title: game.i18n.localize('CUSTOM_DND5E.dialog.reset.title')
             },
@@ -65,8 +66,6 @@ export class ItemPropertiesForm extends CustomDnd5eForm {
                 label: game.i18n.localize('CUSTOM_DND5E.no')
             }
         })
-
-        d.render(true)
     }
 
     static async createItem () {
@@ -127,6 +126,6 @@ export class ItemPropertiesForm extends CustomDnd5eForm {
         })
 
         await setSetting(this.settingKey, this.setting)
-        this.setFunction(this.setting)
+        this.setConfig(this.setting)
     }
 }

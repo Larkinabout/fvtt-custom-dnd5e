@@ -6,13 +6,13 @@
             <div class="form-group">
                 <label>{{localize "CUSTOM_DND5E.label"}}</label>
                 <div class="form-fields">
-                        <input id="effects-encumbered-name" name="effects.encumbered.name" type="text" value="{{localize effects.encumbered.name}}">
+                        <input id="custom-dnd5e-effects-encumbered-name" name="effects.encumbered.name" type="text" value="{{localize effects.encumbered.name}}">
                 </div>
             </div>
             <div class="form-group">
                 <label>{{localize "CUSTOM_DND5E.icon"}}</label>
                 <div class="form-fields">
-                    <input id="effects-encumbered-icon" name="effects.encumbered.icon" type="text" value="{{localize effects.encumbered.icon}}">
+                    <input id="custom-dnd5e-effects-encumbered-icon" name="effects.encumbered.icon" type="text" value="{{localize effects.encumbered.icon}}">
                     {{filePicker target="effects-encumbered-icon" type="image"}}
                 </div>
             </div>
@@ -20,13 +20,13 @@
             <div class="form-group">
                 <label>{{localize "CUSTOM_DND5E.label"}}</label>
                 <div class="form-fields">
-                    <input id="effects-heavily-encumbered-name" name="effects.heavilyEncumbered.name" type="text" value="{{localize effects.heavilyEncumbered.name}}">
+                    <input id="custom-dnd5e-effects-heavily-encumbered-name" name="effects.heavilyEncumbered.name" type="text" value="{{localize effects.heavilyEncumbered.name}}">
                 </div>
             </div>
             <div class="form-group">
                 <label>{{localize "CUSTOM_DND5E.icon"}}</label>
                 <div class="form-fields">
-                    <input id="effects-heavily-encumbered-icon" name="effects.heavilyEncumbered.icon" type="text" value="{{localize effects.heavilyEncumbered.icon}}">
+                    <input id="custom-dnd5e-effects-heavily-encumbered-icon" name="effects.heavilyEncumbered.icon" type="text" value="{{localize effects.heavilyEncumbered.icon}}">
                     {{filePicker target="effects-heavily-encumbered-icon" type="image"}}
                 </div>
             </div>
@@ -34,13 +34,13 @@
             <div class="form-group">
                 <label>{{localize "CUSTOM_DND5E.label"}}</label>
                 <div class="form-fields">
-                    <input id="effects-exceeding-carrying-capacity-name" name="effects.exceedingCarryingCapacity.name" type="text" value="{{localize effects.exceedingCarryingCapacity.name}}">
+                    <input id="custom-dnd5e-effects-exceeding-carrying-capacity-name" name="effects.exceedingCarryingCapacity.name" type="text" value="{{localize effects.exceedingCarryingCapacity.name}}">
                 </div>
             </div>
             <div class="form-group">
                 <label>{{localize "CUSTOM_DND5E.icon"}}</label>
                 <div class="form-fields">
-                    <input id="effects-exceeding-carrying-capacity-icon" name="effects.exceedingCarryingCapacity.icon" type="text" value="{{localize effects.exceedingCarryingCapacity.icon}}">
+                    <input id="custom-dnd5e-effects-exceeding-carrying-capacity-icon" name="effects.exceedingCarryingCapacity.icon" type="text" value="{{localize effects.exceedingCarryingCapacity.icon}}">
                     {{filePicker target="effects-exceeding-carrying-capacity-icon" type="image"}}
                 </div>
             </div>
@@ -50,19 +50,19 @@
             <div class="form-group">
                 <label>{{localize "EFFECT.DND5E.StatusEncumbered"}}</label>
                 <div class="form-fields">
-                    <input id="threshold-encumbered" name="threshold.encumbered.{{#if metric}}metric{{else}}imperial{{/if}}" type="number" value="{{#if metric}}{{threshold.encumbered.metric}}{{else}}{{threshold.encumbered.imperial}}{{/if}}"> 
+                    <input id="custom-dnd5e-threshold-encumbered" name="threshold.encumbered.{{#if metric}}metric{{else}}imperial{{/if}}" type="number" value="{{#if metric}}{{threshold.encumbered.metric}}{{else}}{{threshold.encumbered.imperial}}{{/if}}"> 
                 </div>
             </div>
             <div class="form-group">
                 <label>{{localize "EFFECT.DND5E.StatusHeavilyEncumbered"}}</label>
                 <div class="form-fields">
-                    <input id="threshold-heavily-encumbered" name="threshold.heavilyEncumbered.{{#if metric}}metric{{else}}imperial{{/if}}" type="number" value="{{#if metric}}{{threshold.heavilyEncumbered.metric}}{{else}}{{threshold.heavilyEncumbered.imperial}}{{/if}}"> 
+                    <input id="custom-dnd5e-threshold-heavily-encumbered" name="threshold.heavilyEncumbered.{{#if metric}}metric{{else}}imperial{{/if}}" type="number" value="{{#if metric}}{{threshold.heavilyEncumbered.metric}}{{else}}{{threshold.heavilyEncumbered.imperial}}{{/if}}"> 
                 </div>
             </div>
             <div class="form-group">
                 <label>{{localize "CUSTOM_DND5E.maximum"}}</label>
                 <div class="form-fields">
-                    <input id="threshold-maximum" name="threshold.maximum.{{#if metric}}metric{{else}}imperial{{/if}}" type="number" value="{{#if metric}}{{threshold.maximum.metric}}{{else}}{{threshold.maximum.imperial}}{{/if}}"> 
+                    <input id="custom-dnd5e-threshold-maximum" name="threshold.maximum.{{#if metric}}metric{{else}}imperial{{/if}}" type="number" value="{{#if metric}}{{threshold.maximum.metric}}{{else}}{{threshold.maximum.imperial}}{{/if}}"> 
                 </div>
             </div>
         </fieldset>
@@ -71,19 +71,19 @@
             <div class="form-group">
                 <label>{{localize "EFFECT.DND5E.StatusEncumbered"}}</label>
                 <div class="form-fields">
-                    <input id="speed-reduction-encumbered" name="speedReduction.encumbered.{{#if metric}}m{{else}}ft{{/if}}" type="number" value="{{#if metric}}{{speedReduction.encumbered.m}}{{else}}{{speedReduction.encumbered.ft}}{{/if}}">
+                    <input id="custom-dnd5e-speed-reduction-encumbered" name="speedReduction.encumbered.{{#if metric}}m{{else}}ft{{/if}}" type="number" value="{{#if metric}}{{speedReduction.encumbered.m}}{{else}}{{speedReduction.encumbered.ft}}{{/if}}">
                 </div>
             </div>
             <div class="form-group">
                 <label>{{localize "EFFECT.DND5E.StatusHeavilyEncumbered"}}</label>
                 <div class="form-fields">
-                    <input id="speed-reduction-heavily-encumbered" name="speedReduction.heavilyEncumbered.{{#if metric}}m{{else}}ft{{/if}}" type="number" value="{{#if metric}}{{speedReduction.heavilyEncumbered.m}}{{else}}{{speedReduction.heavilyEncumbered.ft}}{{/if}}"> 
+                    <input id="custom-dnd5e-speed-reduction-heavily-encumbered" name="speedReduction.heavilyEncumbered.{{#if metric}}m{{else}}ft{{/if}}" type="number" value="{{#if metric}}{{speedReduction.heavilyEncumbered.m}}{{else}}{{speedReduction.heavilyEncumbered.ft}}{{/if}}"> 
                 </div>
             </div>
             <div class="form-group">
                 <label>{{localize "EFFECT.DND5E.StatusExceedingCarryingCapacity"}}</label>
                 <div class="form-fields">
-                    <input id="speed-reduction-exceeding-carrying-capacity" name="speedReduction.exceedingCarryingCapacity.{{#if metric}}m{{else}}ft{{/if}}" type="number" value="{{#if metric}}{{speedReduction.exceedingCarryingCapacity.m}}{{else}}{{speedReduction.exceedingCarryingCapacity.ft}}{{/if}}"> 
+                    <input id="custom-dnd5e-speed-reduction-exceeding-carrying-capacity" name="speedReduction.exceedingCarryingCapacity.{{#if metric}}m{{else}}ft{{/if}}" type="number" value="{{#if metric}}{{speedReduction.exceedingCarryingCapacity.m}}{{else}}{{speedReduction.exceedingCarryingCapacity.ft}}{{/if}}"> 
                 </div>
             </div>
         </fieldset>
@@ -92,7 +92,7 @@
             <div class="form-group">
                 <label>{{localize "CUSTOM_DND5E.currencyPerWeight"}}</label>
                 <div class="form-fields">
-                    <input id="currency-per-weight" name="currencyPerWeight.{{#if metric}}metric{{else}}imperial{{/if}}" type="number" value="{{#if metric}}{{currencyPerWeight.metric}}{{else}}{{currencyPerWeight.imperial}}{{/if}}"> 
+                    <input id="custom-dnd5e-currency-per-weight" name="currencyPerWeight.{{#if metric}}metric{{else}}imperial{{/if}}" type="number" value="{{#if metric}}{{currencyPerWeight.metric}}{{else}}{{currencyPerWeight.imperial}}{{/if}}"> 
                 </div>
             </div>
         </fieldset>
@@ -101,7 +101,7 @@
             <div class="form-group">
                 <label>{{localize "CUSTOM_DND5E.vehicleWeightMultiplier"}}</label>
                 <div class="form-fields">
-                    <input id="vehicle-weight-multiplier" name="vehicleWeightMultiplier.{{#if metric}}metric{{else}}imperial{{/if}}" type="number" value="{{#if metric}}{{vehicleWeightMultiplier.metric}}{{else}}{{vehicleWeightMultiplier.imperial}}{{/if}}"> 
+                    <input id="custom-dnd5e-vehicle-weight-multiplier" name="vehicleWeightMultiplier.{{#if metric}}metric{{else}}imperial{{/if}}" type="number" value="{{#if metric}}{{vehicleWeightMultiplier.metric}}{{else}}{{vehicleWeightMultiplier.imperial}}{{/if}}"> 
                 </div>
             </div>
         </fieldset>
@@ -112,19 +112,19 @@
             <div class="form-group">
                 <label>{{localize "CUSTOM_DND5E.equippedItemWeightModifier"}}</label>
                 <div class="form-fields">
-                    <input id="equipped-item-weight-modifier" name="equippedItemWeightModifier" type="number" step="0.01" value="{{equippedItemWeightModifier}}"> 
+                    <input id="custom-dnd5e-equipped-item-weight-modifier" name="equippedItemWeightModifier" type="number" step="0.01" value="{{equippedItemWeightModifier}}"> 
                 </div>
             </div>
             <div class="form-group">
                 <label>{{localize "CUSTOM_DND5E.proficientEquippedItemWeightModifier"}}</label>
                 <div class="form-fields">
-                    <input id="proficient-equipped-item-weight-modifier" name="proficientEquippedItemWeightModifier" type="number" step="0.01" value="{{proficientEquippedItemWeightModifier}}"> 
+                    <input id="custom-dnd5e-proficient-equipped-item-weight-modifier" name="proficientEquippedItemWeightModifier" type="number" step="0.01" value="{{proficientEquippedItemWeightModifier}}"> 
                 </div>
             </div>
             <div class="form-group">
                 <label>{{localize "CUSTOM_DND5E.unequippedItemWeightModifier"}}</label>
                 <div class="form-fields">
-                    <input id="unequipped-item-weight-modifier" name="unequippedItemWeightModifier" type="number" step="0.01" value="{{unequippedItemWeightModifier}}"> 
+                    <input id="custom-dnd5e-unequipped-item-weight-modifier" name="unequippedItemWeightModifier" type="number" step="0.01" value="{{unequippedItemWeightModifier}}"> 
                 </div>
             </div>
         </fieldset>

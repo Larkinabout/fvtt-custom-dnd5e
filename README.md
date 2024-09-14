@@ -81,7 +81,7 @@ Select 'Custom D&D 5e Character Sheet' from the Sheet Configuration dialog (cog 
 ![Custom D&D 5e Character Sheet](./.github/readme/custom-dnd5e-character-sheet.png)
 
 ## Configurations
-- Configure abilities, actor sizes, armor, armor calculations, armor proficiencies, currencies, damage types, encumbrance, item action types, item activation cost types, item properties, item rarity, languages, senses, skills, spell schools, tools, weapons, weapon proficiencies, and max level. For a guide on configurations, visit the [Custom D&D 5e Wiki](https://github.com/Larkinabout/fvtt-custom-dnd5e/wiki)
+- Configure abilities, actor sizes, armor, armor calculations, armor proficiencies, conditions, currencies, damage types, encumbrance, item action types, item activation cost types, item properties, item rarity, languages, senses, skills, spell schools, tools, weapons, weapon proficiencies, and max level. For a guide on configurations, visit the [Custom D&D 5e Wiki](https://github.com/Larkinabout/fvtt-custom-dnd5e/wiki)
 
 ## Configure Encumbrance
 ![Custom D&D 5e Configure Encumbrance](./.github/readme/custom-dnd5e-configure-encumbrance.png)

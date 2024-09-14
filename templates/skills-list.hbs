@@ -1,54 +1,54 @@
 {{#each items as |item key|}}
 <li class="custom-dnd5e-item flexrow" data-key="{{key}}">
     <i class="custom-dnd5e-drag flex0 fas fa-grip-lines" draggable="true"></i>
-    <input id="visible" class="flex0" name="{{key}}.visible" type="checkbox" data-tooltip="{{localize "CUSTOM_DND5E.form.checkbox.visible.tooltip"}}"{{#unless (customDnd5eBoolFalse visible)}} checked{{/unless}}>
+    <input id="custom-dnd5e-visible" class="flex0" name="{{key}}.visible" type="checkbox" data-tooltip="{{localize "CUSTOM_DND5E.form.checkbox.visible.tooltip"}}"{{#unless (customDnd5eBoolFalse visible)}} checked{{/unless}}>
     <div class="custom-dnd5e-col-group flexcol">
-        <input id="system" name="{{key}}.system" type="hidden" value="{{#if (customDnd5eBoolFalse system)}}false{{else}}true{{/if}}">
+        <input id="custom-dnd5e-system" name="{{key}}.system" type="hidden" value="{{#if (customDnd5eBoolFalse system)}}false{{else}}true{{/if}}">
         <div class="form-group">
             <label class="flex1" style="min-width:80px; max-width:100px;">{{localize "CUSTOM_DND5E.key"}}</label>
             <div class="form-fields">
                 {{#if (customDnd5eBoolFalse system)}}
-                <input id="key" name="{{key}}.key" type="text" value="{{localize key}}">
+                <input id="custom-dnd5e-key" name="{{key}}.key" type="text" value="{{localize key}}">
                 {{else}}
-                <input id="disabled-key" disabled name="{{key}}.disabledKey" type="text" value="{{localize key}}">
-                <input id="key" name="{{key}}.key" type="hidden" value="{{localize key}}">
+                <input id="custom-dnd5e-disabled-key" disabled name="{{key}}.disabledKey" type="text" value="{{localize key}}">
+                <input id="custom-dnd5e-key" name="{{key}}.key" type="hidden" value="{{localize key}}">
                 {{/if}}
             </div>
         </div>
         <div class="form-group">
             <label class="flex1" style="min-width:80px; max-width:100px;">{{localize "CUSTOM_DND5E.fullKey"}}</label>
             <div class="form-fields">
-                <input id="full-key" name="{{key}}.fullKey" type="text" value="{{localize fullKey}}">
+                <input id="custom-dnd5e-full-key" name="{{key}}.fullKey" type="text" value="{{localize fullKey}}">
             </div>
         </div>
         <div class="form-group">
             <label class="flex1" style="min-width:80px; max-width:100px;">{{localize "CUSTOM_DND5E.label"}}</label>
             <div class="form-fields">
-                <input id="label" name="{{key}}.label" type="text" value="{{localize label}}">
+                <input id="custom-dnd5e-label" name="{{key}}.label" type="text" value="{{localize label}}">
             </div>
         </div>
         <div class="form-group">
             <label class="flex1" style="min-width:80px; max-width:100px;">{{localize "CUSTOM_DND5E.ability"}}</label>
             <div class="form-fields">
-                <input id="ability" name="{{key}}.ability" type="text" value="{{ability}}">
+                <input id="custom-dnd5e-ability" name="{{key}}.ability" type="text" value="{{ability}}">
             </div>
         </div>
         <div class="form-group">
             <label class="flex1" style="min-width:80px; max-width:100px;">{{localize "CUSTOM_DND5E.icon"}}</label>
             <div class="form-fields">
-                <input id="icon" name="{{key}}.icon" type="text" value="{{icon}}">
+                <input id="custom-dnd5e-icon" name="{{key}}.icon" type="text" value="{{icon}}">
             </div>
         </div>
         <div class="form-group">
             <label class="flex1" style="min-width:80px; max-width:100px;">{{localize "CUSTOM_DND5E.reference"}}</label>
             <div class="form-fields">
-                <input id="reference" name="{{key}}.reference" type="text" value="{{reference}}">
+                <input id="custom-dnd5e-reference" name="{{key}}.reference" type="text" value="{{reference}}">
             </div>
         </div>
     </div>
-    <button{{#unless (customDnd5eBoolFalse system)}} class="hidden"{{/unless}} type="button" data-tooltip="{{localize "CUSTOM_DND5E.form.button.delete.tooltip"}}" data-action="delete" class="flex0 custom-dnd5e-list-button">
+    <button{{#unless (customDnd5eBoolFalse system)}} class="hidden"{{/unless}} type="button" data-action="delete" data-tooltip="{{localize "CUSTOM_DND5E.form.button.delete.tooltip"}}"  class="flex0 custom-dnd5e-list-button">
         <i class="fas fa-xmark"></i>
     </button>
-    <input id="delete" name="{{key}}.delete" type="hidden" value="false">
+    <input id="custom-dnd5e-delete" name="{{key}}.delete" type="hidden" value="false">
 </li>
 {{/each}}

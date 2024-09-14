@@ -90,7 +90,7 @@ export class HouseRulesForm extends CustomDnd5eForm {
             this.render(true)
         }
 
-        const d = await foundry.applications.api.DialogV2.confirm({
+        await foundry.applications.api.DialogV2.confirm({
             window: {
                 title: game.i18n.localize('CUSTOM_DND5E.dialog.reset.title')
             },
@@ -106,8 +106,6 @@ export class HouseRulesForm extends CustomDnd5eForm {
                 label: game.i18n.localize('CUSTOM_DND5E.no')
             }
         })
-
-        d.render(true)
     }
 
     static async submit (event, form, formData) {
