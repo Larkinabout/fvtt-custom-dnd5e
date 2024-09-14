@@ -73,7 +73,7 @@
 .custom-dnd5e-app .standard-form > ul > li:first-child,
 .custom-dnd5e-app .standard-form > section > ul > li:first-child {
     border-top: 1px solid transparent;
-    padding-top: 0;
+    padding: 0;
 }
 
 .custom-dnd5e-app li.dragElem {

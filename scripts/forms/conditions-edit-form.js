@@ -9,8 +9,9 @@ export class ConditionsEditForm extends CustomDnd5eForm {
 
         this.conditionsForm = args.conditionsForm
         this.key = args.data.key
+        this.system = args.data.system
         this.setting = args.setting
-        this.setFunction = setConfig
+        this.dnd5eConfig = getDnd5eConfig(this.key)
     }
 
     static DEFAULT_OPTIONS = {
@@ -44,6 +45,11 @@ export class ConditionsEditForm extends CustomDnd5eForm {
             key: this.key,
             choices: this.#getChoices()
         }
+
+        if (this.system === false) {
+            context.system = false
+        }
+
         return context
     }
 
@@ -53,14 +59,13 @@ export class ConditionsEditForm extends CustomDnd5eForm {
 
     static async reset () {
         const reset = async () => {
-            const condition = getDnd5eConfig(this.key)
-            this.setting[this.key] = condition
+            this.setting[this.key] = this.dnd5eConfig
             await setSetting(this.settingKey, this.setting)
-            this.setFunction(this.setting)
+            setConfig(this.setting)
             this.render(true)
         }
 
-        const d = await foundry.applications.api.DialogV2.confirm({
+        await foundry.applications.api.DialogV2.confirm({
             window: {
                 title: game.i18n.localize('CUSTOM_DND5E.dialog.reset.title')
             },

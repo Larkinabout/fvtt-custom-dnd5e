@@ -57,18 +57,17 @@ function registerSettings () {
  * @param {object} data
  */
 export function setConfig (data = null) {
-    const buildConfig = (data) => Object.fromEntries(
-        Object.entries(data)
-            .filter(([_, value]) => value.visible || value.visible === undefined)
-            .map(([key, value]) => [
+    const buildConfig = (keys, data) => Object.fromEntries(
+        keys.filter((key) => data[key].visible || data[key].visible === undefined)
+            .map((key) => [
                 key,
                 {
-                    abbreviation: game.i18n.localize(value.abbreviation),
-                    ...(value.capacityMultiplier !== undefined && { capacityMultiplier: value.capacityMultiplier }),
-                    hitDie: value.hitDie,
-                    ...(value.dynamicTokenScale !== undefined && { dynamicTokenScale: value.dynamicTokenScale }),
-                    label: game.i18n.localize(value.label),
-                    ...(value.token !== undefined && { token: value.token })
+                    abbreviation: game.i18n.localize(data[key].abbreviation),
+                    ...(data[key].capacityMultiplier !== undefined && { capacityMultiplier: data[key].capacityMultiplier }),
+                    hitDie: data[key].hitDie,
+                    ...(data[key].dynamicTokenScale !== undefined && { dynamicTokenScale: data[key].dynamicTokenScale }),
+                    label: game.i18n.localize(data[key].label),
+                    ...(data[key].token !== undefined && { token: data[key].token })
                 }
             ])
     )
@@ -81,6 +80,6 @@ export function setConfig (data = null) {
     }
 
     const defaultConfig = foundry.utils.deepClone(CONFIG.CUSTOM_DND5E[property])
-    const config = buildConfig(foundry.utils.mergeObject(defaultConfig, data))
+    const config = buildConfig(Object.keys(data), foundry.utils.mergeObject(defaultConfig, data))
     config && (CONFIG.DND5E[property] = config)
 }

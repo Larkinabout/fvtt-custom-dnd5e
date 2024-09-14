@@ -9,7 +9,7 @@ export class EncumbranceForm extends CustomDnd5eForm {
 
         this.metric = game.settings.get('dnd5e', 'metricWeightUnits') || false
         this.settingKey = CONSTANTS.ENCUMBRANCE.SETTING.KEY
-        this.setFunction = setConfig
+        this.setConfig = setConfig
         this.type = 'encumbrance'
     }
 
@@ -51,11 +51,11 @@ export class EncumbranceForm extends CustomDnd5eForm {
                 resetSetting(CONSTANTS.ENCUMBRANCE.PROFICIENT_EQUIPPED_ITEM_WEIGHT_MODIFIER.SETTING.KEY),
                 resetSetting(CONSTANTS.ENCUMBRANCE.UNEQUIPPED_ITEM_WEIGHT_MODIFIER.SETTING.KEY)
             ])
-            this.setFunction(CONFIG.CUSTOM_DND5E[this.type])
+            this.setConfig(CONFIG.CUSTOM_DND5E[this.type])
             this.render(true)
         }
 
-        const d = await foundry.applications.api.DialogV2.confirm({
+        await foundry.applications.api.DialogV2.confirm({
             window: {
                 title: game.i18n.localize('CUSTOM_DND5E.dialog.reset.title')
             },
@@ -88,6 +88,7 @@ export class EncumbranceForm extends CustomDnd5eForm {
             setSetting(CONSTANTS.ENCUMBRANCE.PROFICIENT_EQUIPPED_ITEM_WEIGHT_MODIFIER.SETTING.KEY, formData.object.proficientEquippedItemWeightModifier),
             setSetting(CONSTANTS.ENCUMBRANCE.UNEQUIPPED_ITEM_WEIGHT_MODIFIER.SETTING.KEY, formData.object.unequippedItemWeightModifier)
         ])
-        this.setFunction(this.setting)
+
+        this.setConfig(this.setting)
     }
 }

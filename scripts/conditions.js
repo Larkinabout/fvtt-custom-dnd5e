@@ -1,6 +1,7 @@
 import { CONSTANTS } from './constants.js'
-import { Logger, checkEmpty, registerMenu, registerSetting } from './utils.js'
+import { Logger, checkEmpty, registerMenu, getSetting, registerSetting, resetDnd5eConfig } from './utils.js'
 import { ConditionsForm } from './forms/conditions-form.js'
+import { buildBloodied } from './house-rules.js'
 
 export function register () {
     registerSettings()
@@ -72,7 +73,24 @@ function getDefault () {
  * @returns {object}           The setting data
  */
 function buildData (config) {
-    const data = foundry.utils.deepClone((config.key) ? { [config.key]: config.conditionTypes[config.key] } : config.conditionTypes) ?? {}
+    let data = foundry.utils.deepClone((config.key) ? { [config.key]: config.conditionTypes[config.key] } : config.conditionTypes) ?? {}
+
+    if (!config.key && getSetting(CONSTANTS.BLOODIED.SETTING.APPLY_BLOODIED.KEY)) {
+        const bloodied = buildBloodied()
+
+        const conditionTypes = {}
+
+        Object.entries(data).forEach(([key, value]) => {
+            const conditionLabel = game.i18n.localize(value.label)
+            if (conditionLabel > bloodied.conditionType.label && !conditionTypes.bloodied) {
+                conditionTypes.bloodied = bloodied.conditionType
+                conditionTypes.bloodied.sheet = true
+            }
+            conditionTypes[key] = value
+        })
+
+        data = conditionTypes
+    }
 
     const setStatusEffect = (data, statusEffect) => {
         if (data[statusEffect.id]) {

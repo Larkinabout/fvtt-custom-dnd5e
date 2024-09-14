@@ -332,27 +332,41 @@ function registerHooks () {
 export function registerBloodied () {
     if (!getSetting(CONSTANTS.BLOODIED.SETTING.APPLY_BLOODIED.KEY)) return
 
-    const label = game.i18n.localize('CUSTOM_DND5E.bloodied')
-    const img = getSetting(CONSTANTS.BLOODIED.SETTING.BLOODIED_ICON.KEY) ?? CONSTANTS.BLOODIED.ICON
+    const bloodied = buildBloodied()
 
     // Add bloodied to CONFIG.statusEffects
-    CONFIG.statusEffects.push({
-        id: 'bloodied',
-        name: label,
-        img
-    })
+    CONFIG.statusEffects.push(bloodied.statusEffect)
 
     const conditionTypes = {}
 
     Object.entries(CONFIG.DND5E.conditionTypes).forEach(([key, value]) => {
         const conditionLabel = game.i18n.localize(value.label)
-        if (conditionLabel > label && !conditionTypes.bloodied) {
-            conditionTypes.bloodied = { label, img }
+        if (conditionLabel > bloodied.conditionType.label && !conditionTypes.bloodied) {
+            conditionTypes.bloodied = bloodied.conditionType
         }
         conditionTypes[key] = value
     })
 
     CONFIG.DND5E.conditionTypes = conditionTypes
+}
+
+export function buildBloodied () {
+    const label = game.i18n.localize('CUSTOM_DND5E.bloodied')
+    const img = getSetting(CONSTANTS.BLOODIED.SETTING.BLOODIED_ICON.KEY) ?? CONSTANTS.BLOODIED.ICON
+
+    const data = {
+        conditionType: {
+            label,
+            icon: img
+        },
+        statusEffect: {
+            id: 'bloodied',
+            name: label,
+            img
+        }
+    }
+
+    return data
 }
 
 /**

@@ -50,7 +50,7 @@ export class SheetForm extends CustomDnd5eForm {
             this.render(true)
         }
 
-        const d = await foundry.applications.api.DialogV2.confirm({
+        await foundry.applications.api.DialogV2.confirm({
             window: {
                 title: game.i18n.localize('CUSTOM_DND5E.dialog.reset.title')
             },

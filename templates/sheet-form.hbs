@@ -38,8 +38,7 @@
             <div class="form-group">
                 <label>{{localize "CUSTOM_DND5E.form.sheet.bannerImage.label"}}</label>
                 <div class="form-fields">
-                    <input id="custom-dnd5e-banner-image" name="bannerImage" type="text" data-dtype="text" value="{{bannerImage}}">
-                        {{filePicker target="bannerImage" type="image"}}
+                    <file-picker name="bannerImage" type="image" id="custom-dnd5e-banner-image" value="{{bannerImage}}"></file-picker>
                 </div>
                 <p class="hint">{{localize "CUSTOM_DND5E.form.sheet.bannerImage.note.1"}}</p>
                 <p class="custom-dnd5e-advice notes">{{localize "CUSTOM_DND5E.form.sheet.bannerImage.note.2"}}</p>
