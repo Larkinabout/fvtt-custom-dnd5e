@@ -12,7 +12,6 @@ export class WeaponProficienciesForm extends ConfigForm {
         this.dnd5eConfig = getDnd5eConfig()
         this.setting = getSetting(this.settingKey) || this.dnd5eConfig
         this.setConfig = setConfig
-        this.type = 'itemProperties'
     }
 
     static DEFAULT_OPTIONS = {

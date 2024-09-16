@@ -11,6 +11,7 @@ export class ArmorProficienciesForm extends ConfigForm {
         this.settingKey = CONSTANTS.ARMOR_PROFICIENCIES.SETTING.KEY
         this.dnd5eConfig = getDnd5eConfig()
         this.setting = getSetting(this.settingKey) || this.dnd5eConfig
+        this.setConfig = setConfig
     }
 
     static DEFAULT_OPTIONS = {

@@ -18,6 +18,12 @@
             </div>
         </div>
         <div class="form-group">
+            <label class="flex1" style="min-width:140px; max-width:140px;">{{localize "CUSTOM_DND5E.hitDie"}}</label>
+            <div class="form-fields">
+                <input id="custom-dnd5e-hit-die" name="{{key}}.hitDie" type="number" step="1" value="{{hitDie}}">
+            </div>
+        </div>
+        <div class="form-group">
             <label class="flex1" style="min-width:140px; max-width:140px;">{{localize "CUSTOM_DND5E.tokenSize"}}</label>
             <div class="form-fields">
                 <input id="custom-dnd5e-token" name="{{key}}.token" type="number" step="0.05" value="{{token}}">
