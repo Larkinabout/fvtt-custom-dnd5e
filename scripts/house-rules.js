@@ -90,7 +90,7 @@ function registerSettings () {
             scope: 'world',
             config: false,
             type: Boolean,
-            default: true
+            default: false
         }
     )
 
@@ -332,6 +332,11 @@ function registerHooks () {
 export function registerBloodied () {
     if (!getSetting(CONSTANTS.BLOODIED.SETTING.APPLY_BLOODIED.KEY)) return
 
+    const coreBloodied = game.settings.get('dnd5e', 'bloodied')
+    if (coreBloodied !== 'none') {
+        game.settings.set('dnd5e', 'bloodied', 'none')
+    }
+
     const bloodied = buildBloodied()
 
     // Add bloodied to CONFIG.statusEffects
@@ -360,6 +365,7 @@ export function buildBloodied () {
             icon: img
         },
         statusEffect: {
+            _id: 'dnd5ebloodied000',
             id: 'bloodied',
             name: label,
             img
@@ -413,13 +419,13 @@ export function awardInspiration (rollType, entity, roll) {
 /**
  * Make Death Saves Blind
  * Triggered by the 'renderActorSheet' hook
- * If the 'Death Saves Roll Mode' is set to 'blind', remove the success and failure pips from the death saves tray
+ * If the 'Death Saves Roll Mode' is set to 'blindroll', remove the success and failure pips from the death saves tray
  * @param {object} app  The app
  * @param {object} html The HTML
  * @param {object} data The data
  */
 function makeDeathSavesBlind (app, html, data) {
-    if (getSetting(CONSTANTS.DEATH_SAVES.SETTING.DEATH_SAVES_ROLL_MODE.KEY) !== 'blind' || game.user.isGM) return
+    if (getSetting(CONSTANTS.DEATH_SAVES.SETTING.DEATH_SAVES_ROLL_MODE.KEY) !== 'blindroll' || game.user.isGM) return
 
     const sheetType = SHEET_TYPE[app.constructor.name]
 
@@ -612,7 +618,7 @@ function updateDeathSaves (source, actor, data) {
 
         if (typeof currentValue === 'undefined') return
 
-        if (source === 'regainHp' && removeDeathSaves.regainHp[type] < 3 && hasProperty(data, 'system.attributes.hp.value')) {
+        if (source === 'regainHp' && removeDeathSaves.regainHp[type] < 3 && foundry.utils.hasProperty(data, 'system.attributes.hp.value')) {
             const previousHp = actor.system.attributes.hp.value
             const newValue = (previousHp === 0) ? Math.max(currentValue - removeDeathSaves.regainHp[type], 0) : currentValue
             foundry.utils.setProperty(data, `system.attributes.death.${type}`, newValue)

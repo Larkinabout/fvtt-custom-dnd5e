@@ -184,7 +184,8 @@
     "CUSTOM_DND5E.form.encumbrance.title": "Configure Encumbrance",
 
     "CUSTOM_DND5E.form.houseRules.bloodied.applyBloodied.label": "Apply Bloodied",
-    "CUSTOM_DND5E.form.houseRules.bloodied.applyBloodied.note": "Apply the Bloodied condition when a character or NPC is reduced to half HP or lower",
+    "CUSTOM_DND5E.form.houseRules.bloodied.applyBloodied.note1": "Apply the Bloodied condition when a character or NPC is reduced to half HP or lower",
+    "CUSTOM_DND5E.form.houseRules.bloodied.applyBloodied.note2": "Enabling this will disable D&D 5e's Bloodied Status setting",
     "CUSTOM_DND5E.form.houseRules.bloodied.bloodiedIcon.label": "Icon",
     "CUSTOM_DND5E.form.houseRules.bloodied.bloodiedIcon.note": "Icon for the Bloodied status effect",
     "CUSTOM_DND5E.form.houseRules.bloodied.bloodiedTint.note.1": "Color to tint the token when it has the Bloodied condition",

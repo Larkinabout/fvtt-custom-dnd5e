@@ -1,7 +1,7 @@
 import { CONSTANTS } from './constants.js'
 import { Logger, checkEmpty, registerMenu, getSetting, registerSetting, resetDnd5eConfig } from './utils.js'
 import { ConditionsForm } from './forms/conditions-form.js'
-import { buildBloodied } from './house-rules.js'
+import { buildBloodied, registerBloodied } from './house-rules.js'
 
 export function register () {
     registerSettings()
@@ -189,4 +189,7 @@ export function setConfig (data = null) {
             configType[property] = config[property]
         }
     })
+
+    // If 'Apply Bloodied' is enabled, re-register Bloodied
+    registerBloodied()
 }
