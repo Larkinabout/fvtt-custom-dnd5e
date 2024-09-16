@@ -23,7 +23,6 @@ import { HouseRulesForm } from './forms/house-rules-form.js'
 export function register () {
     registerSettings()
     registerHooks()
-    registerBloodied()
 
     Logger.debug(
         'Loading templates',
@@ -346,10 +345,10 @@ export function registerBloodied () {
 
     Object.entries(CONFIG.DND5E.conditionTypes).forEach(([key, value]) => {
         const conditionLabel = game.i18n.localize(value.label)
-        if (conditionLabel > bloodied.conditionType.label && !conditionTypes.bloodied) {
+        if (conditionLabel > bloodied.conditionType.label && !conditionTypes.bloodied && !CONFIG.DND5E.conditionTypes.bloodied) {
             conditionTypes.bloodied = bloodied.conditionType
         }
-        conditionTypes[key] = value
+        conditionTypes[key] = (key === 'bloodied') ? bloodied.conditionType : value
     })
 
     CONFIG.DND5E.conditionTypes = conditionTypes
@@ -362,13 +361,15 @@ export function buildBloodied () {
     const data = {
         conditionType: {
             label,
-            icon: img
+            icon: img,
+            reference: 'Compendium.custom-dnd5e.custom-dandd-5e.JournalEntry.ngr8w6WBycK59brj.JournalEntryPage.P9uilIbvjoLg1l1l'
         },
         statusEffect: {
             _id: 'dnd5ebloodied000',
             id: 'bloodied',
             name: label,
-            img
+            img,
+            reference: 'Compendium.custom-dnd5e.custom-dandd-5e.JournalEntry.ngr8w6WBycK59brj.JournalEntryPage.P9uilIbvjoLg1l1l'
         }
     }
 

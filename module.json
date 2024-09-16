@@ -35,6 +35,19 @@
 		"path": "languages/pt-BR.json"
 	}
   ],
+  "packs": [
+    {
+      "name": "custom-dandd-5e",
+      "label": "Custom D&D 5e",
+      "path": "packs/custom-dandd-5e",
+      "type": "JournalEntry",
+      "ownership": {
+        "PLAYER": "NONE",
+        "ASSISTANT": "OWNER"
+      },
+      "flags": {}
+    }
+  ],
   "relationships": {
     "systems": [
       {
