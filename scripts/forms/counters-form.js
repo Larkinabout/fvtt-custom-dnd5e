@@ -91,7 +91,7 @@ export class CountersForm extends CustomDnd5eForm {
         const key = item.dataset.key
         if (!key) return
 
-        const type = item.querySelector('#type').value
+        const type = item.querySelector('#custom-dnd5e-type').value
 
         const property = `@flags.${MODULE.ID}.${key}${(type === 'successFailure') ? '.success' : (type === 'fraction') ? '.value' : ''}`
         game.clipboard.copyPlainText(property)
