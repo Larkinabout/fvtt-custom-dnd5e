@@ -6,6 +6,12 @@ export class HouseRulesForm extends CustomDnd5eForm {
     constructor (...args) {
         super(args)
         this.type = 'house-rules'
+        this.headerButton = {
+            icon: 'fa-circle-info',
+            tooltip: 'Open Help Guide',
+            action: 'help',
+            uuid: CONSTANTS.HOUSE_RULES.JOURNAL_UUID
+        }
     }
 
     static DEFAULT_OPTIONS = {

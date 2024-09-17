@@ -326,6 +326,7 @@ export const CONSTANTS = {
         }
     },
     HOUSE_RULES: {
+        JOURNAL_UUID: 'Compendium.custom-dnd5e.custom-dandd-5e.JournalEntry.ngr8w6WBycK59brj',
         MENU: {
             KEY: 'house-rules-menu',
             HINT: 'CUSTOM_DND5E.menu.houseRules.hint',

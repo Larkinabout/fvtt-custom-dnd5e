@@ -58,6 +58,17 @@ export function deleteProperty (object, key) {
 }
 
 /**
+ * Open a document
+ * @param {string} uuid The UUID
+ */
+export async function openDocument (uuid) {
+    const document = await fromUuid(uuid)
+    if (document) {
+        document.sheet.render(true)
+    }
+}
+
+/**
  * Reset the dnd5e config to its default
  * @param {string} property The property
  */

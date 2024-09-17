@@ -122,6 +122,25 @@
     flex: auto;
 }
 
+.custom-dnd5e-app button.unbutton {
+    background: none;
+    border: none;
+    border-radius: 0;
+    display: inline-block;
+    line-height: normal;
+    margin: 0;
+    padding: 0; 
+    outline: none;
+    width: unset;
+}
+
+.custom-dnd5e-app button.unbutton:focus,
+.custom-dnd5e-app button.unbutton:hover {
+    background: none;
+    box-shadow: none;
+    text-shadow: 0 0 5px var(--color-shadow-primary);
+}
+
 .custom-dnd5e-app .standard-form .form-footer > button.new-button {
     flex: 100%;
 }
