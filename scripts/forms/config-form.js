@@ -2,6 +2,7 @@ import { CONSTANTS, MODULE } from '../constants.js'
 import { Logger, getSetting, setSetting } from '../utils.js'
 import { CustomDnd5eForm } from './custom-dnd5e-form.js'
 import { setConfig as setAbilities } from '../abilities.js'
+import { setConfig as setActivationCosts } from '../activation-costs.js'
 import { setConfig as setArmorCalculations } from '../armor-calculations.js'
 import { setConfig as setArmorIds } from '../armor-ids.js'
 import { setConfig as setArmorTypes } from '../armor-types.js'
@@ -177,6 +178,34 @@ export class AbilitiesForm extends ConfigForm {
         if (selects) data.selects = selects
 
         const template = await renderTemplate(CONSTANTS.ABILITIES.TEMPLATE.LIST, data)
+        return template
+    }
+}
+
+export class ActivationCostsForm extends ConfigForm {
+    constructor () {
+        super()
+        this.requiresReload = false
+        this.settingKey = CONSTANTS.ACTIVATION_COSTS.SETTING.KEY
+        this.setConfig = setActivationCosts
+        this.type = 'activityActivationTypes'
+    }
+
+    static DEFAULT_OPTIONS = {
+        id: `${MODULE.ID}-activation-costs-form`,
+        window: {
+            title: 'CUSTOM_DND5E.form.activationCosts.title'
+        }
+    }
+
+    static PARTS = {
+        form: {
+            template: CONSTANTS.ACTIVATION_COSTS.TEMPLATE.FORM
+        }
+    }
+
+    async _getHtml (data) {
+        const template = await renderTemplate(CONSTANTS.ACTIVATION_COSTS.TEMPLATE.LIST, data)
         return template
     }
 }

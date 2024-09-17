@@ -27,6 +27,23 @@ export const CONSTANTS = {
             LIST: 'modules/custom-dnd5e/templates/abilities-list.hbs'
         }
     },
+    ACTIVATION_COSTS: {
+        ID: 'activation-costs',
+        MENU: {
+            KEY: 'activation-costs-menu',
+            HINT: 'CUSTOM_DND5E.menu.activationCosts.hint',
+            ICON: 'fas fa-pen-to-square',
+            LABEL: 'CUSTOM_DND5E.menu.activationCosts.label',
+            NAME: 'CUSTOM_DND5E.menu.activationCosts.name'
+        },
+        SETTING: {
+            KEY: 'actor-sizes'
+        },
+        TEMPLATE: {
+            FORM: 'modules/custom-dnd5e/templates/activation-costs-form.hbs',
+            LIST: 'modules/custom-dnd5e/templates/activation-costs-list.hbs'
+        }
+    },
     ACTOR_SIZES: {
         ID: 'actor-sizes',
         MENU: {

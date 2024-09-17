@@ -2,6 +2,7 @@ import { CONSTANTS } from './constants.js'
 import { Logger, getSetting, registerSetting } from './utils.js'
 import { register as registerHouseRules, registerNegativeHp } from './house-rules.js'
 import { register as registerAbilities, setConfig as setAbilities } from './abilities.js'
+import { register as registerActivationCosts, setConfig as setActivationCosts } from './activation-costs.js'
 import { register as registerActorSizes, setConfig as setActorSizes } from './actor-sizes.js'
 import { register as registerArmorCalculations, setConfig as setArmorCalculations } from './armor-calculations.js'
 import { register as registerArmorIds, setConfig as setArmorIds } from './armor-ids.js'
@@ -53,6 +54,7 @@ Hooks.on('init', async () => {
     patchPrepareEncumbrance()
 
     registerAbilities()
+    registerActivationCosts()
     registerActorSizes()
     registerArmorCalculations()
     registerArmorIds()
@@ -131,7 +133,12 @@ Hooks.on('ready', async () => {
     registerSheet()
     registerCharacterSheet()
 
+    const isV4 = foundry.utils.isNewerVersion(game.dnd5e.version, 3)
+
     setAbilities(getSetting(CONSTANTS.ABILITIES.SETTING.KEY))
+    if (isV4) {
+        setActivationCosts(getSetting(CONSTANTS.ACTIVATION_COSTS.SETTING.KEY))
+    }
     setActorSizes(getSetting(CONSTANTS.ACTOR_SIZES.SETTING.KEY))
     setArmorCalculations(getSetting(CONSTANTS.ARMOR_CALCULATIONS.SETTING.KEY))
     setArmorIds(getSetting(CONSTANTS.ARMOR_IDS.SETTING.KEY))
@@ -140,8 +147,10 @@ Hooks.on('ready', async () => {
     setCurrency(getSetting(CONSTANTS.CURRENCY.SETTING.KEY))
     setDamageTypes(getSetting(CONSTANTS.DAMAGE_TYPES.SETTING.KEY))
     setEncumbrance(getSetting(CONSTANTS.ENCUMBRANCE.SETTING.KEY))
-    setItemActionTypes(getSetting(CONSTANTS.ITEM_ACTION_TYPES.SETTING.KEY))
-    setItemActivationCostTypes(getSetting(CONSTANTS.ITEM_ACTIVATION_COST_TYPES.SETTING.KEY))
+    if (!isV4) {
+        setItemActionTypes(getSetting(CONSTANTS.ITEM_ACTION_TYPES.SETTING.KEY))
+        setItemActivationCostTypes(getSetting(CONSTANTS.ITEM_ACTIVATION_COST_TYPES.SETTING.KEY))
+    }
     setItemProperties(getSetting(CONSTANTS.ITEM_PROPERTIES.SETTING.KEY))
     setItemRarity(getSetting(CONSTANTS.ITEM_RARITY.SETTING.KEY))
     setLanguages(getSetting(CONSTANTS.LANGUAGES.SETTING.KEY))

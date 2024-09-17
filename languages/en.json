@@ -36,6 +36,7 @@
     "CUSTOM_DND5E.formula": "Formula",
     "CUSTOM_DND5E.fraction": "Fraction",
     "CUSTOM_DND5E.fullKey": "Full Key",
+    "CUSTOM_DND5E.group": "Group",
     "CUSTOM_DND5E.groups": "Groups",
     "CUSTOM_DND5E.key": "Key",
     "CUSTOM_DND5E.hitDie": "Hit Die",
@@ -73,6 +74,7 @@
     "CUSTOM_DND5E.rollTypes": "Roll Types",
     "CUSTOM_DND5E.rotation": "Rotation",
     "CUSTOM_DND5E.savingThrow": "Saving Throw",
+    "CUSTOM_DND5E.scalar": "Scalar",
     "CUSTOM_DND5E.shortRest": "Short Rest",
     "CUSTOM_DND5E.skillCheck": "Skill Check",   
     "CUSTOM_DND5E.speedReduction": "Speed Reduction",
@@ -137,6 +139,8 @@
     "CUSTOM_DND5E.form.checkbox.visible.tooltip": "Visible",
 
     "CUSTOM_DND5E.form.abilities.title": "Configure Abilities",
+
+    "CUSTOM_DND5E.form.activationCosts.title": "Configure Activation Costs",
 
     "CUSTOM_DND5E.form.actorSizes.title": "Configure Actor Sizes",
 
@@ -283,6 +287,10 @@
     "CUSTOM_DND5E.menu.abilities.hint": "Configure Abilities",
     "CUSTOM_DND5E.menu.abilities.label": "Configure Abilities",
     "CUSTOM_DND5E.menu.abilities.name": "Configure Abilities",
+
+    "CUSTOM_DND5E.menu.activationCosts.hint": "Configure Activation Costs",
+    "CUSTOM_DND5E.menu.activationCosts.label": "Configure Activation Costs",
+    "CUSTOM_DND5E.menu.activationCosts.name": "Configure Activation Costs",
 
     "CUSTOM_DND5E.menu.actorSizes.hint": "Configure Actor Sizes",
     "CUSTOM_DND5E.menu.actorSizes.label": "Configure Actor Sizes",
