@@ -3,9 +3,26 @@
     <i class="custom-dnd5e-drag flex0 fas fa-grip-lines" draggable="true"></i>
     <input id="custom-dnd5e-visible" class="flex0" name="{{key}}.visible" type="checkbox" data-tooltip="{{localize "CUSTOM_DND5E.form.checkbox.visible.tooltip"}}"{{#unless (customDnd5eBoolFalse visible)}} checked{{/unless}}>
     <div class="custom-dnd5e-col-group flexcol">
+        <input id="custom-dnd5e-system" name="{{key}}.system" type="hidden" value="{{#if (customDnd5eBoolFalse system)}}false{{else}}true{{/if}}">
         <input id="custom-dnd5e-key" name="{{key}}.key" type="hidden" value="{{key}}">
         <input id="custom-dnd5e-fullKey" name="{{key}}.fullKey" type="hidden" value="{{key}}">
-        <input id="custom-dnd5e-system" name="{{key}}.system" type="hidden" value="{{#if (customDnd5eBoolFalse system)}}false{{else}}true{{/if}}">
+        <div class="form-group">
+            <label class="flex1" style="min-width:80px; max-width:100px;">{{localize "CUSTOM_DND5E.key"}}</label>
+            <div class="form-fields">
+                {{#if (customDnd5eBoolFalse system)}}
+                <input id="custom-dnd5e-key" name="{{key}}.key" type="text" value="{{localize key}}">
+                {{else}}
+                <input id="custom-dnd5e-disabled-key" disabled name="{{key}}.disabledKey" type="text" value="{{localize key}}">
+                <input id="custom-dnd5e-key" name="{{key}}.key" type="hidden" value="{{localize key}}">
+                {{/if}}
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="flex1" style="min-width:80px; max-width:100px;">{{localize "CUSTOM_DND5E.fullKey"}}</label>
+            <div class="form-fields">
+                <input id="custom-dnd5e-full-key" name="{{key}}.fullKey" type="text" value="{{localize fullKey}}">
+            </div>
+        </div>
         <div class="form-group">
             <label class="flex1" style="min-width:80px; max-width:100px;">{{localize "CUSTOM_DND5E.label"}}</label>
             <div class="form-fields">
