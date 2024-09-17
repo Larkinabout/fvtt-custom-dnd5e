@@ -53,6 +53,10 @@ Hooks.on('init', async () => {
     patchApplicationRender()
     patchPrepareEncumbrance()
 
+    registerMigration()
+    registerCharacterSheet()
+
+    registerHouseRules()
     registerAbilities()
     registerActivationCosts()
     registerActorSizes()
@@ -71,6 +75,7 @@ Hooks.on('init', async () => {
     registerLanguages()
     registerNegativeHp()
     registerSenses()
+    registerSheet()
     registerSkills()
     registerSpellSchools()
     registerToolIds()
@@ -127,11 +132,6 @@ Hooks.on('ready', async () => {
             return allowed.includes(value)
         }
     })
-
-    registerMigration()
-    registerHouseRules()
-    registerSheet()
-    registerCharacterSheet()
 
     const isV4 = foundry.utils.isNewerVersion(game.dnd5e.version, 3)
 
