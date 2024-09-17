@@ -7,6 +7,7 @@ import { setConfig as setArmorCalculations } from '../armor-calculations.js'
 import { setConfig as setArmorIds } from '../armor-ids.js'
 import { setConfig as setArmorTypes } from '../armor-types.js'
 import { setConfig as setActorSizes } from '../actor-sizes.js'
+import { setConfig as setConsumableTypes } from '../consumable-types.js'
 import { setConfig as setCurrency } from '../currency.js'
 import { setConfig as setDamageTypes } from '../damage-types.js'
 import { setConfig as setItemActionTypes } from '../item-action-types.js'
@@ -56,8 +57,8 @@ export class ConfigForm extends CustomDnd5eForm {
                     data[key] = { label: value }
                 }
 
-                if (value.children) {
-                    labelise(value.children)
+                if (value.children || value.subtypes) {
+                    labelise(value.children || value.subtypes)
                 }
             })
         }
@@ -307,6 +308,24 @@ export class ArmorTypesForm extends ConfigForm {
         id: `${MODULE.ID}-armor-types-form`,
         window: {
             title: 'CUSTOM_DND5E.form.armorTypes.title'
+        }
+    }
+}
+
+export class ConsumableTypesForm extends ConfigForm {
+    constructor () {
+        super()
+        this.nestable = true
+        this.requiresReload = false
+        this.settingKey = CONSTANTS.CONSUMABLE_TYPES.SETTING.KEY
+        this.setConfig = setConsumableTypes
+        this.type = 'consumableTypes'
+    }
+
+    static DEFAULT_OPTIONS = {
+        id: `${MODULE.ID}-consumable-types-form`,
+        window: {
+            title: 'CUSTOM_DND5E.form.consumableTypes.title'
         }
     }
 }

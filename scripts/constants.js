@@ -146,6 +146,19 @@ export const CONSTANTS = {
             EDIT: 'modules/custom-dnd5e/templates/conditions-edit.hbs'
         }
     },
+    CONSUMABLE_TYPES: {
+        ID: 'consumable-types',
+        MENU: {
+            KEY: 'consumable-types-menu',
+            HINT: 'CUSTOM_DND5E.menu.consumableTypes.hint',
+            ICON: 'fas fa-pen-to-square',
+            LABEL: 'CUSTOM_DND5E.menu.consumableTypes.label',
+            NAME: 'CUSTOM_DND5E.menu.consumableTypes.name'
+        },
+        SETTING: {
+            KEY: 'consumable-types'
+        }
+    },
     COUNTERS: {
         ID: 'counters',
         MENU: {

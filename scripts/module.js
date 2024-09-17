@@ -8,6 +8,7 @@ import { register as registerArmorCalculations, setConfig as setArmorCalculation
 import { register as registerArmorIds, setConfig as setArmorIds } from './armor-ids.js'
 import { register as registerArmorProficiencies, setConfig as setArmorProficiencies } from './armor-proficiencies.js'
 import { register as registerConditions, setConfig as setConditions } from './conditions.js'
+import { register as registerConsumableTypes, setConfig as setConsumableTypes } from './consumable-types.js'
 import { registerSettings as registerCounters } from './counters.js'
 import { register as registerCurrency, setConfig as setCurrency } from './currency.js'
 import { register as registerDamageTypes, setConfig as setDamageTypes } from './damage-types.js'
@@ -64,6 +65,7 @@ Hooks.on('init', async () => {
     registerArmorIds()
     registerArmorProficiencies()
     registerConditions()
+    registerConsumableTypes()
     registerCounters()
     registerCurrency()
     registerDamageTypes()
@@ -117,9 +119,9 @@ Hooks.on('ready', async () => {
         customDnd5eRandomId: function () { return foundry.utils.randomID() },
         customDnd5eTrue: function (value) { return !!value },
         customDnd5eUndef: function (value) { return typeof value === 'undefined' || value === null },
-        customDnd5eDotNotateChild: function (parent, child) {
+        customDnd5eDotNotateChild: function (childType, parent, child) {
             if (parent) {
-                return `${parent}.children.${child}`
+                return `${parent}.${childType}.${child}`
             }
             return `${child}`
         },
@@ -144,6 +146,7 @@ Hooks.on('ready', async () => {
     setArmorIds(getSetting(CONSTANTS.ARMOR_IDS.SETTING.KEY))
     setArmorProficiencies(getSetting(CONSTANTS.ARMOR_PROFICIENCIES.SETTING.KEY))
     setConditions(getSetting(CONSTANTS.CONDITIONS.SETTING.KEY))
+    setConsumableTypes(getSetting(CONSTANTS.CONSUMABLE_TYPES.SETTING.KEY))
     setCurrency(getSetting(CONSTANTS.CURRENCY.SETTING.KEY))
     setDamageTypes(getSetting(CONSTANTS.DAMAGE_TYPES.SETTING.KEY))
     setEncumbrance(getSetting(CONSTANTS.ENCUMBRANCE.SETTING.KEY))

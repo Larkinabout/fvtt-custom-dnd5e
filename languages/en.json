@@ -153,6 +153,8 @@
     "CUSTOM_DND5E.form.conditions.title": "Configure Conditions",
     "CUSTOM_DND5E.form.conditions.edit.title": "Edit Condition",
 
+    "CUSTOM_DND5E.form.consumableTypes.title": "Configure Consumable Types",
+
     "CUSTOM_DND5E.form.counters.triggers.tooltip": "Advanced Options",
     "CUSTOM_DND5E.form.counters.copyProperty.message": "'Property \"{property}\" copied to clipboard.'",
     "CUSTOM_DND5E.form.counters.copyProperty.tooltip": "Copy Property to Clipboard",
@@ -311,6 +313,10 @@
     "CUSTOM_DND5E.menu.conditions.hint": "Configure Conditions",
     "CUSTOM_DND5E.menu.conditions.label": "Configure Conditions",
     "CUSTOM_DND5E.menu.conditions.name": "Configure Conditions",
+
+    "CUSTOM_DND5E.menu.consumableTypes.hint": "Configure Consumable Types",
+    "CUSTOM_DND5E.menu.consumableTypes.label": "Configure Consumable Types",
+    "CUSTOM_DND5E.menu.consumableTypes.name": "Configure Consumable Types",
 
     "CUSTOM_DND5E.menu.counters.hint": "Configure Counters",
     "CUSTOM_DND5E.menu.counters.label": "Configure Counters",
