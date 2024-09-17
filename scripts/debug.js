@@ -59,6 +59,7 @@ export async function exportData () {
         configDnd5e: {
             abilities: CONFIG.DND5E.abilities,
             abilityActivationTypes: CONFIG.DND5E.abilityActivationTypes,
+            activityActivationTypes: CONFIG.DND5E.activityActivationTypes,
             actorSizes: CONFIG.DND5E.actorSizes,
             armorClasses: CONFIG.DND5E.armorClasses,
             armorIds: CONFIG.DND5E.armorIds,
