@@ -6,6 +6,7 @@
     "CUSTOM_DND5E.actionValue": "Valor da Ação",
     "CUSTOM_DND5E.amount": "Quantidade",
     "CUSTOM_DND5E.attackRoll": "Jogada de Ataque",
+    "CUSTOM_DND5E.awardInspiration": "Conceder Inspiração",
     "CUSTOM_DND5E.bloodied": "Sangrando",
     "CUSTOM_DND5E.cancel": "Cancelar",
     "CUSTOM_DND5E.capacityMultiplier": "Multiplicador de Capacidade",
@@ -35,8 +36,10 @@
     "CUSTOM_DND5E.formula": "Fórmula",
     "CUSTOM_DND5E.fraction": "Fração",
     "CUSTOM_DND5E.fullKey": "Chave Completa",
+    "CUSTOM_DND5E.group": "Grupo",
     "CUSTOM_DND5E.groups": "Grupos",
     "CUSTOM_DND5E.key": "Chave",
+    "CUSTOM_DND5E.hitDie": "Dado de Vida",
     "CUSTOM_DND5E.hitPoints": "Pontos de Vida",
     "CUSTOM_DND5E.icon": "Ícone",
     "CUSTOM_DND5E.importData": "Importar Dados",
@@ -71,6 +74,7 @@
     "CUSTOM_DND5E.rollTypes": "Tipos de Rolagem",
     "CUSTOM_DND5E.rotation": "Rotação",
     "CUSTOM_DND5E.savingThrow": "Salvaguarda",
+    "CUSTOM_DND5E.scalar": "Escalar",
     "CUSTOM_DND5E.shortRest": "Descanso Curto",
     "CUSTOM_DND5E.skillCheck": "Teste de Perícia",
     "CUSTOM_DND5E.speedReduction": "Redução de Deslocamento",
@@ -135,6 +139,8 @@
     "CUSTOM_DND5E.form.checkbox.visible.tooltip": "Visível",
    
     "CUSTOM_DND5E.form.abilities.title": "Configurar Atributos",
+
+    "CUSTOM_DND5E.form.activationCosts.title": "Configurar Custos de Ativação",
     
     "CUSTOM_DND5E.form.actorSizes.title": "Configurar Tamanhos de Atores",
     
@@ -146,6 +152,8 @@
     
     "CUSTOM_DND5E.form.conditions.title": "Configurar Condições",
     "CUSTOM_DND5E.form.conditions.edit.title": "Editar Condição",
+
+    "CUSTOM_DND5E.form.consumableTypes.title": "Configurar Tipos de Consumíveis",
 
     "CUSTOM_DND5E.form.counters.triggers.tooltip": "Opções Avançadas",
     "CUSTOM_DND5E.form.counters.copyProperty.message": "'Propriedade \"{property}\" copiado para a área de transferência.'",
@@ -185,6 +193,7 @@
     
     "CUSTOM_DND5E.form.houseRules.bloodied.applyBloodied.label": "Aplicar Sangrando",
     "CUSTOM_DND5E.form.houseRules.bloodied.applyBloodied.note": "Aplica a condição Sangrando quando o personagem ou PNJ tem seus PVs reduzidos pela metade, ou menos",
+    "CUSTOM_DND5E.form.houseRules.bloodied.applyBloodied.note2": "Ativar isso desativará a configuração de Status Ensanguentado do D&D 5e",
     "CUSTOM_DND5E.form.houseRules.bloodied.bloodiedIcon.label": "Ícone",
     "CUSTOM_DND5E.form.houseRules.bloodied.bloodiedIcon.note": "Ícone para o efeito de condição Sangrando",
     "CUSTOM_DND5E.form.houseRules.bloodied.bloodiedTint.note.1": "Cor da tonalidade do token quando estiver com a condição Sangrando",
@@ -281,6 +290,10 @@
     "CUSTOM_DND5E.menu.abilities.label": "Configurar Atributos",
     "CUSTOM_DND5E.menu.abilities.name": "Configurar Atributos",
     
+    "CUSTOM_DND5E.menu.activationCosts.hint": "Configurar Custos de Ativação",
+    "CUSTOM_DND5E.menu.activationCosts.label": "Configurar Custos de Ativação",
+    "CUSTOM_DND5E.menu.activationCosts.name": "Configurar Custos de Ativação",
+    
     "CUSTOM_DND5E.menu.actorSizes.hint": "Configurar Tamanhos de Atores",
     "CUSTOM_DND5E.menu.actorSizes.label": "Configurar Tamanhos de Atores",
     "CUSTOM_DND5E.menu.actorSizes.name": "Configurar Tamanhos de Atores",
@@ -300,6 +313,10 @@
     "CUSTOM_DND5E.menu.conditions.hint": "Configurar Condições",
     "CUSTOM_DND5E.menu.conditions.label": "Configurar Condições",
     "CUSTOM_DND5E.menu.conditions.name": "Configurar Condições",
+
+    "CUSTOM_DND5E.menu.consumableTypes.hint": "Configurar Tipos de Consumíveis",
+    "CUSTOM_DND5E.menu.consumableTypes.label": "Configurar Tipos de Consumíveis",
+    "CUSTOM_DND5E.menu.consumableTypes.name": "Configurar Tipos de Consumíveis",
 
     "CUSTOM_DND5E.menu.counters.hint": "Configurar Contadores",
     "CUSTOM_DND5E.menu.counters.label": "Configurar Contadores",
