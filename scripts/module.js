@@ -137,7 +137,7 @@ Hooks.on('ready', async () => {
         }
     })
 
-    const isV4 = foundry.utils.isNewerVersion(game.dnd5e.version, 3)
+    const isV4 = foundry.utils.isNewerVersion(game.dnd5e.version, '3.3.1')
 
     setAbilities(getSetting(CONSTANTS.ABILITIES.SETTING.KEY))
     if (isV4) {

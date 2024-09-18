@@ -8,6 +8,8 @@ const property = 'activityActivationTypes'
  * Register
  */
 export function register () {
+    if (!foundry.utils.isNewerVersion(game.dnd5e.version, '3.3.1')) return
+
     registerSettings()
 
     Logger.debug(

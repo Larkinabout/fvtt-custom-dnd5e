@@ -92,15 +92,19 @@ export class CustomDnd5eForm extends HandlebarsApplicationMixin(ApplicationV2) {
     _onRender (context, options) {
         if (this.headerButton) {
             const windowHeader = this.element.querySelector('.window-header')
-            const closeButton = windowHeader.querySelector('[data-action="close"]')
-            const button = document.createElement('button')
-            button.setAttribute('type', 'button')
-            button.setAttribute('class', `header-control fa-solid ${this.headerButton.icon}`)
-            button.setAttribute('data-tooltip', this.headerButton.tooltip)
-            button.setAttribute('aria-label', this.headerButton.tooltip)
-            button.setAttribute('data-action', this.headerButton.action)
-            button.setAttribute('data-uuid', this.headerButton.uuid)
-            windowHeader.insertBefore(button, closeButton)
+            const existingButton = windowHeader.querySelector(`[data-action="${this.headerButton.action}"]`)
+
+            if (!existingButton) {
+                const closeButton = windowHeader.querySelector('[data-action="close"]')
+                const button = document.createElement('button')
+                button.setAttribute('type', 'button')
+                button.setAttribute('class', `header-control fa-solid ${this.headerButton.icon}`)
+                button.setAttribute('data-tooltip', this.headerButton.tooltip)
+                button.setAttribute('aria-label', this.headerButton.tooltip)
+                button.setAttribute('data-action', this.headerButton.action)
+                button.setAttribute('data-uuid', this.headerButton.uuid)
+                windowHeader.insertBefore(button, closeButton)
+            }
         }
 
         this.items = Array.from(this.element.querySelectorAll(itemClassSelector))

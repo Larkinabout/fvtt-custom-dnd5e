@@ -8,7 +8,7 @@ const property = 'abilityActivationTypes'
  * Register
  */
 export function register () {
-    if (!foundry.utils.isNewerVersion(game.dnd5e.version, 3)) {
+    if (!foundry.utils.isNewerVersion(game.dnd5e.version, '3.3.1')) {
         registerSettings()
     }
 }

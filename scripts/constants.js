@@ -127,7 +127,8 @@ export const CONSTANTS = {
                 KEY: 'bloodied-tint'
             }
         },
-        ICON: 'modules/custom-dnd5e/media/icons/bloodied.svg'
+        ICON: 'modules/custom-dnd5e/media/icons/bloodied.svg',
+        UUID: 'Compendium.custom-dnd5e.custom-dandd-5e.JournalEntry.ngr8w6WBycK59brj.JournalEntryPage.P9uilIbvjoLg1l1l'
     },
     CONDITION_TYPES: {
         SETTING: {

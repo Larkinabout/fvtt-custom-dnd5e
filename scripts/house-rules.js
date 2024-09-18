@@ -331,9 +331,11 @@ function registerHooks () {
 export function registerBloodied () {
     if (!getSetting(CONSTANTS.BLOODIED.SETTING.APPLY_BLOODIED.KEY)) return
 
-    const coreBloodied = game.settings.get('dnd5e', 'bloodied')
-    if (coreBloodied !== 'none') {
-        game.settings.set('dnd5e', 'bloodied', 'none')
+    if (foundry.utils.isNewerVersion(game.system.version, '3.3.1')) {
+        const coreBloodied = game.settings.get('dnd5e', 'bloodied')
+        if (coreBloodied !== 'none') {
+            game.settings.set('dnd5e', 'bloodied', 'none')
+        }
     }
 
     const bloodied = buildBloodied()
@@ -362,14 +364,14 @@ export function buildBloodied () {
         conditionType: {
             label,
             icon: img,
-            reference: 'Compendium.custom-dnd5e.custom-dandd-5e.JournalEntry.ngr8w6WBycK59brj.JournalEntryPage.P9uilIbvjoLg1l1l'
+            reference: CONSTANTS.BLOODIED.UUID
         },
         statusEffect: {
             _id: 'dnd5ebloodied000',
             id: 'bloodied',
             name: label,
             img,
-            reference: 'Compendium.custom-dnd5e.custom-dandd-5e.JournalEntry.ngr8w6WBycK59brj.JournalEntryPage.P9uilIbvjoLg1l1l'
+            reference: CONSTANTS.BLOODIED.UUID
         }
     }
 
