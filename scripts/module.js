@@ -2,11 +2,13 @@ import { CONSTANTS } from './constants.js'
 import { Logger, getSetting, registerSetting } from './utils.js'
 import { register as registerHouseRules, registerNegativeHp } from './house-rules.js'
 import { register as registerAbilities, setConfig as setAbilities } from './abilities.js'
+import { register as registerActivationCosts, setConfig as setActivationCosts } from './activation-costs.js'
 import { register as registerActorSizes, setConfig as setActorSizes } from './actor-sizes.js'
 import { register as registerArmorCalculations, setConfig as setArmorCalculations } from './armor-calculations.js'
 import { register as registerArmorIds, setConfig as setArmorIds } from './armor-ids.js'
 import { register as registerArmorProficiencies, setConfig as setArmorProficiencies } from './armor-proficiencies.js'
 import { register as registerConditions, setConfig as setConditions } from './conditions.js'
+import { register as registerConsumableTypes, setConfig as setConsumableTypes } from './consumable-types.js'
 import { registerSettings as registerCounters } from './counters.js'
 import { register as registerCurrency, setConfig as setCurrency } from './currency.js'
 import { register as registerDamageTypes, setConfig as setDamageTypes } from './damage-types.js'
@@ -16,6 +18,7 @@ import { register as registerItemActionTypes, setConfig as setItemActionTypes } 
 import { register as registerItemActivationCostTypes, setConfig as setItemActivationCostTypes } from './item-activation-cost-types.js'
 import { register as registerItemProperties, setConfig as setItemProperties } from './item-properties.js'
 import { register as registerItemRarity, setConfig as setItemRarity } from './item-rarity.js'
+import { register as registerJournalEntryPageSheet } from './journal-entry-page-sheet.js'
 import { register as registerLanguages, setConfig as setLanguages } from './languages.js'
 import { register as registerMigration, migrate } from './migration.js'
 import { register as registerMisc, setMaxLevel } from './misc.js'
@@ -51,14 +54,20 @@ Hooks.on('init', async () => {
 
     patchApplicationRender()
     patchPrepareEncumbrance()
+
     registerMigration()
+    registerCharacterSheet()
+    registerJournalEntryPageSheet()
+
     registerHouseRules()
     registerAbilities()
+    registerActivationCosts()
     registerActorSizes()
     registerArmorCalculations()
     registerArmorIds()
     registerArmorProficiencies()
     registerConditions()
+    registerConsumableTypes()
     registerCounters()
     registerCurrency()
     registerDamageTypes()
@@ -68,6 +77,7 @@ Hooks.on('init', async () => {
     registerItemProperties()
     registerItemRarity()
     registerLanguages()
+    registerNegativeHp()
     registerSenses()
     registerSheet()
     registerSkills()
@@ -79,30 +89,6 @@ Hooks.on('init', async () => {
     registerRadialStatusEffects()
     registerTokenBorder()
     registerDebug()
-
-    registerCharacterSheet()
-
-    setAbilities(getSetting(CONSTANTS.ABILITIES.SETTING.KEY))
-    setActorSizes(getSetting(CONSTANTS.ACTOR_SIZES.SETTING.KEY))
-    setArmorCalculations(getSetting(CONSTANTS.ARMOR_CALCULATIONS.SETTING.KEY))
-    setArmorIds(getSetting(CONSTANTS.ARMOR_IDS.SETTING.KEY))
-    setArmorProficiencies(getSetting(CONSTANTS.ARMOR_PROFICIENCIES.SETTING.KEY))
-    setConditions(getSetting(CONSTANTS.CONDITIONS.SETTING.KEY))
-    setCurrency(getSetting(CONSTANTS.CURRENCY.SETTING.KEY))
-    setDamageTypes(getSetting(CONSTANTS.DAMAGE_TYPES.SETTING.KEY))
-    setEncumbrance(getSetting(CONSTANTS.ENCUMBRANCE.SETTING.KEY))
-    setItemActionTypes(getSetting(CONSTANTS.ITEM_ACTION_TYPES.SETTING.KEY))
-    setItemActivationCostTypes(getSetting(CONSTANTS.ITEM_ACTIVATION_COST_TYPES.SETTING.KEY))
-    setItemProperties(getSetting(CONSTANTS.ITEM_PROPERTIES.SETTING.KEY))
-    setItemRarity(getSetting(CONSTANTS.ITEM_RARITY.SETTING.KEY))
-    setLanguages(getSetting(CONSTANTS.LANGUAGES.SETTING.KEY))
-    setSenses(getSetting(CONSTANTS.SENSES.SETTING.KEY))
-    setSkills(getSetting(CONSTANTS.SKILLS.SETTING.KEY))
-    setSpellSchools(getSetting(CONSTANTS.SPELL_SCHOOLS.SETTING.KEY))
-    setToolIds(getSetting(CONSTANTS.TOOL_IDS.SETTING.KEY))
-    setWeaponIds(getSetting(CONSTANTS.WEAPON_IDS.SETTING.KEY))
-    setWeaponProficiencies(getSetting(CONSTANTS.WEAPON_PROFICIENCIES.SETTING.KEY))
-    setMaxLevel(getSetting(CONSTANTS.MAX_LEVEL.SETTING.KEY))
 
     Logger.debug(
         'Loading templates',
@@ -135,9 +121,9 @@ Hooks.on('ready', async () => {
         customDnd5eRandomId: function () { return foundry.utils.randomID() },
         customDnd5eTrue: function (value) { return !!value },
         customDnd5eUndef: function (value) { return typeof value === 'undefined' || value === null },
-        customDnd5eDotNotateChild: function (parent, child) {
+        customDnd5eDotNotateChild: function (childType, parent, child) {
             if (parent) {
-                return `${parent}.children.${child}`
+                return `${parent}.${childType}.${child}`
             }
             return `${child}`
         },
@@ -151,7 +137,35 @@ Hooks.on('ready', async () => {
         }
     })
 
-    registerNegativeHp()
+    const isV4 = foundry.utils.isNewerVersion(game.dnd5e.version, '3.3.1')
+
+    setAbilities(getSetting(CONSTANTS.ABILITIES.SETTING.KEY))
+    if (isV4) {
+        setActivationCosts(getSetting(CONSTANTS.ACTIVATION_COSTS.SETTING.KEY))
+    }
+    setActorSizes(getSetting(CONSTANTS.ACTOR_SIZES.SETTING.KEY))
+    setArmorCalculations(getSetting(CONSTANTS.ARMOR_CALCULATIONS.SETTING.KEY))
+    setArmorIds(getSetting(CONSTANTS.ARMOR_IDS.SETTING.KEY))
+    setArmorProficiencies(getSetting(CONSTANTS.ARMOR_PROFICIENCIES.SETTING.KEY))
+    setConditions(getSetting(CONSTANTS.CONDITIONS.SETTING.KEY))
+    setConsumableTypes(getSetting(CONSTANTS.CONSUMABLE_TYPES.SETTING.KEY))
+    setCurrency(getSetting(CONSTANTS.CURRENCY.SETTING.KEY))
+    setDamageTypes(getSetting(CONSTANTS.DAMAGE_TYPES.SETTING.KEY))
+    setEncumbrance(getSetting(CONSTANTS.ENCUMBRANCE.SETTING.KEY))
+    if (!isV4) {
+        setItemActionTypes(getSetting(CONSTANTS.ITEM_ACTION_TYPES.SETTING.KEY))
+        setItemActivationCostTypes(getSetting(CONSTANTS.ITEM_ACTIVATION_COST_TYPES.SETTING.KEY))
+    }
+    setItemProperties(getSetting(CONSTANTS.ITEM_PROPERTIES.SETTING.KEY))
+    setItemRarity(getSetting(CONSTANTS.ITEM_RARITY.SETTING.KEY))
+    setLanguages(getSetting(CONSTANTS.LANGUAGES.SETTING.KEY))
+    setSenses(getSetting(CONSTANTS.SENSES.SETTING.KEY))
+    setSkills(getSetting(CONSTANTS.SKILLS.SETTING.KEY))
+    setSpellSchools(getSetting(CONSTANTS.SPELL_SCHOOLS.SETTING.KEY))
+    setToolIds(getSetting(CONSTANTS.TOOL_IDS.SETTING.KEY))
+    setWeaponIds(getSetting(CONSTANTS.WEAPON_IDS.SETTING.KEY))
+    setWeaponProficiencies(getSetting(CONSTANTS.WEAPON_PROFICIENCIES.SETTING.KEY))
+    setMaxLevel(getSetting(CONSTANTS.MAX_LEVEL.SETTING.KEY))
 
     migrate()
 })

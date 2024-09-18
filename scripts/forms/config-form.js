@@ -1,11 +1,12 @@
-import { CONSTANTS, MODULE } from '../constants.js'
+import { CONSTANTS, JOURNAL_HELP_BUTTON, MODULE } from '../constants.js'
 import { Logger, getSetting, setSetting } from '../utils.js'
 import { CustomDnd5eForm } from './custom-dnd5e-form.js'
 import { setConfig as setAbilities } from '../abilities.js'
+import { setConfig as setActivationCosts } from '../activation-costs.js'
 import { setConfig as setArmorCalculations } from '../armor-calculations.js'
 import { setConfig as setArmorIds } from '../armor-ids.js'
-import { setConfig as setArmorTypes } from '../armor-types.js'
 import { setConfig as setActorSizes } from '../actor-sizes.js'
+import { setConfig as setConsumableTypes } from '../consumable-types.js'
 import { setConfig as setCurrency } from '../currency.js'
 import { setConfig as setDamageTypes } from '../damage-types.js'
 import { setConfig as setItemActionTypes } from '../item-action-types.js'
@@ -55,8 +56,8 @@ export class ConfigForm extends CustomDnd5eForm {
                     data[key] = { label: value }
                 }
 
-                if (value.children) {
-                    labelise(value.children)
+                if (value.children || value.subtypes) {
+                    labelise(value.children || value.subtypes)
                 }
             })
         }
@@ -146,6 +147,8 @@ export class AbilitiesForm extends ConfigForm {
         this.settingKey = CONSTANTS.ABILITIES.SETTING.KEY
         this.setConfig = setAbilities
         this.type = 'abilities'
+        this.headerButton = JOURNAL_HELP_BUTTON
+        this.headerButton.uuid = CONSTANTS.ABILITIES.UUID
     }
 
     static DEFAULT_OPTIONS = {
@@ -181,6 +184,36 @@ export class AbilitiesForm extends ConfigForm {
     }
 }
 
+export class ActivationCostsForm extends ConfigForm {
+    constructor () {
+        super()
+        this.requiresReload = false
+        this.settingKey = CONSTANTS.ACTIVATION_COSTS.SETTING.KEY
+        this.setConfig = setActivationCosts
+        this.type = 'activityActivationTypes'
+        this.headerButton = JOURNAL_HELP_BUTTON
+        this.headerButton.uuid = CONSTANTS.ACTIVATION_COSTS.UUID
+    }
+
+    static DEFAULT_OPTIONS = {
+        id: `${MODULE.ID}-activation-costs-form`,
+        window: {
+            title: 'CUSTOM_DND5E.form.activationCosts.title'
+        }
+    }
+
+    static PARTS = {
+        form: {
+            template: CONSTANTS.ACTIVATION_COSTS.TEMPLATE.FORM
+        }
+    }
+
+    async _getHtml (data) {
+        const template = await renderTemplate(CONSTANTS.ACTIVATION_COSTS.TEMPLATE.LIST, data)
+        return template
+    }
+}
+
 export class ActorSizesForm extends ConfigForm {
     constructor () {
         super()
@@ -188,6 +221,8 @@ export class ActorSizesForm extends ConfigForm {
         this.settingKey = CONSTANTS.ACTOR_SIZES.SETTING.KEY
         this.setConfig = setActorSizes
         this.type = 'actorSizes'
+        this.headerButton = JOURNAL_HELP_BUTTON
+        this.headerButton.uuid = CONSTANTS.ACTOR_SIZES.UUID
     }
 
     static DEFAULT_OPTIONS = {
@@ -216,6 +251,8 @@ export class ArmorCalculationsForm extends ConfigForm {
         this.settingKey = CONSTANTS.ARMOR_CALCULATIONS.SETTING.KEY
         this.setConfig = setArmorCalculations
         this.type = 'armorClasses'
+        this.headerButton = JOURNAL_HELP_BUTTON
+        this.headerButton.uuid = CONSTANTS.ARMOR_CALCULATIONS.UUID
     }
 
     static DEFAULT_OPTIONS = {
@@ -244,6 +281,8 @@ export class ArmorIdsForm extends ConfigForm {
         this.settingKey = CONSTANTS.ARMOR_IDS.SETTING.KEY
         this.setConfig = setArmorIds
         this.type = 'armorIds'
+        this.headerButton = JOURNAL_HELP_BUTTON
+        this.headerButton.uuid = CONSTANTS.ARMOR_IDS.UUID
     }
 
     static DEFAULT_OPTIONS = {
@@ -265,19 +304,23 @@ export class ArmorIdsForm extends ConfigForm {
     }
 }
 
-export class ArmorTypesForm extends ConfigForm {
+export class ConsumableTypesForm extends ConfigForm {
     constructor () {
         super()
+        this.nestable = true
+        this.nestType = 'subtypes'
         this.requiresReload = false
-        this.settingKey = CONSTANTS.ARMOR_TYPES.SETTING.KEY
-        this.setConfig = setArmorTypes
-        this.type = 'armorTypes'
+        this.settingKey = CONSTANTS.CONSUMABLE_TYPES.SETTING.KEY
+        this.setConfig = setConsumableTypes
+        this.type = 'consumableTypes'
+        this.headerButton = JOURNAL_HELP_BUTTON
+        this.headerButton.uuid = CONSTANTS.CONSUMABLE_TYPES.UUID
     }
 
     static DEFAULT_OPTIONS = {
-        id: `${MODULE.ID}-armor-types-form`,
+        id: `${MODULE.ID}-consumable-types-form`,
         window: {
-            title: 'CUSTOM_DND5E.form.armorTypes.title'
+            title: 'CUSTOM_DND5E.form.consumableTypes.title'
         }
     }
 }
@@ -289,6 +332,8 @@ export class CurrencyForm extends ConfigForm {
         this.settingKey = CONSTANTS.CURRENCY.SETTING.KEY
         this.setConfig = setCurrency
         this.type = 'currencies'
+        this.headerButton = JOURNAL_HELP_BUTTON
+        this.headerButton.uuid = CONSTANTS.CURRENCY.UUID
     }
 
     static DEFAULT_OPTIONS = {
@@ -318,6 +363,8 @@ export class DamageTypesForm extends ConfigForm {
         this.setConfig = setDamageTypes
         this.type = 'damageTypes'
         this.actorProperties = ['system.traits.di.value', 'system.traits.dr.value', 'system.traits.dv.value']
+        this.headerButton = JOURNAL_HELP_BUTTON
+        this.headerButton.uuid = CONSTANTS.DAMAGE_TYPES.UUID
     }
 
     static DEFAULT_OPTIONS = {
@@ -346,6 +393,8 @@ export class ItemActionTypesForm extends ConfigForm {
         this.settingKey = CONSTANTS.ITEM_ACTION_TYPES.SETTING.KEY
         this.setConfig = setItemActionTypes
         this.type = 'itemActionTypes'
+        this.headerButton = JOURNAL_HELP_BUTTON
+        this.headerButton.uuid = CONSTANTS.ITEM_ACTION_TYPES.UUID
     }
 
     static DEFAULT_OPTIONS = {
@@ -363,6 +412,8 @@ export class ItemActivationCostTypesForm extends ConfigForm {
         this.settingKey = CONSTANTS.ITEM_ACTIVATION_COST_TYPES.SETTING.KEY
         this.setConfig = setItemActivationCostTypes
         this.type = 'abilityActivationTypes'
+        this.headerButton = JOURNAL_HELP_BUTTON
+        this.headerButton.uuid = CONSTANTS.ITEM_ACTIVATION_COST_TYPES.UUID
     }
 
     static DEFAULT_OPTIONS = {
@@ -380,6 +431,8 @@ export class ItemRarityForm extends ConfigForm {
         this.settingKey = CONSTANTS.ITEM_RARITY.SETTING.KEY
         this.setConfig = setItemRarity
         this.type = 'itemRarity'
+        this.headerButton = JOURNAL_HELP_BUTTON
+        this.headerButton.uuid = CONSTANTS.ITEM_RARITY.UUID
     }
 
     static DEFAULT_OPTIONS = {
@@ -398,6 +451,8 @@ export class LanguagesForm extends ConfigForm {
         this.settingKey = CONSTANTS.LANGUAGES.SETTING.KEY
         this.setConfig = setLanguages
         this.type = 'languages'
+        this.headerButton = JOURNAL_HELP_BUTTON
+        this.headerButton.uuid = CONSTANTS.LANGUAGES.UUID
     }
 
     static DEFAULT_OPTIONS = {
@@ -415,6 +470,8 @@ export class SensesForm extends ConfigForm {
         this.settingKey = CONSTANTS.SENSES.SETTING.KEY
         this.setConfig = setSenses
         this.type = 'senses'
+        this.headerButton = JOURNAL_HELP_BUTTON
+        this.headerButton.uuid = CONSTANTS.SENSES.UUID
     }
 
     static DEFAULT_OPTIONS = {
@@ -432,6 +489,8 @@ export class SkillsForm extends ConfigForm {
         this.settingKey = CONSTANTS.SKILLS.SETTING.KEY
         this.setConfig = setSkills
         this.type = 'skills'
+        this.headerButton = JOURNAL_HELP_BUTTON
+        this.headerButton.uuid = CONSTANTS.SKILLS.UUID
     }
 
     static DEFAULT_OPTIONS = {
@@ -460,6 +519,8 @@ export class SpellSchoolsForm extends ConfigForm {
         this.settingKey = CONSTANTS.SPELL_SCHOOLS.SETTING.KEY
         this.setConfig = setSpellSchools
         this.type = 'spellSchools'
+        this.headerButton = JOURNAL_HELP_BUTTON
+        this.headerButton.uuid = CONSTANTS.SPELL_SCHOOLS.UUID
     }
 
     static DEFAULT_OPTIONS = {
@@ -488,6 +549,8 @@ export class ToolIdsForm extends ConfigForm {
         this.settingKey = CONSTANTS.TOOL_IDS.SETTING.KEY
         this.setConfig = setToolIds
         this.type = 'toolIds'
+        this.headerButton = JOURNAL_HELP_BUTTON
+        this.headerButton.uuid = CONSTANTS.TOOL_IDS.UUID
     }
 
     static DEFAULT_OPTIONS = {
@@ -516,6 +579,8 @@ export class WeaponIdsForm extends ConfigForm {
         this.settingKey = CONSTANTS.WEAPON_IDS.SETTING.KEY
         this.setConfig = setWeaponIds
         this.type = 'weaponIds'
+        this.headerButton = JOURNAL_HELP_BUTTON
+        this.headerButton.uuid = CONSTANTS.WEAPON_IDS.UUID
     }
 
     static DEFAULT_OPTIONS = {

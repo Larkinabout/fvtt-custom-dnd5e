@@ -1,4 +1,4 @@
-import { CONSTANTS, MODULE } from '../constants.js'
+import { CONSTANTS, JOURNAL_HELP_BUTTON, MODULE } from '../constants.js'
 import { deleteProperty, getSetting, setSetting } from '../utils.js'
 import { CustomDnd5eForm } from './custom-dnd5e-form.js'
 import { getDnd5eConfig, setConfig } from '../item-properties.js'
@@ -15,6 +15,8 @@ export class ItemPropertiesForm extends CustomDnd5eForm {
         this.setting = getSetting(this.settingKey) || foundry.utils.deepClone(CONFIG.DND5E.itemProperties)
         this.setConfig = setConfig
         this.type = 'itemProperties'
+        this.headerButton = JOURNAL_HELP_BUTTON
+        this.headerButton.uuid = CONSTANTS.ITEM_PROPERTIES.UUID
     }
 
     static DEFAULT_OPTIONS = {

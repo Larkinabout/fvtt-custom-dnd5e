@@ -1,16 +1,14 @@
 import { CONSTANTS } from './constants.js'
 import { checkEmpty, registerMenu, registerSetting, resetDnd5eConfig } from './utils.js'
-import { ItemActionTypesForm } from './forms/config-form.js'
+import { ConsumableTypesForm } from './forms/config-form.js'
 
-const property = 'itemActionTypes'
+const property = 'consumableTypes'
 
 /**
  * Register
  */
 export function register () {
-    if (!foundry.utils.isNewerVersion(game.dnd5e.version, '3.3.1')) {
-        registerSettings()
-    }
+    registerSettings()
 }
 
 /**
@@ -18,31 +16,31 @@ export function register () {
  */
 function registerSettings () {
     registerMenu(
-        CONSTANTS.ITEM_ACTION_TYPES.MENU.KEY,
+        CONSTANTS.CONSUMABLE_TYPES.MENU.KEY,
         {
-            hint: game.i18n.localize(CONSTANTS.ITEM_ACTION_TYPES.MENU.HINT),
-            label: game.i18n.localize(CONSTANTS.ITEM_ACTION_TYPES.MENU.LABEL),
-            name: game.i18n.localize(CONSTANTS.ITEM_ACTION_TYPES.MENU.NAME),
-            icon: CONSTANTS.ITEM_ACTION_TYPES.MENU.ICON,
-            type: ItemActionTypesForm,
+            hint: game.i18n.localize(CONSTANTS.CONSUMABLE_TYPES.MENU.HINT),
+            label: game.i18n.localize(CONSTANTS.CONSUMABLE_TYPES.MENU.LABEL),
+            name: game.i18n.localize(CONSTANTS.CONSUMABLE_TYPES.MENU.NAME),
+            icon: CONSTANTS.CONSUMABLE_TYPES.MENU.ICON,
+            type: ConsumableTypesForm,
             restricted: true,
             scope: 'world'
         }
     )
 
     registerSetting(
-        CONSTANTS.ITEM_ACTION_TYPES.SETTING.KEY,
+        CONSTANTS.CONSUMABLE_TYPES.SETTING.KEY,
         {
             scope: 'world',
             config: false,
             type: Object,
-            default: CONFIG.CUSTOM_DND5E[property]
+            default: foundry.utils.deepClone(CONFIG.CUSTOM_DND5E[property])
         }
     )
 }
 
 /**
- * Set CONFIG.DND5E.itemActionTypes
+ * Set CONFIG.DND5E.CONSUMABLE_TYPES
  * @param {object} data
  */
 export function setConfig (data = null) {
@@ -50,7 +48,9 @@ export function setConfig (data = null) {
         keys.filter((key) => data[key].visible || data[key].visible === undefined)
             .map((key) => [
                 key,
-                game.i18n.localize(data[key].label || data[key])
+                data[key].subtypes
+                    ? { label: game.i18n.localize(data[key].label), subtypes: buildConfig(Object.keys(data[key].subtypes), data[key].subtypes) }
+                    : game.i18n.localize(data[key]?.label || data[key])
             ])
     )
 

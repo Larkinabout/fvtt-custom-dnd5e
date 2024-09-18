@@ -1,4 +1,4 @@
-import { CONSTANTS, MODULE } from '../constants.js'
+import { CONSTANTS, JOURNAL_HELP_BUTTON, MODULE } from '../constants.js'
 import { getSetting, setSetting } from '../utils.js'
 import { ConfigForm } from './config-form.js'
 import { getDnd5eConfig, setConfig } from '../armor-proficiencies.js'
@@ -11,6 +11,9 @@ export class ArmorProficienciesForm extends ConfigForm {
         this.settingKey = CONSTANTS.ARMOR_PROFICIENCIES.SETTING.KEY
         this.dnd5eConfig = getDnd5eConfig()
         this.setting = getSetting(this.settingKey) || this.dnd5eConfig
+        this.setConfig = setConfig
+        this.headerButton = JOURNAL_HELP_BUTTON
+        this.headerButton.uuid = CONSTANTS.ARMOR_PROFICIENCIES.UUID
     }
 
     static DEFAULT_OPTIONS = {

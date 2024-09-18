@@ -115,6 +115,11 @@
     border: 1px solid var(--dnd5e-color-blue-gray-3);
 }
 
+.dnd5e-theme-dark  :is(.character, .npc) .custom-dnd5e-counters-counter-value input[type="number"],
+.dnd5e-theme-dark  :is(.character, .npc) .custom-dnd5e-counters-counter-value input[type="number"]:disabled {
+    background: rgba(0, 0, 0, 0.05)
+}
+
 .custom-dnd5e-counters-success-failure > input,
 .custom-dnd5e-counters-success-failure
     > input:disabled:hover

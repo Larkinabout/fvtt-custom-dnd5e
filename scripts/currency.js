@@ -74,7 +74,7 @@ function registerHooks () {
 
         const setting = getSetting(CONSTANTS.CURRENCY.SETTING.KEY)
 
-        if (sheetType.character && !sheetType.legacy) {
+        if (!sheetType.legacy) {
             Object.entries(setting).forEach(([key, value]) => {
                 if (value.visible === false) {
                     html[0].querySelector(`.${key}`)?.closest('label')?.remove()

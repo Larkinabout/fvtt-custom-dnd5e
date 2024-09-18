@@ -8,6 +8,10 @@ A Foundry VTT module to customise the D&D 5e system.
 ![Custom D&D 5e Custom Banner](./.github/readme/custom-dnd5e-custom-banner.png)
 
 # House Rules
+For help and advice on the house rules, either click the info buttons in the Configure House Rules window or open the House Rules journal within the Custom D&D 5e compendium.
+
+![Custom D&D 5e Bloodied Journal](./.github/readme/custom-dnd5e-bloodied-journal.png)
+
 ## Bloodied
 - Apply the Bloodied condition when a character or NPC is reduced to half HP or lower.
 - To stop a character or NPC from gaining the Bloodied condition, add Bloodied to their Condition Immunities.
@@ -81,7 +85,11 @@ Select 'Custom D&D 5e Character Sheet' from the Sheet Configuration dialog (cog 
 ![Custom D&D 5e Character Sheet](./.github/readme/custom-dnd5e-character-sheet.png)
 
 ## Configurations
-- Configure abilities, actor sizes, armor, armor calculations, armor proficiencies, conditions, currencies, damage types, encumbrance, item action types, item activation cost types, item properties, item rarity, languages, senses, skills, spell schools, tools, weapons, weapon proficiencies, and max level. For a guide on configurations, visit the [Custom D&D 5e Wiki](https://github.com/Larkinabout/fvtt-custom-dnd5e/wiki)
+For help and advice on modifying a configuration, either click the info button in the header of the configuration window or open the Configurations journal within the Custom D&D 5e compendium.
+
+![Custom D&D 5e Damage Types Journal](./.github/readme/custom-dnd5e-damage-types-journal.png)
+
+- Configure abilities, activation costs (dnd5e 4+ only), actor sizes, armor, armor calculations, armor proficiencies, conditions, consumable types, currencies, damage types, encumbrance, item action types (dnd5e 3 only), item activation cost types (dnd5e 3 only), item properties, item rarity, languages, senses, skills, spell schools, tools, weapons, weapon proficiencies, and max level. 
 
 ## Configure Encumbrance
 ![Custom D&D 5e Configure Encumbrance](./.github/readme/custom-dnd5e-configure-encumbrance.png)

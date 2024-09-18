@@ -1,4 +1,4 @@
-import { CONSTANTS, MODULE } from '../constants.js'
+import { CONSTANTS, JOURNAL_HELP_BUTTON, MODULE } from '../constants.js'
 import { getSetting, setSetting, resetSetting } from '../utils.js'
 import { CustomDnd5eForm } from './custom-dnd5e-form.js'
 
@@ -6,6 +6,8 @@ export class HouseRulesForm extends CustomDnd5eForm {
     constructor (...args) {
         super(args)
         this.type = 'house-rules'
+        this.headerButton = JOURNAL_HELP_BUTTON
+        this.headerButton.uuid = CONSTANTS.HOUSE_RULES.UUID
     }
 
     static DEFAULT_OPTIONS = {
@@ -42,7 +44,7 @@ export class HouseRulesForm extends CustomDnd5eForm {
             deadRotation: getSetting(CONSTANTS.DEAD.SETTING.DEAD_ROTATION.KEY),
             deadTint: getSetting(CONSTANTS.DEAD.SETTING.DEAD_TINT.KEY),
             deathSavesRollMode: getSetting(CONSTANTS.DEATH_SAVES.SETTING.DEATH_SAVES_ROLL_MODE.KEY),
-            removeDeathSave: getSetting(CONSTANTS.DEATH_SAVES.SETTING.REMOVE_DEATH_SAVES.KEY),
+            removeDeathSaves: getSetting(CONSTANTS.DEATH_SAVES.SETTING.REMOVE_DEATH_SAVES.KEY),
             deathSavesTargetValue: getSetting(CONSTANTS.DEATH_SAVES.SETTING.DEATH_SAVES_TARGET_VALUE.KEY),
             applyMassiveDamage: getSetting(CONSTANTS.HIT_POINTS.SETTING.APPLY_MASSIVE_DAMAGE.KEY),
             applyNegativeHp: getSetting(CONSTANTS.HIT_POINTS.SETTING.APPLY_NEGATIVE_HP.KEY),

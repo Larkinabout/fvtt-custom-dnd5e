@@ -1,5 +1,5 @@
 import { MODULE } from '../constants.js'
-import { Logger, setSetting } from '../utils.js'
+import { Logger, openDocument, setSetting } from '../utils.js'
 
 const itemClass = `${MODULE.ID}-item`
 const itemClassSelector = `.${itemClass}`
@@ -12,13 +12,15 @@ export class CustomDnd5eForm extends HandlebarsApplicationMixin(ApplicationV2) {
     constructor (options = {}) {
         super(options)
         this.nestable = false
+        this.nestType = 'children'
     }
 
     static DEFAULT_OPTIONS = {
         actions: {
             delete: CustomDnd5eForm.deleteItem,
             new: CustomDnd5eForm.createItem,
-            reset: CustomDnd5eForm.reset
+            reset: CustomDnd5eForm.reset,
+            help: CustomDnd5eForm.openHelp
         },
         classes: [`${MODULE.ID}-app`, 'sheet'],
         tag: 'form',
@@ -82,9 +84,28 @@ export class CustomDnd5eForm extends HandlebarsApplicationMixin(ApplicationV2) {
         })
     }
 
+    static async openHelp (event, target) {
+        const uuid = target.dataset.uuid
+        openDocument(uuid)
+    }
+
     _onRender (context, options) {
-        // const cancel = html.find(`#${MODULE.ID}-cancel`)
-        // cancel.on('click', this.close.bind(this))
+        if (this.headerButton) {
+            const windowHeader = this.element.querySelector('.window-header')
+            const existingButton = windowHeader.querySelector(`[data-action="${this.headerButton.action}"]`)
+
+            if (!existingButton) {
+                const closeButton = windowHeader.querySelector('[data-action="close"]')
+                const button = document.createElement('button')
+                button.setAttribute('type', 'button')
+                button.setAttribute('class', `header-control fa-solid ${this.headerButton.icon}`)
+                button.setAttribute('data-tooltip', this.headerButton.tooltip)
+                button.setAttribute('aria-label', this.headerButton.tooltip)
+                button.setAttribute('data-action', this.headerButton.action)
+                button.setAttribute('data-uuid', this.headerButton.uuid)
+                windowHeader.insertBefore(button, closeButton)
+            }
+        }
 
         this.items = Array.from(this.element.querySelectorAll(itemClassSelector))
 
@@ -226,7 +247,7 @@ export class CustomDnd5eForm extends HandlebarsApplicationMixin(ApplicationV2) {
 
             if (!parentKey) return
 
-            item.dataset.key = `${parentKey}.children.${key}`
+            item.dataset.key = `${parentKey}.${this.nestType}.${key}`
 
             const inputs = item.querySelectorAll('input')
 
@@ -236,7 +257,7 @@ export class CustomDnd5eForm extends HandlebarsApplicationMixin(ApplicationV2) {
                 }
                 if (input.name) {
                     const inputName = input.name.split('.').pop()
-                    input.name = `${parentKey}.children.${key}.${inputName}`
+                    input.name = `${parentKey}.${this.nestType}.${key}.${inputName}`
                 }
             })
         })
