@@ -12,6 +12,7 @@ export class CustomDnd5eForm extends HandlebarsApplicationMixin(ApplicationV2) {
     constructor (options = {}) {
         super(options)
         this.nestable = false
+        this.nestType = 'children'
     }
 
     static DEFAULT_OPTIONS = {
@@ -242,7 +243,7 @@ export class CustomDnd5eForm extends HandlebarsApplicationMixin(ApplicationV2) {
 
             if (!parentKey) return
 
-            item.dataset.key = `${parentKey}.children.${key}`
+            item.dataset.key = `${parentKey}.${this.nestType}.${key}`
 
             const inputs = item.querySelectorAll('input')
 
@@ -252,7 +253,7 @@ export class CustomDnd5eForm extends HandlebarsApplicationMixin(ApplicationV2) {
                 }
                 if (input.name) {
                     const inputName = input.name.split('.').pop()
-                    input.name = `${parentKey}.children.${key}.${inputName}`
+                    input.name = `${parentKey}.${this.nestType}.${key}.${inputName}`
                 }
             })
         })

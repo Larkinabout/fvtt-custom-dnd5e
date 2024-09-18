@@ -1,0 +1,56 @@
+:root {
+    --custom-dnd5e-note-color: #478be6;
+    --custom-dnd5e-tip-color: #57ab5a;
+}
+
+.sheet.journal-entry-page > .window-content {
+    padding: 1rem;
+}
+
+.sheet.journal-entry-page > .window-content > .journal-page-header {
+    flex: 0;
+}
+
+.custom-dnd5e-img {
+    border: none;
+}
+
+article.custom-dnd5e-note {
+    border-left: 3px solid var(--custom-dnd5e-note-color);
+    padding-left: 0.5rem;
+}
+
+article.custom-dnd5e-note > header {
+    display: flex;
+}
+
+article.custom-dnd5e-note > header > img {
+    border: none;
+}
+
+article.custom-dnd5e-note > header > p {
+    color: var(--custom-dnd5e-note-color);
+    font-weight: bold;
+    margin-left: 0.5rem;
+    text-transform: capitalize;
+}
+
+article.custom-dnd5e-tip {
+    border-left: 3px solid var(--custom-dnd5e-tip-color);
+    padding-left: 0.5rem;
+}
+
+article.custom-dnd5e-tip > header {
+    display: flex;
+}
+
+article.custom-dnd5e-tip > header > img {
+    border: none;
+}
+
+article.custom-dnd5e-tip > header > p {
+    color: var(--custom-dnd5e-tip-color);
+    font-weight: bold;
+    margin-left: 0.5rem;
+    text-transform: capitalize;
+}

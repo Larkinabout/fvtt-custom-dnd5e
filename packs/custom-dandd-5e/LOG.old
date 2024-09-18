@@ -1,14 +1,14 @@
-2024/09/16-22:41:33.403 6cf8 Recovering log #12
-2024/09/16-22:41:33.406 6cf8 Delete type=0 #12
-2024/09/16-22:41:33.406 6cf8 Delete type=3 #10
-2024/09/16-22:58:34.535 81c0 Level-0 table #18: started
-2024/09/16-22:58:34.538 81c0 Level-0 table #18: 9448 bytes OK
-2024/09/16-22:58:34.544 81c0 Delete type=0 #16
-2024/09/16-22:58:34.544 81c0 Manual compaction at level-0 from '!journal!B48iqFBddUikMMer' @ 72057594037927935 : 1 .. '!journal.pages!ngr8w6WBycK59brj.qgLFKLoCIKJSEh5f' @ 0 : 0; will stop at '!journal.pages!ngr8w6WBycK59brj.qgLFKLoCIKJSEh5f' @ 495 : 1
-2024/09/16-22:58:34.544 81c0 Compacting 1@0 + 1@1 files
-2024/09/16-22:58:34.547 81c0 Generated table #19@0: 10 keys, 10561 bytes
-2024/09/16-22:58:34.547 81c0 Compacted 1@0 + 1@1 files => 10561 bytes
-2024/09/16-22:58:34.552 81c0 compacted to: files[ 0 1 0 0 0 0 0 ]
-2024/09/16-22:58:34.552 81c0 Delete type=2 #14
-2024/09/16-22:58:34.552 81c0 Delete type=2 #18
-2024/09/16-22:58:34.552 81c0 Manual compaction at level-0 from '!journal.pages!ngr8w6WBycK59brj.qgLFKLoCIKJSEh5f' @ 495 : 1 .. '!journal.pages!ngr8w6WBycK59brj.qgLFKLoCIKJSEh5f' @ 0 : 0; will stop at (end)
+2024/09/18-13:18:05.332 556c Recovering log #51
+2024/09/18-13:18:05.343 556c Delete type=0 #51
+2024/09/18-13:18:05.343 556c Delete type=3 #48
+2024/09/18-13:34:47.931 788c Level-0 table #57: started
+2024/09/18-13:34:47.936 788c Level-0 table #57: 59222 bytes OK
+2024/09/18-13:34:47.939 788c Delete type=0 #55
+2024/09/18-13:34:47.939 788c Manual compaction at level-0 from '!journal!B48iqFBddUikMMer' @ 72057594037927935 : 1 .. '!journal.pages!ngr8w6WBycK59brj.qgLFKLoCIKJSEh5f' @ 0 : 0; will stop at '!journal.pages!B48iqFBddUikMMer.uFxtCCVz8Ow95cUL' @ 2152 : 1
+2024/09/18-13:34:47.939 788c Compacting 1@0 + 1@1 files
+2024/09/18-13:34:47.943 788c Generated table #58@0: 33 keys, 23966 bytes
+2024/09/18-13:34:47.943 788c Compacted 1@0 + 1@1 files => 23966 bytes
+2024/09/18-13:34:47.947 788c compacted to: files[ 0 1 0 0 0 0 0 ]
+2024/09/18-13:34:47.948 788c Delete type=2 #53
+2024/09/18-13:34:47.948 788c Delete type=2 #57
+2024/09/18-13:34:47.948 788c Manual compaction at level-0 from '!journal.pages!B48iqFBddUikMMer.uFxtCCVz8Ow95cUL' @ 2152 : 1 .. '!journal.pages!ngr8w6WBycK59brj.qgLFKLoCIKJSEh5f' @ 0 : 0; will stop at (end)

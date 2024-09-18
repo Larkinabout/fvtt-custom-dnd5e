@@ -1,4 +1,4 @@
-import { CONSTANTS, MODULE } from '../constants.js'
+import { CONSTANTS, JOURNAL_HELP_BUTTON, MODULE } from '../constants.js'
 import { Logger, getSetting, setSetting } from '../utils.js'
 import { CustomDnd5eForm } from './custom-dnd5e-form.js'
 import { getDnd5eConfig, setConfig } from '../conditions.js'
@@ -11,6 +11,8 @@ export class ConditionsForm extends CustomDnd5eForm {
         this.settingKey = CONSTANTS.CONDITIONS.SETTING.KEY
         this.dnd5eConfig = getDnd5eConfig()
         this.setting = getSetting(this.settingKey) || this.dnd5eConfig
+        this.headerButton = JOURNAL_HELP_BUTTON
+        this.headerButton.uuid = CONSTANTS.CONDITIONS.UUID
     }
 
     static DEFAULT_OPTIONS = {

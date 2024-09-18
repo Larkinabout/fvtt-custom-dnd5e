@@ -1,4 +1,4 @@
-import { CONSTANTS, MODULE } from '../constants.js'
+import { CONSTANTS, JOURNAL_HELP_BUTTON, MODULE } from '../constants.js'
 import { getSetting, setSetting, resetSetting } from '../utils.js'
 import { CustomDnd5eForm } from './custom-dnd5e-form.js'
 
@@ -6,12 +6,8 @@ export class HouseRulesForm extends CustomDnd5eForm {
     constructor (...args) {
         super(args)
         this.type = 'house-rules'
-        this.headerButton = {
-            icon: 'fa-circle-info',
-            tooltip: 'Open Help Guide',
-            action: 'help',
-            uuid: CONSTANTS.HOUSE_RULES.JOURNAL_UUID
-        }
+        this.headerButton = JOURNAL_HELP_BUTTON
+        this.headerButton.uuid = CONSTANTS.HOUSE_RULES.UUID
     }
 
     static DEFAULT_OPTIONS = {

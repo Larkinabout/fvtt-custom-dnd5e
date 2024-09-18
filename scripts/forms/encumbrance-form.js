@@ -1,4 +1,4 @@
-import { CONSTANTS, MODULE } from '../constants.js'
+import { CONSTANTS, JOURNAL_HELP_BUTTON, MODULE } from '../constants.js'
 import { getSetting, setSetting, resetSetting } from '../utils.js'
 import { CustomDnd5eForm } from './custom-dnd5e-form.js'
 import { setConfig } from '../encumbrance.js'
@@ -11,6 +11,8 @@ export class EncumbranceForm extends CustomDnd5eForm {
         this.settingKey = CONSTANTS.ENCUMBRANCE.SETTING.KEY
         this.setConfig = setConfig
         this.type = 'encumbrance'
+        this.headerButton = JOURNAL_HELP_BUTTON
+        this.headerButton.uuid = CONSTANTS.ENCUMBRANCE.UUID
     }
 
     static DEFAULT_OPTIONS = {
