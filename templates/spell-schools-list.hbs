@@ -4,8 +4,6 @@
     <input id="custom-dnd5e-visible" class="flex0" name="{{key}}.visible" type="checkbox" data-tooltip="{{localize "CUSTOM_DND5E.form.checkbox.visible.tooltip"}}"{{#unless (customDnd5eBoolFalse visible)}} checked{{/unless}}>
     <div class="custom-dnd5e-col-group flexcol">
         <input id="custom-dnd5e-system" name="{{key}}.system" type="hidden" value="{{#if (customDnd5eBoolFalse system)}}false{{else}}true{{/if}}">
-        <input id="custom-dnd5e-key" name="{{key}}.key" type="hidden" value="{{key}}">
-        <input id="custom-dnd5e-fullKey" name="{{key}}.fullKey" type="hidden" value="{{key}}">
         <div class="form-group">
             <label class="flex1" style="min-width:80px; max-width:100px;">{{localize "CUSTOM_DND5E.key"}}</label>
             <div class="form-fields">
