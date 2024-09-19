@@ -64,10 +64,10 @@ export function setConfig (data = null) {
             .map(([key, value]) => [
                 key,
                 {
-                    abbreviation: value.abbreviation,
+                    abbreviation: game.i18n.localize(value.abbreviation),
                     ...(value.defaults !== undefined && { defaults: { ...value.defaults } }),
                     fullKey: value.fullKey,
-                    label: value.label,
+                    label: game.i18n.localize(value.label),
                     reference: value.reference,
                     type: value.type
                 }

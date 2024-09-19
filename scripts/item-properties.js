@@ -99,7 +99,7 @@ export function setConfig (data = null) {
             .map(([key, value]) => [
                 key,
                 {
-                    ...(value.abbreviation !== undefined && { abbreviation: value.abbreviation }),
+                    ...(value.abbreviation !== undefined && { abbreviation: game.i18n.localize(value.abbreviation) }),
                     ...(value.icon !== undefined && { icon: value.icon }),
                     ...(value.isPhysical !== undefined && { isPhysical: value.isPhysical }),
                     ...(value.isTag !== undefined && { isTag: value.isTag }),
