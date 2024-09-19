@@ -90,6 +90,9 @@ Hooks.on('init', async () => {
     registerTokenBorder()
     registerDebug()
 
+    setAbilities(getSetting(CONSTANTS.ABILITIES.SETTING.KEY))
+    setSkills(getSetting(CONSTANTS.SKILLS.SETTING.KEY))
+
     Logger.debug(
         'Loading templates',
         [
@@ -138,8 +141,6 @@ Hooks.on('ready', async () => {
     })
 
     const isV4 = foundry.utils.isNewerVersion(game.dnd5e.version, '3.3.1')
-
-    setAbilities(getSetting(CONSTANTS.ABILITIES.SETTING.KEY))
     if (isV4) {
         setActivationCosts(getSetting(CONSTANTS.ACTIVATION_COSTS.SETTING.KEY))
     }
@@ -160,7 +161,6 @@ Hooks.on('ready', async () => {
     setItemRarity(getSetting(CONSTANTS.ITEM_RARITY.SETTING.KEY))
     setLanguages(getSetting(CONSTANTS.LANGUAGES.SETTING.KEY))
     setSenses(getSetting(CONSTANTS.SENSES.SETTING.KEY))
-    setSkills(getSetting(CONSTANTS.SKILLS.SETTING.KEY))
     setSpellSchools(getSetting(CONSTANTS.SPELL_SCHOOLS.SETTING.KEY))
     setToolIds(getSetting(CONSTANTS.TOOL_IDS.SETTING.KEY))
     setWeaponIds(getSetting(CONSTANTS.WEAPON_IDS.SETTING.KEY))
