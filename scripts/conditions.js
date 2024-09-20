@@ -158,12 +158,16 @@ export function setConfig (data = null) {
         .forEach(([key, value]) => {
             const localisedLabel = game.i18n.localize(value.label ?? value)
 
+            // Merge with default config in case their are any new properties
+            value = foundry.utils.mergeObject(foundry.utils.deepClone(getDnd5eConfig(key)) ?? {}, value)
+
             if (value.sheet || value.pseudo) {
                 config.conditionTypes[key] = {
                     icon: value.icon,
                     label: localisedLabel,
                     ...(value.levels && { levels: value.levels }),
                     ...(value.pseudo && { pseudo: value.pseudo }),
+                    ...(value.reduction !== undefined && { reduction: value.reduction }),
                     ...(value.reference !== undefined && { reference: value.reference }),
                     ...(value.riders !== undefined && { riders: value.riders }),
                     ...(value.special !== undefined && { special: value.special }),
