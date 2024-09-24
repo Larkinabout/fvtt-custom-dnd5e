@@ -79,7 +79,7 @@ export async function exportData () {
             skills: CONFIG.DND5E.skills,
             spellSchools: CONFIG.DND5E.spellSchools,
             toolIds: CONFIG.DND5E.toolIds,
-            validProperties: CONFIG.DND5E.validProperties,
+            validProperties: convertSetsToArrays(CONFIG.DND5E.validProperties),
             weaponIds: CONFIG.DND5E.weaponIds,
             weaponProficiencies: CONFIG.DND5E.weaponProficiencies,
             weaponProficienciesMap: CONFIG.DND5E.weaponProficienciesMap,
@@ -132,6 +132,7 @@ export async function importData () {
 async function processImport (file) {
     const json = await readTextFromFile(file)
     const jsonData = JSON.parse(json)
+    jsonData.configDnd5e.validProperties = convertArraysToSets(jsonData.configDnd5e.validProperties)
     const currentVersion = game.modules.get(MODULE.ID).version.split('.').slice(0, 2).join('.')
     const fileVersion = jsonData.customDnd5eVersion.split('.').slice(0, 2).join('.')
     if (fileVersion !== currentVersion) {
@@ -199,4 +200,48 @@ async function overwriteConfigDnd5e (configDnd5e) {
     })
 
     Logger.info(game.i18n.localize('CUSTOM_DND5E.dialog.importData.configImported'), true)
+}
+
+/**
+ * Convert sets to arrays for export to JSON
+ * @param {object} obj The object containing the sets
+ * @returns {object}   The object with the sets converted to arrays
+ */
+function convertSetsToArrays (obj) {
+    if (obj instanceof Set) {
+        return [...obj] // Convert Set to array
+    }
+
+    if (Array.isArray(obj)) {
+        return obj.map(item => convertSetsToArrays(item)) // Recursively convert inside arrays
+    }
+
+    if (typeof obj === 'object' && obj !== null) {
+        // Recursively convert inside objects
+        return Object.fromEntries(
+            Object.entries(obj).map(([key, value]) => [key, convertSetsToArrays(value)])
+        )
+    }
+
+    return obj
+}
+
+/**
+ * Convert arrays to sets
+ * @param {object} obj The object containing the arrays
+ * @returns {object} The object with the arrays converted to sets
+ */
+function convertArraysToSets (obj) {
+    if (Array.isArray(obj)) {
+        return new Set(obj) // Convert arrayto Set
+    }
+
+    if (typeof obj === 'object' && obj !== null) {
+        // Recursively convert inside objects
+        return Object.fromEntries(
+            Object.entries(obj).map(([key, value]) => [key, convertArraysToSets(value)])
+        )
+    }
+
+    return obj
 }

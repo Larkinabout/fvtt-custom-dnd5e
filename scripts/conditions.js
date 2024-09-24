@@ -177,7 +177,7 @@ export function setConfig (data = null) {
 
             config.statusEffects.push({
                 ...(value.hud !== undefined && { hud: value.hud }),
-                _id: `dnd5e${key}00000000000`.substring(0, 16),
+                _id: dnd5e.utils.staticID(`dnd5e${key}`),
                 id: key,
                 img: value.icon,
                 ...(value.levels !== undefined && { levels: value.levels }),
