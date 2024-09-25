@@ -77,7 +77,6 @@ Hooks.on('init', async () => {
     registerItemProperties()
     registerItemRarity()
     registerLanguages()
-    registerNegativeHp()
     registerSenses()
     registerSheet()
     registerSkills()
@@ -92,6 +91,9 @@ Hooks.on('init', async () => {
 
     setAbilities(getSetting(CONSTANTS.ABILITIES.SETTING.KEY))
     setSkills(getSetting(CONSTANTS.SKILLS.SETTING.KEY))
+
+    // Must be registered after abilities and skills are set
+    registerNegativeHp()
 
     Logger.debug(
         'Loading templates',
