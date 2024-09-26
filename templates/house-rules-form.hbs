@@ -265,6 +265,21 @@
                 <p class="hint">{{localize "CUSTOM_DND5E.form.houseRules.prone.proneRotation.note.1"}}</p>
             </div>
         </fieldset>
+        <fieldset>
+            <legend>
+                <span>{{localize "CUSTOM_DND5E.resting"}}</span>
+                <button type="button" class="unbutton control-button" data-action="help" data-uuid="Compendium.custom-dnd5e.custom-dnd5e-journals.JournalEntry.ngr8w6WBycK59brj.JournalEntryPage.dTzGT5PWvgrhMohx" data-tooltip="Open Help Guide" aria-label="Open Help Guide">
+                    <i class="fas fa-circle-info" inert></i>
+                </button>
+            </legend>
+            <div class="form-group">
+                <label>{{localize "CUSTOM_DND5E.useCampSupplies"}}</label>
+                <div class="form-fields">
+                    <input id="custom-dnd5e-use-camp-supplies" name="useCampSupplies" type="checkbox"{{#if useCampSupplies}} checked{{/if}}> 
+                </div>
+                <p class="hint">{{localize "CUSTOM_DND5E.form.houseRules.resting.useCampSupplies.note"}}</p>
+            </div>
+        </fieldset>
     </div>
     <footer class="form-footer" data-application-part="footer">
         <button type="button" data-action="reset" class="reset-button bright">

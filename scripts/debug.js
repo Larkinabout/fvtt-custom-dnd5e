@@ -2,24 +2,20 @@ import { MODULE, CONSTANTS } from './constants.js'
 import { Logger, getSetting, setSetting, registerMenu, registerSetting } from './utils.js'
 import { DebugForm } from './forms/debug-form.js'
 
+const constants = CONSTANTS.DEBUG
+
 /**
  * Register
  */
 export function register () {
     registerSettings()
 
-    Logger.debug(
-        'Loading templates',
-        [
-            CONSTANTS.DEBUG.TEMPLATE.FORM,
-            CONSTANTS.DEBUG.TEMPLATE.IMPORT_DIALOG
-        ]
-    )
-
-    loadTemplates([
-        CONSTANTS.DEBUG.TEMPLATE.FORM,
-        CONSTANTS.DEBUG.TEMPLATE.IMPORT_DIALOG
-    ])
+    const templates = [
+        constants.TEMPLATE.FORM,
+        constants.TEMPLATE.IMPORT_DIALOG
+    ]
+    Logger.debug('Loading templates', templates)
+    loadTemplates(templates)
 }
 
 /**
@@ -27,12 +23,12 @@ export function register () {
  */
 function registerSettings () {
     registerMenu(
-        CONSTANTS.DEBUG.MENU.KEY,
+        constants.MENU.KEY,
         {
-            hint: game.i18n.localize(CONSTANTS.DEBUG.MENU.HINT),
-            label: game.i18n.localize(CONSTANTS.DEBUG.MENU.LABEL),
-            name: game.i18n.localize(CONSTANTS.DEBUG.MENU.NAME),
-            icon: CONSTANTS.DEBUG.MENU.ICON,
+            hint: game.i18n.localize(constants.MENU.HINT),
+            label: game.i18n.localize(constants.MENU.LABEL),
+            name: game.i18n.localize(constants.MENU.NAME),
+            icon: constants.MENU.ICON,
             type: DebugForm,
             restricted: true,
             scope: 'world'
@@ -94,7 +90,7 @@ export async function exportData () {
  * Import data from JSON file
  */
 export async function importData () {
-    const content = await renderTemplate(CONSTANTS.DEBUG.TEMPLATE.IMPORT_DIALOG, {})
+    const content = await renderTemplate(constants.TEMPLATE.IMPORT_DIALOG, {})
     const dialog = new Promise((resolve, reject) => {
         new Dialog({
             title: game.i18n.localize('CUSTOM_DND5E.importData'),

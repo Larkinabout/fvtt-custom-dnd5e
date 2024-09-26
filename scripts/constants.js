@@ -488,6 +488,16 @@ export const CONSTANTS = {
             KEY: 'radial-status-effects'
         }
     },
+    RESTING: {
+        SETTING: {
+            USE_CAMP_SUPPLIES: {
+                KEY: 'use-camp-supplies'
+            }
+        },
+        TEMPLATE: {
+            LONG_REST: 'modules/custom-dnd5e/templates/long-rest.hbs'
+        }
+    },
     SENSES: {
         ID: 'senses',
         MENU: {

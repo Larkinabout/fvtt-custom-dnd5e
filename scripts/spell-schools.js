@@ -10,18 +10,12 @@ const property = 'spellSchools'
 export function register () {
     registerSettings()
 
-    Logger.debug(
-        'Loading templates',
-        [
-            CONSTANTS.SPELL_SCHOOLS.TEMPLATE.FORM,
-            CONSTANTS.SPELL_SCHOOLS.TEMPLATE.LIST
-        ]
-    )
-
-    loadTemplates([
+    const templates = [
         CONSTANTS.SPELL_SCHOOLS.TEMPLATE.FORM,
         CONSTANTS.SPELL_SCHOOLS.TEMPLATE.LIST
-    ])
+    ]
+    Logger.debug('Loading templates', templates)
+    loadTemplates(templates)
 }
 
 /**

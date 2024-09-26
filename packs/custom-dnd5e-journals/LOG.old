@@ -1,7 +1,5 @@
-2024/09/18-18:53:19.985 7db8 Recovering log #61
-2024/09/18-18:53:19.997 7db8 Delete type=0 #61
-2024/09/18-18:53:19.997 7db8 Delete type=3 #59
-2024/09/19-07:30:02.081 220c Level-0 table #67: started
-2024/09/19-07:30:02.081 220c Level-0 table #67: 0 bytes OK
-2024/09/19-07:30:02.085 220c Delete type=0 #65
-2024/09/19-07:30:02.091 220c Manual compaction at level-0 from '!journal!B48iqFBddUikMMer' @ 72057594037927935 : 1 .. '!journal.pages!ngr8w6WBycK59brj.qgLFKLoCIKJSEh5f' @ 0 : 0; will stop at (end)
+2024/09/26-09:15:59.948 60a8 Log #70: 0 ops saved to Table #73 OK
+2024/09/26-09:15:59.949 60a8 Archiving C:\Program Files\Foundry VTT\V12 - dnd5e 4\data\Data\modules\custom-dnd5e\packs\custom-dnd5e-journals/000070.log: OK
+2024/09/26-09:15:59.949 60a8 Table #72: 33 entries OK
+2024/09/26-09:15:59.954 60a8 Archiving C:\Program Files\Foundry VTT\V12 - dnd5e 4\data\Data\modules\custom-dnd5e\packs\custom-dnd5e-journals/MANIFEST-000068: OK
+2024/09/26-09:15:59.961 60a8 **** Repaired leveldb C:\Program Files\Foundry VTT\V12 - dnd5e 4\data\Data\modules\custom-dnd5e\packs\custom-dnd5e-journals; recovered 1 files; 25797 bytes. Some data may have been lost. ****

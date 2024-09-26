@@ -3,17 +3,19 @@ import { Logger, checkEmpty, getFlag, setFlag, unsetFlag, getSetting, registerMe
 import { CountersForm } from './forms/counters-form.js'
 import { CountersFormIndividual } from './forms/counters-form-individual.js'
 
+const constants = CONSTANTS.COUNTERS
+
 /**
  * Register Settings
  */
 export function registerSettings () {
     registerMenu(
-        CONSTANTS.COUNTERS.MENU.KEY,
+        constants.MENU.KEY,
         {
-            hint: game.i18n.localize(CONSTANTS.COUNTERS.MENU.HINT),
-            label: game.i18n.localize(CONSTANTS.COUNTERS.MENU.LABEL),
-            name: game.i18n.localize(CONSTANTS.COUNTERS.MENU.NAME),
-            icon: CONSTANTS.COUNTERS.MENU.ICON,
+            hint: game.i18n.localize(constants.MENU.HINT),
+            label: game.i18n.localize(constants.MENU.LABEL),
+            name: game.i18n.localize(constants.MENU.NAME),
+            icon: constants.MENU.ICON,
             type: CountersForm,
             restricted: true,
             scope: 'world'
@@ -21,7 +23,7 @@ export function registerSettings () {
     )
 
     registerSetting(
-        CONSTANTS.COUNTERS.SETTING.CHARACTER_COUNTERS.KEY,
+        constants.SETTING.CHARACTER_COUNTERS.KEY,
         {
             scope: 'world',
             config: false,
@@ -30,7 +32,7 @@ export function registerSettings () {
     )
 
     registerSetting(
-        CONSTANTS.COUNTERS.SETTING.NPC_COUNTERS.KEY,
+        constants.SETTING.NPC_COUNTERS.KEY,
         {
             scope: 'world',
             config: false,
@@ -39,7 +41,7 @@ export function registerSettings () {
     )
 
     registerSetting(
-        CONSTANTS.COUNTERS.SETTING.GROUP_COUNTERS.KEY,
+        constants.SETTING.GROUP_COUNTERS.KEY,
         {
             scope: 'world',
             config: false,
@@ -48,7 +50,7 @@ export function registerSettings () {
     )
 
     registerSetting(
-        CONSTANTS.COUNTERS.SETTING.ITEM_COUNTERS.KEY,
+        constants.SETTING.ITEM_COUNTERS.KEY,
         {
             scope: 'world',
             config: false,
@@ -56,24 +58,15 @@ export function registerSettings () {
         }
     )
 
-    Logger.debug(
-        'Loading templates',
-        [
-            CONSTANTS.COUNTERS.TEMPLATE.FORM,
-            CONSTANTS.COUNTERS.TEMPLATE.FORM_INDIVIDUAL,
-            CONSTANTS.COUNTERS.TEMPLATE.LIST,
-            CONSTANTS.COUNTERS.TEMPLATE.ADVANCED_OPTIONS_FORM,
-            CONSTANTS.COUNTERS.TEMPLATE.ADVANCED_OPTIONS_LIST
-        ]
-    )
-
-    loadTemplates([
-        CONSTANTS.COUNTERS.TEMPLATE.FORM,
-        CONSTANTS.COUNTERS.TEMPLATE.FORM_INDIVIDUAL,
-        CONSTANTS.COUNTERS.TEMPLATE.LIST,
-        CONSTANTS.COUNTERS.TEMPLATE.ADVANCED_OPTIONS_FORM,
-        CONSTANTS.COUNTERS.TEMPLATE.ADVANCED_OPTIONS_LIST
-    ])
+    const templates = [
+        constants.TEMPLATE.FORM,
+        constants.TEMPLATE.FORM_INDIVIDUAL,
+        constants.TEMPLATE.LIST,
+        constants.TEMPLATE.ADVANCED_OPTIONS_FORM,
+        constants.TEMPLATE.ADVANCED_OPTIONS_LIST
+    ]
+    Logger.debug('Loading templates', templates)
+    loadTemplates(templates)
 }
 
 /**

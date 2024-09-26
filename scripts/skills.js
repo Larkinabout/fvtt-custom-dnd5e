@@ -10,18 +10,12 @@ const property = 'skills'
 export function register () {
     registerSettings()
 
-    Logger.debug(
-        'Loading templates',
-        [
-            CONSTANTS.SKILLS.TEMPLATE.FORM,
-            CONSTANTS.SKILLS.TEMPLATE.LIST
-        ]
-    )
-
-    loadTemplates([
+    const templates = [
         CONSTANTS.SKILLS.TEMPLATE.FORM,
         CONSTANTS.SKILLS.TEMPLATE.LIST
-    ])
+    ]
+    Logger.debug('Loading templates', templates)
+    loadTemplates(templates)
 }
 
 /**

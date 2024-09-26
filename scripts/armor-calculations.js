@@ -2,6 +2,7 @@ import { CONSTANTS } from './constants.js'
 import { Logger, checkEmpty, registerMenu, registerSetting, resetDnd5eConfig } from './utils.js'
 import { ArmorCalculationsForm } from './forms/config-form.js'
 
+const constants = CONSTANTS.ARMOR_CALCULATIONS
 const property = 'armorClasses'
 
 /**
@@ -10,18 +11,12 @@ const property = 'armorClasses'
 export function register () {
     registerSettings()
 
-    Logger.debug(
-        'Loading templates',
-        [
-            CONSTANTS.ARMOR_CALCULATIONS.TEMPLATE.FORM,
-            CONSTANTS.ARMOR_CALCULATIONS.TEMPLATE.LIST
-        ]
-    )
-
-    loadTemplates([
-        CONSTANTS.ARMOR_CALCULATIONS.TEMPLATE.FORM,
-        CONSTANTS.ARMOR_CALCULATIONS.TEMPLATE.LIST
-    ])
+    const templates = [
+        constants.TEMPLATE.FORM,
+        constants.TEMPLATE.LIST
+    ]
+    Logger.debug('Loading templates', templates)
+    loadTemplates(templates)
 }
 
 /**
@@ -29,12 +24,12 @@ export function register () {
  */
 function registerSettings () {
     registerMenu(
-        CONSTANTS.ARMOR_CALCULATIONS.MENU.KEY,
+        constants.MENU.KEY,
         {
-            hint: game.i18n.localize(CONSTANTS.ARMOR_CALCULATIONS.MENU.HINT),
-            label: game.i18n.localize(CONSTANTS.ARMOR_CALCULATIONS.MENU.LABEL),
-            name: game.i18n.localize(CONSTANTS.ARMOR_CALCULATIONS.MENU.NAME),
-            icon: CONSTANTS.SKILLS.MENU.ICON,
+            hint: game.i18n.localize(constants.MENU.HINT),
+            label: game.i18n.localize(constants.MENU.LABEL),
+            name: game.i18n.localize(constants.MENU.NAME),
+            icon: constants.MENU.ICON,
             type: ArmorCalculationsForm,
             restricted: true,
             scope: 'world'
@@ -42,7 +37,7 @@ function registerSettings () {
     )
 
     registerSetting(
-        CONSTANTS.ARMOR_CALCULATIONS.SETTING.KEY,
+        constants.SETTING.KEY,
         {
             scope: 'world',
             config: false,

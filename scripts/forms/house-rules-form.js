@@ -52,6 +52,7 @@ export class HouseRulesForm extends CustomDnd5eForm {
             awardInspirationD20Value: getSetting(CONSTANTS.INSPIRATION.SETTING.AWARD_INSPIRATION_D20_VALUE.KEY),
             awardInspirationRollTypes: getSetting(CONSTANTS.INSPIRATION.SETTING.AWARD_INSPIRATION_ROLL_TYPES.KEY),
             proneRotation: getSetting(CONSTANTS.PRONE.SETTING.PRONE_ROTATION.KEY),
+            useCampSupplies: getSetting(CONSTANTS.RESTING.SETTING.USE_CAMP_SUPPLIES.KEY),
             selects: {
                 deathSavesRollMode: {
                     choices: {
@@ -87,7 +88,8 @@ export class HouseRulesForm extends CustomDnd5eForm {
                 resetSetting(CONSTANTS.HIT_POINTS.SETTING.NEGATIVE_HP_HEAL_FROM_ZERO.KEY),
                 resetSetting(CONSTANTS.INSPIRATION.SETTING.AWARD_INSPIRATION_D20_VALUE.KEY),
                 resetSetting(CONSTANTS.INSPIRATION.SETTING.AWARD_INSPIRATION_ROLL_TYPES.KEY),
-                resetSetting(CONSTANTS.PRONE.SETTING.PRONE_ROTATION.KEY)
+                resetSetting(CONSTANTS.PRONE.SETTING.PRONE_ROTATION.KEY),
+                resetSetting(CONSTANTS.RESTING.SETTING.USE_CAMP_SUPPLIES.KEY)
             ])
             this.render(true)
         }
@@ -144,7 +146,8 @@ export class HouseRulesForm extends CustomDnd5eForm {
             setSetting(CONSTANTS.HIT_POINTS.SETTING.NEGATIVE_HP_HEAL_FROM_ZERO.KEY, formData.object.negativeHpHealFromZero),
             setSetting(CONSTANTS.INSPIRATION.SETTING.AWARD_INSPIRATION_D20_VALUE.KEY, formData.object.awardInspirationD20Value),
             setSetting(CONSTANTS.INSPIRATION.SETTING.AWARD_INSPIRATION_ROLL_TYPES.KEY, awardInspirationRollTypes),
-            setSetting(CONSTANTS.PRONE.SETTING.PRONE_ROTATION.KEY, formData.object.proneRotation)
+            setSetting(CONSTANTS.PRONE.SETTING.PRONE_ROTATION.KEY, formData.object.proneRotation),
+            setSetting(CONSTANTS.RESTING.SETTING.USE_CAMP_SUPPLIES.KEY, formData.object.useCampSupplies)
         ])
 
         SettingsConfig.reloadConfirm()

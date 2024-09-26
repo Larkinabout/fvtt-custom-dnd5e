@@ -2,6 +2,7 @@ import { CONSTANTS } from './constants.js'
 import { Logger, checkEmpty, registerMenu, registerSetting, resetDnd5eConfig } from './utils.js'
 import { AbilitiesForm } from './forms/config-form.js'
 
+const constants = CONSTANTS.ABILITIES
 const property = 'abilities'
 
 /**
@@ -10,18 +11,12 @@ const property = 'abilities'
 export function register () {
     registerSettings()
 
-    Logger.debug(
-        'Loading templates',
-        [
-            CONSTANTS.ABILITIES.TEMPLATE.FORM,
-            CONSTANTS.ABILITIES.TEMPLATE.LIST
-        ]
-    )
-
-    loadTemplates([
-        CONSTANTS.ABILITIES.TEMPLATE.FORM,
-        CONSTANTS.ABILITIES.TEMPLATE.LIST
-    ])
+    const templates = [
+        constants.TEMPLATE.FORM,
+        constants.TEMPLATE.LIST
+    ]
+    Logger.debug('Loading templates', templates)
+    loadTemplates(templates)
 }
 
 /**
@@ -29,12 +24,12 @@ export function register () {
  */
 function registerSettings () {
     registerMenu(
-        CONSTANTS.ABILITIES.MENU.KEY,
+        constants.MENU.KEY,
         {
-            hint: game.i18n.localize(CONSTANTS.ABILITIES.MENU.HINT),
-            label: game.i18n.localize(CONSTANTS.ABILITIES.MENU.LABEL),
-            name: game.i18n.localize(CONSTANTS.ABILITIES.MENU.NAME),
-            icon: CONSTANTS.ABILITIES.MENU.ICON,
+            hint: game.i18n.localize(constants.MENU.HINT),
+            label: game.i18n.localize(constants.MENU.LABEL),
+            name: game.i18n.localize(constants.MENU.NAME),
+            icon: constants.MENU.ICON,
             type: AbilitiesForm,
             restricted: true,
             scope: 'world'
@@ -42,7 +37,7 @@ function registerSettings () {
     )
 
     registerSetting(
-        CONSTANTS.ABILITIES.SETTING.KEY,
+        constants.SETTING.KEY,
         {
             scope: 'world',
             config: false,
