@@ -36,6 +36,20 @@
                 <input id="custom-dnd5e-levels" name="{{key}}.levels" type="number" value="{{levels}}">
             </div>
         </div>
+        {{#if (customDnd5eEq key "exhaustion")}}
+        <div class="form-group">
+            <label class="flex1" style="min-width:80px; max-width:120px;">{{localize "CUSTOM_DND5E.rollsReduction"}}</label>
+            <div class="form-fields">
+                <input id="custom-dnd5e-reduction.rolls" name="{{key}}.reduction.rolls" type="number" value="{{reduction.rolls}}">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="flex1" style="min-width:80px; max-width:120px;">{{localize "CUSTOM_DND5E.speedReduction"}}</label>
+            <div class="form-fields">
+                <input id="custom-dnd5e-speedReduction" name="{{key}}.reduction.speed" type="number" value="{{reduction.speed}}">
+            </div>
+        </div>
+        {{/if}}
         <div class="form-group">
             <label class="flex1" style="min-width:80px; max-width:120px;">{{localize "CUSTOM_DND5E.special"}}</label>
             <div class="form-fields">
