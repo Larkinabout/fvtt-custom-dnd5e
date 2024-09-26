@@ -17,6 +17,8 @@ import {
 } from './utils.js'
 import { HouseRulesForm } from './forms/house-rules-form.js'
 
+const constants = CONSTANTS.HOUSE_RULES
+
 /**
  * Register
  */
@@ -24,16 +26,9 @@ export function register () {
     registerSettings()
     registerHooks()
 
-    Logger.debug(
-        'Loading templates',
-        [
-            CONSTANTS.HOUSE_RULES.TEMPLATE.FORM
-        ]
-    )
-
-    loadTemplates([
-        CONSTANTS.HOUSE_RULES.TEMPLATE.FORM
-    ])
+    const templates = [constants.TEMPLATE.FORM]
+    Logger.debug('Loading templates', templates)
+    loadTemplates(templates)
 }
 
 /**
@@ -41,12 +36,12 @@ export function register () {
  */
 function registerSettings () {
     registerMenu(
-        CONSTANTS.HOUSE_RULES.MENU.KEY,
+        constants.MENU.KEY,
         {
-            hint: game.i18n.localize(CONSTANTS.HOUSE_RULES.MENU.HINT),
-            label: game.i18n.localize(CONSTANTS.HOUSE_RULES.MENU.LABEL),
-            name: game.i18n.localize(CONSTANTS.HOUSE_RULES.MENU.NAME),
-            icon: CONSTANTS.HOUSE_RULES.MENU.ICON,
+            hint: game.i18n.localize(constants.MENU.HINT),
+            label: game.i18n.localize(constants.MENU.LABEL),
+            name: game.i18n.localize(constants.MENU.NAME),
+            icon: constants.MENU.ICON,
             type: HouseRulesForm,
             restricted: true,
             scope: 'world'
@@ -261,6 +256,16 @@ function registerSettings () {
             scope: 'world',
             config: false,
             type: Number
+        }
+    )
+
+    registerSetting(
+        CONSTANTS.RESTING.SETTING.USE_CAMP_SUPPLIES.KEY,
+        {
+            scope: 'world',
+            config: false,
+            type: Boolean,
+            default: false
         }
     )
 }

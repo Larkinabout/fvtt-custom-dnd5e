@@ -3,23 +3,18 @@ import { Logger, checkEmpty, registerMenu, getSetting, registerSetting, resetDnd
 import { ConditionsForm } from './forms/conditions-form.js'
 import { buildBloodied, registerBloodied } from './house-rules.js'
 
+const constants = CONSTANTS.CONDITIONS
+
 export function register () {
     registerSettings()
 
-    Logger.debug(
-        'Loading templates',
-        [
-            CONSTANTS.CONDITIONS.TEMPLATE.FORM,
-            CONSTANTS.CONDITIONS.TEMPLATE.LIST,
-            CONSTANTS.CONDITIONS.TEMPLATE.EDIT
-        ]
-    )
-
-    loadTemplates([
-        CONSTANTS.CONDITIONS.TEMPLATE.FORM,
-        CONSTANTS.CONDITIONS.TEMPLATE.LIST,
-        CONSTANTS.CONDITIONS.TEMPLATE.EDIT
-    ])
+    const templates = [
+        constants.TEMPLATE.FORM,
+        constants.TEMPLATE.LIST,
+        constants.TEMPLATE.EDIT
+    ]
+    Logger.debug('Loading templates', templates)
+    loadTemplates(templates)
 }
 
 /**
@@ -27,12 +22,12 @@ export function register () {
  */
 function registerSettings () {
     registerMenu(
-        CONSTANTS.CONDITIONS.MENU.KEY,
+        constants.MENU.KEY,
         {
-            hint: game.i18n.localize(CONSTANTS.CONDITIONS.MENU.HINT),
-            label: game.i18n.localize(CONSTANTS.CONDITIONS.MENU.LABEL),
-            name: game.i18n.localize(CONSTANTS.CONDITIONS.MENU.NAME),
-            icon: CONSTANTS.CONDITIONS.MENU.ICON,
+            hint: game.i18n.localize(constants.MENU.HINT),
+            label: game.i18n.localize(constants.MENU.LABEL),
+            name: game.i18n.localize(constants.MENU.NAME),
+            icon: constants.MENU.ICON,
             type: ConditionsForm,
             restricted: false,
             scope: 'world'
@@ -40,7 +35,7 @@ function registerSettings () {
     )
 
     registerSetting(
-        CONSTANTS.CONDITIONS.SETTING.KEY,
+        constants.SETTING.KEY,
         {
             scope: 'world',
             config: false,

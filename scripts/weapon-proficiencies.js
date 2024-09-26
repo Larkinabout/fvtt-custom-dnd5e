@@ -8,18 +8,12 @@ import { WeaponProficienciesForm } from './forms/weapon-proficiencies-form.js'
 export function register () {
     registerSettings()
 
-    Logger.debug(
-        'Loading templates',
-        [
-            CONSTANTS.WEAPON_PROFICIENCIES.TEMPLATE.FORM,
-            CONSTANTS.WEAPON_PROFICIENCIES.TEMPLATE.LIST
-        ]
-    )
-
-    loadTemplates([
+    const templates = [
         CONSTANTS.WEAPON_PROFICIENCIES.TEMPLATE.FORM,
         CONSTANTS.WEAPON_PROFICIENCIES.TEMPLATE.LIST
-    ])
+    ]
+    Logger.debug('Loading templates', templates)
+    loadTemplates(templates)
 }
 
 /**

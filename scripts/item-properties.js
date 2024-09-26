@@ -8,18 +8,12 @@ import { ItemPropertiesForm } from './forms/item-properties-form.js'
 export function register () {
     registerSettings()
 
-    Logger.debug(
-        'Loading templates',
-        [
-            CONSTANTS.ITEM_PROPERTIES.TEMPLATE.FORM,
-            CONSTANTS.ITEM_PROPERTIES.TEMPLATE.LIST
-        ]
-    )
-
-    loadTemplates([
+    const templates = [
         CONSTANTS.ITEM_PROPERTIES.TEMPLATE.FORM,
         CONSTANTS.ITEM_PROPERTIES.TEMPLATE.LIST
-    ])
+    ]
+    Logger.debug('Loading templates', templates)
+    loadTemplates(templates)
 }
 
 /**

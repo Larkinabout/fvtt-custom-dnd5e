@@ -2,6 +2,7 @@ import { CONSTANTS, SHEET_TYPE } from './constants.js'
 import { Logger, checkEmpty, getSetting, registerMenu, registerSetting, resetDnd5eConfig } from './utils.js'
 import { CurrencyForm } from './forms/config-form.js'
 
+const constants = CONSTANTS.CURRENCY
 const property = 'currencies'
 
 /**
@@ -11,18 +12,12 @@ export function register () {
     registerSettings()
     registerHooks()
 
-    Logger.debug(
-        'Loading templates',
-        [
-            CONSTANTS.CURRENCY.TEMPLATE.FORM,
-            CONSTANTS.CURRENCY.TEMPLATE.LIST
-        ]
-    )
-
-    loadTemplates([
-        CONSTANTS.CURRENCY.TEMPLATE.FORM,
-        CONSTANTS.CURRENCY.TEMPLATE.LIST
-    ])
+    const templates = [
+        constants.TEMPLATE.FORM,
+        constants.TEMPLATE.LIST
+    ]
+    Logger.debug('Loading templates', templates)
+    loadTemplates(templates)
 }
 
 /**
@@ -30,12 +25,12 @@ export function register () {
  */
 function registerSettings () {
     registerMenu(
-        CONSTANTS.CURRENCY.MENU.KEY,
+        constants.MENU.KEY,
         {
-            hint: game.i18n.localize(CONSTANTS.CURRENCY.MENU.HINT),
-            label: game.i18n.localize(CONSTANTS.CURRENCY.MENU.LABEL),
-            name: game.i18n.localize(CONSTANTS.CURRENCY.MENU.NAME),
-            icon: CONSTANTS.CURRENCY.MENU.ICON,
+            hint: game.i18n.localize(constants.MENU.HINT),
+            label: game.i18n.localize(constants.MENU.LABEL),
+            name: game.i18n.localize(constants.MENU.NAME),
+            icon: constants.MENU.ICON,
             type: CurrencyForm,
             restricted: true,
             scope: 'world'
@@ -43,7 +38,7 @@ function registerSettings () {
     )
 
     registerSetting(
-        CONSTANTS.CURRENCY.SETTING.KEY,
+        constants.SETTING.KEY,
         {
             scope: 'world',
             config: false,
@@ -58,7 +53,7 @@ function registerSettings () {
  */
 function registerHooks () {
     Hooks.on('renderCurrencyManager', (app, html, data) => {
-        const setting = getSetting(CONSTANTS.CURRENCY.SETTING.KEY)
+        const setting = getSetting(constants.SETTING.KEY)
 
         Object.entries(setting).forEach(([key, value]) => {
             if (value.visible === false) {
@@ -72,7 +67,7 @@ function registerHooks () {
 
         if (!sheetType) return
 
-        const setting = getSetting(CONSTANTS.CURRENCY.SETTING.KEY)
+        const setting = getSetting(constants.SETTING.KEY)
 
         if (!sheetType.legacy) {
             Object.entries(setting).forEach(([key, value]) => {

@@ -2,6 +2,7 @@ import { CONSTANTS } from './constants.js'
 import { Logger, checkEmpty, registerMenu, registerSetting, resetDnd5eConfig } from './utils.js'
 import { EncumbranceForm } from './forms/encumbrance-form.js'
 
+const constants = CONSTANTS.ENCUMBRANCE
 const property = 'encumbrance'
 
 /**
@@ -13,16 +14,9 @@ export function register () {
 
     registerSettings()
 
-    Logger.debug(
-        'Loading templates',
-        [
-            CONSTANTS.ENCUMBRANCE.TEMPLATE.FORM
-        ]
-    )
-
-    loadTemplates([
-        CONSTANTS.ENCUMBRANCE.TEMPLATE.FORM
-    ])
+    const templates = [constants.TEMPLATE.FORM]
+    Logger.debug('Loading templates', templates)
+    loadTemplates(templates)
 }
 
 /**
@@ -30,12 +24,12 @@ export function register () {
  */
 function registerSettings () {
     registerMenu(
-        CONSTANTS.ENCUMBRANCE.MENU.KEY,
+        constants.MENU.KEY,
         {
-            hint: game.i18n.localize(CONSTANTS.ENCUMBRANCE.MENU.HINT),
-            label: game.i18n.localize(CONSTANTS.ENCUMBRANCE.MENU.LABEL),
-            name: game.i18n.localize(CONSTANTS.ENCUMBRANCE.MENU.NAME),
-            icon: CONSTANTS.ENCUMBRANCE.MENU.ICON,
+            hint: game.i18n.localize(constants.MENU.HINT),
+            label: game.i18n.localize(constants.MENU.LABEL),
+            name: game.i18n.localize(constants.MENU.NAME),
+            icon: constants.MENU.ICON,
             type: EncumbranceForm,
             restricted: true,
             scope: 'world'
@@ -43,7 +37,7 @@ function registerSettings () {
     )
 
     registerSetting(
-        CONSTANTS.ENCUMBRANCE.SETTING.KEY,
+        constants.SETTING.KEY,
         {
             scope: 'world',
             config: false,
@@ -53,7 +47,7 @@ function registerSettings () {
     )
 
     registerSetting(
-        CONSTANTS.ENCUMBRANCE.EQUIPPED_ITEM_WEIGHT_MODIFIER.SETTING.KEY,
+        constants.EQUIPPED_ITEM_WEIGHT_MODIFIER.SETTING.KEY,
         {
             scope: 'world',
             config: false,
@@ -63,7 +57,7 @@ function registerSettings () {
     )
 
     registerSetting(
-        CONSTANTS.ENCUMBRANCE.PROFICIENT_EQUIPPED_ITEM_WEIGHT_MODIFIER.SETTING.KEY,
+        constants.PROFICIENT_EQUIPPED_ITEM_WEIGHT_MODIFIER.SETTING.KEY,
         {
             scope: 'world',
             config: false,
@@ -73,7 +67,7 @@ function registerSettings () {
     )
 
     registerSetting(
-        CONSTANTS.ENCUMBRANCE.UNEQUIPPED_ITEM_WEIGHT_MODIFIER.SETTING.KEY,
+        constants.UNEQUIPPED_ITEM_WEIGHT_MODIFIER.SETTING.KEY,
         {
             scope: 'world',
             config: false,

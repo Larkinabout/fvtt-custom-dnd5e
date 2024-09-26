@@ -2,17 +2,19 @@ import { CONSTANTS } from './constants.js'
 import { getSetting, setSetting, registerMenu, registerSetting } from './utils.js'
 import { WeaponPropertiesForm } from './forms/config-form.js'
 
+const constants = CONSTANTS.WEAPON_PROFICIENCIES
+
 /**
  * Register Settings
  */
 export function registerSettings () {
     registerMenu(
-        CONSTANTS.WEAPON_PROPERTIES.MENU.KEY,
+        constants.MENU.KEY,
         {
-            hint: game.i18n.localize(CONSTANTS.WEAPON_PROPERTIES.MENU.HINT),
-            label: game.i18n.localize(CONSTANTS.WEAPON_PROPERTIES.MENU.LABEL),
-            name: game.i18n.localize(CONSTANTS.WEAPON_PROPERTIES.MENU.NAME),
-            icon: CONSTANTS.WEAPON_PROPERTIES.MENU.ICON,
+            hint: game.i18n.localize(constants.MENU.HINT),
+            label: game.i18n.localize(constants.MENU.LABEL),
+            name: game.i18n.localize(constants.MENU.NAME),
+            icon: constants.MENU.ICON,
             type: WeaponPropertiesForm,
             restricted: true,
             scope: 'world'
@@ -20,7 +22,7 @@ export function registerSettings () {
     )
 
     registerSetting(
-        CONSTANTS.WEAPON_PROPERTIES.SETTING.KEY,
+        constants.SETTING.KEY,
         {
             scope: 'world',
             config: false,
@@ -29,9 +31,9 @@ export function registerSettings () {
         }
     )
 
-    const setting = getSetting(CONSTANTS.WEAPON_PROPERTIES.SETTING.KEY)
+    const setting = getSetting(constants.SETTING.KEY)
     if (!Object.keys(setting).length) {
-        setSetting(CONSTANTS.WEAPON_PROPERTIES.SETTING.KEY, CONFIG.CUSTOM_DND5E.weaponProperties)
+        setSetting(constants.SETTING.KEY, CONFIG.CUSTOM_DND5E.weaponProperties)
     }
 }
 

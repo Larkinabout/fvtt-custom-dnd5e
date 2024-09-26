@@ -6,16 +6,9 @@ export function register () {
     registerSettings()
     registerHooks()
 
-    Logger.debug(
-        'Loading templates',
-        [
-            CONSTANTS.SHEET.TEMPLATE.FORM
-        ]
-    )
-
-    loadTemplates([
-        CONSTANTS.SHEET.TEMPLATE.FORM
-    ])
+    const templates = [CONSTANTS.SHEET.TEMPLATE.FORM]
+    Logger.debug('Loading templates', templates)
+    loadTemplates(templates)
 }
 
 /**

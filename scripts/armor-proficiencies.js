@@ -2,24 +2,20 @@ import { CONSTANTS } from './constants.js'
 import { Logger, checkEmpty, registerMenu, registerSetting, resetDnd5eConfig } from './utils.js'
 import { ArmorProficienciesForm } from './forms/armor-proficiencies-form.js'
 
+const constants = CONSTANTS.ARMOR_PROFICIENCIES
+
 /**
  * Register
  */
 export function register () {
     registerSettings()
 
-    Logger.debug(
-        'Loading templates',
-        [
-            CONSTANTS.ARMOR_PROFICIENCIES.TEMPLATE.FORM,
-            CONSTANTS.ARMOR_PROFICIENCIES.TEMPLATE.LIST
-        ]
-    )
-
-    loadTemplates([
-        CONSTANTS.ARMOR_PROFICIENCIES.TEMPLATE.FORM,
-        CONSTANTS.ARMOR_PROFICIENCIES.TEMPLATE.LIST
-    ])
+    const templates = [
+        constants.TEMPLATE.FORM,
+        constants.TEMPLATE.LIST
+    ]
+    Logger.debug('Loading templates', templates)
+    loadTemplates(templates)
 }
 
 /**
@@ -27,12 +23,12 @@ export function register () {
  */
 function registerSettings () {
     registerMenu(
-        CONSTANTS.ARMOR_PROFICIENCIES.MENU.KEY,
+        constants.MENU.KEY,
         {
-            hint: game.i18n.localize(CONSTANTS.ARMOR_PROFICIENCIES.MENU.HINT),
-            label: game.i18n.localize(CONSTANTS.ARMOR_PROFICIENCIES.MENU.LABEL),
-            name: game.i18n.localize(CONSTANTS.ARMOR_PROFICIENCIES.MENU.NAME),
-            icon: CONSTANTS.ARMOR_PROFICIENCIES.MENU.ICON,
+            hint: game.i18n.localize(constants.MENU.HINT),
+            label: game.i18n.localize(constants.MENU.LABEL),
+            name: game.i18n.localize(constants.MENU.NAME),
+            icon: constants.MENU.ICON,
             type: ArmorProficienciesForm,
             restricted: true,
             scope: 'world'
@@ -40,7 +36,7 @@ function registerSettings () {
     )
 
     registerSetting(
-        CONSTANTS.ARMOR_PROFICIENCIES.SETTING.KEY,
+        constants.SETTING.KEY,
         {
             scope: 'world',
             config: false,

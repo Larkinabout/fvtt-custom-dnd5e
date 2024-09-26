@@ -7,7 +7,7 @@
   "compatibility": {
     "minimum": 12.325,
     "verified": 12.331,
-    "maximum": 12
+    "maximum": 12.999
   },
   "authors": [
     {
@@ -38,14 +38,27 @@
   ],
   "packs": [
     {
-      "name": "custom-dandd-5e",
+      "name": "custom-dnd5e-journals",
       "label": "Custom D&D 5e",
-      "path": "packs/custom-dandd-5e",
+      "path": "packs/custom-dnd5e-journals",
       "type": "JournalEntry",
       "ownership": {
         "PLAYER": "NONE",
         "ASSISTANT": "OWNER"
       },
+      "system": "dnd5e",
+      "flags": {}
+    },
+    {
+      "name": "custom-dnd5e-items",
+      "label": "Custom D&D 5e Items",
+      "path": "packs/custom-dnd5e-items",
+      "type": "Item",
+      "ownership": {
+        "PLAYER": "NONE",
+        "ASSISTANT": "OWNER"
+      },
+      "system": "dnd5e",
       "flags": {}
     }
   ],
@@ -54,8 +67,8 @@
       {
         "id": "dnd5e",
         "compatibility":{
-          "minimum": "3.3.1",
-          "verified": "4.0.2",
+          "minimum": "4.0.0",
+          "verified": "4.0.3",
           "maximum": "4.99"
         }
       }

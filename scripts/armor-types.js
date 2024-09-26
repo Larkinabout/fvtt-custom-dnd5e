@@ -2,6 +2,7 @@ import { CONSTANTS } from './constants.js'
 import { checkEmpty, registerMenu, registerSetting, resetDnd5eConfig } from './utils.js'
 import { ArmorTypesForm } from './forms/config-form.js'
 
+const constants = CONSTANTS.ARMOR_TYPES
 const property = 'armorTypes'
 
 /**
@@ -16,12 +17,12 @@ export function register () {
  */
 function registerSettings () {
     registerMenu(
-        CONSTANTS.ARMOR_TYPES.MENU.KEY,
+        constants.MENU.KEY,
         {
-            hint: game.i18n.localize(CONSTANTS.ARMOR_TYPES.MENU.HINT),
-            label: game.i18n.localize(CONSTANTS.ARMOR_TYPES.MENU.LABEL),
-            name: game.i18n.localize(CONSTANTS.ARMOR_TYPES.MENU.NAME),
-            icon: CONSTANTS.ARMOR_TYPES.MENU.ICON,
+            hint: game.i18n.localize(constants.MENU.HINT),
+            label: game.i18n.localize(constants.MENU.LABEL),
+            name: game.i18n.localize(constants.MENU.NAME),
+            icon: constants.MENU.ICON,
             type: ArmorTypesForm,
             restricted: true,
             scope: 'world'
@@ -29,7 +30,7 @@ function registerSettings () {
     )
 
     registerSetting(
-        CONSTANTS.ARMOR_TYPES.SETTING.KEY,
+        constants.SETTING.KEY,
         {
             scope: 'world',
             config: false,

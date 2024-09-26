@@ -2,6 +2,7 @@ import { CONSTANTS } from './constants.js'
 import { checkEmpty, registerMenu, registerSetting, resetDnd5eConfig } from './utils.js'
 import { ConsumableTypesForm } from './forms/config-form.js'
 
+const constants = CONSTANTS.CONSUMABLE_TYPES
 const property = 'consumableTypes'
 
 /**
@@ -16,12 +17,12 @@ export function register () {
  */
 function registerSettings () {
     registerMenu(
-        CONSTANTS.CONSUMABLE_TYPES.MENU.KEY,
+        constants.MENU.KEY,
         {
-            hint: game.i18n.localize(CONSTANTS.CONSUMABLE_TYPES.MENU.HINT),
-            label: game.i18n.localize(CONSTANTS.CONSUMABLE_TYPES.MENU.LABEL),
-            name: game.i18n.localize(CONSTANTS.CONSUMABLE_TYPES.MENU.NAME),
-            icon: CONSTANTS.CONSUMABLE_TYPES.MENU.ICON,
+            hint: game.i18n.localize(constants.MENU.HINT),
+            label: game.i18n.localize(constants.MENU.LABEL),
+            name: game.i18n.localize(constants.MENU.NAME),
+            icon: constants.MENU.ICON,
             type: ConsumableTypesForm,
             restricted: true,
             scope: 'world'
@@ -29,7 +30,7 @@ function registerSettings () {
     )
 
     registerSetting(
-        CONSTANTS.CONSUMABLE_TYPES.SETTING.KEY,
+        constants.SETTING.KEY,
         {
             scope: 'world',
             config: false,

@@ -2,6 +2,7 @@ import { CONSTANTS } from './constants.js'
 import { checkEmpty, registerMenu, registerSetting, resetDnd5eConfig } from './utils.js'
 import { FeatureTypesForm } from './forms/feature-types-form.js'
 
+const constants = CONSTANTS.FEATURE_TYPES
 const property = 'featureTypes'
 
 /**
@@ -16,12 +17,12 @@ export function register () {
  */
 function registerSettings () {
     registerMenu(
-        CONSTANTS.FEATURE_TYPES.MENU.KEY,
+        constants.MENU.KEY,
         {
-            hint: game.i18n.localize(CONSTANTS.FEATURE_TYPES.MENU.HINT),
-            label: game.i18n.localize(CONSTANTS.FEATURE_TYPES.MENU.LABEL),
-            name: game.i18n.localize(CONSTANTS.FEATURE_TYPES.MENU.NAME),
-            icon: CONSTANTS.FEATURE_TYPES.MENU.ICON,
+            hint: game.i18n.localize(constants.MENU.HINT),
+            label: game.i18n.localize(constants.MENU.LABEL),
+            name: game.i18n.localize(constants.MENU.NAME),
+            icon: constants.MENU.ICON,
             type: FeatureTypesForm,
             restricted: true,
             scope: 'world'
@@ -29,7 +30,7 @@ function registerSettings () {
     )
 
     registerSetting(
-        CONSTANTS.FEATURE_TYPES.SETTING.KEY,
+        constants.SETTING.KEY,
         {
             scope: 'world',
             config: false,

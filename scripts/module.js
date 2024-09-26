@@ -7,6 +7,7 @@ import { register as registerActorSizes, setConfig as setActorSizes } from './ac
 import { register as registerArmorCalculations, setConfig as setArmorCalculations } from './armor-calculations.js'
 import { register as registerArmorIds, setConfig as setArmorIds } from './armor-ids.js'
 import { register as registerArmorProficiencies, setConfig as setArmorProficiencies } from './armor-proficiencies.js'
+import { register as registerCampSupplies } from './camp-supplies.js'
 import { register as registerConditions, setConfig as setConditions } from './conditions.js'
 import { register as registerConsumableTypes, setConfig as setConsumableTypes } from './consumable-types.js'
 import { registerSettings as registerCounters } from './counters.js'
@@ -66,6 +67,7 @@ Hooks.on('init', async () => {
     registerArmorCalculations()
     registerArmorIds()
     registerArmorProficiencies()
+    registerCampSupplies()
     registerConditions()
     registerConsumableTypes()
     registerCounters()
@@ -95,20 +97,7 @@ Hooks.on('init', async () => {
     // Must be registered after abilities and skills are set
     registerNegativeHp()
 
-    Logger.debug(
-        'Loading templates',
-        [
-            CONSTANTS.CONFIG.TEMPLATE.FORM,
-            CONSTANTS.CONFIG.TEMPLATE.LIST,
-            CONSTANTS.SHEET.TEMPLATE.CHARACTER_SHEET_2,
-            CONSTANTS.SHEET.TEMPLATE.CHARACTER_DETAILS,
-            CONSTANTS.MESSAGE.TEMPLATE.ROLL_REQUEST_CARD,
-            CONSTANTS.UUID.TEMPLATE.FORM,
-            CONSTANTS.UUID.TEMPLATE.LIST
-        ]
-    )
-
-    loadTemplates([
+    const templates = [
         CONSTANTS.CONFIG.TEMPLATE.FORM,
         CONSTANTS.CONFIG.TEMPLATE.LIST,
         CONSTANTS.SHEET.TEMPLATE.CHARACTER_SHEET_2,
@@ -116,7 +105,9 @@ Hooks.on('init', async () => {
         CONSTANTS.MESSAGE.TEMPLATE.ROLL_REQUEST_CARD,
         CONSTANTS.UUID.TEMPLATE.FORM,
         CONSTANTS.UUID.TEMPLATE.LIST
-    ])
+    ]
+    Logger.debug('Loading templates', templates)
+    loadTemplates(templates)
 })
 
 Hooks.on('ready', async () => {
