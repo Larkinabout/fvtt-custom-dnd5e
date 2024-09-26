@@ -56,7 +56,7 @@
         "compatibility":{
           "minimum": "3.3.1",
           "verified": "4.0.2",
-          "maximum": "4"
+          "maximum": "4.99"
         }
       }
     ],
