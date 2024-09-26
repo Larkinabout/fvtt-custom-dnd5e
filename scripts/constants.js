@@ -496,7 +496,8 @@ export const CONSTANTS = {
         },
         TEMPLATE: {
             LONG_REST: 'modules/custom-dnd5e/templates/long-rest.hbs'
-        }
+        },
+        UUID: 'Compendium.custom-dnd5e.custom-dnd5e-journals.JournalEntry.ngr8w6WBycK59brj.JournalEntryPage.lR4mGZPNE02Lbe6t'
     },
     SENSES: {
         ID: 'senses',
@@ -664,7 +665,7 @@ export const CONSTANTS = {
 
 export const JOURNAL_HELP_BUTTON = {
     icon: 'fa-circle-info',
-    tooltip: 'Open Help Guide',
+    tooltip: 'CUSTOM_DND5E.openGuide',
     action: 'help',
     uuid: null
 }

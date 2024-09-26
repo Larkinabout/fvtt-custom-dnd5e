@@ -1,5 +1,1 @@
-2024/09/26-09:15:59.948 60a8 Log #70: 0 ops saved to Table #73 OK
-2024/09/26-09:15:59.949 60a8 Archiving C:\Program Files\Foundry VTT\V12 - dnd5e 4\data\Data\modules\custom-dnd5e\packs\custom-dnd5e-journals/000070.log: OK
-2024/09/26-09:15:59.949 60a8 Table #72: 33 entries OK
-2024/09/26-09:15:59.954 60a8 Archiving C:\Program Files\Foundry VTT\V12 - dnd5e 4\data\Data\modules\custom-dnd5e\packs\custom-dnd5e-journals/MANIFEST-000068: OK
-2024/09/26-09:15:59.961 60a8 **** Repaired leveldb C:\Program Files\Foundry VTT\V12 - dnd5e 4\data\Data\modules\custom-dnd5e\packs\custom-dnd5e-journals; recovered 1 files; 25797 bytes. Some data may have been lost. ****
+2024/09/26-09:15:59.973 60a8 Delete type=3 #1
