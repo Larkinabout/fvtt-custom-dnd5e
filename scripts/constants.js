@@ -542,6 +542,13 @@ export const CONSTANTS = {
             CHARACTER_DETAILS: 'modules/custom-dnd5e/templates/sheet/character-details.hbs'
         }
     },
+    SHOW_PRESSED_KEYS: {
+        SETTING: {
+            KEY: 'show-pressed-keys',
+            NAME: 'CUSTOM_DND5E.setting.showPressedKeys.name',
+            HINT: 'CUSTOM_DND5E.setting.showPressedKeys.hint'
+        }
+    },
     SKILLS: {
         ID: 'skills',
         MENU: {

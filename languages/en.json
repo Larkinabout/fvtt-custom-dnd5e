@@ -411,6 +411,8 @@
     "CUSTOM_DND5E.setting.tokenBorderShape.hint": "Choose the shape of the token's border when it is selected or hovered",
     "CUSTOM_DND5E.setting.applyElevationToSelectedTokens.name": "Apply Elevation to Selected",
     "CUSTOM_DND5E.setting.applyElevationToSelectedTokens.hint": "When applying elevation via a token's HUD, apply it to all selected tokens",
+    "CUSTOM_DND5E.setting.showPressedKeys.name": "Show Pressed Keys",
+    "CUSTOM_DND5E.setting.showPressedKeys.hint": "Displays an icon near the cursor when the Skip Dialog, Advantage, or Disadvantage keys are pressed",
     "CUSTOM_DND5E.setting.toggleStatusEffectOnSelectedTokens.name": "Toggle Status Effects on Selected",
     "CUSTOM_DND5E.setting.toggleStatusEffectOnSelectedTokens.hint": "When toggling a status effect via a token's HUD, toggle it for all selected tokens",
 

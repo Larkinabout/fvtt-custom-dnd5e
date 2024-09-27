@@ -19,6 +19,7 @@
     "scripts/module.js"
   ],
   "styles": [
+    "styles/custom-dnd5e.css",
     "styles/custom-dnd5e-character-sheet.css",
     "styles/custom-dnd5e-counters.css",
     "styles/custom-dnd5e-form.css",

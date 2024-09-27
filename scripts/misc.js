@@ -1,4 +1,5 @@
 import { CONSTANTS } from './constants.js'
+import { registerSettings as registerCursorLabelSettings, registerHooks as registerCursorLabelHooks } from './cursor-label.js'
 import { getSetting, registerSetting } from './utils.js'
 
 /**
@@ -22,6 +23,21 @@ function registerSettings () {
             type: Number,
             default: CONFIG.CUSTOM_DND5E.maxLevel,
             onChange: (value) => { setMaxLevel(value) }
+        }
+    )
+
+    registerCursorLabelSettings()
+
+    registerSetting(
+        CONSTANTS.TOKEN.SETTING.TOGGLE_STATUS_EFFECT_ON_SELECTED_TOKENS.KEY,
+        {
+            name: game.i18n.localize(CONSTANTS.TOKEN.SETTING.TOGGLE_STATUS_EFFECT_ON_SELECTED_TOKENS.NAME),
+            hint: game.i18n.localize(CONSTANTS.TOKEN.SETTING.TOGGLE_STATUS_EFFECT_ON_SELECTED_TOKENS.HINT),
+            scope: 'world',
+            config: true,
+            type: Boolean,
+            default: false,
+            requiresReload: true
         }
     )
 
@@ -66,6 +82,8 @@ function registerHooks () {
     if (getSetting(CONSTANTS.TOKEN.SETTING.APPLY_ELEVATION_TO_SELECTED_TOKENS.KEY)) {
         Hooks.on('updateToken', applyElevationToSelected)
     }
+
+    registerCursorLabelHooks()
 }
 
 async function toggleEffectOnSelected (active, activeEffect) {

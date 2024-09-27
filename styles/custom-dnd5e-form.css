@@ -237,29 +237,3 @@ button.custom-dnd5e-list-button:focus {
     margin-bottom: 0.25rem;
     padding: 0.25rem;
 }
-
-.custom-dnd5e-camp-supplies {
-    align-items: center;
-    display: flex;
-    gap: 0.5rem;
-    justify-content: center;
-    padding: 0.5rem;
-}
-
-.custom-dnd5e-camp-supplies > img {
-    border: 2px solid var(--dnd5e-color-gold);
-    border-radius: 5px;
-    box-shadow: inset 0 0 1px rgba(0, 0, 0, 1);
-    width: 40px;
-}
-
-.custom-dnd5e-camp-supplies > p {
-    color: var(--color-text-dark-primary);
-    font-family: var(--dnd5e-font-roboto-slab);
-    font-size: var(--font-size-15);
-    font-weight: bold;
-}
-
-.custom-dnd5e-camp-supplies > p.custom-dnd5e-failure {
-    color: var(--dnd5e-color-failure);
-}

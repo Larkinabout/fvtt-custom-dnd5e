@@ -64,7 +64,7 @@
     "CUSTOM_DND5E.onLongRest": "Ao Realizar um Descanso Longo",
     "CUSTOM_DND5E.onRegainingHpFromZero": "Ao Recuperar PVs de 0",
     "CUSTOM_DND5E.onShortRest": "Ao Realizar Um Descanso Curto",
-    "CUSTOM_DND5E.openGuide": "Abrir Guia"
+    "CUSTOM_DND5E.openGuide": "Abrir Guia",
     "CUSTOM_DND5E.options": "Opções",
     "CUSTOM_DND5E.physical": "Físico",
     "CUSTOM_DND5E.proficientEquippedItemWeightModifier": "Modificador de Peso de Item Proficiente & Equipado",
@@ -411,6 +411,8 @@
     "CUSTOM_DND5E.setting.tokenBorderShape.hint": "Escolha o formato da borda do token quando ele for selecionado ou estiver com o ponteiro por cima",
     "CUSTOM_DND5E.setting.applyElevationToSelectedTokens.name": "Aplicar Elevação aos Selecionados",
     "CUSTOM_DND5E.setting.applyElevationToSelectedTokens.hint": "Ao aplicar elevação através da HUD de um token, aplicar para todos os tokens selecionados",
+    "CUSTOM_DND5E.setting.showPressedKeys.name": "Mostrar Teclas Pressionadas",
+    "CUSTOM_DND5E.setting.showPressedKeys.hint": "Exibe um ícone próximo ao cursor quando as teclas de Pular Diálogo, Vantagem ou Desvantagem forem pressionadas",
     "CUSTOM_DND5E.setting.toggleStatusEffectOnSelectedTokens.name": "Alterna Efeitos de Condições nos Selecionados",
     "CUSTOM_DND5E.setting.toggleStatusEffectOnSelectedTokens.hint": "Ao alternar efeitos de condições pela HUD de tokens, alterna em todos os tokens selecionados",
     
