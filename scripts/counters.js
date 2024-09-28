@@ -58,13 +58,7 @@ export function registerSettings () {
         }
     )
 
-    const templates = [
-        constants.TEMPLATE.FORM,
-        constants.TEMPLATE.FORM_INDIVIDUAL,
-        constants.TEMPLATE.LIST,
-        constants.TEMPLATE.ADVANCED_OPTIONS_FORM,
-        constants.TEMPLATE.ADVANCED_OPTIONS_LIST
-    ]
+    const templates = Object.values(constants.TEMPLATE)
     Logger.debug('Loading templates', templates)
     loadTemplates(templates)
 }
@@ -74,24 +68,13 @@ export function registerSettings () {
  */
 Hooks.on('renderInnerActorSheet', (app, html, data) => {
     const sheetType = SHEET_TYPE[app.constructor.name]
-
     if (!sheetType) return
 
-    if (sheetType.group) {
-        addCountersGroup(app, html, data, sheetType)
-        return
-    }
-
-    if (sheetType) {
-        sheetType.legacy
-            ? addCountersLegacy(app, html, data, sheetType)
-            : addCounters(app, html, data, sheetType)
-    }
+    addCounters(app, html, data, sheetType)
 })
 
 Hooks.on('renderInnerItemSheet', (app, html, data) => {
     const sheetType = SHEET_TYPE[app.constructor.name]
-
     if (!sheetType) return
 
     addCountersItem(app, html, data, sheetType)
@@ -305,432 +288,141 @@ function handleDecreaseAction (actor, key, trigger, type) {
 }
 
 /**
- * Add counters to the group sheet
- * @param {object} app       The app
- * @param {object} html      The HTML
- * @param {object} data      The data
- * @param {string} sheetType The actor sheet type
- */
-function addCountersGroup (app, html, data, sheetType) {
-    const actor = app.actor
-    const counters = game.settings.get(MODULE.ID, sheetType.countersSetting)
-
-    if (checkEmpty(counters)) return
-
-    const nav = html[0].querySelector('nav.sheet-navigation.tabs')
-    const navItem = document.createElement('a')
-    navItem.classList.add('item')
-    navItem.setAttribute('data-tab', 'custom-dnd5e-counters')
-    navItem.textContent = game.i18n.localize('CUSTOM_DND5E.counters')
-    nav.appendChild(navItem)
-
-    const body = html[0].querySelector('section.sheet-body')
-    const tab = document.createElement('div')
-    tab.classList.add('tab', 'custom-dnd5e-counters')
-    tab.setAttribute('data-group', 'primary')
-    tab.setAttribute('data-tab', 'custom-dnd5e-counters')
-
-    const ul = tab.appendChild(document.createElement('ul'))
-
-    for (const [key, counter] of Object.entries(counters)) {
-        if (!counter.visible || (counter.viewRole && game.user.role < counter.viewRole)) continue
-
-        ul.appendChild(createCounterItem(actor, key, counter))
-    }
-
-    if (Object.values(counters).some(c => !c.system && c.visible)) {
-        body.appendChild(tab)
-    }
-}
-
-/**
- * Add counters to the item sheet
- * @param {object} app       The app
- * @param {object} html      The HTML
- * @param {object} data      The data
- * @param {string} sheetType The item sheet type
- */
-function addCountersItem (app, html, data, sheetType) {
-    const item = app.item
-    const counters = game.settings.get(MODULE.ID, sheetType.countersSetting)
-
-    if (checkEmpty(counters)) return
-
-    const nav = html[0].querySelector('nav.sheet-navigation.tabs')
-    const navItem = document.createElement('a')
-    navItem.classList.add('item')
-    navItem.setAttribute('data-tab', 'custom-dnd5e-counters')
-    navItem.textContent = game.i18n.localize('CUSTOM_DND5E.counters')
-    nav.appendChild(navItem)
-
-    const body = html[0].querySelector('section.sheet-body')
-    const tab = document.createElement('div')
-    tab.classList.add('tab', 'custom-dnd5e-counters')
-    tab.setAttribute('data-group', 'primary')
-    tab.setAttribute('data-tab', 'custom-dnd5e-counters')
-
-    const ul = tab.appendChild(document.createElement('ul'))
-
-    for (const [key, counter] of Object.entries(counters)) {
-        if (!counter.visible || (counter.viewRole && game.user.role < counter.viewRole)) continue
-
-        ul.appendChild(createCounterItem(item, key, counter))
-    }
-
-    if (Object.values(counters).some(c => !c.system && c.visible)) {
-        body.appendChild(tab)
-    }
-}
-
-/**
  * Add counters to the sheet
  * @param {object} app       The app
  * @param {object} html      The HTML
  * @param {object} data      The data
  * @param {string} sheetType The actor sheet type
  */
-function addCounters (app, html, data, sheetType) {
-    const actor = app.actor
-    const counters = {
-        world: game.settings.get(MODULE.ID, sheetType.countersSetting),
-        entity: getFlag(actor, 'counters') ?? {}
-    }
+async function addCounters (app, html, data, sheetType) {
+    const entity = (!sheetType.item) ? app.actor : app
+    const counters = {}
+    const worldCounters = game.settings.get(MODULE.ID, sheetType.countersSetting)
+    const entityCounters = (sheetType.character || sheetType.npc) ? getFlag(entity, 'counters') ?? {} : {}
 
-    if (!data?.editable && checkEmpty(counters.world) && checkEmpty(counters.entity)) return
-
-    const countersDiv = createCountersDiv(actor, data)
-    const ul = countersDiv.appendChild(document.createElement('ul'))
-    let someCounters = false
-
-    for (const [source, counters2] of Object.entries(counters)) {
-        for (let [key, counter] of Object.entries(counters2)) {
-            if (!counter.visible || game.user.role < (counter.viewRole ?? 1)) continue
-            if (source === 'entity') {
-                key = `counters.${key}`
+    Object.entries(foundry.utils.deepClone(worldCounters))
+        .filter(([key, counter]) => counter.visible && game.user.role >= (counter.viewRole ?? 1))
+        .forEach(([key, counter]) => {
+            counter.canEdit = (!counter.editRole || game.user.role >= counter.editRole)
+            counter.property = key
+            if (['checkbox', 'number'].includes(counter.type)) {
+                counter.value = entity.getFlag(MODULE.ID, key)
             }
-            ul.appendChild(createCounterItem(actor, key, counter))
-            someCounters = true
-        }
+            if (counter.type === 'fraction') {
+                counter.value = entity.getFlag(MODULE.ID, `${key}.value`) ?? 0
+                counter.max = counter.max ?? entity.getFlag(MODULE.ID, `${key}.max`) ?? 0
+            }
+            if (counter.type === 'successFailure') {
+                counter.success = entity.getFlag(MODULE.ID, `${key}.success`) ?? 0
+                counter.failure = entity.getFlag(MODULE.ID, `${key}.failure`) ?? 0
+            }
+            counters[key] = counter
+        })
+
+    Object.entries(entityCounters)
+        .filter(([key, counter]) => counter.visible && game.user.role >= (counter.viewRole ?? 1))
+        .forEach(([key, counter]) => {
+            counter.canEdit = (!counter.editRole || game.user.role >= counter.editRole)
+            counter.property = (['checkbox', 'number'].includes(counter.type)) ? `${key}.value` : key
+            if (['checkbox', 'number'].includes(counter.type)) {
+                counter.property = `${key}.value`
+                counter.value = entity.getFlag(MODULE.ID, counter.property)
+            }
+            if (counter.type === 'fraction') {
+                counter.property = key
+                counter.value = entity.getFlag(MODULE.ID, `${key}.value`)
+                counter.canEditMax = (!counter.max && counter.canEdit)
+                counter.max = counter.max ?? entity.getFlag(MODULE.ID, `${key}.max`)
+            }
+            if (counter.type === 'successFailure') {
+                counter.property = key
+                counter.success = entity.getFlag(MODULE.ID, `${key}.success`) ?? 0
+                counter.failure = entity.getFlag(MODULE.ID, `${key}.failure`) ?? 0
+            }
+            counters[`counters.${key}`] = counter
+        })
+
+    if (!data?.editable && checkEmpty(counters)) return
+
+    // Add tab to navigation for group sheets
+    if (sheetType.group || sheetType.item) {
+        const nav = html[0].querySelector('nav.sheet-navigation.tabs')
+        const navItem = document.createElement('a')
+        navItem.classList.add('item')
+        navItem.setAttribute('data-tab', 'custom-dnd5e-counters')
+        navItem.textContent = game.i18n.localize('CUSTOM_DND5E.counters')
+        nav.appendChild(navItem)
     }
 
-    if (data?.editable || someCounters) {
-        if (sheetType.character) {
-            const detailsRightDiv = html[0].querySelector('.tab.details > .right')
-            const detailsRightTopDiv = detailsRightDiv.querySelector('.top')
-            detailsRightTopDiv.after(countersDiv)
-        } else {
-            const sidebarDiv = html[0].querySelector('.sidebar')
-            sidebarDiv.insertBefore(countersDiv, sidebarDiv.firstChild)
-        }
-
-        if (!someCounters) {
-            countersDiv.classList.add('empty')
-        }
+    const context = { editable: data.editable, counters }
+    if (app._tabs[0].active === 'custom-dnd5e-counters') {
+        context.active = ' active'
     }
-}
+    const template = await renderTemplate(sheetType.template, context)
+    const container = html[0].querySelector(sheetType.insert.class)
+    container.insertAdjacentHTML(sheetType.insert.position, template)
 
-/**
- * Create the Counters section
- * @returns {object} The DIV
- */
-function createCountersDiv (actor, data) {
-    const div = document.createElement('div')
-    div.classList.add('custom-dnd5e-counters-counters', 'pills-group')
+    const countersContainer = container.querySelector('#custom-dnd5e-counters')
+    if (!countersContainer) return
 
-    const h3 = document.createElement('h3')
-    h3.setAttribute('class', 'icon')
-    div.appendChild(h3)
-
-    const i = document.createElement('i')
-    i.classList.add('fas', 'fa-scroll')
-    h3.appendChild(i)
-
-    const span = document.createElement('span')
-    span.setAttribute('class', 'roboto-upper')
-    span.textContent = game.i18n.localize('CUSTOM_DND5E.counters')
-    h3.appendChild(span)
-
+    // If sheet is set to editable, add the config button
     if (data.editable) {
-        const a = document.createElement('a')
-        a.setAttribute('class', 'config-button')
-        a.setAttribute('data-tooltip', 'CUSTOM_DND5E.configureCounters')
-        a.setAttribute('aria-label', game.i18n.localize('CUSTOM_DND5E.configureCounters'))
-        h3.appendChild(a)
-
-        const iConfig = document.createElement('i')
-        iConfig.setAttribute('class', 'fas fa-cog')
-        a.appendChild(iConfig)
-
-        a.addEventListener('click', () => { openForm(actor) })
+        const configButton = countersContainer.querySelector('#custom-dnd5e-counters-config-button')
+        configButton?.addEventListener('click', () => openForm(entity))
     }
 
-    return div
+    Object.entries(counters).forEach(([key, counter]) => {
+        if (!counter.canEdit) return
+
+        const counterElement = countersContainer.querySelector(`[data-id="${key}"]`)
+        const links = counterElement.querySelectorAll('.custom-dnd5e-counters-link')
+        const inputs = counterElement.querySelectorAll('input')
+
+        switch (counter.type) {
+        case 'fraction':
+            links[0].addEventListener('click', () => increaseFraction(entity, key))
+            links[0].addEventListener('contextmenu', () => decreaseFraction(entity, key))
+            inputs.forEach(input => {
+                input.addEventListener('click', selectInputContent)
+                if (input.dataset?.input === 'value') {
+                    input.addEventListener('keyup', () => checkValue(input, entity, key), true)
+                }
+            })
+            break
+        case 'number':
+            links[0].addEventListener('click', () => { increaseNumber(entity, counter.property) })
+            links[0].addEventListener('contextmenu', () => decreaseNumber(entity, counter.property))
+            inputs.forEach(input => {
+                input.addEventListener('click', selectInputContent)
+                if (input.dataset?.input === 'value') {
+                    input.addEventListener('keyup', () => checkValue(input, entity, key), true)
+                }
+            })
+            break
+        case 'successFailure':
+            links.forEach(link => {
+                if (link.dataset?.input === 'success') {
+                    link.addEventListener('click', () => increaseSuccess(entity, key))
+                    link.addEventListener('contextmenu', () => decreaseSuccess(entity, key))
+                } else if (link.dataset?.input === 'failure') {
+                    link.addEventListener('click', () => increaseFailure(entity, key))
+                    link.addEventListener('contextmenu', () => decreaseFailure(entity, key))
+                }
+            })
+            inputs.forEach(input => {
+                input.addEventListener('click', selectInputContent)
+            })
+        }
+    })
+
+    if (!Object.keys(counters).length) {
+        countersContainer.classList?.add('empty')
+    }
 }
 
 function openForm (entity) {
     const form = new CountersFormIndividual(entity)
     form.render(true)
-}
-
-/**
- * Create a counter item
- * @param {object} entity  The entity: actor or item
- * @param {string} key     The counter key
- * @param {object} counter The counter
- * @returns {object}       The LI
- */
-function createCounterItem (entity, key, counter) {
-    let li = null
-    switch (counter.type) {
-    case 'checkbox': li = createCheckbox(entity, key, counter); break
-    case 'number': li = createNumber(entity, key, counter); break
-    case 'successFailure': li = createSuccessFailure(entity, key, counter); break
-    case 'fraction': li = createFraction(entity, key, counter)
-    }
-    return li
-}
-
-/**
- * Create a checkbox counter
- * @param {object} entity  The entity: actor or item
- * @param {string} key     The counter key
- * @param {object} counter The counter
- * @returns {object}       The LI
- */
-function createCheckbox (entity, key, counter) {
-    key = (key.startsWith('counters.')) ? `${key}.value` : key
-
-    const li = document.createElement('li')
-    li.classList.add('custom-dnd5e-counters-counter', 'flexrow', key)
-
-    const label = document.createElement('label')
-    label.setAttribute('class', 'flexrow')
-    li.appendChild(label)
-
-    const h4 = document.createElement('h4')
-    label.appendChild(h4)
-
-    if (!counter.editRole || game.user.role >= counter.editRole) {
-        const a = document.createElement('a')
-        a.textContent = counter.label
-        h4.appendChild(a)
-    } else {
-        h4.textContent = counter.label
-    }
-
-    const input = document.createElement('input')
-    input.setAttribute('type', 'checkbox')
-    input.setAttribute('name', `flags.${MODULE.ID}.${key}`)
-    input.checked = entity.getFlag(MODULE.ID, key) || false
-    input.setAttribute('value', entity.getFlag(MODULE.ID, key) || false)
-    input.setAttribute('placeholder', 'false')
-    input.setAttribute('data-dtype', 'Boolean')
-    if (counter.editRole && game.user.role < counter.editRole) {
-        input.setAttribute('disabled', 'true')
-    }
-    label.appendChild(input)
-
-    return li
-}
-
-/**
- * Create a fraction counter
- * @param {object} entity  The entity: actor or item
- * @param {string} key     The counter key
- * @param {object} counter The counter
- * @returns {object}       The LI
- */
-function createFraction (entity, key, counter) {
-    const settingMax = getMax(entity, key)
-
-    const li = document.createElement('li')
-    li.classList.add('custom-dnd5e-counters-counter', 'flexrow', key)
-
-    const h4 = document.createElement('h4')
-    li.appendChild(h4)
-
-    if (!counter.editRole || game.user.role >= counter.editRole) {
-        const a = document.createElement('a')
-        a.textContent = counter.label
-        a.addEventListener('click', () => decreaseFraction(entity, key))
-        a.addEventListener('contextmenu', () => increaseFraction(entity, key))
-        h4.appendChild(a)
-    } else {
-        h4.textContent = counter.label
-    }
-
-    const div = document.createElement('div')
-    div.classList.add('custom-dnd5e-counters-counter-value', 'custom-dnd5e-counters-fraction', key)
-    li.appendChild(div)
-
-    const divGroup = document.createElement('div')
-    divGroup.classList.add('custom-dnd5e-counters-fraction-group', key)
-    div.appendChild(divGroup)
-
-    const inputValue = document.createElement('input')
-    inputValue.setAttribute('type', 'number')
-    inputValue.setAttribute('name', `flags.${MODULE.ID}.${key}.value`)
-    inputValue.setAttribute('value', entity.getFlag(MODULE.ID, `${key}.value`))
-    inputValue.setAttribute('placeholder', '0')
-    inputValue.setAttribute('data-dtype', 'Number')
-    if (counter.editRole && game.user.role < counter.editRole) {
-        inputValue.classList.add('disabled')
-        inputValue.setAttribute('disabled', 'true')
-    } else {
-        inputValue.addEventListener('click', event => selectInputContent(event))
-        inputValue.addEventListener('keyup', () => checkValue(inputValue, entity, key))
-    }
-    divGroup.appendChild(inputValue)
-
-    const span = document.createElement('span')
-    span.classList.add('dnd5e-custom-counters-separator')
-    span.textContent = '/'
-    divGroup.appendChild(span)
-
-    const inputMax = document.createElement('input')
-    inputMax.setAttribute('type', 'number')
-    inputMax.setAttribute('name', `flags.${MODULE.ID}.${key}.max`)
-    inputMax.setAttribute('value', settingMax || entity.getFlag(MODULE.ID, `${key}.max`))
-    inputMax.setAttribute('placeholder', '0')
-    inputMax.setAttribute('data-dtype', 'Number')
-    if ((counter.editRole && game.user.role < counter.editRole) || settingMax) {
-        inputMax.classList.add('disabled')
-        inputMax.setAttribute('disabled', 'true')
-    } else {
-        inputMax.addEventListener('click', event => selectInputContent(event))
-    }
-    divGroup.appendChild(inputMax)
-
-    return li
-}
-
-/**
- * Create a number counter
- * @param {object} entity  The entity: actor or item
- * @param {string} key     The counter key
- * @param {object} counter The counter
- * @returns {object}       The LI
- */
-function createNumber (entity, key, counter) {
-    const originalKey = key
-    key = (key.startsWith('counters.')) ? `${key}.value` : key
-
-    const li = document.createElement('li')
-    li.classList.add('custom-dnd5e-counters-counter', 'flexrow', key)
-    const h4 = document.createElement('h4')
-    li.appendChild(h4)
-
-    if (!counter.editRole || game.user.role >= counter.editRole) {
-        const a = document.createElement('a')
-        a.textContent = counter.label
-        a.addEventListener('click', () => { increaseNumber(entity, originalKey) })
-        a.addEventListener('contextmenu', () => decreaseNumber(entity, key))
-        h4.appendChild(a)
-    } else {
-        h4.textContent = counter.label
-    }
-
-    const div = document.createElement('div')
-    div.classList.add('custom-dnd5e-counters-counter-value', 'custom-dnd5e-counters-number')
-    li.appendChild(div)
-    const input = document.createElement('input')
-    input.setAttribute('type', 'number')
-    input.setAttribute('name', `flags.${MODULE.ID}.${key}`)
-    input.setAttribute('value', entity.getFlag(MODULE.ID, key) || 0)
-    input.setAttribute('placeholder', '0')
-    input.setAttribute('data-dtype', 'Number')
-    if (counter.editRole && game.user.role < counter.editRole) {
-        input.classList.add('disabled')
-        input.setAttribute('disabled', 'true')
-    } else {
-        input.addEventListener('click', event => selectInputContent(event))
-        input.addEventListener('keyup', () => checkValue(input, entity, key), true)
-    }
-    div.appendChild(input)
-
-    return li
-}
-
-/**
- * Create a success/failure counter
- * @param {object} entity  The entity: actor or item
- * @param {string} key     The counter key
- * @param {object} counter The counter
- * @returns {object}       The LI
- */
-function createSuccessFailure (entity, key, counter) {
-    const li = document.createElement('li')
-    li.classList.add('custom-dnd5e-counters-counter', 'flexrow', key)
-
-    const h4 = document.createElement('h4')
-    h4.textContent = counter.label
-    li.appendChild(h4)
-
-    const div = document.createElement('div')
-    div.classList.add('custom-dnd5e-counters-counter-value', 'custom-dnd5e-counters-success-failure', key)
-    li.appendChild(div)
-
-    const iSuccess = document.createElement('i')
-    iSuccess.classList.add('fas', 'fa-check')
-
-    if (!counter.editRole || game.user.role >= counter.editRole) {
-        const aSuccess = document.createElement('a')
-        aSuccess.addEventListener('click', () => increaseSuccess(entity, key))
-        aSuccess.addEventListener('contextmenu', () => decreaseSuccess(entity, key))
-        div.appendChild(aSuccess)
-        aSuccess.appendChild(iSuccess)
-    } else {
-        div.appendChild(iSuccess)
-    }
-
-    const inputSuccess = document.createElement('input')
-    inputSuccess.setAttribute('type', 'number')
-    inputSuccess.setAttribute('name', `flags.${MODULE.ID}.${key}.success`)
-    inputSuccess.setAttribute('value', entity.getFlag(MODULE.ID, `${key}.success`) || 0)
-    inputSuccess.setAttribute('placeholder', '0')
-    inputSuccess.setAttribute('data-dtype', 'Number')
-
-    if (counter.editRole && game.user.role < counter.editRole) {
-        inputSuccess.classList.add('disabled')
-        inputSuccess.setAttribute('disabled', 'true')
-    } else {
-        inputSuccess.addEventListener('click', event => selectInputContent(event))
-        inputSuccess.addEventListener('keyup', () => checkValue(inputSuccess, entity, key), true)
-    }
-
-    div.appendChild(inputSuccess)
-
-    const iFailure = document.createElement('i')
-    iFailure.classList.add('fas', 'fa-times')
-
-    if (!counter.editRole || game.user.role >= counter.editRole) {
-        const aFailure = document.createElement('a')
-        aFailure.addEventListener('click', () => increaseFailure(entity, key))
-        aFailure.addEventListener('contextmenu', () => decreaseFailure(entity, key))
-        div.appendChild(aFailure)
-        aFailure.appendChild(iFailure)
-    } else {
-        div.appendChild(iFailure)
-    }
-
-    const inputFailure = document.createElement('input')
-    inputFailure.setAttribute('type', 'number')
-    inputFailure.setAttribute('name', `flags.${MODULE.ID}.${key}.failure`)
-    inputFailure.setAttribute('value', entity.getFlag(MODULE.ID, `${key}.failure`) || 0)
-    inputFailure.setAttribute('placeholder', '0')
-    inputFailure.setAttribute('data-dtype', 'Number')
-
-    if (counter.editRole && game.user.role < counter.editRole) {
-        inputFailure.classList.add('disabled')
-        inputFailure.setAttribute('disabled', 'true')
-    } else {
-        inputFailure.addEventListener('click', event => selectInputContent(event))
-        inputFailure.addEventListener('keyup', () => checkValue(inputFailure, entity, key), true)
-    }
-
-    div.appendChild(inputFailure)
-
-    return li
 }
 
 /**
@@ -931,147 +623,4 @@ function getCounters (entity, key = null) {
 function getMax (entity, key) {
     const setting = getCounters(entity, key)
     return setting?.max
-}
-
-/**
- * Add counters to the legacy sheet
- * @param {object} app       The app
- * @param {object} html      The HTML
- * @param {object} data      The data
- * @param {string} sheetType The actor sheet type
- */
-function addCountersLegacy (app, html, data, sheetType) {
-    const actor = app.actor
-    const counters = game.settings.get(MODULE.ID, sheetType.countersSetting)
-
-    if (checkEmpty(counters)) return
-
-    const countersDiv = html.find('.counters')
-
-    for (const [key, counter] of Object.entries(counters)) {
-        if (!counter.visible || (counter.viewRole && game.user.role < counter.viewRole)) {
-            continue
-        }
-
-        const settingMax = getMax(actor, key)
-
-        const counterDiv = document.createElement('div')
-        counterDiv.classList.add('counter', 'flexrow', key)
-
-        const h4 = document.createElement('h4')
-        const h4Text = document.createTextNode(counter.label)
-        h4.append(h4Text)
-
-        const counterValueDiv = document.createElement('div')
-        counterValueDiv.classList.add('counter-value')
-
-        const counterInput1 = document.createElement('input')
-        const counterInput2 = document.createElement('input')
-
-        if (counter.editRole && game.user.role < counter.editRole) {
-            counterInput1.classList.add('disabled')
-            counterInput1.setAttribute('disabled', 'true')
-            counterInput2.classList.add('disabled')
-            counterInput2.setAttribute('disabled', 'true')
-        }
-
-        switch (counter.type) {
-        case 'checkbox':
-            counterInput1.setAttribute('type', 'checkbox')
-            counterInput1.setAttribute('name', `flags.${MODULE.ID}.${key}`)
-            counterInput1.checked = app.actor.getFlag(MODULE.ID, key) || false
-            counterInput1.setAttribute('value', app.actor.getFlag(MODULE.ID, key) || false)
-            counterInput1.setAttribute('placeholder', 'false')
-            counterInput1.setAttribute('data-dtype', 'Boolean')
-            if (counter.editRole && game.user.role < counter.editRole) {
-                counterInput1.setAttribute('disabled', 'true')
-            }
-            break
-        case 'fraction':
-            counterInput1.setAttribute('type', 'text')
-            counterInput1.setAttribute('name', `flags.${MODULE.ID}.${key}.value`)
-            counterInput1.setAttribute('value', app.actor.getFlag(MODULE.ID, `${key}.value`) || 0)
-            counterInput1.setAttribute('placeholder', '0')
-            counterInput1.setAttribute('data-dtype', 'Number')
-            if (counter.editRole && game.user.role < counter.editRole) {
-                counterInput1.classList.add('disabled')
-                counterInput1.setAttribute('disabled', 'true')
-            } else {
-                counterInput1.addEventListener('keyup', () => checkValue(counterInput1, actor, key), true)
-            }
-            counterInput2.setAttribute('type', 'text')
-            counterInput2.setAttribute('name', `flags.${MODULE.ID}.${key}.max`)
-            counterInput2.setAttribute('value', settingMax || app.actor.getFlag(MODULE.ID, `${key}.max`) || 0)
-            if (settingMax || (counter.editRole && game.user.role < counter.editRole)) {
-                counterInput2.classList.add('disabled')
-                counterInput2.setAttribute('disabled', 'true')
-            }
-            counterInput2.setAttribute('placeholder', '0')
-            counterInput2.setAttribute('data-dtype', 'Number')
-            break
-        case 'number':
-            counterInput1.setAttribute('type', 'text')
-            counterInput1.setAttribute('name', `flags.${MODULE.ID}.${key}`)
-            counterInput1.setAttribute('value', app.actor.getFlag(MODULE.ID, key) || 0)
-            counterInput1.setAttribute('placeholder', '0')
-            counterInput1.setAttribute('data-dtype', 'Number')
-            if (counter.editRole && game.user.role < counter.editRole) {
-                counterInput1.classList.add('disabled')
-                counterInput1.setAttribute('disabled', 'true')
-            } else {
-                counterInput1.addEventListener('keyup', () => checkValue(counterInput1, actor, key), true)
-            }
-            break
-        case 'successFailure':
-            counterInput1.setAttribute('type', 'text')
-            counterInput1.setAttribute('name', `flags.${MODULE.ID}.${key}.success`)
-            counterInput1.setAttribute('value', app.actor.getFlag(MODULE.ID, `${key}.success`) || 0)
-            counterInput1.setAttribute('placeholder', '0')
-            counterInput1.setAttribute('data-dtype', 'Number')
-            if (counter.editRole && game.user.role < counter.editRole) {
-                counterInput1.classList.add('disabled')
-                counterInput1.setAttribute('disabled', 'true')
-            } else {
-                counterInput1.addEventListener('keyup', () => checkValue(counterInput1, actor, key), true)
-            }
-            counterInput2.setAttribute('type', 'text')
-            counterInput2.setAttribute('name', `flags.${MODULE.ID}.${key}.failure`)
-            counterInput2.setAttribute('value', app.actor.getFlag(MODULE.ID, `${key}.failure`) || 0)
-            counterInput2.setAttribute('placeholder', '0')
-            counterInput2.setAttribute('data-dtype', 'Number')
-            if (counter.editRole && game.user.role < counter.editRole) {
-                counterInput2.classList.add('disabled')
-                counterInput2.setAttribute('disabled', 'true')
-            } else {
-                counterInput2.addEventListener('keyup', () => checkValue(counterInput1, actor, key), true)
-            }
-            break
-        }
-
-        countersDiv[0].appendChild(counterDiv)
-        counterDiv.appendChild(h4)
-        counterDiv.appendChild(counterValueDiv)
-
-        if (counter.type === 'successFailure') {
-            const iSuccess = document.createElement('i')
-            const iFailure = document.createElement('i')
-
-            iSuccess.classList.add('fas', 'fa-check')
-            iFailure.classList.add('fas', 'fa-times')
-
-            counterValueDiv.appendChild(iSuccess)
-            counterValueDiv.appendChild(counterInput1)
-            counterValueDiv.appendChild(iFailure)
-            counterValueDiv.appendChild(counterInput2)
-        } else if (counter.type === 'fraction') {
-            counterValueDiv.appendChild(counterInput1)
-            const separator = document.createElement('span')
-            separator.classList.add('sep')
-            separator.textContent = '/'
-            counterValueDiv.appendChild(separator)
-            counterValueDiv.appendChild(counterInput2)
-        } else {
-            counterValueDiv.appendChild(counterInput1)
-        }
-    }
 }

@@ -152,7 +152,7 @@ export class CountersAdvancedOptionsForm extends CustomDnd5eForm {
     }
 
     async _getHtml (data) {
-        const template = await renderTemplate(CONSTANTS.COUNTERS.TEMPLATE.ADVANCED_OPTIONS_LIST, data)
+        const template = await renderTemplate(CONSTANTS.COUNTERS.TEMPLATE.TRIGGERS_LIST, data)
         return template
     }
 

@@ -1,4 +1,4 @@
-.custom-dnd5e-counters-counters ul {
+#custom-dnd5e-counters ul {
     display: flex;
     flex-direction: column;
     gap: 0.5rem;
@@ -16,25 +16,45 @@
     margin: 0;
 }
 
+/*
+ * INPUTS
+ */
 .custom-dnd5e-counters-counter input {
-    background-color: unset;
     font-size: var(--font-size-14);
     font-weight: bold;
     text-align: center;
     width: 100%;
 }
 
-.dnd5e-theme-dark :is(.character, .npc) .custom-dnd5e-counters-counter input {
+.custom-dnd5e-counters-counter input.disabled {
+    color: var(--color-text-light-7);
+}
+
+.dnd5e-theme-dark :is(.character, .npc)
+    .custom-dnd5e-counters-counter input,
+.dnd5e-theme-dark .dnd5e2:is(.character, .npc)
+    .custom-dnd5e-counters-counter input:disabled {
+    background-color: var(--dnd5e-color-iron-gray);
     color: var(--color-text-dark-primary);
 }
 
-.custom-dnd5e-counters-counter a {
+.dnd5e-theme-dark :is(.character, .npc)
+.custom-dnd5e-counters-counter input:disabled,
+.dnd5e-theme-dark .dnd5e2:is(.character, .npc)
+    .custom-dnd5e-counters-counter input:disabled {
+    color: var(--color-text-dark-6);
+}
+
+.custom-dnd5e-counters-link {
     align-items: center;
     display: flex;
     justify-content: center;
 }
 
-.custom-dnd5e-counters-counter i {
+/*
+ * ICONS
+ */
+.custom-dnd5e-counters-counters i {
     align-items: center;
     display: flex;
     color: var(--dnd5e-color-gold);
@@ -42,10 +62,14 @@
     justify-content: center;
 }
 
-.dnd5e-theme-dark :is(.character, .npc) .custom-dnd5e-counters-counter i {
-    color: var(--dnd5e-color-blue-gray-3);
+.dnd5e-theme-dark :is(.character, .npc)
+    .custom-dnd5e-counters-counter i {
+    color: var(--color-text-dark-secondary);
 }
 
+/*
+ * SEPARATOR
+ */
 .dnd5e-custom-counters-separator {
     align-items: center;
     display: flex;
@@ -54,11 +78,17 @@
     justify-content: center;
 }
 
-.dnd5e-theme-dark :is(.character, .npc) .dnd5e-custom-counters-separator {
-    color: var(--color-text-dark-primary);
+.dnd5e-theme-dark :is(.character, .npc)
+    .dnd5e-custom-counters-separator {
+    background-color: var(--dnd5e-color-iron-gray);
+    color: var(--color-text-dark-secondary);
 }
 
-.custom-dnd5e-counters-fraction {
+/*
+ * FRACTIONS
+ */
+.custom-dnd5e-counters-fraction
+    .custom-dnd5e-counters-counter-value {
     display: grid;
     grid-template-columns: 0.75fr 1.25fr 0.75fr 1.25fr;
 }
@@ -73,36 +103,43 @@
     grid-column-end: 5;
 }
 
-.dnd5e-theme-dark :is(.character, .npc) .custom-dnd5e-counters-fraction-group {
+.dnd5e-theme-dark :is(.character, .npc)
+    .custom-dnd5e-counters-fraction-group {
     background-color: var(--dnd5e-color-iron-gray);
     border: 1px solid var(--dnd5e-color-blue-gray-3);
 }
 
-.custom-dnd5e-counters-fraction-group > input {
-    background-color: unset;
+.custom-dnd5e-counters-fraction input {
+    background-color: var(--dnd5e-color-iron-gray);
     border: 0;
     border-radius: 0;
 }
 
-.custom-dnd5e-counters-counter input.disabled {
-    color: var(--color-text-light-7);
-}
-
-.custom-dnd5e-counters-number {
+/*
+ * NUMBERS
+ */
+.custom-dnd5e-counters-number
+    .custom-dnd5e-counters-counter-value {
     display: grid;
     grid-template-columns: 0.75fr 1.25fr 0.75fr 1.25fr;
 }
 
-.custom-dnd5e-counters-number > input {
+.custom-dnd5e-counters-number input {
     background-color: var(--dnd5e-color-parchment);
+    grid-column: 4
 }
 
-.dnd5e-theme-dark :is(.character, .npc) .custom-dnd5e-counters-number > input {
+.dnd5e-theme-dark :is(.character, .npc)
+    .custom-dnd5e-counters-number input {
     background-color: var(--dnd5e-color-iron-gray);
     border: 1px solid var(--dnd5e-color-blue-gray-3);
 }
 
-.custom-dnd5e-counters-success-failure {
+/*
+ * SUCCESS/FAILURE
+ */
+.custom-dnd5e-counters-success-failure
+    .custom-dnd5e-counters-counter-value {
     background-color: var(--dnd5e-color-parchment);
     border: 1px solid var(--color-border-light-tertiary);
     border-radius: 3px;
@@ -110,60 +147,65 @@
     grid-template-columns: 0.75fr 1.25fr 0.75fr 1.25fr;
 }
 
-.dnd5e-theme-dark  :is(.character, .npc) .custom-dnd5e-counters-success-failure {
+.dnd5e-theme-dark  :is(.character, .npc)
+    .custom-dnd5e-counters-success-failure
+    .custom-dnd5e-counters-counter-value {
     background-color: var(--dnd5e-color-iron-gray);
     border: 1px solid var(--dnd5e-color-blue-gray-3);
 }
 
-.dnd5e-theme-dark  :is(.character, .npc) .custom-dnd5e-counters-counter-value input[type="number"],
-.dnd5e-theme-dark  :is(.character, .npc) .custom-dnd5e-counters-counter-value input[type="number"]:disabled {
-    background: rgba(0, 0, 0, 0.05)
-}
-
-.custom-dnd5e-counters-success-failure > input,
+.custom-dnd5e-counters-success-failure input,
 .custom-dnd5e-counters-success-failure
-    > input:disabled:hover
+    input:disabled:hover
     .custom-dnd5e-counters-success-failure
-    > input,
-.custom-dnd5e-counters-success-failure > input:disabled:hover {
+    input,
+.custom-dnd5e-counters-success-failure input:disabled:hover {
     border: 0;
     border-left: 1px dashed var(--color-border-light-tertiary);
     border-radius: 0;
 }
 
-.dnd5e-theme-dark :is(.character, .npc) .custom-dnd5e-counters-success-failure > input,
-.dnd5e-theme-dark :is(.character, .npc) .custom-dnd5e-counters-success-failure
-    > input:disabled:hover
+.dnd5e-theme-dark :is(.character, .npc)
+    .custom-dnd5e-counters-success-failure input,
+.dnd5e-theme-dark :is(.character, .npc)
     .custom-dnd5e-counters-success-failure
-    > input,
-.dnd5e-theme-dark :is(.character, .npc) .custom-dnd5e-counters-success-failure > input:disabled:hover {
+    input:disabled:hover
+    .custom-dnd5e-counters-success-failure
+    input,
+.dnd5e-theme-dark :is(.character, .npc)
+    .custom-dnd5e-counters-success-failure > input:disabled:hover {
     border-left: 1px dashed var(--dnd5e-color-blue-gray-3);
 }
 
-.custom-dnd5e-counters-success-failure > input:first-of-type,
+.custom-dnd5e-counters-success-failure input:first-of-type,
 .custom-dnd5e-counters-success-failure
-    > input:first-of-type:disabled:hover
+    input:first-of-type:disabled:hover
     .custom-dnd5e-counters-success-failure
-    > input:first-of-type,
-.custom-dnd5e-counters-success-failure > input:first-of-type:disabled:hover {
+    input:first-of-type,
+.custom-dnd5e-counters-success-failure input:first-of-type:disabled:hover {
     border-right: 1px solid var(--color-border-light-tertiary);
 }
 
-.dnd5e-theme-dark :is(.character, .npc) .custom-dnd5e-counters-success-failure > input:first-of-type,
-.dnd5e-theme-dark :is(.character, .npc) .custom-dnd5e-counters-success-failure
-    > input:first-of-type:disabled:hover
+.dnd5e-theme-dark :is(.character, .npc)
+    .custom-dnd5e-counters-success-failure input:first-of-type,
+.dnd5e-theme-dark :is(.character, .npc)
     .custom-dnd5e-counters-success-failure
-    > input:first-of-type,
-.dnd5e-theme-dark .character .custom-dnd5e-counters-success-failure > input:first-of-type:disabled:hover {
+    input:first-of-type:disabled:hover
+    .custom-dnd5e-counters-success-failure
+    input:first-of-type,
+.dnd5e-theme-dark :is(.character, .npc)
+    .custom-dnd5e-counters-success-failure input:first-of-type:disabled:hover {
     border-right: 1px solid var(--dnd5e-color-blue-gray-3);
 }
 
+/*
+ * GROUP SHEET
+ */
 .dnd5e.sheet.group .custom-dnd5e-counters-number input[type="number"],
 .custom-dnd5e-counters-number > input {
     grid-column-start: 4;
 }
 
-/* Group Actor Sheet */
 .dnd5e.sheet.group .custom-dnd5e-counters ul {
     display: flex;
     flex-direction: column;
