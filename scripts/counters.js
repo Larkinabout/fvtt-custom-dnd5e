@@ -426,6 +426,17 @@ export function uncheckCheckbox (entity, counterKey) {
 }
 
 /**
+ * Toggle checkbox counter
+ * @param {object} entity     The entity: actor or item
+ * @param {string} counterKey The counter key
+ */
+export function toggleCheckbox (entity, counterKey) {
+    counterKey = (counterKey.startsWith('counters.')) ? `${counterKey}.value` : counterKey
+    const flag = entity.getFlag(MODULE.ID, counterKey)
+    entity.setFlag(MODULE.ID, counterKey, !flag)
+}
+
+/**
  * Decrease fraction counter
  * @param {object} entity      The entity: actor or item
  * @param {string} counterKey  The counter key
@@ -446,13 +457,26 @@ export function decreaseFraction (entity, counterKey, actionValue = 1) {
  * @param {number} actionValue The action value
  */
 export function increaseFraction (entity, counterKey, actionValue = 1) {
+    modifyFraction(entity, counterKey, actionValue)
+}
+
+/**
+ * Modify fraction counter
+ * @param {object} entity      The entity: actor or item
+ * @param {string} counterKey  The counter key
+ * @param {number} actionValue The action value
+ */
+export function modifyFraction (entity, counterKey, actionValue = 1) {
     const oldValue = entity.getFlag(MODULE.ID, `${counterKey}.value`) ?? 0
     const maxValue = getMax(entity, counterKey) ?? entity.getFlag(MODULE.ID, `${counterKey}.max`)
     const newValue = oldValue + actionValue
 
-    if (!maxValue || newValue <= maxValue) {
+    if (newValue >= 0 && (!maxValue || newValue <= maxValue)) {
         entity.setFlag(MODULE.ID, `${counterKey}.value`, newValue)
     } else {
+        if (newValue >= 0 && oldValue < maxValue) {
+            entity.setFlag(MODULE.ID, `${counterKey}.value`, maxValue)
+        }
         ui.notifications.info(game.i18n.localize('CUSTOM_DND5E.reachedCounterLimit'))
     }
 }
@@ -478,15 +502,28 @@ export function decreaseNumber (entity, counterKey, actionValue = 1) {
  * @param {number} actionValue The action value
  */
 export function increaseNumber (entity, counterKey, actionValue = 1) {
+    modifyNumber(entity, counterKey, actionValue)
+}
+
+/**
+ * Modify number counter
+ * @param {object} entity      The entity: actor or item
+ * @param {string} counterKey  The counter key
+ * @param {number} actionValue The action value
+ */
+export function modifyNumber (entity, counterKey, actionValue = 1) {
     const originalKey = counterKey
     counterKey = (counterKey.startsWith('counters.')) ? `${counterKey}.value` : counterKey
     const oldValue = entity.getFlag(MODULE.ID, counterKey) ?? 0
     const maxValue = getMax(entity, counterKey) ?? entity.getFlag(MODULE.ID, `${originalKey}.max`)
     const newValue = oldValue + actionValue
 
-    if (!maxValue || newValue <= maxValue) {
+    if (newValue >= 0 && (!maxValue || newValue <= maxValue)) {
         entity.setFlag(MODULE.ID, counterKey, newValue)
     } else {
+        if (newValue >= 0 && oldValue < maxValue) {
+            entity.setFlag(MODULE.ID, counterKey, maxValue)
+        }
         ui.notifications.info(game.i18n.localize('CUSTOM_DND5E.reachedCounterLimit'))
     }
 }
@@ -512,17 +549,32 @@ export function decreaseSuccess (entity, counterKey, actionValue = 1) {
  * @param {number} actionValue The action value
  */
 export function increaseSuccess (entity, counterKey, actionValue = 1) {
+    modifySuccess(entity, counterKey, actionValue)
+}
+
+/**
+ * Modify success on success/failure counter
+ * @param {object} entity      The entity: actor or item
+ * @param {string} counterKey  The counter key
+ * @param {number} actionValue The action value
+ */
+export function modifySuccess (entity, counterKey, actionValue = 1) {
     const oldValue = entity.getFlag(MODULE.ID, `${counterKey}.success`) ?? 0
     const maxValue = getMax(entity, counterKey) ?? entity.getFlag(MODULE.ID, `${counterKey}.max`)
     const newValue = (maxValue) ? Math.min(oldValue + actionValue, maxValue) : oldValue + actionValue
 
-    if (!maxValue || newValue <= maxValue) {
+    if (newValue >= 0 && (!maxValue || newValue <= maxValue)) {
         entity.setFlag(MODULE.ID, `${counterKey}.success`, newValue)
+    } else {
+        if (newValue >= 0 && oldValue < maxValue) {
+            entity.setFlag(MODULE.ID, `${counterKey}.success`, maxValue)
+        }
+        ui.notifications.info(game.i18n.localize('CUSTOM_DND5E.reachedCounterLimit'))
     }
 }
 
 /**
- * Decrease failure on successFailure counter
+ * Decrease failure on success/failure counter
  * @param {object} entity      The entity: actor or item
  * @param {string} counterKey   The counter key
  * @param {number} actionValue The action value
@@ -536,18 +588,33 @@ export function decreaseFailure (entity, counterKey, actionValue = 1) {
 }
 
 /**
- * Increase failure on successFailure counter
+ * Increase failure on success/failure counter
  * @param {object} entity      The entity: actor or item
  * @param {string} counterKey  The counter key
  * @param {number} actionValue The action value
  */
 export function increaseFailure (entity, counterKey, actionValue = 1) {
+    modifyFailure(entity, counterKey, actionValue)
+}
+
+/**
+ * Modify failure on success/failure counter
+ * @param {object} entity      The entity: actor or item
+ * @param {string} counterKey  The counter key
+ * @param {number} actionValue The action value
+ */
+export function modifyFailure (entity, counterKey, actionValue = 1) {
     const oldValue = entity.getFlag(MODULE.ID, `${counterKey}.failure`) ?? 0
     const maxValue = getMax(entity, counterKey) || entity.getFlag(MODULE.ID, `${counterKey}.max`)
     const newValue = (maxValue) ? Math.min(oldValue + actionValue, maxValue) : oldValue + actionValue
 
-    if (!maxValue || newValue <= maxValue) {
+    if (newValue >= 0 && (!maxValue || newValue <= maxValue)) {
         entity.setFlag(MODULE.ID, `${counterKey}.failure`, newValue)
+    } else {
+        if (newValue >= 0 && oldValue < maxValue) {
+            entity.setFlag(MODULE.ID, `${counterKey}.failure`, maxValue)
+        }
+        ui.notifications.info(game.i18n.localize('CUSTOM_DND5E.reachedCounterLimit'))
     }
 }
 

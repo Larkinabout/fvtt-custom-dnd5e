@@ -1,4 +1,4 @@
-import { CONSTANTS } from './constants.js'
+import { CONSTANTS, MODULE } from './constants.js'
 import { Logger, getSetting, registerSetting } from './utils.js'
 import { register as registerHouseRules, registerNegativeHp } from './house-rules.js'
 import { register as registerAbilities, setConfig as setAbilities } from './abilities.js'
@@ -10,7 +10,24 @@ import { register as registerArmorProficiencies, setConfig as setArmorProficienc
 import { register as registerCampSupplies } from './camp-supplies.js'
 import { register as registerConditions, setConfig as setConditions } from './conditions.js'
 import { register as registerConsumableTypes, setConfig as setConsumableTypes } from './consumable-types.js'
-import { register as registerCounters } from './counters.js'
+import {
+    register as registerCounters,
+    checkCheckbox,
+    uncheckCheckbox,
+    toggleCheckbox,
+    increaseFraction,
+    decreaseFraction,
+    modifyFraction,
+    increaseNumber,
+    decreaseNumber,
+    modifyNumber,
+    increaseSuccess,
+    decreaseSuccess,
+    modifySuccess,
+    increaseFailure,
+    decreaseFailure,
+    modifyFailure
+} from './counters.js'
 import { register as registerCurrency, setConfig as setCurrency } from './currency.js'
 import { register as registerDamageTypes, setConfig as setDamageTypes } from './damage-types.js'
 import { register as registerDebug } from './debug.js'
@@ -42,6 +59,27 @@ import { registerCharacterSheet } from './sheets/character-sheet.js'
 Hooks.on('init', async () => {
     CONFIG.CUSTOM_DND5E = foundry.utils.deepClone(CONFIG.DND5E)
     CONFIG.CUSTOM_DND5E.coreStatusEffects = foundry.utils.deepClone(CONFIG.statusEffects)
+
+    const module = game.modules.get(MODULE.ID)
+    module.api = {
+        counters: {
+            checkCheckbox,
+            uncheckCheckbox,
+            toggleCheckbox,
+            increaseFraction,
+            decreaseFraction,
+            modifyFraction,
+            increaseNumber,
+            decreaseNumber,
+            modifyNumber,
+            increaseSuccess,
+            decreaseSuccess,
+            modifySuccess,
+            increaseFailure,
+            decreaseFailure,
+            modifyFailure
+        }
+    }
 
     registerSetting(
         CONSTANTS.DEBUG.SETTING.KEY,
