@@ -56,6 +56,7 @@
     "CUSTOM_DND5E.longRest": "Long Rest",
     "CUSTOM_DND5E.loot": "Loot",
     "CUSTOM_DND5E.maximum": "Maximum",
+    "CUSTOM_DND5E.reachedCounterLimit": "You've reached the limit for this counter!",
     "CUSTOM_DND5E.mental": "Mental",
     "CUSTOM_DND5E.negativeHitPoints": "Negative Hit Points",
     "CUSTOM_DND5E.no": "No",

@@ -10,7 +10,7 @@ import { register as registerArmorProficiencies, setConfig as setArmorProficienc
 import { register as registerCampSupplies } from './camp-supplies.js'
 import { register as registerConditions, setConfig as setConditions } from './conditions.js'
 import { register as registerConsumableTypes, setConfig as setConsumableTypes } from './consumable-types.js'
-import { registerSettings as registerCounters } from './counters.js'
+import { register as registerCounters } from './counters.js'
 import { register as registerCurrency, setConfig as setCurrency } from './currency.js'
 import { register as registerDamageTypes, setConfig as setDamageTypes } from './damage-types.js'
 import { register as registerDebug } from './debug.js'

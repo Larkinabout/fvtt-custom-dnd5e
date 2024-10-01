@@ -17,22 +17,6 @@
         </li>
         {{/if}}
 
-        {{#if (eq counter.type "number")}}
-        <li class="custom-dnd5e-counters-counter custom-dnd5e-counters-number flexrow" data-id="{{key}}">
-            <h4>
-                {{#if canEdit}}
-                <a class="custom-dnd5e-counters-link" data-input="value">{{counter.label}}</a>
-                {{else}}
-                {{counter.label}}
-                {{/if}}
-            </h4>
-            <div class="custom-dnd5e-counters-counter-value">
-                <input type="number" data-input="value" name="flags.custom-dnd5e.{{counter.property}}"
-                    value="{{counter.value}}" placeholder="0" data-dtype="Number"{{#unless counter.canEdit}} disabled{{/unless}}>
-            </div>
-        </li>
-        {{/if}}
-
         {{#if (eq counter.type "fraction")}}
         <li class="custom-dnd5e-counters-counter custom-dnd5e-counters-fraction flexrow" data-id="{{key}}">
             <h4>
@@ -51,6 +35,22 @@
                         value="{{counter.max}}" placeholder="0" data-dtype="Number"{{#unless counter.canEditMax}} disabled{{/unless}}>
                 </div>
             <div>
+        </li>
+        {{/if}}
+
+        {{#if (eq counter.type "number")}}
+        <li class="custom-dnd5e-counters-counter custom-dnd5e-counters-number flexrow" data-id="{{key}}">
+            <h4>
+                {{#if canEdit}}
+                <a class="custom-dnd5e-counters-link" data-input="value">{{counter.label}}</a>
+                {{else}}
+                {{counter.label}}
+                {{/if}}
+            </h4>
+            <div class="custom-dnd5e-counters-counter-value">
+                <input type="number" data-input="value" name="flags.custom-dnd5e.{{counter.property}}"
+                    value="{{counter.value}}" placeholder="0" data-dtype="Number"{{#unless counter.canEdit}} disabled{{/unless}}>
+            </div>
         </li>
         {{/if}}
 

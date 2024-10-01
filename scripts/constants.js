@@ -788,5 +788,19 @@ export const SHEET_TYPE = {
             class: 'section.sheet-body',
             position: 'beforeend'
         }
+    },
+    ItemSheet5e2: {
+        countersSetting: CONSTANTS.COUNTERS.SETTING.ITEM_COUNTERS.KEY,
+        character: false,
+        custom: false,
+        group: false,
+        item: true,
+        legacy: false,
+        npc: false,
+        template: CONSTANTS.COUNTERS.TEMPLATE.DND5E.ITEM_GROUP_LEGACY,
+        insert: {
+            class: 'section.sheet-body',
+            position: 'beforeend'
+        }
     }
 }
