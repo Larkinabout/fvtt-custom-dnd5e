@@ -2,6 +2,8 @@ import { CONSTANTS, SHEET_TYPE } from './constants.js'
 import {
     Logger,
     getSetting,
+    getFlag,
+    setFlag,
     registerMenu,
     registerSetting,
     makeBloodied,
@@ -311,7 +313,8 @@ function registerHooks () {
     Hooks.on('dnd5e.rollAbilityTest', (actor, roll, ability) => { awardInspiration('rollAbilityTest', actor, roll) })
     Hooks.on('dnd5e.rollAttack', (item, roll, ability) => { awardInspiration('rollAttack', item, roll) })
     Hooks.on('dnd5e.rollSkill', (actor, roll, ability) => { awardInspiration('rollSkill', actor, roll) })
-    Hooks.on('preUpdateActor', (actor, data, options) => {
+    Hooks.on('preUpdateActor', capturePreviousHp)
+    Hooks.on('updateActor', (actor, data, options) => {
         const instantDeath = updateInstantDeath(actor, data)
         updateHp(actor, data)
         if (!instantDeath) {
@@ -489,7 +492,7 @@ function recalculateDamage (actor, amount, updates, options) {
 
 /**
  * Recalculate Healing
- * Triggered by the 'preUpdateActor' hook
+ * Triggered by the 'updateActor' hook
  * If 'Apply Negative HP' and 'Heal from 0 HP' are enabled, recalculate healing to increase HP from zero instead of the negative value
  * @param {object} actor The actor
  * @param {object} data  The data
@@ -502,7 +505,7 @@ function recalculateHealing (actor, data) {
 
     if (typeof currentHp === 'undefined') return
 
-    const previousHp = actor.system.attributes.hp.value
+    const previousHp = getFlag(actor, 'previousHp')
 
     if (previousHp < 0 && currentHp > previousHp) {
         const diff = currentHp - previousHp
@@ -535,7 +538,7 @@ async function rollNpcHp (token) {
 
 /**
  * Update Bloodied
- * Triggered by the 'preUpdateActor' hook
+ * Triggered by the 'updateActor' hook
  * If 'Apply Bloodied' is enabled, apply or remove the Bloodied condition and other token effects based on the HP change
  * @param {object} actor The actor
  * @param {object} data  The data
@@ -548,7 +551,7 @@ function updateBloodied (actor, data) {
 
     if (typeof currentHp === 'undefined') return null
 
-    const previousHp = actor.system.attributes.hp.value
+    const previousHp = getFlag(actor, 'previousHp')
     const halfHp = Math.ceil((maxHp ?? actor.system.attributes.hp.max) * 0.5)
     const deathFailures = data?.system?.attributes?.death?.failure ?? actor?.system?.attributes?.death?.failure ?? 0
 
@@ -565,7 +568,7 @@ function updateBloodied (actor, data) {
 
 /**
  * Update Dead
- * Triggered by the 'preUpdateActor' hook
+ * Triggered by the 'updateActor' hook
  * @param {object} actor The actor
  * @param {object} data  The data
  */
@@ -588,7 +591,7 @@ function updateDead (actor, data) {
 
 /**
  * Update Unconscious
- * Triggered by the 'preUpdateActor' hook
+ * Triggered by the 'updateActor' hook
  * @param {object} actor The actor
  * @param {object} data  The data
  */
@@ -611,7 +614,7 @@ function updateUnconscious (actor, data) {
 
 /**
  * Update Death Saves
- * Triggered by the 'preUpdateActor' hook
+ * Triggered by the 'updateActor' hook
  * @param {string} source regainHp or rest
  * @param {object} actor  The actor
  * @param {object} data   The data
@@ -627,7 +630,7 @@ function updateDeathSaves (source, actor, data) {
         if (typeof currentValue === 'undefined') return
 
         if (source === 'regainHp' && removeDeathSaves.regainHp[type] < 3 && foundry.utils.hasProperty(data, 'system.attributes.hp.value')) {
-            const previousHp = actor.system.attributes.hp.value
+            const previousHp = getFlag(actor, 'previousHp')
             const newValue = (previousHp === 0) ? Math.max(currentValue - removeDeathSaves.regainHp[type], 0) : currentValue
             foundry.utils.setProperty(data, `system.attributes.death.${type}`, newValue)
         } else if (source === 'rest') {
@@ -646,7 +649,7 @@ function updateDeathSaves (source, actor, data) {
 
 /**
  * Update HP
- * Triggered by the 'preUpdateActor' hook
+ * Triggered by the 'updateActor' hook
  * If 'Apply Negative HP' is disabled and HP is below 0, set HP to 0.
  * This will happen where 'Apply Instant Death' is enabled as negative HP is used to initially calculate whether Instant Death applies
  * @param {object} actor The actor
@@ -693,7 +696,7 @@ function updateHpMeter (app, html, data) {
 
 /**
  * Update Instant Death
- * Triggered by the 'preUpdateActor' hook and called by the 'recalculateDamage' function
+ * Triggered by the 'updateActor' hook and called by the 'recalculateDamage' function
  * @param {object} actor The actor
  * @param {object} data  The data
  * @returns {boolean} Whether instant death is applied
@@ -717,7 +720,7 @@ function updateInstantDeath (actor, data) {
 
 /**
  * Update Massive Damage
- * Triggered by the 'preUpdateActor' hook and called by the 'recalculateDamage' function
+ * Triggered by the 'updateActor' hook and called by the 'recalculateDamage' function
  * @param {object} actor The actor
  * @param {object} data  The data
  * @returns {boolean} Whether instant death is applied
@@ -725,7 +728,7 @@ function updateInstantDeath (actor, data) {
 function updateMassiveDamage (actor, data) {
     if (actor.type !== 'character' || !getSetting(CONSTANTS.HIT_POINTS.SETTING.APPLY_MASSIVE_DAMAGE.KEY)) return false
 
-    const previousHp = actor.system.attributes.hp.value
+    const previousHp = getFlag(actor, 'previousHp')
     const currentHp = data?.system?.attributes?.hp?.value
 
     if (previousHp <= currentHp) return
@@ -740,6 +743,17 @@ function updateMassiveDamage (actor, data) {
     }
 
     return false
+}
+
+/**
+ * Capture previous HP
+ * @param {object} actor The actor
+ * @param {object} data The data
+ */
+function capturePreviousHp (actor, data) {
+    const currentHp = data?.system?.attributes?.hp?.value
+    if (currentHp === undefined) return
+    setFlag(actor, 'previousHp', actor.system.attributes.hp.value)
 }
 
 /**

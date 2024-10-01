@@ -62,15 +62,21 @@ For help and advice on the house rules, either click the info buttons in the Con
 
 ![Custom D&D 5e Negative Hit Points](./.github/readme/custom-dnd5e-negative-hit-points.png)
 
-### Inspiration
+## Award Inspiration
 - Award Inspiration when a set value is rolled for an ability check, attack roll, saving throw and/or skill check.
 
 ![Custom D&D 5e Award Inspiration](./.github/readme/custom-dnd5e-award-inspiration.png)
 
-### Prone Status
+## Prone
 - Rotate the token when it gains the Prone status effect.
 
 ![Custom D&D 5e Prone](./.github/readme/custom-dnd5e-prone-rotation.gif)
+
+## Resting
+### Use Camp Supplies
+- When taking a Long Rest, optionally requires spending Camp Supplies.
+
+![Custom D&D 5e Camp Supplies](./.github/readme/custom-dnd5e-camp-supplies.png)
 
 ## Counters
 **Counter Types:** Add four types of counter to the character sheets: checkbox, fraction, number and success/failure.
@@ -99,6 +105,13 @@ For help and advice on modifying a configuration, either click the info button i
 - Scale the new character sheet up or down.
 - Change the banner at the top of the sheet.
 - Hide death saves, encumbrance, exhaustion, inspiration, the Manage Currency button, Legendary Actions, Legendary Resistances and Use Lair Action.
+
+## Show Pressed Keys
+- Display an icon near the cursor when the Skip Dialog, Advantage or Disadvantage keys are pressed.
+
+![Custom D&D 5e Show Pressed Keys - Skip Dialog](./.github/readme/custom-dnd5e-show-pressed-keys-skip-dialog.png)
+
+![Custom D&D 5e Show Pressed Keys - Advantage](./.github/readme/custom-dnd5e-show-pressed-keys-advantage.png)
 
 ## Radial Status Effects
 - Display status effects in a circle around the token.
