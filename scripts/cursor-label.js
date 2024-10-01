@@ -36,6 +36,7 @@ export function registerHooks () {
     if (getSetting(constants.SETTING.KEY)) {
         Hooks.on('ready', initializeCursorLabel)
         Hooks.on('renderActorSheet', attachSheetPointerListeners)
+        Hooks.on('renderActorSheetV2', attachSheetPointerListeners)
     }
 }
 
@@ -97,8 +98,9 @@ function attachCursorLabelListeners () {
  * @param {object} data Actor sheet data.
  */
 function attachSheetPointerListeners (app, html, data) {
-    html[0].addEventListener('pointermove', handleCursorMove)
-    html[0].addEventListener('pointermove', updateCursorLabelPosition)
+    if (html.find) html = html[0]
+    html.addEventListener('pointermove', handleCursorMove)
+    html.addEventListener('pointermove', updateCursorLabelPosition)
 }
 
 /**
@@ -132,10 +134,16 @@ function getDnd5eKeysPressed (event) {
  * @returns {HTMLElement|null}  The valid button or null if none.
  */
 function getValidButton (element) {
-    if (element.dataset?.action === 'rollAttack' || element.dataset?.action === 'use') {
+    if (
+        element.dataset?.action === 'rollAttack' ||
+        element.dataset?.action === 'use' ||
+        element.classList.contains('item-use-button') // Tidy5eCharacterSheet
+    ) {
         return element
     }
-    return element.closest(('[data-action="use"]')) || element.closest('rollAttack')
+    return element.closest(('[data-action="use"]')) ||
+        element.closest('[data-action="rollAttack"]') ||
+        element.closest('.item-use-button') // Tidy5eCharacterSheet
 }
 
 function updateCursorLabelVisibility (event) {
