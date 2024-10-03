@@ -62,6 +62,7 @@ function registerHooks () {
  * @param {object} data  The data
  */
 function handlePreUpdateActor (actor, data) {
+    if (actor.type === 'group') return
     const currentHp = foundry.utils.getProperty(data, 'system.attributes.hp.value')
     const previousHp = actor.system.attributes.hp.value
     const halfHp = actor.system.attributes.hp.max * 0.5
@@ -121,6 +122,7 @@ function hasDataChanged (data) {
  */
 function processTriggers ({ actor, data = null, triggerType, followUpFlag = null }) {
     const counters = getCounters(actor)
+    if (!counters) return
 
     // Iterate through each counter and check if it has an action that matches the triggerType
     for (const [counterKey, counter] of Object.entries(counters)) {
@@ -247,7 +249,7 @@ async function addCounters (app, html, data) {
  */
 function mergeCounters (entity, settingKey) {
     if (entity.document) entity = entity.document
-    const worldCounters = game.settings.get(MODULE.ID, settingKey)
+    const worldCounters = game.settings.get(MODULE.ID, settingKey) ?? {}
     const entityCounters = getFlag(entity, 'counters') ?? {}
 
     return {
