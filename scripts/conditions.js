@@ -51,7 +51,22 @@ function registerSettings () {
  * @returns {object}        The conditions and status effects
  */
 export function getDnd5eConfig (key = null) {
-    return buildData({ key, conditionTypes: CONFIG.CUSTOM_DND5E.conditionTypes, statusEffects: CONFIG.CUSTOM_DND5E.coreStatusEffects })
+    const data = buildData({ key, conditionTypes: CONFIG.CUSTOM_DND5E.conditionTypes, statusEffects: CONFIG.CUSTOM_DND5E.coreStatusEffects })
+    if (!data) return
+    if (key) return data
+
+    Object.values(data).forEach(value => {
+        value.label = game.i18n.localize(value.label)
+    })
+
+    const sortedData = Object.fromEntries(
+        Object.entries(data).sort(([lId, lhs], [rId, rhs]) =>
+            lhs.order || rhs.order
+                ? (lhs.order ?? Infinity) - (rhs.order ?? Infinity)
+                : lhs.label.localeCompare(rhs.label, game.i18n.lang)
+        )
+    )
+    return sortedData
 }
 
 /**
@@ -89,21 +104,12 @@ function buildData (config) {
 
     const setStatusEffect = (data, statusEffect) => {
         if (data[statusEffect.id]) {
-            if (statusEffect._id) { data[statusEffect.id]._id = statusEffect._id }
-            if (statusEffect.hud) { data[statusEffect.id].hud = statusEffect.hud }
+            foundry.utils.mergeObject(data[statusEffect.id], statusEffect)
             if (!data[statusEffect.id].pseudo) data[statusEffect.id].sheet = true
         } else {
-            data[statusEffect.id] = {
-                ...(statusEffect._id !== undefined && { _id: statusEffect._id }),
-                ...(statusEffect.hud !== undefined && { hud: statusEffect.hud }),
-                icon: statusEffect.img,
-                label: statusEffect.name,
-                ...(statusEffect.levels !== undefined && { levels: statusEffect.levels }),
-                ...(statusEffect.pseudo !== undefined && { pseudo: statusEffect.pseudo }),
-                ...(statusEffect.reference !== undefined && { reference: statusEffect.reference }),
-                ...(statusEffect.riders !== undefined && { riders: statusEffect.riders }),
-                ...(statusEffect.statuses !== undefined && { statuses: statusEffect.statuses })
-            }
+            data[statusEffect.id] = statusEffect
+            data[statusEffect.id].icon = statusEffect.img
+            data[statusEffect.id].label = statusEffect.name
         }
     }
 
@@ -171,7 +177,7 @@ export function setConfig (data = null) {
             }
 
             config.statusEffects.push({
-                ...(value.hud !== undefined && { hud: value.hud }),
+                ...(value.hud === false && { hud: value.hud }),
                 _id: dnd5e.utils.staticID(`dnd5e${key}`),
                 id: key,
                 img: value.icon,

@@ -59,7 +59,7 @@
         <div class="form-group">
             <label class="flex1" style="min-width:80px; max-width:120px;">{{localize "CUSTOM_DND5E.includeOnHud"}}</label>
             <div class="form-fields">
-                <input id="custom-dnd5e-hud" name="{{key}}.hud" type="checkbox"{{#if hud}} checked{{/if}}>
+                <input id="custom-dnd5e-hud" name="{{key}}.hud" type="checkbox"{{#if (ne hud false)}} checked{{/if}}>
             </div>
         </div>
         <div class="form-group">
