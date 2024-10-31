@@ -91,5 +91,10 @@ export function setConfig (data = null) {
 
     const defaultConfig = foundry.utils.deepClone(CONFIG.CUSTOM_DND5E[property])
     const config = foundry.utils.mergeObject(defaultConfig, data)
+
+    if (config?.effects?.encumbered?.name) config.effects.encumbered.name = game.i18n.localize(config.effects.encumbered.name)
+    if (config?.effects?.exceedingCarryingCapacity?.name) config.effects.exceedingCarryingCapacity.name = game.i18n.localize(config.effects.exceedingCarryingCapacity.name)
+    if (config?.effects?.heavilyEncumbered?.name) config.effects.heavilyEncumbered.name = game.i18n.localize(config.effects.heavilyEncumbered.name)
+
     config && (CONFIG.DND5E[property] = config)
 }
