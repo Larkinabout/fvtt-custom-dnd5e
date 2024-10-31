@@ -129,6 +129,7 @@ export const CONSTANTS = {
             }
         },
         ICON: 'modules/custom-dnd5e/media/icons/bloodied.svg',
+        CONDITION_UUID: 'Compendium.custom-dnd5e.custom-dnd5e-journals.JournalEntry.ngr8w6WBycK59brj.JournalEntryPage.sV0ZCKxwh4n4ZU1P',
         UUID: 'Compendium.custom-dnd5e.custom-dnd5e-journals.JournalEntry.ngr8w6WBycK59brj.JournalEntryPage.P9uilIbvjoLg1l1l'
     },
     CONDITION_TYPES: {

@@ -183,6 +183,7 @@ export function setConfig (data = null) {
                 img: value.icon,
                 ...(value.levels !== undefined && { levels: value.levels }),
                 name: localisedLabel,
+                ...(value.reference !== undefined && { reference: value.reference }),
                 ...(value.pseudo && { pseudo: value.pseudo })
             })
         })

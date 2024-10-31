@@ -372,14 +372,14 @@ export function buildBloodied () {
         conditionType: {
             label,
             icon: img,
-            reference: CONSTANTS.BLOODIED.UUID
+            reference: CONSTANTS.BLOODIED.CONDITION_UUID
         },
         statusEffect: {
             _id: 'dnd5ebloodied000',
             id: 'bloodied',
             name: label,
             img,
-            reference: CONSTANTS.BLOODIED.UUID
+            reference: CONSTANTS.BLOODIED.CONDITION_UUID
         }
     }
 
