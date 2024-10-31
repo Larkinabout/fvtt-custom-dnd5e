@@ -98,36 +98,12 @@ export class ItemPropertiesForm extends CustomDnd5eForm {
     }
 
     static async submit (event, form, formData) {
-        const ignore = ['children', 'delete', 'key', 'parentKey']
+        if (!this.validateFormData(formData)) return
 
-        // Get list of properties to delete
-        const deleteKeys = Object.entries(formData.object)
-            .filter(([key, value]) => key.split('.').pop() === 'delete' && value === 'true')
-            .map(([key, _]) => key.split('.').slice(0, -1).join('.'))
+        const propertiesToIgnore = ['children', 'delete', 'key', 'parentKey']
+        const changedKeys = this.getChangedKeys(formData)
+        const processedFormData = this.processFormData({ formData, changedKeys, propertiesToIgnore })
 
-        // Delete properties from formData
-        Object.keys(formData.object).forEach(key => {
-            if (deleteKeys.includes(key.split('.').slice(0, -1).join('.'))) {
-                delete formData.object[key]
-            }
-        })
-
-        // Delete properties from this.setting
-        deleteKeys.forEach(key => {
-            deleteProperty(this.setting, key)
-        })
-
-        // Set properties in this.setting
-        Object.entries(formData.object).forEach(([key, value]) => {
-            if (ignore.includes(key.split('.').pop())) { return }
-            if (key.split('.').pop() === 'system') {
-                if (value === 'true') { return }
-                value = false
-            }
-            foundry.utils.setProperty(this.setting, key, value)
-        })
-
-        await setSetting(this.settingKey, this.setting)
-        this.setConfig(this.setting)
+        this.handleSubmit(processedFormData, this.settingKey, this.setConfig, this.requiresReload)
     }
 }
