@@ -89,14 +89,14 @@ function registerHooks () {
 async function toggleEffectOnSelected (active, activeEffect) {
     if (canvas.tokens.controlled.length <= 1) return
 
-    const effectData = foundry.utils.deepClone(CONFIG.statusEffects.find(effect => effect.id === [...activeEffect.statuses][0]))
+    const statusId = [...activeEffect.statuses][0]
     const overlay = activeEffect?.flags?.core?.overlay ?? false
     const tokenIds = activeEffect.parent.getActiveTokens().map(token => token.id)
     const controlledTokens = canvas.tokens.controlled.filter(token => !tokenIds.includes(token.id) & active !== token.actor.effects.has(activeEffect.id))
 
     if (!controlledTokens.length) return
 
-    await controlledTokens[0].document.toggleActiveEffect(effectData, { active, overlay })
+    await controlledTokens[0].actor?.toggleStatusEffect(statusId, { active, overlay })
 }
 
 function applyElevationToSelected (token, data, options, id) {
