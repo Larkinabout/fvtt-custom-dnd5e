@@ -13,8 +13,10 @@ export class CountersAdvancedOptionsForm extends CustomDnd5eForm {
 
         this.countersForm = args.countersForm
         this.setting = args.setting
+        this.counters = args.data.counters
         this.key = args.data.key
         this.actorType = args.data.actorType
+        this.entity = args.data.entity
         this.label = args.data.label
         this.type = args.data.type
     }
@@ -250,7 +252,12 @@ export class CountersAdvancedOptionsForm extends CustomDnd5eForm {
         this.setting[this.key].label = this.label
         this.setting[this.key].type = this.type
 
-        await setSetting(SETTING_BY_ENTITY_TYPE.COUNTERS[this.actorType], this.setting)
+        if (this.entity) {
+            await unsetFlag(this.entity, 'counters')
+            await setFlag(this.entity, 'counters', this.setting)
+        } else {
+            await setSetting(SETTING_BY_ENTITY_TYPE.COUNTERS[this.actorType], this.setting)
+        }
 
         this.close()
 

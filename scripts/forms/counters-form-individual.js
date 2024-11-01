@@ -1,6 +1,7 @@
 import { CONSTANTS, MODULE } from '../constants.js'
 import { deleteProperty, getFlag, setFlag, unsetFlag } from '../utils.js'
 import { CountersForm } from './counters-form.js'
+import { CountersAdvancedOptionsForm } from './counters-advanced-options-form.js'
 
 const form = 'counters-form-individual'
 
@@ -11,6 +12,9 @@ export class CountersFormIndividual extends CountersForm {
     }
 
     static DEFAULT_OPTIONS = {
+        actions: {
+            'advanced-options': CountersFormIndividual.advancedOptions
+        },
         form: {
             handler: CountersFormIndividual.submit
         },
@@ -45,6 +49,22 @@ export class CountersFormIndividual extends CountersForm {
             counters: this.counters,
             selects: this.#getSelects()
         }
+    }
+
+    static async advancedOptions (event, target) {
+        const item = target.closest('.custom-dnd5e-item')
+        if (!item) return
+
+        const key = item.dataset.key
+        if (!key) return
+
+        const label = item.querySelector('#custom-dnd5e-label').value
+        const type = item.querySelector('#custom-dnd5e-type').value
+        const actorType = this.entity.type
+        const entity = this.entity
+        const setting = this.counters
+        const args = { countersForm: this, data: { key, actorType, entity, label, type }, setting }
+        await CountersAdvancedOptionsForm.open(args)
     }
 
     static async submit (event, form, formData) {
