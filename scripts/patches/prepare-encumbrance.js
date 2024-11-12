@@ -22,7 +22,7 @@ async function prepareEncumbrancePatch (rollData, { validateItem } = {}) {
     const config = CONFIG.DND5E.encumbrance
     const encumbrance = this.attributes.encumbrance ??= {}
     const baseUnits = CONFIG.DND5E.encumbrance.baseUnits[this.parent.type] ??
-    CONFIG.DND5E.encumbrance.baseUnits.default
+        CONFIG.DND5E.encumbrance.baseUnits.default
     const unitSystem = game.settings.get('dnd5e', 'metricWeightUnits') ? 'metric' : 'imperial'
 
     // Get the total weight from items
@@ -60,9 +60,9 @@ async function prepareEncumbrancePatch (rollData, { validateItem } = {}) {
     const calculateThreshold = threshold => {
         let base = this.abilities.str?.value ?? 10
         const bonus = simplifyBonus(encumbrance.bonuses?.[threshold], rollData) +
-      simplifyBonus(encumbrance.bonuses?.overall, rollData)
+        simplifyBonus(encumbrance.bonuses?.overall, rollData)
         let multiplier = simplifyBonus(encumbrance.multipliers[threshold], rollData) *
-      simplifyBonus(encumbrance.multipliers.overall, rollData)
+        simplifyBonus(encumbrance.multipliers.overall, rollData)
         if (threshold === 'maximum') maximumMultiplier = multiplier
         if (this.parent.type === 'vehicle') base = this.attributes.capacity.cargo
         else multiplier *= (config.threshold[threshold]?.[unitSystem] ?? 1) * sizeMod

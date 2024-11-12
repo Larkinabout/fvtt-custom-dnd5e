@@ -106,8 +106,12 @@
     width: calc(var(--dnd5e-sheet-sidebar-width) - 10px);
 }
 
-.dnd5e2.sheet.actor.character .sheet-body .sidebar .card .stats .top {
+.custom-dnd5e.dnd5e2.sheet.actor.character .sheet-body .sidebar .card .stats .top {
     justify-content: center !important;
+}
+
+.custom-dnd5e.dnd5e2.sheet.actor.character .sheet-body .sidebar .card .stats .top .pips {
+    padding: 10px 0;
 }
 
 .custom-dnd5e.dnd5e2 .top .pips:first-child {
