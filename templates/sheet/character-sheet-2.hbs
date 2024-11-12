@@ -61,6 +61,13 @@
                     aria-label="{{ localize "DND5E.Inspiration" }}" data-tooltip="DND5E.Inspiration"
                     aria-pressed="{{ system.attributes.inspiration }}"></button>
 
+            {{!-- Epic Boons --}}
+            {{#if system.details.xp.boonsEarned}}
+            <div class="boon-badge badge" data-tooltip="{{ epicBoonsEarned }}" aria-label="{{ epicBoonsEarned }}">
+                {{ dnd5e-numberFormat system.details.xp.boonsEarned numerals=true }}
+            </div>
+            {{/if}}
+
             <div>
                 {{!-- Resting & Special Traits --}}
                 {{#if actor.isOwner}}
@@ -90,8 +97,10 @@
                     {{else}}
                     <span class="value">{{ dnd5e-numberFormat value }}</span>
                     {{/if}}
+                    {{#unless @root.epicBoonsEarned}}
                     <span class="separator">&sol;</span>
                     <span class="max">{{ dnd5e-numberFormat max }}</span>
+                    {{/unless}}
                 </div>
                 <div class="xp-bar" role="meter" aria-label="{{ localize "DND5E.ExperiencePointsLabel" }}"
                      aria-valuemin="{{ min }}" aria-valuenow="{{ value }}" aria-valuemax="{{ max }}"
@@ -119,7 +128,7 @@
                         {{#if sidebarCollapsed}}
                         data-tooltip="JOURNAL.ViewExpand" aria-label="{{ localize "JOURNAL.ViewExpand" }}"
                         {{else}}
-                            data-tooltip="JOURNAL.ViewCollapse" aria-label="{{ localize "JOURNAL.ViewCollapse" }}"
+                        data-tooltip="JOURNAL.ViewCollapse" aria-label="{{ localize "JOURNAL.ViewCollapse" }}"
                         {{/if}}>
                         <i class="fas fa-caret-{{#if sidebarCollapsed}}right{{else}}left{{/if}}"></i>
                     </button>
@@ -149,11 +158,13 @@
                         {{!-- AC & Exhaustion --}}
                         <div class="top">
 
+                            {{#if exhaustion}}
                             <div class="pips" data-prop="system.attributes.exhaustion">
                                 {{#each exhaustion.left}}
                                     {{> pip }}
                                 {{/each}}
                             </div>
+                            {{/if}}
 
                             {{!-- AC --}}
                             <div class="ac-badge badge" aria-label="{{ localize "DND5E.ArmorClass" }}">
@@ -170,11 +181,13 @@
                                 {{/if}}
                             </div>
 
+                            {{#if exhaustion}}
                             <div class="pips" data-prop="system.attributes.exhaustion">
                                 {{#each exhaustion.right}}
                                     {{> pip }}
                                 {{/each}}
                             </div>
+                            {{/if}}
                         </div>
 
                         {{!-- Initiative, Speed, & Proficiency --}}
@@ -338,6 +351,7 @@
                             {{#if itemId}}data-item-id="{{ itemId }}"{{/if}}
                             {{#if effectId}}data-effect-id="{{ effectId }}"{{/if}}
                             {{#if parentId}}data-parent-id="{{ parentId }}"{{/if}}
+                            {{#if activityId}}data-activity-id="{{ activityId }}" data-action="useFavorite"{{/if}}
                             {{#if reference}}data-reference-tooltip="{{ reference }}"{{/if}}
                             {{#if preparationMode}}data-preparation-mode="{{ preparationMode }}"{{/if}}
                             {{#if level}}data-level="{{ level }}"{{/if}}
@@ -358,8 +372,7 @@
                             </figure>
 
                             {{!-- Name --}}
-                            <div class="name-stacked {{ rollableClass }}"
-                                 role="button" data-action="useFavorite">
+                            <div class="name-stacked {{ rollableClass }}" role="button" data-action="useFavorite">
                                 <span class="title">{{ title }}</span>
                                 {{#if subtitle}}
                                 <span class="subtitle">{{{ subtitle }}}</span>
@@ -370,7 +383,7 @@
                             <div class="info">
                                 <div class="primary {{ css }}">
                                     {{!-- Item Uses & Capacity --}}
-                                    {{#if uses}}
+                                    {{#if uses.max}}
                                     {{#with uses}}
                                     {{#if (and name @root.actor.isOwner)}}
                                     <input type="text" class="uninput value" value="{{ value }}"
@@ -393,12 +406,12 @@
                                     {{/if}}
 
                                     {{!-- Saves --}}
-                                    {{else if save.dc}}
+                                    {{else if save.dc.value}}
                                     {{#with save}}
                                     <span class="ability">
-                                        {{ lookup (lookup @root.config.abilities ability) "abbreviation" }}
+                                        {{ ability }}
                                     </span>
-                                    <span class="value">{{ dc }}</span>
+                                    <span class="value">{{ dc.value }}</span>
                                     {{/with}}
 
                                     {{!-- Other Value --}}
@@ -447,6 +460,10 @@
                                         {{ units }}
                                     </span>
                                     {{/with}}
+
+                                    {{!-- Reach --}}
+                                    {{else if range.reach}}
+                                    <span class="range">{{ range.reach }} {{ range.units }}</span>
                                     {{/if}}
                                 </div>
                             </div>
@@ -491,6 +508,9 @@
                 {{!-- Biography --}}
                 {{~> "dnd5e.character-biography" ~}}
 
+                {{!-- Bastion --}}
+                {{~> "dnd5e.character-bastion" ~}}
+
             </section>
 
         </div>
@@ -499,11 +519,11 @@
 
     {{!-- Child Creation --}}
     <button type="button" class="create-child gold-button"
-            aria-label="{{ "SIDEBAR.Create" type=(localize "DOCUMENT.Item") }}">
+            aria-label="{{ localize "SIDEBAR.Create" type=(localize "DOCUMENT.Item") }}">
         <i class="fas fa-plus"></i>
     </button>
 
-        {{!-- Warnings --}}
+    {{!-- Warnings --}}
     {{> "dnd5e.actor-warnings-dialog" }}
 
 </form>
