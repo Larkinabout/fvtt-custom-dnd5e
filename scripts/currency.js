@@ -91,6 +91,7 @@ export function setConfig (data = null) {
                 {
                     abbreviation: game.i18n.localize(data[key].abbreviation),
                     conversion: data[key].conversion,
+                    icon: data[key].icon,
                     label: game.i18n.localize(data[key].label)
                 }
             ])

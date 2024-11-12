@@ -130,6 +130,7 @@ Hooks.on('init', async () => {
     registerDebug()
 
     setAbilities(getSetting(CONSTANTS.ABILITIES.SETTING.KEY))
+    setCurrency(getSetting(CONSTANTS.CURRENCY.SETTING.KEY))
     setSkills(getSetting(CONSTANTS.SKILLS.SETTING.KEY))
 
     // Must be registered after abilities and skills are set
@@ -181,7 +182,6 @@ Hooks.on('ready', async () => {
     setArmorProficiencies(getSetting(CONSTANTS.ARMOR_PROFICIENCIES.SETTING.KEY))
     setConditions(getSetting(CONSTANTS.CONDITIONS.SETTING.KEY))
     setConsumableTypes(getSetting(CONSTANTS.CONSUMABLE_TYPES.SETTING.KEY))
-    setCurrency(getSetting(CONSTANTS.CURRENCY.SETTING.KEY))
     setDamageTypes(getSetting(CONSTANTS.DAMAGE_TYPES.SETTING.KEY))
     setEncumbrance(getSetting(CONSTANTS.ENCUMBRANCE.SETTING.KEY))
     if (!isV4) {
