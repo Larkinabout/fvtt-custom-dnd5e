@@ -40,6 +40,7 @@ import { register as registerJournalEntryPageSheet } from './journal-entry-page-
 import { register as registerLanguages, setConfig as setLanguages } from './languages.js'
 import { register as registerMigration, migrate } from './migration.js'
 import { register as registerMisc, setMaxLevel } from './misc.js'
+import { register as registerRolls } from './rolls.js'
 import { register as registerSenses, setConfig as setSenses } from './senses.js'
 import { register as registerSheet } from './sheet.js'
 import { register as registerSkills, setConfig as setSkills } from './skills.js'
@@ -50,6 +51,7 @@ import { register as registerToolIds, setConfig as setToolIds } from './tool-ids
 import { register as registerWeaponIds, setConfig as setWeaponIds } from './weapon-ids.js'
 import { register as registerWeaponProficiencies, setConfig as setWeaponProficiencies } from './weapon-proficiencies.js'
 import { patchApplicationRender } from './patches/application-render.js'
+import { patchD20Roll } from './patches/d20roll.js'
 import { patchPrepareEncumbrance } from './patches/prepare-encumbrance.js'
 import { registerCharacterSheet } from './sheets/character-sheet.js'
 
@@ -92,6 +94,7 @@ Hooks.on('init', async () => {
     )
 
     patchApplicationRender()
+    patchD20Roll()
     patchPrepareEncumbrance()
 
     registerMigration()
@@ -117,6 +120,7 @@ Hooks.on('init', async () => {
     registerItemProperties()
     registerItemRarity()
     registerLanguages()
+    registerRolls()
     registerSenses()
     registerSheet()
     registerSkills()

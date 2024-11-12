@@ -506,6 +506,25 @@ export const CONSTANTS = {
         },
         UUID: 'Compendium.custom-dnd5e.custom-dnd5e-journals.JournalEntry.ngr8w6WBycK59brj.JournalEntryPage.lR4mGZPNE02Lbe6t'
     },
+    ROLLS: {
+        ID: 'rolls',
+        MENU: {
+            KEY: 'rolls-menu',
+            HINT: 'CUSTOM_DND5E.menu.rolls.hint',
+            ICON: 'fas fa-pen-to-square',
+            LABEL: 'CUSTOM_DND5E.menu.rolls.label',
+            NAME: 'CUSTOM_DND5E.menu.rolls.name'
+        },
+        SETTING: {
+            ROLLS: {
+                KEY: 'rolls'
+            }
+        },
+        TEMPLATE: {
+            FORM: 'modules/custom-dnd5e/templates/rolls-form.hbs'
+        },
+        UUID: 'Compendium.custom-dnd5e.custom-dnd5e-journals.JournalEntry.B48iqFBddUikMMer.JournalEntryPage.dmzCGf2LPoBlfu9m'
+    },
     SENSES: {
         ID: 'senses',
         MENU: {

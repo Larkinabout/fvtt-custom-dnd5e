@@ -410,7 +410,7 @@ export function awardInspiration (rollType, entity, roll) {
     if (actor.type === 'npc' || !getSetting(CONSTANTS.INSPIRATION.SETTING.AWARD_INSPIRATION_ROLL_TYPES.KEY)?.[rollType]) return
 
     const awardInspirationD20Value = getSetting(CONSTANTS.INSPIRATION.SETTING.AWARD_INSPIRATION_D20_VALUE.KEY)
-    const d20Value = roll.terms.find(term => term.faces === 20).total
+    const d20Value = roll.terms[0].total
 
     if (awardInspirationD20Value === d20Value) {
         let message = 'CUSTOM_DND5E.message.awardInspiration'

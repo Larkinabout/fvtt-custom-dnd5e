@@ -18,6 +18,7 @@
     "CUSTOM_DND5E.circle": "Circle",
     "CUSTOM_DND5E.clientSettings.label": "Client Settings",
     "CUSTOM_DND5E.clientSettings.note": "These settings only affect the current user and are configurable by each user.",
+    "CUSTOM_DND5E.concentrationSavingThrow": "Concentration Saving Throw",
     "CUSTOM_DND5E.configureCounters": "Configure Counters",
     "CUSTOM_DND5E.consumable": "Consumable",
     "CUSTOM_DND5E.container": "Container",
@@ -27,6 +28,7 @@
     "CUSTOM_DND5E.dead": "Dead",
     "CUSTOM_DND5E.deathSavingThrows": "Death Saving Throws",
     "CUSTOM_DND5E.decrease": "Decrease",
+    "CUSTOM_DND5E.die": "Die",
     "CUSTOM_DND5E.dynamicTokenScale": "Dynamic Token Scale",
     "CUSTOM_DND5E.edit": "Edit",
     "CUSTOM_DND5E.equipment": "Equipment",
@@ -48,6 +50,7 @@
     "CUSTOM_DND5E.includeOnHud": "Include on HUD",
     "CUSTOM_DND5E.includeOnSheet": "Include on Sheet",
     "CUSTOM_DND5E.increase": "Increase",
+    "CUSTOM_DND5E.initiativeRoll": "Initiative Roll",
     "CUSTOM_DND5E.inspiration": "Inspiration",
     "CUSTOM_DND5E.items": "Items",
     "CUSTOM_DND5E.itemTypes": "Item Types",
@@ -99,6 +102,7 @@
     "CUSTOM_DND5E.tokenScale": "Token Scale",
     "CUSTOM_DND5E.tokenSize": "Token Size",
     "CUSTOM_DND5E.tool": "Tool",
+    "CUSTOM_DND5E.toolCheck": "Tool Check",
     "CUSTOM_DND5E.trigger": "Trigger",
     "CUSTOM_DND5E.triggers": "Triggers",
     "CUSTOM_DND5E.triggerValue": "Trigger Value",
@@ -254,6 +258,8 @@
 
     "CUSTOM_DND5E.form.languages.title": "Configure Languages",
 
+    "CUSTOM_DND5E.form.rolls.title": "Configure Rolls",
+
     "CUSTOM_DND5E.form.senses.title": "Configure Senses",
 
     "CUSTOM_DND5E.form.sheet.autoFadeSheet.note.1": "Automatically fade out the sheet when it is not hovered over",
@@ -371,6 +377,10 @@
     "CUSTOM_DND5E.menu.languages.hint": "Configure Languages",
     "CUSTOM_DND5E.menu.languages.label": "Configure Languages",
     "CUSTOM_DND5E.menu.languages.name": "Configure Languages",
+
+    "CUSTOM_DND5E.menu.rolls.hint": "Configure Rolls",
+    "CUSTOM_DND5E.menu.rolls.label": "Configure Rolls",
+    "CUSTOM_DND5E.menu.rolls.name": "Configure Rolls",
 
     "CUSTOM_DND5E.menu.senses.hint": "Configure Senses",
     "CUSTOM_DND5E.menu.senses.label": "Configure Senses",

@@ -364,6 +364,7 @@
 .custom-dnd5e.dnd5e2.sheet.actor.character .sheet-body .tools select.ability,
 .custom-dnd5e.dnd5e2.sheet.actor.character .sheet-body .saves select.ability {
     margin-left: -4px;
+    width: 50px;
 }
 
 @container (max-width: 500px) {
