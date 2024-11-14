@@ -136,6 +136,7 @@ function getDnd5eKeysPressed (event) {
 function getValidButton (element) {
     if (
         element.dataset?.action === 'rollAttack' ||
+        element.dataset?.action === 'rollRequest' ||
         element.dataset?.action === 'use' ||
         element.classList.contains('rollable') ||
         element.classList.contains('item-use-button') // Tidy5eCharacterSheet
@@ -144,6 +145,7 @@ function getValidButton (element) {
     }
     return element.closest(('[data-action="use"]')) ||
         element.closest('[data-action="rollAttack"]') ||
+        element.closest('[data-action="rollRequest"]') ||
         element.closest('.rollable') ||
         element.closest('.item-use-button') // Tidy5eCharacterSheet
 }
