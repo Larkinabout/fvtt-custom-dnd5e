@@ -51,7 +51,8 @@ import { register as registerToolIds, setConfig as setToolIds } from './tool-ids
 import { register as registerWeaponIds, setConfig as setWeaponIds } from './weapon-ids.js'
 import { register as registerWeaponProficiencies, setConfig as setWeaponProficiencies } from './weapon-proficiencies.js'
 import { patchApplicationRender } from './patches/application-render.js'
-import { patchD20Roll } from './patches/d20roll.js'
+import { patchD20Die } from './patches/d20-die.js'
+import { patchD20Roll } from './patches/d20-roll.js'
 import { patchPrepareEncumbrance } from './patches/prepare-encumbrance.js'
 import { registerCharacterSheet } from './sheets/character-sheet.js'
 
@@ -94,6 +95,7 @@ Hooks.on('init', async () => {
     )
 
     patchApplicationRender()
+    patchD20Die()
     patchD20Roll()
     patchPrepareEncumbrance()
 

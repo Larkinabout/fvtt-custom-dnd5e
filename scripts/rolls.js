@@ -1,5 +1,5 @@
 import { CONSTANTS } from './constants.js'
-import { getSetting, registerMenu, registerSetting, Logger } from './utils.js'
+import { getDieParts, getSetting, registerMenu, registerSetting, Logger } from './utils.js'
 import { RollsForm } from './forms/rolls-form.js'
 
 const constants = CONSTANTS.ROLLS
@@ -29,7 +29,8 @@ function registerSettings () {
             icon: constants.MENU.ICON,
             type: RollsForm,
             restricted: true,
-            scope: 'world'
+            scope: 'world',
+            requiresReload: true
         }
     )
 
@@ -75,9 +76,10 @@ function registerHooks () {
             roll = rolls.savingThrow
         }
 
-        const regex = /\b\d+d\d+\b/
-        if (roll.die !== '1d20' && roll.die.match(regex)) {
+        const dieParts = getDieParts(roll.die)
+        if (roll.die !== '1d20' && dieParts) {
             config.rolls[0].options.customDie = roll.die
+            config.rolls[0].options.criticalSuccess = dieParts.number
         }
 
         const rollModes = ['gmroll', 'blindroll', 'selfroll']

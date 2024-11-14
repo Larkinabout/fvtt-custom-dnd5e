@@ -1,4 +1,4 @@
-import { CONSTANTS, MODULE } from '../constants.js'
+import { CONSTANTS, JOURNAL_HELP_BUTTON, MODULE } from '../constants.js'
 import { getSetting, setSetting } from '../utils.js'
 import { CustomDnd5eForm } from './custom-dnd5e-form.js'
 
@@ -6,6 +6,8 @@ export class RollsForm extends CustomDnd5eForm {
     constructor (...args) {
         super(args)
         this.type = 'sheet'
+        this.headerButton = JOURNAL_HELP_BUTTON
+        this.headerButton.uuid = CONSTANTS.ROLLS.UUID
     }
 
     static DEFAULT_OPTIONS = {
@@ -29,7 +31,17 @@ export class RollsForm extends CustomDnd5eForm {
 
     async _prepareContext () {
         return {
-            rolls: getSetting(CONSTANTS.ROLLS.SETTING.ROLLS.KEY)
+            rolls: getSetting(CONSTANTS.ROLLS.SETTING.ROLLS.KEY),
+            selects: {
+                rollMode: {
+                    choices: {
+                        blindroll: 'CHAT.RollBlind',
+                        gmroll: 'CHAT.RollPrivate',
+                        publicroll: 'CHAT.RollPublic',
+                        selfroll: 'CHAT.RollSelf'
+                    }
+                }
+            }
         }
     }
 

@@ -511,7 +511,7 @@ export const CONSTANTS = {
         MENU: {
             KEY: 'rolls-menu',
             HINT: 'CUSTOM_DND5E.menu.rolls.hint',
-            ICON: 'fas fa-pen-to-square',
+            ICON: 'fas fa-dice-d20',
             LABEL: 'CUSTOM_DND5E.menu.rolls.label',
             NAME: 'CUSTOM_DND5E.menu.rolls.name'
         },
@@ -523,7 +523,7 @@ export const CONSTANTS = {
         TEMPLATE: {
             FORM: 'modules/custom-dnd5e/templates/rolls-form.hbs'
         },
-        UUID: 'Compendium.custom-dnd5e.custom-dnd5e-journals.JournalEntry.B48iqFBddUikMMer.JournalEntryPage.dmzCGf2LPoBlfu9m'
+        UUID: 'Compendium.custom-dnd5e.custom-dnd5e-journals.JournalEntry.B48iqFBddUikMMer.JournalEntryPage.eIWacCPaiwpIZCBL'
     },
     SENSES: {
         ID: 'senses',

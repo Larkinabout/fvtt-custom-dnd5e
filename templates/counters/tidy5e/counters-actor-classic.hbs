@@ -1,0 +1,89 @@
+<div id="custom-dnd5e-counters" class="pills-group" data-tidy-render-scheme="handlebars">
+    <h3 class="icon">
+        <i class="fas fa-scroll"></i>
+        <span class="roboto-upper">{{localize "CUSTOM_DND5E.counters"}}</span>
+        {{#if editable}}
+        <a id="custom-dnd5e-counters-edit-button" class="config-button" data-tooltip="{{localize "CUSTOM_DND5E.configureCounters"}}" aria-label="{{localize "CUSTOM_DND5E.configureCounters"}}">
+            <i class="fas fa-cog"></i>
+        </a>
+        {{/if}}
+    </h3>
+    <ul>
+        {{#each counters as |counter key|}}
+        {{#if (eq counter.type "checkbox")}}
+        <li class="custom-dnd5e-counters-counter custom-dnd5e-counters-checkbox flexrow" data-id="{{key}}">
+            <div class="flexrow">
+                <h4>
+                    {{#if canEdit}}
+                    <a class="custom-dnd5e-counters-link">{{counter.label}}</a>
+                    {{else}}
+                    {{counter.label}}
+                    {{/if}}
+                </h4>
+                <input type="checkbox" name="flags.custom-dnd5e.{{counter.property}}"
+                    placeholder="false" data-dtype="Boolean" {{#if counter.value}}checked{{/if}}{{#unless counter.canEdit}} disabled{{/unless}}>
+            </div>
+        </li>
+        {{/if}}
+
+        {{#if (eq counter.type "number")}}
+        <li class="custom-dnd5e-counters-counter custom-dnd5e-counters-number flexrow" data-id="{{key}}">
+            <h4>
+                {{#if canEdit}}
+                <a class="custom-dnd5e-counters-link" data-input="value">{{counter.label}}</a>
+                {{else}}
+                {{counter.label}}
+                {{/if}}
+            </h4>
+            <div class="custom-dnd5e-counters-counter-value">
+                <input type="number" data-input="value" name="flags.custom-dnd5e.{{counter.property}}"
+                    value="{{counter.value}}" placeholder="0" data-dtype="Number"{{#unless counter.canEdit}} disabled{{/unless}}>
+            </div>
+        </li>
+        {{/if}}
+
+        {{#if (eq counter.type "fraction")}}
+        <li class="custom-dnd5e-counters-counter custom-dnd5e-counters-fraction flexrow" data-id="{{key}}">
+            <h4>
+                {{#if canEdit}}
+                <a class="custom-dnd5e-counters-link" data-input="value">{{counter.label}}</a>
+                {{else}}
+                {{counter.label}}
+                {{/if}}
+            </h4>
+            <div class="custom-dnd5e-counters-counter-value">
+                <div class="custom-dnd5e-counters-fraction-group">
+                    <input type="number" data-input="value" name="flags.custom-dnd5e.{{counter.property}}.value"
+                        value="{{counter.value}}" placeholder="0" data-dtype="Number"{{#unless counter.canEdit}} disabled{{/unless}}>
+                    <span class="dnd5e-custom-counters-separator">/</span>
+                    <input type="number" data-input="max" name="flags.custom-dnd5e.{{counter.property}}.max"
+                        value="{{counter.max}}" placeholder="0" data-dtype="Number"{{#unless counter.canEditMax}} disabled{{/unless}}>
+                </div>
+            <div>
+        </li>
+        {{/if}}
+
+        {{#if (eq counter.type "successFailure")}}
+        <li class="custom-dnd5e-counters-counter custom-dnd5e-counters-success-failure flexrow" data-id="{{key}}">
+            <h4>{{counter.label}}</h4>
+            <div class="custom-dnd5e-counters-counter-value">
+                {{#if canEdit}}
+                <a class="custom-dnd5e-counters-link" data-input="success"><i class="fas fa-check"></i></a>
+                {{else}}
+                <i class="fas fa-check"></i>
+                {{/if}}
+                <input type="number" data-input="success" name="flags.custom-dnd5e.{{counter.property}}.success"
+                    value="{{counter.success}}" placeholder="0" data-dtype="Number"{{#unless counter.canEdit}} disabled{{/unless}}>
+                {{#if canEdit}}
+                <a class="custom-dnd5e-counters-link" data-input="failure"><i class="fas fa-times"></i></a>
+                {{else}}
+                <i class="fas fa-times"></i>
+                {{/if}}
+                <input type="number" data-input="failure" name="flags.custom-dnd5e.{{counter.property}}.failure"
+                    value="{{counter.failure}}"  placeholder="0" data-dtype="Number"{{#unless counter.canEdit}} disabled{{/unless}}>
+            </div>
+        </li>
+        {{/if}}
+        {{/each}}
+    </ul>
+</div>

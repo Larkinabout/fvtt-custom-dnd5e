@@ -97,6 +97,26 @@ export function registerSetting (key, options) {
 }
 
 /**
+ * Get parts of a die
+ * @param {string} input The die input
+ * @returns {object|null}     The die parts
+ */
+export function getDieParts (input) {
+    if (!input) return null
+
+    const regex = /\b(\d+)[dD](\d+)\b/
+    const match = input.match(regex)
+    if (match) {
+        return {
+            number: parseInt(match[1], 10),
+            faces: parseInt(match[2], 10)
+        }
+    } else {
+        return null
+    }
+}
+
+/**
  * Get flag
  * @param {object} entity The entity
  * @param {string} key    The flag key

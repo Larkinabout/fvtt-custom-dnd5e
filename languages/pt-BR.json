@@ -18,6 +18,7 @@
     "CUSTOM_DND5E.circle": "Círculo",
     "CUSTOM_DND5E.clientSettings.label": "Configurações do Cliente",
     "CUSTOM_DND5E.clientSettings.note": "Essas configurações afetam somente o usuário atual sendo configuráveis por cada usuário.",
+    "CUSTOM_DND5E.concentrationSavingThrow": "Teste de Resistência de Concentração",
     "CUSTOM_DND5E.configureCounters": "Configurar Contadores",
     "CUSTOM_DND5E.consumable": "Consumível",
     "CUSTOM_DND5E.container": "Recipiente",
@@ -27,6 +28,7 @@
     "CUSTOM_DND5E.dead": "Morto",
     "CUSTOM_DND5E.deathSavingThrows": "Salvaguardas contra Morte",
     "CUSTOM_DND5E.decrease": "Diminuir",
+    "CUSTOM_DND5E.die": "Dado",
     "CUSTOM_DND5E.dynamicTokenScale": "Escala do Token Dinâmico",
     "CUSTOM_DND5E.edit": "Editar",
     "CUSTOM_DND5E.equipment": "Equipamento",
@@ -48,6 +50,7 @@
     "CUSTOM_DND5E.includeOnHud": "Incluir no HUD",
     "CUSTOM_DND5E.includeOnSheet": "Incluir na Ficha",
     "CUSTOM_DND5E.increase": "Aumentar",
+    "CUSTOM_DND5E.initiativeRoll": "Rolagem de Iniciativa",
     "CUSTOM_DND5E.inspiration": "Inspiração",
     "CUSTOM_DND5E.items": "Itens",
     "CUSTOM_DND5E.itemTypes": "Tipos de Item",
@@ -56,6 +59,7 @@
     "CUSTOM_DND5E.longRest": "Descanso Longo",
     "CUSTOM_DND5E.loot": "Saque",
     "CUSTOM_DND5E.maximum": "Máximo",
+    "CUSTOM_DND5E.reachedCounterLimit": "Você atingiu o limite para este contador!",
     "CUSTOM_DND5E.mental": "Mental",
     "CUSTOM_DND5E.negativeHitPoints": "Pontos de Vida Negativos",
     "CUSTOM_DND5E.no": "Não",
@@ -98,6 +102,7 @@
     "CUSTOM_DND5E.tokenScale": "Escala do Token",
     "CUSTOM_DND5E.tokenSize": "Tamanho do Token",
     "CUSTOM_DND5E.tool": "Ferramenta",
+    "CUSTOM_DND5E.toolCheck": "Teste de Ferramenta",
     "CUSTOM_DND5E.trigger": "Gatilho",
     "CUSTOM_DND5E.triggers": "Gatilhos",
     "CUSTOM_DND5E.triggerValue": "Valor do Gatilho",
@@ -130,7 +135,7 @@
     "CUSTOM_DND5E.dialog.importData.note.2": "Esta ação irá substituir a configuração existente de Custom D&D 5e",
     "CUSTOM_DND5E.dialog.levelUpHitPointsRerollOnce.note": "Ao rolar Pontos de Vida, se a primeira rolagem for menor que {minimumValue}, o dado será rolado novamente uma vez com o segundo resultado sendo usado.",
     "CUSTOM_DND5E.dialog.levelUpHitPointsRerollForever.note": "Ao rolar Pontos de Vida, o dado será rolado novamente até que o resultado seja pelo menos {minimumValue}.",
-    
+
     "CUSTOM_DND5E.dialog.reset.content": "Isto redefinirá tudo de volta à configuração do sistema. Deseja continuar?",
     "CUSTOM_DND5E.dialog.reset.title": "Redefinir Configurações",
     
@@ -145,19 +150,19 @@
     "CUSTOM_DND5E.form.button.save.label": "Salvar e Fechar",
     "CUSTOM_DND5E.form.button.save.tooltip": "Salvar e Fechar",
     "CUSTOM_DND5E.form.checkbox.visible.tooltip": "Visível",
-   
+
     "CUSTOM_DND5E.form.abilities.title": "Configurar Atributos",
 
     "CUSTOM_DND5E.form.activationCosts.title": "Configurar Custos de Ativação",
-    
+
     "CUSTOM_DND5E.form.actorSizes.title": "Configurar Tamanhos de Atores",
-    
+
     "CUSTOM_DND5E.form.armorCalculations.title": "Configurar Cálculos de Armadura",
-    
+
     "CUSTOM_DND5E.form.armorIds.title": "Configurar Armadura",
-    
+
     "CUSTOM_DND5E.form.armorProficiencies.title": "Configurar Proficiências de Armadura",
-    
+
     "CUSTOM_DND5E.form.conditions.title": "Configurar Condições",
     "CUSTOM_DND5E.form.conditions.edit.title": "Editar Condição",
 
@@ -181,11 +186,11 @@
     "CUSTOM_DND5E.form.counters.triggers.trigger.choices.halfHp": "Metade dos PV ou menos",
     "CUSTOM_DND5E.form.counters.triggers.trigger.choices.roll1": "Rolar 1 em um d20",
     "CUSTOM_DND5E.form.counters.triggers.trigger.choices.roll20": "Rolar 20 em um d20",
-    
+
     "CUSTOM_DND5E.form.currency.title": "Configurar Moeda",
-    
+
     "CUSTOM_DND5E.form.damageTypes.title": "Configurar Tipos de Dano",
-    
+
     "CUSTOM_DND5E.form.debug.button.exportData.tooltip": "Exportar Dados",
     "CUSTOM_DND5E.form.debug.consoleMessages.label": "Habilitar Mensagens no Console",
     "CUSTOM_DND5E.form.debug.consoleMessages.note.1": "Habilitar mensagens de depuração no console do navegador",
@@ -196,9 +201,9 @@
     "CUSTOM_DND5E.form.debug.importData.note.1": "Importar as opções e configurações do módulo usando um arquivo",
     "CUSTOM_DND5E.form.debug.importData.note.2": "Todos os dados existentes serão substituídos",
     "CUSTOM_DND5E.form.debug.title": "Configurações de Depuração",
-    
+
     "CUSTOM_DND5E.form.encumbrance.title": "Configurar Sobrecarga",
-    
+
     "CUSTOM_DND5E.form.houseRules.bloodied.applyBloodied.label": "Aplicar Sangrando",
     "CUSTOM_DND5E.form.houseRules.bloodied.applyBloodied.note": "Aplica a condição Sangrando quando o personagem ou PNJ tem seus PVs reduzidos pela metade, ou menos",
     "CUSTOM_DND5E.form.houseRules.bloodied.applyBloodied.note2": "Ativar isso desativará a configuração de Status Ensanguentado do D&D 5e",
@@ -240,21 +245,23 @@
     "CUSTOM_DND5E.form.houseRules.rollingHitPoints.showTakeAverage.note": "Mostrar a caixa de seleção Usar a Média",
     "CUSTOM_DND5E.form.houseRules.unconscious.applyUnconscious.label": "Aplicar Inconsciente",
     "CUSTOM_DND5E.form.houseRules.unconscious.applyUnconscious.note": "Aplica o efeito de condição Inconsciente quando um PJ é reduzido a 0 PV",
-    
+
     "CUSTOM_DND5E.form.houseRules.title": "Configurar Regras da Casa",
-    
+
     "CUSTOM_DND5E.form.itemActionTypes.title": "Configurar Tipos de Ação de Item",
-    
+
     "CUSTOM_DND5E.form.itemActivationCostTypes.title": "Configurar Tipos de Custo de Ativação de Itens",
-    
+
     "CUSTOM_DND5E.form.itemProperties.title": "Configurar Propriedades de Item",
-    
+
     "CUSTOM_DND5E.form.itemRarity.title": "Configurar Raridade de Item",
-   
+
     "CUSTOM_DND5E.form.languages.title": "Configurar Idiomas",
-    
+
+    "CUSTOM_DND5E.form.rolls.title": "Configurar Rolagens",
+
     "CUSTOM_DND5E.form.senses.title": "Configurar Sentidos",
-    
+
     "CUSTOM_DND5E.form.sheet.autoFadeSheet.note.1": "Desvanecer automaticamente a ficha quando não estiver com o ponteiro em cima dela",
     "CUSTOM_DND5E.form.sheet.autoFadeSheet.note.2": "Pressione CTRL para manter ela desvanecida enquanto move pela ficha e pressione CTRL para manter a visão nítida enquanto move o ponteiro fora da ficha.",
     "CUSTOM_DND5E.form.sheet.autoFadeSheet.label": "Ativar Desvanecer Automático",
@@ -284,41 +291,41 @@
     "CUSTOM_DND5E.form.sheet.showUseLairAction.note": "Mostrar Usar Ação de Covil na ficha de PNJ",
     "CUSTOM_DND5E.form.sheet.showUseLairAction.label": "Mostrar Usar Ação de Covil",
     "CUSTOM_DND5E.form.sheet.title": "Configurar Ficha",
-    
+
     "CUSTOM_DND5E.form.skills.title": "Configurar Perícias",
-   
+
     "CUSTOM_DND5E.form.spellSchools.title": "Configurar Escolas de Magia",
-    
+
     "CUSTOM_DND5E.form.toolIds.title": "Configurar Ferramentas",
-    
+
     "CUSTOM_DND5E.form.weaponIds.title": "Configurar Armas",
-   
+
     "CUSTOM_DND5E.form.weaponProficiencies.title": "Configurar Proficiências de Arma",
-    
+
     "CUSTOM_DND5E.menu.abilities.hint": "Configurar Atributos",
     "CUSTOM_DND5E.menu.abilities.label": "Configurar Atributos",
     "CUSTOM_DND5E.menu.abilities.name": "Configurar Atributos",
-    
+
     "CUSTOM_DND5E.menu.activationCosts.hint": "Configurar Custos de Ativação",
     "CUSTOM_DND5E.menu.activationCosts.label": "Configurar Custos de Ativação",
     "CUSTOM_DND5E.menu.activationCosts.name": "Configurar Custos de Ativação",
-    
+
     "CUSTOM_DND5E.menu.actorSizes.hint": "Configurar Tamanhos de Atores",
     "CUSTOM_DND5E.menu.actorSizes.label": "Configurar Tamanhos de Atores",
     "CUSTOM_DND5E.menu.actorSizes.name": "Configurar Tamanhos de Atores",
-    
+
     "CUSTOM_DND5E.menu.armorCalculations.hint": "Configurar Cálculos de Armadura",
     "CUSTOM_DND5E.menu.armorCalculations.label": "Configurar Cálculos de Armadura",
     "CUSTOM_DND5E.menu.armorCalculations.name": "Configurar Cálculos de Armadura",
-    
+
     "CUSTOM_DND5E.menu.armorIds.hint": "Configurar Armadura",
     "CUSTOM_DND5E.menu.armorIds.label": "Configurar Armadura",
     "CUSTOM_DND5E.menu.armorIds.name": "Configurar Armadura",
-    
+
     "CUSTOM_DND5E.menu.armorProficiencies.hint": "Configurar Proficiências de Armadura",
     "CUSTOM_DND5E.menu.armorProficiencies.label": "Configurar Proficiências de Armadura",
     "CUSTOM_DND5E.menu.armorProficiencies.name": "Configurar Proficiências de Armadura",
-    
+
     "CUSTOM_DND5E.menu.conditions.hint": "Configurar Condições",
     "CUSTOM_DND5E.menu.conditions.label": "Configurar Condições",
     "CUSTOM_DND5E.menu.conditions.name": "Configurar Condições",
@@ -330,7 +337,7 @@
     "CUSTOM_DND5E.menu.counters.hint": "Configurar Contadores",
     "CUSTOM_DND5E.menu.counters.label": "Configurar Contadores",
     "CUSTOM_DND5E.menu.counters.name": "Configurar Contadores",
-    
+
     "CUSTOM_DND5E.menu.currency.hint": "Configurar Moeda",
     "CUSTOM_DND5E.menu.currency.label": "Configurar Moeda",
     "CUSTOM_DND5E.menu.currency.name": "Configurar Moeda",
@@ -338,67 +345,71 @@
     "CUSTOM_DND5E.menu.damageTypes.hint": "Configurar Tipos de Dano",
     "CUSTOM_DND5E.menu.damageTypes.label": "Configurar Tipos de Dano",
     "CUSTOM_DND5E.menu.damageTypes.name": "Configurar Tipos de Dano",
-    
+
     "CUSTOM_DND5E.menu.debug.hint": "Configurações de Depuração",
     "CUSTOM_DND5E.menu.debug.label": "Configurações de Depuração",
     "CUSTOM_DND5E.menu.debug.name": "Configurações de Depuração",
-    
+
     "CUSTOM_DND5E.menu.encumbrance.hint": "Configurar Sobrecarga",
     "CUSTOM_DND5E.menu.encumbrance.label": "Configurar Sobrecarga",
     "CUSTOM_DND5E.menu.encumbrance.name": "Configurar Sobrecarga",
-    
+
     "CUSTOM_DND5E.menu.houseRules.hint": "Configurar Regras da Casa",
     "CUSTOM_DND5E.menu.houseRules.label": "Configurar Regras da Casa",
     "CUSTOM_DND5E.menu.houseRules.name": "Configurar Regras da Casa",
-    
+
     "CUSTOM_DND5E.menu.itemActionTypes.hint": "Configurar Tipos de Ação de Item",
     "CUSTOM_DND5E.menu.itemActionTypes.label": "Configurar Tipos de Ação de Item",
     "CUSTOM_DND5E.menu.itemActionTypes.name": "Configurar Tipos de Ação de Item",
-    
+
     "CUSTOM_DND5E.menu.itemActivationCostTypes.hint": "Configurar Tipos de Custo de Ativação de Itens",
     "CUSTOM_DND5E.menu.itemActivationCostTypes.label": "Configurar Tipos de Custo de Ativação de Itens",
     "CUSTOM_DND5E.menu.itemActivationCostTypes.name": "Configurar Tipos de Custo de Ativação de Itens",
-    
+
     "CUSTOM_DND5E.menu.itemProperties.hint": "Configurar Propriedades de Item",
     "CUSTOM_DND5E.menu.itemProperties.label": "Configurar Propriedades de Item",
     "CUSTOM_DND5E.menu.itemProperties.name": "Configurar Propriedades de Item",
-   
+
     "CUSTOM_DND5E.menu.itemRarity.hint": "Configurar Raridade de Item",
     "CUSTOM_DND5E.menu.itemRarity.label": "Configurar Raridade de Item",
     "CUSTOM_DND5E.menu.itemRarity.name": "Configurar Raridade de Item",
-    
+
     "CUSTOM_DND5E.menu.languages.hint": "Configurar Idiomas",
     "CUSTOM_DND5E.menu.languages.label": "Configurar Idiomas",
     "CUSTOM_DND5E.menu.languages.name": "Configurar Idiomas",
-    
+
+    "CUSTOM_DND5E.menu.rolls.hint": "Configurar Rolagens",
+    "CUSTOM_DND5E.menu.rolls.label": "Configurar Rolagens",
+    "CUSTOM_DND5E.menu.rolls.name": "Configurar Rolagens",
+
     "CUSTOM_DND5E.menu.senses.hint": "Configurar Sentidos",
     "CUSTOM_DND5E.menu.senses.label": "Configurar Sentidos",
     "CUSTOM_DND5E.menu.senses.name": "Configurar Sentidos",
-   
+
     "CUSTOM_DND5E.menu.sheet.hint": "Configurar Ficha",
     "CUSTOM_DND5E.menu.sheet.label": "Configurar Ficha",
     "CUSTOM_DND5E.menu.sheet.name": "Configurar Ficha",
-    
+
     "CUSTOM_DND5E.menu.skills.hint": "Configurar Perícias",
     "CUSTOM_DND5E.menu.skills.label": "Configurar Perícias",
     "CUSTOM_DND5E.menu.skills.name": "Configurar Perícias",
-    
+
     "CUSTOM_DND5E.menu.spellSchools.hint": "Configurar Escolas de Magia",
     "CUSTOM_DND5E.menu.spellSchools.label": "Configurar Escolas de Magia",
     "CUSTOM_DND5E.menu.spellSchools.name": "Configurar Escolas de Magia",
-   
+
     "CUSTOM_DND5E.menu.toolIds.hint": "Configurar Ferramentas",
     "CUSTOM_DND5E.menu.toolIds.label": "Configurar Ferramentas",
     "CUSTOM_DND5E.menu.toolIds.name": "Configurar Ferramentas",
-    
+
     "CUSTOM_DND5E.menu.weaponIds.hint": "Configurar Armas",
     "CUSTOM_DND5E.menu.weaponIds.label": "Configurar Armas",
     "CUSTOM_DND5E.menu.weaponIds.name": "Configurar Armas",
-   
+
     "CUSTOM_DND5E.menu.weaponProficiencies.hint": "Configurar Proficiências de Arma",
     "CUSTOM_DND5E.menu.weaponProficiencies.label": "Configurar Proficiências de Arma",
     "CUSTOM_DND5E.menu.weaponProficiencies.name": "Configurar Proficiências de Armas",
-   
+
     "CUSTOM_DND5E.message.awardInspiration": "<p>{name} recebeu Inspiração por rolar um {value}.</p>",
     "CUSTOM_DND5E.message.awardInspirationAlready": "<p>{name} rolou um {value}, mas já possui Inspiração.</p>",
     "CUSTOM_DND5E.message.instantDeath": "<p>{name} sofreu uma Morte Instantânea.</p>",
@@ -415,6 +426,6 @@
     "CUSTOM_DND5E.setting.showPressedKeys.hint": "Exibe um ícone próximo ao cursor quando as teclas de Pular Diálogo, Vantagem ou Desvantagem forem pressionadas",
     "CUSTOM_DND5E.setting.toggleStatusEffectOnSelectedTokens.name": "Alterna Efeitos de Condições nos Selecionados",
     "CUSTOM_DND5E.setting.toggleStatusEffectOnSelectedTokens.hint": "Ao alternar efeitos de condições pela HUD de tokens, alterna em todos os tokens selecionados",
-    
+
     "CUSTOM_DND5E.sheet.characterSheet": "Ficha de Personagem (Custom D&D 5e)"
 }
