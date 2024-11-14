@@ -547,7 +547,7 @@ function updateBloodied (actor, data) {
     if (!getSetting(CONSTANTS.BLOODIED.SETTING.APPLY_BLOODIED.KEY)) return false
 
     const currentHp = data?.system?.attributes?.hp?.value
-    const maxHp = data?.system?.attributes?.hp?.max
+    const maxHp = data?.system?.attributes?.hp?.max ?? actor?.system?.attributes?.hp?.max
 
     if (typeof currentHp === 'undefined') return null
 
@@ -558,7 +558,7 @@ function updateBloodied (actor, data) {
     if (currentHp <= halfHp && (previousHp === 0 || previousHp > halfHp) && deathFailures !== 3) {
         makeBloodied(actor)
         return true
-    } else if (currentHp > halfHp && previousHp <= halfHp) {
+    } else if (currentHp > halfHp && (previousHp <= halfHp || actor.effects.has('dnd5ebloodied000'))) {
         unmakeBloodied(actor)
         return false
     }
