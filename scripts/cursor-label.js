@@ -137,12 +137,14 @@ function getValidButton (element) {
     if (
         element.dataset?.action === 'rollAttack' ||
         element.dataset?.action === 'use' ||
+        element.classList.contains('rollable') ||
         element.classList.contains('item-use-button') // Tidy5eCharacterSheet
     ) {
         return element
     }
     return element.closest(('[data-action="use"]')) ||
         element.closest('[data-action="rollAttack"]') ||
+        element.closest('.rollable') ||
         element.closest('.item-use-button') // Tidy5eCharacterSheet
 }
 
