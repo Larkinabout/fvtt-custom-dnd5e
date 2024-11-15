@@ -159,6 +159,17 @@ export function getSetting (key, defaultValue = null) {
     try {
         value = game.settings.get(MODULE.ID, key)
     } catch {
+        Logger.debug(`Setting '${key}' not found. Searching world settings storage...`)
+        const worldStorage = game.settings.storage.get('world').find(value => value.key === `${MODULE.ID}.${key}`)
+
+        if (worldStorage !== undefined) return worldStorage.value
+
+        Logger.debug(`Setting '${key}' not found. Searching client settings storage...`)
+
+        const clientStorage = game.settings.storage.get('client')[`${MODULE.ID}.${key}`]
+
+        if (clientStorage !== undefined) return clientStorage
+
         Logger.debug(`Setting '${key}' not found`)
     }
     return value

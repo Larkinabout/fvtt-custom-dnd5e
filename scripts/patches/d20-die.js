@@ -1,7 +1,10 @@
 import { MODULE } from '../constants.js'
+import { isCustomRoll } from '../rolls.js'
 import { getDieParts } from '../utils.js'
 
 export function patchD20Die () {
+    if (!isCustomRoll()) return
+
     libWrapper.register(MODULE.ID, 'CONFIG.Dice.D20Die.prototype.applyAdvantage', applyAdvantagePatch, 'OVERRIDE')
 }
 

@@ -1,6 +1,9 @@
 import { MODULE } from '../constants.js'
+import { isCustomRoll } from '../rolls.js'
 
 export function patchD20Roll () {
+    if (!isCustomRoll()) return
+
     libWrapper.register(MODULE.ID, 'CONFIG.Dice.D20Roll.fromConfig', fromConfigPatch, 'OVERRIDE')
     libWrapper.register(MODULE.ID, 'CONFIG.Dice.D20Roll.prototype.configureModifiers', configureModifiersPatch, 'WRAPPER')
     libWrapper.register(MODULE.ID, 'CONFIG.Dice.D20Roll.prototype.validD20Roll', validD20RollPatch, 'OVERRIDE')

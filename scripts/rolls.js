@@ -42,6 +42,7 @@ function registerSettings () {
             type: Object,
             default: {
                 ability: { die: '1d20', rollMode: 'publicroll' },
+                attack: { die: '1d20', rollMode: 'publicroll' },
                 concentration: { die: '1d20', rollMode: 'publicroll' },
                 initiative: { die: '1d20', rollMode: 'publicroll' },
                 savingThrow: { die: '1d20', rollMode: 'publicroll' },
@@ -76,10 +77,13 @@ function registerHooks () {
             roll = rolls.savingThrow
         }
 
+        if (!roll) return
+
         const dieParts = getDieParts(roll.die)
         if (roll.die !== '1d20' && dieParts) {
             config.rolls[0].options.customDie = roll.die
-            config.rolls[0].options.criticalSuccess = dieParts.number
+            config.rolls[0].options.criticalSuccess = dieParts.number * dieParts.faces
+            config.rolls[0].options.criticalFailure = dieParts.number
         }
 
         const rollModes = ['gmroll', 'blindroll', 'selfroll']
@@ -87,4 +91,16 @@ function registerHooks () {
             message.rollMode = roll.rollMode
         }
     })
+}
+
+export function isCustomRoll () {
+    const rolls = getSetting(constants.SETTING.ROLLS.KEY)
+
+    return (rolls.ability.die && rolls.ability.die !== '1d20') ||
+        (rolls.attack.die && rolls.attack.die !== '1d20') ||
+        (rolls.concentration.die && rolls.concentration.die !== '1d20') ||
+        (rolls.initiative.die && rolls.initiative.die !== '1d20') ||
+        (rolls.savingThrow.die && rolls.savingThrow.die !== '1d20') ||
+        (rolls.skill.die && rolls.skill.die !== '1d20') ||
+        (rolls.tool.die && rolls.tool.die !== '1d20')
 }

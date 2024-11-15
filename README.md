@@ -101,7 +101,7 @@ For help and advice on modifying a configuration, either click the info button i
 ![Custom D&D 5e Configure Encumbrance](./.github/readme/custom-dnd5e-configure-encumbrance.png)
 
 ## Configure Rolls
-Customize the base die and roll mode for Ability Checks, Concentration Saving Throws, Initiative Rolls, Saving Thros, Skills Checks and Tool Checks.
+Customize the base die and roll mode for Ability Checks, Attack Rolls, Concentration Saving Throws, Initiative Rolls, Saving Throws, Skills Checks and Tool Checks.
 ![Custom D&D 5e Configure Rolls](./.github/readme/custom-dnd5e-configure-rolls.gif)
 
 ## Configure Sheet

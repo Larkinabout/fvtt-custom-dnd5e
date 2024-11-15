@@ -81,5 +81,7 @@ export class RollsForm extends CustomDnd5eForm {
         await Promise.all([
             setSetting(CONSTANTS.ROLLS.SETTING.ROLLS.KEY, rolls)
         ])
+
+        SettingsConfig.reloadConfirm()
     }
 }
