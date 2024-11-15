@@ -54,6 +54,13 @@ function registerSettings () {
  * @param {object} data
  */
 export function setConfig (data = null) {
+    if (checkEmpty(data)) {
+        if (checkEmpty(CONFIG.DND5E[property])) {
+            resetDnd5eConfig(property)
+        }
+        return
+    }
+
     const buildConfig = (keys, data) => Object.fromEntries(
         keys.filter((key) => data[key].visible || data[key].visible === undefined)
             .map((key) => [
@@ -65,13 +72,6 @@ export function setConfig (data = null) {
                 }
             ])
     )
-
-    if (checkEmpty(data)) {
-        if (checkEmpty(CONFIG.DND5E[property])) {
-            resetDnd5eConfig(property)
-        }
-        return
-    }
 
     const defaultConfig = foundry.utils.deepClone(CONFIG.CUSTOM_DND5E[property])
     const config = buildConfig(Object.keys(data), foundry.utils.mergeObject(defaultConfig, data))

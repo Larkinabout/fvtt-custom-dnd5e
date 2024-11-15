@@ -96,11 +96,13 @@ function registerHooks () {
 export function isCustomRoll () {
     const rolls = getSetting(constants.SETTING.ROLLS.KEY)
 
-    return (rolls.ability.die && rolls.ability.die !== '1d20') ||
-        (rolls.attack.die && rolls.attack.die !== '1d20') ||
-        (rolls.concentration.die && rolls.concentration.die !== '1d20') ||
-        (rolls.initiative.die && rolls.initiative.die !== '1d20') ||
-        (rolls.savingThrow.die && rolls.savingThrow.die !== '1d20') ||
-        (rolls.skill.die && rolls.skill.die !== '1d20') ||
-        (rolls.tool.die && rolls.tool.die !== '1d20')
+    if (!rolls) return false
+
+    return (rolls.ability?.die && rolls.ability?.die !== '1d20') ||
+        (rolls.attack?.die && rolls.attack?.die !== '1d20') ||
+        (rolls.concentration?.die && rolls.concentration?.die !== '1d20') ||
+        (rolls.initiative?.die && rolls.initiative?.die !== '1d20') ||
+        (rolls.savingThrow?.die && rolls.savingThrow?.die !== '1d20') ||
+        (rolls.skill?.die && rolls.skill?.die !== '1d20') ||
+        (rolls.tool?.die && rolls.tool?.die !== '1d20')
 }

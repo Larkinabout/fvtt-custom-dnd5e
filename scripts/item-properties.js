@@ -87,6 +87,13 @@ function getSettingDefault () {
  * @param {object} data
  */
 export function setConfig (data = null) {
+    if (checkEmpty(data)) {
+        if (checkEmpty(CONFIG.DND5E.itemProperties)) {
+            resetDnd5eConfig('itemProperties')
+        }
+        return
+    }
+
     const buildConfig = (data) => Object.fromEntries(
         Object.entries(data)
             .filter(([_, value]) => value.visible || value.visible === undefined)
@@ -124,13 +131,6 @@ export function setConfig (data = null) {
     CONFIG.DND5E.validProperties = (checkEmpty(validProperties))
         ? foundry.utils.deepClone(CONFIG.CUSTOM_DND5E.validProperties)
         : validProperties
-
-    if (checkEmpty(data)) {
-        if (checkEmpty(CONFIG.DND5E.itemProperties)) {
-            resetDnd5eConfig('itemProperties')
-        }
-        return
-    }
 
     const config = buildConfig(data)
     config && (CONFIG.DND5E.itemProperties = config)
