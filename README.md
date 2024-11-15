@@ -102,7 +102,7 @@ For help and advice on modifying a configuration, either click the info button i
 
 ## Configure Rolls
 Customize the base die and roll mode for Ability Checks, Concentration Saving Throws, Initiative Rolls, Saving Thros, Skills Checks and Tool Checks.
-![Custom D&D 5e Configure Rolls](./.github/readme/custom-dnd5e-configure-rolls.png)
+![Custom D&D 5e Configure Rolls](./.github/readme/custom-dnd5e-configure-rolls.gif)
 
 ## Configure Sheet
 - Auto-fade or auto-minimise the sheet when it's not hovered over.
