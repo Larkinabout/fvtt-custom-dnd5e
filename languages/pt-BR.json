@@ -211,6 +211,8 @@
     "CUSTOM_DND5E.form.houseRules.bloodied.bloodiedIcon.note": "Ícone para o efeito de condição Sangrando",
     "CUSTOM_DND5E.form.houseRules.bloodied.bloodiedTint.note.1": "Cor da tonalidade do token quando estiver com a condição Sangrando",
     "CUSTOM_DND5E.form.houseRules.bloodied.bloodiedTint.note.2": "Deve estar em formato de cor hexadecimal. Deixe em branco para não alterar",
+    "CUSTOM_DND5E.form.houseRules.bloodied.removeBloodiedOnDead.label": "Remover ao Morrer",
+    "CUSTOM_DND5E.form.houseRules.bloodied.removeBloodiedOnDead.note": "Remove a condição Ensanguentado quando uma criatura estiver com o status Morto",
     "CUSTOM_DND5E.form.houseRules.dead.applyDead.label": "Aplicar Morto",
     "CUSTOM_DND5E.form.houseRules.dead.applyDead.note": "Aplica o efeito de condição Morto quando um PNJ é reduzido a 0 PV",
     "CUSTOM_DND5E.form.houseRules.dead.applyInstantDeath.label": "Aplicar Morte Instantânea",

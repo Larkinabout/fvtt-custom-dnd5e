@@ -134,7 +134,9 @@ export function getFlag (entity, key) {
  * @returns
  */
 export async function setFlag (entity, key, value) {
+    Logger.debug('Setting flag...', { entity, key, value })
     await entity.setFlag(MODULE.ID, key, value)
+    Logger.debug('Flag set', { entity, key, value })
 }
 
 /**
@@ -144,7 +146,9 @@ export async function setFlag (entity, key, value) {
  * @returns
  */
 export async function unsetFlag (entity, key) {
+    Logger.debug('Unsetting flag...', { entity, key })
     await entity.unsetFlag(MODULE.ID, key)
+    Logger.debug('Flag unset', { entity, key })
 }
 
 /**
@@ -248,10 +252,12 @@ export async function setDnd5eSetting (key, value) {
  */
 export async function makeBloodied (actor) {
     if (!actor.effects.get('dnd5ebloodied000') && !actor.system.traits.ci.value.has('bloodied')) {
+        Logger.debug('Making Bloodied...', actor)
         const cls = getDocumentClass('ActiveEffect')
         const effect = await cls.fromStatusEffect('bloodied')
         effect.updateSource({ id: 'dnd5ebloodied000', _id: 'dnd5ebloodied000' })
         await cls.create(effect, { parent: actor, keepId: true })
+        Logger.debug('Bloodied made', actor)
     }
 }
 
@@ -260,8 +266,10 @@ export async function makeBloodied (actor) {
  * @param {object} actor The actor
  */
 export async function unmakeBloodied (actor) {
+    Logger.debug('Unmaking Bloodied...', actor)
     const effect = actor.effects.get('dnd5ebloodied000')
     await effect?.delete()
+    Logger.debug('Bloodied unmade', actor)
 }
 
 /**
@@ -270,10 +278,12 @@ export async function unmakeBloodied (actor) {
  */
 export async function makeUnconscious (actor) {
     if (!actor.effects.get('dnd5eunconscious') && !actor.system.traits.ci.value.has('unconscious')) {
+        Logger.debug('Making Unconscious...', actor)
         const cls = getDocumentClass('ActiveEffect')
         const effect = await cls.fromStatusEffect('unconscious')
         effect.updateSource({ id: 'dnd5eunconscious', _id: 'dnd5eunconscious', 'flags.core.overlay': true })
         await cls.create(effect, { parent: actor, keepId: true })
+        Logger.debug('Unconscious made', actor)
     }
 }
 
@@ -282,8 +292,10 @@ export async function makeUnconscious (actor) {
  * @param {object} actor The actor
  */
 export async function unmakeUnconscious (actor) {
+    Logger.debug('Unmaking Unconscious...', actor)
     const effect = actor.effects.get('dnd5eunconscious')
     await effect?.delete()
+    Logger.debug('Unconscious unmade', actor)
 }
 
 /**
@@ -294,12 +306,16 @@ export async function unmakeUnconscious (actor) {
 export async function rotateToken (token, rotation) {
     if (token.document.rotation === rotation) return
 
+    Logger.debug('Rotating token', { token, rotation })
+
     const flag = getFlag(token.document, 'rotation')
     if (!flag && flag !== 0) {
         await setFlag(token.document, 'rotation', token.document.rotation)
     }
 
     token.document.update({ rotation })
+
+    Logger.debug('Token rotated', { token, rotation })
 }
 
 /**
@@ -311,10 +327,14 @@ export async function unrotateToken (token) {
 
     if (token.document.rotation === rotation) return
 
+    Logger.debug('Unrotating token', { token, rotation })
+
     if (rotation || rotation === 0) {
         token.document.update({ rotation })
         await unsetFlag(token.document, 'rotation')
     }
+
+    Logger.debug('Token unrotated', { token, rotation })
 }
 
 /**
@@ -325,11 +345,15 @@ export async function unrotateToken (token) {
 export async function tintToken (token, tint) {
     if (token?.document?.texture?.tint === tint) return
 
+    Logger.debug('Tinting token', { token, tint })
+
     if (!getFlag(token.document, 'tint')) {
         await setFlag(token.document, 'tint', token.document.texture.tint)
     }
 
     token.document.update({ texture: { tint } })
+
+    Logger.debug('Token tinted', { token, tint })
 }
 
 /**
@@ -341,10 +365,14 @@ export async function untintToken (token) {
 
     if (token?.document?.texture?.tint === tint) return
 
+    Logger.debug('Untinting token', { token, tint })
+
     if (tint || tint === null) {
         token.document.update({ texture: { tint } })
         await unsetFlag(token.document, 'tint')
     }
+
+    Logger.debug('Token untinted', { token, tint })
 }
 
 /**
@@ -356,6 +384,7 @@ export async function untintToken (token) {
  * @param {object} data  The data
  */
 export async function makeDead (actor, data = null) {
+    Logger.debug('Making Dead...', actor)
     const applyNegativeHp = getSetting(CONSTANTS.HIT_POINTS.SETTING.APPLY_NEGATIVE_HP.KEY)
     if (data) {
         if (!applyNegativeHp) { foundry.utils.setProperty(data, 'system.attributes.hp.value', 0) }
@@ -368,12 +397,18 @@ export async function makeDead (actor, data = null) {
         actor.update(data)
     }
 
+    if (getSetting(CONSTANTS.BLOODIED.SETTING.REMOVE_BLOODIED_ON_DEAD.KEY) && actor.effects.has('dnd5ebloodied000')) {
+        unmakeBloodied(actor)
+    }
+
     if (actor.effects.get('dnd5edead0000000')) return
 
     const cls = getDocumentClass('ActiveEffect')
     const effect = await cls.fromStatusEffect('dead')
     effect.updateSource({ 'flags.core.overlay': true })
     await cls.create(effect, { parent: actor, keepId: true })
+
+    Logger.debug('Dead made', actor)
 }
 
 /**
@@ -381,6 +416,8 @@ export async function makeDead (actor, data = null) {
  * @param {object} actor The actor
  */
 export async function unmakeDead (actor) {
+    Logger.debug('Unmaking Dead...', actor)
     const effect = actor.effects.get('dnd5edead0000000')
     await effect?.delete()
+    Logger.debug('Dead unmade', actor)
 }

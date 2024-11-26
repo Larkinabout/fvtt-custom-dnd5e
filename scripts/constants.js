@@ -126,6 +126,9 @@ export const CONSTANTS = {
             },
             BLOODIED_TINT: {
                 KEY: 'bloodied-tint'
+            },
+            REMOVE_BLOODIED_ON_DEAD: {
+                KEY: 'remove-bloodied-on-dead'
             }
         },
         ICON: 'modules/custom-dnd5e/media/icons/bloodied.svg',

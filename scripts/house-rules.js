@@ -102,6 +102,17 @@ function registerSettings () {
     )
 
     registerSetting(
+        CONSTANTS.BLOODIED.SETTING.REMOVE_BLOODIED_ON_DEAD.KEY,
+        {
+            scope: 'world',
+            config: false,
+            type: Boolean,
+            default: false,
+            requiresReload: true
+        }
+    )
+
+    registerSetting(
         CONSTANTS.BLOODIED.SETTING.BLOODIED_ICON.KEY,
         {
             scope: 'world',
@@ -314,7 +325,9 @@ function registerHooks () {
     Hooks.on('dnd5e.rollAttack', (item, roll, ability) => { awardInspiration('rollAttack', item, roll) })
     Hooks.on('dnd5e.rollSkill', (actor, roll, ability) => { awardInspiration('rollSkill', actor, roll) })
     Hooks.on('preUpdateActor', capturePreviousHp)
-    Hooks.on('updateActor', (actor, data, options) => {
+    Hooks.on('updateActor', (actor, data, options, userId) => {
+        if (!game.user.isGM && !game.user.id !== userId) return
+
         const instantDeath = updateInstantDeath(actor, data)
         updateHp(actor, data)
         if (!instantDeath) {
@@ -339,6 +352,8 @@ function registerHooks () {
 export function registerBloodied () {
     if (!getSetting(CONSTANTS.BLOODIED.SETTING.APPLY_BLOODIED.KEY)) return
 
+    Logger.debug('Registering Bloodied...')
+
     if (foundry.utils.isNewerVersion(game.system.version, '3.3.1')) {
         const coreBloodied = game.settings.get('dnd5e', 'bloodied')
         if (coreBloodied !== 'none') {
@@ -362,6 +377,8 @@ export function registerBloodied () {
     })
 
     CONFIG.DND5E.conditionTypes = conditionTypes
+
+    Logger.debug('Bloodied registered')
 }
 
 export function buildBloodied () {
@@ -394,7 +411,11 @@ export function registerNegativeHp () {
     if (!getSetting(CONSTANTS.DEAD.SETTING.APPLY_INSTANT_DEATH.KEY) &&
         !getSetting(CONSTANTS.HIT_POINTS.SETTING.APPLY_NEGATIVE_HP.KEY)) return
 
+    Logger.debug('Registering Negative HP...')
+
     dnd5e.dataModels.actor.CharacterData.schema.fields.attributes.fields.hp.fields.value.min = undefined
+
+    Logger.debug('Negative HP registered')
 }
 
 /**
@@ -405,6 +426,8 @@ export function registerNegativeHp () {
  * @param {object} roll     The roll
  */
 export function awardInspiration (rollType, entity, roll) {
+    Logger.debug('Triggering Award Inspiration...')
+
     const actor = (rollType === 'rollAttack') ? entity.parent : entity
 
     if (actor.type === 'npc' || !getSetting(CONSTANTS.INSPIRATION.SETTING.AWARD_INSPIRATION_ROLL_TYPES.KEY)?.[rollType]) return
@@ -413,6 +436,8 @@ export function awardInspiration (rollType, entity, roll) {
     const d20Value = roll.terms[0].total
 
     if (awardInspirationD20Value === d20Value) {
+        Logger.debug('Awarding Inspiration...', { awardInspirationD20Value, d20Value })
+
         let message = 'CUSTOM_DND5E.message.awardInspiration'
 
         if (actor.system.attributes.inspiration) {
@@ -424,6 +449,8 @@ export function awardInspiration (rollType, entity, roll) {
         ChatMessage.create({
             content: game.i18n.format(message, { name: actor.name, value: awardInspirationD20Value })
         })
+
+        Logger.debug('Inspiration awarded')
     }
 }
 
@@ -438,6 +465,8 @@ export function awardInspiration (rollType, entity, roll) {
 function makeDeathSavesBlind (app, html, data) {
     if (getSetting(CONSTANTS.DEATH_SAVES.SETTING.DEATH_SAVES_ROLL_MODE.KEY) !== 'blindroll' || game.user.isGM) return
 
+    Logger.debug('Making death saves blind...')
+
     const sheetType = SHEET_TYPE[app.constructor.name]
 
     if (!sheetType) return
@@ -450,6 +479,8 @@ function makeDeathSavesBlind (app, html, data) {
             pips && (pips.forEach(p => p.remove()))
         }
     }
+
+    Logger.debug('Made death saves blind')
 }
 
 /**
@@ -459,11 +490,15 @@ function makeDeathSavesBlind (app, html, data) {
  * @param {object} rollData The roll data
  */
 function setDeathSavesRollMode (actor, rollData) {
+    Logger.debug('Setting death saves roll mode...')
+
     const rollMode = getSetting(CONSTANTS.DEATH_SAVES.SETTING.DEATH_SAVES_ROLL_MODE.KEY) || 'publicroll'
     const targetValue = getSetting(CONSTANTS.DEATH_SAVES.SETTING.DEATH_SAVES_TARGET_VALUE.KEY)
 
     rollData.rollMode = rollMode
     if (targetValue) rollData.targetValue = targetValue
+
+    Logger.debug('Death saves roll mode set')
 }
 
 /**
@@ -479,6 +514,8 @@ function recalculateDamage (actor, amount, updates, options) {
     if (!getSetting(CONSTANTS.HIT_POINTS.SETTING.APPLY_NEGATIVE_HP.KEY) &&
         !getSetting(CONSTANTS.DEAD.SETTING.APPLY_INSTANT_DEATH.KEY)) return
 
+    Logger.debug('Recalculating damage...')
+
     const hpMax = actor?.system?.attributes?.hp?.max ?? 0
     const hpTemp = actor?.system?.attributes?.hp?.temp ?? 0
     const hpValue = actor?.system?.attributes?.hp?.value ?? 0
@@ -488,6 +525,8 @@ function recalculateDamage (actor, amount, updates, options) {
         : Math.min(startHp - amount, hpMax)
 
     updates['system.attributes.hp.value'] = newHpValue
+
+    Logger.debug('Damage recalculated')
 }
 
 /**
@@ -501,6 +540,8 @@ function recalculateHealing (actor, data) {
     if (!getSetting(CONSTANTS.HIT_POINTS.SETTING.APPLY_NEGATIVE_HP.KEY) ||
         !getSetting(CONSTANTS.HIT_POINTS.SETTING.NEGATIVE_HP_HEAL_FROM_ZERO.KEY)) return
 
+    Logger.debug('Recalculating healing...')
+
     const currentHp = data?.system?.attributes?.hp?.value
 
     if (typeof currentHp === 'undefined') return
@@ -511,6 +552,8 @@ function recalculateHealing (actor, data) {
         const diff = currentHp - previousHp
         data.system.attributes.hp.value = diff
     }
+
+    Logger.debug('Healing recalculated')
 }
 
 /**
@@ -524,6 +567,8 @@ async function rollNpcHp (token) {
     if (actor?.type !== 'npc') return
     if (!getSetting(CONSTANTS.HIT_POINTS.SETTING.ROLL_NPC_HP.KEY)) return
 
+    Logger.debug('Rolling NPC HP...', token)
+
     const formula = actor.system.attributes.hp.formula
 
     if (!formula) return
@@ -534,6 +579,8 @@ async function rollNpcHp (token) {
     if (!r.total) return
 
     actor.update({ 'system.attributes.hp': { value: r.total, max: r.total } }, { isRest: true })
+
+    Logger.debug('NPC HP rolled', { token, hp: r.total })
 }
 
 /**
@@ -546,6 +593,8 @@ async function rollNpcHp (token) {
 function updateBloodied (actor, data) {
     if (!getSetting(CONSTANTS.BLOODIED.SETTING.APPLY_BLOODIED.KEY)) return false
 
+    Logger.debug('Updating Bloodied...')
+
     const currentHp = data?.system?.attributes?.hp?.value
     const maxHp = data?.system?.attributes?.hp?.max ?? actor?.system?.attributes?.hp?.max
 
@@ -557,12 +606,15 @@ function updateBloodied (actor, data) {
 
     if (currentHp <= halfHp && (previousHp === 0 || previousHp > halfHp) && deathFailures !== 3) {
         makeBloodied(actor)
+        Logger.debug('Bloodied updated', { bloodied: true })
         return true
     } else if (currentHp > halfHp && (previousHp <= halfHp || actor.effects.has('dnd5ebloodied000'))) {
         unmakeBloodied(actor)
+        Logger.debug('Bloodied updated', { bloodied: false })
         return false
     }
 
+    Logger.debug('Bloodied not updated')
     return false
 }
 
@@ -576,15 +628,27 @@ function updateDead (actor, data) {
     if (actor.type !== 'npc') return false
     if (!getSetting(CONSTANTS.DEAD.SETTING.APPLY_DEAD.KEY)) return false
 
+    Logger.debug('Updating Dead...')
+
     const currentHp = data?.system?.attributes?.hp?.value
 
     if (typeof currentHp === 'undefined') return null
 
     if (currentHp <= 0) {
         makeDead(actor, data)
+
+        let bloodied = null
+
+        if (getSetting(CONSTANTS.BLOODIED.SETTING.REMOVE_BLOODIED_ON_DEAD.KEY) && actor.effects.has('dnd5ebloodied000')) {
+            unmakeBloodied(actor)
+            bloodied = false
+        }
+
+        Logger.debug('Dead updated', { dead: true, bloodied })
         return true
     } else {
         unmakeDead(actor, data)
+        Logger.debug('Dead updated', { dead: false })
         return false
     }
 }
@@ -599,15 +663,19 @@ function updateUnconscious (actor, data) {
     if (actor.type !== 'character') return false
     if (!getSetting(CONSTANTS.UNCONSCIOUS.SETTING.APPLY_UNCONSCIOUS.KEY)) return false
 
+    Logger.debug('Updating Unconscious...')
+
     const currentHp = data?.system?.attributes?.hp?.value
 
     if (typeof currentHp === 'undefined') return null
 
     if (currentHp <= 0) {
         makeUnconscious(actor, data)
+        Logger.debug('Unconscious updated', { unconscious: true })
         return true
     } else {
         unmakeUnconscious(actor, data)
+        Logger.debug('Unconscious updated', { unconscious: false })
         return false
     }
 }
@@ -623,6 +691,8 @@ function updateDeathSaves (source, actor, data) {
     if (actor.type !== 'character') return
 
     const removeDeathSaves = getSetting(CONSTANTS.DEATH_SAVES.SETTING.REMOVE_DEATH_SAVES.KEY)
+
+    Logger.debug('Updating Death Saves...')
 
     const updateDeathSavesByType = (type) => {
         const currentValue = actor.system.attributes.death[type]
@@ -645,6 +715,8 @@ function updateDeathSaves (source, actor, data) {
 
     updateDeathSavesByType('success')
     updateDeathSavesByType('failure')
+
+    Logger.debug('Death Saves updated')
 }
 
 /**
@@ -658,6 +730,8 @@ function updateDeathSaves (source, actor, data) {
 function updateHp (actor, data) {
     if (getSetting(CONSTANTS.HIT_POINTS.SETTING.APPLY_NEGATIVE_HP.KEY)) return
 
+    Logger.debug('Updating HP...')
+
     const currentHp = data?.system?.attributes?.hp?.value
 
     if (typeof currentHp === 'undefined') return
@@ -665,6 +739,8 @@ function updateHp (actor, data) {
     if (currentHp < 0) {
         data.system.attributes.hp.value = 0
     }
+
+    Logger.debug('HP updated')
 }
 
 /**
@@ -680,6 +756,8 @@ function updateHpMeter (app, html, data) {
 
     if (!sheetType || sheetType.legacy || !sheetType.character) return
 
+    Logger.debug('Updating HP meter...')
+
     const actor = app.actor
     const hpValue = actor.system.attributes.hp.value
     const hpMax = actor.system.attributes.hp.max
@@ -692,6 +770,8 @@ function updateHpMeter (app, html, data) {
     const progress = html[0].querySelector('.progress.hit-points')
     const pct = Math.abs(hpValue / hpMax) * 100
     progress.style = `--bar-percentage: ${pct}%;`
+
+    Logger.debug('HP meter updated')
 }
 
 /**
@@ -704,6 +784,8 @@ function updateHpMeter (app, html, data) {
 function updateInstantDeath (actor, data) {
     if (actor.type !== 'character' || !getSetting(CONSTANTS.DEAD.SETTING.APPLY_INSTANT_DEATH.KEY)) return false
 
+    Logger.debug('Updating Instant Death...')
+
     const currentHp = data?.system?.attributes?.hp?.value
     const maxHp = actor.system.attributes.hp.max
 
@@ -714,6 +796,8 @@ function updateInstantDeath (actor, data) {
         })
         return tokenEffects
     }
+
+    Logger.debug('Instant Death updated...')
 
     return false
 }
@@ -728,6 +812,8 @@ function updateInstantDeath (actor, data) {
 function updateMassiveDamage (actor, data) {
     if (actor.type !== 'character' || !getSetting(CONSTANTS.HIT_POINTS.SETTING.APPLY_MASSIVE_DAMAGE.KEY)) return false
 
+    Logger.debug('Updating Massive Damage...')
+
     const previousHp = getFlag(actor, 'previousHp')
     const currentHp = data?.system?.attributes?.hp?.value
 
@@ -739,9 +825,11 @@ function updateMassiveDamage (actor, data) {
 
     if (diffHp >= halfMaxHp) {
         createMassiveDamageCard(actor, data)
+        Logger.debug('Massive Death updated', { massiveDamage: true })
         return true
     }
 
+    Logger.debug('Massive Death updated', { massiveDamage: false })
     return false
 }
 
@@ -750,10 +838,17 @@ function updateMassiveDamage (actor, data) {
  * @param {object} actor The actor
  * @param {object} data The data
  */
-function capturePreviousHp (actor, data) {
+function capturePreviousHp (actor, data, options, userId) {
+    if (game.user.id !== userId || !actor.isOwner) return
+
     const currentHp = data?.system?.attributes?.hp?.value
     if (currentHp === undefined) return
+
+    Logger.debug('Capturing previous HP...')
+
     setFlag(actor, 'previousHp', actor.system.attributes.hp.value)
+
+    Logger.debug('Previous HP captured', { previousHp: actor.system.attributes.hp.value })
 }
 
 /**
@@ -779,6 +874,8 @@ function updateTokenEffects (active, activeEffect, userId) {
     bloodied = (active && bloodied) || actor.effects.has('dnd5ebloodied000')
     dead = (active && dead) || actor.effects.has('dnd5edead0000000')
 
+    Logger.debug('Updating token effects...', { bloodied, dead, prone })
+
     if (dead) {
         tint = getSetting(CONSTANTS.DEAD.SETTING.DEAD_TINT.KEY)
         rotation = getSetting(CONSTANTS.DEAD.SETTING.DEAD_ROTATION.KEY)
@@ -798,6 +895,8 @@ function updateTokenEffects (active, activeEffect, userId) {
     } else {
         actor.getActiveTokens().forEach(token => unrotateToken(token, rotation))
     }
+
+    Logger.debug('Token effects updated')
 }
 
 async function createMassiveDamageCard (actor, data) {

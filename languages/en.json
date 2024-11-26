@@ -211,6 +211,8 @@
     "CUSTOM_DND5E.form.houseRules.bloodied.bloodiedIcon.note": "Icon for the Bloodied status effect",
     "CUSTOM_DND5E.form.houseRules.bloodied.bloodiedTint.note.1": "Color to tint the token when it has the Bloodied condition",
     "CUSTOM_DND5E.form.houseRules.bloodied.bloodiedTint.note.2": "Must be in hex color format. Leave blank for no tint",
+    "CUSTOM_DND5E.form.houseRules.bloodied.removeBloodiedOnDead.label": "Remove on Dead",
+    "CUSTOM_DND5E.form.houseRules.bloodied.removeBloodiedOnDead.note": "Remove the Bloodied condition when a creature has the Dead status effect",
     "CUSTOM_DND5E.form.houseRules.dead.applyDead.label": "Apply Dead",
     "CUSTOM_DND5E.form.houseRules.dead.applyDead.note": "Apply the Dead status effect when an NPC is reduced to 0 HP",
     "CUSTOM_DND5E.form.houseRules.dead.applyInstantDeath.label": "Apply Instant Death",

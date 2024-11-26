@@ -61,8 +61,8 @@ function registerHooks () {
  * @param {object} actor The actor
  * @param {object} data  The data
  */
-function handlePreUpdateActor (actor, data) {
-    if (actor.type === 'group') return
+function handlePreUpdateActor (actor, data, options, userId) {
+    if (actor.type === 'group' || !actor.isOwner) return
     const currentHp = foundry.utils.getProperty(data, 'system.attributes.hp.value')
     const previousHp = actor.system.attributes.hp.value
     const halfHp = actor.system.attributes.hp.max * 0.5
@@ -74,7 +74,8 @@ function handlePreUpdateActor (actor, data) {
  * @param {object} actor The actor
  * @param {object} data  The data
  */
-function handleUpdateActor (actor, data) {
+function handleUpdateActor (actor, data, options, userId) {
+    if (!actor.isOwner) return
     const hp = foundry.utils.getProperty(data, 'system.attributes.hp.value')
     if (hp === 0) processTriggers({ actor, triggerType: 'zeroHp', followUpFlag: 'zeroHpCombatEnd' })
     if (hasDataChanged(data)) processTriggers({ actor, data, triggerType: 'counterValue' })
