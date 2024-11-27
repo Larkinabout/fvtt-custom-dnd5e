@@ -332,10 +332,10 @@ function registerHooks () {
         updateHp(actor, data)
         if (!instantDeath) {
             const dead = updateDead(actor, data)
+            updateBloodied(actor, data, dead)
             if (!dead) {
                 updateMassiveDamage(actor, data)
                 recalculateHealing(actor, data)
-                updateBloodied(actor, data)
                 updateUnconscious(actor, data)
                 updateDeathSaves('regainHp', actor, data)
             }
@@ -589,8 +589,9 @@ async function rollNpcHp (token) {
  * If 'Apply Bloodied' is enabled, apply or remove the Bloodied condition and other token effects based on the HP change
  * @param {object} actor The actor
  * @param {object} data  The data
+ * @param {boolean} dead Whether or not the actor is dead
  */
-function updateBloodied (actor, data) {
+function updateBloodied (actor, data, dead) {
     if (!getSetting(CONSTANTS.BLOODIED.SETTING.APPLY_BLOODIED.KEY)) return false
 
     Logger.debug('Updating Bloodied...')
@@ -600,15 +601,21 @@ function updateBloodied (actor, data) {
 
     if (typeof currentHp === 'undefined') return null
 
-    const previousHp = getFlag(actor, 'previousHp')
     const halfHp = Math.ceil((maxHp ?? actor.system.attributes.hp.max) * 0.5)
     const deathFailures = data?.system?.attributes?.death?.failure ?? actor?.system?.attributes?.death?.failure ?? 0
 
-    if (currentHp <= halfHp && (previousHp === 0 || previousHp > halfHp) && deathFailures !== 3) {
+    if (currentHp <= halfHp &&
+        !actor.effects.has('dnd5ebloodied000') &&
+        deathFailures !== 3 &&
+        !(dead && getSetting(CONSTANTS.BLOODIED.SETTING.REMOVE_BLOODIED_ON_DEAD.KEY))
+    ) {
         makeBloodied(actor)
         Logger.debug('Bloodied updated', { bloodied: true })
         return true
-    } else if (currentHp > halfHp && (previousHp <= halfHp || actor.effects.has('dnd5ebloodied000'))) {
+    } else if (
+        (currentHp > halfHp && actor.effects.has('dnd5ebloodied000')) ||
+        (dead && getSetting(CONSTANTS.BLOODIED.SETTING.REMOVE_BLOODIED_ON_DEAD.KEY))
+    ) {
         unmakeBloodied(actor)
         Logger.debug('Bloodied updated', { bloodied: false })
         return false
@@ -636,15 +643,7 @@ function updateDead (actor, data) {
 
     if (currentHp <= 0) {
         makeDead(actor, data)
-
-        let bloodied = null
-
-        if (getSetting(CONSTANTS.BLOODIED.SETTING.REMOVE_BLOODIED_ON_DEAD.KEY) && actor.effects.has('dnd5ebloodied000')) {
-            unmakeBloodied(actor)
-            bloodied = false
-        }
-
-        Logger.debug('Dead updated', { dead: true, bloodied })
+        Logger.debug('Dead updated', { dead: true })
         return true
     } else {
         unmakeDead(actor, data)
@@ -838,7 +837,7 @@ function updateMassiveDamage (actor, data) {
  * @param {object} actor The actor
  * @param {object} data The data
  */
-function capturePreviousHp (actor, data, options, userId) {
+async function capturePreviousHp (actor, data, options, userId) {
     if (game.user.id !== userId || !actor.isOwner) return
 
     const currentHp = data?.system?.attributes?.hp?.value
@@ -846,7 +845,7 @@ function capturePreviousHp (actor, data, options, userId) {
 
     Logger.debug('Capturing previous HP...')
 
-    setFlag(actor, 'previousHp', actor.system.attributes.hp.value)
+    await setFlag(actor, 'previousHp', actor.system.attributes.hp.value)
 
     Logger.debug('Previous HP captured', { previousHp: actor.system.attributes.hp.value })
 }

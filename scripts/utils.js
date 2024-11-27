@@ -397,10 +397,6 @@ export async function makeDead (actor, data = null) {
         actor.update(data)
     }
 
-    if (getSetting(CONSTANTS.BLOODIED.SETTING.REMOVE_BLOODIED_ON_DEAD.KEY) && actor.effects.has('dnd5ebloodied000')) {
-        unmakeBloodied(actor)
-    }
-
     if (actor.effects.get('dnd5edead0000000')) return
 
     const cls = getDocumentClass('ActiveEffect')
