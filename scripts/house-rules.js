@@ -335,10 +335,10 @@ function registerHooks () {
             const dead = updateDead(actor, data)
             updateBloodied(actor, data, dead)
             if (!dead) {
-                updateMassiveDamage(actor, data)
-                recalculateHealing(actor, data)
+                updateMassiveDamage(actor, data, options)
+                recalculateHealing(actor, data, options)
                 updateUnconscious(actor, data)
-                updateDeathSaves('regainHp', actor, data)
+                updateDeathSaves('regainHp', actor, data, options)
             }
         }
     })
@@ -509,9 +509,8 @@ function setDeathSavesRollMode (actor, rollData) {
  * @param {object} actor   The actor
  * @param {number} amount  The damage amount
  * @param {object} updates The properties to update
- * @param {object} options The damage options
  */
-function recalculateDamage (actor, amount, updates, options) {
+function recalculateDamage (actor, amount, updates) {
     if (!getSetting(CONSTANTS.HIT_POINTS.SETTING.APPLY_NEGATIVE_HP.KEY) &&
         !getSetting(CONSTANTS.DEAD.SETTING.APPLY_INSTANT_DEATH.KEY)) return
 
@@ -534,10 +533,11 @@ function recalculateDamage (actor, amount, updates, options) {
  * Recalculate Healing
  * Triggered by the 'updateActor' hook
  * If 'Apply Negative HP' and 'Heal from 0 HP' are enabled, recalculate healing to increase HP from zero instead of the negative value
- * @param {object} actor The actor
- * @param {object} data  The data
+ * @param {object} actor   The actor
+ * @param {object} data    The data
+ * @param {object} options The options
  */
-function recalculateHealing (actor, data) {
+function recalculateHealing (actor, data, options) {
     if (!getSetting(CONSTANTS.HIT_POINTS.SETTING.APPLY_NEGATIVE_HP.KEY) ||
         !getSetting(CONSTANTS.HIT_POINTS.SETTING.NEGATIVE_HP_HEAL_FROM_ZERO.KEY)) return
 
@@ -547,7 +547,7 @@ function recalculateHealing (actor, data) {
 
     if (typeof currentHp === 'undefined') return
 
-    const previousHp = getFlag(actor, 'previousHp')
+    const previousHp = options.previousHp
 
     if (previousHp < 0 && currentHp > previousHp) {
         const diff = currentHp - previousHp
@@ -681,11 +681,12 @@ function updateUnconscious (actor, data) {
 /**
  * Update Death Saves
  * Triggered by the 'updateActor' hook
- * @param {string} source regainHp or rest
- * @param {object} actor  The actor
- * @param {object} data   The data
+ * @param {string} source  regainHp or rest
+ * @param {object} actor   The actor
+ * @param {object} data    The data
+ * @param {object} options The options
  */
-function updateDeathSaves (source, actor, data) {
+function updateDeathSaves (source, actor, data, options) {
     if (actor.type !== 'character') return
 
     const removeDeathSaves = getSetting(CONSTANTS.DEATH_SAVES.SETTING.REMOVE_DEATH_SAVES.KEY)
@@ -698,7 +699,7 @@ function updateDeathSaves (source, actor, data) {
         if (typeof currentValue === 'undefined') return
 
         if (source === 'regainHp' && removeDeathSaves.regainHp[type] < 3 && foundry.utils.hasProperty(data, 'system.attributes.hp.value')) {
-            const previousHp = getFlag(actor, 'previousHp')
+            const previousHp = options.previousHp
             const newValue = (previousHp === 0) ? Math.max(currentValue - removeDeathSaves.regainHp[type], 0) : currentValue
             foundry.utils.setProperty(data, `system.attributes.death.${type}`, newValue)
         } else if (source === 'rest') {
@@ -803,16 +804,17 @@ function updateInstantDeath (actor, data) {
 /**
  * Update Massive Damage
  * Triggered by the 'updateActor' hook and called by the 'recalculateDamage' function
- * @param {object} actor The actor
- * @param {object} data  The data
+ * @param {object} actor   The actor
+ * @param {object} data    The data
+ * @param {object} options The options
  * @returns {boolean} Whether instant death is applied
  */
-function updateMassiveDamage (actor, data) {
+function updateMassiveDamage (actor, data, options) {
     if (actor.type !== 'character' || !getSetting(CONSTANTS.HIT_POINTS.SETTING.APPLY_MASSIVE_DAMAGE.KEY)) return false
 
     Logger.debug('Updating Massive Damage...')
 
-    const previousHp = getFlag(actor, 'previousHp')
+    const previousHp = options.previousHp
     const currentHp = data?.system?.attributes?.hp?.value
 
     if (previousHp <= currentHp) return
@@ -833,10 +835,12 @@ function updateMassiveDamage (actor, data) {
 
 /**
  * Capture previous HP
- * @param {object} actor The actor
- * @param {object} data The data
+ * @param {object} actor   The actor
+ * @param {object} data    The data
+ * @param {object} options The options
+ * @param {string} userId  The user id
  */
-async function capturePreviousHp (actor, data, options, userId) {
+function capturePreviousHp (actor, data, options, userId) {
     if (game.user.id !== userId || !actor.isOwner) return
 
     const currentHp = data?.system?.attributes?.hp?.value
@@ -844,7 +848,7 @@ async function capturePreviousHp (actor, data, options, userId) {
 
     Logger.debug('Capturing previous HP...')
 
-    await setFlag(actor, 'previousHp', actor.system.attributes.hp.value)
+    options.previousHp = actor.system.attributes.hp.value
 
     Logger.debug('Previous HP captured', { previousHp: actor.system.attributes.hp.value })
 }
