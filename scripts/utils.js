@@ -255,7 +255,7 @@ export async function makeBloodied (actor) {
         Logger.debug('Making Bloodied...', actor)
         const cls = getDocumentClass('ActiveEffect')
         const effect = await cls.fromStatusEffect('bloodied')
-        effect.updateSource({ id: 'dnd5ebloodied000', _id: 'dnd5ebloodied000' })
+        effect.updateSource({ id: 'dnd5ebloodied000', _id: 'dnd5ebloodied000', 'flags.custom-dnd5e.ignore': true })
         await cls.create(effect, { parent: actor, keepId: true })
         Logger.debug('Bloodied made', actor)
     }
@@ -281,7 +281,7 @@ export async function makeUnconscious (actor) {
         Logger.debug('Making Unconscious...', actor)
         const cls = getDocumentClass('ActiveEffect')
         const effect = await cls.fromStatusEffect('unconscious')
-        effect.updateSource({ id: 'dnd5eunconscious', _id: 'dnd5eunconscious', 'flags.core.overlay': true })
+        effect.updateSource({ id: 'dnd5eunconscious', _id: 'dnd5eunconscious', 'flags.core.overlay': true, 'flags.custom-dnd5e.ignore': true })
         await cls.create(effect, { parent: actor, keepId: true })
         Logger.debug('Unconscious made', actor)
     }
@@ -401,7 +401,7 @@ export async function makeDead (actor, data = null) {
 
     const cls = getDocumentClass('ActiveEffect')
     const effect = await cls.fromStatusEffect('dead')
-    effect.updateSource({ 'flags.core.overlay': true })
+    effect.updateSource({ 'flags.core.overlay': true, 'flags.custom-dnd5e.ignore': true })
     await cls.create(effect, { parent: actor, keepId: true })
 
     Logger.debug('Dead made', actor)

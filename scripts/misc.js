@@ -87,7 +87,7 @@ function registerHooks () {
 }
 
 async function toggleEffectOnSelected (active, activeEffect) {
-    if (canvas.tokens.controlled.length <= 1) return
+    if (canvas.tokens.controlled.length <= 1 || activeEffect.origin || activeEffect?.flags['custom-dnd5e']?.ignore) return
 
     const statusId = [...activeEffect.statuses][0]
     const overlay = activeEffect?.flags?.core?.overlay ?? false
