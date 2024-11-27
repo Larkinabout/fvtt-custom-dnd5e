@@ -327,6 +327,7 @@ function registerHooks () {
     Hooks.on('preUpdateActor', capturePreviousHp)
     Hooks.on('updateActor', (actor, data, options, userId) => {
         if (!game.user.isGM && !game.user.id !== userId) return
+        if (data?.flags?.['custom-dnd5e']) return
 
         const instantDeath = updateInstantDeath(actor, data)
         updateHp(actor, data)
@@ -596,7 +597,7 @@ function updateBloodied (actor, data, dead) {
 
     Logger.debug('Updating Bloodied...')
 
-    const currentHp = data?.system?.attributes?.hp?.value
+    const currentHp = data?.system?.attributes?.hp?.value ?? actor?.system?.attributes?.hp?.value
     const maxHp = data?.system?.attributes?.hp?.max ?? actor?.system?.attributes?.hp?.max
 
     if (typeof currentHp === 'undefined') return null
@@ -879,6 +880,10 @@ function updateTokenEffects (active, activeEffect, userId) {
     } else {
         if (bloodied) { tint = getSetting(CONSTANTS.BLOODIED.SETTING.BLOODIED_TINT.KEY) }
         if (prone) { rotation = getSetting(CONSTANTS.PRONE.SETTING.PRONE_ROTATION.KEY) }
+    }
+
+    if ([...activeEffect.statuses].includes('dead') && !activeEffect?.flags?.['custom-dnd5e']?.ignore) {
+        updateBloodied(actor, null, dead)
     }
 
     if (tint) {

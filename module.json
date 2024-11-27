@@ -69,7 +69,7 @@
         "id": "dnd5e",
         "compatibility":{
           "minimum": "4.1.0",
-          "verified": "4.1.1",
+          "verified": "4.1.2",
           "maximum": "4.99"
         }
       }
