@@ -29,7 +29,7 @@ function registerSettings () {
             name: game.i18n.localize(constants.MENU.NAME),
             icon: constants.MENU.ICON,
             type: ConditionsForm,
-            restricted: false,
+            restricted: true,
             scope: 'world'
         }
     )
