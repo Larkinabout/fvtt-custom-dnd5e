@@ -68,7 +68,8 @@ export function setConfig (data = null) {
                     fullKey: data[key].fullKey,
                     icon: data[key].icon,
                     label: game.i18n.localize(data[key].label),
-                    reference: data[key].reference
+                    reference: data[key].reference,
+                    rollMode: data[key].rollMode ?? 'default'
                 }
             ])
     )

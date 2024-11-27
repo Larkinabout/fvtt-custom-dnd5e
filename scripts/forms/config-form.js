@@ -510,6 +510,20 @@ export class SkillsForm extends ConfigForm {
         const template = await renderTemplate(CONSTANTS.SKILLS.TEMPLATE.LIST, data)
         return template
     }
+
+    _getSelects () {
+        return {
+            rollMode: {
+                choices: {
+                    default: 'CUSTOM_DND5E.default',
+                    blindroll: 'CHAT.RollBlind',
+                    gmroll: 'CHAT.RollPrivate',
+                    publicroll: 'CHAT.RollPublic',
+                    selfroll: 'CHAT.RollSelf'
+                }
+            }
+        }
+    }
 }
 
 export class SpellSchoolsForm extends ConfigForm {

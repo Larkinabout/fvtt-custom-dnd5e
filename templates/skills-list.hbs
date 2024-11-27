@@ -45,6 +45,14 @@
                 <input id="custom-dnd5e-reference" name="{{key}}.reference" type="text" value="{{reference}}">
             </div>
         </div>
+        <div class="form-group">
+            <label class="flex1" style="min-width:80px; max-width:100px;">{{localize "CUSTOM_DND5E.rollMode"}}</label>
+            <div class="form-fields">
+                <select id="custom-dnd5e-roll-mode" name="{{key}}.rollMode">
+                    {{selectOptions ../selects.rollMode.choices selected=rollMode localize=true}}
+                </select>
+            </div>
+        </div>
     </div>
     <button{{#unless (customDnd5eBoolFalse system)}} class="hidden"{{/unless}} type="button" data-action="delete" data-tooltip="{{localize "CUSTOM_DND5E.form.button.delete.tooltip"}}"  class="flex0 custom-dnd5e-list-button">
         <i class="fas fa-xmark"></i>

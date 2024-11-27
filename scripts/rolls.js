@@ -62,6 +62,7 @@ function registerHooks () {
         const rolls = getSetting(constants.SETTING.ROLLS.KEY)
 
         let roll = null
+        let rollMode = null
 
         if (hookNames.includes('concentration')) {
             roll = rolls.concentration
@@ -69,6 +70,7 @@ function registerHooks () {
             roll = rolls.initiative
         } else if (hookNames.includes('skill')) {
             roll = rolls.skill
+            rollMode = CONFIG.DND5E?.skills[config.skill]?.rollMode
         } else if (hookNames.includes('tool')) {
             roll = rolls.tool
         } else if (hookNames.includes('AbilityCheck')) {
@@ -87,7 +89,9 @@ function registerHooks () {
         }
 
         const rollModes = ['gmroll', 'blindroll', 'selfroll']
-        if (rollModes.includes(roll.rollMode)) {
+        if (rollMode && rollMode !== 'default') {
+            message.rollMode = rollMode
+        } else if (rollModes.includes(roll.rollMode)) {
             message.rollMode = roll.rollMode
         }
     })
