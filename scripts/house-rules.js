@@ -602,11 +602,9 @@ function updateBloodied (actor, data, dead) {
     if (typeof currentHp === 'undefined') return null
 
     const halfHp = Math.ceil((maxHp ?? actor.system.attributes.hp.max) * 0.5)
-    const deathFailures = data?.system?.attributes?.death?.failure ?? actor?.system?.attributes?.death?.failure ?? 0
 
     if (currentHp <= halfHp &&
         !actor.effects.has('dnd5ebloodied000') &&
-        deathFailures !== 3 &&
         !(dead && getSetting(CONSTANTS.BLOODIED.SETTING.REMOVE_BLOODIED_ON_DEAD.KEY))
     ) {
         makeBloodied(actor)
