@@ -51,6 +51,7 @@
     "CUSTOM_DND5E.includeOnHud": "Include on HUD",
     "CUSTOM_DND5E.includeOnSheet": "Include on Sheet",
     "CUSTOM_DND5E.increase": "Increase",
+    "CUSTOM_DND5E.initiative": "Initiative",    
     "CUSTOM_DND5E.initiativeRoll": "Initiative Roll",
     "CUSTOM_DND5E.inspiration": "Inspiration",
     "CUSTOM_DND5E.items": "Items",
@@ -233,6 +234,9 @@
     "CUSTOM_DND5E.form.houseRules.hitPoints.applyNegativeHp.note": "Apply negative hit points for characters",
     "CUSTOM_DND5E.form.houseRules.hitPoints.negativeHpHealFromZero.label": "Heal from 0 HP",
     "CUSTOM_DND5E.form.houseRules.hitPoints.negativeHpHealFromZero.note": "Heal from 0 HP when a character has negative HP",
+    "CUSTOM_DND5E.form.houseRules.initiative.rerollInitiativeEachRound.label": "Reroll Initiative Each Round",
+    "CUSTOM_DND5E.form.houseRules.initiative.rerollInitiativeEachRound.note": "Reroll Initiative for all combatants at the start of each round",
+
     "CUSTOM_DND5E.form.houseRules.inspiration.awardInspirationD20Value.label": "Award Inspiration d20 Value",
     "CUSTOM_DND5E.form.houseRules.inspiration.awardInspirationD20Value.note": "Value to roll on the d20 to award Inspiration",
     "CUSTOM_DND5E.form.houseRules.inspiration.awardInspirationRollTypes.note": "Roll types to award Inspiration",

@@ -91,6 +91,16 @@ function registerSettings () {
     )
 
     registerSetting(
+        CONSTANTS.INITIATIVE.SETTING.REROLL_INITIATIVE_EACH_ROUND.KEY,
+        {
+            scope: 'world',
+            config: false,
+            type: Boolean,
+            default: false
+        }
+    )
+
+    registerSetting(
         CONSTANTS.BLOODIED.SETTING.APPLY_BLOODIED.KEY,
         {
             scope: 'world',
@@ -314,6 +324,7 @@ function registerHooks () {
         }
     })
 
+    Hooks.on('combatRound', rerollInitiative)
     Hooks.on('createActiveEffect', (activeEffect, options, userId) => { updateTokenEffects(true, activeEffect, userId) })
     Hooks.on('deleteActiveEffect', (activeEffect, options, userId) => { updateTokenEffects(false, activeEffect, userId) })
     Hooks.on('createToken', (token, data, options, userId) => { rollNpcHp(token) })
@@ -417,6 +428,21 @@ export function registerNegativeHp () {
     dnd5e.dataModels.actor.CharacterData.schema.fields.attributes.fields.hp.fields.value.min = undefined
 
     Logger.debug('Negative HP registered')
+}
+
+/**
+ * Reroll Initiative
+ * Triggered by the 'combatRound' hook
+ * @param {object} combat  The combat
+ * @param {object} data    The data
+ * @param {object} options The options
+ */
+export async function rerollInitiative (combat, data, options) {
+    if (!getSetting(CONSTANTS.INITIATIVE.SETTING.REROLL_INITIATIVE_EACH_ROUND.KEY) || data.turn !== 0) return
+
+    await combat.resetAll()
+    await combat.rollAll()
+    combat.update({ turn: 0 })
 }
 
 /**

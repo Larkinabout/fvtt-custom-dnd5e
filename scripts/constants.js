@@ -359,6 +359,13 @@ export const CONSTANTS = {
         },
         UUID: 'Compendium.custom-dnd5e.custom-dnd5e-journals.JournalEntry.ngr8w6WBycK59brj'
     },
+    INITIATIVE: {
+        SETTING: {
+            REROLL_INITIATIVE_EACH_ROUND: {
+                KEY: 'reroll-initiative-each-round'
+            }
+        }
+    },
     INSPIRATION: {
         SETTING: {
             AWARD_INSPIRATION_D20_VALUE: {
