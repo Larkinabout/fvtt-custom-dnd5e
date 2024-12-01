@@ -421,6 +421,7 @@
     "CUSTOM_DND5E.message.instantDeath": "<p>{name} sofreu uma Morte Instantânea.</p>",
     "CUSTOM_DND5E.message.massiveDamage": "{name} sofreu Dano Massivo.",
     
+    "CUSTOM_DND5E.setting.maxAbilityScore.name": "Pontuação Máxima de Habilidad",
     "CUSTOM_DND5E.setting.maxLevel.name": "Nível Máximo",
     "CUSTOM_DND5E.setting.radialStatusEffects.name": "Efeitos de Condições em Radial",
     "CUSTOM_DND5E.setting.radialStatusEffects.hint": "Exibir os efeitos de condições em um círculo em volta do token",

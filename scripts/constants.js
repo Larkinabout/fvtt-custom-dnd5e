@@ -474,6 +474,13 @@ export const CONSTANTS = {
             }
         }
     },
+    MAX_ABILITY_SCORE: {
+        SETTING: {
+            KEY: 'max-ability-score',
+            NAME: 'CUSTOM_DND5E.setting.maxAbilityScore.name'
+        },
+        UUID: 'Compendium.custom-dnd5e.custom-dnd5e-journals.JournalEntry.B48iqFBddUikMMer.JournalEntryPage.decV7ZeYLc045SuZ'
+    },
     MAX_LEVEL: {
         SETTING: {
             KEY: 'max-level',

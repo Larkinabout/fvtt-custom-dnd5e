@@ -15,6 +15,18 @@ export function register () {
  */
 function registerSettings () {
     registerSetting(
+        CONSTANTS.MAX_ABILITY_SCORE.SETTING.KEY,
+        {
+            name: game.i18n.localize(CONSTANTS.MAX_ABILITY_SCORE.SETTING.NAME),
+            scope: 'world',
+            config: true,
+            type: Number,
+            default: CONFIG.CUSTOM_DND5E.maxAbilityScore,
+            onChange: (value) => { setMaxAbilityScore(value) }
+        }
+    )
+
+    registerSetting(
         CONSTANTS.MAX_LEVEL.SETTING.KEY,
         {
             name: game.i18n.localize(CONSTANTS.MAX_LEVEL.SETTING.NAME),
@@ -112,7 +124,16 @@ function applyElevationToSelected (token, data, options, id) {
 }
 
 /**
+ * Set CONFIG.DND5E.maxAbilityScore
+ * @param {number|null} maxAbilityScore The max ability score
+ */
+export function setMaxAbilityScore (maxAbilityScore = null) {
+    CONFIG.DND5E.maxAbilityScore = maxAbilityScore || CONFIG.CUSTOM_DND5E.maxAbilityScore
+}
+
+/**
  * Set CONFIG.DND5E.maxLevel
+ * @param {number|null} maxLevel The max level
  */
 export function setMaxLevel (maxLevel = null) {
     CONFIG.DND5E.maxLevel = maxLevel || CONFIG.CUSTOM_DND5E.maxLevel
