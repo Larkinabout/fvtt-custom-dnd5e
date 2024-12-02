@@ -75,8 +75,10 @@ function registerHooks () {
             roll = rolls.tool
         } else if (hookNames.includes('AbilityCheck')) {
             roll = rolls.ability
+            rollMode = CONFIG.DND5E?.abilities[config.ability]?.rollMode
         } else if (hookNames.includes('SavingThrow')) {
             roll = rolls.savingThrow
+            rollMode = CONFIG.DND5E?.abilities[config.ability]?.rollMode
         }
 
         if (!roll) return

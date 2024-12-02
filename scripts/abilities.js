@@ -64,6 +64,7 @@ export function setConfig (data = null) {
                     ...(data[key].improvement === false && { improvement: data[key].improvement }),
                     label: game.i18n.localize(data[key].label),
                     reference: data[key].reference,
+                    rollMode: data[key].rollMode ?? 'default',
                     type: data[key].type
                 }
             ])

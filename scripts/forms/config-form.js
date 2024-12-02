@@ -166,6 +166,15 @@ export class AbilitiesForm extends ConfigForm {
 
     _getSelects () {
         return {
+            rollMode: {
+                choices: {
+                    default: 'CUSTOM_DND5E.default',
+                    blindroll: 'CHAT.RollBlind',
+                    gmroll: 'CHAT.RollPrivate',
+                    publicroll: 'CHAT.RollPublic',
+                    selfroll: 'CHAT.RollSelf'
+                }
+            },
             type: {
                 choices: {
                     mental: 'CUSTOM_DND5E.mental',
