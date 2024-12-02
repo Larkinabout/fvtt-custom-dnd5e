@@ -277,10 +277,14 @@ Custom D&D 5e will defer to the [Variant Encumbrance + Midi](https://foundryvtt.
 ### [libWrapper](https://foundryvtt.com/packages/lib-wrapper)
 For developers, LibWrapper is used to patch:
 - **`Application.prototype._render`:** Allows adding data to the character sheets without editing the HTML. This should no longer be required with the release of Application V2.
-- **`CONFIG.Actor.documentClass.prototype._prepareEncumbrance`:** When the D&D 5e's 'Encumbrance Tracking' setting is set to 'Variant', avoids recalculating encumbrance as well as issues with encumbrance active effects applied during item updates/deletions.
-- **`Token.prototype._refreshEffects`:** When Custom D&D 5e's 'Radial Status Effects' setting is enabled.
-- **`Token.prototype._drawEffect`:** When Custom D&D 5e's 'Radial Status Effects' setting is enabled.
-- **`Token.prototype._drawOverlay`:** When Custom D&D 5e's 'Radial Status Effects' setting is enabled.
+- **`CONFIG.Actor.documentClass.prototype._prepareEncumbrance`:** Patched when the D&D 5e's 'Encumbrance Tracking' setting is set to 'Variant'. Avoids recalculating encumbrance as well as issues with encumbrance active effects applied during item updates/deletions.
+- **`CONFIG.Dice.D20Die.prototype.applyAdvantage`**: Patched when at least one roll is configured. Replaces roll formula to allow different numbers and faces of dice.
+- **`CONFIG.Dice.D20Roll.fromConfig`**: Patched when at least one roll is configured. Replaces the d20 die formula with the custom die formula.
+- **`CONFIG.Dice.D20Roll.prototype.configureModifiers`**: Patched when at least one roll is configured. Adds the custom die formula to the d20 options to make it available to `validD20Roll`.
+- **`CONFIG.Dice.D20Roll.prototype.validD20Roll`**: Patched when at least one roll is configured. Additionally returns true when a custom die exists.
+- **`Token.prototype._refreshEffects`:** Patched when Custom D&D 5e's 'Radial Status Effects' setting is enabled.
+- **`Token.prototype._drawEffect`:** Patched when Custom D&D 5e's 'Radial Status Effects' setting is enabled.
+- **`Token.prototype._drawOverlay`:** Patched when Custom D&D 5e's 'Radial Status Effects' setting is enabled.
 
 ## Credits
 The Radial Status Effects feature is a modification of code developed by [Dorako](https://github.com/Dorako) under the MIT License, which is reproduced here: [Licence](./scripts/radial-status-effects.js)
