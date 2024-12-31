@@ -94,6 +94,20 @@ export function setConfig (data = null) {
         return
     }
 
+    const itemTypes = ['consumable', 'container', 'equipment', 'feat', 'loot', 'spell', 'tool', 'weapon']
+
+    // Include item properties added by other modules
+    Object.entries(CONFIG.DND5E.itemProperties).forEach(([id, value]) => {
+        if (!data[id]) {
+            data[id] = foundry.utils.deepClone(value)
+            itemTypes.forEach(itemType => {
+                if (CONFIG.DND5E.validProperties[itemType].has(id)) {
+                    data[id][itemType] = true
+                }
+            })
+        }
+    })
+
     const buildConfig = (data) => Object.fromEntries(
         Object.entries(data)
             .filter(([_, value]) => value.visible || value.visible === undefined)
@@ -117,8 +131,6 @@ export function setConfig (data = null) {
     })
 
     Object.entries(data).forEach(([key, value]) => {
-        const itemTypes = ['consumable', 'container', 'equipment', 'feat', 'loot', 'spell', 'tool', 'weapon']
-
         itemTypes.forEach(itemType => {
             if (value[itemType] && (value.visible || typeof value.visible === 'undefined')) {
                 validProperties[itemType].add(key)

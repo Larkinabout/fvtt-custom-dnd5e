@@ -516,6 +516,9 @@ export class SkillsForm extends ConfigForm {
     }
 
     async _getHtml (data) {
+        const selects = this._getSelects()
+        if (selects) data.selects = selects
+
         const template = await renderTemplate(CONSTANTS.SKILLS.TEMPLATE.LIST, data)
         return template
     }
