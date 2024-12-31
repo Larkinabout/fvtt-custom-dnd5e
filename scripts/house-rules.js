@@ -1,9 +1,8 @@
 import { CONSTANTS, SHEET_TYPE } from './constants.js'
 import {
+    c5eLoadTemplates,
     Logger,
     getSetting,
-    getFlag,
-    setFlag,
     registerMenu,
     registerSetting,
     makeBloodied,
@@ -29,8 +28,7 @@ export function register () {
     registerHooks()
 
     const templates = [constants.TEMPLATE.FORM]
-    Logger.debug('Loading templates', templates)
-    loadTemplates(templates)
+    c5eLoadTemplates(templates)
 }
 
 /**

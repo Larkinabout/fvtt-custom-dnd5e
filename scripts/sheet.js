@@ -1,5 +1,5 @@
 import { CONSTANTS, SHEET_TYPE } from './constants.js'
-import { Logger, getFlag, getSetting, registerMenu, registerSetting } from './utils.js'
+import { c5eLoadTemplates, getFlag, getSetting, registerMenu, registerSetting } from './utils.js'
 import { SheetForm } from './forms/sheet-form.js'
 
 export function register () {
@@ -7,8 +7,7 @@ export function register () {
     registerHooks()
 
     const templates = [CONSTANTS.SHEET.TEMPLATE.FORM]
-    Logger.debug('Loading templates', templates)
-    loadTemplates(templates)
+    c5eLoadTemplates(templates)
 }
 
 /**

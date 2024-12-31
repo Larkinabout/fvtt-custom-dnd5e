@@ -1,5 +1,5 @@
 import { CONSTANTS } from './constants.js'
-import { Logger, getSetting } from './utils.js'
+import { c5eLoadTemplates, getSetting } from './utils.js'
 
 const constants = CONSTANTS.RESTING
 
@@ -9,9 +9,8 @@ const constants = CONSTANTS.RESTING
 export function register () {
     registerHooks()
 
-    const templates = [constants.TEMPLATE.CAMP_SUPPLIES]
-    Logger.debug('Loading templates', templates)
-    loadTemplates(templates)
+    const templates = Object.values(constants.TEMPLATE)
+    c5eLoadTemplates(templates)
 }
 
 /**

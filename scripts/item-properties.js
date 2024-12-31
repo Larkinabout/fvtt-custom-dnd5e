@@ -1,5 +1,5 @@
 import { CONSTANTS } from './constants.js'
-import { Logger, checkEmpty, registerMenu, registerSetting, resetDnd5eConfig } from './utils.js'
+import { c5eLoadTemplates, checkEmpty, registerMenu, registerSetting, resetDnd5eConfig } from './utils.js'
 import { ItemPropertiesForm } from './forms/item-properties-form.js'
 
 /**
@@ -12,8 +12,7 @@ export function register () {
         CONSTANTS.ITEM_PROPERTIES.TEMPLATE.FORM,
         CONSTANTS.ITEM_PROPERTIES.TEMPLATE.LIST
     ]
-    Logger.debug('Loading templates', templates)
-    loadTemplates(templates)
+    c5eLoadTemplates(templates)
 }
 
 /**

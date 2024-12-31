@@ -1,5 +1,5 @@
 import { CONSTANTS, MODULE } from './constants.js'
-import { Logger, getSetting, registerSetting } from './utils.js'
+import { c5eLoadTemplates, getSetting, registerSetting } from './utils.js'
 import { register as registerHouseRules, registerNegativeHp } from './house-rules.js'
 import { register as registerAbilities, setConfig as setAbilities } from './abilities.js'
 import { register as registerActivationCosts, setConfig as setActivationCosts } from './activation-costs.js'
@@ -151,8 +151,7 @@ Hooks.on('init', async () => {
         CONSTANTS.UUID.TEMPLATE.FORM,
         CONSTANTS.UUID.TEMPLATE.LIST
     ]
-    Logger.debug('Loading templates', templates)
-    loadTemplates(templates)
+    c5eLoadTemplates(templates)
 })
 
 Hooks.on('ready', async () => {

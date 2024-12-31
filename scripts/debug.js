@@ -1,5 +1,5 @@
 import { MODULE, CONSTANTS } from './constants.js'
-import { Logger, getSetting, setSetting, registerMenu, registerSetting } from './utils.js'
+import { c5eLoadTemplates, Logger, getSetting, setSetting, registerMenu } from './utils.js'
 import { DebugForm } from './forms/debug-form.js'
 
 const constants = CONSTANTS.DEBUG
@@ -14,8 +14,7 @@ export function register () {
         constants.TEMPLATE.FORM,
         constants.TEMPLATE.IMPORT_DIALOG
     ]
-    Logger.debug('Loading templates', templates)
-    loadTemplates(templates)
+    c5eLoadTemplates(templates)
 }
 
 /**

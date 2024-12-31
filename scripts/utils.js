@@ -417,3 +417,17 @@ export async function unmakeDead (actor) {
     await effect?.delete()
     Logger.debug('Dead unmade', actor)
 }
+
+/**
+ * Load templates
+ * @param {array} templates The templates
+ */
+export async function c5eLoadTemplates (templates) {
+    Logger.debug('Loading templates', templates)
+    try {
+        const result = await loadTemplates(templates)
+        Logger.debug('Templates loaded', { templates, result })
+    } catch (error) {
+        Logger.debug('Failed to load templates', { templates, error })
+    }
+}

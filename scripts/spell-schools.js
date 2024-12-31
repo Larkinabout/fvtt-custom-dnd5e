@@ -1,5 +1,5 @@
 import { CONSTANTS } from './constants.js'
-import { Logger, checkEmpty, registerMenu, registerSetting, resetDnd5eConfig } from './utils.js'
+import { c5eLoadTemplates, checkEmpty, registerMenu, registerSetting, resetDnd5eConfig } from './utils.js'
 import { SpellSchoolsForm } from './forms/config-form.js'
 
 const property = 'spellSchools'
@@ -14,8 +14,7 @@ export function register () {
         CONSTANTS.SPELL_SCHOOLS.TEMPLATE.FORM,
         CONSTANTS.SPELL_SCHOOLS.TEMPLATE.LIST
     ]
-    Logger.debug('Loading templates', templates)
-    loadTemplates(templates)
+    c5eLoadTemplates(templates)
 }
 
 /**

@@ -1,5 +1,5 @@
 import { CONSTANTS } from './constants.js'
-import { Logger, checkEmpty, registerMenu, getSetting, registerSetting, resetDnd5eConfig } from './utils.js'
+import { c5eLoadTemplates, checkEmpty, registerMenu, getSetting, registerSetting, resetDnd5eConfig } from './utils.js'
 import { ConditionsForm } from './forms/conditions-form.js'
 import { buildBloodied, registerBloodied } from './house-rules.js'
 
@@ -13,8 +13,7 @@ export function register () {
         constants.TEMPLATE.LIST,
         constants.TEMPLATE.EDIT
     ]
-    Logger.debug('Loading templates', templates)
-    loadTemplates(templates)
+    c5eLoadTemplates(templates)
 }
 
 /**

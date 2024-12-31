@@ -1,5 +1,5 @@
 import { CONSTANTS } from './constants.js'
-import { Logger, checkEmpty, registerMenu, registerSetting, resetDnd5eConfig } from './utils.js'
+import { c5eLoadTemplates, checkEmpty, registerMenu, registerSetting, resetDnd5eConfig } from './utils.js'
 import { SkillsForm } from './forms/config-form.js'
 
 const property = 'skills'
@@ -14,8 +14,7 @@ export function register () {
         CONSTANTS.SKILLS.TEMPLATE.FORM,
         CONSTANTS.SKILLS.TEMPLATE.LIST
     ]
-    Logger.debug('Loading templates', templates)
-    loadTemplates(templates)
+    c5eLoadTemplates(templates)
 }
 
 /**

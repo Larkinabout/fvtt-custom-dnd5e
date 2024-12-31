@@ -1,5 +1,5 @@
 import { CONSTANTS } from './constants.js'
-import { Logger, checkEmpty, registerMenu, registerSetting, resetDnd5eConfig } from './utils.js'
+import { c5eLoadTemplates, checkEmpty, registerMenu, registerSetting, resetDnd5eConfig } from './utils.js'
 import { ArmorProficienciesForm } from './forms/armor-proficiencies-form.js'
 
 const constants = CONSTANTS.ARMOR_PROFICIENCIES
@@ -14,8 +14,7 @@ export function register () {
         constants.TEMPLATE.FORM,
         constants.TEMPLATE.LIST
     ]
-    Logger.debug('Loading templates', templates)
-    loadTemplates(templates)
+    c5eLoadTemplates(templates)
 }
 
 /**

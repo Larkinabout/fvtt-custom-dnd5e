@@ -1,5 +1,5 @@
 import { CONSTANTS } from './constants.js'
-import { getDieParts, getSetting, registerMenu, registerSetting, Logger } from './utils.js'
+import { c5eLoadTemplates, getDieParts, getSetting, registerMenu, registerSetting } from './utils.js'
 import { RollsForm } from './forms/rolls-form.js'
 
 const constants = CONSTANTS.ROLLS
@@ -11,9 +11,8 @@ export function register () {
     registerSettings()
     registerHooks()
 
-    const templates = [constants.FORM]
-    Logger.debug('Loading templates', templates)
-    loadTemplates(templates)
+    const templates = [constants.TEMPLATE.FORM]
+    c5eLoadTemplates(templates)
 }
 
 /**
@@ -68,6 +67,8 @@ function registerHooks () {
             roll = rolls.concentration
         } else if (hookNames.includes('initiativeDialog')) {
             roll = rolls.initiative
+        } else if (hookNames.includes('attack')) {
+            roll = rolls.attack
         } else if (hookNames.includes('skill')) {
             roll = rolls.skill
             rollMode = CONFIG.DND5E?.skills[config.skill]?.rollMode

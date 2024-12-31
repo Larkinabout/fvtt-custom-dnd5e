@@ -209,11 +209,9 @@ export const CONSTANTS = {
             LIST: 'modules/custom-dnd5e/templates/counters-list.hbs',
             ADVANCED_OPTIONS_FORM: 'modules/custom-dnd5e/templates/counters-advanced-options-form.hbs',
             TRIGGERS_LIST: 'modules/custom-dnd5e/templates/counters-triggers-list.hbs',
-            DND5E: {
-                ACTOR: 'modules/custom-dnd5e/templates/counters/dnd5e/counters-actor.hbs',
-                ACTOR_LEGACY: 'modules/custom-dnd5e/templates/counters/dnd5e/counters-actor-legacy.hbs',
-                ITEM_GROUP_LEGACY: 'modules/custom-dnd5e/templates/counters/dnd5e/counters-item-group-legacy.hbs'
-            }
+            DND5E_ACTOR: 'modules/custom-dnd5e/templates/counters/dnd5e/counters-actor.hbs',
+            DND5E_ACTOR_LEGACY: 'modules/custom-dnd5e/templates/counters/dnd5e/counters-actor-legacy.hbs',
+            DND5E_ITEM_GROUP_LEGACY: 'modules/custom-dnd5e/templates/counters/dnd5e/counters-item-group-legacy.hbs'
         }
     },
     CURRENCY: {
@@ -737,7 +735,7 @@ export const SHEET_TYPE = {
         group: false,
         legacy: true,
         npc: true,
-        template: CONSTANTS.COUNTERS.TEMPLATE.DND5E.ACTOR_LEGACY,
+        template: CONSTANTS.COUNTERS.TEMPLATE.DND5E_ACTOR_LEGACY,
         insert: {
             class: '.counters',
             position: 'beforeend'
@@ -751,7 +749,7 @@ export const SHEET_TYPE = {
         item: false,
         legacy: true,
         npc: true,
-        template: CONSTANTS.COUNTERS.TEMPLATE.DND5E.ACTOR_LEGACY,
+        template: CONSTANTS.COUNTERS.TEMPLATE.DND5E_ACTOR_LEGACY,
         insert: {
             class: '.counters',
             position: 'beforeend'
@@ -765,7 +763,7 @@ export const SHEET_TYPE = {
         item: false,
         legacy: false,
         npc: true,
-        template: CONSTANTS.COUNTERS.TEMPLATE.DND5E.ACTOR,
+        template: CONSTANTS.COUNTERS.TEMPLATE.DND5E_ACTOR,
         insert: {
             class: '.tab.details > .right .top',
             position: 'beforeend'
@@ -779,7 +777,7 @@ export const SHEET_TYPE = {
         item: false,
         legacy: false,
         npc: false,
-        template: CONSTANTS.COUNTERS.TEMPLATE.DND5E.ACTOR,
+        template: CONSTANTS.COUNTERS.TEMPLATE.DND5E_ACTOR,
         insert: {
             class: '.tab.details > .right .top',
             position: 'beforeend'
@@ -793,7 +791,7 @@ export const SHEET_TYPE = {
         item: false,
         legacy: false,
         npc: true,
-        template: CONSTANTS.COUNTERS.TEMPLATE.DND5E.ACTOR,
+        template: CONSTANTS.COUNTERS.TEMPLATE.DND5E_ACTOR,
         insert: {
             class: '.sidebar',
             position: 'afterbegin'
@@ -807,7 +805,7 @@ export const SHEET_TYPE = {
         item: false,
         legacy: true,
         npc: false,
-        template: CONSTANTS.COUNTERS.TEMPLATE.DND5E.ITEM_GROUP_LEGACY,
+        template: CONSTANTS.COUNTERS.TEMPLATE.DND5E_ITEM_GROUP_LEGACY,
         insert: {
             class: 'section.sheet-body',
             position: 'beforeend'
@@ -821,7 +819,7 @@ export const SHEET_TYPE = {
         item: true,
         legacy: true,
         npc: false,
-        template: CONSTANTS.COUNTERS.TEMPLATE.DND5E.ITEM_GROUP_LEGACY,
+        template: CONSTANTS.COUNTERS.TEMPLATE.DND5E_ITEM_GROUP_LEGACY,
         insert: {
             class: 'section.sheet-body',
             position: 'beforeend'
@@ -835,7 +833,7 @@ export const SHEET_TYPE = {
         item: true,
         legacy: false,
         npc: false,
-        template: CONSTANTS.COUNTERS.TEMPLATE.DND5E.ITEM_GROUP_LEGACY,
+        template: CONSTANTS.COUNTERS.TEMPLATE.DND5E_ITEM_GROUP_LEGACY,
         insert: {
             class: 'section.sheet-body',
             position: 'beforeend'
