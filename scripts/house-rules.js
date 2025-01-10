@@ -325,7 +325,7 @@ function registerHooks () {
     Hooks.on('combatRound', rerollInitiative)
     Hooks.on('createActiveEffect', (activeEffect, options, userId) => { updateTokenEffects(true, activeEffect, userId) })
     Hooks.on('deleteActiveEffect', (activeEffect, options, userId) => { updateTokenEffects(false, activeEffect, userId) })
-    Hooks.on('createToken', (token, data, options, userId) => { rollNpcHp(token) })
+    Hooks.on('createToken', rollNpcHp)
     Hooks.on('dnd5e.preApplyDamage', recalculateDamage)
     Hooks.on('dnd5e.preRestCompleted', (actor, data) => updateDeathSaves('rest', actor, data))
     Hooks.on('dnd5e.preRollDeathSave', setDeathSavesRollMode)
@@ -584,9 +584,13 @@ function recalculateHealing (actor, data, options) {
 /**
  * Roll NPC HP
  * Triggered by the 'preCreateToken' hook
- * @param {object} token The token
+ * @param {object} token  The token
+ * @param {object} data   The data
+ * @param {string} userId The user ID
  */
-async function rollNpcHp (token) {
+async function rollNpcHp (token, data, userId) {
+    if (game.user.id !== userId) return
+
     const actor = token?.actor
 
     if (actor?.type !== 'npc') return
