@@ -1,8 +1,9 @@
 import { CONSTANTS, SHEET_TYPE } from './constants.js'
-import { checkEmpty, getFlag, getSetting, registerMenu, registerSetting, resetDnd5eConfig } from './utils.js'
+import { Logger, c5eLoadTemplates, checkEmpty, getFlag, getSetting, registerMenu, registerSetting, resetDnd5eConfig } from './utils.js'
 import { SensesForm } from './forms/config-form.js'
 
 const property = 'senses'
+const constants = CONSTANTS.SENSES
 
 /**
  * Register
@@ -10,6 +11,9 @@ const property = 'senses'
 export function register () {
     registerSettings()
     registerHooks()
+
+    const templates = [constants.TEMPLATE.CONFIG_FORM_GROUP]
+    c5eLoadTemplates(templates)
 }
 
 /**
@@ -17,12 +21,12 @@ export function register () {
  */
 function registerSettings () {
     registerMenu(
-        CONSTANTS.SENSES.MENU.KEY,
+        constants.MENU.KEY,
         {
-            hint: game.i18n.localize(CONSTANTS.SENSES.MENU.HINT),
-            label: game.i18n.localize(CONSTANTS.SENSES.MENU.LABEL),
-            name: game.i18n.localize(CONSTANTS.SENSES.MENU.NAME),
-            icon: CONSTANTS.SENSES.MENU.ICON,
+            hint: game.i18n.localize(constants.MENU.HINT),
+            label: game.i18n.localize(constants.MENU.LABEL),
+            name: game.i18n.localize(constants.MENU.NAME),
+            icon: constants.MENU.ICON,
             type: SensesForm,
             restricted: true,
             scope: 'world'
@@ -30,7 +34,7 @@ function registerSettings () {
     )
 
     registerSetting(
-        CONSTANTS.SENSES.SETTING.KEY,
+        constants.SETTING.KEY,
         {
             scope: 'world',
             config: false,
@@ -44,20 +48,42 @@ function registerSettings () {
  * Register hooks
  */
 function registerHooks () {
-    Hooks.on('renderActorSensesConfig', (app, html, data) => {
-        const actor = data.document
+    Hooks.on('renderMovementSensesConfig', async (app, html) => {
+        const actor = app.document
         const systemSenses = ['blindsight', 'darkvision', 'tremorsense', 'truesight']
-        const inputs = html[0].querySelectorAll('input[type="number"]')
-        inputs.forEach(input => {
-            const key = input.name.split('.').pop()
-            if (!systemSenses.includes(key)) {
-                input.name = `flags.custom-dnd5e.${key}`
-                const flag = getFlag(actor, key)
-                if (flag) {
-                    input.value = flag
+        const senses = getSetting(constants.SETTING.KEY)
+        const outerElement = html.querySelector('fieldset.card')
+        let lastElement = null
+
+        for (const [key, value] of Object.entries(senses)) {
+            const existingElement = html.querySelector(`input[name$='${key}']`)?.closest('.form-group')
+            if (existingElement) {
+                if (!value.visible) {
+                    existingElement.remove()
+                } else {
+                    if (lastElement) {
+                        lastElement.insertAdjacentElement('afterend', existingElement)
+                    }
+                    lastElement = existingElement
+                }
+            } else {
+                if (value.visible && !systemSenses.includes(key)) {
+                    const data = { label: value.label, inputName: `flags.custom-dnd5e.${key}`, inputValue: getFlag(actor, key) }
+                    const template = await renderTemplate(constants.TEMPLATE.CONFIG_FORM_GROUP, data)
+
+                    if (lastElement) {
+                        lastElement.insertAdjacentHTML('afterend', template)
+                    } else {
+                        outerElement.insertAdjacentHTML('afterbegin', template)
+                    }
+
+                    const currentElement = html.querySelector(`input[name$='${key}']`)?.closest('.form-group')
+                    if (currentElement) {
+                        lastElement = currentElement
+                    }
                 }
             }
-        })
+        }
     })
 
     /**
@@ -69,7 +95,7 @@ function registerHooks () {
 
         if (!sheetType) return
 
-        const senses = getSetting(CONSTANTS.SENSES.SETTING.KEY)
+        const senses = getSetting(constants.SETTING.KEY)
         Object.entries(senses).forEach(([key, value]) => {
             const flag = getFlag(app.document, key)
             if (flag) {

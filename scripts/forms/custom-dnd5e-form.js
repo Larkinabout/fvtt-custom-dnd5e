@@ -13,6 +13,7 @@ export class CustomDnd5eForm extends HandlebarsApplicationMixin(ApplicationV2) {
         super(options)
         this.nestable = false
         this.nestType = 'children'
+        this.includeConfig = true
     }
 
     static DEFAULT_OPTIONS = {
@@ -419,7 +420,9 @@ export class CustomDnd5eForm extends HandlebarsApplicationMixin(ApplicationV2) {
     async handleSubmit (processedFormData, settingKey, setConfig, requiresReload = false) {
         try {
             await setSetting(settingKey, processedFormData)
-            setConfig(processedFormData)
+            if (setConfig) {
+                setConfig(processedFormData)
+            }
 
             if (requiresReload) {
                 SettingsConfig.reloadConfirm()

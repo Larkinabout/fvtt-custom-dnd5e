@@ -48,7 +48,7 @@ export class ConfigForm extends CustomDnd5eForm {
     async _prepareContext () {
         this.config = foundry.utils.deepClone(CONFIG.DND5E[this.type])
         this.setting = getSetting(this.settingKey)
-        const data = foundry.utils.mergeObject(this.config, this.setting)
+        const data = (this.includeConfig) ? foundry.utils.mergeObject(this.config, this.setting) : this.setting
 
         const labelise = (data) => {
             Object.entries(data).forEach(([key, value]) => {
@@ -477,10 +477,12 @@ export class SensesForm extends ConfigForm {
         super()
         this.requiresReload = false
         this.settingKey = CONSTANTS.SENSES.SETTING.KEY
-        this.setConfig = setSenses
+        // this.setConfig = setSenses // Temporarily removed until custom senses is supported in the dnd5e system
+        this.setConfig = null
         this.type = 'senses'
         this.headerButton = JOURNAL_HELP_BUTTON
         this.headerButton.uuid = CONSTANTS.SENSES.UUID
+        this.includeConfig = false
     }
 
     static DEFAULT_OPTIONS = {

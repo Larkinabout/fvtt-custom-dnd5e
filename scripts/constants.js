@@ -552,6 +552,9 @@ export const CONSTANTS = {
         SETTING: {
             KEY: 'senses'
         },
+        TEMPLATE: {
+            CONFIG_FORM_GROUP: 'modules/custom-dnd5e/templates/movement-senses-config-form-group.hbs'
+        },
         UUID: 'Compendium.custom-dnd5e.custom-dnd5e-journals.JournalEntry.B48iqFBddUikMMer.JournalEntryPage.UC0cWoAGMtU6yISR'
     },
     SHEET: {

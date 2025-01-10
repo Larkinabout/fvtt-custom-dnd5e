@@ -137,6 +137,7 @@ Hooks.on('init', async () => {
 
     setAbilities(getSetting(CONSTANTS.ABILITIES.SETTING.KEY))
     setCurrency(getSetting(CONSTANTS.CURRENCY.SETTING.KEY))
+    // setSenses(getSetting(CONSTANTS.SENSES.SETTING.KEY))
     setSkills(getSetting(CONSTANTS.SKILLS.SETTING.KEY))
 
     // Must be registered after abilities and skills are set
@@ -196,7 +197,6 @@ Hooks.on('ready', async () => {
     setItemProperties(getSetting(CONSTANTS.ITEM_PROPERTIES.SETTING.KEY))
     setItemRarity(getSetting(CONSTANTS.ITEM_RARITY.SETTING.KEY))
     setLanguages(getSetting(CONSTANTS.LANGUAGES.SETTING.KEY))
-    setSenses(getSetting(CONSTANTS.SENSES.SETTING.KEY))
     setSpellSchools(getSetting(CONSTANTS.SPELL_SCHOOLS.SETTING.KEY))
     setToolIds(getSetting(CONSTANTS.TOOL_IDS.SETTING.KEY))
     setWeaponIds(getSetting(CONSTANTS.WEAPON_IDS.SETTING.KEY))
