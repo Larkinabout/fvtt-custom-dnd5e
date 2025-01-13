@@ -730,7 +730,7 @@ function updateDeathSaves (source, actor, data, options) {
 
         if (typeof currentValue === 'undefined') return
 
-        if (source === 'regainHp' && removeDeathSaves.regainHp[type] < 3 && foundry.utils.hasProperty(data, 'system.attributes.hp.value')) {
+        if (source === 'regainHp' && !options.isRest && removeDeathSaves.regainHp[type] < 3 && foundry.utils.hasProperty(data, 'system.attributes.hp.value')) {
             const previousHp = options.customDnd5e.hp.value
             const previousDeathValue = options.customDnd5e.death[type]
             const newDeathValue = (previousHp === 0) ? Math.max(previousDeathValue - removeDeathSaves.regainHp[type], 0) : previousDeathValue
@@ -881,11 +881,11 @@ function capturePreviousData (actor, data, options, userId) {
 
     options.customDnd5e = {
         hp: {
-            value: actor.system.attributes.hp.value
+            value: actor.system?.attributes?.hp?.value
         },
         death: {
-            success: actor.system.attributes.death.success,
-            failure: actor.system.attributes.death.failure
+            success: actor.system?.attributes?.death?.success,
+            failure: actor.system?.attributes?.death?.failure
         }
     }
 
