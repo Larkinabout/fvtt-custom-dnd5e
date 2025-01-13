@@ -2,6 +2,7 @@ import { CONSTANTS, SHEET_TYPE } from './constants.js'
 import {
     c5eLoadTemplates,
     Logger,
+    getDefaultSetting,
     getSetting,
     registerMenu,
     registerSetting,
@@ -333,7 +334,10 @@ function registerHooks () {
     Hooks.on('dnd5e.rollAbilityTest', (actor, roll, ability) => { awardInspiration('rollAbilityTest', actor, roll) })
     Hooks.on('dnd5e.rollAttack', (item, roll, ability) => { awardInspiration('rollAttack', item, roll) })
     Hooks.on('dnd5e.rollSkill', (actor, roll, ability) => { awardInspiration('rollSkill', actor, roll) })
-    Hooks.on('preUpdateActor', capturePreviousHp)
+    Hooks.on('preUpdateActor', (actor, data, options, userId) => {
+        capturePreviousData(actor, data, options, userId)
+        updateDeathSaves('regainHp', actor, data, options)
+    })
     Hooks.on('updateActor', (actor, data, options, userId) => {
         if (!game.user.isGM && !game.user.id !== userId) return
         if (data?.flags?.['custom-dnd5e']) return
@@ -347,7 +351,6 @@ function registerHooks () {
                 updateMassiveDamage(actor, data, options)
                 recalculateHealing(actor, data, options)
                 updateUnconscious(actor, data)
-                updateDeathSaves('regainHp', actor, data, options)
             }
         }
     })
@@ -571,7 +574,7 @@ function recalculateHealing (actor, data, options) {
 
     if (typeof currentHp === 'undefined') return
 
-    const previousHp = options.previousHp
+    const previousHp = options.customDnd5e.hp.value
 
     if (previousHp < 0 && currentHp > previousHp) {
         const diff = currentHp - previousHp
@@ -718,6 +721,7 @@ function updateDeathSaves (source, actor, data, options) {
     if (actor.type !== 'character') return
 
     const removeDeathSaves = getSetting(CONSTANTS.DEATH_SAVES.SETTING.REMOVE_DEATH_SAVES.KEY)
+    const defaultRemoveDeathSaves = getDefaultSetting(CONSTANTS.DEATH_SAVES.SETTING.REMOVE_DEATH_SAVES.KEY)
 
     Logger.debug('Updating Death Saves...')
 
@@ -727,16 +731,18 @@ function updateDeathSaves (source, actor, data, options) {
         if (typeof currentValue === 'undefined') return
 
         if (source === 'regainHp' && removeDeathSaves.regainHp[type] < 3 && foundry.utils.hasProperty(data, 'system.attributes.hp.value')) {
-            const previousHp = options.previousHp
-            const newValue = (previousHp === 0) ? Math.max(currentValue - removeDeathSaves.regainHp[type], 0) : currentValue
-            foundry.utils.setProperty(data, `system.attributes.death.${type}`, newValue)
+            const previousHp = options.customDnd5e.hp.value
+            const previousDeathValue = options.customDnd5e.death[type]
+            const newDeathValue = (previousHp === 0) ? Math.max(previousDeathValue - removeDeathSaves.regainHp[type], 0) : previousDeathValue
+            foundry.utils.setProperty(data, `system.attributes.death.${type}`, newDeathValue)
         } else if (source === 'rest') {
             const restType = (data?.longRest) ? 'longRest' : 'shortRest'
 
-            if (removeDeathSaves[restType][type] === 0) return
-
-            const newValue = Math.max(currentValue - removeDeathSaves[restType][type], 0)
-            foundry.utils.setProperty(data.updateData, `system.attributes.death.${type}`, newValue)
+            if (removeDeathSaves[restType][type] && removeDeathSaves[restType][type] !== defaultRemoveDeathSaves[restType][type]) {
+                const currentDeathValue = actor.system.attributes.death[type]
+                const newDeathValue = Math.max(currentDeathValue - removeDeathSaves[restType][type], 0)
+                data.updateData[`system.attributes.death.${type}`] = newDeathValue
+            }
         }
     }
 
@@ -842,7 +848,7 @@ function updateMassiveDamage (actor, data, options) {
 
     Logger.debug('Updating Massive Damage...')
 
-    const previousHp = options.previousHp
+    const previousHp = options.customDnd5e.hp.value
     const currentHp = data?.system?.attributes?.hp?.value
 
     if (previousHp <= currentHp) return
@@ -862,23 +868,28 @@ function updateMassiveDamage (actor, data, options) {
 }
 
 /**
- * Capture previous HP
+ * Capture previous data
  * @param {object} actor   The actor
  * @param {object} data    The data
  * @param {object} options The options
  * @param {string} userId  The user id
  */
-function capturePreviousHp (actor, data, options, userId) {
+function capturePreviousData (actor, data, options, userId) {
     if (game.user.id !== userId || !actor.isOwner) return
 
-    const currentHp = data?.system?.attributes?.hp?.value
-    if (currentHp === undefined) return
+    Logger.debug('Capturing previous data...')
 
-    Logger.debug('Capturing previous HP...')
+    options.customDnd5e = {
+        hp: {
+            value: actor.system.attributes.hp.value
+        },
+        death: {
+            success: actor.system.attributes.death.success,
+            failure: actor.system.attributes.death.failure
+        }
+    }
 
-    options.previousHp = actor.system.attributes.hp.value
-
-    Logger.debug('Previous HP captured', { previousHp: actor.system.attributes.hp.value })
+    Logger.debug('Previous data captured', { previousData: options.customDnd5e })
 }
 
 /**

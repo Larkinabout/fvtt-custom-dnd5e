@@ -180,6 +180,21 @@ export function getSetting (key, defaultValue = null) {
 }
 
 /**
+* Get default setting value
+* @public
+* @param {string} key               The setting key
+* @returns {*}                      The default setting value
+*/
+export function getDefaultSetting (key) {
+    try {
+        const defaultValue = game.settings.settings.get(`${MODULE.ID}.${key}`)?.default
+        return defaultValue
+    } catch {
+        Logger.debug(`Default setting '${key}' not found`)
+    }
+}
+
+/**
 * Get dnd5e setting
 * @public
 * @param {string} key               The setting key
