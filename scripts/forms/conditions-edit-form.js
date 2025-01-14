@@ -87,6 +87,11 @@ export class ConditionsEditForm extends CustomDnd5eForm {
         const oldKey = this.key
         const newKey = formData.object[`${this.key}.key`]
 
+        if (!newKey.match(/^[0-9a-zA-Z]+$/)) {
+            Logger.error(`Key '${newKey}' must only contain alphanumeric characters`, true)
+            return
+        }
+
         if (oldKey !== newKey) {
             if (this.setting[newKey]) {
                 Logger.error(`Key '${newKey}' already exists`, true)
