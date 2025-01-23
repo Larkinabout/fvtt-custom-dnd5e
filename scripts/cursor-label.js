@@ -1,5 +1,5 @@
 import { CONSTANTS } from './constants.js'
-import { getSetting, registerSetting } from './utils.js'
+import { Logger, getSetting, registerSetting } from './utils.js'
 
 const constants = CONSTANTS.SHOW_PRESSED_KEYS
 
@@ -35,8 +35,10 @@ export function registerSettings () {
 export function registerHooks () {
     if (getSetting(constants.SETTING.KEY)) {
         Hooks.on('ready', initializeCursorLabel)
-        Hooks.on('renderActorSheet', attachSheetPointerListeners)
-        Hooks.on('renderActorSheetV2', attachSheetPointerListeners)
+        Hooks.on('renderActorSheet', attachAppListeners)
+        Hooks.on('renderActorSheetV2', attachAppListeners)
+        Hooks.on('renderCoreHUD', attachAppListeners)
+        Hooks.on('renderTokenActionHud', attachAppListeners)
     }
 }
 
@@ -87,8 +89,8 @@ function attachCursorLabelListeners () {
     const chatLog = document.querySelector('#chat-log')
     chatLog.addEventListener('pointermove', handleCursorMove)
     chatLog.addEventListener('pointermove', updateCursorLabelPosition)
-    window.addEventListener('keydown', updateCursorLabelVisibility, { passive: true })
-    window.addEventListener('keyup', updateCursorLabelVisibility, { passive: true })
+    document.addEventListener('keydown', updateCursorLabelVisibility, { passive: true, capture: true })
+    document.addEventListener('keyup', updateCursorLabelVisibility, { passive: true, capture: true })
 }
 
 /**
@@ -97,7 +99,7 @@ function attachCursorLabelListeners () {
  * @param {HTMLElement} html The actor sheet HTML element.
  * @param {object} data Actor sheet data.
  */
-function attachSheetPointerListeners (app, html, data) {
+function attachAppListeners (app, html, data) {
     if (html.find) html = html[0]
     html.addEventListener('pointermove', handleCursorMove)
     html.addEventListener('pointermove', updateCursorLabelPosition)
@@ -122,11 +124,31 @@ function handleCursorMove (event) {
  */
 function getDnd5eKeysPressed (event) {
     return {
-        normal: dnd5e.utils.areKeysPressed(event, 'skipDialogNormal'),
-        advantage: dnd5e.utils.areKeysPressed(event, 'skipDialogAdvantage'),
-        disadvantage: dnd5e.utils.areKeysPressed(event, 'skipDialogDisadvantage')
+        normal: areKeysPressed(event, 'skipDialogNormal'),
+        advantage: areKeysPressed(event, 'skipDialogAdvantage'),
+        disadvantage: areKeysPressed(event, 'skipDialogDisadvantage')
     }
 };
+
+function areKeysPressed (event, action) {
+    if ( !event ) return false;
+    const activeModifiers = {};
+    const addModifiers = (key, pressed) => {
+        activeModifiers[key] = pressed;
+        KeyboardManager.MODIFIER_CODES[key].forEach(n => activeModifiers[n] = pressed);
+    };
+    addModifiers(KeyboardManager.MODIFIER_KEYS.CONTROL, event.ctrlKey || event.metaKey);
+    addModifiers(KeyboardManager.MODIFIER_KEYS.SHIFT, event.shiftKey);
+    addModifiers(KeyboardManager.MODIFIER_KEYS.ALT, event.altKey);
+    const isPressed = game.keybindings.get("dnd5e", action).some(b => {
+        if ( !(event.type === 'keyup' && b.key === event.code) && game.keyboard.downKeys.has(b.key) && b.modifiers.every(m => activeModifiers[m]) ) return true;
+        if ( b.modifiers.length ) return false;
+        return activeModifiers[b.key];
+    });
+    const downKeys = [...game.keyboard.downKeys]
+    Logger.debug(`Getting key pressed for ${action}`, { event, downKeys, isPressed })
+    return isPressed
+}
 
 /**
  * Find a valid button element for D&D 5e actions.
@@ -139,7 +161,9 @@ function getValidButton (element) {
         element.dataset?.action === 'rollRequest' ||
         element.dataset?.action === 'use' ||
         element.classList.contains('rollable') ||
-        element.classList.contains('item-use-button') // Tidy5eCharacterSheet
+        element.classList.contains('item-use-button') || // Tidy5eCharacterSheet
+        element.classList.contains('item-button') || // Argon Combat HUD
+        element.dataset?.action === 'clickAction' // Token Action HUD
     ) {
         return element
     }
@@ -147,7 +171,9 @@ function getValidButton (element) {
         element.closest('[data-action="rollAttack"]') ||
         element.closest('[data-action="rollRequest"]') ||
         element.closest('.rollable') ||
-        element.closest('.item-use-button') // Tidy5eCharacterSheet
+        element.closest('.item-use-button') || // Tidy5eCharacterSheet
+        element.closest('.item-button') || // Argon Combat HUD
+        element.closest('[data-action="clickAction"]') // Token Action HUD
 }
 
 function updateCursorLabelVisibility (event) {
