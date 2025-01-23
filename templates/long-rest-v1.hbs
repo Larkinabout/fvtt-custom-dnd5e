@@ -1,0 +1,37 @@
+<form id="long-rest" class="dialog-content" onsubmit="event.preventDefault();">
+    {{#if groupId}}<input name="groupId" type="hidden" value="{{groupId}}">{{/if}}
+
+    <p>
+        {{#if isGroup}}{{ localize "DND5E.LongRestHintGroup" }}
+        {{else}}{{ localize "DND5E.LongRestHint" }}{{/if}}
+    </p>
+
+    {{#if promptNewDay}}
+    <div class="form-group">
+        <label>{{ localize "DND5E.NewDay" }}</label>
+        <input type="checkbox" name="newDay" {{checked newDay}}/>
+        <p class="hint">{{ localize "DND5E.NewDayHint" }}</p>
+    </div>
+    {{/if}}
+
+    <div class="form-group">
+        <label>{{localize "CUSTOM_DND5E.spendCampSupplies.label"}}</label>
+        <input type="checkbox" id="custom-dnd5e-spend-camp-supplies" name="spendCampSupplies" {{checked campSupplies.spend}}>
+    </div>
+
+    <div class="custom-dnd5e-camp-supplies" data-quantity="{{campSupplies.quantity}}" data-required="{{campSupplies.required}}">
+        <img title="{{localize "CUSTOM_DND5E.campSupplies"}}" alt="{{localize "CUSTOM_DND5E.campSupplies"}}" src="modules/custom-dnd5e/media/icons/camp-supplies.webp">
+        <p {{#if (lt campSupplies.quantity campSupplies.required)}}class="custom-dnd5e-failure"{{/if}}>{{localize "CUSTOM_DND5E.available" quantity=campSupplies.quantity}}</p>
+    </div>
+
+    <div class="dialog-buttons">
+        {{#each buttons as |button id|}}
+        <button id="custom-dnd5e-{{id}}" class="dialog-button" data-button="{{id}}" {{#if button.disabled}}disabled{{/if}}>
+            {{{button.icon}}}
+            {{{button.label}}}
+        </button>
+        {{/each}}
+    </div>
+</form>
+
+

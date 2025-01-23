@@ -24,7 +24,7 @@
 }
 
 .custom-dnd5e-camp-supplies > p.custom-dnd5e-failure {
-    color: var(--dnd5e-color-failure);
+    color: var(--color-level-error);
 }
 
 /*

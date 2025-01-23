@@ -517,7 +517,8 @@ export const CONSTANTS = {
             }
         },
         TEMPLATE: {
-            LONG_REST: 'modules/custom-dnd5e/templates/long-rest.hbs'
+            LONG_REST: 'modules/custom-dnd5e/templates/long-rest.hbs',
+            LONG_REST_V1: 'modules/custom-dnd5e/templates/long-rest-v1.hbs'
         },
         UUID: 'Compendium.custom-dnd5e.custom-dnd5e-journals.JournalEntry.ngr8w6WBycK59brj.JournalEntryPage.lR4mGZPNE02Lbe6t'
     },
