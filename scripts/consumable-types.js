@@ -58,7 +58,7 @@ export function setConfig (data = null) {
                 key,
                 data[key].subtypes
                     ? { label: game.i18n.localize(data[key].label), subtypes: buildConfig(Object.keys(data[key].subtypes), data[key].subtypes) }
-                    : game.i18n.localize(data[key]?.label || data[key])
+                    : { label: game.i18n.localize(data[key]?.label || data[key]) }
             ])
     )
 
