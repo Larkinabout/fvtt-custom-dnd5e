@@ -58,7 +58,7 @@ function registerHooks () {
         for (const [key, value] of Object.entries(senses)) {
             const existingElement = html.querySelector(`input[name$='${key}']`)?.closest('.form-group')
             if (existingElement) {
-                if (!value.visible) {
+                if (value.visible === 'false') {
                     existingElement.remove()
                 } else {
                     if (lastElement) {
@@ -67,7 +67,7 @@ function registerHooks () {
                     lastElement = existingElement
                 }
             } else {
-                if (value.visible && !systemSenses.includes(key)) {
+                if (value.visible && value.visible !== undefined && !systemSenses.includes(key)) {
                     const data = { label: value.label, inputName: `flags.custom-dnd5e.${key}`, inputValue: getFlag(actor, key) }
                     const template = await renderTemplate(constants.TEMPLATE.CONFIG_FORM_GROUP, data)
 
