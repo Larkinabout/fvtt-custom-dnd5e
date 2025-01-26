@@ -46,10 +46,7 @@ function registerSettings () {
                 initiative: { die: '1d20', rollMode: 'publicroll' },
                 savingThrow: { die: '1d20', rollMode: 'publicroll' },
                 skill: { die: '1d20', rollMode: 'publicroll' },
-                tool: { die: '1d20', rollMode: 'publicroll' },
-                weapon_type: {
-                    
-                }
+                tool: { die: '1d20', rollMode: 'publicroll' }
             }
         }
     )
