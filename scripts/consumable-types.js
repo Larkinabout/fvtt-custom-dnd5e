@@ -52,13 +52,16 @@ export function setConfig (data = null) {
         return
     }
 
-    const buildConfig = (keys, data) => Object.fromEntries(
+    const buildConfig = (keys, data, isSubtype = false) => Object.fromEntries(
         keys.filter((key) => data[key].visible || data[key].visible === undefined)
             .map((key) => [
                 key,
-                data[key].subtypes
-                    ? { label: game.i18n.localize(data[key].label), subtypes: buildConfig(Object.keys(data[key].subtypes), data[key].subtypes) }
-                    : { label: game.i18n.localize(data[key]?.label || data[key]) }
+                isSubtype
+                    ? game.i18n.localize(data[key]?.label || data[key])
+                    : { 
+                        label: game.i18n.localize(data[key].label),
+                        ...(data[key].subtypes !== undefined && { subtypes: buildConfig(Object.keys(data[key].subtypes), data[key].subtypes, true) })
+                    }
             ])
     )
 
