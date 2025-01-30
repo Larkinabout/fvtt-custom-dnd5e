@@ -25,6 +25,7 @@ const listClassSelector = `.${listClass}`
 export class ConfigForm extends CustomDnd5eForm {
     constructor (options = {}) {
         super(options)
+        this.label = 'CUSTOM_DND5E.label'
     }
 
     static DEFAULT_OPTIONS = {
@@ -64,7 +65,7 @@ export class ConfigForm extends CustomDnd5eForm {
 
         labelise(data)
 
-        const context = { items: data }
+        const context = { label: this.label, items: data }
         const selects = this._getSelects()
         if (selects) context.selects = selects
 
@@ -292,6 +293,7 @@ export class ArmorIdsForm extends ConfigForm {
         this.type = 'armorIds'
         this.headerButton = JOURNAL_HELP_BUTTON
         this.headerButton.uuid = CONSTANTS.ARMOR_IDS.UUID
+        this.label = 'CUSTOM_DND5E.id'
     }
 
     static DEFAULT_OPTIONS = {
@@ -579,6 +581,7 @@ export class ToolIdsForm extends ConfigForm {
         this.type = 'toolIds'
         this.headerButton = JOURNAL_HELP_BUTTON
         this.headerButton.uuid = CONSTANTS.TOOL_IDS.UUID
+        this.label = 'CUSTOM_DND5E.id'
     }
 
     static DEFAULT_OPTIONS = {
@@ -609,6 +612,7 @@ export class WeaponIdsForm extends ConfigForm {
         this.type = 'weaponIds'
         this.headerButton = JOURNAL_HELP_BUTTON
         this.headerButton.uuid = CONSTANTS.WEAPON_IDS.UUID
+        this.label = 'CUSTOM_DND5E.id'
     }
 
     static DEFAULT_OPTIONS = {

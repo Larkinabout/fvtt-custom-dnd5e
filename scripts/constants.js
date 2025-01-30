@@ -94,8 +94,8 @@ export const CONSTANTS = {
             KEY: 'armor-ids'
         },
         TEMPLATE: {
-            FORM: 'modules/custom-dnd5e/templates/uuid-form.hbs',
-            LIST: 'modules/custom-dnd5e/templates/uuid-list.hbs'
+            FORM: 'modules/custom-dnd5e/templates/config-form.hbs',
+            LIST: 'modules/custom-dnd5e/templates/config-list.hbs'
         },
         UUID: 'Compendium.custom-dnd5e.custom-dnd5e-journals.JournalEntry.B48iqFBddUikMMer.JournalEntryPage.ehZqnZslXx3cknv9'
     },
@@ -661,8 +661,8 @@ export const CONSTANTS = {
             KEY: 'tool-ids'
         },
         TEMPLATE: {
-            FORM: 'modules/custom-dnd5e/templates/uuid-form.hbs',
-            LIST: 'modules/custom-dnd5e/templates/uuid-list.hbs'
+            FORM: 'modules/custom-dnd5e/templates/config-form.hbs',
+            LIST: 'modules/custom-dnd5e/templates/config-list.hbs'
         },
         UUID: 'Compendium.custom-dnd5e.custom-dnd5e-journals.JournalEntry.B48iqFBddUikMMer.JournalEntryPage.mBgCguO7mTNQuPtz'
     },
@@ -675,8 +675,8 @@ export const CONSTANTS = {
     },
     UUID: {
         TEMPLATE: {
-            FORM: 'modules/custom-dnd5e/templates/uuid-form.hbs',
-            LIST: 'modules/custom-dnd5e/templates/uuid-list.hbs'
+            FORM: 'modules/custom-dnd5e/templates/config-form.hbs',
+            LIST: 'modules/custom-dnd5e/templates/config-list.hbs'
         }
     },
     WEAPON_IDS: {
@@ -691,8 +691,8 @@ export const CONSTANTS = {
             KEY: 'weapon-ids'
         },
         TEMPLATE: {
-            FORM: 'modules/custom-dnd5e/templates/uuid-form.hbs',
-            LIST: 'modules/custom-dnd5e/templates/uuid-list.hbs'
+            FORM: 'modules/custom-dnd5e/templates/config-form.hbs',
+            LIST: 'modules/custom-dnd5e/templates/config-list.hbs'
         },
         UUID: 'Compendium.custom-dnd5e.custom-dnd5e-journals.JournalEntry.B48iqFBddUikMMer.JournalEntryPage.CeUiNZoH8giNsqNR'
     },

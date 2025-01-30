@@ -47,6 +47,7 @@
     "CUSTOM_DND5E.hitDie": "Hit Die",
     "CUSTOM_DND5E.hitPoints": "Hit Points",
     "CUSTOM_DND5E.icon": "Icon",
+    "CUSTOM_DND5E.id": "ID",
     "CUSTOM_DND5E.importData": "Import Data",
     "CUSTOM_DND5E.includeOnHud": "Include on HUD",
     "CUSTOM_DND5E.includeOnSheet": "Include on Sheet",

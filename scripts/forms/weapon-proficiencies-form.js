@@ -43,7 +43,7 @@ export class WeaponProficienciesForm extends ConfigForm {
 
         labelise(this.setting)
 
-        return { items: this.setting }
+        return { label: this.label, items: this.setting }
     }
 
     static async reset () {
