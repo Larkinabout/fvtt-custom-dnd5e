@@ -141,6 +141,32 @@ export class ConfigForm extends CustomDnd5eForm {
     }
 }
 
+
+export class IdForm extends ConfigForm {
+    constructor () {
+        super()
+        this.label = 'CUSTOM_DND5E.id'
+    }
+
+    validateFormData(formData) {
+        let isValid = super.validateFormData(formData);
+        
+        if (!isValid) return false;
+
+        Object.entries(formData.object)
+            .filter(([key, _]) => key.split('.').slice(1, 2).pop() === 'label')
+            .forEach(([key, value]) => {
+                if (!value.match(/^[0-9a-zA-Z]+$/) || value.length !== 16) {
+                    const keyPart = key.split('.')[0]
+                    Logger.error(`ID '${value}' for Key '${keyPart}' must be a 16-character alphanumeric ID.`, true)
+                    isValid = false
+                }
+        })
+
+        return isValid;
+    }
+}
+
 export class AbilitiesForm extends ConfigForm {
     constructor () {
         super()
@@ -284,7 +310,7 @@ export class ArmorCalculationsForm extends ConfigForm {
     }
 }
 
-export class ArmorIdsForm extends ConfigForm {
+export class ArmorIdsForm extends IdForm {
     constructor () {
         super()
         this.requiresReload = true
@@ -293,7 +319,6 @@ export class ArmorIdsForm extends ConfigForm {
         this.type = 'armorIds'
         this.headerButton = JOURNAL_HELP_BUTTON
         this.headerButton.uuid = CONSTANTS.ARMOR_IDS.UUID
-        this.label = 'CUSTOM_DND5E.id'
     }
 
     static DEFAULT_OPTIONS = {
@@ -572,7 +597,7 @@ export class SpellSchoolsForm extends ConfigForm {
     }
 }
 
-export class ToolIdsForm extends ConfigForm {
+export class ToolIdsForm extends IdForm {
     constructor () {
         super()
         this.requiresReload = true
@@ -581,7 +606,6 @@ export class ToolIdsForm extends ConfigForm {
         this.type = 'toolIds'
         this.headerButton = JOURNAL_HELP_BUTTON
         this.headerButton.uuid = CONSTANTS.TOOL_IDS.UUID
-        this.label = 'CUSTOM_DND5E.id'
     }
 
     static DEFAULT_OPTIONS = {
@@ -603,7 +627,7 @@ export class ToolIdsForm extends ConfigForm {
     }
 }
 
-export class WeaponIdsForm extends ConfigForm {
+export class WeaponIdsForm extends IdForm {
     constructor () {
         super()
         this.requiresReload = true
@@ -612,7 +636,6 @@ export class WeaponIdsForm extends ConfigForm {
         this.type = 'weaponIds'
         this.headerButton = JOURNAL_HELP_BUTTON
         this.headerButton.uuid = CONSTANTS.WEAPON_IDS.UUID
-        this.label = 'CUSTOM_DND5E.id'
     }
 
     static DEFAULT_OPTIONS = {
