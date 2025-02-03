@@ -145,25 +145,7 @@ export class ConfigForm extends CustomDnd5eForm {
 export class IdForm extends ConfigForm {
     constructor () {
         super()
-        this.label = 'CUSTOM_DND5E.id'
-    }
-
-    validateFormData(formData) {
-        let isValid = super.validateFormData(formData);
-        
-        if (!isValid) return false;
-
-        Object.entries(formData.object)
-            .filter(([key, _]) => key.split('.').slice(1, 2).pop() === 'label')
-            .forEach(([key, value]) => {
-                if (!value.match(/^[0-9a-zA-Z]+$/) || value.length !== 16) {
-                    const keyPart = key.split('.')[0]
-                    Logger.error(`ID '${value}' for Key '${keyPart}' must be a 16-character alphanumeric ID.`, true)
-                    isValid = false
-                }
-        })
-
-        return isValid;
+        this.label = 'CUSTOM_DND5E.uuid'
     }
 }
 
