@@ -424,6 +424,8 @@
     "CUSTOM_DND5E.message.instantDeath": "<p>{name} suffered Instant Death.</p>",
     "CUSTOM_DND5E.message.massiveDamage": "{name} suffered Massive Damage.",
     
+    "CUSTOM_DND5E.setting.chatCommands.name": "Chat Commands",
+    "CUSTOM_DND5E.setting.chatCommands.hint": "Enable chat commands",
     "CUSTOM_DND5E.setting.maxAbilityScore.name": "Max Ability Score",
     "CUSTOM_DND5E.setting.maxLevel.name": "Max Level",
     "CUSTOM_DND5E.setting.radialStatusEffects.name": "Radial Status Effects",

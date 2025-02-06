@@ -9,7 +9,6 @@ A Foundry VTT module to customise the D&D 5e system.
 # House Rules
 For help and advice on the house rules, either click the info buttons in the Configure House Rules window or open the House Rules journal within the Custom D&D 5e compendium.
 
-
 <details>
     <summary>See Image</summary>
 
@@ -216,6 +215,17 @@ Customize the base die and roll mode for Ability Checks, Attack Rolls, Concentra
 ![Custom D&D 5e Configure Sheet](./.github/readme/custom-dnd5e-configure-sheet.png)
 
 </details>
+
+## Chat Commands
+Enable additonal chat commands to roll an attack, roll damage or request checks and saving throws.
+
+<details>
+    <summary>See Video</summary>
+
+![Custom D&D 5e Chat Commanfs](./.github/readme/custom-dnd5e-chat-commands.gif)
+
+</details>
+
 
 ## Show Pressed Keys
 Display an icon near the cursor when the Skip Dialog, Advantage or Disadvantage keys are pressed.
