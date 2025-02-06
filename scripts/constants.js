@@ -135,6 +135,13 @@ export const CONSTANTS = {
         CONDITION_UUID: 'Compendium.custom-dnd5e.custom-dnd5e-journals.JournalEntry.ngr8w6WBycK59brj.JournalEntryPage.sV0ZCKxwh4n4ZU1P',
         UUID: 'Compendium.custom-dnd5e.custom-dnd5e-journals.JournalEntry.ngr8w6WBycK59brj.JournalEntryPage.P9uilIbvjoLg1l1l'
     },
+    CHAT_COMMANDS: {
+        SETTING: {
+            KEY: 'chat-commands',
+            NAME: 'CUSTOM_DND5E.setting.chatCommands.name',
+            HINT: 'CUSTOM_DND5E.setting.chatCommands.hint'
+        }
+    },
     CONDITION_TYPES: {
         SETTING: {
             KEY: 'condition-types'

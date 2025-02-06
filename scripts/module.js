@@ -8,6 +8,7 @@ import { register as registerArmorCalculations, setConfig as setArmorCalculation
 import { register as registerArmorIds, setConfig as setArmorIds } from './armor-ids.js'
 import { register as registerArmorProficiencies, setConfig as setArmorProficiencies } from './armor-proficiencies.js'
 import { register as registerCampSupplies } from './camp-supplies.js'
+import { register as registerChatCommands } from './chat-commands.js'
 import { register as registerConditions, setConfig as setConditions } from './conditions.js'
 import { register as registerConsumableTypes, setConfig as setConsumableTypes } from './consumable-types.js'
 import {
@@ -111,6 +112,7 @@ Hooks.on('init', async () => {
     registerArmorIds()
     registerArmorProficiencies()
     registerCampSupplies()
+    registerChatCommands()
     registerConditions()
     registerConsumableTypes()
     registerCounters()
