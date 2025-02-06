@@ -189,6 +189,11 @@ export const CONSTANTS = {
             NAME: 'CUSTOM_DND5E.menu.counters.name'
         },
         SETTING: {
+            COUNTERS: {
+                KEY: 'counters',
+                HINT: 'CUSTOM_DND5E.setting.counters.hint',
+                NAME: 'CUSTOM_DND5E.setting.counters.name'
+            },
             CHARACTER_COUNTERS: {
                 KEY: 'character-counters'
             },

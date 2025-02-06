@@ -426,6 +426,8 @@
     
     "CUSTOM_DND5E.setting.chatCommands.name": "Chat Commands",
     "CUSTOM_DND5E.setting.chatCommands.hint": "Enable chat commands",
+    "CUSTOM_DND5E.setting.counters.name": "Counters",
+    "CUSTOM_DND5E.setting.counters.hint": "Enable counters",
     "CUSTOM_DND5E.setting.maxAbilityScore.name": "Max Ability Score",
     "CUSTOM_DND5E.setting.maxLevel.name": "Max Level",
     "CUSTOM_DND5E.setting.radialStatusEffects.name": "Radial Status Effects",

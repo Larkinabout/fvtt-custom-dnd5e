@@ -1,4 +1,5 @@
 import { CONSTANTS } from './constants.js'
+import { registerSettings as registerChatCommandsSetting, registerHooks as registerChatCommandsHooks } from './chat-commands.js'
 import { registerSettings as registerCursorLabelSettings, registerHooks as registerCursorLabelHooks } from './cursor-label.js'
 import { getSetting, registerSetting } from './utils.js'
 
@@ -38,6 +39,20 @@ function registerSettings () {
         }
     )
 
+    registerSetting(
+        CONSTANTS.COUNTERS.SETTING.COUNTERS.KEY,
+        {
+            name: game.i18n.localize(CONSTANTS.COUNTERS.SETTING.COUNTERS.NAME),
+            hint: game.i18n.localize(CONSTANTS.COUNTERS.SETTING.COUNTERS.HINT),
+            scope: 'world',
+            config: true,
+            type: Boolean,
+            default: true,
+            requiresReload: true
+        }
+    )
+
+    registerChatCommandsSetting()
     registerCursorLabelSettings()
 
     registerSetting(
@@ -95,6 +110,7 @@ function registerHooks () {
         Hooks.on('updateToken', applyElevationToSelected)
     }
 
+    registerChatCommandsHooks()
     registerCursorLabelHooks()
 }
 

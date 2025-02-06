@@ -15,7 +15,7 @@ export function register () {
 /**
  * Register settings
  */
-function registerSettings () {
+export function registerSettings () {
     registerSetting(
         constants.SETTING.KEY,
         {
@@ -33,7 +33,7 @@ function registerSettings () {
 /**
  * Register hooks
  */
-function registerHooks () {
+export function registerHooks () {
     if (!getSetting(CONSTANTS.CHAT_COMMANDS.SETTING.KEY)) return
 
     Hooks.on('chatMessage', (chatLog, message, options) => {

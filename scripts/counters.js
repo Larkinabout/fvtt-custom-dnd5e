@@ -47,6 +47,8 @@ function registerSettings () {
  * Register hooks
  */
 function registerHooks () {
+    if (!getSetting(constants.SETTING.COUNTERS.KEY)) return
+
     Hooks.on('renderInnerActorSheet', addCounters)
     Hooks.on('renderInnerItemSheet', addCounters)
     Hooks.on('preUpdateActor', handlePreUpdateActor)
