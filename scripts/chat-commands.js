@@ -1,5 +1,4 @@
 import { CONSTANTS } from './constants.js'
-import { setConfig } from './currency.js'
 import { getSetting, registerSetting } from './utils.js'
 
 const constants = CONSTANTS.CHAT_COMMANDS

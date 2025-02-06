@@ -30,8 +30,20 @@ export class RollsForm extends CustomDnd5eForm {
     }
 
     async _prepareContext () {
+        const rolls = getSetting(CONSTANTS.ROLLS.SETTING.ROLLS.KEY)
+        const weaponTypes = {}
+
+        Object.entries(CONFIG.DND5E.weaponTypes).forEach(([key, value]) => {
+            const die = rolls.weaponTypes?.[key]?.die || '1d20'
+            const label = value
+            const rollMode = rolls.weaponTypes?.[key]?.rollMode || 'default'
+            weaponTypes[key] = { die, label, rollMode }
+        })
+    
+        rolls.weaponTypes = weaponTypes
+    
         return {
-            rolls: getSetting(CONSTANTS.ROLLS.SETTING.ROLLS.KEY),
+            rolls,
             selects: {
                 rollMode: {
                     choices: {
@@ -73,14 +85,12 @@ export class RollsForm extends CustomDnd5eForm {
 
         Object.entries(formData.object).forEach(([key, value]) => {
             if (key.startsWith('rolls')) {
-                const property = key.split('.').slice(1, 3).join('.')
-                foundry.utils.setProperty(rolls, property, value)
+                foundry.utils.setProperty(rolls, key, value)
             }
         })
 
-        await Promise.all([
-            setSetting(CONSTANTS.ROLLS.SETTING.ROLLS.KEY, rolls)
-        ])
+        await setSetting(CONSTANTS.ROLLS.SETTING.ROLLS.KEY, {})
+        await setSetting(CONSTANTS.ROLLS.SETTING.ROLLS.KEY, rolls.rolls)
 
         SettingsConfig.reloadConfirm()
     }

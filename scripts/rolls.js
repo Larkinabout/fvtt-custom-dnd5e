@@ -68,7 +68,9 @@ function registerHooks () {
         } else if (hookNames.includes('initiativeDialog')) {
             roll = rolls.initiative
         } else if (hookNames.includes('attack')) {
-            roll = rolls.attack
+            const item = config.subject.item
+            const weaponType = item.system.type.value
+            roll = (rolls.weaponTypes?.[weaponType]?.die && rolls.weaponTypes?.[weaponType]?.die !== '1d20') ? rolls.weaponTypes[weaponType] : rolls.attack
         } else if (hookNames.includes('skill')) {
             roll = rolls.skill
             rollMode = CONFIG.DND5E?.skills[config.skill]?.rollMode
@@ -104,6 +106,10 @@ export function isCustomRoll () {
     const rolls = getSetting(constants.SETTING.ROLLS.KEY)
 
     if (!rolls) return false
+
+    const isCustomWeaponTypeRoll = Object.values(rolls.weaponTypes).some(weaponType => weaponType?.die !== '1d20')
+
+    if (isCustomWeaponTypeRoll) return true
 
     return (rolls.ability?.die && rolls.ability?.die !== '1d20') ||
         (rolls.attack?.die && rolls.attack?.die !== '1d20') ||
