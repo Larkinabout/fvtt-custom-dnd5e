@@ -693,7 +693,7 @@ export const CONSTANTS = {
             FORM: 'modules/custom-dnd5e/templates/config-form.hbs',
             LIST: 'modules/custom-dnd5e/templates/config-list.hbs'
         },
-        UUID: 'Compendium.custom-dnd5e.custom-dnd5e-journals.JournalEntry.B48iqFBddUikMMer.JournalEntryPage.Cy09wdPVi8XrkjJ2'
+        UUID: 'Compendium.custom-dnd5e.custom-dnd5e-journals.JournalEntry.B48iqFBddUikMMer.JournalEntryPage.Ls4Rn45UNhTBagHD'
     },
     UNCONSCIOUS: {
         SETTING: {

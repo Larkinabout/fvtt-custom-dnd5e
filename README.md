@@ -184,7 +184,7 @@ For help and advice on modifying a configuration, either click the info button i
 
 </details>
 
-- Configure abilities, activation costs (dnd5e 4+ only), actor sizes, armor, armor calculations, armor proficiencies, conditions, consumable types, currencies, damage types, encumbrance, item action types (dnd5e 3 only), item activation cost types (dnd5e 3 only), item properties, item rarity, languages, senses, skills, spell schools, tools, weapons, weapon proficiencies, and max level. 
+- Configure abilities, activation costs (dnd5e 4+ only), actor sizes, armor, armor calculations, armor proficiencies, conditions, consumable types, currencies, damage types, encumbrance, item action types (dnd5e 3 only), item activation cost types (dnd5e 3 only), item properties, item rarity, languages, senses, skills, spell schools, tools, tool proficiencies, weapons, weapon proficiencies, max ability score and max level. 
 
 ## Configure Encumbrance
 <details>
