@@ -302,7 +302,9 @@ function registerHooks () {
         if (!minimumValue || minimumValue === 1) return
         const reroll = (getSetting(CONSTANTS.LEVEL_UP.HIT_POINTS.REROLL.ONCE.SETTING.KEY)) ? 'r' : 'rr'
         const value = minimumValue - 1
-        rollData.formula = `1${item.system.hitDice}${reroll}${value}`
+        const hd = item?.system?.hitDice || item?.system?.hd?.denomination
+        if (!hd) return
+        rollData.formula = `1${hd}${reroll}${value}`
     })
 
     Hooks.on('renderHitPointsFlow', (app, html, data) => {
@@ -312,13 +314,13 @@ function registerHooks () {
             const note = (rerollOnce) ? 'CUSTOM_DND5E.dialog.levelUpHitPointsRerollOnce.note' : 'CUSTOM_DND5E.dialog.levelUpHitPointsRerollForever.note'
             const h3 = html[0].querySelector('form h3')
             const p = document.createElement('p')
-            p.classList.add('custom-dnd5e-advice', 'notes')
+            p.classList.add('custom-dnd5e-advice', 'notes', 'hp-note')
             p.textContent = game.i18n.format(note, { minimumValue })
-            h3.appendChild(p)
+            h3.after(p)
         }
 
         if (!getSetting(CONSTANTS.LEVEL_UP.HIT_POINTS.SHOW_TAKE_AVERAGE.SETTING.KEY)) {
-            const averageLabel = html[0].querySelector('.averageLabel')
+            const averageLabel = html[0].querySelector('.averageLabel') ?? html[0].querySelector('.average-label')
             averageLabel && (averageLabel.innerHTML = '')
         }
     })

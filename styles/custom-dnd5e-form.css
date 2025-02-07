@@ -218,11 +218,19 @@ button.custom-dnd5e-list-button:focus {
     color: var(--color-text-light-7);
 }
 
+.theme-light .custom-dnd5e-advice.notes {
+    border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.theme-dark .custom-dnd5e-advice.notes {
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: var(--color-light-2);
+}
+
 .custom-dnd5e-advice.notes {
-    background: rgba(255, 255, 255, 0.6);
     border-radius: 3px;
     font-style: italic;
-    margin: 0;;
+    margin: 0;
     padding: 0.25rem;
     flex: 0 1 100%;
 }
@@ -236,4 +244,8 @@ button.custom-dnd5e-list-button:focus {
     margin: 0;
     margin-bottom: 0.25rem;
     padding: 0.25rem;
+}
+
+.custom-dnd5e-advice.notes.hp-note {
+    margin: 0.25rem 0;
 }
