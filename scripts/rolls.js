@@ -107,7 +107,7 @@ export function isCustomRoll () {
 
     if (!rolls) return false
 
-    const isCustomWeaponTypeRoll = Object.values(rolls.weaponTypes).some(weaponType => weaponType?.die !== '1d20')
+    const isCustomWeaponTypeRoll = Object.values(rolls.weaponTypes ?? {}).some(weaponType => weaponType?.die !== '1d20')
 
     if (isCustomWeaponTypeRoll) return true
 
