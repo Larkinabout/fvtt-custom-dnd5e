@@ -1,14 +1,14 @@
-2025/02/06-20:54:32.285 4744 Recovering log #342
-2025/02/06-20:54:32.295 4744 Delete type=0 #342
-2025/02/06-20:54:32.296 4744 Delete type=3 #341
-2025/02/07-10:29:28.846 95b4 Level-0 table #346: started
-2025/02/07-10:29:28.862 95b4 Level-0 table #346: 267862 bytes OK
-2025/02/07-10:29:28.868 95b4 Delete type=0 #344
-2025/02/07-10:29:28.886 95b4 Manual compaction at level-0 from '!journal!7XzI3Dn8WSQwSiVl' @ 72057594037927935 : 1 .. '!journal.pages!ngr8w6WBycK59brj.sV0ZCKxwh4n4ZU1P' @ 0 : 0; will stop at '!journal.pages!B48iqFBddUikMMer.uFxtCCVz8Ow95cUL' @ 4210 : 1
-2025/02/07-10:29:28.886 95b4 Compacting 1@0 + 1@1 files
-2025/02/07-10:29:28.893 95b4 Generated table #347@0: 41 keys, 32100 bytes
-2025/02/07-10:29:28.893 95b4 Compacted 1@0 + 1@1 files => 32100 bytes
-2025/02/07-10:29:28.897 95b4 compacted to: files[ 0 1 0 0 0 0 0 ]
-2025/02/07-10:29:28.898 95b4 Delete type=2 #340
-2025/02/07-10:29:28.898 95b4 Delete type=2 #346
-2025/02/07-10:29:28.898 95b4 Manual compaction at level-0 from '!journal.pages!B48iqFBddUikMMer.uFxtCCVz8Ow95cUL' @ 4210 : 1 .. '!journal.pages!ngr8w6WBycK59brj.sV0ZCKxwh4n4ZU1P' @ 0 : 0; will stop at (end)
+2025/02/07-10:41:02.860 8a1c Recovering log #345
+2025/02/07-10:41:02.870 8a1c Delete type=0 #345
+2025/02/07-10:41:02.870 8a1c Delete type=3 #343
+2025/02/07-12:12:32.006 d5b4 Level-0 table #351: started
+2025/02/07-12:12:32.009 d5b4 Level-0 table #351: 10762 bytes OK
+2025/02/07-12:12:32.012 d5b4 Delete type=0 #349
+2025/02/07-12:12:32.012 d5b4 Manual compaction at level-0 from '!journal!7XzI3Dn8WSQwSiVl' @ 72057594037927935 : 1 .. '!journal.pages!ngr8w6WBycK59brj.sV0ZCKxwh4n4ZU1P' @ 0 : 0; will stop at '!journal.pages!7XzI3Dn8WSQwSiVl.k2ROCSiSu5Dp28xD' @ 4639 : 1
+2025/02/07-12:12:32.013 d5b4 Compacting 1@0 + 1@1 files
+2025/02/07-12:12:32.020 d5b4 Generated table #352@0: 41 keys, 32217 bytes
+2025/02/07-12:12:32.020 d5b4 Compacted 1@0 + 1@1 files => 32217 bytes
+2025/02/07-12:12:32.022 d5b4 compacted to: files[ 0 1 0 0 0 0 0 ]
+2025/02/07-12:12:32.022 d5b4 Delete type=2 #347
+2025/02/07-12:12:32.023 d5b4 Delete type=2 #351
+2025/02/07-12:12:32.029 d5b4 Manual compaction at level-0 from '!journal.pages!7XzI3Dn8WSQwSiVl.k2ROCSiSu5Dp28xD' @ 4639 : 1 .. '!journal.pages!ngr8w6WBycK59brj.sV0ZCKxwh4n4ZU1P' @ 0 : 0; will stop at (end)

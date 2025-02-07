@@ -217,7 +217,7 @@ Customize the base die and roll mode for Ability Checks, Attack Rolls, Concentra
 </details>
 
 ## Chat Commands
-Enable additonal chat commands to roll an attack, roll damage or request checks and saving throws.
+Enable additonal chat commands to roll an attack, roll damage or request checks and saving throws. For a list of available commands, view the **Chat Commands** journal within the **Custom D&D 5e** compendium.
 
 <details>
     <summary>See Video</summary>
