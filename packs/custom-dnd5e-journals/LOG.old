@@ -1,18 +1,14 @@
-2025/02/03-21:36:10.298 d838 Recovering log #334
-2025/02/03-21:36:10.298 d838 Level-0 table #336: started
-2025/02/03-21:36:10.302 d838 Level-0 table #336: 2355 bytes OK
-2025/02/03-21:36:10.311 d838 Delete type=0 #334
-2025/02/03-21:36:10.311 d838 Delete type=3 #332
-2025/02/06-20:37:40.460 cf28 Level-0 table #339: started
-2025/02/06-20:37:40.464 cf28 Level-0 table #339: 26562 bytes OK
-2025/02/06-20:37:40.464 cf28 Delete type=0 #337
-2025/02/06-20:37:40.473 cf28 Manual compaction at level-0 from '!journal!7XzI3Dn8WSQwSiVl' @ 72057594037927935 : 1 .. '!journal.pages!ngr8w6WBycK59brj.sV0ZCKxwh4n4ZU1P' @ 0 : 0; will stop at '!journal.pages!B48iqFBddUikMMer.uFxtCCVz8Ow95cUL' @ 4078 : 1
-2025/02/06-20:37:40.473 cf28 Compacting 3@0 + 1@1 files
-2025/02/06-20:37:40.478 cf28 Generated table #340@0: 40 keys, 31287 bytes
-2025/02/06-20:37:40.478 cf28 Compacted 3@0 + 1@1 files => 31287 bytes
-2025/02/06-20:37:40.478 cf28 compacted to: files[ 0 1 0 0 0 0 0 ]
-2025/02/06-20:37:40.478 cf28 Delete type=2 #331
-2025/02/06-20:37:40.479 cf28 Delete type=2 #333
-2025/02/06-20:37:40.479 cf28 Delete type=2 #336
-2025/02/06-20:37:40.479 cf28 Delete type=2 #339
-2025/02/06-20:37:40.480 cf28 Manual compaction at level-0 from '!journal.pages!B48iqFBddUikMMer.uFxtCCVz8Ow95cUL' @ 4078 : 1 .. '!journal.pages!ngr8w6WBycK59brj.sV0ZCKxwh4n4ZU1P' @ 0 : 0; will stop at (end)
+2025/02/06-20:54:32.285 4744 Recovering log #342
+2025/02/06-20:54:32.295 4744 Delete type=0 #342
+2025/02/06-20:54:32.296 4744 Delete type=3 #341
+2025/02/07-10:29:28.846 95b4 Level-0 table #346: started
+2025/02/07-10:29:28.862 95b4 Level-0 table #346: 267862 bytes OK
+2025/02/07-10:29:28.868 95b4 Delete type=0 #344
+2025/02/07-10:29:28.886 95b4 Manual compaction at level-0 from '!journal!7XzI3Dn8WSQwSiVl' @ 72057594037927935 : 1 .. '!journal.pages!ngr8w6WBycK59brj.sV0ZCKxwh4n4ZU1P' @ 0 : 0; will stop at '!journal.pages!B48iqFBddUikMMer.uFxtCCVz8Ow95cUL' @ 4210 : 1
+2025/02/07-10:29:28.886 95b4 Compacting 1@0 + 1@1 files
+2025/02/07-10:29:28.893 95b4 Generated table #347@0: 41 keys, 32100 bytes
+2025/02/07-10:29:28.893 95b4 Compacted 1@0 + 1@1 files => 32100 bytes
+2025/02/07-10:29:28.897 95b4 compacted to: files[ 0 1 0 0 0 0 0 ]
+2025/02/07-10:29:28.898 95b4 Delete type=2 #340
+2025/02/07-10:29:28.898 95b4 Delete type=2 #346
+2025/02/07-10:29:28.898 95b4 Manual compaction at level-0 from '!journal.pages!B48iqFBddUikMMer.uFxtCCVz8Ow95cUL' @ 4210 : 1 .. '!journal.pages!ngr8w6WBycK59brj.sV0ZCKxwh4n4ZU1P' @ 0 : 0; will stop at (end)

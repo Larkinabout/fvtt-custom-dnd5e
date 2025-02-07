@@ -307,6 +307,8 @@
 
     "CUSTOM_DND5E.form.toolIds.title": "Configure Tools",
 
+    "CUSTOM_DND5E.form.toolProficiencies.title": "Configure Tool Proficiencies",
+
     "CUSTOM_DND5E.form.weaponIds.title": "Configure Weapons",
 
     "CUSTOM_DND5E.form.weaponProficiencies.title": "Configure Weapon Proficiencies",
@@ -410,6 +412,10 @@
     "CUSTOM_DND5E.menu.toolIds.hint": "Configure Tools",
     "CUSTOM_DND5E.menu.toolIds.label": "Configure Tools",
     "CUSTOM_DND5E.menu.toolIds.name": "Configure Tools",
+
+    "CUSTOM_DND5E.menu.toolProficiencies.hint": "Configure Tool Proficiencies",
+    "CUSTOM_DND5E.menu.toolProficiencies.label": "Configure Tool Proficiencies",
+    "CUSTOM_DND5E.menu.toolProficiencies.name": "Configure Tool Proficiencies",
 
     "CUSTOM_DND5E.menu.weaponIds.hint": "Configure Weapons",
     "CUSTOM_DND5E.menu.weaponIds.label": "Configure Weapons",

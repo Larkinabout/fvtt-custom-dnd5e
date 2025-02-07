@@ -678,6 +678,23 @@ export const CONSTANTS = {
         },
         UUID: 'Compendium.custom-dnd5e.custom-dnd5e-journals.JournalEntry.B48iqFBddUikMMer.JournalEntryPage.mBgCguO7mTNQuPtz'
     },
+    TOOL_PROFICIENCIES: {
+        MENU: {
+            KEY: 'tool-proficiencies-menu',
+            HINT: 'CUSTOM_DND5E.menu.toolProficiencies.hint',
+            ICON: 'fas fa-pen-to-square',
+            LABEL: 'CUSTOM_DND5E.menu.toolProficiencies.label',
+            NAME: 'CUSTOM_DND5E.menu.toolProficiencies.name'
+        },
+        SETTING: {
+            KEY: 'tool-proficiencies'
+        },
+        TEMPLATE: {
+            FORM: 'modules/custom-dnd5e/templates/config-form.hbs',
+            LIST: 'modules/custom-dnd5e/templates/config-list.hbs'
+        },
+        UUID: 'Compendium.custom-dnd5e.custom-dnd5e-journals.JournalEntry.B48iqFBddUikMMer.JournalEntryPage.Cy09wdPVi8XrkjJ2'
+    },
     UNCONSCIOUS: {
         SETTING: {
             APPLY_UNCONSCIOUS: {

@@ -37,10 +37,7 @@ export function registerHooks () {
     if (!getSetting(CONSTANTS.CHAT_COMMANDS.SETTING.KEY)) return
 
     Hooks.on('chatMessage', (chatLog, message, options) => {
-        if (
-            message.match(`^/(attack|a|check|c|concentration|con|damage|d|heal|h|healing|item|save|s|skill|k|tool|t) `) 
-            || message.match(`^/(concentration|con)`)
-        ) {
+        if (message.match(`^/(attack|a|concentration|con|check|c|damage|d|heal|h|healing|item|save|s|skill|k|tool|t)`)) {
             handleChatCommand(message)
             return false
         }
@@ -86,6 +83,8 @@ function parseChatCommand(message) {
 
     const type = shorthands[match.groups.type] || match.groups.type
     const config = parseConfig(match.groups.config)
+
+    
     
     return { type, ...config }
 }
@@ -121,6 +120,8 @@ function parseConfig(match='', { multiple = false }={}) {
  * @returns 
  */
 async function createRollRequest(config) {
+    if (!config.ability && !config.skill & !config.tool) return
+
     const MessageClass = getDocumentClass('ChatMessage')
 
     let buttons
@@ -139,65 +140,50 @@ async function createRollRequest(config) {
 
 /**
  * Create the buttons for a check requested in chat.
- * @param {object} dataset
+ * @param {object} config
  * @returns {object[]}
  */
-function createCheckRequestButtons(dataset) {
-    const skills = dataset.skills
-    const tools = dataset.tools
-    if ( (skills.length + tools.length) <= 1 ) return [createRequestButton(dataset)]
-    const baseDataset = { ...dataset }
-    delete baseDataset.skill
-    delete baseDataset.tool
-    return [
-      ...skills.map(skill => createRequestButton({
-        ability: CONFIG.DND5E.skills[skill].ability, ...baseDataset, format: 'short', skill, type: 'skill'
-      })),
-      ...tools.map(tool => createRequestButton({
-        ability: CONFIG.DND5E.tools[tool]?.ability, ...baseDataset, format: 'short', tool, type: 'tool'
-      }))
-    ]
-  }
+function createCheckRequestButtons(config) {
+  return [createRequestButton(config)]
+}
 
   /**
  * Create the buttons for a save requested in chat.
- * @param {object} dataset
+ * @param {object} config
  * @returns {object[]}
  */
-function createSaveRequestButtons(dataset) {
-    return (dataset.ability?.split('|') ?? [])
-      .map(ability => createRequestButton({ ...dataset, format: 'long', ability }))
+function createSaveRequestButtons(config) {
+    return [createRequestButton({ ...config, format: 'long' })]
 }
 
 /**
  * Create a button for a chat request.
- * @param {object} dataset
+ * @param {object} config
  * @returns {object}
  */
-function createRequestButton(dataset) {
+function createRequestButton(config) {
     return {
-      buttonLabel: dnd5e.enrichers.createRollLabel({ ...dataset, icon: true }),
-      hiddenLabel: dnd5e.enrichers.createRollLabel({ ...dataset, icon: true, hideDC: true }),
-      dataset: { ...dataset, action: 'rollRequest', visibility: 'all' }
+      buttonLabel: dnd5e.enrichers.createRollLabel({ ...config, icon: true }),
+      hiddenLabel: dnd5e.enrichers.createRollLabel({ ...config, icon: true, hideDC: true }),
+      dataset: { ...config, action: 'rollRequest', visibility: 'all' }
     }
 }
 
 function parseRollRequest(config) {
-    config.skills = []
-    config.tools = []
-
     for ( let value of config.values ) {
         const slug = foundry.utils.getType(value) === 'string' ? slugify(value) : value
         if (config.type === 'concentration') config._isConcentration = true
         if ( slug in CONFIG.DND5E.enrichmentLookup.abilities ) config.ability = CONFIG.DND5E.enrichmentLookup.abilities[slug]?.key || slug
-        else if ( slug in CONFIG.DND5E.enrichmentLookup.skills ) config.skills.push(CONFIG.DND5E.enrichmentLookup.skills[slug]?.key || slug)
-        else if ( slug in CONFIG.DND5E.enrichmentLookup.tools ) config.tools.push(CONFIG.DND5E.enrichmentLookup.tools[slug]?.key || slug)
+        else if ( slug in CONFIG.DND5E.enrichmentLookup.skills ) config.skill = CONFIG.DND5E.enrichmentLookup.skills[slug]?.key || slug
+        else if ( slug in CONFIG.DND5E.enrichmentLookup.tools ) config.tool = CONFIG.DND5E.enrichmentLookup.tools[slug]?.key || slug
         else if ( Number.isNumeric(value) ) config.dc = Number(value)
         else config[value] = true
     }
 
-    if (config.skills.length === 1) config.skill = config.skills[0]
-    if (config.tools.length === 1) config.tool = config.tool[0]
+    if (!config.ability) {
+      if (config.skill) config.ability = CONFIG.DND5E.skills[config.skill].ability
+      else if (config.skill) config.ability = CONFIG.DND5E.tools[config.tool].ability
+    }
 
     return config
 }
@@ -214,10 +200,10 @@ function parseAttackDamage(config) {
         else if ( value === 'average' ) config.average = true
         else if ( value === 'extended' ) config.format = 'extended'
         else if ( value === 'temp' ) config.damageTypes.push('temphp')
-        else formulaParts.push(value)
+        else if (value.match(/((\+|\-)*\d+d\d+(\+|\-)*\d*|^(\+|\-)*\d+)/g)) formulaParts.push(value)
     }
     const options = { rollData: {}, _embedDepth: 0 }
-    config.formula = Roll.defaultImplementation.replaceFormulaData(formulaParts.join(' '), options.rollData ?? {})
+    config.formula = formulaParts.length ? Roll.defaultImplementation.replaceFormulaData(formulaParts.join(' '), options.rollData ?? {}) : '+0'
     if ( config._isHealing && !config.damageTypes.length ) damageTypes.push('healing')
     if ( config.formula ) {
       config.formulas.push(config.formula)
