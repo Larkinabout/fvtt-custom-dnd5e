@@ -503,13 +503,13 @@ export class SensesForm extends ConfigForm {
     }
 }
 
-export class SheildIdsForm extends IdForm {
+export class ShieldIdsForm extends IdForm {
     constructor () {
         super()
         this.requiresReload = true
         this.settingKey = CONSTANTS.SHIELD_IDS.SETTING.KEY
         this.setConfig = setShieldIds
-        this.type = 'sheildIds'
+        this.type = 'shieldIds'
         this.headerButton = JOURNAL_HELP_BUTTON
         this.headerButton.uuid = CONSTANTS.SHIELD_IDS.UUID
     }
@@ -517,7 +517,7 @@ export class SheildIdsForm extends IdForm {
     static DEFAULT_OPTIONS = {
         id: `${MODULE.ID}-shield-ids-form`,
         window: {
-            title: 'CUSTOM_DND5E.form.sheildIds.title'
+            title: 'CUSTOM_DND5E.form.shieldIds.title'
         }
     }
 
