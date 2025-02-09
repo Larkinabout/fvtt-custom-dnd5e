@@ -47,8 +47,6 @@ function registerSettings () {
  * Register hooks
  */
 function registerHooks () {
-    if (!getSetting(constants.SETTING.COUNTERS.KEY)) return
-
     Hooks.on('renderInnerActorSheet', addCounters)
     Hooks.on('renderInnerItemSheet', addCounters)
     Hooks.on('preUpdateActor', handlePreUpdateActor)
@@ -63,6 +61,7 @@ function registerHooks () {
  * @param {object} data  The data
  */
 function handlePreUpdateActor (actor, data, options, userId) {
+    if (!getSetting(constants.SETTING.COUNTERS.KEY)) return
     if (actor.type === 'group' || !actor.isOwner) return
     const currentHp = foundry.utils.getProperty(data, 'system.attributes.hp.value')
     const previousHp = actor.system.attributes.hp.value
@@ -76,6 +75,7 @@ function handlePreUpdateActor (actor, data, options, userId) {
  * @param {object} data  The data
  */
 function handleUpdateActor (actor, data, options, userId) {
+    if (!getSetting(constants.SETTING.COUNTERS.KEY)) return
     if (!actor.isOwner) return
     const hp = foundry.utils.getProperty(data, 'system.attributes.hp.value')
     if (hp === 0) processTriggers({ actor, triggerType: 'zeroHp', followUpFlag: 'zeroHpCombatEnd' })
@@ -87,6 +87,7 @@ function handleUpdateActor (actor, data, options, userId) {
  * @param {object} combat The combat
  */
 function handleDeleteCombat (combat) {
+    if (!getSetting(constants.SETTING.COUNTERS.KEY)) return
     combat.combatants.forEach(combatant => {
         const actor = combatant.actor
         if (getFlag(actor, 'zeroHpCombatEnd')) {
@@ -102,6 +103,7 @@ function handleDeleteCombat (combat) {
  * @param {object} data  The data
  */
 function handleRest (actor, data) {
+    if (!getSetting(constants.SETTING.COUNTERS.KEY)) return
     const restType = data.longRest ? 'longRest' : 'shortRest'
     processTriggers({ actor, triggerType: restType })
 }
@@ -228,6 +230,8 @@ function getCounterValue (data, counterKey) {
  * @param {object} data The data
  */
 async function addCounters (app, html, data) {
+    if (!getSetting(constants.SETTING.COUNTERS.KEY)) return
+
     const sheetType = SHEET_TYPE[app.constructor.name]
     if (!sheetType) return
 

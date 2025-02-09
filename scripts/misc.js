@@ -47,8 +47,7 @@ function registerSettings () {
             scope: 'world',
             config: true,
             type: Boolean,
-            default: true,
-            requiresReload: true
+            default: true
         }
     )
 
