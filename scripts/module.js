@@ -43,6 +43,7 @@ import { register as registerMisc, setMaxLevel } from './misc.js'
 import { register as registerRolls } from './rolls.js'
 import { register as registerSenses, setConfig as setSenses } from './senses.js'
 import { register as registerSheet } from './sheet.js'
+import { register as registerShieldIds, setConfig as setShieldIds } from './shield-ids.js'
 import { register as registerSkills, setConfig as setSkills } from './skills.js'
 import { register as registerSpellSchools, setConfig as setSpellSchools } from './spell-schools.js'
 import { register as registerRadialStatusEffects } from './radial-status-effects.js'
@@ -126,6 +127,7 @@ Hooks.on('init', async () => {
     registerRolls()
     registerSenses()
     registerSheet()
+    registerShieldIds()
     registerSkills()
     registerSpellSchools()
     registerToolIds()
@@ -197,6 +199,7 @@ Hooks.on('ready', async () => {
     setItemProperties(getSetting(CONSTANTS.ITEM_PROPERTIES.SETTING.KEY))
     setItemRarity(getSetting(CONSTANTS.ITEM_RARITY.SETTING.KEY))
     setLanguages(getSetting(CONSTANTS.LANGUAGES.SETTING.KEY))
+    setShieldIds(getSetting(CONSTANTS.SHIELD_IDS.SETTING.KEY))
     setSpellSchools(getSetting(CONSTANTS.SPELL_SCHOOLS.SETTING.KEY))
     setToolIds(getSetting(CONSTANTS.TOOL_IDS.SETTING.KEY))
     setToolProficiencies(getSetting(CONSTANTS.TOOL_PROFICIENCIES.SETTING.KEY))

@@ -14,6 +14,7 @@ import { setConfig as setItemActivationCostTypes } from '../item-activation-cost
 import { setConfig as setItemRarity } from '../item-rarity.js'
 import { setConfig as setLanguages } from '../languages.js'
 import { setConfig as setSenses } from '../senses.js'
+import { setConfig as setShieldIds } from '../shield-ids.js'
 import { setConfig as setSkills } from '../skills.js'
 import { setConfig as setSpellSchools } from '../spell-schools.js'
 import { setConfig as setToolIds } from '../tool-ids.js'
@@ -499,6 +500,36 @@ export class SensesForm extends ConfigForm {
         window: {
             title: 'CUSTOM_DND5E.form.senses.title'
         }
+    }
+}
+
+export class SheildIdsForm extends IdForm {
+    constructor () {
+        super()
+        this.requiresReload = true
+        this.settingKey = CONSTANTS.SHIELD_IDS.SETTING.KEY
+        this.setConfig = setShieldIds
+        this.type = 'sheildIds'
+        this.headerButton = JOURNAL_HELP_BUTTON
+        this.headerButton.uuid = CONSTANTS.SHIELD_IDS.UUID
+    }
+
+    static DEFAULT_OPTIONS = {
+        id: `${MODULE.ID}-shield-ids-form`,
+        window: {
+            title: 'CUSTOM_DND5E.form.sheildIds.title'
+        }
+    }
+
+    static PARTS = {
+        form: {
+            template: CONSTANTS.SHIELD_IDS.TEMPLATE.FORM
+        }
+    }
+
+    async _getHtml (data) {
+        const template = await renderTemplate(CONSTANTS.SHIELD_IDS.TEMPLATE.LIST, data)
+        return template
     }
 }
 

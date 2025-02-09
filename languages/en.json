@@ -301,6 +301,8 @@
     "CUSTOM_DND5E.form.sheet.showUseLairAction.label": "Show Use Lair Action",
     "CUSTOM_DND5E.form.sheet.title": "Configure Sheet",
 
+    "CUSTOM_DND5E.form.shieldIds.title": "Configure Shields",
+
     "CUSTOM_DND5E.form.skills.title": "Configure Skills",
 
     "CUSTOM_DND5E.form.spellSchools.title": "Configure Spell Schools",
@@ -400,6 +402,10 @@
     "CUSTOM_DND5E.menu.sheet.hint": "Configure Sheet",
     "CUSTOM_DND5E.menu.sheet.label": "Configure Sheet",
     "CUSTOM_DND5E.menu.sheet.name": "Configure Sheet",
+
+    "CUSTOM_DND5E.menu.shieldIds.hint": "Configure Shields",
+    "CUSTOM_DND5E.menu.shieldIds.label": "Configure Shields",
+    "CUSTOM_DND5E.menu.shieldIds.name": "Configure Shields",
 
     "CUSTOM_DND5E.menu.skills.hint": "Configure Skills",
     "CUSTOM_DND5E.menu.skills.label": "Configure Skills",
