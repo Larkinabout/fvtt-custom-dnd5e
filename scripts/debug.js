@@ -71,6 +71,7 @@ export async function exportData () {
             languages: CONFIG.DND5E.languages,
             maxLevel: CONFIG.DND5E.maxLevel,
             senses: CONFIG.DND5E.senses,
+            shieldIds: CONFIG.DND5E.shieldIds,
             skills: CONFIG.DND5E.skills,
             spellSchools: CONFIG.DND5E.spellSchools,
             toolIds: CONFIG.DND5E.toolIds,

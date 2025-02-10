@@ -599,6 +599,23 @@ export const CONSTANTS = {
             CHARACTER_DETAILS: 'modules/custom-dnd5e/templates/sheet/character-details.hbs'
         }
     },
+    SHIELD_IDS: {
+        MENU: {
+            KEY: 'shield-ids-menu',
+            HINT: 'CUSTOM_DND5E.menu.shieldIds.hint',
+            ICON: 'fas fa-pen-to-square',
+            LABEL: 'CUSTOM_DND5E.menu.shieldIds.label',
+            NAME: 'CUSTOM_DND5E.menu.shieldIds.name'
+        },
+        SETTING: {
+            KEY: 'shield-ids'
+        },
+        TEMPLATE: {
+            FORM: 'modules/custom-dnd5e/templates/config-form.hbs',
+            LIST: 'modules/custom-dnd5e/templates/config-list.hbs'
+        },
+        UUID: 'Compendium.custom-dnd5e.custom-dnd5e-journals.JournalEntry.B48iqFBddUikMMer.JournalEntryPage.CeUiNZoH8giNsqNR'
+    },
     SHOW_PRESSED_KEYS: {
         SETTING: {
             KEY: 'show-pressed-keys',
