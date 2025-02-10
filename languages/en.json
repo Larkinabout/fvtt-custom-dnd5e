@@ -230,6 +230,10 @@
     "CUSTOM_DND5E.form.houseRules.deathSaves.deathSavesTargetValue.note": "The value required to succeed a death saving throw",
     "CUSTOM_DND5E.form.houseRules.deathSaves.removeDeathSavesOnEvent.heading": "Remove Death Saves on Event",
     "CUSTOM_DND5E.form.houseRules.deathSaves.removeDeathSavesOnEvent.note": "Use 3 to remove all, 1 to remove one and 0 to remove none",
+    "CUSTOM_DND5E.form.houseRules.exhaustion.applyExhaustionOnZeroHp.label": "Apply on 0 HP",
+    "CUSTOM_DND5E.form.houseRules.exhaustion.applyExhaustionOnZeroHp.note": "Apply Exhaustion when a character is reduced to 0 HP",
+    "CUSTOM_DND5E.form.houseRules.exhaustion.applyExhaustionOnCombatEnd.label": "Apply on Combat End",
+    "CUSTOM_DND5E.form.houseRules.exhaustion.applyExhaustionOnCombatEnd.note": "If a character is reduced to 0 HP in combat, apply Exhaustion when the combat ends",
     "CUSTOM_DND5E.form.houseRules.hitPoints.applyMassiveDamage.label": "Apply Massive Damage",
     "CUSTOM_DND5E.form.houseRules.hitPoints.applyMassiveDamage.note": "Apply Massive Damage when a character suffers damage equal to or greater than half their max HP",
     "CUSTOM_DND5E.form.houseRules.hitPoints.applyNegativeHp.label": "Apply Negative Hit Points",
@@ -427,6 +431,8 @@
 
     "CUSTOM_DND5E.message.awardInspiration": "<p>{name} was awarded Inspiration for rolling a {value}.</p>",
     "CUSTOM_DND5E.message.awardInspirationAlready": "<p>{name} rolled a {value}, but already has Inspiration.</p>",
+    "CUSTOM_DND5E.message.exhaustion": "<p>{name} suffered Exhaustion.</p>",
+    "CUSTOM_DND5E.message.exhaustionDied": "<p>{name} died from Exhaustion.</p>",
     "CUSTOM_DND5E.message.instantDeath": "<p>{name} suffered Instant Death.</p>",
     "CUSTOM_DND5E.message.massiveDamage": "{name} suffered Massive Damage.",
     

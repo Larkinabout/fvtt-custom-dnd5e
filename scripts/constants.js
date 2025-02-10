@@ -340,6 +340,22 @@ export const CONSTANTS = {
         },
         UUID: 'Compendium.custom-dnd5e.custom-dnd5e-journals.JournalEntry.B48iqFBddUikMMer.JournalEntryPage.QK8bAMxx9x9IaTHl'
     },
+    EXHAUSTION: {
+        SETTING: {
+            APPLY_EXHAUSTION_ON_ZERO_HP: {
+                KEY: 'apply-exhaustion-on-zero-hp'
+            },
+            APPLY_EXHAUSTION_ON_COMBAT_END: {
+                KEY: 'apply-exhaustion-on-combat-end'
+            },
+            EXHAUSTION_REQUEST_SAVING_THROW: {
+                KEY: 'exhaustion-request-saving-throw'
+            },
+            EXHAUSTION_SAVING_THROW_DC: {
+                KEY: 'exhaustion-saving-throw-dc'
+            }
+        }
+    },
     HIT_POINTS: {
         SETTING: {
             APPLY_MASSIVE_DAMAGE: {

@@ -149,6 +149,28 @@
         </fieldset>
         <fieldset>
             <legend>
+                <span>{{localize "CUSTOM_DND5E.exhaustion"}}</span>
+                <button type="button" class="unbutton control-button" data-action="help" data-uuid="Compendium.custom-dnd5e.custom-dnd5e-journals.JournalEntry.ngr8w6WBycK59brj.JournalEntryPage.vfBCdjS2G75Ll8Qz" data-tooltip="{{localize "CUSTOM_DND5E.openGuide"}}" aria-label="{{localize "CUSTOM_DND5E.openGuide"}}">
+                    <i class="fas fa-circle-info" inert></i>
+                </button>
+            </legend>
+            <div class="form-group">
+                <label>{{localize "CUSTOM_DND5E.form.houseRules.exhaustion.applyExhaustionOnZeroHp.label"}}</label>
+                <div class="form-fields">
+                    <input id="custom-dnd5e-apply-exhaustion-on-zero-hp" name="applyExhaustionOnZeroHp" type="checkbox"{{#if applyExhaustionOnZeroHp}} checked{{/if}}> 
+                </div>
+                <p class="hint">{{localize "CUSTOM_DND5E.form.houseRules.exhaustion.applyExhaustionOnZeroHp.note"}}</p>
+            </div>
+            <div class="form-group">
+                <label>{{localize "CUSTOM_DND5E.form.houseRules.exhaustion.applyExhaustionOnCombatEnd.label"}}</label>
+                <div class="form-fields">
+                    <input id="custom-dnd5e-apply-exhaustion-on-combat-end" name="applyExhaustionOnCombatEnd" type="checkbox"{{#if applyExhaustionOnCombatEnd}} checked{{/if}}> 
+                </div>
+                <p class="hint">{{localize "CUSTOM_DND5E.form.houseRules.exhaustion.applyExhaustionOnCombatEnd.note"}}</p>
+            </div>
+        </fieldset>
+        <fieldset>
+            <legend>
                 <span>{{localize "CUSTOM_DND5E.hitPoints"}}</span>
                 <button type="button" class="unbutton control-button" data-action="help" data-uuid="Compendium.custom-dnd5e.custom-dnd5e-journals.JournalEntry.ngr8w6WBycK59brj.JournalEntryPage.MVXx2yD2pAfzQBU5" data-tooltip="{{localize "CUSTOM_DND5E.openGuide"}}" aria-label="{{localize "CUSTOM_DND5E.openGuide"}}">
                     <i class="fas fa-circle-info" inert></i>

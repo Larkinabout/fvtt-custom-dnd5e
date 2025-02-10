@@ -32,6 +32,7 @@ import { register as registerCurrency, setConfig as setCurrency } from './curren
 import { register as registerDamageTypes, setConfig as setDamageTypes } from './damage-types.js'
 import { register as registerDebug } from './debug.js'
 import { register as registerEncumbrance, setConfig as setEncumbrance } from './encumbrance.js'
+import { register as registerExhaustion } from './exhaustion.js'
 import { register as registerItemActionTypes, setConfig as setItemActionTypes } from './item-action-types.js'
 import { register as registerItemActivationCostTypes, setConfig as setItemActivationCostTypes } from './item-activation-cost-types.js'
 import { register as registerItemProperties, setConfig as setItemProperties } from './item-properties.js'
@@ -118,6 +119,7 @@ Hooks.on('init', async () => {
     registerCurrency()
     registerDamageTypes()
     registerEncumbrance()
+    registerExhaustion()
     registerItemActionTypes()
     registerItemActivationCostTypes()
     registerItemProperties()
