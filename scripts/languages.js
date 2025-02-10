@@ -61,7 +61,9 @@ export function setConfig (data = null) {
             ])
     )
 
-    const defaultConfig = foundry.utils.deepClone(CONFIG.CUSTOM_DND5E[property])
-    const config = buildConfig(Object.keys(data), foundry.utils.mergeObject(defaultConfig, data))
+    const coreConfig = foundry.utils.deepClone(CONFIG.CUSTOM_DND5E[property])
+    const currentConfig = foundry.utils.deepClone(CONFIG.DND5E[property])
+    const mergedConfig = foundry.utils.mergeObject(foundry.utils.mergeObject(coreConfig, currentConfig), data)
+    const config = buildConfig(Object.keys(mergedConfig), mergedConfig)
     config && (CONFIG.DND5E[property] = config)
 }
