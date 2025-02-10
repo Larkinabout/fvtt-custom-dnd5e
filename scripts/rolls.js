@@ -40,13 +40,13 @@ function registerSettings () {
             config: false,
             type: Object,
             default: {
-                ability: { die: '1d20', rollMode: 'publicroll' },
-                attack: { die: '1d20', rollMode: 'publicroll' },
-                concentration: { die: '1d20', rollMode: 'publicroll' },
-                initiative: { die: '1d20', rollMode: 'publicroll' },
-                savingThrow: { die: '1d20', rollMode: 'publicroll' },
-                skill: { die: '1d20', rollMode: 'publicroll' },
-                tool: { die: '1d20', rollMode: 'publicroll' }
+                ability: { die: '1d20', rollMode: 'default' },
+                attack: { die: '1d20', rollMode: 'default' },
+                concentration: { die: '1d20', rollMode: 'default' },
+                initiative: { die: '1d20', rollMode: 'default' },
+                savingThrow: { die: '1d20', rollMode: 'default' },
+                skill: { die: '1d20', rollMode: 'default' },
+                tool: { die: '1d20', rollMode: 'default' }
             }
         }
     )
@@ -68,9 +68,13 @@ function registerHooks () {
         } else if (hookNames.includes('initiativeDialog')) {
             roll = rolls.initiative
         } else if (hookNames.includes('attack')) {
-            const item = config?.subject?.item
-            const weaponType = item?.system?.type?.value
-            roll = (rolls.weaponTypes?.[weaponType]?.die && rolls.weaponTypes?.[weaponType]?.die !== '1d20') ? rolls.weaponTypes[weaponType] : rolls.attack
+            const weaponType = config?.subject?.item?.system?.type?.value
+            roll = (rolls.weaponTypes?.[weaponType]?.die && rolls.weaponTypes?.[weaponType]?.die !== '1d20') 
+                ? rolls.weaponTypes[weaponType]
+                : rolls.attack
+            rollMode = (rolls.weaponTypes?.[weaponType]?.rollMode && rolls.weaponTypes?.[weaponType]?.rollMode !== 'default')
+                ? rolls.weaponTypes[weaponType].rollMode
+                : rolls.attack.rollMode
         } else if (hookNames.includes('skill')) {
             roll = rolls.skill
             rollMode = CONFIG.DND5E?.skills[config.skill]?.rollMode
@@ -93,8 +97,8 @@ function registerHooks () {
             config.rolls[0].options.criticalFailure = dieParts.number
         }
 
-        const rollModes = ['gmroll', 'blindroll', 'selfroll']
-        if (rollMode && rollMode !== 'default') {
+        const rollModes = ['publicroll', 'gmroll', 'blindroll', 'selfroll']
+        if (rollModes.includes(rollMode)) {
             message.rollMode = rollMode
         } else if (rollModes.includes(roll.rollMode)) {
             message.rollMode = roll.rollMode

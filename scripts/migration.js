@@ -34,23 +34,34 @@ export function migrate () {
     if (moduleVersion === migrationVersion) return
 
     let isSuccess = true
-    isSuccess = (!migrationVersion || migrationVersion < '0.7.0') ? migrateLevelUpHitPointsReroll1s() : true
+    isSuccess = (!migrationVersion || foundry.utils.isNewerVersion('1.3.4', migrationVersion)) ? migrateRollMode() : true
 
     if (isSuccess) {
         setSetting(CONSTANTS.MIGRATION.VERSION.SETTING.KEY, moduleVersion)
     }
 }
 
-/**
- * Migrate from the level-up-hit-points-reroll-1 setting to the level-up-hit-points-minimum-value setting
- * @returns {boolean} Whether the migration was successful
- */
-export function migrateLevelUpHitPointsReroll1s () {
+export async function migrateRollMode() {
     try {
-        const levelUpHitPointsReroll1s = [...game.settings.storage.get('world')]
-            .find(setting => setting.key === 'custom-dnd5e.level-up-hit-points-reroll-1')?.value
-        if (levelUpHitPointsReroll1s) {
-            setSetting(CONSTANTS.LEVEL_UP.HIT_POINTS.REROLL.MINIMUM_VALUE.SETTING.KEY, 2)
+        const rolls = [...game.settings.storage.get('world')]
+            .find(setting => setting.key === 'custom-dnd5e.rolls')?.value
+        if (rolls) {
+            const newRolls = foundry.utils.deepClone(rolls)
+            Object.entries(newRolls).forEach(([key, roll]) => {
+                if (key !== 'weaponTypes' && roll.rollMode && roll.rollMode === 'publicroll') {
+                    roll.rollMode = 'default'
+                } else if (key === 'weaponTypes') {
+                    const weaponTypes = roll
+                    Object.values(weaponTypes).forEach(weaponType => {
+                        if (weaponType.rollMode && weaponType.rollMode === 'publicroll') {
+                            weaponType.rollMode = 'default'
+                        }
+                    })
+                }
+            })
+
+            await setSetting(CONSTANTS.ROLLS.SETTING.ROLLS.KEY, {})
+            await setSetting(CONSTANTS.ROLLS.SETTING.ROLLS.KEY, newRolls)
         }
         return true
     } catch (err) {
