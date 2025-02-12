@@ -1,0 +1,159 @@
+{
+  "folder": null,
+  "name": "Camp Supplies",
+  "type": "consumable",
+  "img": "modules/custom-dnd5e/media/icons/camp-supplies.webp",
+  "system": {
+    "activities": {
+      "Gf6S0sTq4zSrulMn": {
+        "type": "utility",
+        "_id": "Gf6S0sTq4zSrulMn",
+        "sort": 0,
+        "activation": {
+          "type": "special",
+          "value": null,
+          "override": false,
+          "condition": ""
+        },
+        "consumption": {
+          "scaling": {
+            "allowed": false
+          },
+          "spellSlot": true,
+          "targets": [
+            {
+              "type": "itemUses",
+              "value": "1",
+              "target": "",
+              "scaling": {}
+            }
+          ]
+        },
+        "description": {
+          "chatFlavor": ""
+        },
+        "duration": {
+          "units": "hour",
+          "concentration": false,
+          "override": false,
+          "value": "8"
+        },
+        "effects": [],
+        "range": {
+          "override": false,
+          "units": "self",
+          "special": ""
+        },
+        "target": {
+          "template": {
+            "contiguous": false,
+            "units": "ft",
+            "type": ""
+          },
+          "affects": {
+            "choice": false,
+            "count": "",
+            "type": ""
+          },
+          "override": false,
+          "prompt": true
+        },
+        "uses": {
+          "spent": 0,
+          "recovery": [],
+          "max": ""
+        },
+        "roll": {
+          "prompt": false,
+          "visible": false,
+          "name": "",
+          "formula": ""
+        },
+        "name": ""
+      }
+    },
+    "uses": {
+      "spent": 0,
+      "recovery": [],
+      "autoDestroy": true,
+      "max": "1"
+    },
+    "description": {
+      "value": "<p>A neatly packed bundle of everything you need for a restful night under the stars. It includes kindling, flint and steel, basic cooking gear, salted meats, a waterskin of weak ale, and even bandages for those heroic battle scars. Perfect for the weary traveler—or for anyone who's ever tried to cook a meal with a sword!</p>",
+      "chat": ""
+    },
+    "identifier": "custom-dnd5e-camp-supplies",
+    "source": {
+      "revision": 1,
+      "rules": "",
+      "book": "",
+      "page": "",
+      "custom": "Custom D&D 5e",
+      "license": ""
+    },
+    "identified": true,
+    "unidentified": {
+      "description": ""
+    },
+    "container": null,
+    "quantity": 1,
+    "weight": {
+      "value": 4,
+      "units": "lb"
+    },
+    "price": {
+      "value": 10,
+      "denomination": "gp"
+    },
+    "rarity": "common",
+    "attunement": "",
+    "attuned": false,
+    "equipped": false,
+    "type": {
+      "value": "food",
+      "subtype": ""
+    },
+    "damage": {
+      "base": {
+        "number": null,
+        "denomination": null,
+        "types": [],
+        "custom": {
+          "enabled": false
+        },
+        "scaling": {
+          "number": 1
+        }
+      },
+      "replace": false
+    },
+    "magicalBonus": null,
+    "properties": []
+  },
+  "effects": [],
+  "ownership": {
+    "default": 0,
+    "ZR5jaKwclVdroOEN": 3
+  },
+  "flags": {
+    "dnd5e": {
+      "riders": {
+        "activity": [],
+        "effect": []
+      }
+    }
+  },
+  "_stats": {
+    "compendiumSource": null,
+    "duplicateSource": null,
+    "coreVersion": "12.331",
+    "systemId": "dnd5e",
+    "systemVersion": "4.0.3",
+    "createdTime": 1726783178861,
+    "modifiedTime": 1727343229101,
+    "lastModifiedBy": "0wJRsV2r9Hv1a7q0"
+  },
+  "_id": "l6pf6YtapHjBJ6UF",
+  "sort": 0,
+  "_key": "!items!l6pf6YtapHjBJ6UF"
+}

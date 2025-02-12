@@ -3,3 +3,5 @@ node_modules/*
 package-lock.json
 package.json
 .eslintrc.json
+packs/*
+!packs/_source/
