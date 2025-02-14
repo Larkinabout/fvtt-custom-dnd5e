@@ -2,7 +2,7 @@ import { MODULE, CONSTANTS } from "../constants.js";
 import { getSetting } from "../utils.js";
 
 /**
- *
+ * Patch the prepareEncumbrance function to include custom encumbrance calculations.
  */
 export function patchPrepareEncumbrance() {
   if ( game.modules.get("variant-encumbrance-dnd5e")?.active ) return;
@@ -12,10 +12,9 @@ export function patchPrepareEncumbrance() {
 /**
  * Calculate encumbrance details for an Actor.
  * @this {CharacterData|NPCData|VehicleData}
- * @param root0
- * @param root0.validateItem
- * @param rollData.validateItem
  * @param {object} rollData  The Actor's roll data.
+ * @param {object} [options]
+ * @param {Function} [options.validateItem]  Determine whether an item's weight should count toward encumbrance.
  */
 async function prepareEncumbrancePatch(rollData, { validateItem } = {}) {
   const convertWeight = dnd5e.utils.convertWeight;
@@ -28,7 +27,7 @@ async function prepareEncumbrancePatch(rollData, { validateItem } = {}) {
   const config = CONFIG.DND5E.encumbrance;
   const encumbrance = this.attributes.encumbrance ??= {};
   const baseUnits = CONFIG.DND5E.encumbrance.baseUnits[this.parent.type]
-        ?? CONFIG.DND5E.encumbrance.baseUnits.default;
+      ?? CONFIG.DND5E.encumbrance.baseUnits.default;
   const unitSystem = game.settings.get("dnd5e", "metricWeightUnits") ? "metric" : "imperial";
 
   // Get the total weight from items
