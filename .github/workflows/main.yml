@@ -31,7 +31,7 @@ jobs:
 
       - name: Build Packs
         run: |
-          node ./scripts/packs.js --if-present
+          node ./scripts/packs.js package pack --if-present
 
       - name: Modify Module Manifest With Release-Specific Values
         id: sub_manifest_link_version

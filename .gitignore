@@ -1,7 +1,4 @@
 node_modules/*
-.eslintrc.js
 package-lock.json
-package.json
-.eslintrc.json
 packs/*
 !packs/_source/

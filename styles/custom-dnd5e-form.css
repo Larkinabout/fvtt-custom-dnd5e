@@ -1,9 +1,6 @@
-
-
 .flex0 {
     flex: 0;
 }
-
 
 .custom-dnd5e-app {
     height: 100%;
@@ -42,11 +39,16 @@
     line-height: 1.2rem;
 }
 
+.custom-dnd5e-app.application ul.custom-dnd5e-list ul.custom-dnd5e-list {
+    border-top: 3px solid var(--color-border);
+    margin: 0.25rem 0 0 0;
+}
+
 .custom-dnd5e-app ul {
     gap: 0rem;
     list-style-type: none;
-    margin: 0;
-    padding: 0.25rem 0 0 0;
+    margin: 0.25rem 0 0 0;
+    padding: 0;
 }
 
 .custom-dnd5e-app ul:empty {
@@ -66,7 +68,10 @@
 .custom-dnd5e-app li {
     align-items: center;
     gap: 0.25rem;
-    border-top: 1px solid var(--color-border);
+}
+
+.custom-dnd5e-app li:nth-child(n+2) {
+    border-top: 3px solid var(--color-border);
 }
 
 .custom-dnd5e-app .custom-dnd5e-drag {
@@ -84,15 +89,15 @@
 }
 
 .custom-dnd5e-app li.drag-top {
-    border-top: 1px solid red;
+    border-top: 3px dashed red;
 }
 
 .custom-dnd5e-app li.drag-middle {
-    border: 1px solid red;
+    border: 3px dashed red;
 }
 
 .custom-dnd5e-app li.drag-bottom {
-    border-bottom: 1px solid red;
+    border-bottom: 3px dashed red;
 }
 
 .custom-dnd5e-col-group {
@@ -206,12 +211,37 @@ button.custom-dnd5e-list-button:focus {
     display: none;
 }
 
-.custom-dnd5e-item {
+.custom-dnd5e-list .custom-dnd5e-list::before {
+    content: "\2BA1";
+    position: absolute;
+    left: 0px;
+    transform: translateY(45%);
+    font-size: 18px;
+    -webkit-font-smoothing: antialiased;
+}
+
+.theme-light .custom-dnd5e-list .custom-dnd5e-list::before{
+    color: rgba(0,0,0, 0.25);
+}
+
+.theme-dark .custom-dnd5e-list .custom-dnd5e-list::before{
+    color: rgba(255,255,255, 0.25);
+}
+
+.custom-dnd5e-item:not(.custom-dnd5e-item .custom-dnd5e-item) {
     align-items: center;
-    border: 1px solid transparent;
     display: flex;
     gap: 0.25rem;
-    padding: 0.5rem 0 0.5rem 0;
+    padding: 0.4rem 0 0.4rem 0;
+    position: relative;
+}
+
+.custom-dnd5e-item .custom-dnd5e-item {
+    align-items: center;
+    display: flex;
+    gap: 0.25rem;
+    padding: 0.4rem 0 0.4rem 0;
+    position: relative;
 }
 
 .custom-dnd5e-item > i {

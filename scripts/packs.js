@@ -2,14 +2,21 @@ import yargs from "yargs";
 import { hideBin } from "yargs/helpers";
 import { compilePack, extractPack } from "@foundryvtt/foundryvtt-cli";
 
+const packs = [
+  "custom-dnd5e-items",
+  "custom-dnd5e-journals"
+];
+
 // eslint-disable-next-line
 const argv = yargs(hideBin(process.argv))
   .command(packageCommand())
   .help().alias("help", "h")
   .argv;
 
-
-// eslint-disable-next-line
+/**
+ * Package command.
+ * @returns {object} The command
+ */
 function packageCommand() {
   return {
     command: "package [action] [pack]",
@@ -37,18 +44,43 @@ function packageCommand() {
   };
 }
 
+/**
+ * Compile packs.
+ * @param {string} pack The name of the pack to compile
+ */
 export async function compilePacks(pack) {
-    await compilePack('packs/_source/custom-dnd5e-items', 'packs/custom-dnd5e-items')
-    await compilePack('packs/_source/custom-dnd5e-journals', 'packs/custom-dnd5e-journals')
+  try {
+    if ( pack ) {
+      console.log("Compiling:", pack);
+      await compilePack(`packs/_source/${pack}`, `packs/${pack}`);
+    } else {
+      for ( const pack of packs ) {
+        console.log("Compiling:", pack);
+        await compilePack(`packs/_source/${pack}`, `packs/${pack}`);
+      }
+    }
+  } catch(error) {
+    console.error("Error compiling packs:", error);
+  }
 }
 
+/**
+ * Extract packs.
+ * @param {string} pack The name of the pack to extract
+ */
 export async function extractPacks(pack) {
-    try {
+  try {
+    if ( pack ) {
+      console.log("Extracting:", pack);
+      await extractPack(`packs/${pack}`, `packs/_source/${pack}`, { log: true });
+    } else {
+      for ( const pack of packs ) {
         console.log("Extracting:", pack);
-        await extractPack("packs/custom-dnd5e-items", "packs/_source/custom-dnd5e-items", { log: true });
-        await extractPack("packs/custom-dnd5e-journals", "packs/_source/custom-dnd5e-journals", { log: true });
-      } catch (error) {
-        console.error("Error extracting packs:", error);
+        await extractPack(`packs/${pack}`, `packs/_source/${pack}`, { log: true });
       }
+    }
+  } catch(error) {
+    console.error("Error extracting packs:", error);
+  }
 }
 
