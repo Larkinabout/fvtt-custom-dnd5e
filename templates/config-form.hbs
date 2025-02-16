@@ -1,13 +1,19 @@
 <div class="standard-form">
     <div class="standard-form scrollable">
             <ul class="custom-dnd5e-list flexcol">
-                {{> "modules/custom-dnd5e/templates/config-list.hbs" prefix="items"}}
+                {{#if editInList}}
+                {{> "modules/custom-dnd5e/templates/config-edit-in-list.hbs" items=items}}
+                {{else}}
+                {{> "modules/custom-dnd5e/templates/config-list.hbs" items=items selects=selects}}
+                {{/if}}
             </ul>
     </div>
     <footer class="form-footer" data-application-part="footer">
+        {{#unless disableCreate}}
         <button type="button" data-action="new" class="new-button bright">
             <i class="fas fa-plus"></i>{{localize "CUSTOM_DND5E.form.button.new.label"}}
         </button>
+        {{/unless}}
         <button type="button" data-action="reset" class="reset-button">
             <i class="fas fa-arrow-rotate-left"></i>{{localize "CUSTOM_DND5E.form.button.reset.label"}}
         </button>

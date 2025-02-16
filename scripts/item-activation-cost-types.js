@@ -2,7 +2,8 @@ import { CONSTANTS } from "./constants.js";
 import { checkEmpty, registerMenu, registerSetting, resetDnd5eConfig } from "./utils.js";
 import { ItemActivationCostTypesForm } from "./forms/config-form.js";
 
-const property = "abilityActivationTypes";
+const constants = CONSTANTS.ITEM_ACTIVATION_COST_TYPES;
+const configKey = "abilityActivationTypes";
 
 /**
  * Register settings.
@@ -20,12 +21,12 @@ export function register() {
  */
 function registerSettings() {
   registerMenu(
-    CONSTANTS.ITEM_ACTIVATION_COST_TYPES.MENU.KEY,
+    constants.MENU.KEY,
     {
-      hint: game.i18n.localize(CONSTANTS.ITEM_ACTIVATION_COST_TYPES.MENU.HINT),
-      label: game.i18n.localize(CONSTANTS.ITEM_ACTIVATION_COST_TYPES.MENU.LABEL),
-      name: game.i18n.localize(CONSTANTS.ITEM_ACTIVATION_COST_TYPES.MENU.NAME),
-      icon: CONSTANTS.ITEM_ACTIVATION_COST_TYPES.MENU.ICON,
+      hint: game.i18n.localize(constants.MENU.HINT),
+      label: game.i18n.localize(constants.MENU.LABEL),
+      name: game.i18n.localize(constants.MENU.NAME),
+      icon: constants.MENU.ICON,
       type: ItemActivationCostTypesForm,
       restricted: true,
       scope: "world"
@@ -33,12 +34,12 @@ function registerSettings() {
   );
 
   registerSetting(
-    CONSTANTS.ITEM_ACTIVATION_COST_TYPES.SETTING.KEY,
+    constants.SETTING.KEY,
     {
       scope: "world",
       config: false,
       type: Object,
-      default: CONFIG.CUSTOM_DND5E[property]
+      default: CONFIG.CUSTOM_DND5E[configKey]
     }
   );
 }
@@ -51,8 +52,8 @@ function registerSettings() {
  */
 export function setConfig(data = null) {
   if ( checkEmpty(data) ) {
-    if ( checkEmpty(CONFIG.DND5E[property]) ) {
-      resetDnd5eConfig(property);
+    if ( checkEmpty(CONFIG.DND5E[configKey]) ) {
+      resetDnd5eConfig(configKey);
     }
     return;
   }
@@ -65,10 +66,10 @@ export function setConfig(data = null) {
       ])
   );
 
-  const defaultConfig = foundry.utils.deepClone(CONFIG.CUSTOM_DND5E[property]);
+  const defaultConfig = foundry.utils.deepClone(CONFIG.CUSTOM_DND5E[configKey]);
   const config = buildConfig(Object.keys(data), foundry.utils.mergeObject(defaultConfig, data));
 
   if ( config ) {
-    CONFIG.DND5E[property] = config;
+    CONFIG.DND5E[configKey] = config;
   }
 }

@@ -27,6 +27,8 @@ https://github.com/Dorako/pf2e-dorako-ux/blob/main/LICENSE
 import { MODULE, CONSTANTS } from "./constants.js";
 import { getSetting, registerSetting } from "./utils.js";
 
+const constants = CONSTANTS.RADIAL_STATUS_EFFECTS;
+
 /**
  * Register settings and patches.
  */
@@ -42,7 +44,7 @@ export function register() {
  */
 function registerSettings() {
   registerSetting(
-    CONSTANTS.RADIAL_STATUS_EFFECTS.SETTING.KEY,
+    constants.SETTING.KEY,
     {
       name: game.i18n.localize("CUSTOM_DND5E.setting.radialStatusEffects.name"),
       hint: game.i18n.localize("CUSTOM_DND5E.setting.radialStatusEffects.hint"),
@@ -61,7 +63,7 @@ function registerSettings() {
  * Register patches.
  */
 function registerPatches() {
-  if ( !getSetting(CONSTANTS.RADIAL_STATUS_EFFECTS.SETTING.KEY) ) return;
+  if ( !getSetting(constants.SETTING.KEY) ) return;
 
   libWrapper.register(MODULE.ID, "Token.prototype._refreshEffects", tokenRefreshEffectsPatch, "WRAPPER");
   libWrapper.register(MODULE.ID, "Token.prototype._drawEffect", tokenDrawEffectPatch, "WRAPPER");

@@ -84,6 +84,22 @@ export async function openDocument(uuid) {
 /* -------------------------------------------- */
 
 /**
+ * Get default dnd5e config.
+ * @param {string} property The property
+ * @param {string|null} key The key
+ * @returns {object} The config
+ */
+export function getDefaultDnd5eConfig(property, key = null) {
+  if ( key ) {
+    return CONFIG.CUSTOM_DND5E[property][key];
+  } else {
+    return CONFIG.CUSTOM_DND5E[property];
+  }
+}
+
+/* -------------------------------------------- */
+
+/**
  * Reset the dnd5e config to its default.
  * @param {string} property The property
  * @returns {object} The reset config

@@ -1,22 +1,22 @@
 import { CONSTANTS, JOURNAL_HELP_BUTTON, MODULE } from "../constants.js";
 import { ConfigEditForm } from "./config-edit-form.js";
-import { getDefaultConfig, setConfig } from "../conditions.js";
+import { setConfig, getDefaultConfig } from "../spell-schools.js";
 
-const constants = CONSTANTS.CONDITIONS;
-const configKey = "conditions";
+const constants = CONSTANTS.SPELL_SCHOOLS;
+const configKey = "spellSchools";
 
 /**
- * Class representing a form to edit conditions.
+ * Class representing a form to edit spell schools.
  * Extends the ConfigEditForm class.
  *
  * @class
  * @extends ConfigEditForm
  */
-export class ConditionsEditForm extends ConfigEditForm {
+export class SpellSchoolsEditForm extends ConfigEditForm {
   /**
-   * Constructor for ConditionsEditForm.
+   * Constructor for SpellSchoolsEditForm.
    *
-   * @param {object} args Arguments passed to the parent class.
+   * @param {object} args The arguments to initialize the form.
    */
   constructor(args) {
     super(args);
@@ -26,6 +26,7 @@ export class ConditionsEditForm extends ConfigEditForm {
     this.setConfig = setConfig;
     this.headerButton = JOURNAL_HELP_BUTTON;
     this.headerButton.uuid = constants.UUID;
+    this.requiresReload = true;
   }
 
   /* -------------------------------------------- */
@@ -36,7 +37,7 @@ export class ConditionsEditForm extends ConfigEditForm {
    * @type {object}
    */
   static DEFAULT_OPTIONS = {
-    id: `${MODULE.ID}-conditions-edit`,
+    id: `${MODULE.ID}-spell-schools-edit-form`,
     window: {
       title: `CUSTOM_DND5E.form.${configKey}.edit.title`
     }
@@ -63,26 +64,16 @@ export class ConditionsEditForm extends ConfigEditForm {
    * @returns {object} The select options.
    */
   _getSelects() {
-    const statusEffects = Object.fromEntries(
-      CONFIG.statusEffects.map(statusEffect => [statusEffect.id, statusEffect.name])
-    );
-    return { riders: statusEffects, statuses: statusEffects };
-  }
-
-  /* -------------------------------------------- */
-
-  /**
-   * Validate the form data.
-   *
-   * @param {object} formData The form data.
-   * @returns {boolean} Whether the form data passed validation.
-   */
-  validateFormData(formData) {
-    if ( !newKey.match(/^[0-9a-zA-Z]+$/) ) {
-      Logger.error(`Key '${newKey}' must only contain alphanumeric characters`, true);
-      return false;
-    }
-
-    return super.validateFormData(formData);
+    return {
+      rollMode: {
+        choices: {
+          default: "CUSTOM_DND5E.default",
+          blindroll: "CHAT.RollBlind",
+          gmroll: "CHAT.RollPrivate",
+          publicroll: "CHAT.RollPublic",
+          selfroll: "CHAT.RollSelf"
+        }
+      }
+    };
   }
 }

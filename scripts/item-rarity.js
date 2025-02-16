@@ -2,7 +2,8 @@ import { CONSTANTS } from "./constants.js";
 import { checkEmpty, registerMenu, registerSetting, resetDnd5eConfig } from "./utils.js";
 import { ItemRarityForm } from "./forms/config-form.js";
 
-const property = "itemRarity";
+const constants = CONSTANTS.ITEM_RARITY;
+const configKey = "itemRarity";
 
 /**
  * Register settings and hooks.
@@ -18,12 +19,12 @@ export function register() {
  */
 function registerSettings() {
   registerMenu(
-    CONSTANTS.ITEM_RARITY.MENU.KEY,
+    constants.MENU.KEY,
     {
-      hint: game.i18n.localize(CONSTANTS.ITEM_RARITY.MENU.HINT),
-      label: game.i18n.localize(CONSTANTS.ITEM_RARITY.MENU.LABEL),
-      name: game.i18n.localize(CONSTANTS.ITEM_RARITY.MENU.NAME),
-      icon: CONSTANTS.ITEM_RARITY.MENU.ICON,
+      hint: game.i18n.localize(constants.MENU.HINT),
+      label: game.i18n.localize(constants.MENU.LABEL),
+      name: game.i18n.localize(constants.MENU.NAME),
+      icon: constants.MENU.ICON,
       type: ItemRarityForm,
       restricted: true,
       scope: "world"
@@ -31,12 +32,12 @@ function registerSettings() {
   );
 
   registerSetting(
-    CONSTANTS.ITEM_RARITY.SETTING.KEY,
+    constants.SETTING.KEY,
     {
       scope: "world",
       config: false,
       type: Object,
-      default: CONFIG.CUSTOM_DND5E[property]
+      default: CONFIG.CUSTOM_DND5E[configKey]
     }
   );
 }
@@ -49,8 +50,8 @@ function registerSettings() {
  */
 export function setConfig(data = null) {
   if ( checkEmpty(data) ) {
-    if ( checkEmpty(CONFIG.DND5E[property]) ) {
-      resetDnd5eConfig(property);
+    if ( checkEmpty(CONFIG.DND5E[configKey]) ) {
+      resetDnd5eConfig(configKey);
     }
     return;
   }
@@ -63,10 +64,10 @@ export function setConfig(data = null) {
       ])
   );
 
-  const defaultConfig = foundry.utils.deepClone(CONFIG.CUSTOM_DND5E[property]);
+  const defaultConfig = foundry.utils.deepClone(CONFIG.CUSTOM_DND5E[configKey]);
   const config = buildConfig(Object.keys(data), foundry.utils.mergeObject(defaultConfig, data));
 
   if ( config ) {
-    CONFIG.DND5E[property] = config;
+    CONFIG.DND5E[configKey] = config;
   }
 }

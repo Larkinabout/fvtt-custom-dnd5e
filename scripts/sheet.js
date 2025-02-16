@@ -2,6 +2,8 @@ import { CONSTANTS, SHEET_TYPE } from "./constants.js";
 import { c5eLoadTemplates, getFlag, getSetting, registerMenu, registerSetting } from "./utils.js";
 import { SheetForm } from "./forms/sheet-form.js";
 
+const constants = CONSTANTS.SHEET;
+
 /**
  * Register settings and hooks, and load templates.
  */
@@ -9,7 +11,7 @@ export function register() {
   registerSettings();
   registerHooks();
 
-  const templates = [CONSTANTS.SHEET.TEMPLATE.FORM];
+  const templates = [constants.TEMPLATE.FORM];
   c5eLoadTemplates(templates);
 }
 
@@ -20,12 +22,12 @@ export function register() {
  */
 function registerSettings() {
   registerMenu(
-    CONSTANTS.SHEET.MENU.KEY,
+    constants.MENU.KEY,
     {
-      hint: game.i18n.localize(CONSTANTS.SHEET.MENU.HINT),
-      label: game.i18n.localize(CONSTANTS.SHEET.MENU.LABEL),
-      name: game.i18n.localize(CONSTANTS.SHEET.MENU.NAME),
-      icon: CONSTANTS.SHEET.MENU.ICON,
+      hint: game.i18n.localize(constants.MENU.HINT),
+      label: game.i18n.localize(constants.MENU.LABEL),
+      name: game.i18n.localize(constants.MENU.NAME),
+      icon: constants.MENU.ICON,
       type: SheetForm,
       restricted: false,
       scope: "world"
@@ -33,7 +35,7 @@ function registerSettings() {
   );
 
   registerSetting(
-    CONSTANTS.SHEET.SETTING.BANNER_IMAGE.KEY,
+    constants.SETTING.BANNER_IMAGE.KEY,
     {
       scope: "world",
       config: false,
@@ -42,7 +44,7 @@ function registerSettings() {
   );
 
   registerSetting(
-    CONSTANTS.SHEET.SETTING.SHOW_DEATH_SAVES.KEY,
+    constants.SETTING.SHOW_DEATH_SAVES.KEY,
     {
       scope: "world",
       config: false,
@@ -52,7 +54,7 @@ function registerSettings() {
   );
 
   registerSetting(
-    CONSTANTS.SHEET.SETTING.SHOW_ENCUMBRANCE.KEY,
+    constants.SETTING.SHOW_ENCUMBRANCE.KEY,
     {
       scope: "world",
       config: false,
@@ -62,7 +64,7 @@ function registerSettings() {
   );
 
   registerSetting(
-    CONSTANTS.SHEET.SETTING.SHOW_EXHAUSTION.KEY,
+    constants.SETTING.SHOW_EXHAUSTION.KEY,
     {
       scope: "world",
       config: false,
@@ -72,7 +74,7 @@ function registerSettings() {
   );
 
   registerSetting(
-    CONSTANTS.SHEET.SETTING.SHOW_INSPIRATION.KEY,
+    constants.SETTING.SHOW_INSPIRATION.KEY,
     {
       scope: "world",
       config: false,
@@ -82,7 +84,7 @@ function registerSettings() {
   );
 
   registerSetting(
-    CONSTANTS.SHEET.SETTING.SHOW_USE_LAIR_ACTION.KEY,
+    constants.SETTING.SHOW_USE_LAIR_ACTION.KEY,
     {
       scope: "world",
       config: false,
@@ -92,7 +94,7 @@ function registerSettings() {
   );
 
   registerSetting(
-    CONSTANTS.SHEET.SETTING.SHOW_LEGENDARY_ACTIONS.KEY,
+    constants.SETTING.SHOW_LEGENDARY_ACTIONS.KEY,
     {
       scope: "world",
       config: false,
@@ -102,7 +104,7 @@ function registerSettings() {
   );
 
   registerSetting(
-    CONSTANTS.SHEET.SETTING.SHOW_LEGENDARY_RESISTANCE.KEY,
+    constants.SETTING.SHOW_LEGENDARY_RESISTANCE.KEY,
     {
       scope: "world",
       config: false,
@@ -112,7 +114,7 @@ function registerSettings() {
   );
 
   registerSetting(
-    CONSTANTS.SHEET.SETTING.SHOW_MANAGE_CURRENCY.KEY,
+    constants.SETTING.SHOW_MANAGE_CURRENCY.KEY,
     {
       scope: "world",
       config: false,
@@ -142,33 +144,33 @@ function registerHooks() {
     if ( !sheetType ) return;
 
     if ( html[0].classList.contains("app") ) {
-      if ( getFlag(game.user, CONSTANTS.SHEET.SETTING.AUTO_FADE_SHEET.KEY) ) { enableAutoFade(html); }
-      if ( getFlag(game.user, CONSTANTS.SHEET.SETTING.AUTO_MINIMISE_SHEET.KEY) ) { enableAutoMinimise(app, html); }
+      if ( getFlag(game.user, constants.SETTING.AUTO_FADE_SHEET.KEY) ) { enableAutoFade(html); }
+      if ( getFlag(game.user, constants.SETTING.AUTO_MINIMISE_SHEET.KEY) ) { enableAutoMinimise(app, html); }
     }
 
     setBannerImage(sheetType, html);
-    if ( !getSetting(CONSTANTS.SHEET.SETTING.SHOW_DEATH_SAVES.KEY) ) {
+    if ( !getSetting(constants.SETTING.SHOW_DEATH_SAVES.KEY) ) {
       removeDeathSaves(sheetType, html);
     }
-    if ( !getSetting(CONSTANTS.SHEET.SETTING.SHOW_ENCUMBRANCE.KEY) ) {
+    if ( !getSetting(constants.SETTING.SHOW_ENCUMBRANCE.KEY) ) {
       removeEncumbrance(sheetType, html);
     }
-    if ( !getSetting(CONSTANTS.SHEET.SETTING.SHOW_EXHAUSTION.KEY) ) {
+    if ( !getSetting(constants.SETTING.SHOW_EXHAUSTION.KEY) ) {
       removeExhaustion(sheetType, html);
     }
-    if ( !getSetting(CONSTANTS.SHEET.SETTING.SHOW_INSPIRATION.KEY) ) {
+    if ( !getSetting(constants.SETTING.SHOW_INSPIRATION.KEY) ) {
       removeInspiration(sheetType, html);
     }
-    if ( !getSetting(CONSTANTS.SHEET.SETTING.SHOW_LEGENDARY_ACTIONS.KEY) ) {
+    if ( !getSetting(constants.SETTING.SHOW_LEGENDARY_ACTIONS.KEY) ) {
       removeLegendaryActions(sheetType, html);
     }
-    if ( !getSetting(CONSTANTS.SHEET.SETTING.SHOW_LEGENDARY_RESISTANCE.KEY) ) {
+    if ( !getSetting(constants.SETTING.SHOW_LEGENDARY_RESISTANCE.KEY) ) {
       removeLegendaryResistance(sheetType, html);
     }
-    if ( !getSetting(CONSTANTS.SHEET.SETTING.SHOW_MANAGE_CURRENCY.KEY) ) {
+    if ( !getSetting(constants.SETTING.SHOW_MANAGE_CURRENCY.KEY) ) {
       removeManageCurrency(sheetType, html);
     }
-    if ( !getSetting(CONSTANTS.SHEET.SETTING.SHOW_USE_LAIR_ACTION.KEY) ) {
+    if ( !getSetting(constants.SETTING.SHOW_USE_LAIR_ACTION.KEY) ) {
       removeUseLairAction(sheetType, html);
     }
   });
@@ -260,7 +262,7 @@ function maximise(event, app) {
 function setSheetScale(sheetType, app) {
   if ( !sheetType.character || sheetType.legacy ) return;
 
-  const flag = getFlag(game.user, CONSTANTS.SHEET.SETTING.SHEET_SCALE.KEY);
+  const flag = getFlag(game.user, constants.SETTING.SHEET_SCALE.KEY);
 
   if ( flag ) {
     app.position.scale = flag;
@@ -277,7 +279,7 @@ function setSheetScale(sheetType, app) {
 function setBannerImage(sheetType, html) {
   if ( !sheetType.character || sheetType.legacy ) return;
 
-  const bannerImage = getSetting(CONSTANTS.SHEET.SETTING.BANNER_IMAGE.KEY);
+  const bannerImage = getSetting(constants.SETTING.BANNER_IMAGE.KEY);
 
   if ( !bannerImage ) return;
 

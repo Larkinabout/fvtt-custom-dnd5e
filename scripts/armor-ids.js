@@ -3,7 +3,7 @@ import { checkEmpty, registerMenu, registerSetting, resetDnd5eConfig } from "./u
 import { ArmorIdsForm } from "./forms/config-form.js";
 
 const constants = CONSTANTS.ARMOR_IDS;
-const property = "armorIds";
+const configKey = "armorIds";
 
 /**
  * Register settings and load templates.
@@ -37,7 +37,7 @@ function registerSettings() {
       scope: "world",
       config: false,
       type: Object,
-      default: CONFIG.CUSTOM_DND5E[property]
+      default: CONFIG.CUSTOM_DND5E[configKey]
     }
   );
 }
@@ -50,8 +50,8 @@ function registerSettings() {
  */
 export function setConfig(data = null) {
   if ( checkEmpty(data) ) {
-    if ( checkEmpty(CONFIG.DND5E[property]) ) {
-      resetDnd5eConfig(property);
+    if ( checkEmpty(CONFIG.DND5E[configKey]) ) {
+      resetDnd5eConfig(configKey);
     }
     return;
   }
@@ -64,10 +64,10 @@ export function setConfig(data = null) {
       ])
   );
 
-  const defaultConfig = foundry.utils.deepClone(CONFIG.CUSTOM_DND5E[property]);
+  const defaultConfig = foundry.utils.deepClone(CONFIG.CUSTOM_DND5E[configKey]);
   const config = buildConfig(Object.keys(data), foundry.utils.mergeObject(defaultConfig, data));
 
   if ( config ) {
-    CONFIG.DND5E[property] = config;
+    CONFIG.DND5E[configKey] = config;
   }
 }

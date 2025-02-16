@@ -2,7 +2,8 @@ import { CONSTANTS } from "./constants.js";
 import { checkEmpty, registerMenu, registerSetting, resetDnd5eConfig } from "./utils.js";
 import { LanguagesForm } from "./forms/config-form.js";
 
-const property = "languages";
+const constants = CONSTANTS.LANGUAGES;
+const configKey = "languages";
 
 /**
  * Register settings.
@@ -18,12 +19,12 @@ export function register() {
  */
 function registerSettings() {
   registerMenu(
-    CONSTANTS.LANGUAGES.MENU.KEY,
+    constants.MENU.KEY,
     {
-      hint: game.i18n.localize(CONSTANTS.LANGUAGES.MENU.HINT),
-      label: game.i18n.localize(CONSTANTS.LANGUAGES.MENU.LABEL),
-      name: game.i18n.localize(CONSTANTS.LANGUAGES.MENU.NAME),
-      icon: CONSTANTS.LANGUAGES.MENU.ICON,
+      hint: game.i18n.localize(constants.MENU.HINT),
+      label: game.i18n.localize(constants.MENU.LABEL),
+      name: game.i18n.localize(constants.MENU.NAME),
+      icon: constants.MENU.ICON,
       type: LanguagesForm,
       restricted: true,
       scope: "world"
@@ -31,12 +32,12 @@ function registerSettings() {
   );
 
   registerSetting(
-    CONSTANTS.LANGUAGES.SETTING.KEY,
+    constants.SETTING.KEY,
     {
       scope: "world",
       config: false,
       type: Object,
-      default: foundry.utils.deepClone(CONFIG.CUSTOM_DND5E[property])
+      default: foundry.utils.deepClone(CONFIG.CUSTOM_DND5E[configKey])
     }
   );
 }
@@ -49,8 +50,8 @@ function registerSettings() {
  */
 export function setConfig(data = null) {
   if ( checkEmpty(data) ) {
-    if ( checkEmpty(CONFIG.DND5E[property]) ) {
-      resetDnd5eConfig(property);
+    if ( checkEmpty(CONFIG.DND5E[configKey]) ) {
+      resetDnd5eConfig(configKey);
     }
     return;
   }
@@ -66,12 +67,12 @@ export function setConfig(data = null) {
       ])
   );
 
-  const coreConfig = foundry.utils.deepClone(CONFIG.CUSTOM_DND5E[property]);
-  const currentConfig = foundry.utils.deepClone(CONFIG.DND5E[property]);
+  const coreConfig = foundry.utils.deepClone(CONFIG.CUSTOM_DND5E[configKey]);
+  const currentConfig = foundry.utils.deepClone(CONFIG.DND5E[configKey]);
   const mergedConfig = foundry.utils.mergeObject(foundry.utils.mergeObject(coreConfig, currentConfig), data);
   const config = buildConfig(Object.keys(mergedConfig), mergedConfig);
 
   if ( config ) {
-    CONFIG.DND5E[property] = config;
+    CONFIG.DND5E[configKey] = config;
   }
 }

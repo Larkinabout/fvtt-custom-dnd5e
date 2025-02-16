@@ -1,0 +1,10 @@
+<footer class="form-footer" data-application-part="footer">
+    {{#unless (customDnd5eBoolFalse system)}}
+    <button type="button" data-action="reset" class="reset-button">
+        <i class="fas fa-arrow-rotate-left"></i>{{localize "CUSTOM_DND5E.form.button.reset.label"}}
+    </button>
+    {{/unless}}
+    <button type="submit" class="save-button">
+        <i class="fas fa-solid fa-floppy-disk"></i>{{localize "CUSTOM_DND5E.form.button.save.label"}}
+    </button>
+</footer>

@@ -1,16 +1,29 @@
 import { CONSTANTS, JOURNAL_HELP_BUTTON, MODULE } from "../constants.js";
 import { Logger, getSetting, setSetting } from "../utils.js";
 import { CustomDnd5eForm } from "./custom-dnd5e-form.js";
+import { ConfigEditForm } from "./config-edit-form.js";
+import { AbilitiesEditForm } from "./abilities-edit-form.js";
+import { ActivationCostsEditForm } from "./activation-costs-edit-form.js";
+import { ActorSizesEditForm } from "./actor-sizes-edit-form.js";
+import { ArmorCalculationsEditForm } from "./armor-calculations-edit-form.js";
+import { ConditionsEditForm } from "./conditions-edit-form.js";
+import { CurrencyEditForm } from "./currency-edit-form.js";
+import { DamageTypesEditForm } from "./damage-types-edit-form.js";
+import { ItemPropertiesEditForm } from "./item-properties-edit-form.js";
+import { SkillsEditForm } from "./skills-edit-form.js";
+import { SpellSchoolsEditForm } from "./spell-schools-edit-form.js";
 import { setConfig as setAbilities } from "../abilities.js";
 import { setConfig as setActivationCosts } from "../activation-costs.js";
 import { setConfig as setArmorCalculations } from "../armor-calculations.js";
 import { setConfig as setArmorIds } from "../armor-ids.js";
 import { setConfig as setActorSizes } from "../actor-sizes.js";
 import { setConfig as setConsumableTypes } from "../consumable-types.js";
+import { setConfig as setConditions } from "../conditions.js";
 import { setConfig as setCurrency } from "../currency.js";
 import { setConfig as setDamageTypes } from "../damage-types.js";
 import { setConfig as setItemActionTypes } from "../item-action-types.js";
 import { setConfig as setItemActivationCostTypes } from "../item-activation-cost-types.js";
+import { setConfig as setItemProperties } from "../item-properties.js";
 import { setConfig as setItemRarity } from "../item-rarity.js";
 import { setConfig as setLanguages } from "../languages.js";
 import { setConfig as setSenses } from "../senses.js";
@@ -37,6 +50,7 @@ export class ConfigForm extends CustomDnd5eForm {
    */
   constructor(options = {}) {
     super(options);
+    this.editForm = ConfigEditForm;
     this.label = "CUSTOM_DND5E.label";
   }
 
@@ -49,6 +63,7 @@ export class ConfigForm extends CustomDnd5eForm {
    */
   static DEFAULT_OPTIONS = {
     actions: {
+      edit: ConfigForm.edit,
       new: ConfigForm.createItem,
       reset: ConfigForm.reset,
       validate: ConfigForm.validate
@@ -80,17 +95,19 @@ export class ConfigForm extends CustomDnd5eForm {
    * @returns {Promise<object>} The context data.
    */
   async _prepareContext() {
-    this.config = foundry.utils.deepClone(CONFIG.DND5E[this.type]);
+    this.config = foundry.utils.deepClone(CONFIG.DND5E[this.configKey]);
     this.setting = getSetting(this.settingKey);
-    const data = (this.includeConfig) ? foundry.utils.mergeObject(this.config, this.setting) : this.setting;
+    const data = (this.includeConfig && this.config)
+      ? foundry.utils.mergeObject(this.config, this.setting)
+      : this.setting;
 
     const labelise = data => {
       Object.entries(data).forEach(([key, value]) => {
-        if (typeof value === "string") {
+        if ( typeof value === "string" ) {
           data[key] = { label: value };
         }
 
-        if (value.children || value.subtypes) {
+        if ( value.children || value.subtypes ) {
           labelise(value.children || value.subtypes);
         }
       });
@@ -100,7 +117,9 @@ export class ConfigForm extends CustomDnd5eForm {
 
     const context = { label: this.label, items: data };
     const selects = this._getSelects();
-    if (selects) context.selects = selects;
+    if ( selects ) context.selects = selects;
+    if ( this.disableCreate ) context.disableCreate = this.disableCreate;
+    if ( this.editInList ) context.editInList = this.editInList;
 
     return context;
   }
@@ -119,14 +138,34 @@ export class ConfigForm extends CustomDnd5eForm {
   /* -------------------------------------------- */
 
   /**
+   * Edit an item.
+   *
+   * @param {Event} event The event that triggered the edit.
+   * @param {HTMLElement} target The target element.
+   */
+  static async edit(event, target) {
+    const item = target.closest(".custom-dnd5e-item");
+    if ( !item ) return;
+
+    const key = item.dataset.key;
+    if ( !key ) return;
+
+    const args = { form: this, editForm: this.editForm, data: { key }, setting: this.setting };
+    await ConfigEditForm.open(args);
+  }
+
+
+  /* -------------------------------------------- */
+
+  /**
    * Reset the form to its default settings.
    *
    * @returns {Promise<void>}
    */
   static async reset() {
     const reset = async () => {
-      await setSetting(this.settingKey, foundry.utils.deepClone(CONFIG.CUSTOM_DND5E[this.type]));
-      this.setConfig(CONFIG.CUSTOM_DND5E[this.type]);
+      await setSetting(this.settingKey, foundry.utils.deepClone(CONFIG.CUSTOM_DND5E[this.configKey]));
+      this.setConfig(CONFIG.CUSTOM_DND5E[this.configKey]);
       this.render(true);
     };
 
@@ -154,26 +193,37 @@ export class ConfigForm extends CustomDnd5eForm {
    * Create a new item in the form.
    */
   static async createItem() {
-    const list = this.element.querySelector(listClassSelector);
-    const scrollable = list.closest(".scrollable");
+    if ( this.editInList ) {
+      const list = this.element.querySelector(listClassSelector);
+      const scrollable = list.closest(".scrollable");
 
-    const key = foundry.utils.randomID();
+      const key = foundry.utils.randomID();
 
-    const template = await this._getHtml({ items: { [key]: { fullKey: key, system: false, visible: true } } });
+      const template = await this._getHtml({ items: { [key]: { fullKey: key, system: false, visible: true } } });
 
-    list.insertAdjacentHTML("beforeend", template);
+      list.insertAdjacentHTML("beforeend", template);
 
-    const item = list.querySelector(`[data-key="${key}"]`);
-    const dragElement = item.querySelector(".custom-dnd5e-drag");
+      const item = list.querySelector(`[data-key="${key}"]`);
+      const dragElement = item.querySelector(".custom-dnd5e-drag");
 
-    item.addEventListener("dragend", this._onDragEnd.bind(this));
-    item.addEventListener("dragleave", this._onDragLeave.bind(this));
-    item.addEventListener("dragover", this._onDragOver.bind(this));
-    item.addEventListener("drop", this._onDrop.bind(this));
-    dragElement.addEventListener("dragstart", this._onDragStart.bind(this));
+      item.addEventListener("dragend", this._onDragEnd.bind(this));
+      item.addEventListener("dragleave", this._onDragLeave.bind(this));
+      item.addEventListener("dragover", this._onDragOver.bind(this));
+      item.addEventListener("drop", this._onDrop.bind(this));
+      dragElement.addEventListener("dragstart", this._onDragStart.bind(this));
 
-    if (scrollable) {
-      scrollable.scrollTop = scrollable.scrollHeight;
+      if ( scrollable ) {
+        scrollable.scrollTop = scrollable.scrollHeight;
+      }
+    } else {
+      const args = {
+        form: this,
+        editForm: this.editForm,
+        data: { key: foundry.utils.randomID(), system: false },
+        setting: this.setting
+      };
+
+      await ConfigEditForm.open(args);
     }
   }
 
@@ -200,11 +250,16 @@ export class ConfigForm extends CustomDnd5eForm {
    * @param {object} formData The form data.
    */
   static async submit(event, form, formData) {
-    if (!this.validateFormData(formData)) return;
+    if ( !this.validateFormData(formData) ) return;
 
     const propertiesToIgnore = ["children", "delete", "key", "parentKey"];
     const changedKeys = this.getChangedKeys(formData);
-    const processedFormData = this.processFormData({ formData, changedKeys, propertiesToIgnore });
+    const processedFormData = this.processFormData({
+      formData,
+      changedKeys,
+      propertiesToIgnore,
+      setting: this.setting
+    });
 
     this.updateActorKeys({ changedKeys, actorProperties: this.actorProperties });
 
@@ -242,10 +297,11 @@ export class AbilitiesForm extends ConfigForm {
    */
   constructor() {
     super();
+    this.editForm = AbilitiesEditForm;
     this.requiresReload = true;
     this.settingKey = CONSTANTS.ABILITIES.SETTING.KEY;
     this.setConfig = setAbilities;
-    this.type = "abilities";
+    this.configKey = "abilities";
     this.headerButton = JOURNAL_HELP_BUTTON;
     this.headerButton.uuid = CONSTANTS.ABILITIES.UUID;
   }
@@ -263,62 +319,6 @@ export class AbilitiesForm extends ConfigForm {
       title: "CUSTOM_DND5E.form.abilities.title"
     }
   };
-
-  /* -------------------------------------------- */
-
-  /**
-   * Parts of the form.
-   *
-   * @type {object}
-   */
-  static PARTS = {
-    form: {
-      template: CONSTANTS.ABILITIES.TEMPLATE.FORM
-    }
-  };
-
-  /* -------------------------------------------- */
-
-  /**
-   * Get the select options for the form.
-   *
-   * @returns {object} The select options.
-   */
-  _getSelects() {
-    return {
-      rollMode: {
-        choices: {
-          default: "CUSTOM_DND5E.default",
-          blindroll: "CHAT.RollBlind",
-          gmroll: "CHAT.RollPrivate",
-          publicroll: "CHAT.RollPublic",
-          selfroll: "CHAT.RollSelf"
-        }
-      },
-      type: {
-        choices: {
-          mental: "CUSTOM_DND5E.mental",
-          physical: "CUSTOM_DND5E.physical"
-        }
-      }
-    };
-  }
-
-  /* -------------------------------------------- */
-
-  /**
-   * Get the HTML template for the form.
-   *
-   * @param {object} data The data to be passed to the template.
-   * @returns {Promise<string>} The rendered template.
-   */
-  async _getHtml(data) {
-    const selects = this._getSelects();
-    if (selects) data.selects = selects;
-
-    const template = await renderTemplate(CONSTANTS.ABILITIES.TEMPLATE.LIST, data);
-    return template;
-  }
 }
 
 /* -------------------------------------------- */
@@ -334,10 +334,11 @@ export class ActivationCostsForm extends ConfigForm {
    */
   constructor() {
     super();
+    this.editForm = ActivationCostsEditForm;
     this.requiresReload = false;
     this.settingKey = CONSTANTS.ACTIVATION_COSTS.SETTING.KEY;
     this.setConfig = setActivationCosts;
-    this.type = "activityActivationTypes";
+    this.configKey = "activityActivationTypes";
     this.headerButton = JOURNAL_HELP_BUTTON;
     this.headerButton.uuid = CONSTANTS.ACTIVATION_COSTS.UUID;
   }
@@ -352,35 +353,9 @@ export class ActivationCostsForm extends ConfigForm {
   static DEFAULT_OPTIONS = {
     id: `${MODULE.ID}-activation-costs-form`,
     window: {
-      title: "CUSTOM_DND5E.form.activationCosts.title"
+      title: "CUSTOM_DND5E.form.activityActivationTypes.title"
     }
   };
-
-  /* -------------------------------------------- */
-
-  /**
-   * Parts of the form.
-   *
-   * @type {object}
-   */
-  static PARTS = {
-    form: {
-      template: CONSTANTS.ACTIVATION_COSTS.TEMPLATE.FORM
-    }
-  };
-
-  /* -------------------------------------------- */
-
-  /**
-   * Get the HTML template for the form.
-   *
-   * @param {object} data The data to be passed to the template.
-   * @returns {Promise<string>} The rendered template.
-   */
-  async _getHtml(data) {
-    const template = await renderTemplate(CONSTANTS.ACTIVATION_COSTS.TEMPLATE.LIST, data);
-    return template;
-  }
 }
 
 /* -------------------------------------------- */
@@ -396,10 +371,11 @@ export class ActorSizesForm extends ConfigForm {
    */
   constructor() {
     super();
+    this.editForm = ActorSizesEditForm;
     this.requiresReload = false;
     this.settingKey = CONSTANTS.ACTOR_SIZES.SETTING.KEY;
     this.setConfig = setActorSizes;
-    this.type = "actorSizes";
+    this.configKey = "actorSizes";
     this.headerButton = JOURNAL_HELP_BUTTON;
     this.headerButton.uuid = CONSTANTS.ACTOR_SIZES.UUID;
   }
@@ -417,32 +393,6 @@ export class ActorSizesForm extends ConfigForm {
       title: "CUSTOM_DND5E.form.actorSizes.title"
     }
   };
-
-  /* -------------------------------------------- */
-
-  /**
-   * Parts of the form.
-   *
-   * @type {object}
-   */
-  static PARTS = {
-    form: {
-      template: CONSTANTS.ACTOR_SIZES.TEMPLATE.FORM
-    }
-  };
-
-  /* -------------------------------------------- */
-
-  /**
-   * Get the HTML template for the form.
-   *
-   * @param {object} data The data to be passed to the template.
-   * @returns {Promise<string>} The rendered template.
-   */
-  async _getHtml(data) {
-    const template = await renderTemplate(CONSTANTS.ACTOR_SIZES.TEMPLATE.LIST, data);
-    return template;
-  }
 }
 
 /* -------------------------------------------- */
@@ -458,10 +408,11 @@ export class ArmorCalculationsForm extends ConfigForm {
    */
   constructor() {
     super();
+    this.editForm = ArmorCalculationsEditForm;
     this.requiresReload = false;
     this.settingKey = CONSTANTS.ARMOR_CALCULATIONS.SETTING.KEY;
     this.setConfig = setArmorCalculations;
-    this.type = "armorClasses";
+    this.configKey = "armorClasses";
     this.headerButton = JOURNAL_HELP_BUTTON;
     this.headerButton.uuid = CONSTANTS.ARMOR_CALCULATIONS.UUID;
   }
@@ -476,35 +427,9 @@ export class ArmorCalculationsForm extends ConfigForm {
   static DEFAULT_OPTIONS = {
     id: `${MODULE.ID}-armor-calculations-form`,
     window: {
-      title: "CUSTOM_DND5E.form.armorCalculations.title"
+      title: "CUSTOM_DND5E.form.armorClasses.title"
     }
   };
-
-  /* -------------------------------------------- */
-
-  /**
-   * Parts of the form.
-   *
-   * @type {object}
-   */
-  static PARTS = {
-    form: {
-      template: CONSTANTS.ARMOR_CALCULATIONS.TEMPLATE.FORM
-    }
-  };
-
-  /* -------------------------------------------- */
-
-  /**
-   * Get the HTML template for the form.
-   *
-   * @param {object} data The data to be passed to the template.
-   * @returns {Promise<string>} The rendered template.
-   */
-  async _getHtml(data) {
-    const template = await renderTemplate(CONSTANTS.ARMOR_CALCULATIONS.TEMPLATE.LIST, data);
-    return template;
-  }
 }
 
 /* -------------------------------------------- */
@@ -520,10 +445,11 @@ export class ArmorIdsForm extends IdForm {
    */
   constructor() {
     super();
+    this.editInList = true;
     this.requiresReload = true;
     this.settingKey = CONSTANTS.ARMOR_IDS.SETTING.KEY;
     this.setConfig = setArmorIds;
-    this.type = "armorIds";
+    this.configKey = "armorIds";
     this.headerButton = JOURNAL_HELP_BUTTON;
     this.headerButton.uuid = CONSTANTS.ARMOR_IDS.UUID;
   }
@@ -582,12 +508,13 @@ export class ConsumableTypesForm extends ConfigForm {
    */
   constructor() {
     super();
+    this.editInList = true;
     this.nestable = true;
     this.nestType = "subtypes";
     this.requiresReload = false;
     this.settingKey = CONSTANTS.CONSUMABLE_TYPES.SETTING.KEY;
     this.setConfig = setConsumableTypes;
-    this.type = "consumableTypes";
+    this.configKey = "consumableTypes";
     this.headerButton = JOURNAL_HELP_BUTTON;
     this.headerButton.uuid = CONSTANTS.CONSUMABLE_TYPES.UUID;
   }
@@ -610,6 +537,44 @@ export class ConsumableTypesForm extends ConfigForm {
 /* -------------------------------------------- */
 
 /**
+ * Class representing the Conditions Form.
+ *
+ * @extends ConfigForm
+ */
+export class ConditionsForm extends ConfigForm {
+  /**
+   * Constructor for ConditionsForm.
+   */
+  constructor() {
+    super();
+    this.editForm = ConditionsEditForm;
+    this.includeConfig = false;
+    this.requiresReload = false;
+    this.settingKey = CONSTANTS.CONDITIONS.SETTING.KEY;
+    this.setConfig = setConditions;
+    this.configKey = "conditions";
+    this.headerButton = JOURNAL_HELP_BUTTON;
+    this.headerButton.uuid = CONSTANTS.CONDITIONS.UUID;
+  }
+
+  /* -------------------------------------------- */
+
+  /**
+   * Default options for the form.
+   *
+   * @type {object}
+   */
+  static DEFAULT_OPTIONS = {
+    id: `${MODULE.ID}-conditions-form`,
+    window: {
+      title: "CUSTOM_DND5E.form.conditions.title"
+    }
+  };
+}
+
+/* -------------------------------------------- */
+
+/**
  * Class representing the Currency Form.
  *
  * @extends ConfigForm
@@ -620,10 +585,12 @@ export class CurrencyForm extends ConfigForm {
    */
   constructor() {
     super();
+    this.disableCreate = true;
+    this.editForm = CurrencyEditForm;
     this.requiresReload = false;
     this.settingKey = CONSTANTS.CURRENCY.SETTING.KEY;
     this.setConfig = setCurrency;
-    this.type = "currencies";
+    this.configKey = "currencies";
     this.headerButton = JOURNAL_HELP_BUTTON;
     this.headerButton.uuid = CONSTANTS.CURRENCY.UUID;
   }
@@ -638,35 +605,9 @@ export class CurrencyForm extends ConfigForm {
   static DEFAULT_OPTIONS = {
     id: `${MODULE.ID}-currency-form`,
     window: {
-      title: "CUSTOM_DND5E.form.currency.title"
+      title: "CUSTOM_DND5E.form.currencies.title"
     }
   };
-
-  /* -------------------------------------------- */
-
-  /**
-   * Parts of the form.
-   *
-   * @type {object}
-   */
-  static PARTS = {
-    form: {
-      template: CONSTANTS.CURRENCY.TEMPLATE.FORM
-    }
-  };
-
-  /* -------------------------------------------- */
-
-  /**
-   * Get the HTML template for the form.
-   *
-   * @param {object} data The data to be passed to the template.
-   * @returns {Promise<string>} The rendered template.
-   */
-  async _getHtml(data) {
-    const template = await renderTemplate(CONSTANTS.CURRENCY.TEMPLATE.LIST, data);
-    return template;
-  }
 }
 
 /* -------------------------------------------- */
@@ -682,10 +623,11 @@ export class DamageTypesForm extends ConfigForm {
    */
   constructor() {
     super();
+    this.editForm = DamageTypesEditForm;
     this.requiresReload = false;
     this.settingKey = CONSTANTS.DAMAGE_TYPES.SETTING.KEY;
     this.setConfig = setDamageTypes;
-    this.type = "damageTypes";
+    this.configKey = "damageTypes";
     this.actorProperties = ["system.traits.di.value", "system.traits.dr.value", "system.traits.dv.value"];
     this.headerButton = JOURNAL_HELP_BUTTON;
     this.headerButton.uuid = CONSTANTS.DAMAGE_TYPES.UUID;
@@ -704,32 +646,6 @@ export class DamageTypesForm extends ConfigForm {
       title: "CUSTOM_DND5E.form.damageTypes.title"
     }
   };
-
-  /* -------------------------------------------- */
-
-  /**
-   * Parts of the form.
-   *
-   * @type {object}
-   */
-  static PARTS = {
-    form: {
-      template: CONSTANTS.DAMAGE_TYPES.TEMPLATE.FORM
-    }
-  };
-
-  /* -------------------------------------------- */
-
-  /**
-   * Get the HTML template for the form.
-   *
-   * @param {object} data The data to be passed to the template.
-   * @returns {Promise<string>} The rendered template.
-   */
-  async _getHtml(data) {
-    const template = await renderTemplate(CONSTANTS.DAMAGE_TYPES.TEMPLATE.LIST, data);
-    return template;
-  }
 }
 
 /* -------------------------------------------- */
@@ -748,7 +664,7 @@ export class ItemActionTypesForm extends ConfigForm {
     this.requiresReload = false;
     this.settingKey = CONSTANTS.ITEM_ACTION_TYPES.SETTING.KEY;
     this.setConfig = setItemActionTypes;
-    this.type = "itemActionTypes";
+    this.configKey = "itemActionTypes";
     this.headerButton = JOURNAL_HELP_BUTTON;
     this.headerButton.uuid = CONSTANTS.ITEM_ACTION_TYPES.UUID;
   }
@@ -784,7 +700,7 @@ export class ItemActivationCostTypesForm extends ConfigForm {
     this.requiresReload = false;
     this.settingKey = CONSTANTS.ITEM_ACTIVATION_COST_TYPES.SETTING.KEY;
     this.setConfig = setItemActivationCostTypes;
-    this.type = "abilityActivationTypes";
+    this.configKey = "abilityActivationTypes";
     this.headerButton = JOURNAL_HELP_BUTTON;
     this.headerButton.uuid = CONSTANTS.ITEM_ACTIVATION_COST_TYPES.UUID;
   }
@@ -807,6 +723,43 @@ export class ItemActivationCostTypesForm extends ConfigForm {
 /* -------------------------------------------- */
 
 /**
+ * Class representing the Item Properties form.
+ *
+ * @extends ConfigForm
+ */
+export class ItemPropertiesForm extends ConfigForm {
+  /**
+   * Constructor for ItemPropertiesForm.
+   */
+  constructor() {
+    super();
+    this.editForm = ItemPropertiesEditForm;
+    this.requiresReload = false;
+    this.settingKey = CONSTANTS.ITEM_PROPERTIES.SETTING.KEY;
+    this.setConfig = setItemProperties;
+    this.configKey = "itemProperties";
+    this.headerButton = JOURNAL_HELP_BUTTON;
+    this.headerButton.uuid = CONSTANTS.ITEM_PROPERTIES.UUID;
+  }
+
+  /* -------------------------------------------- */
+
+  /**
+   * Default options for the form.
+   *
+   * @type {object}
+   */
+  static DEFAULT_OPTIONS = {
+    id: `${MODULE.ID}-item-properties-form`,
+    window: {
+      title: "CUSTOM_DND5E.form.itemProperties.title"
+    }
+  };
+}
+
+/* -------------------------------------------- */
+
+/**
  * Class representing the Item Rarity Form.
  * @extends ConfigForm
  */
@@ -816,10 +769,11 @@ export class ItemRarityForm extends ConfigForm {
    */
   constructor() {
     super();
+    this.editInList = true;
     this.requiresReload = false;
     this.settingKey = CONSTANTS.ITEM_RARITY.SETTING.KEY;
     this.setConfig = setItemRarity;
-    this.type = "itemRarity";
+    this.configKey = "itemRarity";
     this.headerButton = JOURNAL_HELP_BUTTON;
     this.headerButton.uuid = CONSTANTS.ITEM_RARITY.UUID;
   }
@@ -851,11 +805,12 @@ export class LanguagesForm extends ConfigForm {
    */
   constructor() {
     super();
+    this.editInList = true;
     this.nestable = true;
     this.requiresReload = false;
     this.settingKey = CONSTANTS.LANGUAGES.SETTING.KEY;
     this.setConfig = setLanguages;
-    this.type = "languages";
+    this.configKey = "languages";
     this.headerButton = JOURNAL_HELP_BUTTON;
     this.headerButton.uuid = CONSTANTS.LANGUAGES.UUID;
   }
@@ -887,11 +842,12 @@ export class SensesForm extends ConfigForm {
    */
   constructor() {
     super();
+    this.editInList = true;
     this.requiresReload = false;
     this.settingKey = CONSTANTS.SENSES.SETTING.KEY;
     // This.setConfig = setSenses // Temporarily removed until custom senses is supported in the dnd5e system
     this.setConfig = null;
-    this.type = "senses";
+    this.configKey = "senses";
     this.headerButton = JOURNAL_HELP_BUTTON;
     this.headerButton.uuid = CONSTANTS.SENSES.UUID;
     this.includeConfig = false;
@@ -924,10 +880,11 @@ export class SkillsForm extends ConfigForm {
    */
   constructor() {
     super();
+    this.editForm = SkillsEditForm;
     this.requiresReload = true;
     this.settingKey = CONSTANTS.SKILLS.SETTING.KEY;
     this.setConfig = setSkills;
-    this.type = "skills";
+    this.configKey = "skills";
     this.headerButton = JOURNAL_HELP_BUTTON;
     this.headerButton.uuid = CONSTANTS.SKILLS.UUID;
   }
@@ -945,56 +902,6 @@ export class SkillsForm extends ConfigForm {
       title: "CUSTOM_DND5E.form.skills.title"
     }
   };
-
-  /* -------------------------------------------- */
-
-  /**
-   * Parts of the form.
-   *
-   * @type {object}
-   */
-  static PARTS = {
-    form: {
-      template: CONSTANTS.SKILLS.TEMPLATE.FORM
-    }
-  };
-
-  /* -------------------------------------------- */
-
-  /**
-   * Get the HTML template for the form.
-   *
-   * @param {object} data The data to be passed to the template.
-   * @returns {Promise<string>} The rendered template.
-   */
-  async _getHtml(data) {
-    const selects = this._getSelects();
-    if (selects) data.selects = selects;
-
-    const template = await renderTemplate(CONSTANTS.SKILLS.TEMPLATE.LIST, data);
-    return template;
-  }
-
-  /* -------------------------------------------- */
-
-  /**
-   * Get the select options for the form.
-   *
-   * @returns {object} The select options.
-   */
-  _getSelects() {
-    return {
-      rollMode: {
-        choices: {
-          default: "CUSTOM_DND5E.default",
-          blindroll: "CHAT.RollBlind",
-          gmroll: "CHAT.RollPrivate",
-          publicroll: "CHAT.RollPublic",
-          selfroll: "CHAT.RollSelf"
-        }
-      }
-    };
-  }
 }
 
 /* -------------------------------------------- */
@@ -1009,10 +916,11 @@ export class SpellSchoolsForm extends ConfigForm {
    */
   constructor() {
     super();
+    this.editForm = SpellSchoolsEditForm;
     this.requiresReload = false;
     this.settingKey = CONSTANTS.SPELL_SCHOOLS.SETTING.KEY;
     this.setConfig = setSpellSchools;
-    this.type = "spellSchools";
+    this.configKey = "spellSchools";
     this.headerButton = JOURNAL_HELP_BUTTON;
     this.headerButton.uuid = CONSTANTS.SPELL_SCHOOLS.UUID;
   }
@@ -1030,32 +938,6 @@ export class SpellSchoolsForm extends ConfigForm {
       title: "CUSTOM_DND5E.form.spellSchools.title"
     }
   };
-
-  /* -------------------------------------------- */
-
-  /**
-   * Parts of the form.
-   *
-   * @type {object}
-   */
-  static PARTS = {
-    form: {
-      template: CONSTANTS.SPELL_SCHOOLS.TEMPLATE.FORM
-    }
-  };
-
-  /* -------------------------------------------- */
-
-  /**
-   * Get the HTML template for the form.
-   *
-   * @param {object} data The data to be passed to the template.
-   * @returns {Promise<string>} The rendered template.
-   */
-  async _getHtml(data) {
-    const template = await renderTemplate(CONSTANTS.SPELL_SCHOOLS.TEMPLATE.LIST, data);
-    return template;
-  }
 }
 
 /* -------------------------------------------- */
@@ -1071,10 +953,11 @@ export class ToolIdsForm extends IdForm {
    */
   constructor() {
     super();
+    this.editInList = true;
     this.requiresReload = true;
     this.settingKey = CONSTANTS.TOOL_IDS.SETTING.KEY;
     this.setConfig = setToolIds;
-    this.type = "toolIds";
+    this.configKey = "toolIds";
     this.headerButton = JOURNAL_HELP_BUTTON;
     this.headerButton.uuid = CONSTANTS.TOOL_IDS.UUID;
   }
@@ -1133,10 +1016,11 @@ export class WeaponIdsForm extends IdForm {
    */
   constructor() {
     super();
+    this.editInList = true;
     this.requiresReload = true;
     this.settingKey = CONSTANTS.WEAPON_IDS.SETTING.KEY;
     this.setConfig = setWeaponIds;
-    this.type = "weaponIds";
+    this.configKey = "weaponIds";
     this.headerButton = JOURNAL_HELP_BUTTON;
     this.headerButton.uuid = CONSTANTS.WEAPON_IDS.UUID;
   }

@@ -1,6 +1,8 @@
 import { CONSTANTS, MODULE } from "./constants.js";
 import { Logger, getSetting, setSetting, registerSetting } from "./utils.js";
 
+const constants = CONSTANTS.MIGRATION;
+
 /**
  * Register settings.
  */
@@ -15,7 +17,7 @@ export function register() {
  */
 function registerSettings() {
   registerSetting(
-    CONSTANTS.MIGRATION.VERSION.SETTING.KEY,
+    constants.VERSION.SETTING.KEY,
     {
       scope: "world",
       config: false,
@@ -33,7 +35,7 @@ export function migrate() {
   if ( !game.user.isGM ) return;
 
   const moduleVersion = game.modules.get(MODULE.ID).version;
-  const migrationVersion = getSetting(CONSTANTS.MIGRATION.VERSION.SETTING.KEY);
+  const migrationVersion = getSetting(constants.VERSION.SETTING.KEY);
 
   if ( moduleVersion === migrationVersion ) return;
 
@@ -42,7 +44,7 @@ export function migrate() {
   isSuccess = (!migrationVersion || foundry.utils.isNewerVersion("1.4.0", migrationVersion)) ? migrateAwardInspirationRollType() : true;
 
   if ( isSuccess ) {
-    setSetting(CONSTANTS.MIGRATION.VERSION.SETTING.KEY, moduleVersion);
+    setSetting(constants.VERSION.SETTING.KEY, moduleVersion);
   }
 }
 

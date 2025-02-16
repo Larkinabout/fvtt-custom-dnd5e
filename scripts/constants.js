@@ -7,6 +7,7 @@ export const CONSTANTS = {
   CONFIG: {
     TEMPLATE: {
       FORM: "modules/custom-dnd5e/templates/config-form.hbs",
+      EDIT_IN_LIST: "modules/custom-dnd5e/templates/config-edit-in-list.hbs",
       LIST: "modules/custom-dnd5e/templates/config-list.hbs"
     }
   },
@@ -23,8 +24,7 @@ export const CONSTANTS = {
       KEY: "abilities"
     },
     TEMPLATE: {
-      FORM: "modules/custom-dnd5e/templates/abilities-form.hbs",
-      LIST: "modules/custom-dnd5e/templates/abilities-list.hbs"
+      EDIT: "modules/custom-dnd5e/templates/abilities-edit.hbs",
     },
     UUID: "Compendium.custom-dnd5e.custom-dnd5e-journals.JournalEntry.B48iqFBddUikMMer.JournalEntryPage.tVG6b7kBJUOVvpwP"
   },
@@ -32,17 +32,18 @@ export const CONSTANTS = {
     ID: "activation-costs",
     MENU: {
       KEY: "activation-costs-menu",
-      HINT: "CUSTOM_DND5E.menu.activationCosts.hint",
+      HINT: "CUSTOM_DND5E.menu.activityActivationTypes.hint",
       ICON: "fas fa-pen-to-square",
-      LABEL: "CUSTOM_DND5E.menu.activationCosts.label",
-      NAME: "CUSTOM_DND5E.menu.activationCosts.name"
+      LABEL: "CUSTOM_DND5E.menu.activityActivationTypes.label",
+      NAME: "CUSTOM_DND5E.menu.activityActivationTypes.name"
     },
     SETTING: {
       KEY: "activation-costs"
     },
     TEMPLATE: {
-      FORM: "modules/custom-dnd5e/templates/activation-costs-form.hbs",
-      LIST: "modules/custom-dnd5e/templates/activation-costs-list.hbs"
+      EDIT: "modules/custom-dnd5e/templates/activation-costs-edit.hbs",
+      FORM: "modules/custom-dnd5e/templates/config-form.hbs",
+      LIST: "modules/custom-dnd5e/templates/config-list.hbs"
     },
     UUID: "Compendium.custom-dnd5e.custom-dnd5e-journals.JournalEntry.B48iqFBddUikMMer.JournalEntryPage.LehHpGOmEbRQ4day"
   },
@@ -59,8 +60,7 @@ export const CONSTANTS = {
       KEY: "actor-sizes"
     },
     TEMPLATE: {
-      FORM: "modules/custom-dnd5e/templates/actor-sizes-form.hbs",
-      LIST: "modules/custom-dnd5e/templates/actor-sizes-list.hbs"
+      EDIT: "modules/custom-dnd5e/templates/actor-sizes-edit.hbs",
     },
     UUID: "Compendium.custom-dnd5e.custom-dnd5e-journals.JournalEntry.B48iqFBddUikMMer.JournalEntryPage.V3QbxNviHsZd8Ssb"
   },
@@ -68,17 +68,16 @@ export const CONSTANTS = {
     ID: "armor-calculations",
     MENU: {
       KEY: "armor-calculations-menu",
-      HINT: "CUSTOM_DND5E.menu.armorCalculations.hint",
+      HINT: "CUSTOM_DND5E.menu.armorClasses.hint",
       ICON: "fas fa-pen-to-square",
-      LABEL: "CUSTOM_DND5E.menu.armorCalculations.label",
-      NAME: "CUSTOM_DND5E.menu.armorCalculations.name"
+      LABEL: "CUSTOM_DND5E.menu.armorClasses.label",
+      NAME: "CUSTOM_DND5E.menu.armorClasses.name"
     },
     SETTING: {
       KEY: "armor-calculations"
     },
     TEMPLATE: {
-      FORM: "modules/custom-dnd5e/templates/armor-calculations-form.hbs",
-      LIST: "modules/custom-dnd5e/templates/armor-calculations-list.hbs"
+      EDIT: "modules/custom-dnd5e/templates/armor-calculations-edit.hbs",
     },
     UUID: "Compendium.custom-dnd5e.custom-dnd5e-journals.JournalEntry.B48iqFBddUikMMer.JournalEntryPage.bjFllCYYW9paPCNG"
   },
@@ -95,7 +94,7 @@ export const CONSTANTS = {
     },
     TEMPLATE: {
       FORM: "modules/custom-dnd5e/templates/config-form.hbs",
-      LIST: "modules/custom-dnd5e/templates/config-list.hbs"
+      LIST: "modules/custom-dnd5e/templates/config-edit-in-list.hbs"
     },
     UUID: "Compendium.custom-dnd5e.custom-dnd5e-journals.JournalEntry.B48iqFBddUikMMer.JournalEntryPage.ehZqnZslXx3cknv9"
   },
@@ -112,7 +111,7 @@ export const CONSTANTS = {
     },
     TEMPLATE: {
       FORM: "modules/custom-dnd5e/templates/config-form.hbs",
-      LIST: "modules/custom-dnd5e/templates/config-list.hbs"
+      LIST: "modules/custom-dnd5e/templates/config-edit-in-list.hbs"
     },
     UUID: "Compendium.custom-dnd5e.custom-dnd5e-journals.JournalEntry.B48iqFBddUikMMer.JournalEntryPage.mTVSShsLO960Kmrk"
   },
@@ -159,9 +158,9 @@ export const CONSTANTS = {
       KEY: "conditions"
     },
     TEMPLATE: {
-      FORM: "modules/custom-dnd5e/templates/conditions-form.hbs",
-      LIST: "modules/custom-dnd5e/templates/conditions-list.hbs",
-      EDIT: "modules/custom-dnd5e/templates/conditions-edit.hbs"
+      EDIT: "modules/custom-dnd5e/templates/conditions-edit.hbs",
+      FORM: "modules/custom-dnd5e/templates/config-form.hbs",
+      LIST: "modules/custom-dnd5e/templates/config-list.hbs"
     },
     UUID: "Compendium.custom-dnd5e.custom-dnd5e-journals.JournalEntry.B48iqFBddUikMMer.JournalEntryPage.DOx3PrYi19dFzcA1"
   },
@@ -230,17 +229,16 @@ export const CONSTANTS = {
     ID: "currency",
     MENU: {
       KEY: "currency-menu",
-      HINT: "CUSTOM_DND5E.menu.currency.hint",
+      HINT: "CUSTOM_DND5E.menu.currencies.hint",
       ICON: "fas fa-pen-to-square",
-      LABEL: "CUSTOM_DND5E.menu.currency.label",
-      NAME: "CUSTOM_DND5E.menu.currency.name"
+      LABEL: "CUSTOM_DND5E.menu.currencies.label",
+      NAME: "CUSTOM_DND5E.menu.currencies.name"
     },
     SETTING: {
       KEY: "currency"
     },
     TEMPLATE: {
-      FORM: "modules/custom-dnd5e/templates/currency-form.hbs",
-      LIST: "modules/custom-dnd5e/templates/currency-list.hbs"
+      EDIT: "modules/custom-dnd5e/templates/currency-edit.hbs",
     },
     UUID: "Compendium.custom-dnd5e.custom-dnd5e-journals.JournalEntry.B48iqFBddUikMMer.JournalEntryPage.dmzCGf2LPoBlfu9m"
   },
@@ -257,8 +255,9 @@ export const CONSTANTS = {
       KEY: "damage-types"
     },
     TEMPLATE: {
-      FORM: "modules/custom-dnd5e/templates/damage-types-form.hbs",
-      LIST: "modules/custom-dnd5e/templates/damage-types-list.hbs"
+      EDIT: "modules/custom-dnd5e/templates/damage-types-edit.hbs",
+      FORM: "modules/custom-dnd5e/templates/config-form.hbs",
+      LIST: "modules/custom-dnd5e/templates/config-list.hbs"
     },
     UUID: "Compendium.custom-dnd5e.custom-dnd5e-journals.JournalEntry.B48iqFBddUikMMer.JournalEntryPage.qkB3382uO7YUUApw"
   },
@@ -443,8 +442,7 @@ export const CONSTANTS = {
       KEY: "item-properties"
     },
     TEMPLATE: {
-      FORM: "modules/custom-dnd5e/templates/item-properties-form.hbs",
-      LIST: "modules/custom-dnd5e/templates/item-properties-list.hbs"
+      EDIT: "modules/custom-dnd5e/templates/item-properties-edit.hbs"
     },
     UUID: "Compendium.custom-dnd5e.custom-dnd5e-journals.JournalEntry.B48iqFBddUikMMer.JournalEntryPage.dM6sUm93mUi9oeBo"
   },
@@ -635,8 +633,7 @@ export const CONSTANTS = {
       KEY: "skills"
     },
     TEMPLATE: {
-      FORM: "modules/custom-dnd5e/templates/skills-form.hbs",
-      LIST: "modules/custom-dnd5e/templates/skills-list.hbs"
+      EDIT: "modules/custom-dnd5e/templates/skills-edit.hbs"
     },
     UUID: "Compendium.custom-dnd5e.custom-dnd5e-journals.JournalEntry.B48iqFBddUikMMer.JournalEntryPage.0SCQdu9sYAjcDqAk"
   },
@@ -690,7 +687,7 @@ export const CONSTANTS = {
     },
     TEMPLATE: {
       FORM: "modules/custom-dnd5e/templates/config-form.hbs",
-      LIST: "modules/custom-dnd5e/templates/config-list.hbs"
+      LIST: "modules/custom-dnd5e/templates/config-edit-in-list.hbs"
     },
     UUID: "Compendium.custom-dnd5e.custom-dnd5e-journals.JournalEntry.B48iqFBddUikMMer.JournalEntryPage.mBgCguO7mTNQuPtz"
   },
@@ -707,7 +704,7 @@ export const CONSTANTS = {
     },
     TEMPLATE: {
       FORM: "modules/custom-dnd5e/templates/config-form.hbs",
-      LIST: "modules/custom-dnd5e/templates/config-list.hbs"
+      LIST: "modules/custom-dnd5e/templates/config-edit-in-list.hbs"
     },
     UUID: "Compendium.custom-dnd5e.custom-dnd5e-journals.JournalEntry.B48iqFBddUikMMer.JournalEntryPage.Ls4Rn45UNhTBagHD"
   },
@@ -721,7 +718,7 @@ export const CONSTANTS = {
   UUID: {
     TEMPLATE: {
       FORM: "modules/custom-dnd5e/templates/config-form.hbs",
-      LIST: "modules/custom-dnd5e/templates/config-list.hbs"
+      LIST: "modules/custom-dnd5e/templates/config-edit-in-list.hbs"
     }
   },
   WEAPON_IDS: {
@@ -737,7 +734,7 @@ export const CONSTANTS = {
     },
     TEMPLATE: {
       FORM: "modules/custom-dnd5e/templates/config-form.hbs",
-      LIST: "modules/custom-dnd5e/templates/config-list.hbs"
+      LIST: "modules/custom-dnd5e/templates/config-edit-in-list.hbs"
     },
     UUID: "Compendium.custom-dnd5e.custom-dnd5e-journals.JournalEntry.B48iqFBddUikMMer.JournalEntryPage.CeUiNZoH8giNsqNR"
   },
@@ -754,7 +751,7 @@ export const CONSTANTS = {
     },
     TEMPLATE: {
       FORM: "modules/custom-dnd5e/templates/config-form.hbs",
-      LIST: "modules/custom-dnd5e/templates/config-list.hbs"
+      LIST: "modules/custom-dnd5e/templates/config-edit-in-list.hbs"
     },
     UUID: "Compendium.custom-dnd5e.custom-dnd5e-journals.JournalEntry.B48iqFBddUikMMer.JournalEntryPage.Cy09wdPVi8XrkjJ2"
   }

@@ -3,7 +3,7 @@ import { Logger, c5eLoadTemplates, checkEmpty, registerMenu, registerSetting, re
 import { EncumbranceForm } from "./forms/encumbrance-form.js";
 
 const constants = CONSTANTS.ENCUMBRANCE;
-const property = "encumbrance";
+const configKey = "encumbrance";
 
 /**
  * Register settings and load templates.
@@ -89,13 +89,13 @@ function registerSettings() {
  */
 export function setConfig(data = null) {
   if ( checkEmpty(data) ) {
-    if ( checkEmpty(CONFIG.DND5E[property]) ) {
-      resetDnd5eConfig(property);
+    if ( checkEmpty(CONFIG.DND5E[configKey]) ) {
+      resetDnd5eConfig(configKey);
     }
     return;
   }
 
-  const defaultConfig = foundry.utils.deepClone(CONFIG.CUSTOM_DND5E[property]);
+  const defaultConfig = foundry.utils.deepClone(CONFIG.CUSTOM_DND5E[configKey]);
   const config = foundry.utils.mergeObject(defaultConfig, data);
 
   if ( config?.effects?.encumbered?.name ) {
@@ -111,6 +111,6 @@ export function setConfig(data = null) {
   }
 
   if ( config ) {
-    CONFIG.DND5E[property] = config;
+    CONFIG.DND5E[configKey] = config;
   }
 }

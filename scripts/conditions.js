@@ -1,6 +1,6 @@
 import { CONSTANTS } from "./constants.js";
 import { c5eLoadTemplates, checkEmpty, registerMenu, getSetting, registerSetting, resetDnd5eConfig } from "./utils.js";
-import { ConditionsForm } from "./forms/conditions-form.js";
+import { ConditionsForm } from "./forms/config-form.js";
 import { buildBloodied, registerBloodied } from "./house-rules.js";
 
 const constants = CONSTANTS.CONDITIONS;
@@ -12,8 +12,6 @@ export function register() {
   registerSettings();
 
   const templates = [
-    constants.TEMPLATE.FORM,
-    constants.TEMPLATE.LIST,
     constants.TEMPLATE.EDIT
   ];
   c5eLoadTemplates(templates);
@@ -56,7 +54,7 @@ function registerSettings() {
  * @param {string|null} key The key
  * @returns {object} The conditions and status effects
  */
-export function getDnd5eConfig(key = null) {
+export function getDefaultConfig(key = null) {
   const data = buildData({
     key,
     conditionTypes: CONFIG.CUSTOM_DND5E.conditionTypes,
@@ -180,7 +178,7 @@ export function setConfig(data = null) {
       const localisedLabel = game.i18n.localize(value.label ?? value);
 
       // Merge with default config in case their are any new properties
-      value = foundry.utils.mergeObject(foundry.utils.deepClone(getDnd5eConfig(key)) ?? {}, value);
+      value = foundry.utils.mergeObject(foundry.utils.deepClone(getDefaultConfig(key)) ?? {}, value);
 
       if ( value.sheet || value.pseudo ) {
         config.conditionTypes[key] = {

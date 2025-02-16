@@ -2,8 +2,8 @@ import { CONSTANTS } from "./constants.js";
 import { Logger, c5eLoadTemplates, checkEmpty, getFlag, getSetting, registerMenu, registerSetting, resetDnd5eConfig } from "./utils.js";
 import { SensesForm } from "./forms/config-form.js";
 
-const property = "senses";
 const constants = CONSTANTS.SENSES;
+const configKey = "senses";
 
 /**
  * Register settings and hooks, and load templates.
@@ -41,7 +41,7 @@ function registerSettings() {
       scope: "world",
       config: false,
       type: Object,
-      default: CONFIG.CUSTOM_DND5E[property]
+      default: CONFIG.CUSTOM_DND5E[configKey]
     }
   );
 }
@@ -63,8 +63,8 @@ function registerHooks() {
  */
 export function setConfig(data = null) {
   if ( checkEmpty(data) ) {
-    if ( checkEmpty(CONFIG.DND5E[property]) ) {
-      resetDnd5eConfig(property);
+    if ( checkEmpty(CONFIG.DND5E[configKey]) ) {
+      resetDnd5eConfig(configKey);
     }
     return;
   }
@@ -77,11 +77,11 @@ export function setConfig(data = null) {
       ])
   );
 
-  const defaultConfig = foundry.utils.deepClone(CONFIG.CUSTOM_DND5E[property]);
+  const defaultConfig = foundry.utils.deepClone(CONFIG.CUSTOM_DND5E[configKey]);
   const config = buildConfig(Object.keys(data), foundry.utils.mergeObject(defaultConfig, data));
 
   if ( config ) {
-    CONFIG.DND5E[property] = config;
+    CONFIG.DND5E[configKey] = config;
   }
 }
 

@@ -1,9 +1,9 @@
 import { CONSTANTS, SHEET_TYPE } from "./constants.js";
-import { c5eLoadTemplates, checkEmpty, getSetting, registerMenu, registerSetting, resetDnd5eConfig } from "./utils.js";
+import { c5eLoadTemplates, checkEmpty, getSetting, registerMenu, registerSetting, getDefaultDnd5eConfig, resetDnd5eConfig } from "./utils.js";
 import { CurrencyForm } from "./forms/config-form.js";
 
 const constants = CONSTANTS.CURRENCY;
-const property = "currencies";
+const configKey = "currencies";
 
 /**
  * Register settings and hooks, and load templates.
@@ -13,8 +13,7 @@ export function register() {
   registerHooks();
 
   const templates = [
-    constants.TEMPLATE.FORM,
-    constants.TEMPLATE.LIST
+    constants.TEMPLATE.EDIT
   ];
   c5eLoadTemplates(templates);
 }
@@ -44,7 +43,7 @@ function registerSettings() {
       scope: "world",
       config: false,
       type: Object,
-      default: foundry.utils.deepClone(CONFIG.CUSTOM_DND5E[property])
+      default: foundry.utils.deepClone(CONFIG.CUSTOM_DND5E[configKey])
     }
   );
 }
@@ -85,13 +84,24 @@ function registerHooks() {
 /* -------------------------------------------- */
 
 /**
+ * Get default config.
+ * @param {string|null} key The key
+ * @returns {object} The config
+ */
+export function getDefaultConfig(key = null) {
+  return getDefaultDnd5eConfig(configKey, key);
+}
+
+/* -------------------------------------------- */
+
+/**
  * Set CONFIG.DND5E.currencies.
  * @param {object} data The data
  */
 export function setConfig(data = null) {
   if ( checkEmpty(data) ) {
-    if ( checkEmpty(CONFIG.DND5E[property]) ) {
-      resetDnd5eConfig(property);
+    if ( checkEmpty(CONFIG.DND5E[configKey]) ) {
+      resetDnd5eConfig(configKey);
     }
     return;
   }
@@ -109,10 +119,10 @@ export function setConfig(data = null) {
       ])
   );
 
-  const defaultConfig = foundry.utils.deepClone(CONFIG.CUSTOM_DND5E[property]);
+  const defaultConfig = foundry.utils.deepClone(CONFIG.CUSTOM_DND5E[configKey]);
   const config = buildConfig(Object.keys(data), foundry.utils.mergeObject(defaultConfig, data));
 
   if ( config ) {
-    CONFIG.DND5E[property] = config;
+    CONFIG.DND5E[configKey] = config;
   }
 }

@@ -14,7 +14,7 @@ export class ToolProficienciesForm extends ConfigForm {
    */
   constructor(...args) {
     super(args);
-
+    this.editInList = true;
     this.nestable = true;
     this.settingKey = CONSTANTS.TOOL_PROFICIENCIES.SETTING.KEY;
     this.dnd5eConfig = getDnd5eConfig();
@@ -65,7 +65,7 @@ export class ToolProficienciesForm extends ConfigForm {
 
     labelise(this.setting);
 
-    return { label: this.label, items: this.setting };
+    return { editInList: this.editInList, label: this.label, items: this.setting };
   }
 
   /* -------------------------------------------- */

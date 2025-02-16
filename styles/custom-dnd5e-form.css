@@ -112,6 +112,7 @@
 **************************************/
 
 .custom-dnd5e-app ul {
+    border: 3px solid transparent;
     gap: 0rem;
     list-style-type: none;
     margin: 0.25rem 0 0 0;
@@ -134,8 +135,8 @@
     border-top: 3px solid transparent;
 }
 
-.custom-dnd5e-app ul > li:first-child:not(li li) {
-    padding: 0;
+.custom-dnd5e-app ul:first-child:not(ul ul) {
+    margin-top: 0;
 }
 
 .custom-dnd5e-app.application ul ul {
@@ -164,17 +165,16 @@
 **************************************/
 
 .custom-dnd5e-app li {
-    align-items: center;
+    border: 3px solid transparent;
     border-top: 3px solid var(--color-border);
-    gap: 0.25rem;
 }
 
 .custom-dnd5e-app li:not(li li) {
-    align-items: center;
-    display: flex;
-    gap: 0.25rem;
+    margin: 0;
     padding: 0.4rem 0 0.4rem 0;
     position: relative;
+    list-style: none;
+    margin-top: -2px;
 }
 
 .custom-dnd5e-app li li {
@@ -201,15 +201,15 @@
 }
 
 .custom-dnd5e-app li.drag-top {
-    border-top: 3px dashed red;
+    border-top: 3px dashed red !important;
 }
 
 .custom-dnd5e-app li.drag-middle {
-    border: 3px dashed red;
+    border: 3px dashed red !important;
 }
 
 .custom-dnd5e-app li.drag-bottom {
-    border-bottom: 3px dashed red;
+    border-bottom: 3px dashed red !important;
 }
 
 

@@ -1,6 +1,8 @@
 import { CONSTANTS } from "./constants.js";
 import { c5eLoadTemplates, checkEmpty, registerMenu, registerSetting, resetDnd5eConfig } from "./utils.js";
-import { ItemPropertiesForm } from "./forms/item-properties-form.js";
+import { ItemPropertiesForm } from "./forms/config-form.js";
+
+const constants = CONSTANTS.ITEM_PROPERTIES;
 
 /**
  * Register settings and load templates.
@@ -9,8 +11,7 @@ export function register() {
   registerSettings();
 
   const templates = [
-    CONSTANTS.ITEM_PROPERTIES.TEMPLATE.FORM,
-    CONSTANTS.ITEM_PROPERTIES.TEMPLATE.LIST
+    constants.TEMPLATE.EDIT
   ];
   c5eLoadTemplates(templates);
 }
@@ -22,12 +23,12 @@ export function register() {
  */
 function registerSettings() {
   registerMenu(
-    CONSTANTS.ITEM_PROPERTIES.MENU.KEY,
+    constants.MENU.KEY,
     {
-      hint: game.i18n.localize(CONSTANTS.ITEM_PROPERTIES.MENU.HINT),
-      label: game.i18n.localize(CONSTANTS.ITEM_PROPERTIES.MENU.LABEL),
-      name: game.i18n.localize(CONSTANTS.ITEM_PROPERTIES.MENU.NAME),
-      icon: CONSTANTS.ITEM_PROPERTIES.MENU.ICON,
+      hint: game.i18n.localize(constants.MENU.HINT),
+      label: game.i18n.localize(constants.MENU.LABEL),
+      name: game.i18n.localize(constants.MENU.NAME),
+      icon: constants.MENU.ICON,
       type: ItemPropertiesForm,
       restricted: true,
       scope: "world"
@@ -35,7 +36,7 @@ function registerSettings() {
   );
 
   registerSetting(
-    CONSTANTS.ITEM_PROPERTIES.SETTING.KEY,
+    constants.SETTING.KEY,
     {
       scope: "world",
       config: false,
@@ -45,14 +46,15 @@ function registerSettings() {
   );
 }
 
+
 /* -------------------------------------------- */
 
 /**
- * Get dnd5e config.
- *
- * @returns {object} The item properties
+ * Get default config.
+ * @param {string|null} key The key
+ * @returns {object} The config
  */
-export function getDnd5eConfig() {
+export function getDefaultConfig(key = null) {
   const config = foundry.utils.deepClone(CONFIG.CUSTOM_DND5E.itemProperties);
 
   Object.entries(CONFIG.CUSTOM_DND5E.validProperties).forEach(itemType => {
@@ -64,7 +66,11 @@ export function getDnd5eConfig() {
     });
   });
 
-  return config;
+  if ( key ) {
+    return config[key];
+  } else {
+    return config;
+  }
 }
 
 /* -------------------------------------------- */

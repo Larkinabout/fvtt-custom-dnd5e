@@ -156,12 +156,16 @@
     "CUSTOM_DND5E.form.checkbox.visible.tooltip": "Visible",
 
     "CUSTOM_DND5E.form.abilities.title": "Configure Abilities",
+    "CUSTOM_DND5E.form.abilities.edit.title": "Edit Ability",
 
-    "CUSTOM_DND5E.form.activationCosts.title": "Configure Activation Costs",
+    "CUSTOM_DND5E.form.activityActivationTypes.title": "Configure Activation Costs",
+    "CUSTOM_DND5E.form.activityActivationTypes.edit.title": "Edit Activation Cost",
 
     "CUSTOM_DND5E.form.actorSizes.title": "Configure Actor Sizes",
+    "CUSTOM_DND5E.form.actorSizes.edit.title": "Edit Actor Size",
 
-    "CUSTOM_DND5E.form.armorCalculations.title": "Configure Armor Calculations",
+    "CUSTOM_DND5E.form.armorClasses.title": "Configure Armor Calculations",
+    "CUSTOM_DND5E.form.armorClasses.edit.title": "Edit Armor Calculation",
 
     "CUSTOM_DND5E.form.armorIds.title": "Configure Armor",
 
@@ -171,6 +175,7 @@
     "CUSTOM_DND5E.form.conditions.edit.title": "Edit Condition",
 
     "CUSTOM_DND5E.form.consumableTypes.title": "Configure Consumable Types",
+    "CUSTOM_DND5E.form.consumableTypes.edit.title": "Edit Consumable Type",
 
     "CUSTOM_DND5E.form.counters.triggers.tooltip": "Advanced Options",
     "CUSTOM_DND5E.form.counters.copyProperty.message": "'Property \"{property}\" copied to clipboard.'",
@@ -191,9 +196,11 @@
     "CUSTOM_DND5E.form.counters.triggers.trigger.choices.roll1": "Roll 1 on a d20",
     "CUSTOM_DND5E.form.counters.triggers.trigger.choices.roll20": "Roll 20 on a d20",
 
-    "CUSTOM_DND5E.form.currency.title": "Configure Currency",
+    "CUSTOM_DND5E.form.currencies.title": "Configure Currency",
+    "CUSTOM_DND5E.form.currencies.edit.title": "Edit Currency",
 
     "CUSTOM_DND5E.form.damageTypes.title": "Configure Damage Types",
+    "CUSTOM_DND5E.form.damageTypes.edit.title": "Edit Damage Type",
 
     "CUSTOM_DND5E.form.debug.button.exportData.tooltip": "Export Data",
     "CUSTOM_DND5E.form.debug.consoleMessages.label": "Enable Console Messages",
@@ -262,10 +269,13 @@
     "CUSTOM_DND5E.form.houseRules.title": "Configure House Rules",
 
     "CUSTOM_DND5E.form.itemActionTypes.title": "Configure Item Action Types",
+    "CUSTOM_DND5E.form.itemActionTypes.edit.title": "Edit Consumable Type",
 
     "CUSTOM_DND5E.form.itemActivationCostTypes.title": "Configure Item Activation Cost Types",
+    "CUSTOM_DND5E.form.itemActivationCostTypes.edit.title": "Edit Item Activation Cost Type",
 
     "CUSTOM_DND5E.form.itemProperties.title": "Configure Item Properties",
+    "CUSTOM_DND5E.form.itemProperties.edit.title": "Edit Item Property",
 
     "CUSTOM_DND5E.form.itemRarity.title": "Configure Item Rarity",
 
@@ -306,8 +316,10 @@
     "CUSTOM_DND5E.form.sheet.title": "Configure Sheet",
 
     "CUSTOM_DND5E.form.skills.title": "Configure Skills",
+    "CUSTOM_DND5E.form.skills.edit.title": "Edit Skill",
 
     "CUSTOM_DND5E.form.spellSchools.title": "Configure Spell Schools",
+    "CUSTOM_DND5E.form.spellSchools.edit.title": "Edit Spell School",
 
     "CUSTOM_DND5E.form.toolIds.title": "Configure Tools",
 
@@ -321,17 +333,17 @@
     "CUSTOM_DND5E.menu.abilities.label": "Configure Abilities",
     "CUSTOM_DND5E.menu.abilities.name": "Configure Abilities",
 
-    "CUSTOM_DND5E.menu.activationCosts.hint": "Configure Activation Costs",
-    "CUSTOM_DND5E.menu.activationCosts.label": "Configure Activation Costs",
-    "CUSTOM_DND5E.menu.activationCosts.name": "Configure Activation Costs",
+    "CUSTOM_DND5E.menu.activityActivationTypes.hint": "Configure Activation Costs",
+    "CUSTOM_DND5E.menu.activityActivationTypes.label": "Configure Activation Costs",
+    "CUSTOM_DND5E.menu.activityActivationTypes.name": "Configure Activation Costs",
 
     "CUSTOM_DND5E.menu.actorSizes.hint": "Configure Actor Sizes",
     "CUSTOM_DND5E.menu.actorSizes.label": "Configure Actor Sizes",
     "CUSTOM_DND5E.menu.actorSizes.name": "Configure Actor Sizes",
 
-    "CUSTOM_DND5E.menu.armorCalculations.hint": "Configure Armor Calculations",
-    "CUSTOM_DND5E.menu.armorCalculations.label": "Configure Armor Calculations",
-    "CUSTOM_DND5E.menu.armorCalculations.name": "Configure Armor Calculations",
+    "CUSTOM_DND5E.menu.armorClasses.hint": "Configure Armor Calculations",
+    "CUSTOM_DND5E.menu.armorClasses.label": "Configure Armor Calculations",
+    "CUSTOM_DND5E.menu.armorClasses.name": "Configure Armor Calculations",
 
     "CUSTOM_DND5E.menu.armorIds.hint": "Configure Armor",
     "CUSTOM_DND5E.menu.armorIds.label": "Configure Armor",
@@ -353,9 +365,9 @@
     "CUSTOM_DND5E.menu.counters.label": "Configure Counters",
     "CUSTOM_DND5E.menu.counters.name": "Configure Counters",
 
-    "CUSTOM_DND5E.menu.currency.hint": "Configure Currency",
-    "CUSTOM_DND5E.menu.currency.label": "Configure Currency",
-    "CUSTOM_DND5E.menu.currency.name": "Configure Currency",
+    "CUSTOM_DND5E.menu.currencies.hint": "Configure Currency",
+    "CUSTOM_DND5E.menu.currencies.label": "Configure Currency",
+    "CUSTOM_DND5E.menu.currencies.name": "Configure Currency",
     
     "CUSTOM_DND5E.menu.damageTypes.hint": "Configure Damage Types",
     "CUSTOM_DND5E.menu.damageTypes.label": "Configure Damage Types",

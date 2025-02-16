@@ -1,9 +1,9 @@
 import { CONSTANTS } from "./constants.js";
-import { c5eLoadTemplates, checkEmpty, registerMenu, registerSetting, resetDnd5eConfig } from "./utils.js";
+import { c5eLoadTemplates, checkEmpty, registerMenu, registerSetting, getDefaultDnd5eConfig, resetDnd5eConfig } from "./utils.js";
 import { ArmorCalculationsForm } from "./forms/config-form.js";
 
 const constants = CONSTANTS.ARMOR_CALCULATIONS;
-const property = "armorClasses";
+const configKey = "armorClasses";
 
 /**
  * Register settings and load templates.
@@ -12,8 +12,7 @@ export function register() {
   registerSettings();
 
   const templates = [
-    constants.TEMPLATE.FORM,
-    constants.TEMPLATE.LIST
+    constants.TEMPLATE.EDIT
   ];
   c5eLoadTemplates(templates);
 }
@@ -44,9 +43,20 @@ function registerSettings() {
       config: false,
       requiresReload: true,
       type: Object,
-      default: CONFIG.CUSTOM_DND5E[property]
+      default: CONFIG.CUSTOM_DND5E[configKey]
     }
   );
+}
+
+/* -------------------------------------------- */
+
+/**
+ * Get default config.
+ * @param {string|null} key The key
+ * @returns {object} The config
+ */
+export function getDefaultConfig(key = null) {
+  return getDefaultDnd5eConfig(configKey, key);
 }
 
 /* -------------------------------------------- */
@@ -57,8 +67,8 @@ function registerSettings() {
  */
 export function setConfig(data = null) {
   if ( checkEmpty(data) ) {
-    if ( checkEmpty(CONFIG.DND5E[property]) ) {
-      resetDnd5eConfig(property);
+    if ( checkEmpty(CONFIG.DND5E[configKey]) ) {
+      resetDnd5eConfig(configKey);
     }
     return;
   }
@@ -74,10 +84,10 @@ export function setConfig(data = null) {
       ])
   );
 
-  const defaultConfig = foundry.utils.deepClone(CONFIG.CUSTOM_DND5E[property]);
+  const defaultConfig = foundry.utils.deepClone(CONFIG.CUSTOM_DND5E[configKey]);
   const config = buildConfig(Object.keys(data), foundry.utils.mergeObject(defaultConfig, data));
 
   if ( config ) {
-    CONFIG.DND5E[property] = config;
+    CONFIG.DND5E[configKey] = config;
   }
 }

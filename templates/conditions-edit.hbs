@@ -78,7 +78,7 @@
             <label class="flex1" style="min-width:80px; max-width:120px;">{{localize "CUSTOM_DND5E.riders"}}</label>
             <div class="form-fields">
                 <multi-select name="{{key}}.riders">
-                    {{selectOptions choices.riders selected=riders}}
+                    {{selectOptions selects.riders selected=riders}}
                 </multi-select>
             </div>
         </div>
@@ -86,19 +86,10 @@
             <label class="flex1" style="min-width:80px; max-width:120px;">{{localize "CUSTOM_DND5E.statuses"}}</label>
             <div class="form-fields">
                 <multi-select name="{{key}}.statuses">
-                    {{selectOptions choices.statuses selected=statuses}}
+                    {{selectOptions selects.statuses selected=statuses}}
                 </multi-select>
             </div>
         </div>
     </div>
-    <footer class="form-footer" data-application-part="footer">
-        {{#unless (customDnd5eBoolFalse system)}}
-        <button type="button" data-action="reset" class="reset-button">
-            <i class="fas fa-arrow-rotate-left"></i>{{localize "CUSTOM_DND5E.form.button.reset.label"}}
-        </button>
-        {{/unless}}
-        <button type="submit" class="save-button">
-            <i class="fas fa-solid fa-floppy-disk"></i>{{localize "CUSTOM_DND5E.form.button.save.label"}}
-        </button>
-    </footer>
+    {{> "modules/custom-dnd5e/templates/footer.hbs" system=system}}
 </div>

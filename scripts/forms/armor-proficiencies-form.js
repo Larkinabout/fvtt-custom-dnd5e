@@ -16,7 +16,7 @@ export class ArmorProficienciesForm extends ConfigForm {
    */
   constructor(...args) {
     super(args);
-
+    this.editInList = true;
     this.nestable = true;
     this.settingKey = CONSTANTS.ARMOR_PROFICIENCIES.SETTING.KEY;
     this.dnd5eConfig = getDnd5eConfig();
@@ -67,7 +67,7 @@ export class ArmorProficienciesForm extends ConfigForm {
 
     labelise(this.setting);
 
-    return { items: this.setting };
+    return { editInList: this.editInList, items: this.setting };
   }
 
   /* -------------------------------------------- */

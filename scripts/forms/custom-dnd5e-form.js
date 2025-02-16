@@ -473,7 +473,7 @@ export class CustomDnd5eForm extends HandlebarsApplicationMixin(ApplicationV2) {
       // If setting passed, initialise property with setting data
       if ( setting ) {
         if ( !processedFormData[propertyPath] ) {
-          foundry.utils.setProperty(processedFormData, propertyPath, setting[propertyPath]);
+          foundry.utils.setProperty(processedFormData, propertyPath, setting[propertyPath] ?? {});
         }
       }
 
