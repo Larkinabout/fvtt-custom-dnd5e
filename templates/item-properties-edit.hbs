@@ -48,40 +48,42 @@
                 <input id="custom-dnd5e-reference" name="{{key}}.reference" type="text" value="{{reference}}">
             </div>
         </div>
-        <div class="form-group stacked">
-            <label>{{localize "CUSTOM_DND5E.itemTypes"}}</label>
-            <label class="flex1" style="min-width:80px; max-width:100px;">
-                <input id="custom-dnd5e-consumable" name="{{key}}.consumable" type="checkbox"{{#if consumable}} checked{{/if}}>
-                {{localize "CUSTOM_DND5E.consumable"}}
-            </label>
-            <label class="flex1" style="min-width:80px; max-width:100px;">
-                <input id="custom-dnd5e-container" name="{{key}}.container" type="checkbox"{{#if container}} checked{{/if}}>
-                {{localize "CUSTOM_DND5E.container"}}
-            </label>
-            <label class="flex1" style="min-width:80px; max-width:100px;">
-                <input id="custom-dnd5e-equipment" name="{{key}}.equipment" type="checkbox"{{#if equipment}} checked{{/if}}>
-                {{localize "CUSTOM_DND5E.equipment"}}
-            </label>
-            <label class="flex1" style="min-width:80px; max-width:100px;">
-                <input id="custom-dnd5e-feat" name="{{key}}.feat" type="checkbox"{{#if feat}} checked{{/if}}>
-                {{localize "CUSTOM_DND5E.feat"}}
-            </label>
-            <label class="flex1" style="min-width:80px; max-width:100px;">
-                <input id="custom-dnd5e-loot" name="{{key}}.loot" type="checkbox"{{#if loot}} checked{{/if}}>
-                {{localize "CUSTOM_DND5E.loot"}}
-            </label>
-            <label class="flex1" style="min-width:80px; max-width:100px;">
-                <input id="custom-dnd5e-spell" name="{{key}}.spell" type="checkbox"{{#if spell}} checked{{/if}}>
-                {{localize "CUSTOM_DND5E.spell"}}
-            </label>
-            <label class="flex1" style="min-width:80px; max-width:100px;">
-                <input id="custom-dnd5e-tool" name="{{key}}.tool" type="checkbox"{{#if tool}} checked{{/if}}>
-                {{localize "CUSTOM_DND5E.tool"}}
-            </label>
-            <label class="flex1" style="min-width:80px; max-width:100px;">
-                <input id="custom-dnd5e-weapon" name="{{key}}.weapon" type="checkbox"{{#if weapon}} checked{{/if}}>
-                {{localize "CUSTOM_DND5E.weapon"}}
-            </label>
+        <div class="form-group stacked checkbox-grid">
+            <label style="flex: 0 0 100%;">{{localize "CUSTOM_DND5E.itemTypes"}}</label>
+            <div class="form-fields">
+                <label class="checkbox">
+                    <dnd5e-checkbox id="custom-dnd5e-consumable" name="{{key}}.consumable"{{#if consumable}} checked{{/if}}></dnd5e-checkbox>
+                    <span>{{localize "CUSTOM_DND5E.consumable"}}</span>
+                </label>
+                <label class="checkbox">
+                    <dnd5e-checkbox id="custom-dnd5e-container" name="{{key}}.container"{{#if container}} checked{{/if}}></dnd5e-checkbox>
+                    <span>{{localize "CUSTOM_DND5E.container"}}</span>
+                </label>
+                <label class="checkbox">
+                    <dnd5e-checkbox id="custom-dnd5e-equipment" name="{{key}}.equipment"{{#if equipment}} checked{{/if}}></dnd5e-checkbox>
+                    <span>{{localize "CUSTOM_DND5E.equipment"}}</span>
+                </label>
+                <label class="checkbox">
+                    <dnd5e-checkbox id="custom-dnd5e-feat" name="{{key}}.feat"{{#if feat}} checked{{/if}}></dnd5e-checkbox>
+                    <span>{{localize "CUSTOM_DND5E.feat"}}</span>
+                </label>
+                <label class="checkbox">
+                    <dnd5e-checkbox id="custom-dnd5e-loot" name="{{key}}.loot"{{#if loot}} checked{{/if}}></dnd5e-checkbox>
+                    <span>{{localize "CUSTOM_DND5E.loot"}}</span>
+                </label>
+                <label class="checkbox">
+                    <dnd5e-checkbox id="custom-dnd5e-spell" name="{{key}}.spell"{{#if spell}} checked{{/if}}></dnd5e-checkbox>
+                    <span>{{localize "CUSTOM_DND5E.spell"}}</span>
+                </label>
+                <label class="checkbox">
+                    <dnd5e-checkbox id="custom-dnd5e-tool" name="{{key}}.tool"{{#if tool}} checked{{/if}}></dnd5e-checkbox>
+                    <span>{{localize "CUSTOM_DND5E.tool"}}</span>
+                </label>
+                <label class="checkbox">
+                    <dnd5e-checkbox id="custom-dnd5e-weapon" name="{{key}}.weapon"{{#if weapon}} checked{{/if}}></dnd5e-checkbox>
+                    <span>{{localize "CUSTOM_DND5E.weapon"}}</span>
+                </label>
+            </div>
         </div>
     </div>
     {{> "modules/custom-dnd5e/templates/footer.hbs" system=system}}

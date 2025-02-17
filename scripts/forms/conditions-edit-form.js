@@ -21,7 +21,7 @@ export class ConditionsEditForm extends ConfigEditForm {
   constructor(args) {
     super(args);
     this.configKey = configKey;
-    this.settingKey = constants.SETTING.KEY;
+    this.settingKey = constants.SETTING.CONFIG.KE;
     this.getDefaultConfig = getDefaultConfig;
     this.setConfig = setConfig;
     this.headerButton = JOURNAL_HELP_BUTTON;
@@ -37,6 +37,9 @@ export class ConditionsEditForm extends ConfigEditForm {
    */
   static DEFAULT_OPTIONS = {
     id: `${MODULE.ID}-conditions-edit`,
+    position: {
+      height: 600
+    },
     window: {
       title: `CUSTOM_DND5E.form.${configKey}.edit.title`
     }

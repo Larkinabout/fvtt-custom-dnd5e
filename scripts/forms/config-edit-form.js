@@ -38,6 +38,9 @@ export class ConfigEditForm extends CustomDnd5eForm {
       closeOnSubmit: false
     },
     id: `${MODULE.ID}-config-edit`,
+    position: {
+      width: 450
+    },
     window: {
       title: "CUSTOM_DND5E.form.config.edit.title"
     }
@@ -131,6 +134,7 @@ export class ConfigEditForm extends CustomDnd5eForm {
   static async submit(event, form, formData) {
     const oldKey = this.key;
     const newKey = formData.object[`${this.key}.key`];
+    const enableConfig = formData.object.enableConfig;
 
     if ( !newKey.match(/^[0-9a-zA-Z]+$/) ) {
       Logger.error(`Key '${newKey}' must only contain alphanumeric characters`, true);
@@ -146,6 +150,7 @@ export class ConfigEditForm extends CustomDnd5eForm {
 
     // Set properties in this.setting
     Object.entries(formData.object).forEach(([key, value]) => {
+      if ( key === "enableConfig" ) return;
       if ( key.split(".").pop() === "key" ) return;
       if ( value === "false" ) {
         value = false;
@@ -172,6 +177,7 @@ export class ConfigEditForm extends CustomDnd5eForm {
     }
 
     await setSetting(this.settingKey, this.setting);
+    await setSetting(this.enableConfigKey, enableConfig);
 
     this.close();
 

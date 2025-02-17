@@ -1,6 +1,14 @@
 import { CONSTANTS } from "./constants.js";
-import { c5eLoadTemplates, checkEmpty, registerMenu, registerSetting, resetDnd5eConfig } from "./utils.js";
+import {
+  c5eLoadTemplates,
+  checkEmpty,
+  getSetting,
+  registerMenu,
+  registerSetting,
+  resetDnd5eConfig } from "./utils.js";
 import { ToolProficienciesForm } from "./forms/tool-proficiencies-form.js";
+
+const constants = CONSTANTS.TOOL_PROFICIENCIES;
 
 /**
  * Register settings and load templates.
@@ -9,8 +17,8 @@ export function register() {
   registerSettings();
 
   const templates = [
-    CONSTANTS.TOOL_PROFICIENCIES.TEMPLATE.FORM,
-    CONSTANTS.TOOL_PROFICIENCIES.TEMPLATE.LIST
+    constants.TEMPLATE.FORM,
+    constants.TEMPLATE.LIST
   ];
   c5eLoadTemplates(templates);
 }
@@ -22,12 +30,12 @@ export function register() {
  */
 function registerSettings() {
   registerMenu(
-    CONSTANTS.TOOL_PROFICIENCIES.MENU.KEY,
+    constants.MENU.KEY,
     {
-      hint: game.i18n.localize(CONSTANTS.TOOL_PROFICIENCIES.MENU.HINT),
-      label: game.i18n.localize(CONSTANTS.TOOL_PROFICIENCIES.MENU.LABEL),
-      name: game.i18n.localize(CONSTANTS.TOOL_PROFICIENCIES.MENU.NAME),
-      icon: CONSTANTS.TOOL_PROFICIENCIES.MENU.ICON,
+      hint: game.i18n.localize(constants.MENU.HINT),
+      label: game.i18n.localize(constants.MENU.LABEL),
+      name: game.i18n.localize(constants.MENU.NAME),
+      icon: constants.MENU.ICON,
       type: ToolProficienciesForm,
       restricted: true,
       scope: "world"
@@ -35,7 +43,18 @@ function registerSettings() {
   );
 
   registerSetting(
-    CONSTANTS.TOOL_PROFICIENCIES.SETTING.KEY,
+    constants.SETTING.ENABLE.KEY,
+    {
+      scope: "world",
+      config: false,
+      requiresReload: true,
+      type: Boolean,
+      default: true
+    }
+  );
+
+  registerSetting(
+    constants.SETTING.CONFIG.KEY,
     {
       scope: "world",
       config: false,
@@ -98,15 +117,10 @@ function buildData(config) {
  * @param {object} data The data
  */
 export function setConfig(data = null) {
+  if ( !getSetting(constants.SETTING.ENABLE.KEY) ) return;
+
   const properties = ["toolProficiencies", "toolTypes"];
 
-  // Initialise the config object
-  const config = {
-    toolProficiencies: {},
-    toolTypes: {}
-  };
-
-  // Exit if data is empty and reset config
   if ( checkEmpty(data) ) {
     properties.forEach(property => {
       if ( checkEmpty(CONFIG.DND5E[property]) ) {
@@ -115,6 +129,12 @@ export function setConfig(data = null) {
     });
     return;
   }
+
+  // Initialise the config object
+  const config = {
+    toolProficiencies: {},
+    toolTypes: {}
+  };
 
   // Populate config
   Object.entries(data)

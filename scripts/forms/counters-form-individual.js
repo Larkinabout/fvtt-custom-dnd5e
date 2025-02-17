@@ -1,7 +1,7 @@
 import { CONSTANTS, MODULE } from "../constants.js";
 import { deleteProperty, getFlag, setFlag, unsetFlag } from "../utils.js";
 import { CountersForm } from "./counters-form.js";
-import { CountersAdvancedOptionsForm } from "./counters-advanced-options-form.js";
+import { CountersEditForm } from "./counters-edit.js";
 
 const form = "counters-form-individual";
 
@@ -108,7 +108,7 @@ export class CountersFormIndividual extends CountersForm {
     const entity = this.entity;
     const setting = this.counters;
     const args = { countersForm: this, data: { key, actorType, entity, label, type }, setting };
-    await CountersAdvancedOptionsForm.open(args);
+    await CountersEditForm.open(args);
   }
 
   /* -------------------------------------------- */

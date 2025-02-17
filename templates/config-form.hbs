@@ -1,12 +1,19 @@
 <div class="standard-form">
+    <div class="form-group">
+        <label class="flex1" style="min-width:80px; max-width:200px;">{{localize "CUSTOM_DND5E.enableConfiguration"}}</label>
+        <div class="form-fields">
+            <dnd5e-checkbox id="custom-dnd5e-enable-config" name="enableConfig"{{#if (ne enableConfig false)}} checked{{/if}}></dnd5e-checkbox>
+        </div>
+    </div>
+    <hr>
     <div class="standard-form scrollable">
-            <ul class="custom-dnd5e-list flexcol">
-                {{#if editInList}}
-                {{> "modules/custom-dnd5e/templates/config-edit-in-list.hbs" items=items}}
-                {{else}}
-                {{> "modules/custom-dnd5e/templates/config-list.hbs" items=items selects=selects}}
-                {{/if}}
-            </ul>
+        <ul class="custom-dnd5e-list flexcol">
+            {{#if editInList}}
+            {{> "modules/custom-dnd5e/templates/config-edit-in-list.hbs" items=items}}
+            {{else}}
+            {{> "modules/custom-dnd5e/templates/config-list.hbs" items=items selects=selects}}
+            {{/if}}
+        </ul>
     </div>
     <footer class="form-footer" data-application-part="footer">
         {{#unless disableCreate}}

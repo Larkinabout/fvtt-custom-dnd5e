@@ -1,8 +1,10 @@
 import { CONSTANTS, MODULE } from "../constants.js";
 import { deleteProperty, unsetFlag, getSetting, setSetting } from "../utils.js";
 import { CustomDnd5eForm } from "./custom-dnd5e-form.js";
-import { CountersAdvancedOptionsForm } from "./counters-advanced-options-form.js";
+import { CountersEditForm } from "./counters-edit.js";
 
+const id = CONSTANTS.COUNTERS.ID;
+const form = `${id}-form`;
 const listClass = `${MODULE.ID}-list`;
 const listClassSelector = `.${listClass}`;
 
@@ -40,6 +42,41 @@ export class CountersForm extends CustomDnd5eForm {
   constructor(...args) {
     super(args);
   }
+
+  /* -------------------------------------------- */
+
+  /**
+   * Default options for the form.
+   *
+   * @type {object}
+   */
+  static DEFAULT_OPTIONS = {
+    actions: {
+      new: CountersForm.createItem,
+      "copy-property": CountersForm.copyProperty,
+      edit: CountersForm.edit
+    },
+    form: {
+      handler: CountersForm.submit
+    },
+    id: `${MODULE.ID}-${form}`,
+    window: {
+      title: `CUSTOM_DND5E.form.${id}.title`
+    }
+  };
+
+  /* -------------------------------------------- */
+
+  /**
+   * Parts of the form.
+   *
+   * @type {object}
+   */
+  static PARTS = {
+    form: {
+      template: `modules/${MODULE.ID}/templates/${form}.hbs`
+    }
+  };
 
   /* -------------------------------------------- */
 
@@ -123,13 +160,13 @@ export class CountersForm extends CustomDnd5eForm {
   /* -------------------------------------------- */
 
   /**
-   * Open the advanced options form for a counter.
+   * Open the edit form for a counter.
    *
-   * @param {Event} event The event that triggered the advanced options.
+   * @param {Event} event The event that triggered the edit.
    * @param {HTMLElement} target The target element.
    * @returns {Promise<void>}
    */
-  static async advancedOptions(event, target) {
+  static async edit(event, target) {
     const item = target.closest(".custom-dnd5e-item");
     if ( !item ) return;
 
@@ -142,7 +179,7 @@ export class CountersForm extends CustomDnd5eForm {
     const actorType = activeTab?.dataset?.actorType;
     const setting = this.settings[actorType];
     const args = { countersForm: this, data: { key, actorType, label, type }, setting };
-    await CountersAdvancedOptionsForm.open(args);
+    await CountersEditForm.open(args);
   }
 
   /* -------------------------------------------- */

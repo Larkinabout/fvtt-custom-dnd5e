@@ -1,5 +1,12 @@
 import { CONSTANTS, SHEET_TYPE } from "./constants.js";
-import { c5eLoadTemplates, checkEmpty, getSetting, registerMenu, registerSetting, getDefaultDnd5eConfig, resetDnd5eConfig } from "./utils.js";
+import {
+  c5eLoadTemplates,
+  checkEmpty,
+  getSetting,
+  registerMenu,
+  registerSetting,
+  getDefaultDnd5eConfig,
+  resetDnd5eConfig } from "./utils.js";
 import { CurrencyForm } from "./forms/config-form.js";
 
 const constants = CONSTANTS.CURRENCY;
@@ -38,7 +45,18 @@ function registerSettings() {
   );
 
   registerSetting(
-    constants.SETTING.KEY,
+    constants.SETTING.ENABLE.KEY,
+    {
+      scope: "world",
+      config: false,
+      requiresReload: true,
+      type: Boolean,
+      default: true
+    }
+  );
+
+  registerSetting(
+    constants.SETTING.CONFIG.KEY,
     {
       scope: "world",
       config: false,
@@ -54,8 +72,10 @@ function registerSettings() {
  * Register hooks.
  */
 function registerHooks() {
+  if ( !getSetting(constants.SETTING.ENABLE.KEY) ) return;
+
   Hooks.on("renderCurrencyManager", (app, html, data) => {
-    const setting = getSetting(constants.SETTING.KEY);
+    const setting = getSetting(constants.SETTING.CONFIG.KEY);
 
     Object.entries(setting).forEach(([key, value]) => {
       if ( value.visible === false ) {
@@ -69,7 +89,7 @@ function registerHooks() {
 
     if ( !sheetType ) return;
 
-    const setting = getSetting(constants.SETTING.KEY);
+    const setting = getSetting(constants.SETTING.CONFIG.KEY);
 
     if ( !sheetType.legacy ) {
       Object.entries(setting).forEach(([key, value]) => {
@@ -99,6 +119,7 @@ export function getDefaultConfig(key = null) {
  * @param {object} data The data
  */
 export function setConfig(data = null) {
+  if ( !getSetting(constants.SETTING.ENABLE.KEY) ) return;
   if ( checkEmpty(data) ) {
     if ( checkEmpty(CONFIG.DND5E[configKey]) ) {
       resetDnd5eConfig(configKey);

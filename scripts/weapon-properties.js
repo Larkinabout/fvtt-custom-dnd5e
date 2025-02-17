@@ -1,5 +1,9 @@
 import { CONSTANTS } from "./constants.js";
-import { getSetting, setSetting, registerMenu, registerSetting } from "./utils.js";
+import {
+  getSetting,
+  setSetting,
+  registerMenu,
+  registerSetting } from "./utils.js";
 import { WeaponPropertiesForm } from "./forms/config-form.js";
 
 const constants = CONSTANTS.WEAPON_PROFICIENCIES;
@@ -29,7 +33,18 @@ export function registerSettings() {
   );
 
   registerSetting(
-    constants.SETTING.KEY,
+    constants.SETTING.ENABLE.KEY,
+    {
+      scope: "world",
+      config: false,
+      requiresReload: true,
+      type: Boolean,
+      default: true
+    }
+  );
+
+  registerSetting(
+    constants.SETTING.CONFIG.KEY,
     {
       scope: "world",
       config: false,
@@ -38,9 +53,9 @@ export function registerSettings() {
     }
   );
 
-  const setting = getSetting(constants.SETTING.KEY);
+  const setting = getSetting(constants.SETTING.CONFIG.KEY);
   if ( !Object.keys(setting).length ) {
-    setSetting(constants.SETTING.KEY, CONFIG.CUSTOM_DND5E.weaponProperties);
+    setSetting(constants.SETTING.CONFIG.KEY, CONFIG.CUSTOM_DND5E.weaponProperties);
   }
 }
 
@@ -51,6 +66,8 @@ export function registerSettings() {
  * @param {object} data The data
  */
 export function setConfig(data) {
+  if ( !getSetting(constants.SETTING.ENABLE.KEY) ) return;
+
   const buildConfig = data => Object.fromEntries(
     Object.entries(data)
       .filter(([_, value]) => value.visible || value.visible === undefined)

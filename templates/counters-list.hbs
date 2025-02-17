@@ -1,15 +1,15 @@
 {{#each counters as |item key|}}
-<li class="custom-dnd5e-item" data-key="{{key}}">
+<li class="custom-dnd5e-item flexrow" data-key="{{key}}">
     <i class="custom-dnd5e-drag flex0 fas fa-grip-lines" draggable="true"></i>
-    <input id="custom-dnd5e-visible" class="flex0" name="{{#if ../actorType}}{{../actorType}}.{{/if}}{{key}}.visible" type="checkbox" data-tooltip="{{localize "CUSTOM_DND5E.form.checkbox.visible.tooltip"}}"{{#unless (customDnd5eBoolFalse visible)}} checked{{/unless}}>
-    <div class="fields flexrow">
+    <dnd5e-checkbox id="custom-dnd5e-visible" class="flex0" name="{{#if ../actorType}}{{../actorType}}.{{/if}}{{key}}.visible" data-tooltip="{{localize "CUSTOM_DND5E.form.checkbox.visible.tooltip"}}"{{#unless (customDnd5eBoolFalse visible)}} checked{{/unless}}></dnd5e-checkbox>
+    <div class="form-group">
         <input id="custom-dnd5e-actorType" name="{{#if ../actorType}}{{../actorType}}.{{/if}}{{key}}.actorType" type="hidden" value="{{../actorType}}">
         <input id="custom-dnd5e-key" name="{{#if ../actorType}}{{../actorType}}.{{/if}}{{key}}.key" type="hidden" value="{{key}}">
-        <div class="field">
+        <div class="form-fields">
             <label>{{localize "CUSTOM_DND5E.label"}}</label>
             <input id="custom-dnd5e-label" name="{{#if ../actorType}}{{../actorType}}.{{/if}}{{key}}.label" type="text" value="{{localize label}}">
         </div>
-        <div class="field">
+        <div class="form-fields">
             <label>{{localize "CUSTOM_DND5E.type"}}</label>
             <select id="custom-dnd5e-type" name="{{#if ../actorType}}{{../actorType}}.{{/if}}{{key}}.type">
                 {{selectOptions ../selects.type.choices selected=type localize=true}}
@@ -17,10 +17,10 @@
         </div>
     </div>
     <div class="custom-dnd5e-list-buttons">
-        <button type="button" data-tooltip="{{localize "CUSTOM_DND5E.form.counters.triggers.tooltip"}}" data-action="advanced-options" data-tooltip="{{localize "CUSTOM_DND5E.form.counters.triggers.tooltip"}}" data-tooltip-direction="UP" class="flex0 custom-dnd5e-list-button">
-        <i class="fa-solid fa-gear"></i>
+        <button type="button" data-action="edit" data-tooltip="{{localize "CUSTOM_DND5E.edit"}}" data-tooltip-direction="UP" class="flex0 custom-dnd5e-list-button">
+        <i class="fa-solid fa-pen-to-square"></i>
         </button>
-        <button type="button" data-tooltip="{{localize "CUSTOM_DND5E.form.counters.copyProperty.tooltip"}}" data-action="copy-property" data-tooltip="{{localize "CUSTOM_DND5E.form.counters.copyProperty.tooltip"}}" data-tooltip-direction="UP" class="flex0 custom-dnd5e-list-button">
+        <button type="button" data-action="copy-property" data-tooltip="{{localize "CUSTOM_DND5E.form.counters.copyProperty.tooltip"}}" data-tooltip-direction="UP" class="flex0 custom-dnd5e-list-button">
             <i class="fa-solid fa-at"></i>
         </button>
         <button type="button" data-action="delete" data-tooltip="{{localize "CUSTOM_DND5E.form.button.delete.tooltip"}}"  class="flex0 custom-dnd5e-list-button">

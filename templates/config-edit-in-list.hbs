@@ -1,7 +1,7 @@
 {{#each items as |item key|}}
 <li class="custom-dnd5e-item flexrow" data-key="{{customDnd5eDotNotateChild ../childType ../parentKey key}}">
     <i class="custom-dnd5e-drag flex0 fas fa-grip-lines" draggable="true"></i>
-    <input id="custom-dnd5e-visible" class="flex0" name="{{customDnd5eDotNotateChild ../childType ../parentKey key}}.visible" type="checkbox" data-tooltip="{{localize "CUSTOM_DND5E.form.checkbox.visible.tooltip"}}"{{#unless (customDnd5eBoolFalse visible)}} checked{{/unless}}>
+    <dnd5e-checkbox id="custom-dnd5e-visible" class="flex0" name="{{customDnd5eDotNotateChild ../childType ../parentKey key}}.visible" data-tooltip="{{localize "CUSTOM_DND5E.form.checkbox.visible.tooltip"}}"{{#unless (customDnd5eBoolFalse visible)}} checked{{/unless}}></dnd5e-checkbox>
     <div class="fields flexrow">
         <input id="custom-dnd5e-parentKey" name="{{customDnd5eDotNotateChild ../childType ../parentKey key}}.parentKey" type="hidden" value="{{../parentKey}}">
         <div class="form-group">

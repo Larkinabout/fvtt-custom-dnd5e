@@ -1,4 +1,4 @@
-import { CONSTANTS, SHEET_TYPE } from "./constants.js";
+import { CONSTANTS } from "./constants.js";
 import {
   Logger,
   getFlag,

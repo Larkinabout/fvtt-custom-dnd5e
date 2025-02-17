@@ -1,5 +1,11 @@
 import { CONSTANTS } from "./constants.js";
-import { c5eLoadTemplates, checkEmpty, registerMenu, getSetting, registerSetting, resetDnd5eConfig } from "./utils.js";
+import {
+  c5eLoadTemplates,
+  checkEmpty,
+  registerMenu,
+  getSetting,
+  registerSetting,
+  resetDnd5eConfig } from "./utils.js";
 import { ConditionsForm } from "./forms/config-form.js";
 import { buildBloodied, registerBloodied } from "./house-rules.js";
 
@@ -37,7 +43,18 @@ function registerSettings() {
   );
 
   registerSetting(
-    constants.SETTING.KEY,
+    constants.SETTING.ENABLE.KEY,
+    {
+      scope: "world",
+      config: false,
+      requiresReload: true,
+      type: Boolean,
+      default: true
+    }
+  );
+
+  registerSetting(
+    constants.SETTING.CONFIG.KEY,
     {
       scope: "world",
       config: false,
@@ -152,15 +169,10 @@ function buildData(config) {
  * @param {object} data The data
  */
 export function setConfig(data = null) {
+  if ( !getSetting(constants.SETTING.ENABLE.KEY) ) return;
+
   const properties = ["conditionTypes", "statusEffects"];
 
-  // Initialise the config object
-  const config = {
-    conditionTypes: {},
-    statusEffects: []
-  };
-
-  // Exit if data is empty and reset config
   if ( checkEmpty(data) ) {
     properties.forEach(property => {
       const configType = (property === "conditionTypes") ? CONFIG.DND5E : CONFIG;
@@ -170,6 +182,12 @@ export function setConfig(data = null) {
     });
     return;
   }
+
+  // Initialise the config object
+  const config = {
+    conditionTypes: {},
+    statusEffects: []
+  };
 
   // Populate config
   Object.entries(data)

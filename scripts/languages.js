@@ -1,5 +1,10 @@
 import { CONSTANTS } from "./constants.js";
-import { checkEmpty, registerMenu, registerSetting, resetDnd5eConfig } from "./utils.js";
+import {
+  checkEmpty,
+  getSetting,
+  registerMenu,
+  registerSetting,
+  resetDnd5eConfig } from "./utils.js";
 import { LanguagesForm } from "./forms/config-form.js";
 
 const constants = CONSTANTS.LANGUAGES;
@@ -32,7 +37,18 @@ function registerSettings() {
   );
 
   registerSetting(
-    constants.SETTING.KEY,
+    constants.SETTING.ENABLE.KEY,
+    {
+      scope: "world",
+      config: false,
+      requiresReload: true,
+      type: Boolean,
+      default: true
+    }
+  );
+
+  registerSetting(
+    constants.SETTING.CONFIG.KEY,
     {
       scope: "world",
       config: false,
@@ -49,6 +65,7 @@ function registerSettings() {
  * @param {object} data The data
  */
 export function setConfig(data = null) {
+  if ( !getSetting(constants.SETTING.ENABLE.KEY) ) return;
   if ( checkEmpty(data) ) {
     if ( checkEmpty(CONFIG.DND5E[configKey]) ) {
       resetDnd5eConfig(configKey);

@@ -59,19 +59,19 @@
         <div class="form-group">
             <label class="flex1" style="min-width:80px; max-width:120px;">{{localize "CUSTOM_DND5E.includeOnHud"}}</label>
             <div class="form-fields">
-                <input id="custom-dnd5e-hud" name="{{key}}.hud" type="checkbox"{{#if (ne hud false)}} checked{{/if}}>
+                <dnd5e-checkbox id="custom-dnd5e-hud" name="{{key}}.hud"{{#if (ne hud false)}} checked{{/if}}></dnd5e-checkbox>
             </div>
         </div>
         <div class="form-group">
             <label class="flex1" style="min-width:80px; max-width:120px;">{{localize "CUSTOM_DND5E.includeOnSheet"}}</label>
             <div class="form-fields">
-                <input id="custom-dnd5e-sheet" name="{{key}}.sheet" type="checkbox"{{#if sheet}} checked{{/if}}>
+                <dnd5e-checkbox id="custom-dnd5e-sheet" name="{{key}}.sheet"{{#if sheet}} checked{{/if}}></dnd5e-checkbox>
             </div>
         </div>
         <div class="form-group">
             <label class="flex1" style="min-width:80px; max-width:120px;">{{localize "CUSTOM_DND5E.pseudo"}}</label>
             <div class="form-fields">
-                <input id="custom-dnd5e-pseudo" name="{{key}}.pseudo" type="checkbox"{{#if pseudo}} checked{{/if}}>
+                <dnd5e-checkbox id="custom-dnd5e-pseudo" name="{{key}}.pseudo"{{#if pseudo}} checked{{/if}}></dnd5e-checkbox>
             </div>
         </div>
         <div class="form-group">

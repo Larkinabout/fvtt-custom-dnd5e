@@ -33,7 +33,7 @@
         <div class="form-group">
             <label class="flex1" style="min-width:80px; max-width:100px;">Include for ASI</label>
             <div class="form-fields">
-                <input id="custom-dnd5e-improvement" name="{{key}}.improvement" type="checkbox" {{#unless (customDnd5eBoolFalse improvement)}}checked{{/unless}}>
+                <dnd5e-checkbox id="custom-dnd5e-improvement" name="{{key}}.improvement" {{#unless (customDnd5eBoolFalse improvement)}}checked{{/unless}}></dnd5e-checkbox> 
             </div>
         </div>
         <div class="form-group">

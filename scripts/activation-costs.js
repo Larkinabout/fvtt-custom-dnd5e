@@ -1,5 +1,12 @@
 import { CONSTANTS } from "./constants.js";
-import { c5eLoadTemplates, checkEmpty, registerMenu, registerSetting, getDefaultDnd5eConfig, resetDnd5eConfig } from "./utils.js";
+import {
+  c5eLoadTemplates,
+  checkEmpty,
+  registerMenu,
+  getSetting,
+  registerSetting,
+  getDefaultDnd5eConfig,
+  resetDnd5eConfig } from "./utils.js";
 import { ActivationCostsForm } from "./forms/config-form.js";
 
 const constants = CONSTANTS.ACTIVATION_COSTS;
@@ -39,7 +46,18 @@ function registerSettings() {
   );
 
   registerSetting(
-    constants.SETTING.KEY,
+    constants.SETTING.ENABLE.KEY,
+    {
+      scope: "world",
+      config: false,
+      requiresReload: true,
+      type: Boolean,
+      default: true
+    }
+  );
+
+  registerSetting(
+    constants.SETTING.CONFIG.KEY,
     {
       scope: "world",
       config: false,
@@ -67,6 +85,7 @@ export function getDefaultConfig(key = null) {
  * @param {object} [data=null] The activation types data.
  */
 export function setConfig(data = null) {
+  if ( !getSetting(constants.SETTING.ENABLE.KEY) ) return;
   if ( checkEmpty(data) ) {
     if ( checkEmpty(CONFIG.DND5E[configKey]) ) {
       resetDnd5eConfig(configKey);

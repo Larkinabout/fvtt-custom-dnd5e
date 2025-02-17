@@ -3,19 +3,19 @@ import { getFlag, setFlag, unsetFlag, setSetting, Logger } from "../utils.js";
 import { CustomDnd5eForm } from "./custom-dnd5e-form.js";
 
 const id = CONSTANTS.COUNTERS.ID;
-const form = `${id}-advanced-options-form`;
+const form = `${id}-edit`;
 const listClass = `${MODULE.ID}-list`;
 const listClassSelector = `.${listClass}`;
 
 /* -------------------------------------------- */
 
 /**
- * Class representing the Counters Advanced Options Form.
+ * Class representing the Counters Edit Form.
  * @extends CustomDnd5eForm
  */
-export class CountersAdvancedOptionsForm extends CustomDnd5eForm {
+export class CountersEditForm extends CustomDnd5eForm {
   /**
-   * Constructor for CountersAdvancedOptionsForm.
+   * Constructor for CountersEditForm.
    *
    * @param {object} args Arguments passed to the parent class.
    */
@@ -41,15 +41,15 @@ export class CountersAdvancedOptionsForm extends CustomDnd5eForm {
    */
   static DEFAULT_OPTIONS = {
     actions: {
-      new: CountersAdvancedOptionsForm.createItem
+      new: CountersEditForm.createItem
     },
     form: {
-      handler: CountersAdvancedOptionsForm.submit,
+      handler: CountersEditForm.submit,
       closeOnSubmit: false
     },
     id: `${MODULE.ID}-${form}`,
     window: {
-      title: `CUSTOM_DND5E.form.${id}.triggers.title`
+      title: `CUSTOM_DND5E.form.${id}.edit.title`
     }
   };
 
@@ -361,7 +361,7 @@ export class CountersAdvancedOptionsForm extends CustomDnd5eForm {
    * @param {object} args The arguments for opening the form.
    */
   static async open(args) {
-    const form = new CountersAdvancedOptionsForm(args);
+    const form = new CountersEditForm(args);
     form.render(true);
   }
 }

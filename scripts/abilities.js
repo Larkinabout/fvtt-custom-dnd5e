@@ -1,5 +1,12 @@
 import { CONSTANTS } from "./constants.js";
-import { c5eLoadTemplates, checkEmpty, registerMenu, registerSetting, getDefaultDnd5eConfig, resetDnd5eConfig } from "./utils.js";
+import {
+  c5eLoadTemplates,
+  checkEmpty,
+  registerMenu,
+  getSetting,
+  registerSetting,
+  getDefaultDnd5eConfig,
+  resetDnd5eConfig } from "./utils.js";
 import { AbilitiesForm } from "./forms/config-form.js";
 
 const constants = CONSTANTS.ABILITIES;
@@ -37,7 +44,18 @@ function registerSettings() {
   );
 
   registerSetting(
-    constants.SETTING.KEY,
+    constants.SETTING.ENABLE.KEY,
+    {
+      scope: "world",
+      config: false,
+      requiresReload: true,
+      type: Boolean,
+      default: true
+    }
+  );
+
+  registerSetting(
+    constants.SETTING.CONFIG.KEY,
     {
       scope: "world",
       config: false,
@@ -66,6 +84,14 @@ export function getDefaultConfig(key = null) {
  * @param {object} [data=null] The abilities data.
  */
 export function setConfig(data = null) {
+  if ( !getSetting(constants.SETTING.ENABLE.KEY) ) return;
+  if ( checkEmpty(data) ) {
+    if ( checkEmpty(CONFIG.DND5E[configKey]) ) {
+      resetDnd5eConfig(configKey);
+    }
+    return;
+  }
+
   const buildConfig = (keys, data) => Object.fromEntries(
     keys.filter(key => data[key].visible || data[key].visible === undefined)
       .map(key => [
@@ -82,13 +108,6 @@ export function setConfig(data = null) {
         }
       ])
   );
-
-  if ( checkEmpty(data) ) {
-    if ( checkEmpty(CONFIG.DND5E[configKey]) ) {
-      resetDnd5eConfig(configKey);
-    }
-    return;
-  }
 
   const defaultConfig = foundry.utils.deepClone(CONFIG.CUSTOM_DND5E[configKey]);
   const config = buildConfig(Object.keys(data), foundry.utils.mergeObject(defaultConfig, data));

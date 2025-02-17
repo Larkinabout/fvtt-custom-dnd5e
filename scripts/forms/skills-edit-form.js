@@ -21,7 +21,7 @@ export class SkillsEditForm extends ConfigEditForm {
   constructor(args) {
     super(args);
     this.configKey = configKey;
-    this.settingKey = constants.SETTING.KEY;
+    this.settingKey = constants.SETTING.CONFIG.KE;
     this.getDefaultConfig = getDefaultConfig;
     this.setConfig = setConfig;
     this.headerButton = JOURNAL_HELP_BUTTON;

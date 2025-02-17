@@ -6,7 +6,6 @@
     height: 100%;
 }
 
-
 .custom-dnd5e-app .hidden {
     display: none;
 }
@@ -15,10 +14,27 @@
     height: 100%;
 }
 
+.custom-dnd5e-app.dnd5e2 .standard-form {
+    gap: 1rem;
+}
+
 .custom-dnd5e-app.application .flexrow {
     display: flex;
     flex: 1;
-    gap: 0.25rem;
+    gap: 0.5rem;
+}
+
+.custom-dnd5e-app.application li > .fields {
+    border-left: 1px dotted var(--color-border);
+    padding-left: 0.5rem
+}
+
+.theme-light .custom-dnd5e-app.application li > .fields {
+    border-left: 1px dotted var(--dnd5e-color-gold);
+}
+
+.theme-dark .custom-dnd5e-app.application li > .fields {
+    border-left: 1px dotted var(--dnd5e-color-blue-gray-3);
 }
 
 .custom-dnd5e-app nav.sheet-tabs {
@@ -36,8 +52,20 @@
     font-size: 1.5rem;
 }
 
-.custom-dnd5e-app.application h3 {
-    font-size: 1.2rem;
+.custom-dnd5e-app.dnd5e2.application h3 {
+    font-size: 0.875rem;
+
+    text-shadow: none;
+    border-bottom: none;
+    padding-top: 0.5rem;
+}
+
+.theme-light .custom-dnd5e-app.dnd5e2.application h3 {
+    color: var(--color-text-dark-5);
+}
+
+.theme-dark .custom-dnd5e-app.dnd5e2.application h3 {
+    color: var(--dnd5e-color-gold);
 }
 
 .custom-dnd5e-app .form-group > label {
@@ -49,9 +77,16 @@
 }
 
 .custom-dnd5e-col-group {
-    border-left: 3px solid var(--color-border);
     gap: 0.5rem;
     padding: 0 0 0 0.5rem;
+}
+
+.theme-light .custom-dnd5e-col-group {
+    border-left: 1px dotted var(--dnd5e-color-gold);
+}
+
+.theme-dark .custom-dnd5e-col-group {
+    border-left: 1px dotted var(--dnd5e-color-blue-gray-3);
 }
 
 .custom-dnd5e-app .form-group.stacked label {
@@ -108,11 +143,23 @@
 }
 
 /*************************************
+    NAVIGATION
+**************************************/
+
+.application.custom-dnd5e-app nav.tabs .item {
+    color: var(--color-text-dark-5);
+}
+
+.theme-light .application.custom-dnd5e-app nav.tabs .item.active {
+    color: var(--color-text-dark-primary);
+}
+
+/*************************************
     LIST / UL
 **************************************/
 
 .custom-dnd5e-app ul {
-    border: 3px solid transparent;
+    border: 1px solid transparent;
     gap: 0rem;
     list-style-type: none;
     margin: 0.25rem 0 0 0;
@@ -124,15 +171,21 @@
 }
 
 .custom-dnd5e-app ul ul {
-    border-top: 3px solid var(--color-border);
     flex: 100%;
     list-style-type: none;
     padding-left: 25px;
 }
 
+.theme-light .custom-dnd5e-app ul ul {
+    border-top: 1px dotted var(--dnd5e-color-gold);
+}
+
+.theme-dark .custom-dnd5e-app ul ul {
+    border-top: 1px dotted var(--dnd5e-color-blue-gray-3);
+}
 
 .custom-dnd5e-app ul > li:first-child {
-    border-top: 3px solid transparent;
+    border-top: 1px solid transparent;
 }
 
 .custom-dnd5e-app ul:first-child:not(ul ul) {
@@ -165,8 +218,15 @@
 **************************************/
 
 .custom-dnd5e-app li {
-    border: 3px solid transparent;
-    border-top: 3px solid var(--color-border);
+    border: 1px solid transparent;
+}
+
+.theme-light .custom-dnd5e-app li {
+    border-top: 1px dotted var(--dnd5e-color-gold);
+}
+
+.theme-dark .custom-dnd5e-app li {
+    border-top: 1px dotted var(--dnd5e-color-blue-gray-3);
 }
 
 .custom-dnd5e-app li:not(li li) {
@@ -201,15 +261,15 @@
 }
 
 .custom-dnd5e-app li.drag-top {
-    border-top: 3px dashed red !important;
+    border-top: 1px dashed red !important;
 }
 
 .custom-dnd5e-app li.drag-middle {
-    border: 3px dashed red !important;
+    border: 1px dashed red !important;
 }
 
 .custom-dnd5e-app li.drag-bottom {
-    border-bottom: 3px dashed red !important;
+    border-bottom: 1px dashed red !important;
 }
 
 
@@ -217,42 +277,47 @@
     LIST BUTTONS
 **************************************/
 
-.application .flexrow > .custom-dnd5e-list-buttons,
+.application.dnd5e2 .flexrow > .custom-dnd5e-list-buttons,
 .custom-dnd5e-list-buttons {
     display: flex;
     flex: 0;
     justify-content: center;
 }
 
-button.custom-dnd5e-list-button {
+.dnd5e2 button.custom-dnd5e-list-button {
     background: transparent;
     border: none;
     border-radius: 0;
+    box-shadow: none;
     padding: 0 0.5rem;
     margin: 0;
 }
 
-button.custom-dnd5e-list-button:hover,
-button.custom-dnd5e-list-button:focus {
+.theme-dark .dnd5e2 button.custom-dnd5e-list-button {
+    color: var(--color-text-dark-5);
+}
+
+.dnd5e2 button.custom-dnd5e-list-button:hover,
+.dnd5e2 button.custom-dnd5e-list-button:focus {
     background: transparent;
     border: none;
     box-shadow: none;
     outline: none;
 }
 
-.custom-dnd5e-list-button:last-of-type {
+.dnd5e2 .custom-dnd5e-list-button:last-of-type {
     border-right: none;
 }
 
-.custom-dnd5e-list-button:hover {
+.dnd5e2 .custom-dnd5e-list-button:hover {
     box-shadow: none;
 }
 
-.custom-dnd5e-list-button:disabled {
+.dnd5e2 .custom-dnd5e-list-button:disabled {
     cursor: unset;
 }
 
-.custom-dnd5e-list-button:disabled > i {
+.dnd5e2 .custom-dnd5e-list-button:disabled > i {
     color: transparent;
 }
 
@@ -261,7 +326,7 @@ button.custom-dnd5e-list-button:focus {
     outline: none;
 }
 
-.custom-dnd5e-app .custom-dnd5e-list-button:disabled:hover > i {
+.custom-dnd5e-app.dnd5e2 .custom-dnd5e-list-button:disabled:hover > i {
     text-shadow: none;
 }
 
@@ -270,19 +335,21 @@ button.custom-dnd5e-list-button:focus {
 **************************************/
 
 .theme-light .custom-dnd5e-advice.notes {
-    border: 1px solid rgba(0, 0, 0, 0.1);
+    background-color: rgba(0, 0, 0, 0.05);
+    border: 1px solid rgba(0, 0, 0, 0.05);
 }
 
 .theme-dark .custom-dnd5e-advice.notes {
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    background-color: rgba(255,255,255,0.2);
+    border: 1px solid rgba(255, 255, 255, 0.2);
     color: var(--color-light-2);
 }
 
 .custom-dnd5e-advice.notes {
     border-radius: 3px;
-    font-style: italic;
-    margin: 0;
-    padding: 0.25rem;
+    font-size: var(--font-size-11);
+    margin: 0.2rem 0;
+    padding: 0.15rem;
     flex: 0 1 100%;
 }
 
@@ -291,12 +358,7 @@ button.custom-dnd5e-list-button:focus {
     border: 1px solid var(--color-level-error);
     border-radius: 3px;
     color: var(--color-level-error);
-    font-style: italic;
-    margin: 0;
-    margin-bottom: 0.25rem;
-    padding: 0.25rem;
-}
-
-.custom-dnd5e-advice.notes.hp-note {
-    margin: 0.25rem 0;
+    font-size: var(--font-size-11);
+    margin: 0.2rem 0;
+    padding: 0.15rem;
 }

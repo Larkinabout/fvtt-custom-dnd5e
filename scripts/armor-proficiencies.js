@@ -1,5 +1,5 @@
 import { CONSTANTS } from "./constants.js";
-import { c5eLoadTemplates, checkEmpty, registerMenu, registerSetting, resetDnd5eConfig } from "./utils.js";
+import { c5eLoadTemplates, checkEmpty, getSetting, registerMenu, registerSetting, resetDnd5eConfig } from "./utils.js";
 import { ArmorProficienciesForm } from "./forms/armor-proficiencies-form.js";
 
 const constants = CONSTANTS.ARMOR_PROFICIENCIES;
@@ -37,7 +37,18 @@ function registerSettings() {
   );
 
   registerSetting(
-    constants.SETTING.KEY,
+    constants.SETTING.ENABLE.KEY,
+    {
+      scope: "world",
+      config: false,
+      requiresReload: true,
+      type: Boolean,
+      default: true
+    }
+  );
+
+  registerSetting(
+    constants.SETTING.CONFIG.KEY,
     {
       scope: "world",
       config: false,
@@ -104,16 +115,10 @@ function buildData(config) {
  * @param {object} [data=null] The armor proficiencies data.
  */
 export function setConfig(data = null) {
+  if ( !getSetting(constants.SETTING.ENABLE.KEY) ) return;
+
   const properties = ["armorProficiencies", "armorProficienciesMap", "armorTypes"];
 
-  // Initialise the config object
-  const config = {
-    armorProficiencies: {},
-    armorProficienciesMap: {},
-    armorTypes: {}
-  };
-
-  // Exit if data is empty and reset config
   if ( checkEmpty(data) ) {
     properties.forEach(property => {
       if ( checkEmpty(CONFIG.DND5E[property]) ) {
@@ -122,6 +127,13 @@ export function setConfig(data = null) {
     });
     return;
   }
+
+  // Initialise the config object
+  const config = {
+    armorProficiencies: {},
+    armorProficienciesMap: {},
+    armorTypes: {}
+  };
 
   // Populate config
   Object.entries(data)

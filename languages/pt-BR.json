@@ -170,7 +170,7 @@
     "CUSTOM_DND5E.form.counters.max.label": "Valor Máximo",
     "CUSTOM_DND5E.form.counters.max.note.1": "Definir o valor máximo do contador",
     "CUSTOM_DND5E.form.counters.title": "Configurar Contadores",
-    "CUSTOM_DND5E.form.counters.triggers.title": "Opções Avançadas",
+    "CUSTOM_DND5E.form.counters.edit.title": "Opções Avançadas",
     "CUSTOM_DND5E.form.counters.triggers.trigger.choices.counterValue": "Valor do contador",
     "CUSTOM_DND5E.form.counters.triggers.trigger.choices.zeroHp": "0 PV",
     "CUSTOM_DND5E.form.counters.triggers.trigger.choices.zeroHpCombatEnd": "Finaliza o combate se reduzido a 0 PV durante o combate",

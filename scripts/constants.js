@@ -21,7 +21,12 @@ export const CONSTANTS = {
       NAME: "CUSTOM_DND5E.menu.abilities.name"
     },
     SETTING: {
-      KEY: "abilities"
+      ENABLE: {
+        KEY: "enable-abilities"
+      },
+      CONFIG: {
+        KEY: "abilities"
+      }
     },
     TEMPLATE: {
       EDIT: "modules/custom-dnd5e/templates/abilities-edit.hbs",
@@ -38,7 +43,12 @@ export const CONSTANTS = {
       NAME: "CUSTOM_DND5E.menu.activityActivationTypes.name"
     },
     SETTING: {
-      KEY: "activation-costs"
+      ENABLE: {
+        KEY: "enable-activation-costs"
+      },
+      CONFIG: {
+        KEY: "activation-costs"
+      }
     },
     TEMPLATE: {
       EDIT: "modules/custom-dnd5e/templates/activation-costs-edit.hbs",
@@ -57,7 +67,12 @@ export const CONSTANTS = {
       NAME: "CUSTOM_DND5E.menu.actorSizes.name"
     },
     SETTING: {
-      KEY: "actor-sizes"
+      ENABLE: {
+        KEY: "enable-actor-sizes"
+      },
+      CONFIG: {
+        KEY: "actor-sizes"
+      }
     },
     TEMPLATE: {
       EDIT: "modules/custom-dnd5e/templates/actor-sizes-edit.hbs",
@@ -74,7 +89,12 @@ export const CONSTANTS = {
       NAME: "CUSTOM_DND5E.menu.armorClasses.name"
     },
     SETTING: {
-      KEY: "armor-calculations"
+      ENABLE: {
+        KEY: "enable-armor-calculations"
+      },
+      CONFIG: {
+        KEY: "armor-calculations"
+      }
     },
     TEMPLATE: {
       EDIT: "modules/custom-dnd5e/templates/armor-calculations-edit.hbs",
@@ -90,7 +110,12 @@ export const CONSTANTS = {
       NAME: "CUSTOM_DND5E.menu.armorIds.name"
     },
     SETTING: {
-      KEY: "armor-ids"
+      ENABLE: {
+        KEY: "enable-armor-ids"
+      },
+      CONFIG: {
+        KEY: "armor-ids"
+      }
     },
     TEMPLATE: {
       FORM: "modules/custom-dnd5e/templates/config-form.hbs",
@@ -107,7 +132,12 @@ export const CONSTANTS = {
       NAME: "CUSTOM_DND5E.menu.armorProficiencies.name"
     },
     SETTING: {
-      KEY: "armor-proficiencies"
+      ENABLE: {
+        KEY: "enable-armor-proficiencies"
+      },
+      CONFIG: {
+        KEY: "armor-proficiencies"
+      }
     },
     TEMPLATE: {
       FORM: "modules/custom-dnd5e/templates/config-form.hbs",
@@ -141,11 +171,6 @@ export const CONSTANTS = {
       HINT: "CUSTOM_DND5E.setting.chatCommands.hint"
     }
   },
-  CONDITION_TYPES: {
-    SETTING: {
-      KEY: "condition-types"
-    }
-  },
   CONDITIONS: {
     MENU: {
       KEY: "conditions-menu",
@@ -155,7 +180,12 @@ export const CONSTANTS = {
       NAME: "CUSTOM_DND5E.menu.conditions.name"
     },
     SETTING: {
-      KEY: "conditions"
+      ENABLE: {
+        KEY: "enable-conditions"
+      },
+      CONFIG: {
+        KEY: "conditions"
+      }
     },
     TEMPLATE: {
       EDIT: "modules/custom-dnd5e/templates/conditions-edit.hbs",
@@ -174,7 +204,12 @@ export const CONSTANTS = {
       NAME: "CUSTOM_DND5E.menu.consumableTypes.name"
     },
     SETTING: {
-      KEY: "consumable-types"
+      ENABLE: {
+        KEY: "enable-consumable-types"
+      },
+      CONFIG: {
+        KEY: "consumable-types"
+      }
     },
     UUID: "Compendium.custom-dnd5e.custom-dnd5e-journals.JournalEntry.B48iqFBddUikMMer.JournalEntryPage.OgMhctYM5NFh8neL"
   },
@@ -218,7 +253,7 @@ export const CONSTANTS = {
       FORM: "modules/custom-dnd5e/templates/counters-form.hbs",
       FORM_INDIVIDUAL: "modules/custom-dnd5e/templates/counters-form-individual.hbs",
       LIST: "modules/custom-dnd5e/templates/counters-list.hbs",
-      ADVANCED_OPTIONS_FORM: "modules/custom-dnd5e/templates/counters-advanced-options-form.hbs",
+      EDIT: "modules/custom-dnd5e/templates/counters-edit.hbs",
       TRIGGERS_LIST: "modules/custom-dnd5e/templates/counters-triggers-list.hbs",
       DND5E_ACTOR: "modules/custom-dnd5e/templates/counters/dnd5e/counters-actor.hbs",
       DND5E_ACTOR_LEGACY: "modules/custom-dnd5e/templates/counters/dnd5e/counters-actor-legacy.hbs",
@@ -235,7 +270,12 @@ export const CONSTANTS = {
       NAME: "CUSTOM_DND5E.menu.currencies.name"
     },
     SETTING: {
-      KEY: "currency"
+      ENABLE: {
+        KEY: "enable-currency"
+      },
+      CONFIG: {
+        KEY: "currency"
+      }
     },
     TEMPLATE: {
       EDIT: "modules/custom-dnd5e/templates/currency-edit.hbs",
@@ -252,7 +292,12 @@ export const CONSTANTS = {
       NAME: "CUSTOM_DND5E.menu.damageTypes.name"
     },
     SETTING: {
-      KEY: "damage-types"
+      ENABLE: {
+        KEY: "enable-damage-types"
+      },
+      CONFIG: {
+        KEY: "damage-types"
+      }
     },
     TEMPLATE: {
       EDIT: "modules/custom-dnd5e/templates/damage-types-edit.hbs",
@@ -411,7 +456,12 @@ export const CONSTANTS = {
       NAME: "CUSTOM_DND5E.menu.itemActionTypes.name"
     },
     SETTING: {
-      KEY: "item-action-types"
+      ENABLE: {
+        KEY: "enable-item-actions-types"
+      },
+      CONFIG: {
+        KEY: "item-action-types"
+      }
     },
     UUID: "Compendium.custom-dnd5e.custom-dnd5e-journals.JournalEntry.B48iqFBddUikMMer.JournalEntryPage.Ubzow5wKgOUEXYJw"
   },
@@ -425,7 +475,12 @@ export const CONSTANTS = {
       NAME: "CUSTOM_DND5E.menu.itemActivationCostTypes.name"
     },
     SETTING: {
-      KEY: "item-activation-cost-types"
+      ENABLE: {
+        KEY: "enable-item-activation-cost-types"
+      },
+      CONFIG: {
+        KEY: "item-activation-cost-types"
+      }
     },
     UUID: "Compendium.custom-dnd5e.custom-dnd5e-journals.JournalEntry.B48iqFBddUikMMer.JournalEntryPage.uFxtCCVz8Ow95cUL"
   },
@@ -439,7 +494,12 @@ export const CONSTANTS = {
       NAME: "CUSTOM_DND5E.menu.itemProperties.name"
     },
     SETTING: {
-      KEY: "item-properties"
+      ENABLE: {
+        KEY: "enable-item-properties"
+      },
+      CONFIG: {
+        KEY: "item-properties"
+      }
     },
     TEMPLATE: {
       EDIT: "modules/custom-dnd5e/templates/item-properties-edit.hbs"
@@ -456,7 +516,12 @@ export const CONSTANTS = {
       NAME: "CUSTOM_DND5E.menu.itemRarity.name"
     },
     SETTING: {
-      KEY: "item-rarity"
+      ENABLE: {
+        KEY: "enable-item-rarity"
+      },
+      CONFIG: {
+        KEY: "item-rarity"
+      }
     },
     UUID: "Compendium.custom-dnd5e.custom-dnd5e-journals.JournalEntry.B48iqFBddUikMMer.JournalEntryPage.FIMLwqJ6ACWHbuDJ"
   },
@@ -470,7 +535,12 @@ export const CONSTANTS = {
       NAME: "CUSTOM_DND5E.menu.languages.name"
     },
     SETTING: {
-      KEY: "languages"
+      ENABLE: {
+        KEY: "enable-languages"
+      },
+      CONFIG: {
+        KEY: "languages"
+      }
     },
     UUID: "Compendium.custom-dnd5e.custom-dnd5e-journals.JournalEntry.B48iqFBddUikMMer.JournalEntryPage.UHurkLgqKecvpq2S"
   },
@@ -577,7 +647,12 @@ export const CONSTANTS = {
       NAME: "CUSTOM_DND5E.menu.senses.name"
     },
     SETTING: {
-      KEY: "senses"
+      ENABLE: {
+        KEY: "enable-senses"
+      },
+      CONFIG: {
+        KEY: "senses"
+      }
     },
     TEMPLATE: {
       CONFIG_FORM_GROUP: "modules/custom-dnd5e/templates/movement-senses-config-form-group.hbs"
@@ -630,7 +705,12 @@ export const CONSTANTS = {
       NAME: "CUSTOM_DND5E.menu.skills.name"
     },
     SETTING: {
-      KEY: "skills"
+      ENABLE: {
+        KEY: "enable-skills"
+      },
+      CONFIG: {
+        KEY: "skills"
+      }
     },
     TEMPLATE: {
       EDIT: "modules/custom-dnd5e/templates/skills-edit.hbs"
@@ -647,7 +727,12 @@ export const CONSTANTS = {
       NAME: "CUSTOM_DND5E.menu.spellSchools.name"
     },
     SETTING: {
-      KEY: "spell-schools"
+      ENABLE: {
+        KEY: "enable-spell-schools"
+      },
+      CONFIG: {
+        KEY: "spell-schools"
+      }
     },
     TEMPLATE: {
       FORM: "modules/custom-dnd5e/templates/spell-schools-form.hbs",
@@ -683,7 +768,12 @@ export const CONSTANTS = {
       NAME: "CUSTOM_DND5E.menu.toolIds.name"
     },
     SETTING: {
-      KEY: "tool-ids"
+      ENABLE: {
+        KEY: "enable-tools-ids"
+      },
+      CONFIG: {
+        KEY: "tool-ids"
+      }
     },
     TEMPLATE: {
       FORM: "modules/custom-dnd5e/templates/config-form.hbs",
@@ -700,7 +790,12 @@ export const CONSTANTS = {
       NAME: "CUSTOM_DND5E.menu.toolProficiencies.name"
     },
     SETTING: {
-      KEY: "tool-proficiencies"
+      ENABLE: {
+        KEY: "enable-tool-proficiencies"
+      },
+      CONFIG: {
+        KEY: "tool-proficiencies"
+      }
     },
     TEMPLATE: {
       FORM: "modules/custom-dnd5e/templates/config-form.hbs",
@@ -730,7 +825,12 @@ export const CONSTANTS = {
       NAME: "CUSTOM_DND5E.menu.weaponIds.name"
     },
     SETTING: {
-      KEY: "weapon-ids"
+      ENABLE: {
+        KEY: "enable-weapon-ids"
+      },
+      CONFIG: {
+        KEY: "weapon-ids"
+      }
     },
     TEMPLATE: {
       FORM: "modules/custom-dnd5e/templates/config-form.hbs",
@@ -747,7 +847,12 @@ export const CONSTANTS = {
       NAME: "CUSTOM_DND5E.menu.weaponProficiencies.name"
     },
     SETTING: {
-      KEY: "weapon-proficiencies"
+      ENABLE: {
+        KEY: "enable-weapon-proficiencies"
+      },
+      CONFIG: {
+        KEY: "weapon-proficiencies"
+      }
     },
     TEMPLATE: {
       FORM: "modules/custom-dnd5e/templates/config-form.hbs",

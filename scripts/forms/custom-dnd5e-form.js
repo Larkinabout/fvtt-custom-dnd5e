@@ -38,7 +38,7 @@ export class CustomDnd5eForm extends HandlebarsApplicationMixin(ApplicationV2) {
       reset: CustomDnd5eForm.reset,
       help: CustomDnd5eForm.openHelp
     },
-    classes: [`${MODULE.ID}-app`, "sheet"],
+    classes: [`${MODULE.ID}-app`, "dnd5e2", "sheet"],
     tag: "form",
     form: {
       submitOnChange: false,
@@ -49,7 +49,7 @@ export class CustomDnd5eForm extends HandlebarsApplicationMixin(ApplicationV2) {
       dropSelector: listClassSelector
     }],
     position: {
-      width: 600,
+      width: 540,
       height: 680
     },
     scrollable: "custom-dnd5e-scrollable",
@@ -528,13 +528,14 @@ export class CustomDnd5eForm extends HandlebarsApplicationMixin(ApplicationV2) {
    *
    * @param {object} processedFormData The processed form data.
    * @param {string} settingKey The setting key.
+   * @param {boolean} enableConfig Whether the config is enabled.
    * @param {Function} setConfig The function to set the config.
    * @param {boolean} [requiresReload=false] Whether a reload is required.
    */
-  async handleSubmit(processedFormData, settingKey, setConfig, requiresReload = false) {
+  async handleSubmit(processedFormData, settingKey, enableConfig, setConfig, requiresReload = false) {
     try {
       await setSetting(settingKey, processedFormData);
-      if ( setConfig ) {
+      if ( enableConfig && setConfig ) {
         setConfig(processedFormData);
       }
 

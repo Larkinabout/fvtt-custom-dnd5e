@@ -1,5 +1,11 @@
 import { CONSTANTS } from "./constants.js";
-import { c5eLoadTemplates, checkEmpty, registerMenu, registerSetting, resetDnd5eConfig } from "./utils.js";
+import {
+  c5eLoadTemplates,
+  checkEmpty,
+  getSetting,
+  registerMenu,
+  registerSetting,
+  resetDnd5eConfig } from "./utils.js";
 import { ItemPropertiesForm } from "./forms/config-form.js";
 
 const constants = CONSTANTS.ITEM_PROPERTIES;
@@ -36,7 +42,18 @@ function registerSettings() {
   );
 
   registerSetting(
-    constants.SETTING.KEY,
+    constants.SETTING.ENABLE.KEY,
+    {
+      scope: "world",
+      config: false,
+      requiresReload: true,
+      type: Boolean,
+      default: true
+    }
+  );
+
+  registerSetting(
+    constants.SETTING.CONFIG.KEY,
     {
       scope: "world",
       config: false,
@@ -103,6 +120,7 @@ function getSettingDefault() {
  * @param {object} data The data
  */
 export function setConfig(data = null) {
+  if ( !getSetting(constants.SETTING.ENABLE.KEY) ) return;
   if ( checkEmpty(data) ) {
     if ( checkEmpty(CONFIG.DND5E.itemProperties) ) {
       resetDnd5eConfig("itemProperties");

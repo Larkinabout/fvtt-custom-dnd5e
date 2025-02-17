@@ -1,6 +1,14 @@
 import { CONSTANTS } from "./constants.js";
-import { c5eLoadTemplates, checkEmpty, registerMenu, registerSetting, resetDnd5eConfig } from "./utils.js";
+import {
+  c5eLoadTemplates,
+  checkEmpty,
+  getSetting,
+  registerMenu,
+  registerSetting,
+  resetDnd5eConfig } from "./utils.js";
 import { WeaponProficienciesForm } from "./forms/weapon-proficiencies-form.js";
+
+const constants = CONSTANTS.WEAPON_PROFICIENCIES;
 
 /**
  * Register settings and load templates.
@@ -9,8 +17,8 @@ export function register() {
   registerSettings();
 
   const templates = [
-    CONSTANTS.WEAPON_PROFICIENCIES.TEMPLATE.FORM,
-    CONSTANTS.WEAPON_PROFICIENCIES.TEMPLATE.LIST
+    constants.TEMPLATE.FORM,
+    constants.TEMPLATE.LIST
   ];
   c5eLoadTemplates(templates);
 }
@@ -20,12 +28,12 @@ export function register() {
  */
 function registerSettings() {
   registerMenu(
-    CONSTANTS.WEAPON_PROFICIENCIES.MENU.KEY,
+    constants.MENU.KEY,
     {
-      hint: game.i18n.localize(CONSTANTS.WEAPON_PROFICIENCIES.MENU.HINT),
-      label: game.i18n.localize(CONSTANTS.WEAPON_PROFICIENCIES.MENU.LABEL),
-      name: game.i18n.localize(CONSTANTS.WEAPON_PROFICIENCIES.MENU.NAME),
-      icon: CONSTANTS.WEAPON_PROFICIENCIES.MENU.ICON,
+      hint: game.i18n.localize(constants.MENU.HINT),
+      label: game.i18n.localize(constants.MENU.LABEL),
+      name: game.i18n.localize(constants.MENU.NAME),
+      icon: constants.MENU.ICON,
       type: WeaponProficienciesForm,
       restricted: true,
       scope: "world"
@@ -33,7 +41,18 @@ function registerSettings() {
   );
 
   registerSetting(
-    CONSTANTS.WEAPON_PROFICIENCIES.SETTING.KEY,
+    constants.SETTING.ENABLE.KEY,
+    {
+      scope: "world",
+      config: false,
+      requiresReload: true,
+      type: Boolean,
+      default: true
+    }
+  );
+
+  registerSetting(
+    constants.SETTING.CONFIG.KEY,
     {
       scope: "world",
       config: false,
@@ -97,16 +116,10 @@ function buildData(config) {
  * @param {object} data The data
  */
 export function setConfig(data = null) {
+  if ( !getSetting(constants.SETTING.ENABLE.KEY) ) return;
+
   const properties = ["weaponProficiencies", "weaponProficienciesMap", "weaponTypes"];
 
-  // Initialise the config object
-  const config = {
-    weaponProficiencies: {},
-    weaponProficienciesMap: {},
-    weaponTypes: {}
-  };
-
-  // Exit if data is empty and reset config
   if ( checkEmpty(data) ) {
     properties.forEach(property => {
       if ( checkEmpty(CONFIG.DND5E[property]) ) {
@@ -115,6 +128,13 @@ export function setConfig(data = null) {
     });
     return;
   }
+
+  // Initialise the config object
+  const config = {
+    weaponProficiencies: {},
+    weaponProficienciesMap: {},
+    weaponTypes: {}
+  };
 
   // Populate config
   Object.entries(data)
