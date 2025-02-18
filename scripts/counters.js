@@ -56,6 +56,8 @@ function registerHooks() {
   Hooks.on("preUpdateActor", handlePreUpdateActor);
   Hooks.on("updateActor", handleUpdateActor);
   Hooks.on("deleteCombat", handleDeleteCombat);
+  Hooks.on("combatStart", handleCombatStart);
+  Hooks.on("updateCombat", handleUpdateCombat);
   Hooks.on("dnd5e.preRestCompleted", handleRest);
 }
 
@@ -99,6 +101,41 @@ function handleUpdateActor(actor, data, options, userId) {
 /* -------------------------------------------- */
 
 /**
+ * Handle combat start triggers.
+ * @param {object} combat The combat
+ * @param {object} data The data
+ */
+function handleCombatStart(combat, data) {
+  if ( !getSetting(constants.SETTING.COUNTERS.KEY) ) return;
+  combat.combatants.forEach(combatant => {
+    const actor = combatant.actor;
+    processTriggers({ actor, triggerType: "startOfCombat" });
+  });
+}
+
+/* -------------------------------------------- */
+
+/**
+ * Handle update combat triggers.
+ * @param {object} combat The combat
+ * @param {object} data The data
+ * @param {object} options The options
+ */
+function handleUpdateCombat(combat, data, options) {
+  if ( !getSetting(constants.SETTING.COUNTERS.KEY) ) return;
+
+  if ( combat.previous ) {
+    const previousActor = combat.combatants.get(combat.previous.combatantId).actor;
+    processTriggers({ actor: previousActor, triggerType: "endOfTurn" });
+  }
+
+  const actor = combat.combatant.actor;
+  processTriggers({ actor, triggerType: "startOfTurn" });
+}
+
+/* -------------------------------------------- */
+
+/**
  * Handle end of combat triggers.
  * @param {object} combat The combat
  */
@@ -106,6 +143,7 @@ function handleDeleteCombat(combat) {
   if ( !getSetting(constants.SETTING.COUNTERS.KEY) ) return;
   combat.combatants.forEach(combatant => {
     const actor = combatant.actor;
+    processTriggers({ actor, triggerType: "endOfCombat" });
     if ( getFlag(actor, "zeroHpCombatEnd") ) {
       processTriggers({ actor, triggerType: "zeroHpCombatEnd" });
       unsetFlag(actor, "zeroHpCombatEnd");
@@ -193,6 +231,9 @@ function handleAction(counterKey, counter, trigger, { actor, data }) {
     case "decrease":
       decreaseCounter(actor, counterKey, trigger, counter.type);
       break;
+    case "set":
+      setCounter(actor, counterKey, trigger, counter.type);
+      break;
     case "dead":
       {
         const counterValue = getCounterValue(data, counterKey);
@@ -240,6 +281,24 @@ function decreaseCounter(actor, key, trigger, type) {
       break;
     case "number":
       decreaseNumber(actor, key, trigger.actionValue);
+      break;
+  }
+}
+
+/**
+ * Set a counter to the trigger's action value.
+ * @param {object} actor The actor
+ * @param {string} key The counter key
+ * @param {object} trigger The trigger
+ * @param {string} type The counter type
+ */
+function setCounter(actor, key, trigger, type) {
+  switch (type) {
+    case "fraction":
+      setFraction(actor, key, trigger.actionValue);
+      break;
+    case "number":
+      setNumber(actor, key, trigger.actionValue);
       break;
   }
 }
@@ -547,6 +606,18 @@ export function increaseFraction(entity, counterKey, actionValue = 1) {
 /* -------------------------------------------- */
 
 /**
+ * Set fraction counter.
+ * @param {object} entity The entity: actor or item
+ * @param {string} counterKey The counter key
+ * @param {number} actionValue The action value
+ */
+export function setFraction(entity, counterKey, actionValue = 0) {
+  entity.setFlag(MODULE.ID, `${counterKey}.value`, actionValue);
+}
+
+/* -------------------------------------------- */
+
+/**
  * Modify fraction counter.
  * @param {object} entity The entity: actor or item
  * @param {string} counterKey The counter key
@@ -593,6 +664,18 @@ export function decreaseNumber(entity, counterKey, actionValue = 1) {
  */
 export function increaseNumber(entity, counterKey, actionValue = 1) {
   modifyNumber(entity, counterKey, actionValue);
+}
+
+/* -------------------------------------------- */
+
+/**
+ * Set number counter.
+ * @param {object} entity The entity: actor or item
+ * @param {string} counterKey The counter key
+ * @param {number} actionValue The action value
+ */
+export function setNumber(entity, counterKey, actionValue = 0) {
+  entity.setFlag(MODULE.ID, counterKey, actionValue);
 }
 
 /* -------------------------------------------- */

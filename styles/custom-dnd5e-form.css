@@ -54,7 +54,6 @@
 
 .custom-dnd5e-app.dnd5e2.application h3 {
     font-size: 0.875rem;
-
     text-shadow: none;
     border-bottom: none;
     padding-top: 0.5rem;
@@ -68,7 +67,12 @@
     color: var(--dnd5e-color-gold);
 }
 
-.custom-dnd5e-app .form-group > label {
+.custom-dnd5e-app.dnd5e2.application p {
+    font-size: var(--font-size-11);
+}
+
+.custom-dnd5e-app.dnd5e2 .standard-form .form-group:not(.label-top) > label,
+.custom-dnd5e-app.dnd5e2.standard-form .form-group:not(.label-top) > label {
     line-height: 1.2rem;
 }
 

@@ -48,8 +48,8 @@ import { register as registerSkills, setConfig as setSkills } from "./skills.js"
 import { register as registerSpellSchools, setConfig as setSpellSchools } from "./spell-schools.js";
 import { register as registerRadialStatusEffects } from "./radial-status-effects.js";
 import { register as registerTokenBorder } from "./token-border.js";
-import { register as registerToolIds, setConfig as setToolIds } from "./tool-ids.js";
-import { register as registerToolProficiencies, setConfig as setToolProficiencies } from "./tool-proficiencies.js";
+import { register as registerToolIds, setConfig as setolIds } from "./tool-ids.js";
+import { register as registerToolProficiencies, setConfig as setolProficiencies } from "./tool-proficiencies.js";
 import { register as registerWeaponIds, setConfig as setWeaponIds } from "./weapon-ids.js";
 import { register as registerWeaponProficiencies, setConfig as setWeaponProficiencies } from "./weapon-proficiencies.js";
 import { patchApplicationRender } from "./patches/application-render.js";
@@ -205,8 +205,8 @@ Hooks.on("ready", async () => {
   setItemRarity(getSetting(CONSTANTS.ITEM_RARITY.SETTING.KEY));
   setLanguages(getSetting(CONSTANTS.LANGUAGES.SETTING.KEY));
   setSpellSchools(getSetting(CONSTANTS.SPELL_SCHOOLS.SETTING.KEY));
-  setToolIds(getSetting(CONSTANTS.TOOL_IDS.SETTING.KEY));
-  setToolProficiencies(getSetting(CONSTANTS.TOOL_PROFICIENCIES.SETTING.KEY));
+  setolIds(getSetting(CONSTANTS.TOOL_IDS.SETTING.KEY));
+  setolProficiencies(getSetting(CONSTANTS.TOOL_PROFICIENCIES.SETTING.KEY));
   setWeaponIds(getSetting(CONSTANTS.WEAPON_IDS.SETTING.KEY));
   setWeaponProficiencies(getSetting(CONSTANTS.WEAPON_PROFICIENCIES.SETTING.KEY));
   setMaxLevel(getSetting(CONSTANTS.MAX_LEVEL.SETTING.KEY));

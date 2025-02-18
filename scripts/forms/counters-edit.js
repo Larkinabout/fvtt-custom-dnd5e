@@ -86,6 +86,10 @@ export class CountersEditForm extends CustomDnd5eForm {
     triggerChoices.halfHp = "CUSTOM_DND5E.form.counters.triggers.trigger.choices.halfHp";
     triggerChoices.shortRest = "CUSTOM_DND5E.shortRest";
     triggerChoices.longRest = "CUSTOM_DND5E.longRest";
+    triggerChoices.startOfCombat = "CUSTOM_DND5E.startOfCombat";
+    triggerChoices.endOfCombat = "CUSTOM_DND5E.endOfCombat";
+    triggerChoices.startOfTurn = "CUSTOM_DND5E.startOfTurn";
+    triggerChoices.endOfTurn = "CUSTOM_DND5E.endOfTurn";
     // TriggerChoices.roll1 = 'CUSTOM_DND5E.form.counters.triggers.trigger.choices.roll1'
     // triggerChoices.roll20 = 'CUSTOM_DND5E.form.counters.triggers.trigger.choices.roll20'
 
@@ -94,6 +98,7 @@ export class CountersEditForm extends CustomDnd5eForm {
     if ( type !== "checkbox" ) {
       actionChoices.increase = "CUSTOM_DND5E.increase";
       actionChoices.decrease = "CUSTOM_DND5E.decrease";
+      actionChoices.set = "CUSTOM_DND5E.set";
       actionChoices.dead = "CUSTOM_DND5E.dead";
     } else {
       actionChoices.check = "CUSTOM_DND5E.check";
@@ -159,6 +164,7 @@ export class CountersEditForm extends CustomDnd5eForm {
       el.action = item.querySelector("#custom-dnd5e-action");
       el.actionIncrease = el.action.querySelector("#custom-dnd5e-increase");
       el.actionDecrease = el.action.querySelector("#custom-dnd5e-decrease");
+      el.actionSet = el.action.querySelector("#custom-dnd5e-set-to");
       el.actionValueGroup = item.querySelector("#custom-dnd5e-action-value").closest(".form-group");
       el.action.addEventListener("change", () => { this.#onChangeAction(el); });
 
@@ -198,6 +204,7 @@ export class CountersEditForm extends CustomDnd5eForm {
     el.actionValueGroup = item.querySelector("#custom-dnd5e-action-value").closest(".form-group");
     el.actionIncrease = el.action.querySelector("#custom-dnd5e-increase");
     el.actionDecrease = el.action.querySelector("#custom-dnd5e-decrease");
+    el.actionSet = el.action.querySelector("#custom-dnd5e-set-to");
 
     item.addEventListener("dragend", this._onDragEnd.bind(this));
     item.addEventListener("dragleave", this._onDragLeave.bind(this));
@@ -238,6 +245,7 @@ export class CountersEditForm extends CustomDnd5eForm {
     if ( el.trigger.value === "counterValue" ) {
       el.actionIncrease?.classList.add("hidden");
       el.actionDecrease?.classList.add("hidden");
+      el.actionSet?.classList.add("hidden");
       el.triggerValueGroup?.classList.remove("hidden");
       const type = this.setting[this.key]?.type || this.type;
       el.action.value = (type === "checkbox") ? "check" : "dead";
@@ -245,6 +253,7 @@ export class CountersEditForm extends CustomDnd5eForm {
     if ( !allowed.includes(el.trigger.value) ) {
       el.actionIncrease?.classList.remove("hidden");
       el.actionDecrease?.classList.remove("hidden");
+      el.actionSet?.classList.remove("hidden");
       el.triggerValueGroup?.classList.add("hidden");
     }
   }
@@ -256,7 +265,7 @@ export class CountersEditForm extends CustomDnd5eForm {
    * @param {object} el The element.
    */
   #onChangeAction(el) {
-    const allowed = ["increase", "decrease"];
+    const allowed = ["increase", "decrease", "set"];
     el.actionValueGroup?.classList.remove("hidden");
     if ( !allowed.includes(el.action.value) ) {
       el.actionValueGroup?.classList.add("hidden");

@@ -16,7 +16,8 @@ export class WeaponProficienciesForm extends ConfigForm {
     super(args);
     this.editInList = true;
     this.nestable = true;
-    this.settingKey = CONSTANTS.WEAPON_PROFICIENCIES.SETTING.KEY;
+    this.enableConfigKey = CONSTANTS.WEAPON_PROFICIENCIES.SETTING.ENABLE.KEY;
+    this.settingKey = CONSTANTS.WEAPON_PROFICIENCIES.SETTING.CONFIG.KEY;
     this.dnd5eConfig = getDnd5eConfig();
     this.setting = getSetting(this.settingKey) || this.dnd5eConfig;
     this.setConfig = setConfig;

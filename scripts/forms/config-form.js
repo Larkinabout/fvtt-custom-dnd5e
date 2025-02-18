@@ -29,7 +29,7 @@ import { setConfig as setLanguages } from "../languages.js";
 import { setConfig as setSenses } from "../senses.js";
 import { setConfig as setSkills } from "../skills.js";
 import { setConfig as setSpellSchools } from "../spell-schools.js";
-import { setConfig as setToolIds } from "../tool-ids.js";
+import { setConfig as setolIds } from "../tool-ids.js";
 import { setConfig as setWeaponIds } from "../weapon-ids.js";
 
 const listClass = `${MODULE.ID}-list`;
@@ -982,7 +982,7 @@ export class ToolIdsForm extends IdForm {
     this.requiresReload = true;
     this.enableConfigKey = CONSTANTS.TOOL_IDS.SETTING.ENABLE.KEY;
     this.settingKey = CONSTANTS.TOOL_IDS.SETTING.CONFIG.KEY;
-    this.setConfig = setToolIds;
+    this.setConfig = setolIds;
     this.configKey = "toolIds";
     this.headerButton = JOURNAL_HELP_BUTTON;
     this.headerButton.uuid = CONSTANTS.TOOL_IDS.UUID;
