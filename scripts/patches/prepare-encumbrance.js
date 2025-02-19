@@ -5,6 +5,7 @@ import { getSetting } from "../utils.js";
  * Patch the prepareEncumbrance function to include custom encumbrance calculations.
  */
 export function patchPrepareEncumbrance() {
+  if ( !getSetting(CONSTANTS.ENCUMBRANCE.SETTING.ENABLE.KEY) ) return;
   if ( game.modules.get("variant-encumbrance-dnd5e")?.active ) return;
   libWrapper.register(MODULE.ID, "dnd5e.dataModels.actor.AttributesFields.prepareEncumbrance", prepareEncumbrancePatch, "OVERRIDE");
 }

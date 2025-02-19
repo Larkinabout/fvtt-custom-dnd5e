@@ -1,5 +1,12 @@
 import { CONSTANTS } from "./constants.js";
-import { Logger, c5eLoadTemplates, checkEmpty, registerMenu, registerSetting, resetDnd5eConfig } from "./utils.js";
+import {
+  Logger,
+  c5eLoadTemplates,
+  checkEmpty,
+  getSetting,
+  registerMenu,
+  registerSetting,
+  resetDnd5eConfig } from "./utils.js";
 import { EncumbranceForm } from "./forms/encumbrance-form.js";
 
 const constants = CONSTANTS.ENCUMBRANCE;
@@ -41,7 +48,18 @@ function registerSettings() {
   );
 
   registerSetting(
-    constants.SETTING.KEY,
+    constants.SETTING.ENABLE.KEY,
+    {
+      scope: "world",
+      config: false,
+      type: Boolean,
+      default: true,
+      requiresReload: true
+    }
+  );
+
+  registerSetting(
+    constants.SETTING.CONFIG.KEY,
     {
       scope: "world",
       config: false,
@@ -87,7 +105,8 @@ function registerSettings() {
  * Set CONFIG.DND5E.encumbrance.
  * @param {object} data The data
  */
-export function setConfig(data = null) {
+export async function setConfig(data = null) {
+  if ( !getSetting(constants.SETTING.ENABLE.KEY) ) return;
   if ( checkEmpty(data) ) {
     if ( checkEmpty(CONFIG.DND5E[configKey]) ) {
       resetDnd5eConfig(configKey);

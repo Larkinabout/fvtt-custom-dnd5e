@@ -377,7 +377,12 @@ export const CONSTANTS = {
       NAME: "CUSTOM_DND5E.menu.encumbrance.name"
     },
     SETTING: {
-      KEY: "encumbrance"
+      ENABLE: {
+        KEY: "enable-encumbrance"
+      },
+      CONFIG: {
+        KEY: "encumbrance"
+      }
     },
     TEMPLATE: {
       FORM: "modules/custom-dnd5e/templates/encumbrance-form.hbs"

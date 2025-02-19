@@ -16,7 +16,8 @@ export class EncumbranceForm extends CustomDnd5eForm {
     super(args);
 
     this.metric = game.settings.get("dnd5e", "metricWeightUnits") || false;
-    this.settingKey = CONSTANTS.ENCUMBRANCE.SETTING.KEY;
+    this.enableConfigKey = CONSTANTS.ENCUMBRANCE.SETTING.ENABLE.KEY;
+    this.settingKey = CONSTANTS.ENCUMBRANCE.SETTING.CONFIG.KEY;
     this.setConfig = setConfig;
     this.type = "encumbrance";
     this.headerButton = JOURNAL_HELP_BUTTON;
@@ -58,7 +59,7 @@ export class EncumbranceForm extends CustomDnd5eForm {
    */
   async _prepareContext() {
     this.setting = getSetting(this.settingKey) || foundry.utils.deepClone(CONFIG.DND5E.encumbrance);
-    const context = this.setting;
+    const context = foundry.utils.deepClone(this.setting);
     context.metric = this.metric;
     context.equippedItemWeightModifier =
       getSetting(CONSTANTS.ENCUMBRANCE.EQUIPPED_ITEM_WEIGHT_MODIFIER.SETTING.KEY);
@@ -66,6 +67,10 @@ export class EncumbranceForm extends CustomDnd5eForm {
       getSetting(CONSTANTS.ENCUMBRANCE.PROFICIENT_EQUIPPED_ITEM_WEIGHT_MODIFIER.SETTING.KEY);
     context.unequippedItemWeightModifier =
       getSetting(CONSTANTS.ENCUMBRANCE.UNEQUIPPED_ITEM_WEIGHT_MODIFIER.SETTING.KEY);
+
+    if ( this.enableConfigKey ) {
+      context.enableConfig = getSetting(this.enableConfigKey);
+    }
 
     return context;
   }
@@ -115,7 +120,11 @@ export class EncumbranceForm extends CustomDnd5eForm {
    * @param {object} formData The form data.
    */
   static async submit(event, form, formData) {
-    const ignore = ["equippedItemWeightModifier", "proficientEquippedItemWeightModifier", "unequippedItemWeightModifier"];
+    const ignore = ["enableConfig", "equippedItemWeightModifier", "metric", "partId", "proficientEquippedItemWeightModifier", "unequippedItemWeightModifier"];
+
+    this.enableConfig = formData.object.enableConfig;
+    await setSetting(this.enableConfigKey, this.enableConfig);
+    delete formData.object.enableConfig;
 
     Object.entries(formData.object).forEach(([key, value]) => {
       if ( ignore.includes(key) ) return;
@@ -134,5 +143,7 @@ export class EncumbranceForm extends CustomDnd5eForm {
     ]);
 
     this.setConfig(this.setting);
+
+    SettingsConfig.reloadConfirm();
   }
 }

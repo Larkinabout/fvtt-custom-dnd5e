@@ -139,10 +139,11 @@ Hooks.on("init", async () => {
   registerTokenBorder();
   registerDebug();
 
-  setAbilities(getSetting(CONSTANTS.ABILITIES.SETTING.KEY));
-  setCurrency(getSetting(CONSTANTS.CURRENCY.SETTING.KEY));
+  setAbilities(getSetting(CONSTANTS.ABILITIES.SETTING.CONFIG.KEY));
+  setCurrency(getSetting(CONSTANTS.CURRENCY.SETTING.CONFIG.KEY));
+  await setEncumbrance(getSetting(CONSTANTS.ENCUMBRANCE.SETTING.CONFIG.KEY));
   // SetSenses(getSetting(CONSTANTS.SENSES.SETTING.KEY))
-  setSkills(getSetting(CONSTANTS.SKILLS.SETTING.KEY));
+  setSkills(getSetting(CONSTANTS.SKILLS.SETTING.CONFIG.KEY));
 
   // Must be registered after abilities and skills are set
   registerNegativeHp();
@@ -187,28 +188,27 @@ Hooks.on("ready", async () => {
 
   const isV4 = foundry.utils.isNewerVersion(game.dnd5e.version, "3.3.1");
   if ( isV4 ) {
-    setActivationCosts(getSetting(CONSTANTS.ACTIVATION_COSTS.SETTING.KEY));
+    setActivationCosts(getSetting(CONSTANTS.ACTIVATION_COSTS.SETTING.CONFIG.KEY));
   }
-  setActorSizes(getSetting(CONSTANTS.ACTOR_SIZES.SETTING.KEY));
-  setArmorCalculations(getSetting(CONSTANTS.ARMOR_CALCULATIONS.SETTING.KEY));
-  setArmorIds(getSetting(CONSTANTS.ARMOR_IDS.SETTING.KEY));
-  setArmorProficiencies(getSetting(CONSTANTS.ARMOR_PROFICIENCIES.SETTING.KEY));
-  setConditions(getSetting(CONSTANTS.CONDITIONS.SETTING.KEY));
-  setConsumableTypes(getSetting(CONSTANTS.CONSUMABLE_TYPES.SETTING.KEY));
-  setDamageTypes(getSetting(CONSTANTS.DAMAGE_TYPES.SETTING.KEY));
-  setEncumbrance(getSetting(CONSTANTS.ENCUMBRANCE.SETTING.KEY));
+  setActorSizes(getSetting(CONSTANTS.ACTOR_SIZES.SETTING.CONFIG.KEY));
+  setArmorCalculations(getSetting(CONSTANTS.ARMOR_CALCULATIONS.SETTING.CONFIG.KEY));
+  setArmorIds(getSetting(CONSTANTS.ARMOR_IDS.SETTING.CONFIG.KEY));
+  setArmorProficiencies(getSetting(CONSTANTS.ARMOR_PROFICIENCIES.SETTING.CONFIG.KEY));
+  setConditions(getSetting(CONSTANTS.CONDITIONS.SETTING.CONFIG.KEY));
+  setConsumableTypes(getSetting(CONSTANTS.CONSUMABLE_TYPES.SETTING.CONFIG.KEY));
+  setDamageTypes(getSetting(CONSTANTS.DAMAGE_TYPES.SETTING.CONFIG.KEY));
   if ( !isV4 ) {
-    setItemActionTypes(getSetting(CONSTANTS.ITEM_ACTION_TYPES.SETTING.KEY));
-    setItemActivationCostTypes(getSetting(CONSTANTS.ITEM_ACTIVATION_COST_TYPES.SETTING.KEY));
+    setItemActionTypes(getSetting(CONSTANTS.ITEM_ACTION_TYPES.SETTING.CONFIG.KEY));
+    setItemActivationCostTypes(getSetting(CONSTANTS.ITEM_ACTIVATION_COST_TYPES.SETTING.CONFIG.KEY));
   }
-  setItemProperties(getSetting(CONSTANTS.ITEM_PROPERTIES.SETTING.KEY));
-  setItemRarity(getSetting(CONSTANTS.ITEM_RARITY.SETTING.KEY));
-  setLanguages(getSetting(CONSTANTS.LANGUAGES.SETTING.KEY));
-  setSpellSchools(getSetting(CONSTANTS.SPELL_SCHOOLS.SETTING.KEY));
-  setolIds(getSetting(CONSTANTS.TOOL_IDS.SETTING.KEY));
-  setolProficiencies(getSetting(CONSTANTS.TOOL_PROFICIENCIES.SETTING.KEY));
-  setWeaponIds(getSetting(CONSTANTS.WEAPON_IDS.SETTING.KEY));
-  setWeaponProficiencies(getSetting(CONSTANTS.WEAPON_PROFICIENCIES.SETTING.KEY));
+  setItemProperties(getSetting(CONSTANTS.ITEM_PROPERTIES.SETTING.CONFIG.KEY));
+  setItemRarity(getSetting(CONSTANTS.ITEM_RARITY.SETTING.CONFIG.KEY));
+  setLanguages(getSetting(CONSTANTS.LANGUAGES.SETTING.CONFIG.KEY));
+  setSpellSchools(getSetting(CONSTANTS.SPELL_SCHOOLS.SETTING.CONFIG.KEY));
+  setolIds(getSetting(CONSTANTS.TOOL_IDS.SETTING.CONFIG.KEY));
+  setolProficiencies(getSetting(CONSTANTS.TOOL_PROFICIENCIES.SETTING.CONFIG.KEY));
+  setWeaponIds(getSetting(CONSTANTS.WEAPON_IDS.SETTING.CONFIG.KEY));
+  setWeaponProficiencies(getSetting(CONSTANTS.WEAPON_PROFICIENCIES.SETTING.CONFIG.KEY));
   setMaxLevel(getSetting(CONSTANTS.MAX_LEVEL.SETTING.KEY));
 
   migrate();
