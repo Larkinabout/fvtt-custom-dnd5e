@@ -18,9 +18,6 @@ jobs:
         id: get_version
         uses: battila7/get-version-action@v2
 
-      - name: Install Dependencies
-        run: npm ci
-
       - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
