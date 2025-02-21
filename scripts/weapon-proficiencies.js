@@ -93,16 +93,19 @@ function buildData(config) {
   const data = {};
 
   Object.entries(config.weaponProficiencies).forEach(([key, value]) => {
-    data[key] = { label: value, children: {} };
+    data[key] = { label: value };
   });
 
   Object.entries(config.weaponTypes).forEach(([key, value]) => {
     const map = config.weaponProficienciesMap[key];
 
     if ( map ) {
+      if ( !foundry.utils.hasProperty(data[map], "children") ) {
+        data[map].children = {};
+      }
       data[map].children[key] = value;
     } else {
-      data[key] = { label: value, children: {} };
+      data[key] = { label: value };
     }
   });
 
@@ -142,7 +145,7 @@ export function setConfig(data = null) {
     .forEach(([key, value]) => {
       const localisedLabel = game.i18n.localize(value.label ?? value);
 
-      if ( value.children ) {
+      if ( Object.keys(value.children ?? {}).length ) {
         config.weaponProficiencies[key] = localisedLabel;
 
         Object.entries(value.children).forEach(([childKey, childValue]) => {

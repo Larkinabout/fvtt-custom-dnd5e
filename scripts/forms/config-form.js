@@ -205,7 +205,10 @@ export class ConfigForm extends CustomDnd5eForm {
 
       const key = foundry.utils.randomID();
 
-      const template = await this._getHtml({ items: { [key]: { fullKey: key, system: false, visible: true } } });
+      const template = await this._getHtml({
+        label: this.label,
+        items: { [key]: { fullKey: key, system: false, visible: true } }
+      });
 
       list.insertAdjacentHTML("beforeend", template);
 
@@ -242,7 +245,7 @@ export class ConfigForm extends CustomDnd5eForm {
    * @returns {Promise<string>} The rendered template.
    */
   async _getHtml(data) {
-    const template = await renderTemplate(CONSTANTS.CONFIG.TEMPLATE.LIST, data);
+    const template = await renderTemplate(CONSTANTS.CONFIG.TEMPLATE.EDIT_IN_LIST, data);
     return template;
   }
 

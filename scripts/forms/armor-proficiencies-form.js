@@ -68,7 +68,7 @@ export class ArmorProficienciesForm extends ConfigForm {
 
     labelise(this.setting);
 
-    return { editInList: this.editInList, items: this.setting };
+    return { editInList: this.editInList, label: this.label, items: this.setting };
   }
 
   /* -------------------------------------------- */

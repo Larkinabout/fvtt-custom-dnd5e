@@ -96,14 +96,17 @@ function buildData(config) {
   const data = {};
 
   Object.entries(config.toolProficiencies).forEach(([key, value]) => {
-    data[key] = { label: value, children: {} };
+    data[key] = { label: value };
   });
 
   Object.entries(config.toolTypes).forEach(([key, value]) => {
     if ( data[key] ) {
+      if ( !foundry.utils.hasProperty(data[key], "children") ) {
+        data[key].children = {};
+      }
       data[key].children[key] = value;
     } else {
-      data[key] = { label: value, children: {} };
+      data[key] = { label: value };
     }
   });
 
@@ -144,7 +147,7 @@ export function setConfig(data = null) {
 
       config.toolProficiencies[key] = localisedLabel;
 
-      if ( value.children ) {
+      if ( Object.keys(value.children ?? {}).length ) {
         Object.entries(value.children).forEach(([childKey, childValue]) => {
           config.toolTypes[childKey] = game.i18n.localize(childValue.label ?? childValue);
         });

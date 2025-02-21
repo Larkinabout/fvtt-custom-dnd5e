@@ -321,6 +321,7 @@ function registerHooks() {
   Hooks.on("updateActor", (actor, data, options, userId) => {
     if ( !game.user.isGM && !game.user.id !== userId ) return;
     if ( data?.flags?.["custom-dnd5e"] ) return;
+    if ( !foundry.utils.hasProperty(data, "system.attributes.hp") ) return;
 
     const instantDeath = applyInstantDeath(actor, data);
     updateHp(actor, data);
