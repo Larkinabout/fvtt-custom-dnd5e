@@ -41,9 +41,6 @@ jobs:
           manifest: https://github.com/${{github.repository}}/releases/latest/download/module.json
           download: https://github.com/${{github.repository}}/releases/download/${{github.event.release.tag_name}}/module.zip
 
-      - name: List Files and Directories
-        run: ls -R
-
       - run: zip -r ./module.zip module.json README.md languages/ media/ packs/ scripts/ styles/ templates/ -x "packs/_source/*"
 
       - name: Update Release with Files
