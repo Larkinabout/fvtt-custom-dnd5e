@@ -5,14 +5,14 @@
     <div class="fields flexrow">
         <input id="custom-dnd5e-parentKey" name="{{customDnd5eDotNotateChild ../childType ../parentKey key}}.parentKey" type="hidden" value="{{../parentKey}}">
         <div class="form-group">
-            <label class="flex1" style="min-width:50px; max-width:120px;">{{localize "CUSTOM_DND5E.key"}}</label>
+            <label class="flex0">{{localize "CUSTOM_DND5E.key"}}</label>
             <div class="form-fields">
                 <input{{#unless (customDnd5eBoolFalse system)}} disabled{{/unless}} id="key" {{#if (customDnd5eBoolFalse system)}}name="{{customDnd5eDotNotateChild ../childType ../parentKey key}}.key"{{/if}} type="text" value="{{key}}">
                 {{#unless (customDnd5eBoolFalse system)}}<input id="custom-dnd5e-key" name="{{customDnd5eDotNotateChild ../childType ../parentKey key}}.key" type="hidden" value="{{key}}">{{/unless}}
             </div>
         </div>
         <div class="form-group">
-            <label class="flex1" style="min-width:50px; max-width:120px;">{{localize ../label}}</label>
+            <label class="flex0">{{localize ../label}}</label>
             <div class="form-fields">
                 <input id="custom-dnd5e-label" name="{{customDnd5eDotNotateChild ../childType ../parentKey key}}.label" type="text" value="{{localize label}}">
             </div>

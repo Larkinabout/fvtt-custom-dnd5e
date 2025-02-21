@@ -123,7 +123,8 @@ export class ConfigForm extends CustomDnd5eForm {
     if ( this.editInList ) context.editInList = this.editInList;
 
     if ( this.enableConfigKey ) {
-      context.enableConfig = getSetting(this.enableConfigKey);
+      this.enableConfig = getSetting(this.enableConfigKey);
+      context.enableConfig = this.enableConfig;
     }
 
     return context;
@@ -257,6 +258,10 @@ export class ConfigForm extends CustomDnd5eForm {
   static async submit(event, form, formData) {
     if ( !this.validateFormData(formData) ) return;
 
+    if ( !this.requiresReload && this.enableConfigKey ) {
+      this.requiresReload = (this.enableConfig !== formData.object.enableConfig)
+    }
+
     this.enableConfig = formData.object.enableConfig;
     await setSetting(this.enableConfigKey, this.enableConfig);
     delete formData.object.enableConfig;
@@ -269,6 +274,7 @@ export class ConfigForm extends CustomDnd5eForm {
       propertiesToIgnore,
       setting: this.setting
     });
+
 
     this.updateActorKeys({ changedKeys, actorProperties: this.actorProperties });
     this.handleSubmit(processedFormData, this.settingKey, this.enableConfig, this.setConfig, this.requiresReload);
