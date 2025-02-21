@@ -33,6 +33,9 @@
     "CUSTOM_DND5E.die": "Die",
     "CUSTOM_DND5E.dynamicTokenScale": "Dynamic Token Scale",
     "CUSTOM_DND5E.edit": "Edit",
+    "CUSTOM_DND5E.enableConfiguration": "Enable Configuration",
+    "CUSTOM_DND5E.endOfCombat": "End of Combat",
+    "CUSTOM_DND5E.endOfTurn": "End of Turn",
     "CUSTOM_DND5E.equipment": "Equipment",
     "CUSTOM_DND5E.equippedItemWeightModifier": "Equipped Item Weight Modifier",
     "CUSTOM_DND5E.exhaustion": "Exhaustion",
@@ -88,6 +91,7 @@
     "CUSTOM_DND5E.rotation": "Rotation",
     "CUSTOM_DND5E.savingThrow": "Saving Throw",
     "CUSTOM_DND5E.scalar": "Scalar",
+    "CUSTOM_DND5E.set": "Set",
     "CUSTOM_DND5E.shortRest": "Short Rest",
     "CUSTOM_DND5E.skillCheck": "Skill Check",   
     "CUSTOM_DND5E.speedReduction": "Speed Reduction",
@@ -95,6 +99,8 @@
     "CUSTOM_DND5E.spell": "Spell",
     "CUSTOM_DND5E.spendCampSupplies.label": "Spend Camp Supplies",
     "CUSTOM_DND5E.square": "Square",
+    "CUSTOM_DND5E.startOfCombat": "Start of Combat",
+    "CUSTOM_DND5E.startOfTurn": "Start of Turn",
     "CUSTOM_DND5E.statuses": "Statuses",
     "CUSTOM_DND5E.successFailure": "Success/Failure",
     "CUSTOM_DND5E.successes": "Successes",
@@ -156,12 +162,16 @@
     "CUSTOM_DND5E.form.checkbox.visible.tooltip": "Visible",
 
     "CUSTOM_DND5E.form.abilities.title": "Configure Abilities",
+    "CUSTOM_DND5E.form.abilities.edit.title": "Edit Ability",
 
-    "CUSTOM_DND5E.form.activationCosts.title": "Configure Activation Costs",
+    "CUSTOM_DND5E.form.activityActivationTypes.title": "Configure Activation Costs",
+    "CUSTOM_DND5E.form.activityActivationTypes.edit.title": "Edit Activation Cost",
 
     "CUSTOM_DND5E.form.actorSizes.title": "Configure Actor Sizes",
+    "CUSTOM_DND5E.form.actorSizes.edit.title": "Edit Actor Size",
 
-    "CUSTOM_DND5E.form.armorCalculations.title": "Configure Armor Calculations",
+    "CUSTOM_DND5E.form.armorClasses.title": "Configure Armor Calculations",
+    "CUSTOM_DND5E.form.armorClasses.edit.title": "Edit Armor Calculation",
 
     "CUSTOM_DND5E.form.armorIds.title": "Configure Armor",
 
@@ -171,6 +181,7 @@
     "CUSTOM_DND5E.form.conditions.edit.title": "Edit Condition",
 
     "CUSTOM_DND5E.form.consumableTypes.title": "Configure Consumable Types",
+    "CUSTOM_DND5E.form.consumableTypes.edit.title": "Edit Consumable Type",
 
     "CUSTOM_DND5E.form.counters.triggers.tooltip": "Advanced Options",
     "CUSTOM_DND5E.form.counters.copyProperty.message": "'Property \"{property}\" copied to clipboard.'",
@@ -183,7 +194,7 @@
     "CUSTOM_DND5E.form.counters.max.label": "Maximum Value",
     "CUSTOM_DND5E.form.counters.max.note.1": "Set the maximum value of counter",
     "CUSTOM_DND5E.form.counters.title": "Configure Counters",
-    "CUSTOM_DND5E.form.counters.triggers.title": "Advanced Options",
+    "CUSTOM_DND5E.form.counters.edit.title": "Edit Counter",
     "CUSTOM_DND5E.form.counters.triggers.trigger.choices.counterValue": "Counter value",
     "CUSTOM_DND5E.form.counters.triggers.trigger.choices.zeroHp": "0 HP",
     "CUSTOM_DND5E.form.counters.triggers.trigger.choices.zeroHpCombatEnd": "Combat end, if reached 0 HP during combat",
@@ -191,9 +202,11 @@
     "CUSTOM_DND5E.form.counters.triggers.trigger.choices.roll1": "Roll 1 on a d20",
     "CUSTOM_DND5E.form.counters.triggers.trigger.choices.roll20": "Roll 20 on a d20",
 
-    "CUSTOM_DND5E.form.currency.title": "Configure Currency",
+    "CUSTOM_DND5E.form.currencies.title": "Configure Currency",
+    "CUSTOM_DND5E.form.currencies.edit.title": "Edit Currency",
 
     "CUSTOM_DND5E.form.damageTypes.title": "Configure Damage Types",
+    "CUSTOM_DND5E.form.damageTypes.edit.title": "Edit Damage Type",
 
     "CUSTOM_DND5E.form.debug.button.exportData.tooltip": "Export Data",
     "CUSTOM_DND5E.form.debug.consoleMessages.label": "Enable Console Messages",
@@ -230,6 +243,10 @@
     "CUSTOM_DND5E.form.houseRules.deathSaves.deathSavesTargetValue.note": "The value required to succeed a death saving throw",
     "CUSTOM_DND5E.form.houseRules.deathSaves.removeDeathSavesOnEvent.heading": "Remove Death Saves on Event",
     "CUSTOM_DND5E.form.houseRules.deathSaves.removeDeathSavesOnEvent.note": "Use 3 to remove all, 1 to remove one and 0 to remove none",
+    "CUSTOM_DND5E.form.houseRules.exhaustion.applyExhaustionOnZeroHp.label": "Apply on 0 HP",
+    "CUSTOM_DND5E.form.houseRules.exhaustion.applyExhaustionOnZeroHp.note": "Apply Exhaustion when a character is reduced to 0 HP",
+    "CUSTOM_DND5E.form.houseRules.exhaustion.applyExhaustionOnCombatEnd.label": "Apply on Combat End",
+    "CUSTOM_DND5E.form.houseRules.exhaustion.applyExhaustionOnCombatEnd.note": "If a character is reduced to 0 HP in combat, apply Exhaustion when the combat ends",
     "CUSTOM_DND5E.form.houseRules.hitPoints.applyMassiveDamage.label": "Apply Massive Damage",
     "CUSTOM_DND5E.form.houseRules.hitPoints.applyMassiveDamage.note": "Apply Massive Damage when a character suffers damage equal to or greater than half their max HP",
     "CUSTOM_DND5E.form.houseRules.hitPoints.applyNegativeHp.label": "Apply Negative Hit Points",
@@ -258,10 +275,13 @@
     "CUSTOM_DND5E.form.houseRules.title": "Configure House Rules",
 
     "CUSTOM_DND5E.form.itemActionTypes.title": "Configure Item Action Types",
+    "CUSTOM_DND5E.form.itemActionTypes.edit.title": "Edit Item Action Type",
 
     "CUSTOM_DND5E.form.itemActivationCostTypes.title": "Configure Item Activation Cost Types",
+    "CUSTOM_DND5E.form.itemActivationCostTypes.edit.title": "Edit Item Activation Cost Type",
 
     "CUSTOM_DND5E.form.itemProperties.title": "Configure Item Properties",
+    "CUSTOM_DND5E.form.itemProperties.edit.title": "Edit Item Property",
 
     "CUSTOM_DND5E.form.itemRarity.title": "Configure Item Rarity",
 
@@ -302,8 +322,10 @@
     "CUSTOM_DND5E.form.sheet.title": "Configure Sheet",
 
     "CUSTOM_DND5E.form.skills.title": "Configure Skills",
+    "CUSTOM_DND5E.form.skills.edit.title": "Edit Skill",
 
     "CUSTOM_DND5E.form.spellSchools.title": "Configure Spell Schools",
+    "CUSTOM_DND5E.form.spellSchools.edit.title": "Edit Spell School",
 
     "CUSTOM_DND5E.form.toolIds.title": "Configure Tools",
 
@@ -317,17 +339,17 @@
     "CUSTOM_DND5E.menu.abilities.label": "Configure Abilities",
     "CUSTOM_DND5E.menu.abilities.name": "Configure Abilities",
 
-    "CUSTOM_DND5E.menu.activationCosts.hint": "Configure Activation Costs",
-    "CUSTOM_DND5E.menu.activationCosts.label": "Configure Activation Costs",
-    "CUSTOM_DND5E.menu.activationCosts.name": "Configure Activation Costs",
+    "CUSTOM_DND5E.menu.activityActivationTypes.hint": "Configure Activation Costs",
+    "CUSTOM_DND5E.menu.activityActivationTypes.label": "Configure Activation Costs",
+    "CUSTOM_DND5E.menu.activityActivationTypes.name": "Configure Activation Costs",
 
     "CUSTOM_DND5E.menu.actorSizes.hint": "Configure Actor Sizes",
     "CUSTOM_DND5E.menu.actorSizes.label": "Configure Actor Sizes",
     "CUSTOM_DND5E.menu.actorSizes.name": "Configure Actor Sizes",
 
-    "CUSTOM_DND5E.menu.armorCalculations.hint": "Configure Armor Calculations",
-    "CUSTOM_DND5E.menu.armorCalculations.label": "Configure Armor Calculations",
-    "CUSTOM_DND5E.menu.armorCalculations.name": "Configure Armor Calculations",
+    "CUSTOM_DND5E.menu.armorClasses.hint": "Configure Armor Calculations",
+    "CUSTOM_DND5E.menu.armorClasses.label": "Configure Armor Calculations",
+    "CUSTOM_DND5E.menu.armorClasses.name": "Configure Armor Calculations",
 
     "CUSTOM_DND5E.menu.armorIds.hint": "Configure Armor",
     "CUSTOM_DND5E.menu.armorIds.label": "Configure Armor",
@@ -349,9 +371,9 @@
     "CUSTOM_DND5E.menu.counters.label": "Configure Counters",
     "CUSTOM_DND5E.menu.counters.name": "Configure Counters",
 
-    "CUSTOM_DND5E.menu.currency.hint": "Configure Currency",
-    "CUSTOM_DND5E.menu.currency.label": "Configure Currency",
-    "CUSTOM_DND5E.menu.currency.name": "Configure Currency",
+    "CUSTOM_DND5E.menu.currencies.hint": "Configure Currency",
+    "CUSTOM_DND5E.menu.currencies.label": "Configure Currency",
+    "CUSTOM_DND5E.menu.currencies.name": "Configure Currency",
     
     "CUSTOM_DND5E.menu.damageTypes.hint": "Configure Damage Types",
     "CUSTOM_DND5E.menu.damageTypes.label": "Configure Damage Types",
@@ -427,6 +449,8 @@
 
     "CUSTOM_DND5E.message.awardInspiration": "<p>{name} was awarded Inspiration for rolling a {value}.</p>",
     "CUSTOM_DND5E.message.awardInspirationAlready": "<p>{name} rolled a {value}, but already has Inspiration.</p>",
+    "CUSTOM_DND5E.message.exhaustion": "<p>{name} suffered Exhaustion.</p>",
+    "CUSTOM_DND5E.message.exhaustionDied": "<p>{name} died from Exhaustion.</p>",
     "CUSTOM_DND5E.message.instantDeath": "<p>{name} suffered Instant Death.</p>",
     "CUSTOM_DND5E.message.massiveDamage": "{name} suffered Massive Damage.",
     

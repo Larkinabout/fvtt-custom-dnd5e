@@ -10,7 +10,7 @@
             <div class="form-group">
                 <label>{{localize "CUSTOM_DND5E.form.houseRules.bloodied.applyBloodied.label"}}</label>
                 <div class="form-fields">
-                    <input id="custom-dnd5e-apply-bloodied" name="applyBloodied" type="checkbox"{{#if applyBloodied}} checked{{/if}}>
+                    <dnd5e-checkbox id="custom-dnd5e-apply-bloodied" name="applyBloodied"{{#if applyBloodied}} checked{{/if}}></dnd5e-checkbox>
                 </div>
                 <p class="hint">{{localize "CUSTOM_DND5E.form.houseRules.bloodied.applyBloodied.note1"}}</p>
                 <p class="custom-dnd5e-warning notes">{{localize "CUSTOM_DND5E.form.houseRules.bloodied.applyBloodied.note2"}}</p>
@@ -18,7 +18,7 @@
               <div class="form-group">
                 <label>{{localize "CUSTOM_DND5E.form.houseRules.bloodied.removeBloodiedOnDead.label"}}</label>
                 <div class="form-fields">
-                    <input id="custom-dnd5e-remove-bloodied-on-dead" name="removeBloodiedOnDead" type="checkbox"{{#if removeBloodiedOnDead}} checked{{/if}}>
+                    <dnd5e-checkbox id="custom-dnd5e-remove-bloodied-on-dead" name="removeBloodiedOnDead"{{#if removeBloodiedOnDead}} checked{{/if}}></dnd5e-checkbox>
                 </div>
                 <p class="hint">{{localize "CUSTOM_DND5E.form.houseRules.bloodied.removeBloodiedOnDead.note"}}</p>
             </div>
@@ -48,14 +48,14 @@
             <div class="form-group">
                 <label>{{localize "CUSTOM_DND5E.form.houseRules.dead.applyDead.label"}}</label>
                 <div class="form-fields">
-                    <input id="custom-dnd5e-apply-dead" name="applyDead" type="checkbox"{{#if applyDead}} checked{{/if}}> 
+                    <dnd5e-checkbox id="custom-dnd5e-apply-dead" name="applyDead"{{#if applyDead}} checked{{/if}}></dnd5e-checkbox>
                 </div>
                 <p class="hint">{{localize "CUSTOM_DND5E.form.houseRules.dead.applyDead.note"}}</p>
             </div>
             <div class="form-group">
                 <label>{{localize "CUSTOM_DND5E.form.houseRules.dead.applyInstantDeath.label"}}</label>
                 <div class="form-fields">
-                    <input id="custom-dnd5e-apply-instant-death" name="applyInstantDeath" type="checkbox"{{#if applyInstantDeath}} checked{{/if}}> 
+                    <dnd5e-checkbox id="custom-dnd5e-apply-instant-death" name="applyInstantDeath"{{#if applyInstantDeath}} checked{{/if}}></dnd5e-checkbox>
                 </div>
                 <p class="hint">{{localize "CUSTOM_DND5E.form.houseRules.dead.applyInstantDeath.note"}}</p>
             </div>
@@ -149,6 +149,28 @@
         </fieldset>
         <fieldset>
             <legend>
+                <span>{{localize "CUSTOM_DND5E.exhaustion"}}</span>
+                <button type="button" class="unbutton control-button" data-action="help" data-uuid="Compendium.custom-dnd5e.custom-dnd5e-journals.JournalEntry.ngr8w6WBycK59brj.JournalEntryPage.vfBCdjS2G75Ll8Qz" data-tooltip="{{localize "CUSTOM_DND5E.openGuide"}}" aria-label="{{localize "CUSTOM_DND5E.openGuide"}}">
+                    <i class="fas fa-circle-info" inert></i>
+                </button>
+            </legend>
+            <div class="form-group">
+                <label>{{localize "CUSTOM_DND5E.form.houseRules.exhaustion.applyExhaustionOnZeroHp.label"}}</label>
+                <div class="form-fields">
+                    <dnd5e-checkbox id="custom-dnd5e-apply-exhaustion-on-zero-hp" name="applyExhaustionOnZeroHp"{{#if applyExhaustionOnZeroHp}} checked{{/if}}></dnd5e-checkbox>
+                </div>
+                <p class="hint">{{localize "CUSTOM_DND5E.form.houseRules.exhaustion.applyExhaustionOnZeroHp.note"}}</p>
+            </div>
+            <div class="form-group">
+                <label>{{localize "CUSTOM_DND5E.form.houseRules.exhaustion.applyExhaustionOnCombatEnd.label"}}</label>
+                <div class="form-fields">
+                    <dnd5e-checkbox id="custom-dnd5e-apply-exhaustion-on-combat-end" name="applyExhaustionOnCombatEnd"{{#if applyExhaustionOnCombatEnd}} checked{{/if}}></dnd5e-checkbox> 
+                </div>
+                <p class="hint">{{localize "CUSTOM_DND5E.form.houseRules.exhaustion.applyExhaustionOnCombatEnd.note"}}</p>
+            </div>
+        </fieldset>
+        <fieldset>
+            <legend>
                 <span>{{localize "CUSTOM_DND5E.hitPoints"}}</span>
                 <button type="button" class="unbutton control-button" data-action="help" data-uuid="Compendium.custom-dnd5e.custom-dnd5e-journals.JournalEntry.ngr8w6WBycK59brj.JournalEntryPage.MVXx2yD2pAfzQBU5" data-tooltip="{{localize "CUSTOM_DND5E.openGuide"}}" aria-label="{{localize "CUSTOM_DND5E.openGuide"}}">
                     <i class="fas fa-circle-info" inert></i>
@@ -157,7 +179,7 @@
             <div class="form-group">
                 <label>{{localize "CUSTOM_DND5E.form.houseRules.hitPoints.applyMassiveDamage.label"}}</label>
                 <div class="form-fields">
-                    <input id="custom-dnd5e-apply-massive-damage" name="applyMassiveDamage" type="checkbox"{{#if applyMassiveDamage}} checked{{/if}}> 
+                    <dnd5e-checkbox id="custom-dnd5e-apply-massive-damage" name="applyMassiveDamage"{{#if applyMassiveDamage}} checked{{/if}}></dnd5e-checkbox>
                 </div>
                 <p class="hint">{{localize "CUSTOM_DND5E.form.houseRules.hitPoints.applyMassiveDamage.note"}}</p>
             </div>
@@ -172,21 +194,21 @@
             <div class="form-group">
                 <label>{{localize "CUSTOM_DND5E.form.houseRules.rollingHitPoints.rerollOnce.label"}}</label>
                 <div class="form-fields">
-                    <input id="custom-dnd5e-level-up-hit-points-reroll-once" name="levelUpHitPointsRerollOnce" type="checkbox"{{#if levelUpHitPointsRerollOnce}} checked{{/if}}> 
+                    <dnd5e-checkbox id="custom-dnd5e-level-up-hit-points-reroll-once" name="levelUpHitPointsRerollOnce"{{#if levelUpHitPointsRerollOnce}} checked{{/if}}></dnd5e-checkbox> 
                 </div>
                 <p class="hint">{{localize "CUSTOM_DND5E.form.houseRules.rollingHitPoints.rerollOnce.note"}}</p>
             </div>
             <div class="form-group">
                 <label>{{localize "CUSTOM_DND5E.form.houseRules.rollingHitPoints.showTakeAverage.label"}}</label>
                 <div class="form-fields">
-                    <input id="custom-dnd5e-level-up-hit-points-show-take-average" name="levelUpHitPointsShowTakeAverage" type="checkbox"{{#if levelUpHitPointsShowTakeAverage}} checked{{/if}}> 
+                    <dnd5e-checkbox id="custom-dnd5e-level-up-hit-points-show-take-average" name="levelUpHitPointsShowTakeAverage"{{#if levelUpHitPointsShowTakeAverage}} checked{{/if}}></dnd5e-checkbox>
                 </div>
                 <p class="hint">{{localize "CUSTOM_DND5E.form.houseRules.rollingHitPoints.showTakeAverage.note"}}</p>
             </div>
             <div class="form-group">
                 <label>{{localize "CUSTOM_DND5E.form.houseRules.rollingHitPoints.rollNpcHp.label"}}</label>
                 <div class="form-fields">
-                    <input id="custom-dnd5e-roll-npc-hp" name="rollNpcHp" type="checkbox"{{#if rollNpcHp}} checked{{/if}}> 
+                    <dnd5e-checkbox id="custom-dnd5e-roll-npc-hp" name="rollNpcHp"{{#if rollNpcHp}} checked{{/if}}></dnd5e-checkbox>
                 </div>
                 <p class="hint">{{localize "CUSTOM_DND5E.form.houseRules.rollingHitPoints.rollNpcHp.note"}}</p>
             </div>
@@ -194,14 +216,14 @@
             <div class="form-group">
                 <label>{{localize "CUSTOM_DND5E.form.houseRules.hitPoints.applyNegativeHp.label"}}</label>
                 <div class="form-fields">
-                    <input id="custom-dnd5e-apply-negative-hp" name="applyNegativeHp" type="checkbox"{{#if applyNegativeHp}} checked{{/if}}> 
+                    <dnd5e-checkbox id="custom-dnd5e-apply-negative-hp" name="applyNegativeHp"{{#if applyNegativeHp}} checked{{/if}}></dnd5e-checkbox>
                 </div>
                 <p class="hint">{{localize "CUSTOM_DND5E.form.houseRules.hitPoints.applyNegativeHp.note"}}</p>
             </div>
             <div class="form-group">
                 <label>{{localize "CUSTOM_DND5E.form.houseRules.hitPoints.negativeHpHealFromZero.label"}}</label>
                 <div class="form-fields">
-                    <input id="custom-dnd5e-negative-hp-heal-from-zero" name="negativeHpHealFromZero" type="checkbox"{{#if negativeHpHealFromZero}} checked{{/if}}> 
+                    <dnd5e-checkbox id="custom-dnd5e-negative-hp-heal-from-zero" name="negativeHpHealFromZero"{{#if negativeHpHealFromZero}} checked{{/if}}></dnd5e-checkbox>
                 </div>
                 <p class="hint">{{localize "CUSTOM_DND5E.form.houseRules.hitPoints.negativeHpHealFromZero.note"}}</p>
             </div>
@@ -216,7 +238,7 @@
             <div class="form-group">
                 <label>{{localize "CUSTOM_DND5E.form.houseRules.initiative.rerollInitiativeEachRound.label"}}</label>
                 <div class="form-fields">
-                    <input id="custom-dnd5e-reroll-initiative-each-round" name="rerollInitiativeEachRound" type="checkbox"{{#if rerollInitiativeEachRound}} checked{{/if}}> 
+                    <dnd5e-checkbox id="custom-dnd5e-reroll-initiative-each-round" name="rerollInitiativeEachRound"{{#if rerollInitiativeEachRound}} checked{{/if}}></dnd5e-checkbox>
                 </div>
                 <p class="hint">{{localize "CUSTOM_DND5E.form.houseRules.initiative.rerollInitiativeEachRound.note"}}</p>
             </div>
@@ -236,24 +258,24 @@
                 </div>
                 <p class="hint">{{localize "CUSTOM_DND5E.form.houseRules.inspiration.awardInspirationD20Value.note"}}</p>
             </div>
-            <label>{{localize "CUSTOM_DND5E.rollTypes"}}</label>
-            <div class="form-group">
+            <div class="form-group stacked checkbox-grid">
+                <label style="flex: 0 0 100%;">{{localize "CUSTOM_DND5E.rollTypes"}}</label>
                 <p class="hint">{{localize "CUSTOM_DND5E.form.houseRules.inspiration.awardInspirationRollTypes.note"}}</p>
-                <label style="display:flex;">
-                    <input id="custom-dnd5e-rollAbilityTest" name="awardInspirationRollTypes.rollAbilityTest" type="checkbox"{{#if awardInspirationRollTypes.rollAbilityTest}} checked{{/if}}>
-                    {{localize "CUSTOM_DND5E.abilityCheck"}}
+                <label class="checkbox">
+                    <dnd5e-checkbox id="custom-dnd5e-rollAbilityCheck" name="awardInspirationRollTypes.rollAbilityCheck"{{#if awardInspirationRollTypes.rollAbilityCheck}} checked{{/if}}></dnd5e-checkbox>
+                    <span>{{localize "CUSTOM_DND5E.abilityCheck"}}</span>
                 </label>
-                <label style="display:flex;">
-                    <input id="custom-dnd5e-rollAttack" name="awardInspirationRollTypes.rollAttack" type="checkbox"{{#if awardInspirationRollTypes.rollAttack}} checked{{/if}}>
-                    {{localize "CUSTOM_DND5E.attackRoll"}}
+                <label class="checkbox">
+                    <dnd5e-checkbox id="custom-dnd5e-rollAttack" name="awardInspirationRollTypes.rollAttack"{{#if awardInspirationRollTypes.rollAttack}} checked{{/if}}></dnd5e-checkbox>
+                    <span>{{localize "CUSTOM_DND5E.attackRoll"}}</span>
                 </label>
-                <label style="display:flex;">
-                    <input id="custom-dnd5e-rollAbilitySave" name="awardInspirationRollTypes.rollAbilitySave" type="checkbox"{{#if awardInspirationRollTypes.rollAbilitySave}} checked{{/if}}>
-                    {{localize "CUSTOM_DND5E.savingThrow"}}
+                <label class="checkbox">
+                    <dnd5e-checkbox id="custom-dnd5e-rollAbilitySave" name="awardInspirationRollTypes.rollAbilitySave"{{#if awardInspirationRollTypes.rollAbilitySave}} checked{{/if}}></dnd5e-checkbox>
+                    <span>{{localize "CUSTOM_DND5E.savingThrow"}}</span>
                 </label>
-                <label style="display:flex;">
-                    <input id="custom-dnd5e-rollSkill" name="awardInspirationRollTypes.rollSkill" type="checkbox"{{#if awardInspirationRollTypes.rollSkill}} checked{{/if}}>
-                    {{localize "CUSTOM_DND5E.skillCheck"}}
+                <label class="checkbox">
+                    <dnd5e-checkbox id="custom-dnd5e-rollSkill" name="awardInspirationRollTypes.rollSkill"{{#if awardInspirationRollTypes.rollSkill}} checked{{/if}}></dnd5e-checkbox>
+                    <span>{{localize "CUSTOM_DND5E.skillCheck"}}</span>
                 </label>
             </div>
         </fieldset>
@@ -282,7 +304,7 @@
             <div class="form-group">
                 <label>{{localize "CUSTOM_DND5E.useCampSupplies"}}</label>
                 <div class="form-fields">
-                    <input id="custom-dnd5e-use-camp-supplies" name="useCampSupplies" type="checkbox"{{#if useCampSupplies}} checked{{/if}}> 
+                    <dnd5e-checkbox id="custom-dnd5e-use-camp-supplies" name="useCampSupplies"{{#if useCampSupplies}} checked{{/if}}></dnd5e-checkbox>
                 </div>
                 <p class="hint">{{localize "CUSTOM_DND5E.form.houseRules.resting.useCampSupplies.note"}}</p>
             </div>
@@ -297,7 +319,7 @@
             <div class="form-group">
                 <label>{{localize "CUSTOM_DND5E.form.houseRules.unconscious.applyUnconscious.label"}}</label>
                 <div class="form-fields">
-                    <input id="custom-dnd5e-apply-unconscious" name="applyUnconscious" type="checkbox"{{#if applyUnconscious}} checked{{/if}}> 
+                    <dnd5e-checkbox id="custom-dnd5e-apply-unconscious" name="applyUnconscious"{{#if applyUnconscious}} checked{{/if}}></dnd5e-checkbox>
                 </div>
                 <p class="hint">{{localize "CUSTOM_DND5E.form.houseRules.unconscious.applyUnconscious.note"}}</p>
             </div>

@@ -1,0 +1,63 @@
+<div class="standard-form">
+    <div class="standard-form scrollable">
+        <input id="custom-dnd5e-system" name="{{key}}.system" type="hidden" value="{{#if (customDnd5eBoolFalse system)}}false{{else}}true{{/if}}">
+        <div class="form-group">
+            <label class="flex1" style="min-width:80px; max-width:100px;">{{localize "CUSTOM_DND5E.key"}}</label>
+            <div class="form-fields">
+                {{#if (customDnd5eBoolFalse system)}}
+                <input id="custom-dnd5e-key" name="{{key}}.key" type="text" value="{{localize key}}">
+                {{else}}
+                <input id="custom-dnd5e-disabled-key" disabled name="{{key}}.disabledKey" type="text" value="{{localize key}}">
+                <input id="custom-dnd5e-key" name="{{key}}.key" type="hidden" value="{{localize key}}">
+                {{/if}}
+            </div>
+        </div>
+         <div class="form-group">
+            <label class="flex1" style="min-width:80px; max-width:100px;">{{localize "CUSTOM_DND5E.fullKey"}}</label>
+            <div class="form-fields">
+                <input id="custom-dnd5e-full-key" name="{{key}}.fullKey" type="text" value="{{localize fullKey}}">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="flex1" style="min-width:80px; max-width:100px;">{{localize "CUSTOM_DND5E.label"}}</label>
+            <div class="form-fields">
+                <input id="custom-dnd5e-label" name="{{key}}.label" type="text" value="{{localize label}}">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="flex1" style="min-width:80px; max-width:100px;">{{localize "CUSTOM_DND5E.abbreviation"}}</label>
+            <div class="form-fields">
+                <input id="custom-dnd5e-abbreviation" name="{{key}}.abbreviation" type="text" value="{{localize abbreviation}}">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="flex1" style="min-width:80px; max-width:100px;">Include for ASI</label>
+            <div class="form-fields">
+                <dnd5e-checkbox id="custom-dnd5e-improvement" name="{{key}}.improvement" {{#unless (customDnd5eBoolFalse improvement)}}checked{{/unless}}></dnd5e-checkbox> 
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="flex1" style="min-width:80px; max-width:100px;">{{localize "CUSTOM_DND5E.type"}}</label>
+            <div class="form-fields">
+                <select{{#unless (customDnd5eBoolFalse system)}} disabled{{/unless}} id="type" name="{{key}}.type">
+                    {{selectOptions selects.type.choices selected=type localize=true}}
+                </select>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="flex1" style="min-width:80px; max-width:100px;">{{localize "CUSTOM_DND5E.reference"}}</label>
+            <div class="form-fields">
+                <input id="custom-dnd5e-reference" name="{{key}}.reference" type="text" value="{{reference}}">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="flex1" style="min-width:80px; max-width:100px;">{{localize "CUSTOM_DND5E.rollMode"}}</label>
+            <div class="form-fields">
+                <select id="custom-dnd5e-roll-mode" name="{{key}}.rollMode">
+                    {{selectOptions selects.rollMode.choices selected=rollMode localize=true}}
+                </select>
+            </div>
+        </div>
+    </div>
+    {{> "modules/custom-dnd5e/templates/footer.hbs" system=system}}
+</div>

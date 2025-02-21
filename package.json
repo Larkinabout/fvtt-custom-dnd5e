@@ -1,0 +1,21 @@
+{
+  "type": "module",
+  "scripts": {
+    "build": "npm run build:db",
+    "build:db": "node ./scripts/packs.js package pack",
+    "build:json": "node ./scripts/packs.js package unpack"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.26.8",
+    "@babel/eslint-parser": "^7.26.8",
+    "@foundryvtt/foundryvtt-cli": "^1.0.4",
+    "eslint": "^9.20.1",
+    "eslint-plugin-custom-eslint-rules": "file:./custom-eslint-rules",
+    "eslint-plugin-import": "^2.31.0",
+    "eslint-plugin-jsdoc": "^46.5.0",
+    "eslint-plugin-n": "^16.6.2",
+    "eslint-plugin-promise": "^6.6.0",
+    "globals": "^15.15.0",
+    "yargs": "^17.7.2"
+  }
+}

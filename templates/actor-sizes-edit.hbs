@@ -1,0 +1,53 @@
+<div class="standard-form">
+    <div class="standard-form scrollable">
+        <input id="custom-dnd5e-system" name="{{key}}.system" type="hidden" value="{{#if (customDnd5eBoolFalse system)}}false{{else}}true{{/if}}">
+        <div class="form-group">
+            <label class="flex1" style="min-width:140px; max-width:140px;">{{localize "CUSTOM_DND5E.key"}}</label>
+            <div class="form-fields">
+                {{#if (customDnd5eBoolFalse system)}}
+                <input id="custom-dnd5e-key" name="{{key}}.key" type="text" value="{{localize key}}">
+                {{else}}
+                <input id="custom-dnd5e-disabled-key" disabled name="{{key}}.disabledKey" type="text" value="{{localize key}}">
+                <input id="custom-dnd5e-key" name="{{key}}.key" type="hidden" value="{{localize key}}">
+                {{/if}}
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="flex1" style="min-width:140px; max-width:140px;">{{localize "CUSTOM_DND5E.label"}}</label>
+            <div class="form-fields">
+                <input id="custom-dnd5e-label" name="{{key}}.label" type="text" value="{{localize label}}">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="flex1" style="min-width:140px; max-width:140px;">{{localize "CUSTOM_DND5E.abbreviation"}}</label>
+            <div class="form-fields">
+                <input id="custom-dnd5e-abbreviation" name="{{key}}.abbreviation" type="text" value="{{localize abbreviation}}">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="flex1" style="min-width:140px; max-width:140px;">{{localize "CUSTOM_DND5E.hitDie"}}</label>
+            <div class="form-fields">
+                <input id="custom-dnd5e-hit-die" name="{{key}}.hitDie" type="number" step="1" value="{{hitDie}}">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="flex1" style="min-width:140px; max-width:140px;">{{localize "CUSTOM_DND5E.tokenSize"}}</label>
+            <div class="form-fields">
+                <input id="custom-dnd5e-token" name="{{key}}.token" type="number" step="0.05" value="{{token}}">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="flex1" style="min-width:140px; max-width:140px;">{{localize "CUSTOM_DND5E.dynamicTokenScale"}}</label>
+            <div class="form-fields">
+                <input id="custom-dnd5e-dynamic-token-scale" name="{{key}}.dynamicTokenScale" type="number" step="0.05" value="{{dynamicTokenScale}}">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="flex1" style="min-width:140px; max-width:140px;">{{localize "CUSTOM_DND5E.capacityMultiplier"}}</label>
+            <div class="form-fields">
+                <input id="custom-dnd5e-capacity-multiplier" name="{{key}}.capacityMultiplier" type="number" step="0.05" value="{{capacityMultiplier}}">
+            </div>
+        </div>
+    </div>
+    {{> "modules/custom-dnd5e/templates/footer.hbs" system=system}}
+</div>

@@ -1,71 +1,103 @@
-import { CONSTANTS, MODULE } from './constants.js'
-import { Logger, getSetting, setSetting, registerSetting } from './utils.js'
+import { CONSTANTS, MODULE } from "./constants.js";
+import { Logger, getSetting, setSetting, registerSetting } from "./utils.js";
+
+const constants = CONSTANTS.MIGRATION;
 
 /**
- * Register
+ * Register settings.
  */
-export function register () {
-    registerSettings()
+export function register() {
+  registerSettings();
 }
 
-/**
- * Register settings
- */
-function registerSettings () {
-    registerSetting(
-        CONSTANTS.MIGRATION.VERSION.SETTING.KEY,
-        {
-            scope: 'world',
-            config: false,
-            type: String
-        }
-    )
-}
+/* -------------------------------------------- */
 
 /**
- * Run migrations between module versions
+ * Register settings.
  */
-export function migrate () {
-    if (!game.user.isGM) return
-
-    const moduleVersion = game.modules.get(MODULE.ID).version
-    const migrationVersion = getSetting(CONSTANTS.MIGRATION.VERSION.SETTING.KEY)
-
-    if (moduleVersion === migrationVersion) return
-
-    let isSuccess = true
-    isSuccess = (!migrationVersion || foundry.utils.isNewerVersion('1.3.4', migrationVersion)) ? migrateRollMode() : true
-
-    if (isSuccess) {
-        setSetting(CONSTANTS.MIGRATION.VERSION.SETTING.KEY, moduleVersion)
+function registerSettings() {
+  registerSetting(
+    constants.VERSION.SETTING.KEY,
+    {
+      scope: "world",
+      config: false,
+      type: String
     }
+  );
 }
 
+/* -------------------------------------------- */
+
+/**
+ * Run migrations between module versions.
+ */
+export function migrate() {
+  if ( !game.user.isGM ) return;
+
+  const moduleVersion = game.modules.get(MODULE.ID).version;
+  const migrationVersion = getSetting(constants.VERSION.SETTING.KEY);
+
+  if ( moduleVersion === migrationVersion ) return;
+
+  let isSuccess = true;
+  isSuccess = (!migrationVersion || foundry.utils.isNewerVersion("1.3.4", migrationVersion)) ? migrateRollMode() : true;
+  isSuccess = (!migrationVersion || foundry.utils.isNewerVersion("1.4.0", migrationVersion)) ? migrateAwardInspirationRollType() : true;
+
+  if ( isSuccess ) {
+    setSetting(constants.VERSION.SETTING.KEY, moduleVersion);
+  }
+}
+
+/* -------------------------------------------- */
+
+/**
+ * Migrate roll mode settings.
+ *
+ * @returns {Promise<boolean>} Whether the migration was successful
+ */
 export async function migrateRollMode() {
-    try {
-        const rolls = [...game.settings.storage.get('world')]
-            .find(setting => setting.key === 'custom-dnd5e.rolls')?.value
-        if (rolls) {
-            const newRolls = foundry.utils.deepClone(rolls)
-            Object.entries(newRolls).forEach(([key, roll]) => {
-                if (key !== 'weaponTypes' && roll.rollMode && roll.rollMode === 'publicroll') {
-                    roll.rollMode = 'default'
-                } else if (key === 'weaponTypes') {
-                    const weaponTypes = roll
-                    Object.values(weaponTypes).forEach(weaponType => {
-                        if (weaponType.rollMode && weaponType.rollMode === 'publicroll') {
-                            weaponType.rollMode = 'default'
-                        }
-                    })
-                }
-            })
-
-            await setSetting(CONSTANTS.ROLLS.SETTING.ROLLS.KEY, {})
-            await setSetting(CONSTANTS.ROLLS.SETTING.ROLLS.KEY, newRolls)
+  try {
+    const rolls = [...game.settings.storage.get("world")]
+      .find(setting => setting.key === "custom-dnd5e.rolls")?.value;
+    if ( rolls ) {
+      const newRolls = foundry.utils.deepClone(rolls);
+      Object.entries(newRolls).forEach(([key, roll]) => {
+        if ( key !== "weaponTypes" && roll.rollMode && roll.rollMode === "publicroll" ) {
+          roll.rollMode = "default";
+        } else if ( key === "weaponTypes" ) {
+          const weaponTypes = roll;
+          Object.values(weaponTypes).forEach(weaponType => {
+            if ( weaponType.rollMode && weaponType.rollMode === "publicroll" ) {
+              weaponType.rollMode = "default";
+            }
+          });
         }
-        return true
-    } catch (err) {
-        Logger.debug(err.message, err)
-        return false
+      });
+
+      await setSetting(CONSTANTS.ROLLS.SETTING.ROLLS.KEY, {});
+      await setSetting(CONSTANTS.ROLLS.SETTING.ROLLS.KEY, newRolls);
     }
+    return true;
+  } catch (err) {
+    Logger.debug(err.message, err);
+    return false;
+  }
+}
+
+/* -------------------------------------------- */
+
+/**
+ * Migrate award inspiration roll type settings.
+ * @returns {Promise<boolean>} Whether the migration was successful
+ */
+export async function migrateAwardInspirationRollType() {
+  const rollTypes = getSetting(CONSTANTS.INSPIRATION.SETTING.AWARD_INSPIRATION_ROLL_TYPES.KEY);
+  if ( !rollTypes ) return true;
+  const newRollTypes = foundry.utils.deepClone(rollTypes);
+  if ( newRollTypes.rollAbilityTest ) {
+    newRollTypes.rollAbilityCheck = newRollTypes.rollAbilityTest;
+    delete newRollTypes.rollAbilityTest;
+  }
+  await setSetting(CONSTANTS.INSPIRATION.SETTING.AWARD_INSPIRATION_ROLL_TYPES.KEY, newRollTypes);
+  return true;
 }

@@ -1,0 +1,6 @@
+{
+  "type": "module",
+  "name": "eslint-plugin-custom-eslint-rules",
+  "version": "1.0.0",
+  "main": "index.mjs"
+}

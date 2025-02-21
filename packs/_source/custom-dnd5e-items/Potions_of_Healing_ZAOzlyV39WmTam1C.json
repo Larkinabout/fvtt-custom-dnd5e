@@ -1,0 +1,22 @@
+{
+  "name": "Potions of Healing",
+  "sorting": "a",
+  "folder": null,
+  "type": "Item",
+  "_id": "ZAOzlyV39WmTam1C",
+  "description": "",
+  "sort": 100000,
+  "color": null,
+  "flags": {},
+  "_stats": {
+    "compendiumSource": null,
+    "duplicateSource": null,
+    "coreVersion": "12.331",
+    "systemId": "dnd5e",
+    "systemVersion": "4.0.1",
+    "createdTime": 1726783176589,
+    "modifiedTime": 1726783176650,
+    "lastModifiedBy": "ZR5jaKwclVdroOEN"
+  },
+  "_key": "!folders!ZAOzlyV39WmTam1C"
+}

@@ -1,0 +1,1025 @@
+{
+  "name": "Configurations",
+  "_id": "B48iqFBddUikMMer",
+  "pages": [
+    {
+      "sort": 100000,
+      "name": "Configurations",
+      "type": "text",
+      "_id": "l6HMGwywr35THhJR",
+      "system": {},
+      "title": {
+        "show": false,
+        "level": 1
+      },
+      "image": {},
+      "text": {
+        "format": 1,
+        "content": "<h2>Reorder Items</h2><p>All items in a list can be reordered by dragging and dropping an item by the horizontal grip lines to the left of the item. Languages can also be nested by dropping the item onto another item.</p><h2>Show/Hide Items</h2><p>All items in a list can be shown or hidden by clicking the checkbox to the left of the item.</p><h2></h2>"
+      },
+      "video": {
+        "controls": true,
+        "volume": 0.5
+      },
+      "src": null,
+      "ownership": {
+        "default": -1,
+        "0wJRsV2r9Hv1a7q0": 3
+      },
+      "flags": {},
+      "_stats": {
+        "compendiumSource": null,
+        "duplicateSource": null,
+        "coreVersion": "12.331",
+        "systemId": "dnd5e",
+        "systemVersion": "4.0.0",
+        "createdTime": 1726516302053,
+        "modifiedTime": 1726658012426,
+        "lastModifiedBy": "0wJRsV2r9Hv1a7q0"
+      },
+      "_key": "!journal.pages!B48iqFBddUikMMer.l6HMGwywr35THhJR"
+    },
+    {
+      "sort": 200000,
+      "name": "Abilities",
+      "type": "text",
+      "_id": "tVG6b7kBJUOVvpwP",
+      "system": {},
+      "title": {
+        "show": true,
+        "level": 1
+      },
+      "image": {},
+      "text": {
+        "format": 1,
+        "content": "<p>Located in <strong>Game Settings</strong> &gt; <strong>Configure Settings</strong> &gt; <strong>Custom D&amp;D 5e</strong> &gt; <strong>Configure Abilities</strong></p><h3>Create an Ability</h3><ol><li><p>Click <strong>Create New</strong>.</p></li><li><p>Enter a <strong>Key</strong>.</p><article class=\"custom-dnd5e-note\"><header><img src=\"modules/custom-dnd5e/media/icons/note.svg\" /><p>Note</p></header><p>An auto-generated Key is provided, but it's best to replace it with a simple three-letter key.</p></article></li><li><p>Enter a <strong>Full Key</strong>.</p></li><li><p>Enter a <strong>Label</strong>.</p></li><li><p>Enter an <strong>Abbreviation</strong>.</p></li><li><p>(Optional) Check <strong>Include for ASI</strong>.</p><article class=\"custom-dnd5e-note\"><header><img src=\"modules/custom-dnd5e/media/icons/note.svg\" /><p>Note</p></header><p>Checking Include for ASI allows the ability to improved by an Ability Score Improvement (ASI).</p></article></li><li><p>Select a <strong>Type</strong>: 'Mental' or 'Physical'.</p></li><li><p>(Optional) Paste a journal entry's UUID into <strong>Reference</strong>.</p><article class=\"custom-dnd5e-tip\"><header><img src=\"modules/custom-dnd5e/media/icons/tip.svg\" /><p>Tip</p></header><p>You can copy a journal entry's UUID by opening up the entry and left-clicking the passport icon in the window's header.</p></article><article class=\"custom-dnd5e-note\"><header><img src=\"modules/custom-dnd5e/media/icons/note.svg\" /><p>Note</p></header><p>For a tooltip to appear, the <strong>Reference</strong> must be linked to a journal entry with the \"Rule\" page type, and the tooltip content should be entered in the Tooltip section using the \"Ability\" rule type.</p></article></li><li><p>Click <strong>Save and Close</strong>.</p></li></ol><h4>Example Ability</h4><table><tbody><tr><td style=\"min-width:120px\" data-colwidth=\"272\"><p><strong>Property</strong></p></td><td><p><strong>Value</strong></p></td></tr><tr><td data-colwidth=\"272\"><p>Key</p></td><td><p>luc</p></td></tr><tr><td data-colwidth=\"272\"><p>Full Key</p></td><td><p>luck</p></td></tr><tr><td data-colwidth=\"272\"><p>Label</p></td><td><p>Luck</p></td></tr><tr><td data-colwidth=\"272\"><p>Abbreviation</p></td><td><p>luc</p></td></tr><tr><td data-colwidth=\"272\"><p>Include for ASI</p></td><td><img class=\"custom-dnd5e-img\" src=\"modules/custom-dnd5e/media/icons/checked.svg\" /></td></tr><tr><td data-colwidth=\"272\"><p>Type</p></td><td><p>Mental</p></td></tr><tr><td data-colwidth=\"272\"><p>Reference</p></td><td><p>Compendium.world.my-rules.JournalEntry.r04xTaCjv1UK6GJn.JournalEntryPage.pVHCdBd6kRX3zyyE</p></td></tr></tbody></table>"
+      },
+      "video": {
+        "controls": true,
+        "volume": 0.5
+      },
+      "src": null,
+      "ownership": {
+        "default": -1,
+        "0wJRsV2r9Hv1a7q0": 3
+      },
+      "flags": {},
+      "_stats": {
+        "compendiumSource": null,
+        "duplicateSource": null,
+        "coreVersion": "12.331",
+        "systemId": "dnd5e",
+        "systemVersion": "4.0.1",
+        "createdTime": 1726649901323,
+        "modifiedTime": 1726777116147,
+        "lastModifiedBy": "ZR5jaKwclVdroOEN"
+      },
+      "_key": "!journal.pages!B48iqFBddUikMMer.tVG6b7kBJUOVvpwP"
+    },
+    {
+      "sort": 300000,
+      "name": "Actor Sizes",
+      "type": "text",
+      "_id": "V3QbxNviHsZd8Ssb",
+      "system": {},
+      "title": {
+        "show": true,
+        "level": 1
+      },
+      "image": {},
+      "text": {
+        "format": 1,
+        "content": "<p>Located in <strong>Game Settings</strong> &gt; <strong>Configure Settings</strong> &gt; <strong>Custom D&amp;D 5e</strong> &gt; <strong>Configure Actor Sizes</strong></p><h3>Create an Actor Size</h3><ol><li><p>Click <strong>Create New</strong>.</p></li><li><p>Enter a <strong>Label</strong>.</p></li><li><p>Enter an <strong>Abbreviation</strong>.</p></li><li><p>Enter <strong>Hit Die</strong>.</p></li><li><p>Enter a <strong>Token Size</strong>.</p><article class=\"custom-dnd5e-note\"><header><img src=\"modules/custom-dnd5e/media/icons/note.svg\" /><p>Note</p></header><p>Token Size determines the token's size relative to a scene's Grid Size. For example: 1 would be one times the grid size, 4 would be four times the grid size.</p></article></li><li><p>(Optional) Enter a <strong>Dynamic</strong> <strong>Token Scale</strong>.</p><article class=\"custom-dnd5e-note\"><header><img src=\"modules/custom-dnd5e/media/icons/note.svg\" /><p>Note</p></header><p>Dynamic Token Scale corrects the size of the token's image when using a dynamic ring. For example: 1 would be 100% or no change and 0.5 would be 50%.</p></article></li><li><p>Enter a <strong>Capacity Multiplier</strong>.</p></li><li><p>Click <strong>Save and Close</strong>.</p></li></ol><h4>Example Actor Size</h4><table><tbody><tr><td style=\"min-width:120px\" data-colwidth=\"272\"><p><strong>Property</strong></p></td><td><p><strong>Value</strong></p></td></tr><tr><td data-colwidth=\"272\"><p>Label</p></td><td><p>Colossal</p></td></tr><tr><td data-colwidth=\"272\"><p>Abbreviation</p></td><td><p>Cl</p></td></tr><tr><td data-colwidth=\"272\"><p>Hit Die</p></td><td><p>20</p></td></tr><tr><td data-colwidth=\"272\"><p>Token Size</p></td><td><p>5</p></td></tr><tr><td data-colwidth=\"272\"><p>Capacity Multiplier</p></td><td><p>5</p></td></tr></tbody></table>"
+      },
+      "video": {
+        "controls": true,
+        "volume": 0.5
+      },
+      "src": null,
+      "ownership": {
+        "default": -1,
+        "0wJRsV2r9Hv1a7q0": 3
+      },
+      "flags": {},
+      "_stats": {
+        "compendiumSource": null,
+        "duplicateSource": null,
+        "coreVersion": "12.331",
+        "systemId": "dnd5e",
+        "systemVersion": "4.0.1",
+        "createdTime": 1726655796863,
+        "modifiedTime": 1726666471403,
+        "lastModifiedBy": "0wJRsV2r9Hv1a7q0"
+      },
+      "_key": "!journal.pages!B48iqFBddUikMMer.V3QbxNviHsZd8Ssb"
+    },
+    {
+      "sort": 400000,
+      "name": "Armor",
+      "type": "text",
+      "_id": "ehZqnZslXx3cknv9",
+      "system": {},
+      "title": {
+        "show": true,
+        "level": 1
+      },
+      "image": {},
+      "text": {
+        "format": 1,
+        "content": "<p>Located in <strong>Game Settings</strong> &gt; <strong>Configure Settings</strong> &gt; <strong>Custom D&amp;D 5e</strong> &gt; <strong>Configure Armor</strong></p><h3>Create an Armor</h3><ol><li><p>Click <strong>Create New</strong>.</p></li><li><p>Enter a <strong>Key</strong>.</p></li><li><p>Create a base item for the armor.</p><article class=\"custom-dnd5e-note\"><header><img src=\"modules/custom-dnd5e/media/icons/note.svg\" /><p>Note</p></header><p>Base armor details, including its Equipment Type (e.g., Light Armor, Medium Armor, Heavy Armor), are contained within an item stored within a compendium. To create a new armor, you will need to create an Item compendium and create a base item within it.</p></article></li><li><p>Paste the item's <strong>UUID</strong>.</p><article class=\"custom-dnd5e-tip\"><header><img src=\"modules/custom-dnd5e/media/icons/tip.svg\" /><p>Tip</p></header><p>You can copy an item's UUID by opening up the item and left-clicking the passport icon in the window's header.</p></article></li><li><p>Click <strong>Save and Close</strong>.</p></li></ol><h4>Example Armor</h4><table><tbody><tr><td style=\"min-width:120px\" data-colwidth=\"272\"><p><strong>Property</strong></p></td><td><p><strong>Value</strong></p></td></tr><tr><td data-colwidth=\"272\"><p>Key</p></td><td><p>greathelm</p></td></tr><tr><td data-colwidth=\"272\"><p>ID</p></td><td><p>Compendium.world.my-items.Item.hU51WZiTbOeYUbAf</p></td></tr></tbody></table>"
+      },
+      "video": {
+        "controls": true,
+        "volume": 0.5
+      },
+      "src": null,
+      "ownership": {
+        "default": -1,
+        "0wJRsV2r9Hv1a7q0": 3
+      },
+      "flags": {},
+      "_stats": {
+        "compendiumSource": null,
+        "duplicateSource": null,
+        "coreVersion": "12.331",
+        "systemId": "dnd5e",
+        "systemVersion": "4.0.1",
+        "createdTime": 1726655816622,
+        "modifiedTime": 1738618431837,
+        "lastModifiedBy": "JdWLPbQd9x1aeEfz"
+      },
+      "_key": "!journal.pages!B48iqFBddUikMMer.ehZqnZslXx3cknv9"
+    },
+    {
+      "sort": 500000,
+      "name": "Armor Calculations",
+      "type": "text",
+      "_id": "bjFllCYYW9paPCNG",
+      "system": {},
+      "title": {
+        "show": true,
+        "level": 1
+      },
+      "image": {},
+      "text": {
+        "format": 1,
+        "content": "<p>Located in <strong>Game Settings</strong> &gt; <strong>Configure Settings</strong> &gt; <strong>Custom D&amp;D 5e</strong> &gt; <strong>Configure Armor Calculations</strong></p><h3>Create an Armor Calculation</h3><ol><li><p>Click <strong>Create New</strong>.</p></li><li><p>Enter a <strong>Label</strong>.</p></li><li><p>Enter a <strong>Formula</strong>.</p><article class=\"custom-dnd5e-tip\"><header><img src=\"modules/custom-dnd5e/media/icons/tip.svg\" /><p>Tip</p></header><p>For available formula properties, visit <a href=\"https://github.com/foundryvtt/dnd5e/wiki/Roll-Formulas\">Roll Formulas</a>.</p></article></li><li><p>Click <strong>Save and Close</strong>.</p></li></ol><h4>Example Armor Calculation</h4><table><tbody><tr><td style=\"min-width:120px\" data-colwidth=\"272\"><p><strong>Property</strong></p></td><td><p><strong>Value</strong></p></td></tr><tr><td data-colwidth=\"272\"><p>Label</p></td><td><p>Intelligent Defense</p></td></tr><tr><td data-colwidth=\"272\"><p>Formula</p></td><td><p>10 + @abilities.dex.mod + @abilities.int.mod</p></td></tr></tbody></table>"
+      },
+      "video": {
+        "controls": true,
+        "volume": 0.5
+      },
+      "src": null,
+      "ownership": {
+        "default": -1,
+        "0wJRsV2r9Hv1a7q0": 3
+      },
+      "flags": {},
+      "_stats": {
+        "compendiumSource": null,
+        "duplicateSource": null,
+        "coreVersion": "12.331",
+        "systemId": "dnd5e",
+        "systemVersion": "4.0.1",
+        "createdTime": 1726655856551,
+        "modifiedTime": 1726661559486,
+        "lastModifiedBy": "0wJRsV2r9Hv1a7q0"
+      },
+      "_key": "!journal.pages!B48iqFBddUikMMer.bjFllCYYW9paPCNG"
+    },
+    {
+      "sort": 600000,
+      "name": "Armor Proficiencies",
+      "type": "text",
+      "_id": "mTVSShsLO960Kmrk",
+      "system": {},
+      "title": {
+        "show": true,
+        "level": 1
+      },
+      "image": {},
+      "text": {
+        "format": 1,
+        "content": "<p>Located in <strong>Game Settings</strong> &gt; <strong>Configure Settings</strong> &gt; <strong>Custom D&amp;D 5e</strong> &gt; <strong>Configure Armor Proficiencies</strong></p><p>The Armor Proficiencies configuration includes both Armor Proficiencies (Light, Medium, Heavy, and Shields) and Armor Types (Light Armor, Medium Armor, Heavy Armor, Shield, and Natural Armor). An Armor Proficiency groups one or more Armor Types together.</p><p>For an Armor Type to show on a character sheet, it must be linked to an Armor Proficiency and a base item must exist with the matching Armor Type (see Create a New Armor). Similarly, an Armor Proficiency will only appear if it includes at least one Armor Type.</p><h3>Create an Armor Type</h3><ol><li><p>Click <strong>Create New</strong>.</p></li><li><p>Enter a <strong>Key</strong>.</p></li><li><p>Enter a <strong>Label</strong>.</p></li><li><p>(Optional) Drag and drop the new armor type onto an Armor Proficiency.</p></li><li><p>Click <strong>Save and Close</strong>.</p></li></ol><h4>Example Armor Type</h4><table><tbody><tr><td style=\"min-width:120px\" data-colwidth=\"272\"><p><strong>Property</strong></p></td><td><p><strong>Value</strong></p></td></tr><tr><td data-colwidth=\"272\"><p>Key</p></td><td><p>buckler</p></td></tr><tr><td data-colwidth=\"272\"><p>Label</p></td><td><p>Buckler</p></td></tr><tr><td data-colwidth=\"272\"><p>Armor Proficiency</p></td><td><p>Drag and drop onto <em>Shields</em></p></td></tr></tbody></table>"
+      },
+      "video": {
+        "controls": true,
+        "volume": 0.5
+      },
+      "src": null,
+      "ownership": {
+        "default": -1,
+        "0wJRsV2r9Hv1a7q0": 3
+      },
+      "flags": {},
+      "_stats": {
+        "compendiumSource": null,
+        "duplicateSource": null,
+        "coreVersion": "12.331",
+        "systemId": "dnd5e",
+        "systemVersion": "4.0.1",
+        "createdTime": 1726655877839,
+        "modifiedTime": 1730413828489,
+        "lastModifiedBy": "0wJRsV2r9Hv1a7q0"
+      },
+      "_key": "!journal.pages!B48iqFBddUikMMer.mTVSShsLO960Kmrk"
+    },
+    {
+      "sort": 700000,
+      "name": "Conditions",
+      "type": "text",
+      "_id": "DOx3PrYi19dFzcA1",
+      "system": {},
+      "title": {
+        "show": true,
+        "level": 1
+      },
+      "image": {},
+      "text": {
+        "format": 1,
+        "content": "<p>Located in <strong>Game Settings</strong> &gt; <strong>Configure Settings</strong> &gt; <strong>Custom D&amp;D 5e</strong> &gt; <strong>Configure Conditions</strong></p><p>While core conditions are included to let users hide or edit their properties, proceed with caution—modifying these conditions may disrupt core functionality. For instance, the <em>Exhaustion</em> condition cannot be hidden because it's essential for the character sheet to function properly.</p><p>If issues arise from editing core conditions, you can restore the default settings. To reset all conditions to the core list, click the Reset to Default button in the Configure Conditions window. To reset a single condition, click the Edit button for that condition, then select Reset to Default in the Edit Condition window.</p><h3>Create a Condition</h3><ol><li><p>Click <strong>Create New</strong>.</p></li><li><p>Enter a <strong>Key</strong>.</p><article class=\"custom-dnd5e-warning\"><header><img src=\"modules/custom-dnd5e/media/icons/warning.svg\" /><p>Warning</p></header><p>The key must only contain alphanumeric characters.</p></article></li><li><p>Enter a <strong>Label</strong>.</p></li><li><p>Pick an <strong>Icon</strong>.</p></li><li><p>(Optional) Paste a journal entry's UUID into <strong>Reference</strong>.</p><article class=\"custom-dnd5e-tip\"><header><img src=\"modules/custom-dnd5e/media/icons/tip.svg\" /><p>Tip</p></header><p>You can copy a journal entry's UUID by opening up the entry and left-clicking the passport icon in the window's header.</p></article><article class=\"custom-dnd5e-note\"><header><img src=\"modules/custom-dnd5e/media/icons/note.svg\" /><p>Note</p></header><p>For a tooltip to appear, the Reference must be linked to a journal entry with the \"Rule\" page type, and the tooltip content should be entered in the Tooltip section using the \"Condition\" rule type.</p><p>If you leave the <strong>Reference</strong> field empty, the condition button on the character sheet will lose some styling. If you don’t have a specific reference, you can add placeholder text to avoid this styling issue.</p></article></li><li><p>(Optional) Check <strong>Include on HUD</strong>.</p><article class=\"custom-dnd5e-note\"><header><img src=\"modules/custom-dnd5e/media/icons/note.svg\" /><p>Note</p></header><p>This determines whether the condition will show in the Token HUD's status effects menu.</p></article></li><li><p>(Optional) Check <strong>Include on Sheet</strong>.</p><article class=\"custom-dnd5e-note\"><header><img src=\"modules/custom-dnd5e/media/icons/note.svg\" /><p>Note</p></header><p>This determines whether the condition will show under <em>Conditions</em> on the character sheet.</p></article></li><li><p>Click <strong>Save and Close</strong>.</p></li></ol><h4>Example Condition</h4><table><tbody><tr><td style=\"min-width:120px\" data-colwidth=\"272\"><p><strong>Property</strong></p></td><td><p><strong>Value</strong></p></td></tr><tr><td data-colwidth=\"272\"><p>Key</p></td><td><p>starved</p></td></tr><tr><td data-colwidth=\"272\"><p>Label</p></td><td><p>Starved</p></td></tr><tr><td data-colwidth=\"272\"><p>Icon</p></td><td><p>my-icons/starved.svg</p></td></tr><tr><td data-colwidth=\"272\"><p>Reference</p></td><td><p>Compendium.world.my-rules.JournalEntry.1TpkbEoS1K4WqKWX.JournalEntryPage.ObX4m75A6XRG1sG0</p></td></tr><tr><td data-colwidth=\"272\"><p>Include on HUD</p></td><td><img class=\"custom-dnd5e-img\" src=\"modules/custom-dnd5e/media/icons/checked.svg\" /></td></tr><tr><td data-colwidth=\"272\"><p>Include on Sheet</p></td><td><img class=\"custom-dnd5e-img\" src=\"modules/custom-dnd5e/media/icons/checked.svg\" /></td></tr></tbody></table>"
+      },
+      "video": {
+        "controls": true,
+        "volume": 0.5
+      },
+      "src": null,
+      "ownership": {
+        "default": -1,
+        "0wJRsV2r9Hv1a7q0": 3
+      },
+      "flags": {},
+      "_stats": {
+        "compendiumSource": null,
+        "duplicateSource": null,
+        "coreVersion": "12.331",
+        "systemId": "dnd5e",
+        "systemVersion": "4.0.1",
+        "createdTime": 1726655960422,
+        "modifiedTime": 1736892763586,
+        "lastModifiedBy": "n99Zmia1fjZIEb1T"
+      },
+      "_key": "!journal.pages!B48iqFBddUikMMer.DOx3PrYi19dFzcA1"
+    },
+    {
+      "sort": 800000,
+      "name": "Currency",
+      "type": "text",
+      "_id": "dmzCGf2LPoBlfu9m",
+      "system": {},
+      "title": {
+        "show": true,
+        "level": 1
+      },
+      "image": {},
+      "text": {
+        "format": 1,
+        "content": "<p>Located in <strong>Game Settings</strong> &gt; <strong>Configure Settings</strong> &gt; <strong>Custom D&amp;D 5e</strong> &gt; <strong>Configure Currency</strong></p><article class=\"custom-dnd5e-note\"><header><img src=\"modules/custom-dnd5e/media/icons/note.svg\" /><p>Note</p></header><p>New currencies cannot be created currently.</p></article><h3>Modify a Currency</h3><ul><li><p>Hide a currency by unticking the checkbox.</p></li><li><p>Rename a currency by editing the Label.</p></li><li><p>Change the Conversion Rate.</p></li></ul>"
+      },
+      "video": {
+        "controls": true,
+        "volume": 0.5
+      },
+      "src": null,
+      "ownership": {
+        "default": -1,
+        "0wJRsV2r9Hv1a7q0": 3
+      },
+      "flags": {},
+      "_stats": {
+        "compendiumSource": null,
+        "duplicateSource": null,
+        "coreVersion": "12.331",
+        "systemId": "dnd5e",
+        "systemVersion": "4.0.1",
+        "createdTime": 1726655976559,
+        "modifiedTime": 1726661602069,
+        "lastModifiedBy": "0wJRsV2r9Hv1a7q0"
+      },
+      "_key": "!journal.pages!B48iqFBddUikMMer.dmzCGf2LPoBlfu9m"
+    },
+    {
+      "sort": 900000,
+      "name": "Damage Types",
+      "type": "text",
+      "_id": "qkB3382uO7YUUApw",
+      "system": {},
+      "title": {
+        "show": true,
+        "level": 1
+      },
+      "image": {},
+      "text": {
+        "format": 1,
+        "content": "<p>Located in <strong>Game Settings</strong> &gt; <strong>Configure Settings</strong> &gt; <strong>Custom D&amp;D 5e</strong> &gt; <strong>Configure Damage Types</strong></p><h3>Create a Damage Type</h3><ol><li><p>Click <strong>Create New</strong>.</p></li><li><p>Enter a <strong>Key</strong>.</p></li><li><p>Enter a <strong>Label</strong>.</p></li><li><p>(Optional) Pick an <strong>Icon</strong>.</p></li><li><p>(Optional) Paste a journal entry's UUID into the <strong>Reference</strong>.</p><article class=\"custom-dnd5e-tip\"><header><img src=\"modules/custom-dnd5e/media/icons/tip.svg\" /><p>Tip</p></header><p>You can copy a journal entry's UUID by opening up the entry and left-clicking the passport icon in the window's header.</p></article><article class=\"custom-dnd5e-note\"><header><img src=\"modules/custom-dnd5e/media/icons/note.svg\" /><p>Note</p></header><p>For a tooltip to appear, the <strong>Reference</strong> must be linked to a journal entry with the \"Rule\" page type, and the tooltip content should be entered in the Tooltip section using the \"Damage Type\" rule type.</p></article></li><li><p>Click <strong>Save and Close</strong>.</p></li></ol><h4>Example Damage Type</h4><table><tbody><tr><td style=\"min-width:120px\" data-colwidth=\"272\"><p><strong>Property</strong></p></td><td><p><strong>Value</strong></p></td></tr><tr><td data-colwidth=\"272\"><p>Key</p></td><td><p>laser</p></td></tr><tr><td data-colwidth=\"272\"><p>Label</p></td><td><p>Laser</p></td></tr><tr><td data-colwidth=\"272\"><p>Icon</p></td><td><p>my-icons/laser.svg</p></td></tr><tr><td data-colwidth=\"272\"><p>Reference</p></td><td><p>Compendium.world.my-rules.JournalEntry.r04xTaCjv1UK6GJn.JournalEntryPage.uYSsqgtEa0krxnEs</p></td></tr></tbody></table>"
+      },
+      "video": {
+        "controls": true,
+        "volume": 0.5
+      },
+      "src": null,
+      "ownership": {
+        "default": -1,
+        "0wJRsV2r9Hv1a7q0": 3
+      },
+      "flags": {},
+      "_stats": {
+        "compendiumSource": null,
+        "duplicateSource": null,
+        "coreVersion": "12.331",
+        "systemId": "dnd5e",
+        "systemVersion": "4.0.1",
+        "createdTime": 1726655990655,
+        "modifiedTime": 1726777218271,
+        "lastModifiedBy": "ZR5jaKwclVdroOEN"
+      },
+      "_key": "!journal.pages!B48iqFBddUikMMer.qkB3382uO7YUUApw"
+    },
+    {
+      "sort": 1150000,
+      "name": "Encumbrance",
+      "type": "text",
+      "_id": "QK8bAMxx9x9IaTHl",
+      "system": {},
+      "title": {
+        "show": true,
+        "level": 1
+      },
+      "image": {},
+      "text": {
+        "format": 1,
+        "content": "<p>Located in <strong>Game Settings</strong> &gt; <strong>Configure Settings</strong> &gt; <strong>Custom D&amp;D 5e</strong> &gt; <strong>Configure Encumbrance</strong></p><article class=\"custom-dnd5e-note\"><header><img src=\"modules/custom-dnd5e/media/icons/note.svg\" /><p>Note</p></header><p>The <strong>Configure Encumbrance</strong> form displays values in either imperial or metric units, depending on the \"Use Metric Weight Units\" setting found under <strong>Game Settings</strong> &gt; <strong>Configure Settings</strong> &gt; <strong>Dungeons &amp; Dragons Fifth Edition</strong>.</p></article><h2>Effects</h2><p>Effects are applied when a creature reaches the encumbrance thresholds. Modify the Label and Icon for each status effect as needed.</p><h2>Thresholds</h2><p><strong>Thresholds</strong> determine when a status effect is applied and set position of threshold markers in relation to the Maximum threshold. For example, by default, the Encumbered status activates at 33% of the maximum while Heavily Encumbered activates at 66%.</p><h2>Speed Reduction</h2><p>Speed is reduced by the <strong>Speed Reduction</strong> value when a creature reaches a threshold. For instance, with default settings, a creature's speed is reduced by 10 feet when they hit the Encumbered threshold.</p><h2>Currency per Weight</h2><p>The <strong>Currency Per Weight</strong> determines how many coins equal one base weight unit (either pounds or kilograms).</p><h2>Vehicle Weight Multiplier</h2><p>The <strong>Vehicle Weight Multiplier</strong> adjusts a vehicle's carrying capacity.</p><h2>Weight Modifiers</h2><p><strong>Weight Modifiers</strong> adjust the weight of items based on their properties. These modifiers are percentages: a value of 0 reduces the item's weight by 100%, 0.5 reduces the item's weight by 50% and 1.25 increases the weight by 25%.</p><p>Modifiers don't stack; instead, the lower modifier applies when two or more affect the same item. For example, if the <strong>Equipped Item Weight Modifier</strong> is 0.75 and the <strong>Proficient &amp; Equipped Item Modifier</strong> is 0.5, the item's weight will be reduced by 50% (0.5) when both properties apply.</p><ul><li><p><strong>Equipped Item Weight Modifier: </strong>Adjusts the weight of all equipped items.</p></li><li><p><strong>Proficient &amp; Equipped Item Weight Modifier:</strong> Adjusts the weight of items the creature has equipped and is proficient in.</p></li><li><p><strong>Unequipped Item Weight Modifier:</strong> Adjusts the weight of all unequipped items.</p></li></ul>"
+      },
+      "video": {
+        "controls": true,
+        "volume": 0.5
+      },
+      "src": null,
+      "ownership": {
+        "default": -1,
+        "0wJRsV2r9Hv1a7q0": 3
+      },
+      "flags": {},
+      "_stats": {
+        "compendiumSource": null,
+        "duplicateSource": null,
+        "coreVersion": "12.331",
+        "systemId": "dnd5e",
+        "systemVersion": "4.0.1",
+        "createdTime": 1726656001975,
+        "modifiedTime": 1731626525004,
+        "lastModifiedBy": "0wJRsV2r9Hv1a7q0"
+      },
+      "_key": "!journal.pages!B48iqFBddUikMMer.QK8bAMxx9x9IaTHl"
+    },
+    {
+      "sort": 1175000,
+      "name": "Item Action Types",
+      "type": "text",
+      "_id": "Ubzow5wKgOUEXYJw",
+      "system": {},
+      "title": {
+        "show": true,
+        "level": 1
+      },
+      "image": {},
+      "text": {
+        "format": 1,
+        "content": "<p>Located in <strong>Game Settings</strong> &gt; <strong>Configure Settings</strong> &gt; <strong>Custom D&amp;D 5e</strong> &gt; <strong>Configure Item Action Types</strong></p><article class=\"custom-dnd5e-note\"><header><img src=\"modules/custom-dnd5e/media/icons/note.svg\" /><p>Note</p></header><p>Only available in D&amp;D 5e system version 3.</p></article><h3>Create an Item Action Type</h3><ol><li><p>Click <strong>Create New</strong>.</p></li><li><p>Enter a <strong>Key</strong>.</p></li><li><p>Enter a <strong>Label</strong>.</p></li><li><p>Click <strong>Save and Close</strong>.</p></li></ol><h4>Example Item Action Type</h4><table><tbody><tr><td style=\"min-width:120px\" data-colwidth=\"272\"><p><strong>Property</strong></p></td><td><p><strong>Value</strong></p></td></tr><tr><td data-colwidth=\"272\"><p>Key</p></td><td><p>cwak</p></td></tr><tr><td data-colwidth=\"272\"><p>Label</p></td><td><p>Close Weapon Attack</p></td></tr></tbody></table>"
+      },
+      "video": {
+        "controls": true,
+        "volume": 0.5
+      },
+      "src": null,
+      "ownership": {
+        "default": -1,
+        "0wJRsV2r9Hv1a7q0": 3
+      },
+      "flags": {},
+      "_stats": {
+        "compendiumSource": null,
+        "duplicateSource": null,
+        "coreVersion": "12.331",
+        "systemId": "dnd5e",
+        "systemVersion": "4.0.1",
+        "createdTime": 1726656019337,
+        "modifiedTime": 1726661641798,
+        "lastModifiedBy": "0wJRsV2r9Hv1a7q0"
+      },
+      "_key": "!journal.pages!B48iqFBddUikMMer.Ubzow5wKgOUEXYJw"
+    },
+    {
+      "sort": 1200000,
+      "name": "Item Activation Cost Types",
+      "type": "text",
+      "_id": "uFxtCCVz8Ow95cUL",
+      "system": {},
+      "title": {
+        "show": true,
+        "level": 1
+      },
+      "image": {},
+      "text": {
+        "format": 1,
+        "content": "<p>Located in <strong>Game Settings</strong> &gt; <strong>Configure Settings</strong> &gt; <strong>Custom D&amp;D 5e</strong> &gt; <strong>Configure Item Activation Cost Types</strong></p><article class=\"custom-dnd5e-note\"><header><img src=\"modules/custom-dnd5e/media/icons/note.svg\" /><p>Note</p></header><p>Only available in D&amp;D 5e system version 3.</p></article><h3>Create an Item Activation Cost Type</h3><ol><li><p>Click <strong>Create New</strong>.</p></li><li><p>Enter a <strong>Key</strong>.</p></li><li><p>Enter a <strong>Label</strong>.</p></li><li><p>Click <strong>Save and Close</strong>.</p></li></ol><h4>Example Item Activation Cost Type</h4><table><tbody><tr><td style=\"min-width:120px\" data-colwidth=\"272\"><p><strong>Property</strong></p></td><td><p><strong>Value</strong></p></td></tr><tr><td data-colwidth=\"272\"><p>Key</p></td><td><p>year</p></td></tr><tr><td data-colwidth=\"272\"><p>Label</p></td><td><p>Years</p></td></tr></tbody></table>"
+      },
+      "video": {
+        "controls": true,
+        "volume": 0.5
+      },
+      "src": null,
+      "ownership": {
+        "default": -1,
+        "0wJRsV2r9Hv1a7q0": 3
+      },
+      "flags": {},
+      "_stats": {
+        "compendiumSource": null,
+        "duplicateSource": null,
+        "coreVersion": "12.331",
+        "systemId": "dnd5e",
+        "systemVersion": "4.0.1",
+        "createdTime": 1726656038055,
+        "modifiedTime": 1726661669552,
+        "lastModifiedBy": "0wJRsV2r9Hv1a7q0"
+      },
+      "_key": "!journal.pages!B48iqFBddUikMMer.uFxtCCVz8Ow95cUL"
+    },
+    {
+      "sort": 1300000,
+      "name": "Item Properties",
+      "type": "text",
+      "_id": "dM6sUm93mUi9oeBo",
+      "system": {},
+      "title": {
+        "show": true,
+        "level": 1
+      },
+      "image": {},
+      "text": {
+        "format": 1,
+        "content": "<p>Located in <strong>Game Settings</strong> &gt; <strong>Configure Settings</strong> &gt; <strong>Custom D&amp;D 5e</strong> &gt; <strong>Configure Item Properties</strong></p><h3>Create an Item Property</h3><ol><li><p>Click <strong>Create New</strong>.</p></li><li><p>Enter a <strong>Key</strong>.</p></li><li><p>Enter a <strong>Label</strong>.</p><article class=\"custom-dnd5e-note\"><header><img src=\"modules/custom-dnd5e/media/icons/note.svg\" /><p>Note</p></header><p>You can ignore the Abbreviation, Icon and Tag properties as they currently have no function for new Item Properties.</p></article></li><li><p>(Optional) Check <strong>Physical</strong>.</p></li><li><p>(Optional) Paste a journal entry's UUID into <strong>Reference</strong>.</p><article class=\"custom-dnd5e-tip\"><header><img src=\"modules/custom-dnd5e/media/icons/tip.svg\" /><p>Tip</p></header><p>You can copy a journal entry's UUID by opening up the entry and left-clicking the passport icon in the window's header.</p></article></li><li><p>Check required <strong>Item Types</strong>.</p></li><li><p>Click <strong>Save and Close</strong>.</p></li></ol><h4>Example Item Property</h4><table><tbody><tr><td style=\"min-width:120px\" data-colwidth=\"272\"><p><strong>Property</strong></p></td><td><p><strong>Value</strong></p></td></tr><tr><td data-colwidth=\"272\"><p>Key</p></td><td><p>aem</p></td></tr><tr><td data-colwidth=\"272\"><p>Label</p></td><td><p>Aetherium</p></td></tr><tr><td data-colwidth=\"272\"><p>Physical</p></td><td><img class=\"custom-dnd5e-img\" src=\"modules/custom-dnd5e/media/icons/checked.svg\" /></td></tr><tr><td data-colwidth=\"272\"><p>Reference</p></td><td><p>Compendium.world.my-rules.JournalEntry.r04xTaCjv1UK6GJn.JournalEntryPage.WIdCHQ6OBiFgt3OA</p></td></tr><tr><td data-colwidth=\"272\"><p>Item Types</p></td><td><p>Container, Equipment, Loot, Tool, Weapon</p></td></tr></tbody></table>"
+      },
+      "video": {
+        "controls": true,
+        "volume": 0.5
+      },
+      "src": null,
+      "ownership": {
+        "default": -1,
+        "0wJRsV2r9Hv1a7q0": 3
+      },
+      "flags": {},
+      "_stats": {
+        "compendiumSource": null,
+        "duplicateSource": null,
+        "coreVersion": "12.331",
+        "systemId": "dnd5e",
+        "systemVersion": "4.0.1",
+        "createdTime": 1726656054407,
+        "modifiedTime": 1730413722303,
+        "lastModifiedBy": "0wJRsV2r9Hv1a7q0"
+      },
+      "_key": "!journal.pages!B48iqFBddUikMMer.dM6sUm93mUi9oeBo"
+    },
+    {
+      "sort": 1400000,
+      "name": "Item Rarity",
+      "type": "text",
+      "_id": "FIMLwqJ6ACWHbuDJ",
+      "system": {},
+      "title": {
+        "show": true,
+        "level": 1
+      },
+      "image": {},
+      "text": {
+        "format": 1,
+        "content": "<p>Located in <strong>Game Settings</strong> &gt; <strong>Configure Settings</strong> &gt; <strong>Custom D&amp;D 5e</strong> &gt; <strong>Configure Item Rarity</strong></p><h3>Create an Item Rarity</h3><ol><li><p>Click <strong>Create New</strong>.</p></li><li><p>Enter a <strong>Key</strong>.</p></li><li><p>Enter a <strong>Label</strong>.</p></li><li><p>Click <strong>Save and Close</strong>.</p></li></ol><h4>Example Item Rarity</h4><table><tbody><tr><td style=\"min-width:120px\" data-colwidth=\"272\"><p><strong>Property</strong></p></td><td><p><strong>Value</strong></p></td></tr><tr><td data-colwidth=\"272\"><p>Key</p></td><td><p>epic</p></td></tr><tr><td data-colwidth=\"272\"><p>Label</p></td><td><p>Epic</p></td></tr></tbody></table>"
+      },
+      "video": {
+        "controls": true,
+        "volume": 0.5
+      },
+      "src": null,
+      "ownership": {
+        "default": -1,
+        "0wJRsV2r9Hv1a7q0": 3
+      },
+      "flags": {},
+      "_stats": {
+        "compendiumSource": null,
+        "duplicateSource": null,
+        "coreVersion": "12.331",
+        "systemId": "dnd5e",
+        "systemVersion": "4.0.1",
+        "createdTime": 1726656068552,
+        "modifiedTime": 1726661694324,
+        "lastModifiedBy": "0wJRsV2r9Hv1a7q0"
+      },
+      "_key": "!journal.pages!B48iqFBddUikMMer.FIMLwqJ6ACWHbuDJ"
+    },
+    {
+      "sort": 1500000,
+      "name": "Languages",
+      "type": "text",
+      "_id": "UHurkLgqKecvpq2S",
+      "system": {},
+      "title": {
+        "show": true,
+        "level": 1
+      },
+      "image": {},
+      "text": {
+        "format": 1,
+        "content": "<p>Located in <strong>Game Settings</strong> &gt; <strong>Configure Settings</strong> &gt; <strong>Custom D&amp;D 5e</strong> &gt; <strong>Configure Languages</strong></p><article class=\"custom-dnd5e-tip\"><header><img src=\"modules/custom-dnd5e/media/icons/tip.svg\" /><p>Tip</p></header><p>Items can be rearranged by dragging and dropping them using the horizontal grip lines on the left. A red line will appear to indicate where the item will be placed. To nest items, simply drop one item onto another; a red box will highlight the hovered item, showing where it will be nested.</p></article><h3>Create a Language</h3><ol><li><p>Click <strong>Create New</strong>.</p></li><li><p>Enter a <strong>Key</strong>.</p></li><li><p>Enter a <strong>Label</strong>.</p></li><li><p>(Optional) Drag and drop the new language into a language group.</p></li><li><p>Click <strong>Save and Close</strong>.</p></li></ol><h4>Example Language</h4><table><tbody><tr><td style=\"min-width:120px\" data-colwidth=\"272\"><p><strong>Property</strong></p></td><td><p><strong>Value</strong></p></td></tr><tr><td data-colwidth=\"272\"><p>Key</p></td><td><p>snaketongue</p></td></tr><tr><td data-colwidth=\"272\"><p>Label</p></td><td><p>Snaketongue</p></td></tr><tr><td data-colwidth=\"272\"><p>Group</p></td><td><p>Drag and drop onto <em>Exotic Languages</em></p></td></tr></tbody></table>"
+      },
+      "video": {
+        "controls": true,
+        "volume": 0.5
+      },
+      "src": null,
+      "ownership": {
+        "default": -1,
+        "0wJRsV2r9Hv1a7q0": 3
+      },
+      "flags": {},
+      "_stats": {
+        "compendiumSource": null,
+        "duplicateSource": null,
+        "coreVersion": "12.331",
+        "systemId": "dnd5e",
+        "systemVersion": "4.0.1",
+        "createdTime": 1726656084809,
+        "modifiedTime": 1726661703551,
+        "lastModifiedBy": "0wJRsV2r9Hv1a7q0"
+      },
+      "_key": "!journal.pages!B48iqFBddUikMMer.UHurkLgqKecvpq2S"
+    },
+    {
+      "sort": 1600000,
+      "name": "Max Level",
+      "type": "text",
+      "_id": "4h10hYx01hjbUQL6",
+      "system": {},
+      "title": {
+        "show": true,
+        "level": 1
+      },
+      "image": {},
+      "text": {
+        "format": 1,
+        "content": "<p>Located in <strong>Game Settings</strong> &gt; <strong>Configure Settings</strong> &gt; <strong>Custom D&amp;D 5e</strong></p><ol><li><p>Edit the <strong>Max Level</strong>.</p></li><li><p>Click <strong>Save Changes</strong>.</p></li></ol>"
+      },
+      "video": {
+        "controls": true,
+        "volume": 0.5
+      },
+      "src": null,
+      "ownership": {
+        "default": -1,
+        "0wJRsV2r9Hv1a7q0": 3
+      },
+      "flags": {},
+      "_stats": {
+        "compendiumSource": null,
+        "duplicateSource": null,
+        "coreVersion": "12.331",
+        "systemId": "dnd5e",
+        "systemVersion": "4.0.1",
+        "createdTime": 1726656094546,
+        "modifiedTime": 1733052648851,
+        "lastModifiedBy": "0wJRsV2r9Hv1a7q0"
+      },
+      "_key": "!journal.pages!B48iqFBddUikMMer.4h10hYx01hjbUQL6"
+    },
+    {
+      "sort": 1700000,
+      "name": "Senses",
+      "type": "text",
+      "_id": "UC0cWoAGMtU6yISR",
+      "system": {},
+      "title": {
+        "show": true,
+        "level": 1
+      },
+      "image": {},
+      "text": {
+        "format": 1,
+        "content": "<p>Located in <strong>Game Settings</strong> &gt; <strong>Configure Settings</strong> &gt; <strong>Custom D&amp;D 5e</strong> &gt; <strong>Configure Senses</strong></p><h3>Create a Sense</h3><ol><li><p>Click <strong>Create New</strong>.</p></li><li><p>Enter a <strong>Key</strong>.</p></li><li><p>Enter a <strong>Label</strong>.</p></li><li><p>Click <strong>Save and Close</strong>.</p></li></ol><h4>Example Sense</h4><table><tbody><tr><td style=\"min-width:120px\" data-colwidth=\"272\"><p><strong>Property</strong></p></td><td><p><strong>Value</strong></p></td></tr><tr><td data-colwidth=\"272\"><p>Key</p></td><td><p>devilsight</p></td></tr><tr><td data-colwidth=\"272\"><p>Label</p></td><td><p>Devil Sight</p></td></tr></tbody></table>"
+      },
+      "video": {
+        "controls": true,
+        "volume": 0.5
+      },
+      "src": null,
+      "ownership": {
+        "default": -1,
+        "0wJRsV2r9Hv1a7q0": 3
+      },
+      "flags": {},
+      "_stats": {
+        "compendiumSource": null,
+        "duplicateSource": null,
+        "coreVersion": "12.331",
+        "systemId": "dnd5e",
+        "systemVersion": "4.0.1",
+        "createdTime": 1726656112968,
+        "modifiedTime": 1731626527130,
+        "lastModifiedBy": "0wJRsV2r9Hv1a7q0"
+      },
+      "_key": "!journal.pages!B48iqFBddUikMMer.UC0cWoAGMtU6yISR"
+    },
+    {
+      "sort": 1800000,
+      "name": "Skills",
+      "type": "text",
+      "_id": "0SCQdu9sYAjcDqAk",
+      "system": {},
+      "title": {
+        "show": true,
+        "level": 1
+      },
+      "image": {},
+      "text": {
+        "format": 1,
+        "content": "<p>Located in <strong>Game Settings</strong> &gt; <strong>Configure Settings</strong> &gt; <strong>Custom D&amp;D 5e</strong> &gt; <strong>Configure Skills</strong></p><h3>Create a Skill</h3><ol><li><p>Click <strong>Create New</strong>.</p></li><li><p>Enter a <strong>Key</strong>.</p></li><li><p>Enter a <strong>Full Key</strong>.</p></li><li><p>Enter a <strong>Label</strong>.</p></li><li><p>Enter an <strong>Ability</strong>.</p></li><li><p>(Optional) Pick an <strong>Icon</strong>.</p></li><li><p>(Optional) Paste a journal entry's UUID into <strong>Reference</strong>.</p><article class=\"custom-dnd5e-tip\"><header><img src=\"modules/custom-dnd5e/media/icons/tip.svg\" /><p>Tip</p></header><p>You can copy a journal entry's UUID by opening up the entry and left-clicking the passport icon in the window's header.</p></article><article class=\"custom-dnd5e-note\"><header><img src=\"modules/custom-dnd5e/media/icons/note.svg\" /><p>Note</p></header><p>For a tooltip to appear, the <strong>Reference</strong> must be linked to a journal entry with the \"Rule\" page type, and the tooltip content should be entered in the Tooltip section using the \"Skill\" rule type.</p></article></li><li><p>(Optional) Select a <strong>Roll Mode</strong>.</p><article class=\"custom-dnd5e-note\"><header><img src=\"modules/custom-dnd5e/media/icons/note.svg\" /><p>Note</p></header><p>Setting the <strong>Roll Mode</strong> will override the setting in the Configure Rolls form. Leave as \"Default\" to use the mode from the Configure Rolls form.</p></article></li><li><p>Click <strong>Save and Close</strong>.</p></li></ol><h4>Example Skill</h4><table><tbody><tr><td style=\"min-width:120px\" data-colwidth=\"272\"><p><strong>Property</strong></p></td><td><p><strong>Value</strong></p></td></tr><tr><td data-colwidth=\"272\"><p>Key</p></td><td><p>eng</p></td></tr><tr><td data-colwidth=\"272\"><p>Full Key</p></td><td><p>engineering</p></td></tr><tr><td data-colwidth=\"272\"><p>Label</p></td><td><p>Engineering</p></td></tr><tr><td data-colwidth=\"272\"><p>Abbreviation</p></td><td><p>int</p></td></tr><tr><td data-colwidth=\"272\"><p>Icon</p></td><td><p>my-icons/engineering.svg</p></td></tr><tr><td data-colwidth=\"272\"><p>Reference</p></td><td><p>Compendium.world.my-rules.JournalEntry.r04xTaCjv1UK6GJn.JournalEntryPage.jQtlphFXMiHfRY9m</p></td></tr></tbody></table>"
+      },
+      "video": {
+        "controls": true,
+        "volume": 0.5
+      },
+      "src": null,
+      "ownership": {
+        "default": -1,
+        "0wJRsV2r9Hv1a7q0": 3
+      },
+      "flags": {},
+      "_stats": {
+        "compendiumSource": null,
+        "duplicateSource": null,
+        "coreVersion": "12.331",
+        "systemId": "dnd5e",
+        "systemVersion": "4.0.1",
+        "createdTime": 1726656126455,
+        "modifiedTime": 1732708313418,
+        "lastModifiedBy": "0wJRsV2r9Hv1a7q0"
+      },
+      "_key": "!journal.pages!B48iqFBddUikMMer.0SCQdu9sYAjcDqAk"
+    },
+    {
+      "sort": 1900000,
+      "name": "Spell Schools",
+      "type": "text",
+      "_id": "PlVATLzmAndA0gfR",
+      "system": {},
+      "title": {
+        "show": true,
+        "level": 1
+      },
+      "image": {},
+      "text": {
+        "format": 1,
+        "content": "<p>Located in <strong>Game Settings</strong> &gt; <strong>Configure Settings</strong> &gt; <strong>Custom D&amp;D 5e</strong> &gt; <strong>Configure Spell Schools</strong></p><h3>Create a Spell School</h3><ol><li><p>Click <strong>Create New</strong>.</p></li><li><p>Enter a <strong>Label</strong>.</p></li><li><p>(Optional) Pick an <strong>Icon</strong>.</p><article class=\"custom-dnd5e-note\"><header><img src=\"modules/custom-dnd5e/media/icons/note.svg\" /><p>Note</p></header><p>The icon will appear on the character sheet against any spells with the spell school.</p></article></li><li><p>(Optional) Paste a journal entry's UUID into <strong>Reference</strong>.</p><article class=\"custom-dnd5e-tip\"><header><img src=\"modules/custom-dnd5e/media/icons/tip.svg\" /><p>Tip</p></header><p>You can copy a journal entry's UUID by opening up the entry and left-clicking the passport icon in the window's header.</p></article><article class=\"custom-dnd5e-note\"><header><img src=\"modules/custom-dnd5e/media/icons/note.svg\" /><p>Note</p></header><p>For a tooltip to appear, the <strong>Reference</strong> must be linked to a journal entry with the \"Rule\" page type, and the tooltip content should be entered in the Tooltip section using the \"Spell School\" rule type.</p></article></li><li><p>Click <strong>Save and Close</strong>.</p></li></ol><h4>Example Spell School</h4><table><tbody><tr><td style=\"min-width:120px\" data-colwidth=\"272\"><p><strong>Property</strong></p></td><td><p><strong>Value</strong></p></td></tr><tr><td data-colwidth=\"272\"><p>Label</p></td><td><p>Cartomancy</p></td></tr><tr><td data-colwidth=\"272\"><p>Icon</p></td><td><p>my-icons/cartomancy.svg</p></td></tr><tr><td data-colwidth=\"272\"><p>Reference</p></td><td><p>Compendium.world.my-rules.JournalEntry.r04xTaCjv1UK6GJn.JournalEntryPage.2H1TC6FJulrcA7jr</p></td></tr></tbody></table>"
+      },
+      "video": {
+        "controls": true,
+        "volume": 0.5
+      },
+      "src": null,
+      "ownership": {
+        "default": -1,
+        "0wJRsV2r9Hv1a7q0": 3
+      },
+      "flags": {},
+      "_stats": {
+        "compendiumSource": null,
+        "duplicateSource": null,
+        "coreVersion": "12.331",
+        "systemId": "dnd5e",
+        "systemVersion": "4.0.1",
+        "createdTime": 1726656170688,
+        "modifiedTime": 1726777241994,
+        "lastModifiedBy": "ZR5jaKwclVdroOEN"
+      },
+      "_key": "!journal.pages!B48iqFBddUikMMer.PlVATLzmAndA0gfR"
+    },
+    {
+      "sort": 2000000,
+      "name": "Tools",
+      "type": "text",
+      "_id": "mBgCguO7mTNQuPtz",
+      "system": {},
+      "title": {
+        "show": true,
+        "level": 1
+      },
+      "image": {},
+      "text": {
+        "format": 1,
+        "content": "<p>Located in <strong>Game Settings</strong> &gt; <strong>Configure Settings</strong> &gt; <strong>Custom D&amp;D 5e</strong> &gt; <strong>Configure Tools</strong></p><h3>Create a New Tool</h3><ol><li><p>Click <strong>Create New</strong>.</p></li><li><p>Enter a <strong>Key</strong>.</p></li><li><p>Create a base item for the tool.</p><article class=\"custom-dnd5e-note\"><header><img src=\"modules/custom-dnd5e/media/icons/note.svg\" /><p>Note</p></header><p>Base tool details, including its Tool Type (e.g., Artisan's Tools, Gaming Set, Musical Instrument), are contained within an item stored within a compendium. To create a new tool, you will need to create an Item compendium and create a base item within it.</p></article></li><li><p>Paste the item's <strong>UUID</strong>.</p><article class=\"custom-dnd5e-tip\"><header><img src=\"modules/custom-dnd5e/media/icons/tip.svg\" /><p>Tip</p></header><p>You can copy an item's UUID by opening up the item and left-clicking the passport icon in the window's header.</p></article></li><li><p>Click <strong>Save and Close</strong>.</p></li></ol><h4>Example Tool</h4><table><tbody><tr><td style=\"min-width:120px\" data-colwidth=\"272\"><p><strong>Property</strong></p></td><td><p><strong>Value</strong></p></td></tr><tr><td data-colwidth=\"272\"><p>Key</p></td><td><p>computer</p></td></tr><tr><td data-colwidth=\"272\"><p>ID</p></td><td><p>Compendium.world.my-items.Item.eiZn1BwVg4nGqHWS</p></td></tr></tbody></table>"
+      },
+      "video": {
+        "controls": true,
+        "volume": 0.5
+      },
+      "src": null,
+      "ownership": {
+        "default": -1,
+        "0wJRsV2r9Hv1a7q0": 3
+      },
+      "flags": {},
+      "_stats": {
+        "compendiumSource": null,
+        "duplicateSource": null,
+        "coreVersion": "12.331",
+        "systemId": "dnd5e",
+        "systemVersion": "4.0.1",
+        "createdTime": 1726656189913,
+        "modifiedTime": 1738922968950,
+        "lastModifiedBy": "JdWLPbQd9x1aeEfz"
+      },
+      "_key": "!journal.pages!B48iqFBddUikMMer.mBgCguO7mTNQuPtz"
+    },
+    {
+      "sort": 2100000,
+      "name": "Weapons",
+      "type": "text",
+      "_id": "CeUiNZoH8giNsqNR",
+      "system": {},
+      "title": {
+        "show": true,
+        "level": 1
+      },
+      "image": {},
+      "text": {
+        "format": 1,
+        "content": "<p>Located in <strong>Game Settings</strong> &gt; <strong>Configure Settings</strong> &gt; <strong>Custom D&amp;D 5e</strong> &gt; <strong>Configure Weapons</strong></p><h3>Create a Weapon</h3><ol><li><p>Click <strong>Create New</strong>.</p></li><li><p>Enter a <strong>Key</strong>.</p></li><li><p>Create a base item for the weapon.</p><article class=\"custom-dnd5e-note\"><header><img src=\"modules/custom-dnd5e/media/icons/note.svg\" /><p>Note</p></header><p>Base weapon details, including its Weapon Type (e.g., Simple Melee, Simple Ranged, Martial Melee, etc.), are contained within an item stored within a compendium. To create a new tool, you will need to create an Item compendium and create a base item within it.</p></article></li><li><p>Paste the item's <strong>UUID</strong>.</p><article class=\"custom-dnd5e-tip\"><header><img src=\"modules/custom-dnd5e/media/icons/tip.svg\" /><p>Tip</p></header><p>You can copy an item's UUID by opening up the item and left-clicking the passport icon in the window's header.</p></article></li><li><p>Click <strong>Save and Close</strong>.</p></li></ol><h4>Example Weapon</h4><table><tbody><tr><td style=\"min-width:120px\" data-colwidth=\"272\"><p><strong>Property</strong></p></td><td><p><strong>Value</strong></p></td></tr><tr><td data-colwidth=\"272\"><p>Key</p></td><td><p>stiletto</p></td></tr><tr><td data-colwidth=\"272\"><p>ID</p></td><td><p>Compendium.world.my-items.Item.Hyd53SduzXC6DQy0</p></td></tr></tbody></table>"
+      },
+      "video": {
+        "controls": true,
+        "volume": 0.5
+      },
+      "src": null,
+      "ownership": {
+        "default": -1,
+        "0wJRsV2r9Hv1a7q0": 3
+      },
+      "flags": {},
+      "_stats": {
+        "compendiumSource": null,
+        "duplicateSource": null,
+        "coreVersion": "12.331",
+        "systemId": "dnd5e",
+        "systemVersion": "4.0.1",
+        "createdTime": 1726656205177,
+        "modifiedTime": 1738617852296,
+        "lastModifiedBy": "JdWLPbQd9x1aeEfz"
+      },
+      "_key": "!journal.pages!B48iqFBddUikMMer.CeUiNZoH8giNsqNR"
+    },
+    {
+      "sort": 2200000,
+      "name": "Weapon Proficiencies",
+      "type": "text",
+      "_id": "Cy09wdPVi8XrkjJ2",
+      "system": {},
+      "title": {
+        "show": true,
+        "level": 1
+      },
+      "image": {},
+      "text": {
+        "format": 1,
+        "content": "<p>Located in <strong>Game Settings</strong> &gt; <strong>Configure Settings</strong> &gt; <strong>Custom D&amp;D 5e</strong> &gt; <strong>Configure Weapon Proficiencies</strong></p><p>The Weapon Proficiencies configuration includes both <strong>Weapon Proficiencies</strong> (Simple, Martial) and <strong>Weapon Types</strong> (Simple Melee, Simple Ranged, Martial Melee, Martial Ranged, Natural Weapons). A Weapon Proficiency groups one or more Weapon Types together.</p><p>For a Weapon Type to show on a character sheet, it must be linked to a Weapon Proficiency and a base item must exist with the matching Weapon Type (see Create a New Weapon). Similarly, a Weapon Proficiency will only appear if it includes at least one Weapon Type.</p><h3>Create a Weapon Type</h3><ol><li><p>Click <strong>Create New</strong>.</p></li><li><p>Enter a <strong>Key</strong>.</p></li><li><p>Enter a <strong>Label</strong>.</p></li><li><p>(Optional) Drag and drop the new Weapon Type onto a Weapon Proficiency.</p></li><li><p>Click <strong>Save and Close</strong>.</p></li></ol><h4>Example Weapon Type</h4><table><tbody><tr><td style=\"min-width:120px\" data-colwidth=\"272\"><p><strong>Property</strong></p></td><td><p><strong>Value</strong></p></td></tr><tr><td data-colwidth=\"272\"><p>Key</p></td><td><p>stiletto</p></td></tr><tr><td data-colwidth=\"272\"><p>Label</p></td><td><p>Stiletto</p></td></tr><tr><td data-colwidth=\"272\"><p>Weapon Proficiency</p></td><td><p>Drag and drop onto <em>Simple Melee</em></p></td></tr></tbody></table>"
+      },
+      "video": {
+        "controls": true,
+        "volume": 0.5
+      },
+      "src": null,
+      "ownership": {
+        "default": -1,
+        "0wJRsV2r9Hv1a7q0": 3
+      },
+      "flags": {},
+      "_stats": {
+        "compendiumSource": null,
+        "duplicateSource": null,
+        "coreVersion": "12.331",
+        "systemId": "dnd5e",
+        "systemVersion": "4.0.1",
+        "createdTime": 1726656226649,
+        "modifiedTime": 1738923235998,
+        "lastModifiedBy": "JdWLPbQd9x1aeEfz"
+      },
+      "_key": "!journal.pages!B48iqFBddUikMMer.Cy09wdPVi8XrkjJ2"
+    },
+    {
+      "sort": 200000,
+      "name": "Activation Costs",
+      "type": "text",
+      "system": {},
+      "title": {
+        "show": true,
+        "level": 1
+      },
+      "image": {},
+      "text": {
+        "format": 1,
+        "content": "<p>Located in <strong>Game Settings</strong> &gt; <strong>Configure Settings</strong> &gt; <strong>Custom D&amp;D 5e</strong> &gt; <strong>Configure Activation Costs</strong></p><article class=\"custom-dnd5e-note\"><header><img src=\"modules/custom-dnd5e/media/icons/note.svg\" /><p>Note</p></header><p>Only available in D&amp;D 5e system version 4+.</p></article><h3>Create an Activation Cost</h3><ol><li><p>Click <strong>Create New</strong>.</p></li><li><p>Enter a <strong>Label</strong>.</p></li><li><p>(Optional) Enter a <strong>Group</strong>.</p><article class=\"custom-dnd5e-note\"><header><img src=\"modules/custom-dnd5e/media/icons/note.svg\" /><p>Note</p></header><p>The Group determines which heading the activation cost will be nested under in the Activation Cost menu. If left blank, the item will remain unnested.</p></article></li><li><p>(Optional) Check <strong>Scalar</strong>.</p><article class=\"custom-dnd5e-note\"><header><img src=\"modules/custom-dnd5e/media/icons/note.svg\" /><p>Note</p></header><p>Checking Scalar means the activation cost requires a variable amount. For example, the \"Minutes\" activation cost requires a specific amount, like 10 minutes, while \"Action\" always represents a single action.</p></article></li><li><p>Click <strong>Save and Close</strong>.</p></li></ol><h4>Example Ability</h4><table><tbody><tr><td style=\"min-width:120px\" data-colwidth=\"272\"><p><strong>Property</strong></p></td><td><p><strong>Value</strong></p></td></tr><tr><td data-colwidth=\"272\"><p>Label</p></td><td><p>Years</p></td></tr><tr><td data-colwidth=\"272\"><p>Group</p></td><td><p>Time</p></td></tr><tr><td data-colwidth=\"272\"><p>Scalar</p></td><td><img class=\"custom-dnd5e-img\" src=\"modules/custom-dnd5e/media/icons/checked.svg\" /></td></tr></tbody></table>"
+      },
+      "video": {
+        "controls": true,
+        "volume": 0.5
+      },
+      "src": null,
+      "ownership": {
+        "default": -1,
+        "0wJRsV2r9Hv1a7q0": 3
+      },
+      "flags": {},
+      "_stats": {
+        "compendiumSource": null,
+        "duplicateSource": "Compendium.custom-dnd5e.custom-dandd-5e.JournalEntry.B48iqFBddUikMMer.JournalEntryPage.tVG6b7kBJUOVvpwP",
+        "coreVersion": "12.331",
+        "systemId": "dnd5e",
+        "systemVersion": "4.0.1",
+        "createdTime": 1726659240453,
+        "modifiedTime": 1726661510462,
+        "lastModifiedBy": "0wJRsV2r9Hv1a7q0"
+      },
+      "_id": "LehHpGOmEbRQ4day",
+      "_key": "!journal.pages!B48iqFBddUikMMer.LehHpGOmEbRQ4day"
+    },
+    {
+      "sort": 900000,
+      "name": "Consumable Types",
+      "type": "text",
+      "system": {},
+      "title": {
+        "show": true,
+        "level": 1
+      },
+      "image": {},
+      "text": {
+        "format": 1,
+        "content": "<p>Located in <strong>Game Settings</strong> &gt; <strong>Configure Settings</strong> &gt; <strong>Custom D&amp;D 5e</strong> &gt; <strong>Configure Consumable Types</strong></p><h3>Create a Consumable Type</h3><ol><li><p>Click <strong>Create New</strong>.</p></li><li><p>Enter a <strong>Key</strong>.</p></li><li><p>Enter a <strong>Label</strong>.</p></li><li><p>(Optional) Drag and drop the consumable type onto another to make it a subtype.</p></li><li><p>Click <strong>Save and Close</strong>.</p></li></ol><h4>Example Consumable Type</h4><table><tbody><tr><td style=\"min-width:120px\" data-colwidth=\"272\"><p><strong>Property</strong></p></td><td><p><strong>Value</strong></p></td></tr><tr><td data-colwidth=\"272\"><p>Key</p></td><td><p>drink</p></td></tr><tr><td data-colwidth=\"272\"><p>Label</p></td><td><p>Drink</p></td></tr></tbody></table>"
+      },
+      "video": {
+        "controls": true,
+        "volume": 0.5
+      },
+      "src": null,
+      "ownership": {
+        "default": -1,
+        "0wJRsV2r9Hv1a7q0": 3
+      },
+      "flags": {},
+      "_stats": {
+        "compendiumSource": null,
+        "duplicateSource": "Compendium.custom-dnd5e.custom-dandd-5e.JournalEntry.B48iqFBddUikMMer.JournalEntryPage.qkB3382uO7YUUApw",
+        "coreVersion": "12.331",
+        "systemId": "dnd5e",
+        "systemVersion": "4.0.1",
+        "createdTime": 1726662490438,
+        "modifiedTime": 1726662866895,
+        "lastModifiedBy": "0wJRsV2r9Hv1a7q0"
+      },
+      "_id": "OgMhctYM5NFh8neL",
+      "_key": "!journal.pages!B48iqFBddUikMMer.OgMhctYM5NFh8neL"
+    },
+    {
+      "sort": 1650000,
+      "name": "Rolls",
+      "type": "text",
+      "_id": "eIWacCPaiwpIZCBL",
+      "system": {},
+      "title": {
+        "show": true,
+        "level": 1
+      },
+      "image": {},
+      "text": {
+        "format": 1,
+        "content": "<p>Located in <strong>Game Settings</strong> &gt; <strong>Configure Settings</strong> &gt; <strong>Custom D&amp;D 5e</strong> &gt; <strong>Configure Rolls</strong></p><p>Always wanted to roll 1d4 for initiative, use 2d10 instead of 1d20, or make skill checks private by default? The <strong>Configure Rolls</strong> form lets you customize the base die and roll mode for Ability Checks, Attack Rolls, Concentration Saving Throws, Initiative Rolls, Saving Throws, Skill Checks and Tool Checks.</p><p>To change a base die, enter the desired number and type of die in the die notation format, for example: 1d6, 2d10, 1d10, etc.</p><article class=\"custom-dnd5e-note\"><header><img src=\"modules/custom-dnd5e/media/icons/note.svg\" /><p>Note</p></header><p>If you use multiple base dice (e.g., 2d10), Advantage and Disadvantage will double the dice rolled, keeping the highest or lowest two, respectively. For Elven Accuracy, the number of base dice is tripled.</p></article>"
+      },
+      "video": {
+        "controls": true,
+        "volume": 0.5
+      },
+      "src": null,
+      "ownership": {
+        "default": -1,
+        "0wJRsV2r9Hv1a7q0": 3
+      },
+      "flags": {},
+      "_stats": {
+        "compendiumSource": null,
+        "duplicateSource": null,
+        "coreVersion": "12.331",
+        "systemId": "dnd5e",
+        "systemVersion": "4.1.1",
+        "createdTime": 1731625705713,
+        "modifiedTime": 1738881727959,
+        "lastModifiedBy": "JdWLPbQd9x1aeEfz"
+      },
+      "_key": "!journal.pages!B48iqFBddUikMMer.eIWacCPaiwpIZCBL"
+    },
+    {
+      "sort": 1550000,
+      "name": "Max Ability Score",
+      "type": "text",
+      "_id": "decV7ZeYLc045SuZ",
+      "system": {},
+      "title": {
+        "show": true,
+        "level": 1
+      },
+      "image": {},
+      "text": {
+        "format": 1,
+        "content": "<p>Located in <strong>Game Settings</strong> &gt; <strong>Configure Settings</strong> &gt; <strong>Custom D&amp;D 5e</strong></p><ol><li><p>Edit the <strong>Max Ability Score</strong>.</p></li><li><p>Click <strong>Save Changes</strong>.</p></li></ol>"
+      },
+      "video": {
+        "controls": true,
+        "volume": 0.5
+      },
+      "src": null,
+      "ownership": {
+        "default": -1,
+        "0wJRsV2r9Hv1a7q0": 3
+      },
+      "flags": {},
+      "_stats": {
+        "compendiumSource": null,
+        "duplicateSource": null,
+        "coreVersion": "12.331",
+        "systemId": "dnd5e",
+        "systemVersion": "4.1.2",
+        "createdTime": 1733052631415,
+        "modifiedTime": 1733052657703,
+        "lastModifiedBy": "0wJRsV2r9Hv1a7q0"
+      },
+      "_key": "!journal.pages!B48iqFBddUikMMer.decV7ZeYLc045SuZ"
+    },
+    {
+      "sort": 2050000,
+      "name": "Tool Proficiencies",
+      "type": "text",
+      "system": {},
+      "title": {
+        "show": true,
+        "level": 1
+      },
+      "image": {},
+      "text": {
+        "format": 1,
+        "content": "<p>Located in <strong>Game Settings</strong> &gt; <strong>Configure Settings</strong> &gt; <strong>Custom D&amp;D 5e</strong> &gt; <strong>Configure Tool Proficiencies</strong></p><p>Tool Proficiencies consist of <strong>Tool Proficiencies</strong> and <strong>Tool Types</strong>, where each Tool Type is nested within a Tool Proficiency. Unlike Armor and Weapon Proficiencies, a Tool Proficiency must contain exactly one Tool Type, and both must share the same key and label.</p><ul><li>A Tool Proficiency without a Tool Type appears under the <strong>Other</strong> section in the Tool Proficiencies window.</li><li>Tools created under <strong>Configure Tools</strong> without an assigned Tool Type also appear under <strong>Other</strong>.</li><li>For a tool to be linked to a Tool Proficiency, the Tool Proficiency must contain a Tool Type, and a matching base item must exist (see <em>Create a New Tool</em>).</li></ul><h3>Create a Tool Proficiency</h3><ol><li><p>Click <strong>Create New</strong>.</p></li><li><p>Enter a <strong>Key</strong>.</p></li><li><p>Enter a <strong>Label</strong>.</p></li><li><p>Click <strong>Save and Close</strong>.</p></li></ol><h4>Example Tool Proficiency</h4><table><tbody><tr><td style=\"min-width:120px\" data-colwidth=\"272\"><p><strong>Property</strong></p></td><td><p><strong>Value</strong></p></td></tr><tr><td data-colwidth=\"272\"><p>Key</p></td><td><p>tech</p></td></tr><tr><td data-colwidth=\"272\"><p>Label</p></td><td><p>Technology</p></td></tr></tbody></table><h3>Create a Tool Type</h3><ol><li><p>Click <strong>Create New</strong>.</p></li><li><p>Enter a <strong>Key</strong> matching an existing Tool Proficiency.</p></li><li><p>Enter a <strong>Label</strong> matching an existing Tool Proficiency</p></li><li><p>Drag and drop the new Tool Type onto the matching Tool Proficiency.</p></li><li><p>Click <strong>Save and Close</strong>.</p></li></ol><h4>Example Tool Type</h4><table><tbody><tr><td style=\"min-width:120px\" data-colwidth=\"272\"><p><strong>Property</strong></p></td><td><p><strong>Value</strong></p></td></tr><tr><td data-colwidth=\"272\"><p>Key</p></td><td><p>tech</p></td></tr><tr><td data-colwidth=\"272\"><p>Label</p></td><td><p>Technology</p></td></tr><tr><td data-colwidth=\"272\"><p>Tool Proficiency</p></td><td><p>Drag and drop onto <em>Technology</em></p></td></tr></tbody></table><p></p>"
+      },
+      "video": {
+        "controls": true,
+        "volume": 0.5
+      },
+      "src": null,
+      "ownership": {
+        "default": -1,
+        "0wJRsV2r9Hv1a7q0": 3,
+        "JdWLPbQd9x1aeEfz": 3
+      },
+      "flags": {},
+      "_stats": {
+        "compendiumSource": null,
+        "duplicateSource": "Compendium.custom-dnd5e.custom-dnd5e-journals.JournalEntry.B48iqFBddUikMMer.JournalEntryPage.Cy09wdPVi8XrkjJ2",
+        "coreVersion": "12.331",
+        "systemId": "dnd5e",
+        "systemVersion": "4.2.2",
+        "createdTime": 1738922088965,
+        "modifiedTime": 1738935510047,
+        "lastModifiedBy": "JdWLPbQd9x1aeEfz"
+      },
+      "_id": "Ls4Rn45UNhTBagHD",
+      "_key": "!journal.pages!B48iqFBddUikMMer.Ls4Rn45UNhTBagHD"
+    }
+  ],
+  "folder": null,
+  "sort": 100000,
+  "ownership": {
+    "default": 0,
+    "0wJRsV2r9Hv1a7q0": 3
+  },
+  "flags": {},
+  "_stats": {
+    "compendiumSource": null,
+    "duplicateSource": null,
+    "coreVersion": "12.331",
+    "systemId": "dnd5e",
+    "systemVersion": "4.0.0",
+    "createdTime": 1726516280396,
+    "modifiedTime": 1730414487977,
+    "lastModifiedBy": "0wJRsV2r9Hv1a7q0"
+  },
+  "categories": [],
+  "_key": "!journal!B48iqFBddUikMMer"
+}
