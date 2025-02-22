@@ -156,7 +156,7 @@ export class ConfigForm extends CustomDnd5eForm {
     const key = item.dataset.key;
     if ( !key ) return;
 
-    const args = { form: this, editForm: this.editForm, data: { key }, setting: this.setting };
+    const args = { form: this, editForm: this.editForm, data: { key, enableConfig: this.enableConfig, }, setting: this.setting };
     await ConfigEditForm.open(args);
   }
 
@@ -275,7 +275,7 @@ export class ConfigForm extends CustomDnd5eForm {
       formData,
       changedKeys,
       propertiesToIgnore,
-      setting: this.setting
+      setting: (this.editInList) ? null : this.setting
     });
 
 

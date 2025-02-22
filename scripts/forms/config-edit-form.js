@@ -1,5 +1,5 @@
 import { CONSTANTS, JOURNAL_HELP_BUTTON, MODULE } from "../constants.js";
-import { setSetting, Logger } from "../utils.js";
+import { Logger, parseBoolean, setSetting,  } from "../utils.js";
 import { CustomDnd5eForm } from "./custom-dnd5e-form.js";
 
 /**
@@ -132,56 +132,74 @@ export class ConfigEditForm extends CustomDnd5eForm {
    * @param {object} formData The form data.
    */
   static async submit(event, form, formData) {
+    if ( !this.validateFormData(formData) ) return;
+  
     const oldKey = this.key;
     const newKey = formData.object[`${this.key}.key`];
-    const enableConfig = formData.object.enableConfig;
 
-    if ( !newKey.match(/^[0-9a-zA-Z]+$/) ) {
-      Logger.error(`Key '${newKey}' must only contain alphanumeric characters`, true);
-      return;
-    }
+    let settingData = foundry.utils.deepClone(this.setting);
+    const processedFormData = this.processFormData(formData);
 
-    if ( oldKey !== newKey ) {
-      if ( this.setting[newKey] ) {
-        Logger.error(`Key '${newKey}' already exists`, true);
-        return;
-      }
-    }
-
-    // Set properties in this.setting
-    Object.entries(formData.object).forEach(([key, value]) => {
-      if ( key === "enableConfig" ) return;
-      if ( key.split(".").pop() === "key" ) return;
-      if ( value === "false" ) {
-        value = false;
-      } else if ( value === "true" ) {
-        value = true;
-      }
-      foundry.utils.setProperty(this.setting, key, value);
-    });
-
-    // Create new key and delete old key while keeping order of counters
-    if ( oldKey !== newKey ) {
-      this.setting[newKey] = foundry.utils.deepClone(this.setting[oldKey]);
-
-      const data = Object.fromEntries(
-        Object.keys(this.setting).map(key => [
+    if ( !settingData[oldKey] || oldKey === newKey ) {
+      // Add new item or update existing one
+      settingData[newKey] = processedFormData[oldKey];
+    } else {
+      // Rebuild object to preserve order while replacing old key with new key
+      const updatedData = Object.fromEntries(
+        Object.entries(settingData).map(([key, value]) => [
           (key === oldKey) ? newKey : key,
-          foundry.utils.deepClone(this.setting[key])
+          (key === oldKey) ? processedFormData[key] : foundry.utils.deepClone(value)
         ])
       );
-
-      this.setting = data;
-
-      this.key = newKey;
+      settingData = updatedData;
     }
 
-    await setSetting(this.settingKey, this.setting);
-    await setSetting(this.enableConfigKey, enableConfig);
-
+    await setSetting(this.settingKey, settingData);
     this.close();
-
     this.form.render(true);
+  }
+
+  /* -------------------------------------------- */
+
+  /**
+   * Process form data, converting boolean values and structuring nested properties.
+   *
+   * @param {object} formData The form data.
+   * @returns {object} The processed form data.
+   */
+  processFormData(formData) {
+    const processedFormData = {};
+
+    Object.entries(formData.object).forEach(([key, value]) => {
+      if (key.endsWith(".key")) return;
+      foundry.utils.setProperty(processedFormData, key, parseBoolean(value));
+    });
+
+    return processedFormData;
+  }
+
+  /* -------------------------------------------- */
+
+  /**
+   * Validate the form data.
+   *
+   * @param {object} formData The form data.
+   * @returns {boolean} Whether the form data passed validation.
+   */
+  validateFormData(formData) {
+    const newKey = formData.object[`${this.key}.key`];
+  
+    if ( !newKey.match(/^[0-9a-zA-Z]+$/) ) {
+      Logger.error(`Key '${newKey}' must only contain alphanumeric characters`, true);
+      return false;
+    }
+
+    if ( this.key !== newKey && this.setting[newKey] ) {
+      Logger.error(`Key '${newKey}' already exists`, true);
+      return false;
+    }
+
+    return true;
   }
 
   /* -------------------------------------------- */
@@ -194,107 +212,5 @@ export class ConfigEditForm extends CustomDnd5eForm {
     const editForm = args.editForm ?? this;
     const form = new editForm(args);
     form.render(true);
-  }
-}
-
-/* -------------------------------------------- */
-
-/**
- * Class representing the Abilities Form.
- *
- * @extends ConfigEditForm
- */
-/**
- * Class representing a form to edit abilities configuration.
- * Extends the ConfigEditForm class.
- *
- * @class
- * @extends ConfigEditForm
- */
-export class AbilitiesEditForm extends ConfigEditForm {
-  /**
-   * Constructor for AbilitiesEditForm.
-   *
-   * @param {object} args The arguments to initialize the form.
-   */
-  constructor(args) {
-    super(args);
-    this.requiresReload = true;
-    this.settingKey = CONSTANTS.ABILITIES.SETTING.KEY;
-    this.setConfig = setAbilities;
-    this.getDefaultConfig = getDefaultAbilities;
-    this.configKey = "abilities";
-    this.headerButton = JOURNAL_HELP_BUTTON;
-    this.headerButton.uuid = CONSTANTS.ABILITIES.UUID;
-  }
-
-  /* -------------------------------------------- */
-
-  /**
-   * Default options for the form.
-   *
-   * @type {object}
-   */
-  static DEFAULT_OPTIONS = {
-    id: `${MODULE.ID}-abilities-edit-form`,
-    window: {
-      title: "CUSTOM_DND5E.form.abilities.edit.title"
-    }
-  };
-
-  /* -------------------------------------------- */
-
-  /**
-   * Parts of the form.
-   *
-   * @type {object}
-   */
-  static PARTS = {
-    form: {
-      template: CONSTANTS.ABILITIES.TEMPLATE.EDIT
-    }
-  };
-
-  /* -------------------------------------------- */
-
-  /**
-   * Get the select options for the form.
-   *
-   * @returns {object} The select options.
-   */
-  _getSelects() {
-    return {
-      rollMode: {
-        choices: {
-          default: "CUSTOM_DND5E.default",
-          blindroll: "CHAT.RollBlind",
-          gmroll: "CHAT.RollPrivate",
-          publicroll: "CHAT.RollPublic",
-          selfroll: "CHAT.RollSelf"
-        }
-      },
-      type: {
-        choices: {
-          mental: "CUSTOM_DND5E.mental",
-          physical: "CUSTOM_DND5E.physical"
-        }
-      }
-    };
-  }
-
-  /* -------------------------------------------- */
-
-  /**
-   * Get the HTML template for the form.
-   *
-   * @param {object} data The data to be passed to the template.
-   * @returns {Promise<string>} The rendered template.
-   */
-  async _getHtml(data) {
-    const selects = this._getSelects();
-    if ( selects ) data.selects = selects;
-
-    const template = await renderTemplate(CONSTANTS.ABILITIES.TEMPLATE.EDIT, data);
-    return template;
   }
 }

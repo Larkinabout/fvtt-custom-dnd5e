@@ -147,6 +147,19 @@ export function getDieParts(input) {
 /* -------------------------------------------- */
 
 /**
+ * Convert string "true"/"false" values to booleans.
+ * @param {string|boolean} value The input value.
+ * @returns {boolean|string} The converted value.
+ */
+export function parseBoolean(value) {
+  if (value === "false") return false;
+  if (value === "true") return true;
+  return value;
+}
+
+/* -------------------------------------------- */
+
+/**
  * Get a flag from an entity.
  * @param {object} entity The entity
  * @param {string} key The flag key

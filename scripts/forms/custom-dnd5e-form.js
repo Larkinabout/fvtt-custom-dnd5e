@@ -341,7 +341,7 @@ export class CustomDnd5eForm extends HandlebarsApplicationMixin(ApplicationV2) {
 
       item.dataset.key = `${parentKey}.${this.nestType}.${key}`;
 
-      const inputs = item.querySelectorAll("input");
+      const inputs = item.querySelectorAll("input, dnd5e-checkbox");
 
       inputs.forEach(input => {
         if ( input.id === "parentKey" ) {
@@ -447,6 +447,7 @@ export class CustomDnd5eForm extends HandlebarsApplicationMixin(ApplicationV2) {
   processFormData(args) {
     const { formData, changedKeys, propertiesToIgnore, setting } = args;
     const processedFormData = {};
+    const settingData = setting ? foundry.utils.deepClone(setting) : null;
 
     // Helper function to set properties
     const setProperty = ([key, value]) => {
@@ -471,9 +472,9 @@ export class CustomDnd5eForm extends HandlebarsApplicationMixin(ApplicationV2) {
       }
 
       // If setting passed, initialise property with setting data
-      if ( setting ) {
-        if ( !processedFormData[propertyPath] ) {
-          foundry.utils.setProperty(processedFormData, propertyPath, setting[propertyPath] ?? {});
+      if ( settingData ) {
+        if ( !processedFormData[propertyPath] && typeof settingData[propertyPath] === "object" ) {
+          foundry.utils.setProperty(processedFormData, propertyPath, settingData[propertyPath] ?? {});
         }
       }
 
@@ -534,9 +535,12 @@ export class CustomDnd5eForm extends HandlebarsApplicationMixin(ApplicationV2) {
    */
   async handleSubmit(processedFormData, settingKey, enableConfig, setConfig, requiresReload = false) {
     try {
-      await setSetting(settingKey, processedFormData);
+      const settingData = foundry.utils.deepClone(processedFormData);
+      await setSetting(settingKey, {});
+      await setSetting(settingKey, settingData);
       if ( enableConfig && setConfig ) {
-        setConfig(processedFormData);
+        const configData = foundry.utils.deepClone(processedFormData);
+        setConfig(configData);
       }
 
       if ( requiresReload ) {

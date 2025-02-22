@@ -740,8 +740,9 @@ export const CONSTANTS = {
       }
     },
     TEMPLATE: {
-      FORM: "modules/custom-dnd5e/templates/spell-schools-form.hbs",
-      LIST: "modules/custom-dnd5e/templates/spell-schools-list.hbs"
+      EDIT: "modules/custom-dnd5e/templates/spell-schools-edit.hbs",
+      FORM: "modules/custom-dnd5e/templates/config-form.hbs",
+      LIST: "modules/custom-dnd5e/templates/config-list.hbs"
     },
     UUID: "Compendium.custom-dnd5e.custom-dnd5e-journals.JournalEntry.B48iqFBddUikMMer.JournalEntryPage.PlVATLzmAndA0gfR"
   },

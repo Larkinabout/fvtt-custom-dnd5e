@@ -21,7 +21,7 @@ export class ConditionsEditForm extends ConfigEditForm {
   constructor(args) {
     super(args);
     this.configKey = configKey;
-    this.settingKey = constants.SETTING.CONFIG.KE;
+    this.settingKey = constants.SETTING.CONFIG.KEY;
     this.getDefaultConfig = getDefaultConfig;
     this.setConfig = setConfig;
     this.headerButton = JOURNAL_HELP_BUTTON;
@@ -70,22 +70,5 @@ export class ConditionsEditForm extends ConfigEditForm {
       CONFIG.statusEffects.map(statusEffect => [statusEffect.id, statusEffect.name])
     );
     return { riders: statusEffects, statuses: statusEffects };
-  }
-
-  /* -------------------------------------------- */
-
-  /**
-   * Validate the form data.
-   *
-   * @param {object} formData The form data.
-   * @returns {boolean} Whether the form data passed validation.
-   */
-  validateFormData(formData) {
-    if ( !newKey.match(/^[0-9a-zA-Z]+$/) ) {
-      Logger.error(`Key '${newKey}' must only contain alphanumeric characters`, true);
-      return false;
-    }
-
-    return super.validateFormData(formData);
   }
 }
