@@ -152,8 +152,8 @@ export function getDieParts(input) {
  * @returns {boolean|string} The converted value.
  */
 export function parseBoolean(value) {
-  if (value === "false") return false;
-  if (value === "true") return true;
+  if ( value === "false" ) return false;
+  if ( value === "true" ) return true;
   return value;
 }
 
@@ -468,8 +468,14 @@ export async function makeDead(actor, data = null) {
   Logger.debug("Making Dead...", actor);
   const applyNegativeHp = getSetting(CONSTANTS.HIT_POINTS.SETTING.APPLY_NEGATIVE_HP.KEY);
   if ( data ) {
-    if ( !applyNegativeHp ) foundry.utils.setProperty(data, "system.attributes.hp.value", 0);
-    foundry.utils.setProperty(data, "system.attributes.death.failure", 3);
+    if ( !applyNegativeHp ) {
+      if ( data["system.attributes.hp.value"] !== undefined ) {
+        data["system.attributes.hp.value"] = 0;
+      } else {
+        foundry.utils.setProperty(data, "system.attributes.hp.value", 0);
+      }
+    }
+    data["system.attributes.death.failure"] = 3;
   } else {
     actor.update({
       ...(!applyNegativeHp && { "system.attributes.hp.value": 0 }),

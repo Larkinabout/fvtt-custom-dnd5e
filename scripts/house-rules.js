@@ -306,34 +306,33 @@ function registerHooks() {
   Hooks.on("createActiveEffect", (activeEffect, options, userId) => { updateTokenEffects(true, activeEffect, userId); });
   Hooks.on("deleteActiveEffect", (activeEffect, options, userId) => { updateTokenEffects(false, activeEffect, userId); });
   Hooks.on("createToken", rollNpcHp);
-  Hooks.on("dnd5e.preApplyDamage", recalculateDamage);
+  Hooks.on("dnd5e.preApplyDamage", (actor, amount, updates, options) => {
+    recalculateDamage(actor, amount, updates, options);
+    const instantDeath = applyInstantDeath(actor, updates);
+    updateHp(actor, updates);
+    if ( !instantDeath ) {
+      const dead = updateDead(actor, updates);
+      updateBloodied(actor, updates, dead);
+      if ( !dead ) {
+        applyMassiveDamage(actor, updates);
+        recalculateHealing(actor, updates);
+        updateUnconscious(actor, updates);
+      }
+    }
+  });
   Hooks.on("dnd5e.preRestCompleted", (actor, data) => updateDeathSaves("rest", actor, data));
   Hooks.on("dnd5e.preRollDeathSave", setDeathSavesRollMode);
   Hooks.on("dnd5e.rollAbilityCheck", (actor, roll, ability) => { awardInspiration("rollAbilityCheck", actor, roll); });
   Hooks.on("dnd5e.rollAbilitySave", (actor, roll, ability) => { awardInspiration("rollAbilitySave", actor, roll); });
   Hooks.on("dnd5e.rollAbilityTest", (actor, roll, ability) => { awardInspiration("rollAbilityTest", actor, roll); });
-  Hooks.on("dnd5e.rollAttack", (item, roll, ability) => { awardInspiration("rollAttack", item, roll); });
+  Hooks.on("dnd5e.rollAttack", (item, roll, ability) => {
+    awardInspiration("rollAttack", item, roll);
+    // applyHighLowGround(item, roll, ability);
+  });
   Hooks.on("dnd5e.rollSkill", (actor, roll, ability) => { awardInspiration("rollSkill", actor, roll); });
   Hooks.on("preUpdateActor", (actor, data, options, userId) => {
     capturePreviousData(actor, data, options, userId);
     updateDeathSaves("regainHp", actor, data, options);
-  });
-  Hooks.on("updateActor", (actor, data, options, userId) => {
-    if ( !game.user.isGM && !game.user.id !== userId ) return;
-    if ( data?.flags?.["custom-dnd5e"] ) return;
-    if ( !foundry.utils.hasProperty(data, "system.attributes.hp") ) return;
-
-    const instantDeath = applyInstantDeath(actor, data);
-    updateHp(actor, data);
-    if ( !instantDeath ) {
-      const dead = updateDead(actor, data);
-      updateBloodied(actor, data, dead);
-      if ( !dead ) {
-        applyMassiveDamage(actor, data, options);
-        recalculateHealing(actor, data, options);
-        updateUnconscious(actor, data);
-      }
-    }
   });
   Hooks.on("renderActorSheet", makeDeathSavesBlind);
   Hooks.on("renderActorSheet", updateHpMeter);
@@ -500,6 +499,17 @@ export async function rerollInitiative(combat, data, options) {
   combat.update({ turn: 0 });
 }
 
+
+/**
+ * Applies high ground or low ground modifiers to a given roll.
+ * @param {object} item The item being used in the roll.
+ * @param {object} roll The roll object to which the modifiers will be applied.
+ * @param {string} ability The ability score being used for the roll.
+ */
+export function applyHighLowGround(item, roll, ability) {
+
+}
+
 /* -------------------------------------------- */
 
 /**
@@ -603,21 +613,32 @@ function setDeathSavesRollMode(actor, rollData) {
  * @param {object} actor The actor
  * @param {number} amount The damage amount
  * @param {object} updates The properties to update
+ * @param {object} options The options
  */
-function recalculateDamage(actor, amount, updates) {
+function recalculateDamage(actor, amount, updates, options) {
   if ( !getSetting(CONSTANTS.HIT_POINTS.SETTING.APPLY_NEGATIVE_HP.KEY)
         && !getSetting(CONSTANTS.DEAD.SETTING.APPLY_INSTANT_DEATH.KEY) ) return;
 
   Logger.debug("Recalculating damage...");
 
+  const isDelta = options.isDelta ?? false;
   const hpMax = actor?.system?.attributes?.hp?.max ?? 0;
   const hpTemp = actor?.system?.attributes?.hp?.temp ?? 0;
   const hpValue = actor?.system?.attributes?.hp?.value ?? 0;
   const healFromZero = getSetting(CONSTANTS.HIT_POINTS.SETTING.NEGATIVE_HP_HEAL_FROM_ZERO.KEY);
   const startHp = (healFromZero && amount < 0 && hpValue < 0) ? 0 : hpValue;
-  const newHpValue = amount > 0
-    ? hpValue - Math.max((amount - hpTemp), 0)
-    : Math.min(startHp - amount, hpMax);
+
+  let newHpValue = updates["system.attributes.hp.value"];
+
+  if ( amount > 0 ) {
+    newHpValue = hpValue - Math.max(amount - hpTemp, 0);
+  } else {
+    let healing = Math.abs(amount);
+    if ( hpValue < 0 && healFromZero && !isDelta ) {
+      healing = healing - Math.abs(hpValue);
+    }
+    newHpValue = Math.min(startHp + healing, hpMax);
+  }
 
   updates["system.attributes.hp.value"] = newHpValue;
 
@@ -627,28 +648,27 @@ function recalculateDamage(actor, amount, updates) {
 /* -------------------------------------------- */
 
 /**
- * Triggered by the 'updateActor' hook.
+ * Triggered by the 'dnd5e.preApplyDamage' hook.
  * If 'Apply Negative HP' and 'Heal from 0 HP' are enabled,
  * recalculate healing to increase HP from zero instead of the negative value.
  * @param {object} actor The actor
- * @param {object} data The data
- * @param {object} options The options
+ * @param {object} updates The updates
  */
-function recalculateHealing(actor, data, options) {
+function recalculateHealing(actor, updates) {
   if ( !getSetting(CONSTANTS.HIT_POINTS.SETTING.APPLY_NEGATIVE_HP.KEY)
     || !getSetting(CONSTANTS.HIT_POINTS.SETTING.NEGATIVE_HP_HEAL_FROM_ZERO.KEY) ) return;
 
   Logger.debug("Recalculating healing...");
 
-  const currentHp = data?.system?.attributes?.hp?.value;
+  const currentHp = foundry.utils.getProperty(updates, "system.attributes.hp.value");
 
   if ( typeof currentHp === "undefined" ) return;
 
-  const previousHp = options.customDnd5e.hp.value;
+  const previousHp = actor?.system?.attributes?.hp?.value;
 
   if ( previousHp < 0 && currentHp > previousHp ) {
     const diff = currentHp - previousHp;
-    data.system.attributes.hp.value = diff;
+    updates["system.attributes.hp.value"] = diff;
   }
 
   Logger.debug("Healing recalculated");
@@ -690,26 +710,26 @@ async function rollNpcHp(token, data, userId) {
 /* -------------------------------------------- */
 
 /**
- * Triggered by the 'updateActor' hook.
+ * Triggered by the 'dnd5e.preApplyDamage' hook.
  * If 'Apply Bloodied' is enabled, apply or remove the Bloodied condition and other token effects
  * based on the HP change.
  * If the actor is dead and 'Remove Bloodied on Dead' is enabled, remove the Bloodied condition.
  * @param {object} actor The actor
- * @param {object} data The data
+ * @param {object} updates The updates
  * @param {boolean} dead Whether or not the actor is dead
  * @returns {boolean} Whether the Bloodied condition was updated
  */
-function updateBloodied(actor, data, dead) {
+function updateBloodied(actor, updates, dead) {
   if ( !getSetting(CONSTANTS.BLOODIED.SETTING.APPLY_BLOODIED.KEY) ) return false;
 
   Logger.debug("Updating Bloodied...");
 
-  const currentHp = data?.system?.attributes?.hp?.value ?? actor?.system?.attributes?.hp?.value;
-  const maxHp = data?.system?.attributes?.hp?.max ?? actor?.system?.attributes?.hp?.max;
+  const currentHp = foundry.utils.getProperty(updates, "system.attributes.hp.value") ?? actor?.system?.attributes?.hp?.value;
+  const maxHp = foundry.utils.getProperty(updates, "updates.system.attributes.hp.max") ?? actor?.system?.attributes?.hp?.max;
 
   if ( typeof currentHp === "undefined" ) return null;
 
-  const halfHp = Math.ceil((maxHp ?? actor.system.attributes.hp.max) * 0.5);
+  const halfHp = Math.ceil(maxHp * 0.5);
 
   if ( currentHp <= halfHp
         && !actor.effects.has("dnd5ebloodied000")
@@ -731,28 +751,28 @@ function updateBloodied(actor, data, dead) {
 /* -------------------------------------------- */
 
 /**
- * Triggered by the 'updateActor' hook.
+ * Triggered by the 'dnd5e.preApplyDamage' hook.
  * If 'Apply Dead' is enabled, apply or remove the Dead condition and other token effects based on the HP change.
  * @param {object} actor The actor
- * @param {object} data The data
+ * @param {object} updates The updates
  * @returns {boolean} Whether the Dead condition was updated
  */
-function updateDead(actor, data) {
+function updateDead(actor, updates) {
   if ( actor.type !== "npc" ) return false;
   if ( !getSetting(CONSTANTS.DEAD.SETTING.APPLY_DEAD.KEY) ) return false;
 
   Logger.debug("Updating Dead...");
 
-  const currentHp = data?.system?.attributes?.hp?.value;
+  const currentHp = foundry.utils.getProperty(updates, "system.attributes.hp.value");
 
   if ( typeof currentHp === "undefined" ) return null;
 
   if ( currentHp <= 0 ) {
-    makeDead(actor, data);
+    makeDead(actor, updates);
     Logger.debug("Dead updated", { dead: true });
     return true;
   } else {
-    unmakeDead(actor, data);
+    unmakeDead(actor, updates);
     Logger.debug("Dead updated", { dead: false });
     return false;
   }
@@ -761,28 +781,28 @@ function updateDead(actor, data) {
 /* -------------------------------------------- */
 
 /**
- * Triggered by the 'updateActor' hook.
+ * Triggered by the 'dnd5e.preApplyDamage' hook.
  * If 'Apply Unconscious' is enabled, apply or remove the Unconscious condition based on the HP change.
  * @param {object} actor The actor
- * @param {object} data The data
+ * @param {object} updates The updates
  * @returns {boolean} Whether the Unconscious condition was updated
  */
-function updateUnconscious(actor, data) {
+function updateUnconscious(actor, updates) {
   if ( actor.type !== "character" ) return false;
   if ( !getSetting(CONSTANTS.UNCONSCIOUS.SETTING.APPLY_UNCONSCIOUS.KEY) ) return false;
 
   Logger.debug("Updating Unconscious...");
 
-  const currentHp = data?.system?.attributes?.hp?.value;
+  const currentHp = foundry.utils.getProperty(updates, "system.attributes.hp.value");
 
   if ( typeof currentHp === "undefined" ) return null;
 
   if ( currentHp <= 0 ) {
-    makeUnconscious(actor, data);
+    makeUnconscious(actor, updates);
     Logger.debug("Unconscious updated", { unconscious: true });
     return true;
   } else {
-    unmakeUnconscious(actor, data);
+    unmakeUnconscious(actor, updates);
     Logger.debug("Unconscious updated", { unconscious: false });
     return false;
   }
@@ -839,24 +859,24 @@ function updateDeathSaves(source, actor, data, options) {
 /* -------------------------------------------- */
 
 /**
- * Triggered by the 'updateActor' hook.
+ * Triggered by the 'dnd5e.preApplyDamage' hook.
  * If 'Apply Negative HP' is disabled and HP is below 0, set HP to 0.
  * This will happen where 'Apply Instant Death' is enabled as negative HP is used to initially calculate
  * whether Instant Death applies.
  * @param {object} actor The actor
- * @param {object} data The data
+ * @param {object} updates The updates
  */
-function updateHp(actor, data) {
+function updateHp(actor, updates) {
   if ( getSetting(CONSTANTS.HIT_POINTS.SETTING.APPLY_NEGATIVE_HP.KEY) ) return;
 
   Logger.debug("Updating HP...");
 
-  const currentHp = data?.system?.attributes?.hp?.value;
+  const currentHp = foundry.utils.getProperty(updates, "system.attributes.hp.value");
 
   if ( typeof currentHp === "undefined" ) return;
 
   if ( currentHp < 0 ) {
-    data.system.attributes.hp.value = 0;
+    updates["system.attributes.hp.value"] = 0;
   }
 
   Logger.debug("HP updated");
@@ -901,24 +921,27 @@ function updateHpMeter(app, html, data) {
  * Triggered by the 'updateActor' hook and called by the 'recalculateDamage' function.
  * If HP is below 0 and the absolute value is greater than or equal to max HP, apply Instant Death
  * @param {object} actor The actor
- * @param {object} data The data
+ * @param {object} updates The updates
  * @returns {boolean} Whether instant death is applied
  */
-function applyInstantDeath(actor, data) {
+function applyInstantDeath(actor, updates) {
   if ( actor.type !== "character" || !getSetting(CONSTANTS.DEAD.SETTING.APPLY_INSTANT_DEATH.KEY) ) return false;
 
   Logger.debug("Updating Instant Death...");
 
-  const currentHp = data?.system?.attributes?.hp?.value;
+  const previousHp = actor?.system?.attributes?.hp?.value;
+  const currentHp = foundry.utils.getProperty(updates, "system.attributes.hp.value");
   const maxHp = actor.system.attributes.hp.max;
 
+  if ( previousHp < 0 && Math.abs(previousHp) >= maxHp ) return true;
+
   if ( currentHp < 0 && Math.abs(currentHp) >= maxHp ) {
-    const tokenEffects = makeDead(actor, data);
+    const tokenEffects = makeDead(actor, updates);
     ChatMessage.create({
       content: game.i18n.format("CUSTOM_DND5E.message.instantDeath", { name: actor.name })
     });
 
-    updateBloodied(actor, data, true);
+    updateBloodied(actor, updates, true);
 
     return tokenEffects;
   }
@@ -935,17 +958,16 @@ function applyInstantDeath(actor, data) {
  * If the difference between the previous HP and the current HP is greater than or equal to half the max HP,
  * create a massive damage card.
  * @param {object} actor The actor
- * @param {object} data The data
- * @param {object} options The options
+ * @param {object} updates The updates
  * @returns {boolean} Whether massive damage is applied
  */
-function applyMassiveDamage(actor, data, options) {
+function applyMassiveDamage(actor, updates) {
   if ( actor.type !== "character"|| !getSetting(CONSTANTS.HIT_POINTS.SETTING.APPLY_MASSIVE_DAMAGE.KEY) ) return false;
 
   Logger.debug("Updating Massive Damage...");
 
-  const previousHp = options.customDnd5e.hp.value;
-  const currentHp = data?.system?.attributes?.hp?.value;
+  const previousHp = actor?.system?.attributes?.hp?.value;
+  const currentHp = foundry.utils.getProperty(updates, "system.attributes.hp.value");
 
   if ( previousHp <= currentHp ) return;
 
@@ -954,7 +976,7 @@ function applyMassiveDamage(actor, data, options) {
   const halfMaxHp = Math.floor(maxHp / 2);
 
   if ( diffHp >= halfMaxHp ) {
-    createMassiveDamageCard(actor, data);
+    createMassiveDamageCard(actor, updates);
     Logger.debug("Massive Death updated", { massiveDamage: true });
     return true;
   }
