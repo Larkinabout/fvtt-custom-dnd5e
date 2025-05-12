@@ -1,15 +1,18 @@
 import { CONSTANTS } from "./constants.js";
 import {
+  Logger,
   c5eLoadTemplates,
   checkEmpty,
   registerMenu,
   getSetting,
   registerSetting,
-  resetDnd5eConfig } from "./utils.js";
+  resetDnd5eConfig,
+  resetSetting } from "./utils.js";
 import { ConditionsForm } from "./forms/config-form.js";
 import { buildBloodied, registerBloodied } from "./house-rules.js";
 
 const constants = CONSTANTS.CONDITIONS;
+const configKey = "conditionTypes";
 
 /**
  * Register settings and load templates.
@@ -59,7 +62,7 @@ function registerSettings() {
       scope: "world",
       config: false,
       type: Object,
-      default: getDefault()
+      default: getSettingDefault()
     }
   );
 }
@@ -71,7 +74,7 @@ function registerSettings() {
  * @param {string|null} key The key
  * @returns {object} The conditions and status effects
  */
-export function getDefaultConfig(key = null) {
+export function getSettingDefault(key = null) {
   const data = buildData({
     key,
     conditionTypes: CONFIG.CUSTOM_DND5E.conditionTypes,
@@ -98,12 +101,13 @@ export function getDefaultConfig(key = null) {
 /* -------------------------------------------- */
 
 /**
- * Get setting default.
- *
- * @returns {object} The setting
+ * Reset config and setting to their default values.
  */
-function getDefault() {
-  return buildData({ conditionTypes: CONFIG.DND5E.conditionTypes, statusEffects: CONFIG.statusEffects });
+export async function resetConfigSetting() {
+  await resetDnd5eConfig(configKey);
+  CONFIG.statusEffects = foundry.utils.deepClone(CONFIG.CUSTOM_DND5E.coreStatusEffects);
+  Logger.debug("Config 'CONFIG.statusEffects' reset to default");
+  await resetSetting(constants.SETTING.CONFIG.KEY);
 }
 
 /* -------------------------------------------- */
@@ -196,7 +200,7 @@ export function setConfig(data = null) {
       const localisedLabel = game.i18n.localize(value.label ?? value);
 
       // Merge with default config in case their are any new properties
-      value = foundry.utils.mergeObject(foundry.utils.deepClone(getDefaultConfig(key)) ?? {}, value);
+      value = foundry.utils.mergeObject(foundry.utils.deepClone(getSettingDefault(key)) ?? {}, value);
 
       if ( value.sheet || value.pseudo ) {
         config.conditionTypes[key] = {
@@ -228,6 +232,9 @@ export function setConfig(data = null) {
 
   // Apply the config to CONFIG.DND5E
   properties.forEach(property => {
+    const hookLabel = property.charAt(0).toUpperCase() + property.slice(1);
+    Hooks.callAll(`customDnd5e.set${hookLabel}Config`, config[property]);
+
     if ( Object.keys(config[property]).length ) {
       const configType = (property === "conditionTypes") ? CONFIG.DND5E : CONFIG;
       configType[property] = config[property];

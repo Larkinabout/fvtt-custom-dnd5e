@@ -1,10 +1,12 @@
 import { CONSTANTS } from "./constants.js";
 import {
   checkEmpty,
+  getDefaultDnd5eConfig,
   getSetting,
   registerMenu,
   registerSetting,
-  resetDnd5eConfig } from "./utils.js";
+  resetDnd5eConfig,
+  resetSetting } from "./utils.js";
 import { LanguagesForm } from "./forms/config-form.js";
 
 const constants = CONSTANTS.LANGUAGES;
@@ -53,7 +55,7 @@ function registerSettings() {
       scope: "world",
       config: false,
       type: Object,
-      default: foundry.utils.deepClone(CONFIG.CUSTOM_DND5E[configKey])
+      default: getSettingDefault()
     }
   );
 }
@@ -61,35 +63,87 @@ function registerSettings() {
 /* -------------------------------------------- */
 
 /**
- * Set CONFIG.DND5E.languages.
- * @param {object} data The data
+ * Get default config.
+ * @param {string|null} key The key
+ * @returns {object} The config data
  */
-export function setConfig(data = null) {
+export function getSettingDefault(key = null) {
+  return getDefaultDnd5eConfig(configKey, key);
+}
+
+/* -------------------------------------------- */
+
+/**
+ * Reset config and setting to their default values.
+ */
+export async function resetConfigSetting() {
+  await resetDnd5eConfig(configKey);
+  await resetSetting(constants.SETTING.CONFIG.KEY);
+}
+
+/* -------------------------------------------- */
+
+/**
+ * Set CONFIG.DND5E.languages.
+ * @param {object} [settingData=null] The setting data
+ * @returns {void}
+ */
+export function setConfig(settingData = null) {
   if ( !getSetting(constants.SETTING.ENABLE.KEY) ) return;
-  if ( checkEmpty(data) ) {
-    if ( checkEmpty(CONFIG.DND5E[configKey]) ) {
-      resetDnd5eConfig(configKey);
-    }
-    return;
+  if ( checkEmpty(settingData) ) return handleEmptyData();
+
+  // Do not merge existing config as it will re-add languages that were removed or moved in the setting.
+  const mergedSettingData = foundry.utils.mergeObject(settingData, getSettingDefault(), { overwrite: false });
+
+  const configData = buildConfig(mergedSettingData);
+
+  Hooks.callAll("customDnd5e.setLanguagesConfig", configData);
+
+  if ( configData ) {
+    CONFIG.DND5E[configKey] = configData;
   }
+}
 
-  const buildConfig = (keys, data) => Object.fromEntries(
-    keys.filter(key => data[key].visible || data[key].visible === undefined)
-      .map(key => [
-        key,
-        data[key].children
-          ? { label: game.i18n.localize(data[key].label),
-            children: buildConfig(Object.keys(data[key].children), data[key].children) }
-          : game.i18n.localize(data[key]?.label || data[key])
-      ])
+/* -------------------------------------------- */
+
+/**
+ * Handle empty data.
+ */
+function handleEmptyData() {
+  if ( checkEmpty(CONFIG.DND5E[configKey]) ) {
+    resetDnd5eConfig(configKey);
+  }
+}
+
+/* -------------------------------------------- */
+
+/**
+ * Build config.
+ * @param {object} settingData The setting data
+ * @returns {object} The config data
+ */
+function buildConfig(settingData) {
+  return Object.fromEntries(
+    Object.keys(settingData)
+      .filter(key => settingData[key].visible || settingData[key].visible === undefined)
+      .map(key => [key, buildConfigEntry(settingData[key])])
   );
+}
 
-  const coreConfig = foundry.utils.deepClone(CONFIG.CUSTOM_DND5E[configKey]);
-  const currentConfig = foundry.utils.deepClone(CONFIG.DND5E[configKey]);
-  const mergedConfig = foundry.utils.mergeObject(foundry.utils.mergeObject(coreConfig, currentConfig), data);
-  const config = buildConfig(Object.keys(mergedConfig), mergedConfig);
+/* -------------------------------------------- */
 
-  if ( config ) {
-    CONFIG.DND5E[configKey] = config;
+/**
+ * Build config entry.
+ * @param {object} data The data
+ * @returns {object} The config entry
+ */
+function buildConfigEntry(data) {
+  if ( data.children ) {
+    return {
+      label: game.i18n.localize(data.label),
+      children: buildConfig(data.children)
+    };
+  } else {
+    return game.i18n.localize(data.label || data);
   }
 }

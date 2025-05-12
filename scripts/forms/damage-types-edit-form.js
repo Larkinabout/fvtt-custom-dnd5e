@@ -1,6 +1,6 @@
 import { CONSTANTS, JOURNAL_HELP_BUTTON, MODULE } from "../constants.js";
 import { ConfigEditForm } from "./config-edit-form.js";
-import { setConfig, getDefaultConfig } from "../damage-types.js";
+import { setConfig, getSettingDefault } from "../damage-types.js";
 
 const constants = CONSTANTS.DAMAGE_TYPES;
 const configKey = "damageTypes";
@@ -22,7 +22,7 @@ export class DamageTypesEditForm extends ConfigEditForm {
     super(args);
     this.configKey = configKey;
     this.settingKey = constants.SETTING.CONFIG.KEY;
-    this.getDefaultConfig = getDefaultConfig;
+    this.getSettingDefault = getSettingDefault;
     this.setConfig = setConfig;
     this.headerButton = JOURNAL_HELP_BUTTON;
     this.headerButton.uuid = constants.UUID;

@@ -28,7 +28,7 @@ export class CountersFormIndividual extends CountersForm {
    */
   static DEFAULT_OPTIONS = {
     actions: {
-      "advanced-options": CountersFormIndividual.advancedOptions
+      "edit": CountersFormIndividual.edit
     },
     form: {
       handler: CountersFormIndividual.submit
@@ -90,12 +90,12 @@ export class CountersFormIndividual extends CountersForm {
   /* -------------------------------------------- */
 
   /**
-   * Open the advanced options form.
+   * Open the edit form.
    *
    * @param {Event} event The event that triggered the action.
    * @param {HTMLElement} target The target element.
    */
-  static async advancedOptions(event, target) {
+  static async edit(event, target) {
     const item = target.closest(".custom-dnd5e-item");
     if ( !item ) return;
 

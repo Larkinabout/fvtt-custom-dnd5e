@@ -2,11 +2,12 @@ import { CONSTANTS } from "./constants.js";
 import {
   c5eLoadTemplates,
   checkEmpty,
-  registerMenu,
-  getSetting,
-  registerSetting,
   getDefaultDnd5eConfig,
-  resetDnd5eConfig } from "./utils.js";
+  getSetting,
+  registerMenu,
+  registerSetting,
+  resetDnd5eConfig,
+  resetSetting } from "./utils.js";
 import { ArmorCalculationsForm } from "./forms/config-form.js";
 
 const constants = CONSTANTS.ARMOR_CALCULATIONS;
@@ -61,7 +62,7 @@ function registerSettings() {
       config: false,
       requiresReload: true,
       type: Object,
-      default: CONFIG.CUSTOM_DND5E[configKey]
+      default: getSettingDefault()
     }
   );
 }
@@ -71,42 +72,84 @@ function registerSettings() {
 /**
  * Get default config.
  * @param {string|null} key The key
- * @returns {object} The config
+ * @returns {object} The config data
  */
-export function getDefaultConfig(key = null) {
+export function getSettingDefault(key = null) {
   return getDefaultDnd5eConfig(configKey, key);
 }
 
 /* -------------------------------------------- */
 
 /**
- * Set CONFIG.DND5E.skills
- * @param {object} [data=null] The actor sizes data.
+ * Reset config and setting to their default values.
  */
-export function setConfig(data = null) {
-  if ( !getSetting(constants.SETTING.ENABLE.KEY) ) return;
-  if ( checkEmpty(data) ) {
-    if ( checkEmpty(CONFIG.DND5E[configKey]) ) {
-      resetDnd5eConfig(configKey);
-    }
-    return;
-  }
+export async function resetConfigSetting() {
+  await resetDnd5eConfig(configKey);
+  await resetSetting(constants.SETTING.CONFIG.KEY);
+}
 
-  const buildConfig = (keys, data) => Object.fromEntries(
-    keys.filter(key => data[key].visible || data[key].visible === undefined)
-      .map(key => [
-        key,
-        {
-          formula: data[key].formula,
-          label: game.i18n.localize(data[key].label)
-        }
-      ])
+/* -------------------------------------------- */
+
+/**
+ * Set CONFIG.DND5E.armorCalculations
+ * @param {object} [settingData=null] The setting data
+ * @returns {void}
+ */
+export function setConfig(settingData = null) {
+  if ( !getSetting(constants.SETTING.ENABLE.KEY) ) return;
+  if ( checkEmpty(settingData) ) return handleEmptyData();
+
+  const mergedSettingData = foundry.utils.mergeObject(
+    foundry.utils.mergeObject(settingData, CONFIG.DND5E[configKey], { overwrite: false }),
+    getSettingDefault(),
+    { overwrite: false }
   );
 
-  const defaultConfig = foundry.utils.deepClone(CONFIG.CUSTOM_DND5E[configKey]);
-  const config = buildConfig(Object.keys(data), foundry.utils.mergeObject(defaultConfig, data));
+  const configData = buildConfig(mergedSettingData);
 
-  if ( config ) {
-    CONFIG.DND5E[configKey] = config;
+  Hooks.callAll("customDnd5e.setArmorCalculationsConfig", configData);
+
+  if ( configData ) {
+    CONFIG.DND5E[configKey] = configData;
   }
+}
+
+/* -------------------------------------------- */
+
+/**
+ * Handle empty data.
+ */
+function handleEmptyData() {
+  if ( checkEmpty(CONFIG.DND5E[configKey]) ) {
+    resetDnd5eConfig(configKey);
+  }
+}
+
+/* -------------------------------------------- */
+
+/**
+ * Build config.
+ * @param {object} settingData The setting data
+ * @returns {object} The config data
+ */
+function buildConfig(settingData) {
+  return Object.fromEntries(
+    Object.keys(settingData)
+      .filter(key => settingData[key].visible || settingData[key].visible === undefined)
+      .map(key => [key, buildConfigEntry(settingData[key])])
+  );
+}
+
+/* -------------------------------------------- */
+
+/**
+ * Build config entry.
+ * @param {object} data The data
+ * @returns {object} The config entry
+ */
+function buildConfigEntry(data) {
+  return {
+    formula: data.formula,
+    label: game.i18n.localize(data.label)
+  };
 }

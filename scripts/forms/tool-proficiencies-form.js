@@ -1,7 +1,7 @@
 import { CONSTANTS, JOURNAL_HELP_BUTTON, MODULE } from "../constants.js";
 import { getSetting, setSetting } from "../utils.js";
 import { ConfigForm } from "./config-form.js";
-import { getDnd5eConfig, setConfig } from "../tool-proficiencies.js";
+import { getSettingDefault, setConfig } from "../tool-proficiencies.js";
 
 /**
  * Class representing the Tool Proficiencies Form.
@@ -18,8 +18,8 @@ export class ToolProficienciesForm extends ConfigForm {
     this.nestable = true;
     this.enableConfigKey = CONSTANTS.TOOL_PROFICIENCIES.SETTING.ENABLE.KEY;
     this.settingKey = CONSTANTS.TOOL_PROFICIENCIES.SETTING.CONFIG.KEY;
-    this.dnd5eConfig = getDnd5eConfig();
-    this.setting = getSetting(this.settingKey) || this.dnd5eConfig;
+    this.settingDefault = getSettingDefault();
+    this.setting = getSetting(this.settingKey) || this.settingDefault;
     this.setConfig = setConfig;
     this.headerButton = JOURNAL_HELP_BUTTON;
     this.headerButton.uuid = CONSTANTS.TOOL_PROFICIENCIES.UUID;
@@ -50,7 +50,7 @@ export class ToolProficienciesForm extends ConfigForm {
    * @returns {Promise<object>} The context data.
    */
   async _prepareContext() {
-    this.setting = getSetting(this.settingKey) || this.dnd5eConfig;
+    this.setting = getSetting(this.settingKey) || this.settingDefault;
 
     const labelise = data => {
       Object.entries(data).forEach(([key, value]) => {
@@ -76,8 +76,8 @@ export class ToolProficienciesForm extends ConfigForm {
    */
   static async reset() {
     const reset = async () => {
-      await setSetting(this.settingKey, this.dnd5eConfig);
-      this.setConfig(this.dnd5eConfig);
+      await setSetting(this.settingKey, this.settingDefault);
+      this.setConfig(this.settingDefault);
       this.render(true);
     };
 

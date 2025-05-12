@@ -239,6 +239,10 @@
     border-top: 1px dotted var(--dnd5e-color-blue-gray-3);
 }
 
+.custom-dnd5e-app li {
+    border: 1px dotted transparent;
+}
+
 .custom-dnd5e-app li:not(li li) {
     margin: 0;
     padding: 0.4rem 0 0.4rem 0;
@@ -249,8 +253,8 @@
 
 .custom-dnd5e-app li li {
     align-items: center;
-    border: 3px solid transparent;
-    border-top: 3px solid var(--color-border);
+    border: 1px solid transparent;
+    border-top: 1px solid var(--color-border);
     display: flex;
     gap: 0.25rem;
     padding: 0.4rem 0 0.4rem 0;

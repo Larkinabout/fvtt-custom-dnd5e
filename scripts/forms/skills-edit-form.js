@@ -1,6 +1,6 @@
 import { CONSTANTS, JOURNAL_HELP_BUTTON, MODULE } from "../constants.js";
 import { ConfigEditForm } from "./config-edit-form.js";
-import { setConfig, getDefaultConfig } from "../skills.js";
+import { setConfig, getSettingDefault } from "../skills.js";
 
 const constants = CONSTANTS.SKILLS;
 const configKey = "skills";
@@ -22,7 +22,7 @@ export class SkillsEditForm extends ConfigEditForm {
     super(args);
     this.configKey = configKey;
     this.settingKey = constants.SETTING.CONFIG.KEY;
-    this.getDefaultConfig = getDefaultConfig;
+    this.getSettingDefault = getSettingDefault;
     this.setConfig = setConfig;
     this.headerButton = JOURNAL_HELP_BUTTON;
     this.headerButton.uuid = constants.UUID;
