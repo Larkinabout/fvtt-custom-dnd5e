@@ -2,10 +2,12 @@ import { CONSTANTS } from "./constants.js";
 import {
   c5eLoadTemplates,
   checkEmpty,
+  getDefaultDnd5eConfig,
   getSetting,
   registerMenu,
   registerSetting,
-  resetDnd5eConfig } from "./utils.js";
+  resetDnd5eConfig,
+  resetSetting } from "./utils.js";
 import { ToolProficienciesForm } from "./forms/tool-proficiencies-form.js";
 
 const constants = CONSTANTS.TOOL_PROFICIENCIES;
@@ -59,20 +61,9 @@ function registerSettings() {
       scope: "world",
       config: false,
       type: Object,
-      default: getDefault()
+      default: getSettingDefault()
     }
   );
-}
-
-/* -------------------------------------------- */
-
-/**
- * Get dnd5e config
- *
- * @returns {object} The tool proficiencies and tool types
- */
-export function getDnd5eConfig() {
-  return buildData(CONFIG.CUSTOM_DND5E);
 }
 
 /* -------------------------------------------- */
@@ -81,8 +72,19 @@ export function getDnd5eConfig() {
  * Get setting default
  * @returns {object} The setting
  */
-function getDefault() {
-  return buildData(CONFIG.DND5E);
+export function getSettingDefault() {
+  return buildData(CONFIG.CUSTOM_DND5E);
+}
+
+/* -------------------------------------------- */
+
+/**
+ * Reset config and setting to their default values.
+ */
+export async function resetConfigSetting() {
+  await resetDnd5eConfig("toolProficiencies");
+  await resetDnd5eConfig("toolTypes");
+  await resetSetting(constants.SETTING.CONFIG.KEY);
 }
 
 /* -------------------------------------------- */
@@ -116,22 +118,14 @@ function buildData(config) {
 /* -------------------------------------------- */
 
 /**
- * Set CONFIG.DND5E.toolProficiencies and CONFIG.DND5E.toolTypes.
- * @param {object} data The data
+ * Set CONFIG.DND5E.toolProficiencies and CONFIG.DND5E.toolTypes
+ * @param {object} settingData The data
+ * @returns {void}
  */
-export function setConfig(data = null) {
+export function setConfig(settingData = null) {
   if ( !getSetting(constants.SETTING.ENABLE.KEY) ) return;
-
   const properties = ["toolProficiencies", "toolTypes"];
-
-  if ( checkEmpty(data) ) {
-    properties.forEach(property => {
-      if ( checkEmpty(CONFIG.DND5E[property]) ) {
-        resetDnd5eConfig(property);
-      }
-    });
-    return;
-  }
+  if ( checkEmpty(settingData) ) return handleEmptyData(properties);
 
   // Initialise the config object
   const config = {
@@ -140,7 +134,7 @@ export function setConfig(data = null) {
   };
 
   // Populate config
-  Object.entries(data)
+  Object.entries(settingData)
     .filter(([_, value]) => value.visible || value.visible === undefined)
     .forEach(([key, value]) => {
       const localisedLabel = game.i18n.localize(value.label ?? value);
@@ -156,8 +150,25 @@ export function setConfig(data = null) {
 
   // Apply the config to CONFIG.DND5E
   properties.forEach(property => {
+    const hookLabel = property.charAt(0).toUpperCase() + property.slice(1);
+    Hooks.callAll(`customDnd5e.set${hookLabel}Config`, config[property]);
+
     if ( Object.keys(config[property]).length ) {
       CONFIG.DND5E[property] = config[property];
+    }
+  });
+}
+
+/* -------------------------------------------- */
+
+/**
+ * Handle empty data.
+ * @param {string[]} properties The properties
+ */
+function handleEmptyData(properties) {
+  properties.forEach(property => {
+    if ( checkEmpty(CONFIG.DND5E[property]) ) {
+      resetDnd5eConfig(property);
     }
   });
 }

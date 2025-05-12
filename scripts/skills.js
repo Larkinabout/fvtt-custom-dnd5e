@@ -6,7 +6,8 @@ import {
   registerMenu,
   registerSetting,
   getDefaultDnd5eConfig,
-  resetDnd5eConfig } from "./utils.js";
+  resetDnd5eConfig,
+  resetSetting } from "./utils.js";
 import { SkillsForm } from "./forms/config-form.js";
 
 const constants = CONSTANTS.SKILLS;
@@ -61,7 +62,7 @@ function registerSettings() {
       config: false,
       requiresReload: true,
       type: Object,
-      default: CONFIG.CUSTOM_DND5E[configKey]
+      default: getSettingDefault()
     }
   );
 }
@@ -73,45 +74,88 @@ function registerSettings() {
  * @param {string|null} key The key
  * @returns {object} The config
  */
-export function getDefaultConfig(key = null) {
+export function getSettingDefault(key = null) {
   return getDefaultDnd5eConfig(configKey, key);
 }
 
 /* -------------------------------------------- */
 
 /**
- * Set CONFIG.DND5E.skills.
- *
- * @param {object} data The data
+ * Reset config and setting to their default values.
  */
-export function setConfig(data = null) {
-  if ( !getSetting(constants.SETTING.ENABLE.KEY) ) return;
-  if ( checkEmpty(data) ) {
-    if ( checkEmpty(CONFIG.DND5E[configKey]) ) {
-      resetDnd5eConfig(configKey);
-    }
-    return;
-  }
+export async function resetConfigSetting() {
+  await resetDnd5eConfig(configKey);
+  await resetSetting(constants.SETTING.CONFIG.KEY);
+}
 
-  const buildConfig = (keys, data) => Object.fromEntries(
-    keys.filter(key => data[key].visible || data[key].visible === undefined)
-      .map(key => [
-        key,
-        {
-          ability: data[key].ability,
-          fullKey: data[key].fullKey,
-          icon: data[key].icon,
-          label: game.i18n.localize(data[key].label),
-          reference: data[key].reference,
-          rollMode: data[key].rollMode ?? "default"
-        }
-      ])
+/* -------------------------------------------- */
+
+/**
+ * Set CONFIG.DND5E.skills.
+ * @param {object} [settingData=null] The setting data
+ * @returns {void}
+ */
+export function setConfig(settingData = null) {
+  if ( !getSetting(constants.SETTING.ENABLE.KEY) ) return;
+  if ( checkEmpty(settingData) ) return handleEmptyData();
+
+  const mergedSettingData = foundry.utils.mergeObject(
+    foundry.utils.mergeObject(settingData, CONFIG.DND5E[configKey], { overwrite: false }),
+    getSettingDefault(),
+    { overwrite: false }
   );
 
-  const defaultConfig = foundry.utils.deepClone(CONFIG.CUSTOM_DND5E[configKey]);
-  const config = buildConfig(Object.keys(data), foundry.utils.mergeObject(defaultConfig, data));
+  const configData = buildConfig(mergedSettingData);
 
-  if ( config ) {
-    CONFIG.DND5E[configKey] = config;
+  Hooks.callAll("customDnd5e.setSkillsConfig", configData);
+
+  if ( configData ) {
+    CONFIG.DND5E[configKey] = configData;
   }
 }
+
+
+/* -------------------------------------------- */
+
+/**
+ * Handle empty data.
+ */
+function handleEmptyData() {
+  if ( checkEmpty(CONFIG.DND5E[configKey]) ) {
+    resetDnd5eConfig(configKey);
+  }
+}
+
+/* -------------------------------------------- */
+
+/**
+ * Build config.
+ * @param {object} settingData The setting data
+ * @returns {object} The config data
+ */
+function buildConfig(settingData) {
+  return Object.fromEntries(
+    Object.keys(settingData)
+      .filter(key => settingData[key].visible || settingData[key].visible === undefined)
+      .map(key => [key, buildConfigEntry(settingData[key])])
+  );
+}
+
+/* -------------------------------------------- */
+
+/**
+ * Build config entry.
+ * @param {object} data The data
+ * @returns {object} The config entry
+ */
+function buildConfigEntry(data) {
+  return {
+    ability: data.ability,
+    fullKey: data.fullKey,
+    icon: data.icon,
+    label: game.i18n.localize(data.label),
+    reference: data.reference,
+    rollMode: data.rollMode ?? "default"
+  };
+}
+

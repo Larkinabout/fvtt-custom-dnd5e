@@ -298,38 +298,71 @@ export class CustomDnd5eForm extends HandlebarsApplicationMixin(ApplicationV2) {
   _onDrop(event) {
     if ( !this.sourceItem ) return;
 
-    this.sourceItem?.style.removeProperty("opacity");
-
-    this.targetItem?.classList.remove(`drag-${this.mousePos}`);
-
+    this.#cleanupDragStyles();
     this.#getDragElement(event);
 
     if ( !this.targetItem ) return;
 
+    if ( !this.#insertSourceItem() ) return;
+
+    this.#updateSourceItemKeys();
+
+    this.sourceItem = null;
+    this.targetItem = null;
+  }
+
+  /* -------------------------------------------- */
+
+  /**
+   * Cleanup the drag styles after a drop event.
+   */
+  #cleanupDragStyles() {
+    this.sourceItem?.style.removeProperty("opacity");
     this.targetItem?.classList.remove(`drag-${this.mousePos}`);
+  }
 
-    this.targetItemIndex = this.items.findIndex(item => item.dataset.key === this.targetItem.dataset.key);
+  /* -------------------------------------------- */
 
-    if ( this.mousePos === "top" ) {
-      this.targetItem.before(this.sourceItem);
-    } else if ( this.mousePos === "bottom" ) {
-      this.targetItem.after(this.sourceItem);
-    } else if ( this.mousePos === "middle" ) {
-      const list = this.targetItem.querySelector("ul");
+  /**
+   * Insert the source item based on the mouse position over the target item.
+   * @returns {boolean} Whether the source item was inserted successfully.
+   */
+  #insertSourceItem() {
+    if ( this.sourceItem === this.targetItem ) return false;
 
-      if ( list ) {
+    this.targetItemIndex = this.items.findIndex(
+      item => item.dataset.key === this.targetItem.dataset.key
+    );
+
+    switch ( this.mousePos ) {
+      case "top":
+        this.targetItem.before(this.sourceItem);
+        break;
+      case "bottom":
+        this.targetItem.after(this.sourceItem);
+        break;
+      case "middle":
+        let list = this.targetItem.querySelector("ul");
+        if ( !list ) {
+          list = document.createElement("ul");
+          list.classList.add("custom-dnd5e-list", "flexcol");
+          this.targetItem.appendChild(list);
+        }
         list.appendChild(this.sourceItem);
-      } else {
-        const ul = document.createElement("ul");
-        ul.classList.add("custom-dnd5e-list", "flexcol");
-        this.targetItem.appendChild(ul);
-        ul.appendChild(this.sourceItem);
-      }
-    } else {
-      return;
+        break;
+      default:
+        return false;
     }
 
-    // Update keys with new parents
+    return true;
+  }
+
+  /* -------------------------------------------- */
+
+  /**
+   * Update the keys of the source item and its children.
+   */
+  #updateSourceItemKeys() {
     const items = this.sourceItem?.closest("ul").querySelectorAll("li");
 
     items.forEach(item => {
@@ -337,9 +370,11 @@ export class CustomDnd5eForm extends HandlebarsApplicationMixin(ApplicationV2) {
 
       const parentKey = item.closest("ul")?.closest("li")?.dataset?.key;
 
-      if ( !parentKey ) return;
+      const newKey = parentKey ? `${parentKey}.${this.nestType}.${key}` : key;
 
-      item.dataset.key = `${parentKey}.${this.nestType}.${key}`;
+      if ( item.dataset.key === newKey ) return;
+
+      item.dataset.key = newKey;
 
       const inputs = item.querySelectorAll("input, dnd5e-checkbox");
 
@@ -347,15 +382,13 @@ export class CustomDnd5eForm extends HandlebarsApplicationMixin(ApplicationV2) {
         if ( input.id === "parentKey" ) {
           input.value = parentKey;
         }
+
         if ( input.name ) {
           const inputName = input.name.split(".").pop();
-          input.name = `${parentKey}.${this.nestType}.${key}.${inputName}`;
+          input.name = `${newKey}.${inputName}`;
         }
       });
     });
-
-    this.sourceItem = null;
-    this.targetItem = null;
   }
 
   /* -------------------------------------------- */
@@ -546,7 +579,7 @@ export class CustomDnd5eForm extends HandlebarsApplicationMixin(ApplicationV2) {
       if ( requiresReload ) {
         SettingsConfig.reloadConfirm();
       }
-    } catch(err) {
+    } catch (err) {
       Logger.error(`Failed to save configuration: ${err.message}`, true);
     }
 

@@ -1,5 +1,5 @@
 import { CONSTANTS, JOURNAL_HELP_BUTTON, MODULE } from "../constants.js";
-import { Logger, parseBoolean, setSetting,  } from "../utils.js";
+import { Logger, parseBoolean, setSetting } from "../utils.js";
 import { CustomDnd5eForm } from "./custom-dnd5e-form.js";
 
 /**
@@ -98,7 +98,7 @@ export class ConfigEditForm extends CustomDnd5eForm {
    */
   static async reset() {
     const reset = async () => {
-      this.setting[this.key] = this.getDefaultConfig(this.key);
+      this.setting[this.key] = this.getSettingDefault(this.key);
       await setSetting(this.settingKey, this.setting);
       this.setConfig(this.setting);
       this.render(true);
@@ -133,7 +133,7 @@ export class ConfigEditForm extends CustomDnd5eForm {
    */
   static async submit(event, form, formData) {
     if ( !this.validateFormData(formData) ) return;
-  
+
     const oldKey = this.key;
     const newKey = formData.object[`${this.key}.key`];
 
@@ -171,7 +171,7 @@ export class ConfigEditForm extends CustomDnd5eForm {
     const processedFormData = {};
 
     Object.entries(formData.object).forEach(([key, value]) => {
-      if (key.endsWith(".key")) return;
+      if ( key.endsWith(".key") ) return;
       foundry.utils.setProperty(processedFormData, key, parseBoolean(value));
     });
 
@@ -188,7 +188,7 @@ export class ConfigEditForm extends CustomDnd5eForm {
    */
   validateFormData(formData) {
     const newKey = formData.object[`${this.key}.key`];
-  
+
     if ( !newKey.match(/^[0-9a-zA-Z]+$/) ) {
       Logger.error(`Key '${newKey}' must only contain alphanumeric characters`, true);
       return false;

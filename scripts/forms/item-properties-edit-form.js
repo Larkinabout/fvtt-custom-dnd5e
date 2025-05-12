@@ -1,6 +1,6 @@
 import { CONSTANTS, JOURNAL_HELP_BUTTON, MODULE } from "../constants.js";
 import { ConfigEditForm } from "./config-edit-form.js";
-import { setConfig, getDefaultConfig } from "../item-properties.js";
+import { setConfig, getSettingDefault } from "../item-properties.js";
 
 const constants = CONSTANTS.ITEM_PROPERTIES;
 const configKey = "itemProperties";
@@ -22,7 +22,7 @@ export class ItemPropertiesEditForm extends ConfigEditForm {
     super(args);
     this.configKey = configKey;
     this.settingKey = constants.SETTING.CONFIG.KEY;
-    this.getDefaultConfig = getDefaultConfig;
+    this.getSettingDefault = getSettingDefault;
     this.setConfig = setConfig;
     this.headerButton = JOURNAL_HELP_BUTTON;
     this.headerButton.uuid = constants.UUID;
@@ -55,4 +55,47 @@ export class ItemPropertiesEditForm extends ConfigEditForm {
       template: constants.TEMPLATE.EDIT
     }
   };
+
+  /* -------------------------------------------- */
+
+  /**
+   * Prepare the context for rendering the form.
+   *
+   * @returns {Promise<object>} The context data.
+   */
+  async _prepareContext() {
+    const context = {
+      ...this.setting[this.key],
+      key: this.key,
+      selects: this._getSelects(),
+      itemTypes: this._getItemTypes()
+    };
+
+    if ( this.system === false ) {
+      context.system = false;
+    }
+
+    return context;
+  }
+
+  /* -------------------------------------------- */
+
+  /**
+   * Get the item types.
+   * @returns {Array} The item types
+   */
+  _getItemTypes() {
+    return Object.keys(CONFIG.DND5E.validProperties).map(key => {
+      let label = game.i18n.localize(`CUSTOM_DND5E.${key}`);
+      if ( label === `CUSTOM_DND5E.${key}` ) {
+        label = key.charAt(0).toUpperCase() + key.slice(1);
+      }
+      return {
+        key,
+        label,
+        checked: !!this.setting[this.key][key]
+      };
+    }
+    );
+  }
 }

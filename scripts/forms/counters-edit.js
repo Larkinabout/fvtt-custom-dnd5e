@@ -324,13 +324,21 @@ export class CountersEditForm extends CustomDnd5eForm {
 
       this.setting = data;
 
-      game.actors.forEach(actor => {
-        const flag = getFlag(actor, oldKey);
-        if ( typeof flag !== "undefined" ) {
-          setFlag(actor, newKey, flag);
-          unsetFlag(actor, oldKey);
+      if ( this.entity ) {
+        // Update the entity with the new key and delete the old key
+        const flag = getFlag(this.entity, oldKey);
+        await setFlag(this.entity, newKey, flag);
+        await unsetFlag(this.entity, oldKey);
+      } else {
+        // Update all actors with the new key and delete the old key
+        for ( const actor of game.actors ) {
+          const flag = getFlag(actor, oldKey);
+          if ( typeof flag !== "undefined" ) {
+            await setFlag(actor, newKey, flag);
+            await unsetFlag(actor, oldKey);
+          }
         }
-      });
+      }
 
       this.key = newKey;
     }

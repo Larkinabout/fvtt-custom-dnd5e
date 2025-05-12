@@ -3,11 +3,13 @@ import {
   Logger,
   c5eLoadTemplates,
   checkEmpty,
+  getDefaultDnd5eConfig,
   getFlag,
   getSetting,
   registerMenu,
   registerSetting,
-  resetDnd5eConfig } from "./utils.js";
+  resetDnd5eConfig,
+  resetSetting } from "./utils.js";
 import { SensesForm } from "./forms/config-form.js";
 
 const constants = CONSTANTS.SENSES;
@@ -60,7 +62,7 @@ function registerSettings() {
       scope: "world",
       config: false,
       type: Object,
-      default: CONFIG.CUSTOM_DND5E[configKey]
+      default: getSettingDefault()
     }
   );
 }
@@ -72,38 +74,93 @@ function registerSettings() {
  */
 function registerHooks() {
   if ( !getSetting(constants.SETTING.ENABLE.KEY) ) return;
-  Hooks.on("renderMovementSensesConfig", addCustomSenses);
+  Hooks.on("renderMovementSensesConfig", addCustomSensesToConfig);
+  Hooks.on("preRenderActorSheet5eCharacter2", addCustomSensesToSheet);
+}
+
+/* -------------------------------------------- */
+
+/**
+ * Get default config.
+ * @param {string|null} key The key
+ * @returns {object} The config data
+ */
+export function getSettingDefault(key = null) {
+  return getDefaultDnd5eConfig(configKey, key);
+}
+
+/* -------------------------------------------- */
+
+/**
+ * Reset config and setting to their default values.
+ */
+export async function resetConfigSetting() {
+  await resetDnd5eConfig(configKey);
+  await resetSetting(constants.SETTING.CONFIG.KEY);
 }
 
 /* -------------------------------------------- */
 
 /**
  * Set CONFIG.DND5E.senses
- * @param {object} data The data
+ * @param {object} [settingData=null] The setting data
+ * @returns {void}
  */
-export function setConfig(data = null) {
+export function setConfig(settingData = null) {
   if ( !getSetting(constants.SETTING.ENABLE.KEY) ) return;
-  if ( checkEmpty(data) ) {
-    if ( checkEmpty(CONFIG.DND5E[configKey]) ) {
-      resetDnd5eConfig(configKey);
-    }
-    return;
-  }
+  if ( checkEmpty(settingData) ) return handleEmptyData();
 
-  const buildConfig = (keys, data) => Object.fromEntries(
-    keys.filter(key => data[key].visible || data[key].visible === undefined)
-      .map(key => [
-        key,
-        game.i18n.localize(data[key].label || data[key])
-      ])
+  const mergedSettingData = foundry.utils.mergeObject(
+    foundry.utils.mergeObject(settingData, CONFIG.DND5E[configKey], { overwrite: false }),
+    getSettingDefault(),
+    { overwrite: false }
   );
 
-  const defaultConfig = foundry.utils.deepClone(CONFIG.CUSTOM_DND5E[configKey]);
-  const config = buildConfig(Object.keys(data), foundry.utils.mergeObject(defaultConfig, data));
+  const configData = buildConfig(mergedSettingData);
 
-  if ( config ) {
-    CONFIG.DND5E[configKey] = config;
+  Hooks.callAll("customDnd5e.setSensesConfig", configData);
+
+  if ( configData ) {
+    CONFIG.DND5E[configKey] = configData;
   }
+}
+
+
+/* -------------------------------------------- */
+
+/**
+ * Handle empty data.
+ */
+function handleEmptyData() {
+  if ( checkEmpty(CONFIG.DND5E[configKey]) ) {
+    resetDnd5eConfig(configKey);
+  }
+}
+
+/* -------------------------------------------- */
+
+/**
+ * Build config.
+ * @param {object} settingData The setting data
+ * @returns {object} The config data
+ */
+function buildConfig(settingData) {
+  return Object.fromEntries(
+    Object.keys(settingData)
+      .filter(key => settingData[key].visible || settingData[key].visible === undefined)
+      .map(key => [key, buildConfigEntry(settingData[key])])
+  );
+}
+
+/* -------------------------------------------- */
+
+/**
+ * Build config entry.
+ * @param {object} data The data
+ * @returns {object} The config entry
+ */
+function buildConfigEntry(data) {
+  return game.i18n.localize(data.label || data);
 }
 
 /* -------------------------------------------- */
@@ -113,7 +170,7 @@ export function setConfig(data = null) {
  * @param {object} app The app
  * @param {object} html The HTML
  */
-async function addCustomSenses(app, html) {
+async function addCustomSensesToConfig(app, html) {
   Logger.debug("Adding custom senses...");
   const actor = app.document;
   const systemSenses = ["blindsight", "darkvision", "tremorsense", "truesight"];
@@ -149,4 +206,31 @@ async function addCustomSenses(app, html) {
     }
   }
   Logger.debug("Custom senses added");
+}
+
+/**
+ * Add custom senses to the actor sheet.
+ * @param {object} app The app
+ * @param {object} data The data
+ */
+function addCustomSensesToSheet(app, data) {
+  const senses = getSetting(constants.SETTING.CONFIG.KEY);
+  const actorSenses = data.senses;
+  const sensesData = {};
+
+  for ( const key in senses) {
+    const sense = senses[key];
+    if ( sense.visible || sense.visible === undefined ) {
+      if ( actorSenses[key] ) {
+        sensesData[key] = actorSenses[key];
+      } else {
+        const flagValue = getFlag(app.actor, key);
+        if ( flagValue ) {
+          sensesData[key] = { label: game.i18n.localize(sense.label), value: flagValue };
+        }
+      }
+    }
+  }
+
+  data.senses = sensesData;
 }

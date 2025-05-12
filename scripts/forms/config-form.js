@@ -12,25 +12,25 @@ import { DamageTypesEditForm } from "./damage-types-edit-form.js";
 import { ItemPropertiesEditForm } from "./item-properties-edit-form.js";
 import { SkillsEditForm } from "./skills-edit-form.js";
 import { SpellSchoolsEditForm } from "./spell-schools-edit-form.js";
-import { setConfig as setAbilities } from "../abilities.js";
-import { setConfig as setActivationCosts } from "../activation-costs.js";
-import { setConfig as setArmorCalculations } from "../armor-calculations.js";
-import { setConfig as setArmorIds } from "../armor-ids.js";
-import { setConfig as setActorSizes } from "../actor-sizes.js";
-import { setConfig as setConsumableTypes } from "../consumable-types.js";
-import { setConfig as setConditions } from "../conditions.js";
-import { setConfig as setCurrency } from "../currency.js";
-import { setConfig as setDamageTypes } from "../damage-types.js";
-import { setConfig as setItemActionTypes } from "../item-action-types.js";
-import { setConfig as setItemActivationCostTypes } from "../item-activation-cost-types.js";
-import { setConfig as setItemProperties } from "../item-properties.js";
-import { setConfig as setItemRarity } from "../item-rarity.js";
-import { setConfig as setLanguages } from "../languages.js";
-import { setConfig as setSenses } from "../senses.js";
-import { setConfig as setSkills } from "../skills.js";
-import { setConfig as setSpellSchools } from "../spell-schools.js";
-import { setConfig as setolIds } from "../tool-ids.js";
-import { setConfig as setWeaponIds } from "../weapon-ids.js";
+import { resetConfigSetting as resetAbilities, setConfig as setAbilities } from "../abilities.js";
+import { resetConfigSetting as resetActivationCosts, setConfig as setActivationCosts } from "../activation-costs.js";
+import { resetConfigSetting as resetArmorCalculations, setConfig as setArmorCalculations } from "../armor-calculations.js";
+import { resetConfigSetting as resetArmorIds, setConfig as setArmorIds } from "../armor-ids.js";
+import { resetConfigSetting as resetActorSizes, setConfig as setActorSizes } from "../actor-sizes.js";
+import { resetConfigSetting as resetConsumableTypes, setConfig as setConsumableTypes } from "../consumable-types.js";
+import { resetConfigSetting as resetConditions, setConfig as setConditions } from "../conditions.js";
+import { resetConfigSetting as resetCurrency, setConfig as setCurrency } from "../currency.js";
+import { resetConfigSetting as resetDamageTypes, setConfig as setDamageTypes } from "../damage-types.js";
+import { resetConfigSetting as resetItemActionTypes, setConfig as setItemActionTypes } from "../item-action-types.js";
+import { resetConfigSetting as resetItemActivationCostTypes, setConfig as setItemActivationCostTypes } from "../item-activation-cost-types.js";
+import { resetConfigSetting as resetItemProperties, setConfig as setItemProperties } from "../item-properties.js";
+import { resetConfigSetting as resetItemRarity, setConfig as setItemRarity } from "../item-rarity.js";
+import { resetConfigSetting as resetLanguages, setConfig as setLanguages } from "../languages.js";
+import { resetConfigSetting as resetSenses, setConfig as setSenses } from "../senses.js";
+import { resetConfigSetting as resetSkills, setConfig as setSkills } from "../skills.js";
+import { resetConfigSetting as resetSpellSchools, setConfig as setSpellSchools } from "../spell-schools.js";
+import { resetConfigSetting as resetToolIds, setConfig as setToolIds } from "../tool-ids.js";
+import { resetConfigSetting as resetWeaponIds, setConfig as setWeaponIds } from "../weapon-ids.js";
 
 const listClass = `${MODULE.ID}-list`;
 const listClassSelector = `.${listClass}`;
@@ -108,8 +108,8 @@ export class ConfigForm extends CustomDnd5eForm {
           data[key] = { label: value };
         }
 
-        if ( value.children || value.subtypes ) {
-          labelise(value.children || value.subtypes);
+        if ( value?.children || value?.subtypes ) {
+          labelise(value?.children || value?.subtypes);
         }
       });
     };
@@ -156,7 +156,12 @@ export class ConfigForm extends CustomDnd5eForm {
     const key = item.dataset.key;
     if ( !key ) return;
 
-    const args = { form: this, editForm: this.editForm, data: { key, enableConfig: this.enableConfig, }, setting: this.setting };
+    const args = {
+      form: this,
+      editForm: this.editForm,
+      data: { key, enableConfig: this.enableConfig },
+      setting: this.setting
+    };
     await ConfigEditForm.open(args);
   }
 
@@ -170,8 +175,7 @@ export class ConfigForm extends CustomDnd5eForm {
    */
   static async reset() {
     const reset = async () => {
-      await setSetting(this.settingKey, foundry.utils.deepClone(CONFIG.CUSTOM_DND5E[this.configKey]));
-      this.setConfig(CONFIG.CUSTOM_DND5E[this.configKey]);
+      await this.resetConfigSetting();
       this.render(true);
     };
 
@@ -318,6 +322,7 @@ export class AbilitiesForm extends ConfigForm {
     this.requiresReload = true;
     this.enableConfigKey = CONSTANTS.ABILITIES.SETTING.ENABLE.KEY;
     this.settingKey = CONSTANTS.ABILITIES.SETTING.CONFIG.KEY;
+    this.resetConfigSetting = resetAbilities;
     this.setConfig = setAbilities;
     this.configKey = "abilities";
     this.headerButton = JOURNAL_HELP_BUTTON;
@@ -356,6 +361,7 @@ export class ActivationCostsForm extends ConfigForm {
     this.requiresReload = false;
     this.enableConfigKey = CONSTANTS.ACTIVATION_COSTS.SETTING.ENABLE.KEY;
     this.settingKey = CONSTANTS.ACTIVATION_COSTS.SETTING.CONFIG.KEY;
+    this.resetConfigSetting = resetActivationCosts;
     this.setConfig = setActivationCosts;
     this.configKey = "activityActivationTypes";
     this.headerButton = JOURNAL_HELP_BUTTON;
@@ -394,6 +400,7 @@ export class ActorSizesForm extends ConfigForm {
     this.requiresReload = false;
     this.enableConfigKey = CONSTANTS.ACTOR_SIZES.SETTING.ENABLE.KEY;
     this.settingKey = CONSTANTS.ACTOR_SIZES.SETTING.CONFIG.KEY;
+    this.resetConfigSetting = resetActorSizes;
     this.setConfig = setActorSizes;
     this.configKey = "actorSizes";
     this.headerButton = JOURNAL_HELP_BUTTON;
@@ -432,6 +439,7 @@ export class ArmorCalculationsForm extends ConfigForm {
     this.requiresReload = false;
     this.enableConfigKey = CONSTANTS.ARMOR_CALCULATIONS.SETTING.ENABLE.KEY;
     this.settingKey = CONSTANTS.ARMOR_CALCULATIONS.SETTING.CONFIG.KEY;
+    this.resetConfigSetting = resetArmorCalculations;
     this.setConfig = setArmorCalculations;
     this.configKey = "armorClasses";
     this.headerButton = JOURNAL_HELP_BUTTON;
@@ -470,6 +478,7 @@ export class ArmorIdsForm extends IdForm {
     this.requiresReload = true;
     this.enableConfigKey = CONSTANTS.ARMOR_IDS.SETTING.ENABLE.KEY;
     this.settingKey = CONSTANTS.ARMOR_IDS.SETTING.CONFIG.KEY;
+    this.resetConfigSetting = resetArmorIds;
     this.setConfig = setArmorIds;
     this.configKey = "armorIds";
     this.headerButton = JOURNAL_HELP_BUTTON;
@@ -536,6 +545,7 @@ export class ConsumableTypesForm extends ConfigForm {
     this.requiresReload = false;
     this.enableConfigKey = CONSTANTS.CONSUMABLE_TYPES.SETTING.ENABLE.KEY;
     this.settingKey = CONSTANTS.CONSUMABLE_TYPES.SETTING.CONFIG.KEY;
+    this.resetConfigSetting = resetConsumableTypes;
     this.setConfig = setConsumableTypes;
     this.configKey = "consumableTypes";
     this.headerButton = JOURNAL_HELP_BUTTON;
@@ -575,6 +585,7 @@ export class ConditionsForm extends ConfigForm {
     this.requiresReload = false;
     this.enableConfigKey = CONSTANTS.CONDITIONS.SETTING.ENABLE.KEY;
     this.settingKey = CONSTANTS.CONDITIONS.SETTING.CONFIG.KEY;
+    this.resetConfigSetting = resetConditions;
     this.setConfig = setConditions;
     this.configKey = "conditions";
     this.headerButton = JOURNAL_HELP_BUTTON;
@@ -614,6 +625,7 @@ export class CurrencyForm extends ConfigForm {
     this.requiresReload = false;
     this.enableConfigKey = CONSTANTS.CURRENCY.SETTING.ENABLE.KEY;
     this.settingKey = CONSTANTS.CURRENCY.SETTING.CONFIG.KEY;
+    this.resetConfigSetting = resetCurrency;
     this.setConfig = setCurrency;
     this.configKey = "currencies";
     this.headerButton = JOURNAL_HELP_BUTTON;
@@ -652,6 +664,7 @@ export class DamageTypesForm extends ConfigForm {
     this.requiresReload = false;
     this.enableConfigKey = CONSTANTS.DAMAGE_TYPES.SETTING.ENABLE.KEY;
     this.settingKey = CONSTANTS.DAMAGE_TYPES.SETTING.CONFIG.KEY;
+    this.resetConfigSetting = resetDamageTypes;
     this.setConfig = setDamageTypes;
     this.configKey = "damageTypes";
     this.actorProperties = ["system.traits.di.value", "system.traits.dr.value", "system.traits.dv.value"];
@@ -690,6 +703,7 @@ export class ItemActionTypesForm extends ConfigForm {
     this.requiresReload = false;
     this.enableConfigKey = CONSTANTS.ITEM_ACTION_TYPES.SETTING.ENABLE.KEY;
     this.settingKey = CONSTANTS.ITEM_ACTION_TYPES.SETTING.CONFIG.KEY;
+    this.resetConfigSetting = resetItemActionTypes;
     this.setConfig = setItemActionTypes;
     this.configKey = "itemActionTypes";
     this.headerButton = JOURNAL_HELP_BUTTON;
@@ -727,6 +741,7 @@ export class ItemActivationCostTypesForm extends ConfigForm {
     this.requiresReload = false;
     this.enableConfigKey = CONSTANTS.ITEM_ACTIVATION_COST_TYPES.SETTING.ENABLE.KEY;
     this.settingKey = CONSTANTS.ITEM_ACTIVATION_COST_TYPES.SETTING.CONFIG.KEY;
+    this.resetConfigSetting = resetItemActivationCostTypes;
     this.setConfig = setItemActivationCostTypes;
     this.configKey = "abilityActivationTypes";
     this.headerButton = JOURNAL_HELP_BUTTON;
@@ -765,8 +780,10 @@ export class ItemPropertiesForm extends ConfigForm {
     this.requiresReload = false;
     this.enableConfigKey = CONSTANTS.ITEM_PROPERTIES.SETTING.ENABLE.KEY;
     this.settingKey = CONSTANTS.ITEM_PROPERTIES.SETTING.CONFIG.KEY;
+    this.resetConfigSetting = resetItemProperties;
     this.setConfig = setItemProperties;
     this.configKey = "itemProperties";
+    this.configKeys = ["itemProperties", "validProperties"];
     this.headerButton = JOURNAL_HELP_BUTTON;
     this.headerButton.uuid = CONSTANTS.ITEM_PROPERTIES.UUID;
   }
@@ -802,6 +819,7 @@ export class ItemRarityForm extends ConfigForm {
     this.requiresReload = false;
     this.enableConfigKey = CONSTANTS.ITEM_RARITY.SETTING.ENABLE.KEY;
     this.settingKey = CONSTANTS.ITEM_RARITY.SETTING.CONFIG.KEY;
+    this.resetConfigSetting = resetItemRarity;
     this.setConfig = setItemRarity;
     this.configKey = "itemRarity";
     this.headerButton = JOURNAL_HELP_BUTTON;
@@ -840,6 +858,7 @@ export class LanguagesForm extends ConfigForm {
     this.requiresReload = false;
     this.enableConfigKey = CONSTANTS.LANGUAGES.SETTING.ENABLE.KEY;
     this.settingKey = CONSTANTS.LANGUAGES.SETTING.CONFIG.KEY;
+    this.resetConfigSetting = resetLanguages;
     this.setConfig = setLanguages;
     this.configKey = "languages";
     this.headerButton = JOURNAL_HELP_BUTTON;
@@ -877,6 +896,7 @@ export class SensesForm extends ConfigForm {
     this.requiresReload = false;
     this.enableConfigKey = CONSTANTS.SENSES.SETTING.ENABLE.KEY;
     this.settingKey = CONSTANTS.SENSES.SETTING.CONFIG.KEY;
+    this.resetConfigSetting = resetSenses;
     // This.setConfig = setSenses // Temporarily removed until custom senses is supported in the dnd5e system
     this.setConfig = null;
     this.configKey = "senses";
@@ -916,6 +936,7 @@ export class SkillsForm extends ConfigForm {
     this.requiresReload = true;
     this.enableConfigKey = CONSTANTS.SKILLS.SETTING.ENABLE.KEY;
     this.settingKey = CONSTANTS.SKILLS.SETTING.CONFIG.KEY;
+    this.resetConfigSetting = resetSkills;
     this.setConfig = setSkills;
     this.configKey = "skills";
     this.headerButton = JOURNAL_HELP_BUTTON;
@@ -953,6 +974,7 @@ export class SpellSchoolsForm extends ConfigForm {
     this.requiresReload = false;
     this.enableConfigKey = CONSTANTS.SPELL_SCHOOLS.SETTING.ENABLE.KEY;
     this.settingKey = CONSTANTS.SPELL_SCHOOLS.SETTING.CONFIG.KEY;
+    this.resetConfigSetting = resetSpellSchools;
     this.setConfig = setSpellSchools;
     this.configKey = "spellSchools";
     this.headerButton = JOURNAL_HELP_BUTTON;
@@ -991,7 +1013,8 @@ export class ToolIdsForm extends IdForm {
     this.requiresReload = true;
     this.enableConfigKey = CONSTANTS.TOOL_IDS.SETTING.ENABLE.KEY;
     this.settingKey = CONSTANTS.TOOL_IDS.SETTING.CONFIG.KEY;
-    this.setConfig = setolIds;
+    this.resetConfigSetting = resetToolIds;
+    this.setConfig = setToolIds;
     this.configKey = "toolIds";
     this.headerButton = JOURNAL_HELP_BUTTON;
     this.headerButton.uuid = CONSTANTS.TOOL_IDS.UUID;
@@ -1055,6 +1078,7 @@ export class WeaponIdsForm extends IdForm {
     this.requiresReload = true;
     this.enableConfigKey = CONSTANTS.WEAPON_IDS.SETTING.ENABLE.KEY;
     this.settingKey = CONSTANTS.WEAPON_IDS.SETTING.CONFIG.KEY;
+    this.resetConfigSetting = resetWeaponIds;
     this.setConfig = setWeaponIds;
     this.configKey = "weaponIds";
     this.headerButton = JOURNAL_HELP_BUTTON;

@@ -124,7 +124,7 @@ function handleCombatStart(combat, data) {
 function handleUpdateCombat(combat, data, options) {
   if ( !getSetting(constants.SETTING.COUNTERS.KEY) ) return;
 
-  if ( combat.previous ) {
+  if ( combat?.previous?.combatantId ) {
     const previousActor = combat.combatants.get(combat.previous.combatantId).actor;
     processTriggers({ actor: previousActor, triggerType: "endOfTurn" });
   }
@@ -816,6 +816,10 @@ export function modifyFailure(entity, counterKey, actionValue = 1) {
 function getCounters(entity, key = null) {
   const type = (entity.documentName === "Actor") ? entity.type : "item";
   const settingKey = SETTING_BY_ENTITY_TYPE.COUNTERS[type];
+
+  if ( !getSetting(settingKey) ) {
+    return null;
+  }
 
   if ( !key ) {
     return mergeCounters(entity, settingKey);

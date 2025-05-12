@@ -91,9 +91,9 @@ export async function openDocument(uuid) {
  */
 export function getDefaultDnd5eConfig(property, key = null) {
   if ( key ) {
-    return CONFIG.CUSTOM_DND5E[property][key];
+    return foundry.utils.deepClone(CONFIG.CUSTOM_DND5E[property][key]);
   } else {
-    return CONFIG.CUSTOM_DND5E[property];
+    return foundry.utils.deepClone(CONFIG.CUSTOM_DND5E[property]);
   }
 }
 

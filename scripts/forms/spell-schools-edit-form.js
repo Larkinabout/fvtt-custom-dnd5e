@@ -1,6 +1,6 @@
 import { CONSTANTS, JOURNAL_HELP_BUTTON, MODULE } from "../constants.js";
 import { ConfigEditForm } from "./config-edit-form.js";
-import { setConfig, getDefaultConfig } from "../spell-schools.js";
+import { setConfig, getSettingDefault } from "../spell-schools.js";
 
 const constants = CONSTANTS.SPELL_SCHOOLS;
 const configKey = "spellSchools";
@@ -22,7 +22,7 @@ export class SpellSchoolsEditForm extends ConfigEditForm {
     super(args);
     this.configKey = configKey;
     this.settingKey = constants.SETTING.CONFIG.KEY;
-    this.getDefaultConfig = getDefaultConfig;
+    this.getSettingDefault = getSettingDefault;
     this.setConfig = setConfig;
     this.headerButton = JOURNAL_HELP_BUTTON;
     this.headerButton.uuid = constants.UUID;

@@ -2,10 +2,12 @@ import { CONSTANTS } from "./constants.js";
 import {
   c5eLoadTemplates,
   checkEmpty,
+  getDefaultDnd5eConfig,
   getSetting,
   registerMenu,
   registerSetting,
-  resetDnd5eConfig } from "./utils.js";
+  resetDnd5eConfig,
+  resetSetting } from "./utils.js";
 import { WeaponProficienciesForm } from "./forms/weapon-proficiencies-form.js";
 
 const constants = CONSTANTS.WEAPON_PROFICIENCIES;
@@ -57,19 +59,9 @@ function registerSettings() {
       scope: "world",
       config: false,
       type: Object,
-      default: getDefault()
+      default: getSettingDefault()
     }
   );
-}
-
-/* -------------------------------------------- */
-
-/**
- * Get dnd5e config.
- * @returns {object} The weapon proficiencies and weapon types
- */
-export function getDnd5eConfig() {
-  return buildData(CONFIG.CUSTOM_DND5E);
 }
 
 /* -------------------------------------------- */
@@ -78,8 +70,20 @@ export function getDnd5eConfig() {
  * Get setting default.
  * @returns {object} The setting
  */
-function getDefault() {
-  return buildData(CONFIG.DND5E);
+export function getSettingDefault() {
+  return buildData(CONFIG.CUSTOM_DND5E);
+}
+
+/* -------------------------------------------- */
+
+/**
+ * Reset config and setting to their default values.
+ */
+export async function resetConfigSetting() {
+  await resetDnd5eConfig("weaponProficiencies");
+  await resetDnd5eConfig("weaponProficienciesMap");
+  await resetDnd5eConfig("weaponTypes");
+  await resetSetting(constants.SETTING.CONFIG.KEY);
 }
 
 /* -------------------------------------------- */
@@ -115,22 +119,14 @@ function buildData(config) {
 /* -------------------------------------------- */
 
 /**
- * Set CONFIG.DND5E.weaponProficiencies, CONFIG.DND5E.weaponProficienciesMap and CONFIG.DND5E.weaponTypes.
- * @param {object} data The data
+ * Set CONFIG.DND5E.weaponProficiencies, CONFIG.DND5E.weaponProficienciesMap and CONFIG.DND5E.weaponTypes
+ * @param {object} [settingData=null] The setting data
+ * @returns {void}
  */
-export function setConfig(data = null) {
+export function setConfig(settingData = null) {
   if ( !getSetting(constants.SETTING.ENABLE.KEY) ) return;
-
   const properties = ["weaponProficiencies", "weaponProficienciesMap", "weaponTypes"];
-
-  if ( checkEmpty(data) ) {
-    properties.forEach(property => {
-      if ( checkEmpty(CONFIG.DND5E[property]) ) {
-        resetDnd5eConfig(property);
-      }
-    });
-    return;
-  }
+  if ( checkEmpty(settingData) ) return handleEmptyData(properties);
 
   // Initialise the config object
   const config = {
@@ -140,7 +136,7 @@ export function setConfig(data = null) {
   };
 
   // Populate config
-  Object.entries(data)
+  Object.entries(settingData)
     .filter(([_, value]) => value.visible || value.visible === undefined)
     .forEach(([key, value]) => {
       const localisedLabel = game.i18n.localize(value.label ?? value);
@@ -159,8 +155,25 @@ export function setConfig(data = null) {
 
   // Apply the config to CONFIG.DND5E
   properties.forEach(property => {
+    const hookLabel = property.charAt(0).toUpperCase() + property.slice(1);
+    Hooks.callAll(`customDnd5e.set${hookLabel}Config`, config[property]);
+
     if ( Object.keys(config[property]).length ) {
       CONFIG.DND5E[property] = config[property];
+    }
+  });
+}
+
+/* -------------------------------------------- */
+
+/**
+ * Handle empty data.
+ * @param {string[]} properties The properties
+ */
+function handleEmptyData(properties) {
+  properties.forEach(property => {
+    if ( checkEmpty(CONFIG.DND5E[property]) ) {
+      resetDnd5eConfig(property);
     }
   });
 }

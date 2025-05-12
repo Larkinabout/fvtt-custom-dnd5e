@@ -5,10 +5,12 @@ import {
   getSetting,
   registerMenu,
   registerSetting,
-  resetDnd5eConfig } from "./utils.js";
+  resetDnd5eConfig,
+  resetSetting } from "./utils.js";
 import { ItemPropertiesForm } from "./forms/config-form.js";
 
 const constants = CONSTANTS.ITEM_PROPERTIES;
+const configKey = "itemProperties";
 
 /**
  * Register settings and load templates.
@@ -71,16 +73,19 @@ function registerSettings() {
  * @param {string|null} key The key
  * @returns {object} The config
  */
-export function getDefaultConfig(key = null) {
-  const config = foundry.utils.deepClone(CONFIG.CUSTOM_DND5E.itemProperties);
+export function getSettingDefault(key = null) {
+  const config = foundry.utils.deepClone(CONFIG.CUSTOM_DND5E[configKey]);
 
   Object.entries(CONFIG.CUSTOM_DND5E.validProperties).forEach(itemType => {
-    [...itemType[1]].forEach(property => {
-      const itemProperty = config[property];
-      if ( itemProperty ) {
-        itemProperty[itemType[0]] = true;
-      }
-    });
+    // Check if instance of Set to ensure valid structure
+    if ( itemType[1] instanceof Set ) {
+      [...itemType[1]].forEach(property => {
+        const itemProperty = config[property];
+        if ( itemProperty ) {
+          itemProperty[itemType[0]] = true;
+        }
+      });
+    }
   });
 
   if ( key ) {
@@ -93,70 +98,111 @@ export function getDefaultConfig(key = null) {
 /* -------------------------------------------- */
 
 /**
- * Get the default setting.
- *
- *
- * @returns {object} The setting
+ * Reset config and setting to their default values.
  */
-function getSettingDefault() {
-  const itemProperties = foundry.utils.deepClone(CONFIG.CUSTOM_DND5E.itemProperties);
-  const itemTypes = ["consumable", "container", "equipment", "feat", "loot", "spell", "tool", "weapon"];
-
-  Object.keys(itemProperties).forEach(key => {
-    itemTypes.forEach(itemType => {
-      if ( CONFIG.CUSTOM_DND5E.validProperties[itemType].has(key) ) {
-        itemProperties[key][itemType] = true;
-      }
-    });
-  });
-
-  return itemProperties;
+export async function resetConfigSetting() {
+  await resetDnd5eConfig(configKey);
+  await resetDnd5eConfig("validProperties");
+  await resetSetting(constants.SETTING.CONFIG.KEY);
 }
 
 /* -------------------------------------------- */
 
 /**
  * Set CONFIG.DND5E.itemProperties and CONFIG.DND5E.validProperties.
- * @param {object} data The data
+ * @param {object} [settingData=null] The setting data
+ * @returns {void}
  */
-export function setConfig(data = null) {
+export function setConfig(settingData = null) {
   if ( !getSetting(constants.SETTING.ENABLE.KEY) ) return;
-  if ( checkEmpty(data) ) {
-    if ( checkEmpty(CONFIG.DND5E.itemProperties) ) {
-      resetDnd5eConfig("itemProperties");
-    }
-    return;
-  }
-
-  const itemTypes = ["consumable", "container", "equipment", "feat", "loot", "spell", "tool", "weapon"];
+  if ( checkEmpty(settingData) ) return handleEmptyData();
 
   // Include item properties added by other modules
-  Object.entries(CONFIG.DND5E.itemProperties).forEach(([id, value]) => {
-    if ( !data[id] ) {
-      data[id] = foundry.utils.deepClone(value);
+  Object.entries(CONFIG.DND5E[configKey]).forEach(([id, value]) => {
+    if ( !settingData[id] ) {
+      settingData[id] = foundry.utils.deepClone(value);
       itemTypes.forEach(itemType => {
         if ( CONFIG.DND5E.validProperties[itemType].has(id) ) {
-          data[id][itemType] = true;
+          settingData[id][itemType] = true;
         }
       });
     }
   });
 
-  const buildConfig = data => Object.fromEntries(
-    Object.entries(data)
-      .filter(([_, value]) => value.visible || value.visible === undefined)
-      .map(([key, value]) => [
-        key,
-        {
-          ...(value.abbreviation !== undefined && { abbreviation: game.i18n.localize(value.abbreviation) }),
-          ...(value.icon !== undefined && { icon: value.icon }),
-          ...(value.isPhysical !== undefined && { isPhysical: value.isPhysical }),
-          ...(value.isTag !== undefined && { isTag: value.isTag }),
-          label: game.i18n.localize(value.label),
-          ...(value.reference !== undefined && { reference: value.reference })
-        }
-      ])
+  const mergedSettingData = foundry.utils.mergeObject(
+    foundry.utils.mergeObject(settingData, CONFIG.DND5E[configKey], { overwrite: false }),
+    getSettingDefault(),
+    { overwrite: false }
   );
+
+  const itemPropertiesConfigData = buildItemPropertiesConfig(mergedSettingData);
+
+  Hooks.callAll("customDnd5e.setItemPropertiesConfig", itemPropertiesConfigData);
+
+  if ( itemPropertiesConfigData ) {
+    CONFIG.DND5E[configKey] = itemPropertiesConfigData;
+  }
+
+  setValidProperties(mergedSettingData);
+}
+
+/* -------------------------------------------- */
+
+/**
+ * Handle empty data.
+ */
+function handleEmptyData() {
+  if ( checkEmpty(CONFIG.DND5E[configKey]) ) {
+    resetDnd5eConfig(configKey);
+  }
+  if ( checkEmpty(CONFIG.DND5E.validProperties) ) {
+    resetDnd5eConfig("validProperties");
+  }
+}
+
+/* -------------------------------------------- */
+
+/**
+ * Build config.
+ * @param {object} settingData The setting data
+ * @returns {object} The config data
+ */
+function buildItemPropertiesConfig(settingData) {
+  return Object.fromEntries(
+    Object.keys(settingData)
+      .filter(key => settingData[key].visible || settingData[key].visible === undefined)
+      .map(key => [key, buildItemPropertiesConfigEntry(settingData[key])])
+  );
+}
+
+/* -------------------------------------------- */
+
+/**
+ * Build config entry.
+ * @param {object} data The data
+ * @returns {object} The config entry
+ */
+function buildItemPropertiesConfigEntry(data) {
+  return {
+    ...(data.abbreviation !== undefined && { abbreviation: game.i18n.localize(data.abbreviation) }),
+    ...(data.icon !== undefined && { icon: data.icon }),
+    ...(data.isPhysical !== undefined && { isPhysical: data.isPhysical }),
+    ...(data.isTag !== undefined && { isTag: data.isTag }),
+    label: game.i18n.localize(data.label),
+    ...(data.reference !== undefined && { reference: data.reference })
+  };
+}
+
+/**
+ * Set valid item properties.
+ * @param {object} settingData The setting data
+ */
+function setValidProperties(settingData) {
+  const itemTypesSet = new Set(
+    Object.keys(CONFIG.CUSTOM_DND5E.validProperties),
+    Object.keys(CONFIG.DND5E.validProperties)
+  );
+  const itemTypes = [...itemTypesSet];
 
   const validProperties = {};
 
@@ -164,7 +210,7 @@ export function setConfig(data = null) {
     validProperties[property[0]] = new Set([...property[1]]);
   });
 
-  Object.entries(data).forEach(([key, value]) => {
+  Object.entries(settingData).forEach(([key, value]) => {
     itemTypes.forEach(itemType => {
       if ( value[itemType] && (value.visible || typeof value.visible === "undefined") ) {
         validProperties[itemType].add(key);
@@ -177,10 +223,4 @@ export function setConfig(data = null) {
   CONFIG.DND5E.validProperties = (checkEmpty(validProperties))
     ? foundry.utils.deepClone(CONFIG.CUSTOM_DND5E.validProperties)
     : validProperties;
-
-  const config = buildConfig(data);
-
-  if ( config ) {
-    CONFIG.DND5E.itemProperties = config;
-  }
 }
