@@ -765,13 +765,13 @@ export const CONSTANTS = {
       }
     }
   },
-  TOOL_IDS: {
+  TOOLS: {
     MENU: {
       KEY: "tool-ids-menu",
-      HINT: "CUSTOM_DND5E.menu.toolIds.hint",
+      HINT: "CUSTOM_DND5E.menu.tools.hint",
       ICON: "fas fa-pen-to-square",
-      LABEL: "CUSTOM_DND5E.menu.toolIds.label",
-      NAME: "CUSTOM_DND5E.menu.toolIds.name"
+      LABEL: "CUSTOM_DND5E.menu.tools.label",
+      NAME: "CUSTOM_DND5E.menu.tools.name"
     },
     SETTING: {
       ENABLE: {
@@ -869,7 +869,7 @@ export const CONSTANTS = {
 };
 
 export const JOURNAL_HELP_BUTTON = {
-  icon: "fa-circle-info",
+  icon: "fa-regular fa-circle-info",
   tooltip: "CUSTOM_DND5E.openGuide",
   action: "help",
   uuid: null

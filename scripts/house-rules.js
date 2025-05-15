@@ -1085,7 +1085,7 @@ async function createMassiveDamageCard(actor, data) {
   const chatData = {
     user: game.user.id,
     style: CONST.CHAT_MESSAGE_STYLES.OTHER,
-    content: await renderTemplate(CONSTANTS.MESSAGE.TEMPLATE.ROLL_REQUEST_CARD, {
+    content: await foundry.applications.handlebars.renderTemplate(CONSTANTS.MESSAGE.TEMPLATE.ROLL_REQUEST_CARD, {
       buttonLabel: `<i class="fas fa-shield-heart"></i>${label}`,
       hiddenLabel: `<i class="fas fa-shield-heart"></i>${label}`,
       description: game.i18n.format("CUSTOM_DND5E.message.massiveDamage", { name: actor.name }),

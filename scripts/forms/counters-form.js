@@ -120,7 +120,7 @@ export class CountersForm extends CustomDnd5eForm {
       selects: getSelects()
     };
 
-    const template = await renderTemplate(CONSTANTS.COUNTERS.TEMPLATE.LIST, data);
+    const template = await foundry.applications.handlebars.renderTemplate(CONSTANTS.COUNTERS.TEMPLATE.LIST, data);
 
     list.insertAdjacentHTML("beforeend", template);
 

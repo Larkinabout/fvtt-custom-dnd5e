@@ -40,7 +40,7 @@ export class ActorSizesEditForm extends ConfigEditForm {
   static DEFAULT_OPTIONS = {
     id: `${MODULE.ID}-actor-sizes-edit-form`,
     position: {
-      height: 420
+      height: 460
     },
     window: {
       title: `CUSTOM_DND5E.form.${configKey}.edit.title`

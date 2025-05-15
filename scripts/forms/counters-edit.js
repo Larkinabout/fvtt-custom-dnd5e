@@ -228,7 +228,7 @@ export class CountersEditForm extends CustomDnd5eForm {
    * @returns {Promise<string>} The rendered template.
    */
   async _getHtml(data) {
-    const template = await renderTemplate(CONSTANTS.COUNTERS.TEMPLATE.TRIGGERS_LIST, data);
+    const template = await foundry.applications.handlebars.renderTemplate(CONSTANTS.COUNTERS.TEMPLATE.TRIGGERS_LIST, data);
     return template;
   }
 

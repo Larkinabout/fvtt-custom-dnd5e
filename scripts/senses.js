@@ -191,7 +191,7 @@ async function addCustomSensesToConfig(app, html) {
       }
     } else if ( value.visible && value.visible !== undefined && !systemSenses.includes(key) ) {
       const data = { label: value.label, inputName: `flags.custom-dnd5e.${key}`, inputValue: getFlag(actor, key) };
-      const template = await renderTemplate(constants.TEMPLATE.CONFIG_FORM_GROUP, data);
+      const template = await foundry.applications.handlebars.renderTemplate(constants.TEMPLATE.CONFIG_FORM_GROUP, data);
 
       if ( lastElement ) {
         lastElement.insertAdjacentHTML("afterend", template);

@@ -22,7 +22,7 @@ Hooks.on("preRenderActorSheet", (app, data) => {
  * Register the custom character sheet.
  */
 export function registerCharacterSheet() {
-  DocumentSheetConfig.registerSheet(Actor, "dnd5e", CustomDnd5eSheetCharacter2, {
+  foundry.applications.apps.DocumentSheetConfig.registerSheet(Actor, "dnd5e", CustomDnd5eSheetCharacter2, {
     types: ["character"],
     makeDefault: false,
     label: "CUSTOM_DND5E.sheet.characterSheet"

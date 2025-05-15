@@ -68,6 +68,7 @@
     "CUSTOM_DND5E.maximum": "Maksimum",
     "CUSTOM_DND5E.reachedCounterLimit": "Osiągnąłeś limit dla tego licznika!",
     "CUSTOM_DND5E.mental": "Psychiczne",
+    "CUSTOM_DND5E.name": "Nazwa",
     "CUSTOM_DND5E.negativeHitPoints": "Ujemne Punkty Wytrzymałości",
     "CUSTOM_DND5E.no": "Nie",
     "CUSTOM_DND5E.npcs": "BN'owie",
@@ -327,7 +328,7 @@
     "CUSTOM_DND5E.form.spellSchools.title": "Konfiguracja szkół zaklęć",
     "CUSTOM_DND5E.form.spellSchools.edit.title": "Edytuj szkołę zaklęć",
 
-    "CUSTOM_DND5E.form.toolIds.title": "Konfiguracja narzędzi",
+    "CUSTOM_DND5E.form.tools.title": "Konfiguracja narzędzi",
 
     "CUSTOM_DND5E.form.toolProficiencies.title": "Konfiguracja biegłości narzędzi",
 
@@ -431,9 +432,9 @@
     "CUSTOM_DND5E.menu.spellSchools.label": "Konfiguracja szkół zaklęć",
     "CUSTOM_DND5E.menu.spellSchools.name": "Konfiguracja szkół zaklęć",
 
-    "CUSTOM_DND5E.menu.toolIds.hint": "Konfiguracja narzędzi",
-    "CUSTOM_DND5E.menu.toolIds.label": "Konfiguracja narzędzi",
-    "CUSTOM_DND5E.menu.toolIds.name": "Konfiguracja narzędzi",
+    "CUSTOM_DND5E.menu.tools.hint": "Konfiguracja narzędzi",
+    "CUSTOM_DND5E.menu.tools.label": "Konfiguracja narzędzi",
+    "CUSTOM_DND5E.menu.tools.name": "Konfiguracja narzędzi",
 
     "CUSTOM_DND5E.menu.toolProficiencies.hint": "Konfiguracja biegłości narzędzi",
     "CUSTOM_DND5E.menu.toolProficiencies.label": "Konfiguracja biegłości narzędzi",

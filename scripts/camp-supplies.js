@@ -53,7 +53,7 @@ async function addCampSupplies(dialog, html) {
 
   const context = { required, quantity, spend };
 
-  const template = await renderTemplate(constants.TEMPLATE.LONG_REST, context);
+  const template = await foundry.applications.handlebars.renderTemplate(constants.TEMPLATE.LONG_REST, context);
   const fieldset = html.querySelector("fieldset");
   fieldset.insertAdjacentHTML("beforeend", template);
 

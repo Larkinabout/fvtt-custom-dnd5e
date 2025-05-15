@@ -515,7 +515,7 @@ export async function unmakeDead(actor) {
 export async function c5eLoadTemplates(templates) {
   Logger.debug("Loading templates", templates);
   try {
-    const result = await loadTemplates(templates);
+    const result = await foundry.applications.handlebars.loadTemplates(templates);
     Logger.debug("Templates loaded", { templates, result });
   } catch (error) {
     Logger.debug("Failed to load templates", { templates, error });

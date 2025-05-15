@@ -154,7 +154,7 @@ export class CustomDnd5eForm extends HandlebarsApplicationMixin(ApplicationV2) {
         const closeButton = windowHeader.querySelector('[data-action="close"]');
         const button = document.createElement("button");
         button.setAttribute("type", "button");
-        button.setAttribute("class", `header-control fa-solid ${this.headerButton.icon}`);
+        button.setAttribute("class", `header-control icon fa-solid ${this.headerButton.icon}`);
         button.setAttribute("data-tooltip", this.headerButton.tooltip);
         button.setAttribute("aria-label", this.headerButton.tooltip);
         button.setAttribute("data-action", this.headerButton.action);
@@ -366,7 +366,8 @@ export class CustomDnd5eForm extends HandlebarsApplicationMixin(ApplicationV2) {
     const items = this.sourceItem?.closest("ul").querySelectorAll("li");
 
     items.forEach(item => {
-      const key = item.querySelector("#key")?.value;
+      const key = item.dataset?.key;
+      if ( !key ) return;
 
       const parentKey = item.closest("ul")?.closest("li")?.dataset?.key;
 

@@ -1,5 +1,5 @@
 import { CONSTANTS, JOURNAL_HELP_BUTTON, MODULE } from "../constants.js";
-import { Logger, getSetting, setSetting } from "../utils.js";
+import { Logger, getDefaultSetting, getSetting, setSetting } from "../utils.js";
 import { CustomDnd5eForm } from "./custom-dnd5e-form.js";
 import { ConfigEditForm } from "./config-edit-form.js";
 import { AbilitiesEditForm } from "./abilities-edit-form.js";
@@ -29,7 +29,7 @@ import { resetConfigSetting as resetLanguages, setConfig as setLanguages } from 
 import { resetConfigSetting as resetSenses, setConfig as setSenses } from "../senses.js";
 import { resetConfigSetting as resetSkills, setConfig as setSkills } from "../skills.js";
 import { resetConfigSetting as resetSpellSchools, setConfig as setSpellSchools } from "../spell-schools.js";
-import { resetConfigSetting as resetToolIds, setConfig as setToolIds } from "../tool-ids.js";
+import { resetConfigSetting as resetTools, setConfig as setTools } from "../tools.js";
 import { resetConfigSetting as resetWeaponIds, setConfig as setWeaponIds } from "../weapon-ids.js";
 
 const listClass = `${MODULE.ID}-list`;
@@ -98,6 +98,9 @@ export class ConfigForm extends CustomDnd5eForm {
   async _prepareContext() {
     this.config = foundry.utils.deepClone(CONFIG.DND5E[this.configKey]);
     this.setting = getSetting(this.settingKey);
+    if ( !this.setting ) {
+      this.setting = getDefaultSetting(this.settingKey);
+    }
     const data = (this.includeConfig && this.config)
       ? foundry.utils.mergeObject(this.config, this.setting)
       : this.setting;
@@ -249,7 +252,7 @@ export class ConfigForm extends CustomDnd5eForm {
    * @returns {Promise<string>} The rendered template.
    */
   async _getHtml(data) {
-    const template = await renderTemplate(CONSTANTS.CONFIG.TEMPLATE.EDIT_IN_LIST, data);
+    const template = await foundry.applications.handlebars.renderTemplate(CONSTANTS.CONFIG.TEMPLATE.EDIT_IN_LIST, data);
     return template;
   }
 
@@ -521,7 +524,7 @@ export class ArmorIdsForm extends IdForm {
    * @returns {Promise<string>} The rendered template.
    */
   async _getHtml(data) {
-    const template = await renderTemplate(CONSTANTS.ARMOR_IDS.TEMPLATE.LIST, data);
+    const template = await foundry.applications.handlebars.renderTemplate(CONSTANTS.ARMOR_IDS.TEMPLATE.LIST, data);
     return template;
   }
 }
@@ -581,6 +584,7 @@ export class ConditionsForm extends ConfigForm {
   constructor() {
     super();
     this.editForm = ConditionsEditForm;
+    this.label = "CUSTOM_DND5E.name";
     this.includeConfig = false;
     this.requiresReload = false;
     this.enableConfigKey = CONSTANTS.CONDITIONS.SETTING.ENABLE.KEY;
@@ -1009,15 +1013,15 @@ export class ToolIdsForm extends IdForm {
    */
   constructor() {
     super();
-    this.editInList = true;
+    this.editInList = false;
     this.requiresReload = true;
-    this.enableConfigKey = CONSTANTS.TOOL_IDS.SETTING.ENABLE.KEY;
-    this.settingKey = CONSTANTS.TOOL_IDS.SETTING.CONFIG.KEY;
-    this.resetConfigSetting = resetToolIds;
-    this.setConfig = setToolIds;
-    this.configKey = "toolIds";
+    this.enableConfigKey = CONSTANTS.TOOLS.SETTING.ENABLE.KEY;
+    this.settingKey = CONSTANTS.TOOLS.SETTING.CONFIG.KEY;
+    this.resetConfigSetting = resetTools;
+    this.setConfig = setTools;
+    this.configKey = "tools";
     this.headerButton = JOURNAL_HELP_BUTTON;
-    this.headerButton.uuid = CONSTANTS.TOOL_IDS.UUID;
+    this.headerButton.uuid = CONSTANTS.TOOLS.UUID;
   }
 
   /* -------------------------------------------- */
@@ -1028,9 +1032,9 @@ export class ToolIdsForm extends IdForm {
    * @type {object}
    */
   static DEFAULT_OPTIONS = {
-    id: `${MODULE.ID}-tool-ids-form`,
+    id: `${MODULE.ID}-tools-form`,
     window: {
-      title: "CUSTOM_DND5E.form.toolIds.title"
+      title: "CUSTOM_DND5E.form.tools.title"
     }
   };
 
@@ -1043,7 +1047,7 @@ export class ToolIdsForm extends IdForm {
    */
   static PARTS = {
     form: {
-      template: CONSTANTS.TOOL_IDS.TEMPLATE.FORM
+      template: CONSTANTS.TOOLS.TEMPLATE.FORM
     }
   };
 
@@ -1056,7 +1060,7 @@ export class ToolIdsForm extends IdForm {
    * @returns {Promise<string>} The rendered template.
    */
   async _getHtml(data) {
-    const template = await renderTemplate(CONSTANTS.TOOL_IDS.TEMPLATE.LIST, data);
+    const template = await foundry.applications.handlebars.renderTemplate(CONSTANTS.TOOLS.TEMPLATE.LIST, data);
     return template;
   }
 }
@@ -1121,7 +1125,7 @@ export class WeaponIdsForm extends IdForm {
    * @returns {Promise<string>} The rendered template.
    */
   async _getHtml(data) {
-    const template = await renderTemplate(CONSTANTS.WEAPON_IDS.TEMPLATE.LIST, data);
+    const template = await foundry.applications.handlebars.renderTemplate(CONSTANTS.WEAPON_IDS.TEMPLATE.LIST, data);
     return template;
   }
 }

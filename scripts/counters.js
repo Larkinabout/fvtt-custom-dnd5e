@@ -429,7 +429,7 @@ async function insertCounters(sheetType, counters, app, html, data) {
   if ( app._tabs[0].active === "custom-dnd5e-counters" ) {
     context.active = " active";
   }
-  const template = await renderTemplate(sheetType.template, context);
+  const template = await foundry.applications.handlebars.renderTemplate(sheetType.template, context);
   const element = html[0].querySelector(sheetType.insert.class);
   element.insertAdjacentHTML(sheetType.insert.position, template);
   return element.querySelector("#custom-dnd5e-counters");

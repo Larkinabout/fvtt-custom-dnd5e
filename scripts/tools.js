@@ -9,8 +9,8 @@ import {
   resetSetting } from "./utils.js";
 import { ToolIdsForm } from "./forms/config-form.js";
 
-const constants = CONSTANTS.TOOL_IDS;
-const configKey = "toolIds";
+const constants = CONSTANTS.TOOLS;
+const configKey = "tools";
 
 /**
  * Register settings.
@@ -100,7 +100,7 @@ export function setConfig(settingData = null) {
 
   const configData = buildConfig(mergedSettingData);
 
-  Hooks.callAll("customDnd5e.setToolIdsConfig", configData);
+  Hooks.callAll("customDnd5e.setToolsConfig", configData);
 
   if ( configData ) {
     CONFIG.DND5E[configKey] = configData;
@@ -141,5 +141,8 @@ function buildConfig(settingData) {
  * @returns {object} The config entry
  */
 function buildConfigEntry(data) {
-  return game.i18n.localize(data.label || data);
+  return {
+    ability: data.ability,
+    id: data.id
+  };
 }

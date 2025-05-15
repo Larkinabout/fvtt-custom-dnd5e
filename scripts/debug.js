@@ -77,7 +77,7 @@ export async function exportData() {
       senses: CONFIG.DND5E.senses,
       skills: CONFIG.DND5E.skills,
       spellSchools: CONFIG.DND5E.spellSchools,
-      toolIds: CONFIG.DND5E.toolIds,
+      tools: CONFIG.DND5E.tools,
       toolProficiencies: CONFIG.DND5E.toolProficiencies,
       toolTypes: CONFIG.DND5E.toolTypes,
       validProperties: convertSetsToArrays(CONFIG.DND5E.validProperties),
@@ -99,7 +99,7 @@ export async function exportData() {
  * @returns {Promise<boolean>} Whether the import was successful
  */
 export async function importData() {
-  const content = await renderTemplate(constants.TEMPLATE.IMPORT_DIALOG, {});
+  const content = await foundry.applications.handlebars.renderTemplate(constants.TEMPLATE.IMPORT_DIALOG, {});
   const dialog = new Promise((resolve, reject) => {
     new Dialog({
       title: game.i18n.localize("CUSTOM_DND5E.importData"),

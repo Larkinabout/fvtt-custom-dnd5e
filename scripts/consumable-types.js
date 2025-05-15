@@ -99,6 +99,9 @@ export function setConfig(settingData = null) {
   );
 
   const configData = buildConfig(mergedSettingData);
+
+  Hooks.callAll("customDnd5e.setConsumableTypesConfig", configData);
+
   if ( configData ) {
     CONFIG.DND5E[configKey] = configData;
   }

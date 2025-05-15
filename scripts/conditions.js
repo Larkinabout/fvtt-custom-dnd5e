@@ -3,7 +3,7 @@ import {
   Logger,
   c5eLoadTemplates,
   checkEmpty,
-  registerMenu,
+  registerMenu as c5eRegisterMenu,
   getSetting,
   registerSetting,
   resetDnd5eConfig,
@@ -29,10 +29,10 @@ export function register() {
 /* -------------------------------------------- */
 
 /**
- * Register settings.
+ * Register menu.
  */
-function registerSettings() {
-  registerMenu(
+export function registerMenu() {
+  c5eRegisterMenu(
     constants.MENU.KEY,
     {
       hint: game.i18n.localize(constants.MENU.HINT),
@@ -44,7 +44,14 @@ function registerSettings() {
       scope: "world"
     }
   );
+}
 
+/* -------------------------------------------- */
+
+/**
+ * Register settings.
+ */
+function registerSettings() {
   registerSetting(
     constants.SETTING.ENABLE.KEY,
     {
@@ -85,14 +92,14 @@ export function getSettingDefault(key = null) {
   if ( key ) return data;
 
   Object.values(data).forEach(value => {
-    value.label = game.i18n.localize(value.label);
+    value.name = game.i18n.localize(value.name);
   });
 
   const sortedData = Object.fromEntries(
     Object.entries(data).sort(([lId, lhs], [rId, rhs]) =>
       lhs.order || rhs.order
         ? (lhs.order ?? Infinity) - (rhs.order ?? Infinity)
-        : lhs.label.localeCompare(rhs.label, game.i18n.lang)
+        : lhs.name.localeCompare(rhs.name, game.i18n.lang)
     )
   );
   return sortedData;
@@ -129,8 +136,8 @@ function buildData(config) {
     const conditionTypes = {};
 
     Object.entries(data).forEach(([key, value]) => {
-      const conditionLabel = game.i18n.localize(value.label);
-      if ( conditionLabel > bloodied.conditionType.label && !conditionTypes.bloodied ) {
+      const conditionName = game.i18n.localize(value.name);
+      if ( conditionName > bloodied.conditionType.name && !conditionTypes.bloodied ) {
         conditionTypes.bloodied = bloodied.conditionType;
         conditionTypes.bloodied.sheet = true;
       }
@@ -147,7 +154,7 @@ function buildData(config) {
     } else {
       data[statusEffect.id] = statusEffect;
       data[statusEffect.id].icon = statusEffect.img;
-      data[statusEffect.id].label = statusEffect.name;
+      data[statusEffect.id].name = statusEffect.name;
     }
   };
 
@@ -197,7 +204,7 @@ export function setConfig(data = null) {
   Object.entries(data)
     .filter(([_, value]) => value.visible || value.visible === undefined)
     .forEach(([key, value]) => {
-      const localisedLabel = game.i18n.localize(value.label ?? value);
+      const localisedName = game.i18n.localize(value.name ?? value);
 
       // Merge with default config in case their are any new properties
       value = foundry.utils.mergeObject(foundry.utils.deepClone(getSettingDefault(key)) ?? {}, value);
@@ -205,7 +212,7 @@ export function setConfig(data = null) {
       if ( value.sheet || value.pseudo ) {
         config.conditionTypes[key] = {
           icon: value.icon,
-          label: localisedLabel,
+          name: localisedName,
           ...(value.levels && { levels: value.levels }),
           ...(value.pseudo && { pseudo: value.pseudo }),
           ...(value.reduction !== undefined && { reduction: value.reduction }),
@@ -222,7 +229,7 @@ export function setConfig(data = null) {
         id: key,
         img: value.icon,
         ...(value.levels !== undefined && { levels: value.levels }),
-        name: localisedLabel,
+        name: localisedName,
         ...(value.pseudo && { pseudo: value.pseudo }),
         ...(value.reference !== undefined && { reference: value.reference }),
         ...(value.riders !== undefined && { riders: value.riders }),

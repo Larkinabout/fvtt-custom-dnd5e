@@ -8,7 +8,7 @@ import { register as registerArmorCalculations, setConfig as setArmorCalculation
 import { register as registerArmorIds, setConfig as setArmorIds } from "./armor-ids.js";
 import { register as registerArmorProficiencies, setConfig as setArmorProficiencies } from "./armor-proficiencies.js";
 import { register as registerCampSupplies } from "./camp-supplies.js";
-import { register as registerConditions, setConfig as setConditions } from "./conditions.js";
+import { register as registerConditions, registerMenu as registerConditionsMenu, setConfig as setConditions } from "./conditions.js";
 import { register as registerConsumableTypes, setConfig as setConsumableTypes } from "./consumable-types.js";
 import {
   register as registerCounters,
@@ -48,7 +48,7 @@ import { register as registerSkills, setConfig as setSkills } from "./skills.js"
 import { register as registerSpellSchools, setConfig as setSpellSchools } from "./spell-schools.js";
 import { register as registerRadialStatusEffects } from "./radial-status-effects.js";
 import { register as registerTokenBorder } from "./token-border.js";
-import { register as registerToolIds, setConfig as setToolIds } from "./tool-ids.js";
+import { register as registerToolIds, setConfig as setTools } from "./tools.js";
 import { register as registerToolProficiencies, setConfig as setolProficiencies } from "./tool-proficiencies.js";
 import { register as registerWeaponIds, setConfig as setWeaponIds } from "./weapon-ids.js";
 import { register as registerWeaponProficiencies, setConfig as setWeaponProficiencies } from "./weapon-proficiencies.js";
@@ -64,7 +64,6 @@ import { registerCharacterSheet } from "./sheets/character-sheet.js";
  */
 Hooks.on("init", async () => {
   CONFIG.CUSTOM_DND5E = foundry.utils.deepClone(CONFIG.DND5E);
-  CONFIG.CUSTOM_DND5E.coreStatusEffects = foundry.utils.deepClone(CONFIG.statusEffects);
 
   const module = game.modules.get(MODULE.ID);
   module.api = {
@@ -115,7 +114,7 @@ Hooks.on("init", async () => {
   registerArmorIds();
   registerArmorProficiencies();
   registerCampSupplies();
-  registerConditions();
+  registerConditionsMenu();
   registerConsumableTypes();
   registerCounters();
   registerCurrency();
@@ -189,6 +188,9 @@ Hooks.on("ready", async () => {
     }
   });
 
+  CONFIG.CUSTOM_DND5E.coreStatusEffects = foundry.utils.deepClone(CONFIG.statusEffects);
+  registerConditions();
+
   const isV4 = foundry.utils.isNewerVersion(game.dnd5e.version, "3.3.1");
   if ( isV4 ) {
     setActivationCosts(getSetting(CONSTANTS.ACTIVATION_COSTS.SETTING.CONFIG.KEY));
@@ -207,7 +209,7 @@ Hooks.on("ready", async () => {
   setItemProperties(getSetting(CONSTANTS.ITEM_PROPERTIES.SETTING.CONFIG.KEY));
   setItemRarity(getSetting(CONSTANTS.ITEM_RARITY.SETTING.CONFIG.KEY));
   setSpellSchools(getSetting(CONSTANTS.SPELL_SCHOOLS.SETTING.CONFIG.KEY));
-  setToolIds(getSetting(CONSTANTS.TOOL_IDS.SETTING.CONFIG.KEY));
+  setTools(getSetting(CONSTANTS.TOOLS.SETTING.CONFIG.KEY));
   setolProficiencies(getSetting(CONSTANTS.TOOL_PROFICIENCIES.SETTING.CONFIG.KEY));
   setWeaponIds(getSetting(CONSTANTS.WEAPON_IDS.SETTING.CONFIG.KEY));
   setWeaponProficiencies(getSetting(CONSTANTS.WEAPON_PROFICIENCIES.SETTING.CONFIG.KEY));
