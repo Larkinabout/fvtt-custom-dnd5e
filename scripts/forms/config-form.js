@@ -12,6 +12,7 @@ import { DamageTypesEditForm } from "./damage-types-edit-form.js";
 import { ItemPropertiesEditForm } from "./item-properties-edit-form.js";
 import { SkillsEditForm } from "./skills-edit-form.js";
 import { SpellSchoolsEditForm } from "./spell-schools-edit-form.js";
+import { ToolsEditForm } from "./tools-edit-form.js";
 import { resetConfigSetting as resetAbilities, setConfig as setAbilities } from "../abilities.js";
 import { resetConfigSetting as resetActivationCosts, setConfig as setActivationCosts } from "../activation-costs.js";
 import { resetConfigSetting as resetArmorCalculations, setConfig as setArmorCalculations } from "../armor-calculations.js";
@@ -626,7 +627,7 @@ export class CurrencyForm extends ConfigForm {
     super();
     this.disableCreate = true;
     this.editForm = CurrencyEditForm;
-    this.requiresReload = false;
+    this.requiresReload = true;
     this.enableConfigKey = CONSTANTS.CURRENCY.SETTING.ENABLE.KEY;
     this.settingKey = CONSTANTS.CURRENCY.SETTING.CONFIG.KEY;
     this.resetConfigSetting = resetCurrency;
@@ -1007,12 +1008,13 @@ export class SpellSchoolsForm extends ConfigForm {
  *
  * @extends IdForm
  */
-export class ToolIdsForm extends IdForm {
+export class ToolsForm extends IdForm {
   /**
-   * Constructor for ToolIdsForm.
+   * Constructor for ToolsForm.
    */
   constructor() {
     super();
+    this.editForm = ToolsEditForm;
     this.editInList = false;
     this.requiresReload = true;
     this.enableConfigKey = CONSTANTS.TOOLS.SETTING.ENABLE.KEY;
@@ -1037,32 +1039,6 @@ export class ToolIdsForm extends IdForm {
       title: "CUSTOM_DND5E.form.tools.title"
     }
   };
-
-  /* -------------------------------------------- */
-
-  /**
-   * Parts of the form.
-   *
-   * @type {object}
-   */
-  static PARTS = {
-    form: {
-      template: CONSTANTS.TOOLS.TEMPLATE.FORM
-    }
-  };
-
-  /* -------------------------------------------- */
-
-  /**
-   * Get the HTML template for the form.
-   *
-   * @param {object} data The data to be passed to the template.
-   * @returns {Promise<string>} The rendered template.
-   */
-  async _getHtml(data) {
-    const template = await foundry.applications.handlebars.renderTemplate(CONSTANTS.TOOLS.TEMPLATE.LIST, data);
-    return template;
-  }
 }
 
 /* -------------------------------------------- */

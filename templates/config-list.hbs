@@ -8,7 +8,11 @@
             {{#if label}}
             <label class="flex1">{{localize label}}</label>
             {{else}}
+                {{#if name}}
             <label class="flex1">{{localize name}}</label>
+                {{else}}
+            <label class="flex1">{{localize key}}</label>
+                {{/if}}
             {{/if}}
         </div>
     </div>

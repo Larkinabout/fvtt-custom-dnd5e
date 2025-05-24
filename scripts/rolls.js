@@ -73,7 +73,7 @@ function registerHooks() {
       roll = rolls.initiative;
     } else if ( hookNames.includes("attack") ) {
       const weaponType = config?.subject?.item?.system?.type?.value;
-      roll = (rolls.weaponTypes?.[weaponType]?.die && rolls.weaponTypes?.[weaponType]?.die !== "1d20")
+      roll = (rolls.weaponTypes?.[weaponType]?.die)
         ? rolls.weaponTypes[weaponType]
         : rolls.attack;
       rollMode = (rolls.weaponTypes?.[weaponType]?.rollMode && rolls.weaponTypes?.[weaponType]?.rollMode !== "default")

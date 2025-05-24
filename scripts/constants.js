@@ -256,7 +256,6 @@ export const CONSTANTS = {
       EDIT: "modules/custom-dnd5e/templates/counters-edit.hbs",
       TRIGGERS_LIST: "modules/custom-dnd5e/templates/counters-triggers-list.hbs",
       DND5E_ACTOR: "modules/custom-dnd5e/templates/counters/dnd5e/counters-actor.hbs",
-      DND5E_ACTOR_LEGACY: "modules/custom-dnd5e/templates/counters/dnd5e/counters-actor-legacy.hbs",
       DND5E_ITEM_GROUP_LEGACY: "modules/custom-dnd5e/templates/counters/dnd5e/counters-item-group-legacy.hbs"
     }
   },
@@ -443,7 +442,7 @@ export const CONSTANTS = {
   },
   INSPIRATION: {
     SETTING: {
-      AWARD_INSPIRATION_D20_VALUE: {
+      AWARD_INSPIRATION_DICE_VALUE: {
         KEY: "award-inspiration-d20-value"
       },
       AWARD_INSPIRATION_ROLL_TYPES: {
@@ -782,6 +781,7 @@ export const CONSTANTS = {
       }
     },
     TEMPLATE: {
+      EDIT: "modules/custom-dnd5e/templates/tools-edit.hbs",
       FORM: "modules/custom-dnd5e/templates/config-form.hbs",
       LIST: "modules/custom-dnd5e/templates/config-edit-in-list.hbs"
     },
@@ -885,33 +885,6 @@ export const SETTING_BY_ENTITY_TYPE = {
 };
 
 export const SHEET_TYPE = {
-  ActorSheet5eCharacter: {
-    countersSetting: CONSTANTS.COUNTERS.SETTING.CHARACTER_COUNTERS.KEY,
-    character: true,
-    custom: false,
-    group: false,
-    legacy: true,
-    npc: true,
-    template: CONSTANTS.COUNTERS.TEMPLATE.DND5E_ACTOR_LEGACY,
-    insert: {
-      class: ".counters",
-      position: "beforeend"
-    }
-  },
-  ActorSheet5eNPC: {
-    countersSetting: CONSTANTS.COUNTERS.SETTING.NPC_COUNTERS.KEY,
-    character: false,
-    custom: false,
-    group: false,
-    item: false,
-    legacy: true,
-    npc: true,
-    template: CONSTANTS.COUNTERS.TEMPLATE.DND5E_ACTOR_LEGACY,
-    insert: {
-      class: ".counters",
-      position: "beforeend"
-    }
-  },
   ActorSheet5eCharacter2: {
     countersSetting: CONSTANTS.COUNTERS.SETTING.CHARACTER_COUNTERS.KEY,
     character: true,
@@ -924,6 +897,34 @@ export const SHEET_TYPE = {
     insert: {
       class: ".tab.details > .right .top",
       position: "beforeend"
+    }
+  },
+  CharacterActorSheet: {
+    countersSetting: CONSTANTS.COUNTERS.SETTING.CHARACTER_COUNTERS.KEY,
+    character: true,
+    custom: false,
+    group: false,
+    item: false,
+    legacy: false,
+    npc: true,
+    template: CONSTANTS.COUNTERS.TEMPLATE.DND5E_ACTOR,
+    insert: {
+      class: ".tab[data-application-part='details'] > .right .top",
+      position: "beforeend"
+    }
+  },
+  NPCActorSheet: {
+    countersSetting: CONSTANTS.COUNTERS.SETTING.NPC_COUNTERS.KEY,
+    character: false,
+    custom: false,
+    group: false,
+    item: false,
+    legacy: false,
+    npc: true,
+    template: CONSTANTS.COUNTERS.TEMPLATE.DND5E_ACTOR,
+    insert: {
+      class: ".sidebar",
+      position: "afterbegin"
     }
   },
   CustomDnd5eSheetCharacter2: {

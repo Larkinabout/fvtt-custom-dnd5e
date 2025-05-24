@@ -41,7 +41,7 @@ function registerSettings() {
 function registerPatches() {
   if ( getSetting(CONSTANTS.TOKEN.SETTING.BORDER_SHAPE.KEY) === "square" ) return;
 
-  libWrapper.register(MODULE.ID, "Token.prototype._refreshBorder", tokenRefreshBorderPatch, "WRAPPER");
+  libWrapper.register(MODULE.ID, "foundry.canvas.placeables.Token.prototype._refreshBorder", tokenRefreshBorderPatch, "WRAPPER");
 }
 
 /* -------------------------------------------- */

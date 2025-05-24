@@ -49,14 +49,14 @@ import { register as registerSpellSchools, setConfig as setSpellSchools } from "
 import { register as registerRadialStatusEffects } from "./radial-status-effects.js";
 import { register as registerTokenBorder } from "./token-border.js";
 import { register as registerToolIds, setConfig as setTools } from "./tools.js";
-import { register as registerToolProficiencies, setConfig as setolProficiencies } from "./tool-proficiencies.js";
+import { register as registerToolProficiencies, setConfig as setToolProficiencies } from "./tool-proficiencies.js";
 import { register as registerWeaponIds, setConfig as setWeaponIds } from "./weapon-ids.js";
 import { register as registerWeaponProficiencies, setConfig as setWeaponProficiencies } from "./weapon-proficiencies.js";
 import { patchModifyTokenAttribute } from "./patches/actor-modify-token-attribute.js";
-import { patchApplicationRender } from "./patches/application-render.js";
 import { patchD20Die } from "./patches/d20-die.js";
 import { patchD20Roll } from "./patches/d20-roll.js";
 import { patchPrepareEncumbrance } from "./patches/prepare-encumbrance.js";
+import { patchPrepareSenses } from "./patches/prepare-senses.js";
 import { registerCharacterSheet } from "./sheets/character-sheet.js";
 
 /**
@@ -97,10 +97,10 @@ Hooks.on("init", async () => {
   );
 
   patchModifyTokenAttribute();
-  patchApplicationRender();
   patchD20Die();
   patchD20Roll();
   patchPrepareEncumbrance();
+  patchPrepareSenses();
 
   registerMigration();
   registerCharacterSheet();
@@ -144,7 +144,7 @@ Hooks.on("init", async () => {
   setCurrency(getSetting(CONSTANTS.CURRENCY.SETTING.CONFIG.KEY));
   await setEncumbrance(getSetting(CONSTANTS.ENCUMBRANCE.SETTING.CONFIG.KEY));
   setLanguages(getSetting(CONSTANTS.LANGUAGES.SETTING.CONFIG.KEY));
-  // SetSenses(getSetting(CONSTANTS.SENSES.SETTING.KEY))
+  // setSenses(getSetting(CONSTANTS.SENSES.SETTING.CONFIG.KEY));
   setSkills(getSetting(CONSTANTS.SKILLS.SETTING.CONFIG.KEY));
 
   // Must be registered after abilities and skills are set
@@ -210,7 +210,7 @@ Hooks.on("ready", async () => {
   setItemRarity(getSetting(CONSTANTS.ITEM_RARITY.SETTING.CONFIG.KEY));
   setSpellSchools(getSetting(CONSTANTS.SPELL_SCHOOLS.SETTING.CONFIG.KEY));
   setTools(getSetting(CONSTANTS.TOOLS.SETTING.CONFIG.KEY));
-  setolProficiencies(getSetting(CONSTANTS.TOOL_PROFICIENCIES.SETTING.CONFIG.KEY));
+  setToolProficiencies(getSetting(CONSTANTS.TOOL_PROFICIENCIES.SETTING.CONFIG.KEY));
   setWeaponIds(getSetting(CONSTANTS.WEAPON_IDS.SETTING.CONFIG.KEY));
   setWeaponProficiencies(getSetting(CONSTANTS.WEAPON_PROFICIENCIES.SETTING.CONFIG.KEY));
   setMaxLevel(getSetting(CONSTANTS.MAX_LEVEL.SETTING.KEY));

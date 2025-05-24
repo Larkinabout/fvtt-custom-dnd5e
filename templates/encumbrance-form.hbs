@@ -20,7 +20,7 @@
                 <div class="form-group">
                     <label>{{localize "CUSTOM_DND5E.icon"}}</label>
                     <div class="form-fields">
-                        <file-picker id="custom-dnd5e-effects-encumbered-icon" name="effects.encumbered.icon" type="image" value="{{localize effects.encumbered.icon}}"></file-picker>
+                        <file-picker id="custom-dnd5e-effects-encumbered-image" name="effects.encumbered.img" type="image" value="{{localize effects.encumbered.img}}"></file-picker>
                     </div>
                 </div>
             </fieldset>
@@ -35,7 +35,7 @@
                 <div class="form-group">
                     <label>{{localize "CUSTOM_DND5E.icon"}}</label>
                     <div class="form-fields">
-                        <file-picker id="custom-dnd5e-effects-heavily-encumbered-icon" name="effects.heavilyEncumbered.icon" type="image" value="{{localize effects.heavilyEncumbered.icon}}"></file-picker>
+                        <file-picker id="custom-dnd5e-effects-heavily-encumbered-image" name="effects.heavilyEncumbered.img" type="image" value="{{localize effects.heavilyEncumbered.img}}"></file-picker>
                     </div>
                 </div>
             </fieldset>
@@ -50,7 +50,7 @@
                 <div class="form-group">
                     <label>{{localize "CUSTOM_DND5E.icon"}}</label>
                     <div class="form-fields">
-                        <file-picker id="custom-dnd5e-effects-exceeding-carrying-capacity-icon" name="effects.exceedingCarryingCapacity.icon" type="image" value="{{localize effects.exceedingCarryingCapacity.icon}}"></file-picker>
+                        <file-picker id="custom-dnd5e-effects-exceeding-carrying-capacity-image" name="effects.exceedingCarryingCapacity.img" type="image" value="{{localize effects.exceedingCarryingCapacity.img}}"></file-picker>
                     </div>
                 </div>
             </fieldset>
@@ -103,15 +103,6 @@
                 <label>{{localize "CUSTOM_DND5E.currencyPerWeight"}}</label>
                 <div class="form-fields">
                     <input id="custom-dnd5e-currency-per-weight" name="currencyPerWeight.{{#if metric}}metric{{else}}imperial{{/if}}" type="number" value="{{#if metric}}{{currencyPerWeight.metric}}{{else}}{{currencyPerWeight.imperial}}{{/if}}"> 
-                </div>
-            </div>
-        </fieldset>
-        <fieldset>
-            <legend>{{localize "CUSTOM_DND5E.vehicleWeightMultiplier"}}</legend>
-            <div class="form-group">
-                <label>{{localize "CUSTOM_DND5E.vehicleWeightMultiplier"}}</label>
-                <div class="form-fields">
-                    <input id="custom-dnd5e-vehicle-weight-multiplier" name="vehicleWeightMultiplier.{{#if metric}}metric{{else}}imperial{{/if}}" type="number" value="{{#if metric}}{{vehicleWeightMultiplier.metric}}{{else}}{{vehicleWeightMultiplier.imperial}}{{/if}}"> 
                 </div>
             </div>
         </fieldset>

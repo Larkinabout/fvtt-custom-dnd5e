@@ -7,7 +7,7 @@ import {
   registerSetting,
   resetDnd5eConfig,
   resetSetting } from "./utils.js";
-import { ToolIdsForm } from "./forms/config-form.js";
+import { ToolsForm } from "./forms/config-form.js";
 
 const constants = CONSTANTS.TOOLS;
 const configKey = "tools";
@@ -32,7 +32,7 @@ function registerSettings() {
       label: game.i18n.localize(constants.MENU.LABEL),
       name: game.i18n.localize(constants.MENU.NAME),
       icon: constants.MENU.ICON,
-      type: ToolIdsForm,
+      type: ToolsForm,
       restricted: true,
       scope: "world"
     }

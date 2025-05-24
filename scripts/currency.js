@@ -80,12 +80,12 @@ function registerHooks() {
 
     Object.entries(setting).forEach(([key, value]) => {
       if ( value.visible === false ) {
-        html[0].querySelector(`input[name="amount.${key}"]`)?.closest("label")?.remove();
+        html.querySelector(`input[name="amount.${key}"]`)?.closest("label")?.remove();
       }
     });
   });
 
-  Hooks.on("renderActorSheet", (app, html, data) => {
+  Hooks.on("renderActorSheetV2", (app, html, data) => {
     const sheetType = SHEET_TYPE[app.constructor.name];
 
     if ( !sheetType ) return;
@@ -95,7 +95,7 @@ function registerHooks() {
     if ( !sheetType.legacy ) {
       Object.entries(setting).forEach(([key, value]) => {
         if ( value.visible === false ) {
-          html[0].querySelector(`.${key}`)?.closest("label")?.remove();
+          html.querySelector(`.${key}`)?.closest("label")?.remove();
         }
       });
     }

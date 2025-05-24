@@ -256,7 +256,7 @@ function registerSettings() {
   );
 
   registerSetting(
-    CONSTANTS.INSPIRATION.SETTING.AWARD_INSPIRATION_D20_VALUE.KEY,
+    CONSTANTS.INSPIRATION.SETTING.AWARD_INSPIRATION_DICE_VALUE.KEY,
     {
       scope: "world",
       config: false,
@@ -315,7 +315,6 @@ function registerHooks() {
       updateBloodied(actor, updates, dead);
       if ( !dead ) {
         applyMassiveDamage(actor, updates);
-        recalculateHealing(actor, updates);
         updateUnconscious(actor, updates);
       }
     }
@@ -377,7 +376,7 @@ export function modifyHitPointsFlowDialog(app, html, data) {
   if ( minimumValue > 1 ) {
     const rerollOnce = getSetting(CONSTANTS.LEVEL_UP.HIT_POINTS.REROLL.ONCE.SETTING.KEY);
     const note = (rerollOnce) ? "CUSTOM_DND5E.dialog.levelUpHitPointsRerollOnce.note" : "CUSTOM_DND5E.dialog.levelUpHitPointsRerollForever.note";
-    const h3 = html[0].querySelector("form h3");
+    const h3 = html.querySelector("form h3");
     const p = document.createElement("p");
     p.classList.add("custom-dnd5e-advice", "notes", "hp-note");
     p.textContent = game.i18n.format(note, { minimumValue });
@@ -385,7 +384,7 @@ export function modifyHitPointsFlowDialog(app, html, data) {
   }
 
   if ( !getSetting(CONSTANTS.LEVEL_UP.HIT_POINTS.SHOW_TAKE_AVERAGE.SETTING.KEY) ) {
-    const averageLabel = html[0].querySelector(".averageLabel") ?? html[0].querySelector(".average-label");
+    const averageLabel = html.querySelector(".averageLabel") ?? html.querySelector(".average-label");
 
     if ( averageLabel ) {
       averageLabel.innerHTML = "";
@@ -518,21 +517,21 @@ export function applyHighLowGround(item, roll, ability) {
  * If the roll matches the 'Award Inspiration D20 Value', award inspiration to the actor.
  * If the actor already has inspiration, do not award it again.
  * @param {string} rollType The roll type: rollAbilityCheck, rollAbilitySave, rollAbilityTest, rollAttack, rollSkill
- * @param {object} entity The entity: actor or item
  * @param {object} roll The roll
+ * @param {object} data The data
  */
-export function awardInspiration(rollType, entity, roll) {
+export function awardInspiration(rollType, roll, data) {
   Logger.debug("Triggering Award Inspiration...");
 
-  const actor = (rollType === "rollAttack") ? entity.parent : entity;
+  const actor = (rollType === "rollAttack") ? data.subject.actor : data.subject;
 
   if ( actor.type === "npc" || !getSetting(CONSTANTS.INSPIRATION.SETTING.AWARD_INSPIRATION_ROLL_TYPES.KEY)?.[rollType] ) return;
 
-  const awardInspirationD20Value = getSetting(CONSTANTS.INSPIRATION.SETTING.AWARD_INSPIRATION_D20_VALUE.KEY);
-  const d20Value = roll.terms[0].total;
+  const awardInspirationDieTotal = getSetting(CONSTANTS.INSPIRATION.SETTING.AWARD_INSPIRATION_DICE_VALUE.KEY);
+  const diceTotal = roll[0].terms[0].total;
 
-  if ( awardInspirationD20Value === d20Value ) {
-    Logger.debug("Awarding Inspiration...", { awardInspirationD20Value, d20Value });
+  if ( awardInspirationDieTotal === diceTotal ) {
+    Logger.debug("Awarding Inspiration...", { awardInspirationDieTotal, diceTotal });
 
     let message = "CUSTOM_DND5E.message.awardInspiration";
 
@@ -543,7 +542,7 @@ export function awardInspiration(rollType, entity, roll) {
     }
 
     ChatMessage.create({
-      content: game.i18n.format(message, { name: actor.name, value: awardInspirationD20Value })
+      content: game.i18n.format(message, { name: actor.name, value: awardInspirationDieTotal })
     });
 
     Logger.debug("Inspiration awarded");
@@ -571,9 +570,9 @@ function makeDeathSavesBlind(app, html, data) {
 
   if ( sheetType.character ) {
     if ( sheetType.legacy ) {
-      html[0].querySelector(".death-saves .counter-value")?.remove();
+      html.querySelector(".death-saves .counter-value")?.remove();
     } else {
-      const pips = html[0].querySelectorAll(".death-saves .pips");
+      const pips = html.querySelectorAll(".death-saves .pips");
 
       if ( pips ) {
         pips.forEach(p => p.remove());
@@ -589,17 +588,18 @@ function makeDeathSavesBlind(app, html, data) {
 /**
  * Triggered by 'dnd5e.preRollDeathSave' hook.
  * If the 'Death Saves Roll Mode' is set, set the roll mode and target value for the death saves roll.
- * @param {object} actor The actor
- * @param {object} rollData The roll data
+ * @param {object} config The config
+ * @param {object} dialog The dialog
+ * @param {object} message The message
  */
-function setDeathSavesRollMode(actor, rollData) {
+function setDeathSavesRollMode(config, dialog, message) {
   Logger.debug("Setting death saves roll mode...");
 
   const rollMode = getSetting(CONSTANTS.DEATH_SAVES.SETTING.DEATH_SAVES_ROLL_MODE.KEY);
   const targetValue = getSetting(CONSTANTS.DEATH_SAVES.SETTING.DEATH_SAVES_TARGET_VALUE.KEY);
 
-  if ( rollMode ) rollData.rollMode = rollMode;
-  if ( targetValue ) rollData.targetValue = targetValue;
+  if ( rollMode ) message.rollMode = rollMode;
+  if ( targetValue ) config.target = targetValue;
 
   Logger.debug("Death saves roll mode set");
 }
@@ -643,35 +643,6 @@ function recalculateDamage(actor, amount, updates, options) {
   updates["system.attributes.hp.value"] = newHpValue;
 
   Logger.debug("Damage recalculated");
-}
-
-/* -------------------------------------------- */
-
-/**
- * Triggered by the 'dnd5e.preApplyDamage' hook.
- * If 'Apply Negative HP' and 'Heal from 0 HP' are enabled,
- * recalculate healing to increase HP from zero instead of the negative value.
- * @param {object} actor The actor
- * @param {object} updates The updates
- */
-function recalculateHealing(actor, updates) {
-  if ( !getSetting(CONSTANTS.HIT_POINTS.SETTING.APPLY_NEGATIVE_HP.KEY)
-    || !getSetting(CONSTANTS.HIT_POINTS.SETTING.NEGATIVE_HP_HEAL_FROM_ZERO.KEY) ) return;
-
-  Logger.debug("Recalculating healing...");
-
-  const currentHp = foundry.utils.getProperty(updates, "system.attributes.hp.value");
-
-  if ( typeof currentHp === "undefined" ) return;
-
-  const previousHp = actor?.system?.attributes?.hp?.value;
-
-  if ( previousHp < 0 && currentHp > previousHp ) {
-    const diff = currentHp - previousHp;
-    updates["system.attributes.hp.value"] = diff;
-  }
-
-  Logger.debug("Healing recalculated");
 }
 
 /* -------------------------------------------- */
@@ -905,10 +876,10 @@ function updateHpMeter(app, html, data) {
 
   if ( hpValue >= 0 ) return;
 
-  const meter = html[0].querySelector(".meter.hit-points");
+  const meter = html.querySelector(".meter.hit-points");
   meter.classList.add("negative");
 
-  const progress = html[0].querySelector(".progress.hit-points");
+  const progress = html.querySelector(".progress.hit-points");
   const pct = Math.abs(hpValue / hpMax) * 100;
   progress.style = `--bar-percentage: ${pct}%;`;
 

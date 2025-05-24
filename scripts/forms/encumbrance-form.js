@@ -144,6 +144,6 @@ export class EncumbranceForm extends CustomDnd5eForm {
 
     this.setConfig(this.setting);
 
-    SettingsConfig.reloadConfirm();
+    foundry.applications.settings.SettingsConfig.reloadConfirm();
   }
 }

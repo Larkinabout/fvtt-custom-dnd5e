@@ -257,8 +257,8 @@
     "CUSTOM_DND5E.form.houseRules.initiative.rerollInitiativeEachRound.label": "Przerzucanie inicjatywy w każdej rundzie",
     "CUSTOM_DND5E.form.houseRules.initiative.rerollInitiativeEachRound.note": "Przerzuć inicjatywę wszystkich walczących na początku każdej rundy.",
 
-    "CUSTOM_DND5E.form.houseRules.inspiration.awardInspirationD20Value.label": "Nagroda Inspiracja Wartość k20",
-    "CUSTOM_DND5E.form.houseRules.inspiration.awardInspirationD20Value.note": "Wartość do wyrzucenia na k20 w celu przyznania Inspiracji",
+    "CUSTOM_DND5E.form.houseRules.inspiration.awardInspirationDiceValue.label": "Nagroda Inspiracja Wartość k20",
+    "CUSTOM_DND5E.form.houseRules.inspiration.awardInspirationDiceValue.note": "Wartość do wyrzucenia na k20 w celu przyznania Inspiracji",
     "CUSTOM_DND5E.form.houseRules.inspiration.awardInspirationRollTypes.note": "Rodzaje rzutów do przyznania Inspiracji",
     "CUSTOM_DND5E.form.houseRules.prone.proneRotation.note.1": "Kąt obrotu tokena, gdy ma on efekt statusu Powalony.",
     "CUSTOM_DND5E.form.houseRules.resting.useCampSupplies.note": "Podczas długiego odpoczynku opcjonalnie wymagane jest wydanie zapasów obozowych.",
@@ -329,6 +329,7 @@
     "CUSTOM_DND5E.form.spellSchools.edit.title": "Edytuj szkołę zaklęć",
 
     "CUSTOM_DND5E.form.tools.title": "Konfiguracja narzędzi",
+    "CUSTOM_DND5E.form.tools.edit.title": "Edytuj narzędzie",
 
     "CUSTOM_DND5E.form.toolProficiencies.title": "Konfiguracja biegłości narzędzi",
 

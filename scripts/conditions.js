@@ -153,7 +153,7 @@ function buildData(config) {
       if ( !data[statusEffect.id].pseudo ) data[statusEffect.id].sheet = true;
     } else {
       data[statusEffect.id] = statusEffect;
-      data[statusEffect.id].icon = statusEffect.img;
+      data[statusEffect.id].img = statusEffect.img;
       data[statusEffect.id].name = statusEffect.name;
     }
   };
@@ -211,7 +211,7 @@ export function setConfig(data = null) {
 
       if ( value.sheet || value.pseudo ) {
         config.conditionTypes[key] = {
-          icon: value.icon,
+          img: value.img,
           name: localisedName,
           ...(value.levels && { levels: value.levels }),
           ...(value.pseudo && { pseudo: value.pseudo }),
@@ -226,10 +226,13 @@ export function setConfig(data = null) {
       config.statusEffects.push({
         ...(value.hud === false && { hud: value.hud }),
         _id: dnd5e.utils.staticID(`dnd5e${key}`),
+        ...(value.coverBonus !== undefined && { coverBonus: value.coverBonus }),
+        ...(value.exclusiveGroup !== undefined && { exclusiveGroup: value.exclusiveGroup }),
         id: key,
-        img: value.icon,
+        img: value.img,
         ...(value.levels !== undefined && { levels: value.levels }),
         name: localisedName,
+        ...(value.order !== undefined && { order: value.order }),
         ...(value.pseudo && { pseudo: value.pseudo }),
         ...(value.reference !== undefined && { reference: value.reference }),
         ...(value.riders !== undefined && { riders: value.riders }),

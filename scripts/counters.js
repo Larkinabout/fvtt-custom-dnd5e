@@ -51,7 +51,7 @@ function registerSettings() {
  * Register hooks.
  */
 function registerHooks() {
-  Hooks.on("renderInnerActorSheet", addCounters);
+  Hooks.on("renderActorSheetV2", addCounters);
   Hooks.on("renderInnerItemSheet", addCounters);
   Hooks.on("preUpdateActor", handlePreUpdateActor);
   Hooks.on("updateActor", handleUpdateActor);
@@ -404,7 +404,7 @@ function processCounters(type, counters, entity) {
  */
 function renderCountersTab(sheetType, html) {
   if ( sheetType.group || sheetType.item ) {
-    const nav = html[0].querySelector("nav.sheet-navigation.tabs");
+    const nav = html.querySelector("nav.sheet-navigation.tabs");
     const navItem = document.createElement("a");
     navItem.classList.add("item");
     navItem.setAttribute("data-tab", "custom-dnd5e-counters");
@@ -426,11 +426,11 @@ function renderCountersTab(sheetType, html) {
  */
 async function insertCounters(sheetType, counters, app, html, data) {
   const context = { editable: data.editable, counters };
-  if ( app._tabs[0].active === "custom-dnd5e-counters" ) {
+  if ( app?._tabs?.[0]?.active === "custom-dnd5e-counters" ) {
     context.active = " active";
   }
   const template = await foundry.applications.handlebars.renderTemplate(sheetType.template, context);
-  const element = html[0].querySelector(sheetType.insert.class);
+  const element = html.querySelector(sheetType.insert.class);
   element.insertAdjacentHTML(sheetType.insert.position, template);
   return element.querySelector("#custom-dnd5e-counters");
 }

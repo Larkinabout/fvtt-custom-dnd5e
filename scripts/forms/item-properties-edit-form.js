@@ -93,7 +93,7 @@ export class ItemPropertiesEditForm extends ConfigEditForm {
       return {
         key,
         label,
-        checked: !!this.setting[this.key][key]
+        checked: !!this.setting?.[this.key]?.[key]
       };
     }
     );

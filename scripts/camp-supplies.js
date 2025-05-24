@@ -105,9 +105,8 @@ async function addCampSuppliesV1(dialog, options) {
 function addCampSuppliesListener(dialog, html, options) {
   if ( options.isGroup ) return;
 
-  const element = html[0] ?? html;
-  const spendCampSupplies = element.querySelector("#custom-dnd5e-spend-camp-supplies");
-  spendCampSupplies.addEventListener("change", handleRestButtonToggle.bind(spendCampSupplies, element));
+  const spendCampSupplies = html.querySelector("#custom-dnd5e-spend-camp-supplies");
+  spendCampSupplies.addEventListener("change", handleRestButtonToggle.bind(spendCampSupplies, html));
 }
 
 /* -------------------------------------------- */

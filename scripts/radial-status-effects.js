@@ -65,9 +65,9 @@ function registerSettings() {
 function registerPatches() {
   if ( !getSetting(constants.SETTING.KEY) ) return;
 
-  libWrapper.register(MODULE.ID, "Token.prototype._refreshEffects", tokenRefreshEffectsPatch, "WRAPPER");
-  libWrapper.register(MODULE.ID, "Token.prototype._drawEffect", tokenDrawEffectPatch, "WRAPPER");
-  libWrapper.register(MODULE.ID, "Token.prototype._drawOverlay", tokenDrawOverlayPatch, "WRAPPER");
+  libWrapper.register(MODULE.ID, "foundry.canvas.placeables.Token.prototype._refreshEffects", tokenRefreshEffectsPatch, "WRAPPER");
+  libWrapper.register(MODULE.ID, "foundry.canvas.placeables.Token.prototype._drawEffect", tokenDrawEffectPatch, "WRAPPER");
+  libWrapper.register(MODULE.ID, "foundry.canvas.placeables.Token.prototype._drawOverlay", tokenDrawOverlayPatch, "WRAPPER");
 }
 
 /* -------------------------------------------- */
@@ -121,7 +121,7 @@ async function tokenDrawEffectPatch(wrapped, src, tint, overlay = false) {
 
   if ( !src ) return;
 
-  const tex = await loadTexture(src, { fallback: "icons/svg/hazard.svg" });
+  const tex = await foundry.canvas.loadTexture(src, { fallback: "icons/svg/hazard.svg" });
   const icon = new PIXI.Sprite(tex);
   icon.tint = tint ?? 0xFFFFFF;
 

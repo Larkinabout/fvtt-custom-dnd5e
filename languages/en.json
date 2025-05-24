@@ -257,8 +257,8 @@
     "CUSTOM_DND5E.form.houseRules.initiative.rerollInitiativeEachRound.label": "Reroll Initiative Each Round",
     "CUSTOM_DND5E.form.houseRules.initiative.rerollInitiativeEachRound.note": "Reroll Initiative for all combatants at the start of each round",
 
-    "CUSTOM_DND5E.form.houseRules.inspiration.awardInspirationD20Value.label": "Award Inspiration d20 Value",
-    "CUSTOM_DND5E.form.houseRules.inspiration.awardInspirationD20Value.note": "Value to roll on the d20 to award Inspiration",
+    "CUSTOM_DND5E.form.houseRules.inspiration.awardInspirationDiceValue.label": "Award Inspiration Dice Value",
+    "CUSTOM_DND5E.form.houseRules.inspiration.awardInspirationDiceValue.note": "Value to roll on the dice to award Inspiration",
     "CUSTOM_DND5E.form.houseRules.inspiration.awardInspirationRollTypes.note": "Roll types to award Inspiration",
     "CUSTOM_DND5E.form.houseRules.prone.proneRotation.note.1": "Angle to rotate the token when it has the Prone status effect",
     "CUSTOM_DND5E.form.houseRules.resting.useCampSupplies.note": "When taking a Long Rest, optionally require spending Camp Supplies",
@@ -329,6 +329,7 @@
     "CUSTOM_DND5E.form.spellSchools.edit.title": "Edit Spell School",
 
     "CUSTOM_DND5E.form.tools.title": "Configure Tools",
+    "CUSTOM_DND5E.form.tools.edit.title": "Edit Tool",
 
     "CUSTOM_DND5E.form.toolProficiencies.title": "Configure Tool Proficiencies",
 

@@ -96,7 +96,10 @@ function createCursorLabelElement() {
  * Attach listeners for cursor movement and key press events.
  */
 function attachCursorLabelListeners() {
-  const chatLog = document.querySelector("#chat-log");
+  const chatNotifications = document.querySelector("#chat-notifications");
+  chatNotifications.addEventListener("pointermove", handleCursorMove);
+  chatNotifications.addEventListener("pointermove", updateCursorLabelPosition);
+  const chatLog = document.querySelector("#chat .chat-log");
   chatLog.addEventListener("pointermove", handleCursorMove);
   chatLog.addEventListener("pointermove", updateCursorLabelPosition);
   document.addEventListener("keydown", updateCursorLabelVisibility, { passive: true, capture: true });
@@ -112,7 +115,6 @@ function attachCursorLabelListeners() {
  * @param {object} data Actor sheet data.
  */
 function attachAppListeners(app, html, data) {
-  if ( html.find ) html = html[0];
   html.addEventListener("pointermove", handleCursorMove);
   html.addEventListener("pointermove", updateCursorLabelPosition);
 }

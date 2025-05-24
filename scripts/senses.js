@@ -75,7 +75,6 @@ function registerSettings() {
 function registerHooks() {
   if ( !getSetting(constants.SETTING.ENABLE.KEY) ) return;
   Hooks.on("renderMovementSensesConfig", addCustomSensesToConfig);
-  Hooks.on("preRenderActorSheet5eCharacter2", addCustomSensesToSheet);
 }
 
 /* -------------------------------------------- */
@@ -206,31 +205,4 @@ async function addCustomSensesToConfig(app, html) {
     }
   }
   Logger.debug("Custom senses added");
-}
-
-/**
- * Add custom senses to the actor sheet.
- * @param {object} app The app
- * @param {object} data The data
- */
-function addCustomSensesToSheet(app, data) {
-  const senses = getSetting(constants.SETTING.CONFIG.KEY);
-  const actorSenses = data.senses;
-  const sensesData = {};
-
-  for ( const key in senses) {
-    const sense = senses[key];
-    if ( sense.visible || sense.visible === undefined ) {
-      if ( actorSenses[key] ) {
-        sensesData[key] = actorSenses[key];
-      } else {
-        const flagValue = getFlag(app.actor, key);
-        if ( flagValue ) {
-          sensesData[key] = { label: game.i18n.localize(sense.label), value: flagValue };
-        }
-      }
-    }
-  }
-
-  data.senses = sensesData;
 }

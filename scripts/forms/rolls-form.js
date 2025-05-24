@@ -136,6 +136,6 @@ export class RollsForm extends CustomDnd5eForm {
     await setSetting(CONSTANTS.ROLLS.SETTING.ROLLS.KEY, {});
     await setSetting(CONSTANTS.ROLLS.SETTING.ROLLS.KEY, rolls.rolls);
 
-    SettingsConfig.reloadConfirm();
+    foundry.applications.settings.SettingsConfig.reloadConfirm();
   }
 }

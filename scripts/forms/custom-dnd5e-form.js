@@ -367,11 +367,12 @@ export class CustomDnd5eForm extends HandlebarsApplicationMixin(ApplicationV2) {
 
     items.forEach(item => {
       const key = item.dataset?.key;
-      if ( !key ) return;
+      const lastKey = key?.split(".").pop();
+      if ( !lastKey ) return;
 
       const parentKey = item.closest("ul")?.closest("li")?.dataset?.key;
 
-      const newKey = parentKey ? `${parentKey}.${this.nestType}.${key}` : key;
+      const newKey = parentKey ? `${parentKey}.${this.nestType}.${lastKey}` : lastKey;
 
       if ( item.dataset.key === newKey ) return;
 
@@ -578,7 +579,7 @@ export class CustomDnd5eForm extends HandlebarsApplicationMixin(ApplicationV2) {
       }
 
       if ( requiresReload ) {
-        SettingsConfig.reloadConfirm();
+        foundry.applications.settings.SettingsConfig.reloadConfirm();
       }
     } catch (err) {
       Logger.error(`Failed to save configuration: ${err.message}`, true);
