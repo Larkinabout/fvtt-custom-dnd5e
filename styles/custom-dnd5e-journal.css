@@ -65,3 +65,15 @@ article.custom-dnd5e-tip {
 article.custom-dnd5e-warning {
     border-left: 3px solid var(--custom-dnd5e-warning-color);
 }
+
+[id*="custom-dnd5e"].sheet.journal-entry-page .page-metadata {
+  display: none;
+}
+
+[id*="custom-dnd5e"].sheet.journal-entry-page .editor-menu {
+  display: none;
+}
+
+[id*="custom-dnd5e"].sheet.journal-entry-page .journal-footer {
+  display: none;
+}
