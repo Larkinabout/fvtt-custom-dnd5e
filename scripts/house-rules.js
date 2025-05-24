@@ -1,4 +1,5 @@
 import { CONSTANTS, SHEET_TYPE } from "./constants.js";
+import { updateBloodied } from "./bloodied.js";
 import {
   c5eLoadTemplates,
   Logger,
@@ -6,16 +7,10 @@ import {
   getSetting,
   registerMenu,
   registerSetting,
-  makeBloodied,
-  unmakeBloodied,
   makeDead,
   unmakeDead,
   makeUnconscious,
   unmakeUnconscious,
-  rotateToken,
-  unrotateToken,
-  tintToken,
-  untintToken
 } from "./utils.js";
 import { HouseRulesForm } from "./forms/house-rules-form.js";
 
@@ -98,48 +93,6 @@ function registerSettings() {
       config: false,
       type: Boolean,
       default: false
-    }
-  );
-
-  registerSetting(
-    CONSTANTS.BLOODIED.SETTING.APPLY_BLOODIED.KEY,
-    {
-      scope: "world",
-      config: false,
-      type: Boolean,
-      default: false,
-      requiresReload: true
-    }
-  );
-
-  registerSetting(
-    CONSTANTS.BLOODIED.SETTING.REMOVE_BLOODIED_ON_DEAD.KEY,
-    {
-      scope: "world",
-      config: false,
-      type: Boolean,
-      default: false,
-      requiresReload: true
-    }
-  );
-
-  registerSetting(
-    CONSTANTS.BLOODIED.SETTING.BLOODIED_ICON.KEY,
-    {
-      scope: "world",
-      config: false,
-      type: String,
-      default: CONSTANTS.BLOODIED.ICON
-    }
-  );
-
-  registerSetting(
-    CONSTANTS.BLOODIED.SETTING.BLOODIED_TINT.KEY,
-    {
-      scope: "world",
-      config: false,
-      type: String,
-      default: "#ff0000"
     }
   );
 
@@ -303,8 +256,6 @@ function registerHooks() {
   Hooks.on("dnd5e.preRollClassHitPoints", setHitDiceRollFormula);
   Hooks.on("renderHitPointsFlow", modifyHitPointsFlowDialog);
   Hooks.on("combatRound", rerollInitiative);
-  Hooks.on("createActiveEffect", (activeEffect, options, userId) => { updateTokenEffects(true, activeEffect, userId); });
-  Hooks.on("deleteActiveEffect", (activeEffect, options, userId) => { updateTokenEffects(false, activeEffect, userId); });
   Hooks.on("createToken", rollNpcHp);
   Hooks.on("dnd5e.preApplyDamage", (actor, amount, updates, options) => {
     recalculateDamage(actor, amount, updates, options);
@@ -390,77 +341,6 @@ export function modifyHitPointsFlowDialog(app, html, data) {
       averageLabel.innerHTML = "";
     }
   }
-}
-
-
-/* -------------------------------------------- */
-
-/**
- * If the system version is 3.3.1 or newer, set the core Bloodied setting to 'none'.
- * Add the Bloodied condition to CONFIG.DND5E.conditionTypes.
- * Add the Bloodied status effect to CONFIG.statusEffects.
- */
-export function registerBloodied() {
-  if ( !getSetting(CONSTANTS.BLOODIED.SETTING.APPLY_BLOODIED.KEY) ) return;
-
-  Logger.debug("Registering Bloodied...");
-
-  if ( foundry.utils.isNewerVersion(game.system.version, "3.3.1") ) {
-    const coreBloodied = game.settings.get("dnd5e", "bloodied");
-    if ( coreBloodied !== "none" ) {
-      game.settings.set("dnd5e", "bloodied", "none");
-    }
-  }
-
-  const bloodied = buildBloodied();
-
-  // Add bloodied to CONFIG.statusEffects
-  CONFIG.statusEffects.push(bloodied.statusEffect);
-
-  const conditionTypes = {};
-
-  Object.entries(CONFIG.DND5E.conditionTypes).forEach(([key, value]) => {
-    const conditionLabel = game.i18n.localize(value.label);
-    if ( conditionLabel > bloodied.conditionType.label
-        && !conditionTypes.bloodied
-        && !CONFIG.DND5E.conditionTypes.bloodied ) {
-      conditionTypes.bloodied = bloodied.conditionType;
-    }
-    conditionTypes[key] = (key === "bloodied") ? bloodied.conditionType : value;
-  });
-
-  CONFIG.DND5E.conditionTypes = conditionTypes;
-
-  Logger.debug("Bloodied registered");
-}
-
-/* -------------------------------------------- */
-
-/**
- * Build Bloodied data.
- *
- * @returns {object} The Bloodied data
- */
-export function buildBloodied() {
-  const label = game.i18n.localize("CUSTOM_DND5E.bloodied");
-  const img = getSetting(CONSTANTS.BLOODIED.SETTING.BLOODIED_ICON.KEY) ?? CONSTANTS.BLOODIED.ICON;
-
-  const data = {
-    conditionType: {
-      label,
-      icon: img,
-      reference: CONSTANTS.BLOODIED.CONDITION_UUID
-    },
-    statusEffect: {
-      _id: "dnd5ebloodied000",
-      id: "bloodied",
-      name: label,
-      img,
-      reference: CONSTANTS.BLOODIED.CONDITION_UUID
-    }
-  };
-
-  return data;
 }
 
 /* -------------------------------------------- */
@@ -676,47 +556,6 @@ async function rollNpcHp(token, data, userId) {
   actor.update({ "system.attributes.hp": { value: r.total, max: r.total } }, { isRest: true });
 
   Logger.debug("NPC HP rolled", { token, hp: r.total });
-}
-
-/* -------------------------------------------- */
-
-/**
- * Triggered by the 'dnd5e.preApplyDamage' hook.
- * If 'Apply Bloodied' is enabled, apply or remove the Bloodied condition and other token effects
- * based on the HP change.
- * If the actor is dead and 'Remove Bloodied on Dead' is enabled, remove the Bloodied condition.
- * @param {object} actor The actor
- * @param {object} updates The updates
- * @param {boolean} dead Whether or not the actor is dead
- * @returns {boolean} Whether the Bloodied condition was updated
- */
-function updateBloodied(actor, updates, dead) {
-  if ( !getSetting(CONSTANTS.BLOODIED.SETTING.APPLY_BLOODIED.KEY) ) return false;
-
-  Logger.debug("Updating Bloodied...");
-
-  const currentHp = foundry.utils.getProperty(updates, "system.attributes.hp.value") ?? actor?.system?.attributes?.hp?.value;
-  const maxHp = foundry.utils.getProperty(updates, "updates.system.attributes.hp.max") ?? actor?.system?.attributes?.hp?.max;
-
-  if ( typeof currentHp === "undefined" ) return null;
-
-  const halfHp = Math.ceil(maxHp * 0.5);
-
-  if ( currentHp <= halfHp
-        && !actor.effects.has("dnd5ebloodied000")
-        && !(dead && getSetting(CONSTANTS.BLOODIED.SETTING.REMOVE_BLOODIED_ON_DEAD.KEY)) ) {
-    makeBloodied(actor);
-    Logger.debug("Bloodied updated", { bloodied: true });
-    return true;
-  } else if ( (currentHp > halfHp && actor.effects.has("dnd5ebloodied000"))
-        || (dead && getSetting(CONSTANTS.BLOODIED.SETTING.REMOVE_BLOODIED_ON_DEAD.KEY)) ) {
-    unmakeBloodied(actor);
-    Logger.debug("Bloodied updated", { bloodied: false });
-    return false;
-  }
-
-  Logger.debug("Bloodied not updated");
-  return false;
 }
 
 /* -------------------------------------------- */
@@ -982,61 +821,6 @@ function capturePreviousData(actor, data, options, userId) {
   };
 
   Logger.debug("Previous data captured", { previousData: options.customDnd5e });
-}
-
-/* -------------------------------------------- */
-
-/**
- * Triggered by the 'createActiveEffect' and 'deleteActiveEffect' hooks.
- * If the active effect is prone, bloodied, or dead, update the token effects.
- * @param {boolean} active Whether the active effect is active
- * @param {object} activeEffect The active effect
- * @param {string} userId The user ID
- */
-function updateTokenEffects(active, activeEffect, userId) {
-  if ( !game.user.isGM && (game.user.id !== userId || !game.user.hasPermission("TOKEN_CONFIGURE")) ) return;
-
-  let prone = [...activeEffect.statuses].includes("prone");
-  let bloodied = [...activeEffect.statuses].includes("bloodied");
-  let dead = [...activeEffect.statuses].includes("dead");
-
-  if ( !prone && !bloodied && !dead ) return;
-
-  let tint = null;
-  let rotation = null;
-
-  const actor = activeEffect.parent;
-  prone = (active && prone) || actor.effects.has("dnd5eprone000000");
-  bloodied = (active && bloodied) || actor.effects.has("dnd5ebloodied000");
-  dead = (active && dead) || actor.effects.has("dnd5edead0000000");
-
-  Logger.debug("Updating token effects...", { bloodied, dead, prone });
-
-  if ( dead ) {
-    tint = getSetting(CONSTANTS.DEAD.SETTING.DEAD_TINT.KEY);
-    rotation = getSetting(CONSTANTS.DEAD.SETTING.DEAD_ROTATION.KEY);
-  } else {
-    if ( bloodied ) { tint = getSetting(CONSTANTS.BLOODIED.SETTING.BLOODIED_TINT.KEY); }
-    if ( prone ) { rotation = getSetting(CONSTANTS.PRONE.SETTING.PRONE_ROTATION.KEY); }
-  }
-
-  if ( [...activeEffect.statuses].includes("dead") && !activeEffect?.flags?.["custom-dnd5e"]?.ignore ) {
-    updateBloodied(actor, null, dead);
-  }
-
-  if ( tint ) {
-    actor.getActiveTokens().forEach(token => tintToken(token, tint));
-  } else {
-    actor.getActiveTokens().forEach(token => untintToken(token, tint));
-  }
-
-  if ( rotation ) {
-    actor.getActiveTokens().forEach(token => rotateToken(token, rotation));
-  } else {
-    actor.getActiveTokens().forEach(token => unrotateToken(token, rotation));
-  }
-
-  Logger.debug("Token effects updated");
 }
 
 /* -------------------------------------------- */

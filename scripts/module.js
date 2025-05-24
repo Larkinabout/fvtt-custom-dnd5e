@@ -7,6 +7,7 @@ import { register as registerActorSizes, setConfig as setActorSizes } from "./ac
 import { register as registerArmorCalculations, setConfig as setArmorCalculations } from "./armor-calculations.js";
 import { register as registerArmorIds, setConfig as setArmorIds } from "./armor-ids.js";
 import { register as registerArmorProficiencies, setConfig as setArmorProficiencies } from "./armor-proficiencies.js";
+import { register as registerBloodied, setConfig as setBloodied } from "./bloodied.js";
 import { register as registerCampSupplies } from "./camp-supplies.js";
 import { register as registerConditions, registerMenu as registerConditionsMenu, setConfig as setConditions } from "./conditions.js";
 import { register as registerConsumableTypes, setConfig as setConsumableTypes } from "./consumable-types.js";
@@ -48,6 +49,7 @@ import { register as registerSkills, setConfig as setSkills } from "./skills.js"
 import { register as registerSpellSchools, setConfig as setSpellSchools } from "./spell-schools.js";
 import { register as registerRadialStatusEffects } from "./radial-status-effects.js";
 import { register as registerTokenBorder } from "./token-border.js";
+import { register as registerTokenEffects } from "./token-effects.js";
 import { register as registerToolIds, setConfig as setTools } from "./tools.js";
 import { register as registerToolProficiencies, setConfig as setToolProficiencies } from "./tool-proficiencies.js";
 import { register as registerWeaponIds, setConfig as setWeaponIds } from "./weapon-ids.js";
@@ -113,6 +115,7 @@ Hooks.on("init", async () => {
   registerArmorCalculations();
   registerArmorIds();
   registerArmorProficiencies();
+  registerBloodied();
   registerCampSupplies();
   registerConditionsMenu();
   registerConsumableTypes();
@@ -138,6 +141,7 @@ Hooks.on("init", async () => {
   registerMisc();
   registerRadialStatusEffects();
   registerTokenBorder();
+  registerTokenEffects();
   registerDebug();
 
   setAbilities(getSetting(CONSTANTS.ABILITIES.SETTING.CONFIG.KEY));
@@ -199,6 +203,7 @@ Hooks.on("ready", async () => {
   setArmorCalculations(getSetting(CONSTANTS.ARMOR_CALCULATIONS.SETTING.CONFIG.KEY));
   setArmorIds(getSetting(CONSTANTS.ARMOR_IDS.SETTING.CONFIG.KEY));
   setArmorProficiencies(getSetting(CONSTANTS.ARMOR_PROFICIENCIES.SETTING.CONFIG.KEY));
+  setBloodied(getSetting(CONSTANTS.BLOODIED.SETTING.CONFIG.KEY));
   setConditions(getSetting(CONSTANTS.CONDITIONS.SETTING.CONFIG.KEY));
   setConsumableTypes(getSetting(CONSTANTS.CONSUMABLE_TYPES.SETTING.CONFIG.KEY));
   setDamageTypes(getSetting(CONSTANTS.DAMAGE_TYPES.SETTING.CONFIG.KEY));

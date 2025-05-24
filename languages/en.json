@@ -19,6 +19,7 @@
     "CUSTOM_DND5E.clientSettings.label": "Client Settings",
     "CUSTOM_DND5E.clientSettings.note": "These settings only affect the current user and are configurable by each user.",
     "CUSTOM_DND5E.concentrationSavingThrow": "Concentration Saving Throw",
+    "CUSTOM_DND5E.configuration": "Configuration",
     "CUSTOM_DND5E.configureCounters": "Configure Counters",
     "CUSTOM_DND5E.consumable": "Consumable",
     "CUSTOM_DND5E.container": "Container",
@@ -78,6 +79,8 @@
     "CUSTOM_DND5E.onShortRest": "On Short Rest",
     "CUSTOM_DND5E.openGuide": "Open Guide",
     "CUSTOM_DND5E.options": "Options",
+    "CUSTOM_DND5E.override": "Override",
+    "CUSTOM_DND5E.other": "Other",
     "CUSTOM_DND5E.physical": "Physical",
     "CUSTOM_DND5E.proficientEquippedItemWeightModifier": "Proficient & Equipped Item Weight Modifier",
     "CUSTOM_DND5E.prone": "Prone",
@@ -102,10 +105,12 @@
     "CUSTOM_DND5E.square": "Square",
     "CUSTOM_DND5E.startOfCombat": "Start of Combat",
     "CUSTOM_DND5E.startOfTurn": "Start of Turn",
+    "CUSTOM_DND5E.status": "Status",
     "CUSTOM_DND5E.statuses": "Statuses",
     "CUSTOM_DND5E.successFailure": "Success/Failure",
     "CUSTOM_DND5E.successes": "Successes",
     "CUSTOM_DND5E.tag": "Tag",
+    "CUSTOM_DND5E.threshold": "Threshold",
     "CUSTOM_DND5E.thresholds": "Thresholds",
     "CUSTOM_DND5E.tint": "Tint",
     "CUSTOM_DND5E.token": "Token",
@@ -132,10 +137,8 @@
     "CUSTOM_DND5E.worldSettings.label": "World Settings",
     "CUSTOM_DND5E.worldSettings.note": "These settings affect all users and are only configurable by the GM.",
     "CUSTOM_DND5E.yes": "Yes",
-
     "CUSTOM_DND5E.dialog.delete.content": "This will also delete the item from all actors. Do you wish to continue?",
     "CUSTOM_DND5E.dialog.delete.title": "Delete Item",
-
     "CUSTOM_DND5E.dialog.importData.noFile": "No file chosen",
     "CUSTOM_DND5E.dialog.importData.differentVersion": "Failed to import configuration as the file's version '{fileVersion}' is different to the installed version '{currentVersion}'",
     "CUSTOM_DND5E.dialog.importData.settingsImported": "Finished importing module settings",
@@ -146,10 +149,8 @@
     "CUSTOM_DND5E.dialog.importData.note.2": "This action will overwrite the existing Custom D&D 5e configuration",
     "CUSTOM_DND5E.dialog.levelUpHitPointsRerollOnce.note": "When rolling for Hit Points, if the first roll is below {minimumValue}, the die will automatically reroll once, taking the second result.",
     "CUSTOM_DND5E.dialog.levelUpHitPointsRerollForever.note": "When rolling for Hit Points, the die will reroll until the result is at least {minimumValue}.",
-
     "CUSTOM_DND5E.dialog.reset.content": "This will reset everything back to the system configuration. Do you wish to continue?",
     "CUSTOM_DND5E.dialog.reset.title": "Reset Configuration",
-    
     "CUSTOM_DND5E.form.button.delete.label": "Delete",
     "CUSTOM_DND5E.form.button.delete.tooltip": "Delete",
     "CUSTOM_DND5E.form.button.export.label": "Export Data",
@@ -161,29 +162,30 @@
     "CUSTOM_DND5E.form.button.save.label": "Save and Close",
     "CUSTOM_DND5E.form.button.save.tooltip": "Save and Close",
     "CUSTOM_DND5E.form.checkbox.visible.tooltip": "Visible",
-
     "CUSTOM_DND5E.form.abilities.title": "Configure Abilities",
     "CUSTOM_DND5E.form.abilities.edit.title": "Edit Ability",
-
     "CUSTOM_DND5E.form.activityActivationTypes.title": "Configure Activation Costs",
     "CUSTOM_DND5E.form.activityActivationTypes.edit.title": "Edit Activation Cost",
-
     "CUSTOM_DND5E.form.actorSizes.title": "Configure Actor Sizes",
     "CUSTOM_DND5E.form.actorSizes.edit.title": "Edit Actor Size",
-
     "CUSTOM_DND5E.form.armorClasses.title": "Configure Armor Calculations",
     "CUSTOM_DND5E.form.armorClasses.edit.title": "Edit Armor Calculation",
-
     "CUSTOM_DND5E.form.armorIds.title": "Configure Armor",
-
     "CUSTOM_DND5E.form.armorProficiencies.title": "Configure Armor Proficiencies",
-
+    "CUSTOM_DND5E.form.bloodied.applyBloodied.label": "Override Bloodied",
+    "CUSTOM_DND5E.form.bloodied.applyBloodied.note1": "Override the core Bloodied with the Custom D&D 5e version",
+    "CUSTOM_DND5E.form.bloodied.applyBloodied.note2": "Enabling this will disable D&D 5e's Bloodied Status setting",
+    "CUSTOM_DND5E.form.bloodied.bloodiedIcon.label": "Icon",
+    "CUSTOM_DND5E.form.bloodied.bloodiedIcon.note": "Icon for the Bloodied status effect",
+    "CUSTOM_DND5E.form.bloodied.bloodiedTint.note.1": "Color to tint the token when it has the Bloodied condition",
+    "CUSTOM_DND5E.form.bloodied.bloodiedTint.note.2": "Must be in hex color format. Leave blank for no tint",
+    "CUSTOM_DND5E.form.bloodied.removeBloodiedOnDead.label": "Remove on Dead",
+    "CUSTOM_DND5E.form.bloodied.removeBloodiedOnDead.note": "Remove the Bloodied condition when a creature has the Dead status effect",
+    "CUSTOM_DND5E.form.bloodied.title": "Configure Bloodied",
     "CUSTOM_DND5E.form.conditions.title": "Configure Conditions",
     "CUSTOM_DND5E.form.conditions.edit.title": "Edit Condition",
-
     "CUSTOM_DND5E.form.consumableTypes.title": "Configure Consumable Types",
     "CUSTOM_DND5E.form.consumableTypes.edit.title": "Edit Consumable Type",
-
     "CUSTOM_DND5E.form.counters.triggers.tooltip": "Advanced Options",
     "CUSTOM_DND5E.form.counters.copyProperty.message": "'Property \"{property}\" copied to clipboard.'",
     "CUSTOM_DND5E.form.counters.copyProperty.tooltip": "Copy Property to Clipboard",
@@ -202,13 +204,10 @@
     "CUSTOM_DND5E.form.counters.triggers.trigger.choices.halfHp": "Half HP or lower",
     "CUSTOM_DND5E.form.counters.triggers.trigger.choices.roll1": "Roll 1 on a d20",
     "CUSTOM_DND5E.form.counters.triggers.trigger.choices.roll20": "Roll 20 on a d20",
-
     "CUSTOM_DND5E.form.currencies.title": "Configure Currency",
     "CUSTOM_DND5E.form.currencies.edit.title": "Edit Currency",
-
     "CUSTOM_DND5E.form.damageTypes.title": "Configure Damage Types",
     "CUSTOM_DND5E.form.damageTypes.edit.title": "Edit Damage Type",
-
     "CUSTOM_DND5E.form.debug.button.exportData.tooltip": "Export Data",
     "CUSTOM_DND5E.form.debug.consoleMessages.label": "Enable Console Messages",
     "CUSTOM_DND5E.form.debug.consoleMessages.note.1": "Enable debugging messages in the browser's console",
@@ -219,18 +218,7 @@
     "CUSTOM_DND5E.form.debug.importData.note.1": "Import the module's settings and configuration from file",
     "CUSTOM_DND5E.form.debug.importData.note.2": "All existing data will be overwritten",
     "CUSTOM_DND5E.form.debug.title": "Debug Settings",
-
     "CUSTOM_DND5E.form.encumbrance.title": "Configure Encumbrance",
-
-    "CUSTOM_DND5E.form.houseRules.bloodied.applyBloodied.label": "Apply Bloodied",
-    "CUSTOM_DND5E.form.houseRules.bloodied.applyBloodied.note1": "Apply the Bloodied condition when a character or NPC is reduced to half HP or lower",
-    "CUSTOM_DND5E.form.houseRules.bloodied.applyBloodied.note2": "Enabling this will disable D&D 5e's Bloodied Status setting",
-    "CUSTOM_DND5E.form.houseRules.bloodied.bloodiedIcon.label": "Icon",
-    "CUSTOM_DND5E.form.houseRules.bloodied.bloodiedIcon.note": "Icon for the Bloodied status effect",
-    "CUSTOM_DND5E.form.houseRules.bloodied.bloodiedTint.note.1": "Color to tint the token when it has the Bloodied condition",
-    "CUSTOM_DND5E.form.houseRules.bloodied.bloodiedTint.note.2": "Must be in hex color format. Leave blank for no tint",
-    "CUSTOM_DND5E.form.houseRules.bloodied.removeBloodiedOnDead.label": "Remove on Dead",
-    "CUSTOM_DND5E.form.houseRules.bloodied.removeBloodiedOnDead.note": "Remove the Bloodied condition when a creature has the Dead status effect",
     "CUSTOM_DND5E.form.houseRules.dead.applyDead.label": "Apply Dead",
     "CUSTOM_DND5E.form.houseRules.dead.applyDead.note": "Apply the Dead status effect when an NPC is reduced to 0 HP",
     "CUSTOM_DND5E.form.houseRules.dead.applyInstantDeath.label": "Apply Instant Death",
@@ -256,7 +244,6 @@
     "CUSTOM_DND5E.form.houseRules.hitPoints.negativeHpHealFromZero.note": "Heal from 0 HP when a character has negative HP",
     "CUSTOM_DND5E.form.houseRules.initiative.rerollInitiativeEachRound.label": "Reroll Initiative Each Round",
     "CUSTOM_DND5E.form.houseRules.initiative.rerollInitiativeEachRound.note": "Reroll Initiative for all combatants at the start of each round",
-
     "CUSTOM_DND5E.form.houseRules.inspiration.awardInspirationDiceValue.label": "Award Inspiration Dice Value",
     "CUSTOM_DND5E.form.houseRules.inspiration.awardInspirationDiceValue.note": "Value to roll on the dice to award Inspiration",
     "CUSTOM_DND5E.form.houseRules.inspiration.awardInspirationRollTypes.note": "Roll types to award Inspiration",
@@ -272,26 +259,17 @@
     "CUSTOM_DND5E.form.houseRules.rollingHitPoints.showTakeAverage.note": "Show the Take Average checkbox",
     "CUSTOM_DND5E.form.houseRules.unconscious.applyUnconscious.label": "Apply Unconscious",
     "CUSTOM_DND5E.form.houseRules.unconscious.applyUnconscious.note": "Apply the Unconscious status effect when a PC is reduced to 0 HP",
-
     "CUSTOM_DND5E.form.houseRules.title": "Configure House Rules",
-
     "CUSTOM_DND5E.form.itemActionTypes.title": "Configure Item Action Types",
     "CUSTOM_DND5E.form.itemActionTypes.edit.title": "Edit Item Action Type",
-
     "CUSTOM_DND5E.form.itemActivationCostTypes.title": "Configure Item Activation Cost Types",
     "CUSTOM_DND5E.form.itemActivationCostTypes.edit.title": "Edit Item Activation Cost Type",
-
     "CUSTOM_DND5E.form.itemProperties.title": "Configure Item Properties",
     "CUSTOM_DND5E.form.itemProperties.edit.title": "Edit Item Property",
-
     "CUSTOM_DND5E.form.itemRarity.title": "Configure Item Rarity",
-
     "CUSTOM_DND5E.form.languages.title": "Configure Languages",
-
     "CUSTOM_DND5E.form.rolls.title": "Configure Rolls",
-
     "CUSTOM_DND5E.form.senses.title": "Configure Senses",
-
     "CUSTOM_DND5E.form.sheet.autoFadeSheet.note.1": "Automatically fade out the sheet when it is not hovered over",
     "CUSTOM_DND5E.form.sheet.autoFadeSheet.note.2": "Press CTRL to keep the faded view while moving onto the sheet, and press CTRL to keep the full view while moving off the sheet.",
     "CUSTOM_DND5E.form.sheet.autoFadeSheet.label": "Enable Auto-Fade",
@@ -321,141 +299,108 @@
     "CUSTOM_DND5E.form.sheet.showUseLairAction.note": "Show Use Lair Action on the NPC sheet",
     "CUSTOM_DND5E.form.sheet.showUseLairAction.label": "Show Use Lair Action",
     "CUSTOM_DND5E.form.sheet.title": "Configure Sheet",
-
     "CUSTOM_DND5E.form.skills.title": "Configure Skills",
     "CUSTOM_DND5E.form.skills.edit.title": "Edit Skill",
-
     "CUSTOM_DND5E.form.spellSchools.title": "Configure Spell Schools",
     "CUSTOM_DND5E.form.spellSchools.edit.title": "Edit Spell School",
-
     "CUSTOM_DND5E.form.tools.title": "Configure Tools",
     "CUSTOM_DND5E.form.tools.edit.title": "Edit Tool",
-
     "CUSTOM_DND5E.form.toolProficiencies.title": "Configure Tool Proficiencies",
-
     "CUSTOM_DND5E.form.weaponIds.title": "Configure Weapons",
-
     "CUSTOM_DND5E.form.weaponProficiencies.title": "Configure Weapon Proficiencies",
-
     "CUSTOM_DND5E.menu.abilities.hint": "Configure Abilities",
     "CUSTOM_DND5E.menu.abilities.label": "Configure Abilities",
     "CUSTOM_DND5E.menu.abilities.name": "Configure Abilities",
-
     "CUSTOM_DND5E.menu.activityActivationTypes.hint": "Configure Activation Costs",
     "CUSTOM_DND5E.menu.activityActivationTypes.label": "Configure Activation Costs",
     "CUSTOM_DND5E.menu.activityActivationTypes.name": "Configure Activation Costs",
-
     "CUSTOM_DND5E.menu.actorSizes.hint": "Configure Actor Sizes",
     "CUSTOM_DND5E.menu.actorSizes.label": "Configure Actor Sizes",
     "CUSTOM_DND5E.menu.actorSizes.name": "Configure Actor Sizes",
-
     "CUSTOM_DND5E.menu.armorClasses.hint": "Configure Armor Calculations",
     "CUSTOM_DND5E.menu.armorClasses.label": "Configure Armor Calculations",
     "CUSTOM_DND5E.menu.armorClasses.name": "Configure Armor Calculations",
-
     "CUSTOM_DND5E.menu.armorIds.hint": "Configure Armor",
     "CUSTOM_DND5E.menu.armorIds.label": "Configure Armor",
     "CUSTOM_DND5E.menu.armorIds.name": "Configure Armor",
-
     "CUSTOM_DND5E.menu.armorProficiencies.hint": "Configure Armor Proficiencies",
     "CUSTOM_DND5E.menu.armorProficiencies.label": "Configure Armor Proficiencies",
     "CUSTOM_DND5E.menu.armorProficiencies.name": "Configure Armor Proficiencies",
-
+    "CUSTOM_DND5E.menu.bloodied.hint": "Configure Bloodied",
+    "CUSTOM_DND5E.menu.bloodied.label": "Configure Bloodied",
+    "CUSTOM_DND5E.menu.bloodied.name": "Configure Bloodied",
     "CUSTOM_DND5E.menu.conditions.hint": "Configure Conditions",
     "CUSTOM_DND5E.menu.conditions.label": "Configure Conditions",
     "CUSTOM_DND5E.menu.conditions.name": "Configure Conditions",
-
     "CUSTOM_DND5E.menu.consumableTypes.hint": "Configure Consumable Types",
     "CUSTOM_DND5E.menu.consumableTypes.label": "Configure Consumable Types",
     "CUSTOM_DND5E.menu.consumableTypes.name": "Configure Consumable Types",
-
     "CUSTOM_DND5E.menu.counters.hint": "Configure Counters",
     "CUSTOM_DND5E.menu.counters.label": "Configure Counters",
     "CUSTOM_DND5E.menu.counters.name": "Configure Counters",
-
     "CUSTOM_DND5E.menu.currencies.hint": "Configure Currency",
     "CUSTOM_DND5E.menu.currencies.label": "Configure Currency",
     "CUSTOM_DND5E.menu.currencies.name": "Configure Currency",
-    
     "CUSTOM_DND5E.menu.damageTypes.hint": "Configure Damage Types",
     "CUSTOM_DND5E.menu.damageTypes.label": "Configure Damage Types",
     "CUSTOM_DND5E.menu.damageTypes.name": "Configure Damage Types",
-
     "CUSTOM_DND5E.menu.debug.hint": "Debug Settings",
     "CUSTOM_DND5E.menu.debug.label": "Debug Settings",
     "CUSTOM_DND5E.menu.debug.name": "Debug Settings",
-
     "CUSTOM_DND5E.menu.encumbrance.hint": "Configure Encumbrance",
     "CUSTOM_DND5E.menu.encumbrance.label": "Configure Encumbrance",
     "CUSTOM_DND5E.menu.encumbrance.name": "Configure Encumbrance",
-
     "CUSTOM_DND5E.menu.houseRules.hint": "Configure House Rules",
     "CUSTOM_DND5E.menu.houseRules.label": "Configure House Rules",
     "CUSTOM_DND5E.menu.houseRules.name": "Configure House Rules",
-
     "CUSTOM_DND5E.menu.itemActionTypes.hint": "Configure Item Action Types",
     "CUSTOM_DND5E.menu.itemActionTypes.label": "Configure Item Action Types",
     "CUSTOM_DND5E.menu.itemActionTypes.name": "Configure Item Action Types",
-
     "CUSTOM_DND5E.menu.itemActivationCostTypes.hint": "Configure Item Activation Cost Types",
     "CUSTOM_DND5E.menu.itemActivationCostTypes.label": "Configure Item Activation Cost Types",
     "CUSTOM_DND5E.menu.itemActivationCostTypes.name": "Configure Item Activation Cost Types",
-
     "CUSTOM_DND5E.menu.itemProperties.hint": "Configure Item Properties",
     "CUSTOM_DND5E.menu.itemProperties.label": "Configure Item Properties",
     "CUSTOM_DND5E.menu.itemProperties.name": "Configure Item Properties",
-
     "CUSTOM_DND5E.menu.itemRarity.hint": "Configure Item Rarity",
     "CUSTOM_DND5E.menu.itemRarity.label": "Configure Item Rarity",
     "CUSTOM_DND5E.menu.itemRarity.name": "Configure Item Rarity",
-
     "CUSTOM_DND5E.menu.languages.hint": "Configure Languages",
     "CUSTOM_DND5E.menu.languages.label": "Configure Languages",
     "CUSTOM_DND5E.menu.languages.name": "Configure Languages",
-
     "CUSTOM_DND5E.menu.rolls.hint": "Configure Rolls",
     "CUSTOM_DND5E.menu.rolls.label": "Configure Rolls",
     "CUSTOM_DND5E.menu.rolls.name": "Configure Rolls",
-
     "CUSTOM_DND5E.menu.senses.hint": "Configure Senses",
     "CUSTOM_DND5E.menu.senses.label": "Configure Senses",
     "CUSTOM_DND5E.menu.senses.name": "Configure Senses",
-
     "CUSTOM_DND5E.menu.sheet.hint": "Configure Sheet",
     "CUSTOM_DND5E.menu.sheet.label": "Configure Sheet",
     "CUSTOM_DND5E.menu.sheet.name": "Configure Sheet",
-
     "CUSTOM_DND5E.menu.skills.hint": "Configure Skills",
     "CUSTOM_DND5E.menu.skills.label": "Configure Skills",
     "CUSTOM_DND5E.menu.skills.name": "Configure Skills",
-
     "CUSTOM_DND5E.menu.spellSchools.hint": "Configure Spell Schools",
     "CUSTOM_DND5E.menu.spellSchools.label": "Configure Spell Schools",
     "CUSTOM_DND5E.menu.spellSchools.name": "Configure Spell Schools",
-
     "CUSTOM_DND5E.menu.tools.hint": "Configure Tools",
     "CUSTOM_DND5E.menu.tools.label": "Configure Tools",
     "CUSTOM_DND5E.menu.tools.name": "Configure Tools",
-
     "CUSTOM_DND5E.menu.toolProficiencies.hint": "Configure Tool Proficiencies",
     "CUSTOM_DND5E.menu.toolProficiencies.label": "Configure Tool Proficiencies",
     "CUSTOM_DND5E.menu.toolProficiencies.name": "Configure Tool Proficiencies",
-
     "CUSTOM_DND5E.menu.weaponIds.hint": "Configure Weapons",
     "CUSTOM_DND5E.menu.weaponIds.label": "Configure Weapons",
     "CUSTOM_DND5E.menu.weaponIds.name": "Configure Weapons",
-
     "CUSTOM_DND5E.menu.weaponProficiencies.hint": "Configure Weapon Proficiencies",
     "CUSTOM_DND5E.menu.weaponProficiencies.label": "Configure Weapon Proficiencies",
     "CUSTOM_DND5E.menu.weaponProficiencies.name": "Configure Weapons Proficiencies",
-
     "CUSTOM_DND5E.message.awardInspiration": "<p>{name} was awarded Inspiration for rolling a {value}.</p>",
     "CUSTOM_DND5E.message.awardInspirationAlready": "<p>{name} rolled a {value}, but already has Inspiration.</p>",
     "CUSTOM_DND5E.message.exhaustion": "<p>{name} suffered Exhaustion.</p>",
     "CUSTOM_DND5E.message.exhaustionDied": "<p>{name} died from Exhaustion.</p>",
     "CUSTOM_DND5E.message.instantDeath": "<p>{name} suffered Instant Death.</p>",
     "CUSTOM_DND5E.message.massiveDamage": "{name} suffered Massive Damage.",
-    
     "CUSTOM_DND5E.setting.chatCommands.name": "Chat Commands",
     "CUSTOM_DND5E.setting.chatCommands.hint": "Enable chat commands",
     "CUSTOM_DND5E.setting.counters.name": "Counters",
@@ -472,6 +417,5 @@
     "CUSTOM_DND5E.setting.showPressedKeys.hint": "Displays an icon near the cursor when the Skip Dialog, Advantage, or Disadvantage keys are pressed",
     "CUSTOM_DND5E.setting.toggleStatusEffectOnSelectedTokens.name": "Toggle Status Effects on Selected",
     "CUSTOM_DND5E.setting.toggleStatusEffectOnSelectedTokens.hint": "When toggling a status effect via a token's HUD, toggle it for all selected tokens",
-
     "CUSTOM_DND5E.sheet.characterSheet": "Custom D&D 5e Character Sheet"
 }

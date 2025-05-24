@@ -3,46 +3,6 @@
   "_id": "ngr8w6WBycK59brj",
   "pages": [
     {
-      "sort": 100000,
-      "name": "Bloodied",
-      "type": "rule",
-      "_id": "P9uilIbvjoLg1l1l",
-      "system": {
-        "tooltip": "<ul><li><p>A creature is Bloodied while it has half its Hit Points or fewer remaining.</p></li></ul>",
-        "type": "condition"
-      },
-      "title": {
-        "show": true,
-        "level": 1
-      },
-      "image": {},
-      "text": {
-        "format": 1,
-        "content": "<h2>Apply Bloodied</h2><p>When enabled, this setting automatically applies the Bloodied condition to a character or NPC and adds the Bloodied status effect to their token while they have half their Hit Points or fewer remaining.</p><ul><li><p><strong>Immunity to Bloodied: </strong>Add Bloodied as a condition immunity to a character or NPC to stop the Bloodied condition from applying to them.</p></li></ul><p>Note: As of D&amp;D 5e system version 4, <span>enabling this setting will automatically disable the built-in D&amp;D 5e Bloodied Status setting (found in <strong>Game Settings</strong> &gt; <strong>Configure Settings</strong> &gt; <strong>Dungeons &amp; Dragons Fifth Edition</strong>).</span></p><h2>Remove on Dead</h2><p>Remove the Bloodied condition when a creature has the Dead status effect.</p><h2>Icon</h2><p>Choose a custom icon for the Bloodied condition and status effect.</p><h2>Tint</h2><p>Enter a color in hex format (e.g., #ff0000 for red) to visually tint the token when it has the Bloodied condition. This helps to quickly identify Bloodied creatures on the map. Leave empty for no tint.</p>"
-      },
-      "video": {
-        "controls": true,
-        "volume": 0.5
-      },
-      "src": null,
-      "ownership": {
-        "default": -1,
-        "0wJRsV2r9Hv1a7q0": 3
-      },
-      "flags": {},
-      "_stats": {
-        "compendiumSource": null,
-        "duplicateSource": null,
-        "coreVersion": "12.331",
-        "systemId": "dnd5e",
-        "systemVersion": "4.0.0",
-        "createdTime": 1726515892564,
-        "modifiedTime": 1732821414849,
-        "lastModifiedBy": "0wJRsV2r9Hv1a7q0"
-      },
-      "_key": "!journal.pages!ngr8w6WBycK59brj.P9uilIbvjoLg1l1l"
-    },
-    {
       "sort": 700000,
       "name": "Unconscious",
       "type": "text",
@@ -70,13 +30,15 @@
       "_stats": {
         "compendiumSource": null,
         "duplicateSource": null,
-        "coreVersion": "12.331",
+        "coreVersion": "13.342",
         "systemId": "dnd5e",
         "systemVersion": "4.0.0",
         "createdTime": 1726519096751,
         "modifiedTime": 1727380288923,
-        "lastModifiedBy": "0wJRsV2r9Hv1a7q0"
+        "lastModifiedBy": "0wJRsV2r9Hv1a7q0",
+        "exportSource": null
       },
+      "category": null,
       "_key": "!journal.pages!ngr8w6WBycK59brj.DLpxGddzm7rKpgsO"
     },
     {
@@ -107,13 +69,15 @@
       "_stats": {
         "compendiumSource": null,
         "duplicateSource": null,
-        "coreVersion": "12.331",
+        "coreVersion": "13.342",
         "systemId": "dnd5e",
         "systemVersion": "4.0.0",
         "createdTime": 1726519171783,
         "modifiedTime": 1726576355581,
-        "lastModifiedBy": "0wJRsV2r9Hv1a7q0"
+        "lastModifiedBy": "0wJRsV2r9Hv1a7q0",
+        "exportSource": null
       },
+      "category": null,
       "_key": "!journal.pages!ngr8w6WBycK59brj.DePfY7KUVlToh5dx"
     },
     {
@@ -144,13 +108,15 @@
       "_stats": {
         "compendiumSource": null,
         "duplicateSource": null,
-        "coreVersion": "12.331",
+        "coreVersion": "13.342",
         "systemId": "dnd5e",
         "systemVersion": "4.0.0",
         "createdTime": 1726520156448,
         "modifiedTime": 1726524100539,
-        "lastModifiedBy": "0wJRsV2r9Hv1a7q0"
+        "lastModifiedBy": "0wJRsV2r9Hv1a7q0",
+        "exportSource": null
       },
+      "category": null,
       "_key": "!journal.pages!ngr8w6WBycK59brj.qgLFKLoCIKJSEh5f"
     },
     {
@@ -181,13 +147,15 @@
       "_stats": {
         "compendiumSource": null,
         "duplicateSource": null,
-        "coreVersion": "12.331",
+        "coreVersion": "13.342",
         "systemId": "dnd5e",
         "systemVersion": "4.0.0",
         "createdTime": 1726520913888,
         "modifiedTime": 1726524136980,
-        "lastModifiedBy": "0wJRsV2r9Hv1a7q0"
+        "lastModifiedBy": "0wJRsV2r9Hv1a7q0",
+        "exportSource": null
       },
+      "category": null,
       "_key": "!journal.pages!ngr8w6WBycK59brj.MVXx2yD2pAfzQBU5"
     },
     {
@@ -218,13 +186,15 @@
       "_stats": {
         "compendiumSource": null,
         "duplicateSource": null,
-        "coreVersion": "12.331",
+        "coreVersion": "13.342",
         "systemId": "dnd5e",
         "systemVersion": "4.0.0",
         "createdTime": 1726522006009,
         "modifiedTime": 1726524161826,
-        "lastModifiedBy": "0wJRsV2r9Hv1a7q0"
+        "lastModifiedBy": "0wJRsV2r9Hv1a7q0",
+        "exportSource": null
       },
+      "category": null,
       "_key": "!journal.pages!ngr8w6WBycK59brj.HTh2Dt4vpGjpfSbE"
     },
     {
@@ -255,13 +225,15 @@
       "_stats": {
         "compendiumSource": null,
         "duplicateSource": null,
-        "coreVersion": "12.331",
+        "coreVersion": "13.342",
         "systemId": "dnd5e",
         "systemVersion": "4.0.0",
         "createdTime": 1726522498737,
         "modifiedTime": 1726576375964,
-        "lastModifiedBy": "0wJRsV2r9Hv1a7q0"
+        "lastModifiedBy": "0wJRsV2r9Hv1a7q0",
+        "exportSource": null
       },
+      "category": null,
       "_key": "!journal.pages!ngr8w6WBycK59brj.dTzGT5PWvgrhMohx"
     },
     {
@@ -292,13 +264,15 @@
       "_stats": {
         "compendiumSource": null,
         "duplicateSource": null,
-        "coreVersion": "12.331",
+        "coreVersion": "13.342",
         "systemId": "dnd5e",
         "systemVersion": "4.0.3",
         "createdTime": 1727380263060,
         "modifiedTime": 1727381817268,
-        "lastModifiedBy": "0wJRsV2r9Hv1a7q0"
+        "lastModifiedBy": "0wJRsV2r9Hv1a7q0",
+        "exportSource": null
       },
+      "category": null,
       "_key": "!journal.pages!ngr8w6WBycK59brj.lR4mGZPNE02Lbe6t"
     },
     {
@@ -332,13 +306,15 @@
       "_stats": {
         "compendiumSource": null,
         "duplicateSource": null,
-        "coreVersion": "12.331",
+        "coreVersion": "13.342",
         "systemId": "dnd5e",
         "systemVersion": "4.3.0",
         "createdTime": 1730413928146,
         "modifiedTime": 1736893826542,
-        "lastModifiedBy": "n99Zmia1fjZIEb1T"
+        "lastModifiedBy": "n99Zmia1fjZIEb1T",
+        "exportSource": null
       },
+      "category": null,
       "_key": "!journal.pages!ngr8w6WBycK59brj.sV0ZCKxwh4n4ZU1P"
     },
     {
@@ -369,13 +345,15 @@
       "_stats": {
         "compendiumSource": null,
         "duplicateSource": null,
-        "coreVersion": "12.331",
+        "coreVersion": "13.342",
         "systemId": "dnd5e",
         "systemVersion": "4.1.2",
         "createdTime": 1732821331427,
         "modifiedTime": 1732821385094,
-        "lastModifiedBy": "0wJRsV2r9Hv1a7q0"
+        "lastModifiedBy": "0wJRsV2r9Hv1a7q0",
+        "exportSource": null
       },
+      "category": null,
       "_key": "!journal.pages!ngr8w6WBycK59brj.PinXfgV1fJKcVAcG"
     },
     {
@@ -406,14 +384,16 @@
       "_stats": {
         "compendiumSource": null,
         "duplicateSource": "Compendium.custom-dnd5e.custom-dnd5e-journals.JournalEntry.ngr8w6WBycK59brj.JournalEntryPage.qgLFKLoCIKJSEh5f",
-        "coreVersion": "12.331",
+        "coreVersion": "13.342",
         "systemId": "dnd5e",
         "systemVersion": "4.2.2",
         "createdTime": 1739227597608,
         "modifiedTime": 1739227994262,
-        "lastModifiedBy": "JdWLPbQd9x1aeEfz"
+        "lastModifiedBy": "JdWLPbQd9x1aeEfz",
+        "exportSource": null
       },
       "_id": "vfBCdjS2G75Ll8Qz",
+      "category": null,
       "_key": "!journal.pages!ngr8w6WBycK59brj.vfBCdjS2G75Ll8Qz"
     }
   ],
@@ -427,12 +407,13 @@
   "_stats": {
     "compendiumSource": null,
     "duplicateSource": null,
-    "coreVersion": "12.331",
+    "coreVersion": "13.342",
     "systemId": "dnd5e",
     "systemVersion": "4.0.0",
     "createdTime": 1726515885725,
     "modifiedTime": 1726516256752,
-    "lastModifiedBy": "0wJRsV2r9Hv1a7q0"
+    "lastModifiedBy": "0wJRsV2r9Hv1a7q0",
+    "exportSource": null
   },
   "categories": [],
   "_key": "!journal!ngr8w6WBycK59brj"

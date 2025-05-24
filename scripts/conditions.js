@@ -9,7 +9,7 @@ import {
   resetDnd5eConfig,
   resetSetting } from "./utils.js";
 import { ConditionsForm } from "./forms/config-form.js";
-import { buildBloodied, registerBloodied } from "./house-rules.js";
+import { buildBloodied, registerBloodied } from "./bloodied.js";
 
 const constants = CONSTANTS.CONDITIONS;
 const configKey = "conditionTypes";

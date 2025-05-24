@@ -84,7 +84,7 @@ export async function resetConfigSetting() {
 /* -------------------------------------------- */
 
 /**
- * Set CONFIG.DND5E.weaponIds
+ * Set CONFIG.DND5E.tools
  * @param {object} [settingData=null] The setting data
  * @returns {void}
  */

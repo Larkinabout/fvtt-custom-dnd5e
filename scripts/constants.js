@@ -16,7 +16,7 @@ export const CONSTANTS = {
     MENU: {
       KEY: "abilities-menu",
       HINT: "CUSTOM_DND5E.menu.abilities.hint",
-      ICON: "fas fa-pen-to-square",
+      ICON: "fas fa-head-side-brain",
       LABEL: "CUSTOM_DND5E.menu.abilities.label",
       NAME: "CUSTOM_DND5E.menu.abilities.name"
     },
@@ -38,7 +38,7 @@ export const CONSTANTS = {
     MENU: {
       KEY: "activation-costs-menu",
       HINT: "CUSTOM_DND5E.menu.activityActivationTypes.hint",
-      ICON: "fas fa-pen-to-square",
+      ICON: "fas fa-clock",
       LABEL: "CUSTOM_DND5E.menu.activityActivationTypes.label",
       NAME: "CUSTOM_DND5E.menu.activityActivationTypes.name"
     },
@@ -62,7 +62,7 @@ export const CONSTANTS = {
     MENU: {
       KEY: "actor-sizes-menu",
       HINT: "CUSTOM_DND5E.menu.actorSizes.hint",
-      ICON: "fas fa-pen-to-square",
+      ICON: "fas fa-arrow-up-big-small",
       LABEL: "CUSTOM_DND5E.menu.actorSizes.label",
       NAME: "CUSTOM_DND5E.menu.actorSizes.name"
     },
@@ -84,7 +84,7 @@ export const CONSTANTS = {
     MENU: {
       KEY: "armor-calculations-menu",
       HINT: "CUSTOM_DND5E.menu.armorClasses.hint",
-      ICON: "fas fa-pen-to-square",
+      ICON: "fas fa-abacus",
       LABEL: "CUSTOM_DND5E.menu.armorClasses.label",
       NAME: "CUSTOM_DND5E.menu.armorClasses.name"
     },
@@ -105,7 +105,7 @@ export const CONSTANTS = {
     MENU: {
       KEY: "armor-ids-menu",
       HINT: "CUSTOM_DND5E.menu.armorIds.hint",
-      ICON: "fas fa-pen-to-square",
+      ICON: "fas fa-shield-halved",
       LABEL: "CUSTOM_DND5E.menu.armorIds.label",
       NAME: "CUSTOM_DND5E.menu.armorIds.name"
     },
@@ -127,7 +127,7 @@ export const CONSTANTS = {
     MENU: {
       KEY: "armor-proficiencies-menu",
       HINT: "CUSTOM_DND5E.menu.armorProficiencies.hint",
-      ICON: "fas fa-pen-to-square",
+      ICON: "fas fa-user-shield",
       LABEL: "CUSTOM_DND5E.menu.armorProficiencies.label",
       NAME: "CUSTOM_DND5E.menu.armorProficiencies.name"
     },
@@ -146,6 +146,13 @@ export const CONSTANTS = {
     UUID: "Compendium.custom-dnd5e.custom-dnd5e-journals.JournalEntry.B48iqFBddUikMMer.JournalEntryPage.mTVSShsLO960Kmrk"
   },
   BLOODIED: {
+    MENU: {
+      KEY: "bloodied-menu",
+      HINT: "CUSTOM_DND5E.menu.bloodied.hint",
+      ICON: "fas fa-droplet",
+      LABEL: "CUSTOM_DND5E.menu.bloodied.label",
+      NAME: "CUSTOM_DND5E.menu.bloodied.name"
+    },
     SETTING: {
       APPLY_BLOODIED: {
         KEY: "apply-bloodied"
@@ -153,16 +160,28 @@ export const CONSTANTS = {
       BLOODIED_ICON: {
         KEY: "bloodied-icon"
       },
+      BLOODIED_STATUS: {
+        KEY: "bloodied-status"
+      },
       BLOODIED_TINT: {
         KEY: "bloodied-tint"
+      },
+      CONFIG: {
+        KEY: "bloodied"
+      },
+      ENABLE: {
+        KEY: "enable-bloodied"
       },
       REMOVE_BLOODIED_ON_DEAD: {
         KEY: "remove-bloodied-on-dead"
       }
     },
+    TEMPLATE: {
+      FORM: "modules/custom-dnd5e/templates/bloodied-form.hbs",
+    },
     ICON: "modules/custom-dnd5e/media/icons/bloodied.svg",
     CONDITION_UUID: "Compendium.custom-dnd5e.custom-dnd5e-journals.JournalEntry.ngr8w6WBycK59brj.JournalEntryPage.sV0ZCKxwh4n4ZU1P",
-    UUID: "Compendium.custom-dnd5e.custom-dnd5e-journals.JournalEntry.ngr8w6WBycK59brj.JournalEntryPage.P9uilIbvjoLg1l1l"
+    UUID: "Compendium.custom-dnd5e.custom-dnd5e-journals.JournalEntry.B48iqFBddUikMMer.JournalEntryPage.GjOBdXwapcYvUihc"
   },
   CHAT_COMMANDS: {
     SETTING: {
@@ -175,7 +194,7 @@ export const CONSTANTS = {
     MENU: {
       KEY: "conditions-menu",
       HINT: "CUSTOM_DND5E.menu.conditions.hint",
-      ICON: "fas fa-pen-to-square",
+      ICON: "fas fa-skull",
       LABEL: "CUSTOM_DND5E.menu.conditions.label",
       NAME: "CUSTOM_DND5E.menu.conditions.name"
     },
@@ -199,7 +218,7 @@ export const CONSTANTS = {
     MENU: {
       KEY: "consumable-types-menu",
       HINT: "CUSTOM_DND5E.menu.consumableTypes.hint",
-      ICON: "fas fa-pen-to-square",
+      ICON: "fas fa-flask-round-potion",
       LABEL: "CUSTOM_DND5E.menu.consumableTypes.label",
       NAME: "CUSTOM_DND5E.menu.consumableTypes.name"
     },
@@ -218,7 +237,7 @@ export const CONSTANTS = {
     MENU: {
       KEY: "counters-menu",
       HINT: "CUSTOM_DND5E.menu.counters.hint",
-      ICON: "fas fa-pen-to-square",
+      ICON: "fas fa-tally",
       LABEL: "CUSTOM_DND5E.menu.counters.label",
       NAME: "CUSTOM_DND5E.menu.counters.name"
     },
@@ -264,7 +283,7 @@ export const CONSTANTS = {
     MENU: {
       KEY: "currency-menu",
       HINT: "CUSTOM_DND5E.menu.currencies.hint",
-      ICON: "fas fa-pen-to-square",
+      ICON: "fas fa-coin",
       LABEL: "CUSTOM_DND5E.menu.currencies.label",
       NAME: "CUSTOM_DND5E.menu.currencies.name"
     },
@@ -286,7 +305,7 @@ export const CONSTANTS = {
     MENU: {
       KEY: "damage-types-menu",
       HINT: "CUSTOM_DND5E.menu.damageTypes.hint",
-      ICON: "fas fa-pen-to-square",
+      ICON: "fas fa-face-head-bandage",
       LABEL: "CUSTOM_DND5E.menu.damageTypes.label",
       NAME: "CUSTOM_DND5E.menu.damageTypes.name"
     },
@@ -371,7 +390,7 @@ export const CONSTANTS = {
     MENU: {
       KEY: "encumbrance-menu",
       HINT: "CUSTOM_DND5E.menu.encumbrance.hint",
-      ICON: "fas fa-pen-to-square",
+      ICON: "fas fa-weight-hanging",
       LABEL: "CUSTOM_DND5E.menu.encumbrance.label",
       NAME: "CUSTOM_DND5E.menu.encumbrance.name"
     },
@@ -493,7 +512,7 @@ export const CONSTANTS = {
     MENU: {
       KEY: "item-properties-menu",
       HINT: "CUSTOM_DND5E.menu.itemProperties.hint",
-      ICON: "fas fa-pen-to-square",
+      ICON: "fas fa-sparkles",
       LABEL: "CUSTOM_DND5E.menu.itemProperties.label",
       NAME: "CUSTOM_DND5E.menu.itemProperties.name"
     },
@@ -515,7 +534,7 @@ export const CONSTANTS = {
     MENU: {
       KEY: "item-rarity-menu",
       HINT: "CUSTOM_DND5E.menu.itemRarity.hint",
-      ICON: "fas fa-pen-to-square",
+      ICON: "fas fa-treasure-chest",
       LABEL: "CUSTOM_DND5E.menu.itemRarity.label",
       NAME: "CUSTOM_DND5E.menu.itemRarity.name"
     },
@@ -534,7 +553,7 @@ export const CONSTANTS = {
     MENU: {
       KEY: "languages-menu",
       HINT: "CUSTOM_DND5E.menu.languages.hint",
-      ICON: "fas fa-pen-to-square",
+      ICON: "fas fa-comment",
       LABEL: "CUSTOM_DND5E.menu.languages.label",
       NAME: "CUSTOM_DND5E.menu.languages.name"
     },
@@ -646,7 +665,7 @@ export const CONSTANTS = {
     MENU: {
       KEY: "senses-menu",
       HINT: "CUSTOM_DND5E.menu.senses.hint",
-      ICON: "fas fa-pen-to-square",
+      ICON: "fas fa-eye",
       LABEL: "CUSTOM_DND5E.menu.senses.label",
       NAME: "CUSTOM_DND5E.menu.senses.name"
     },
@@ -668,7 +687,7 @@ export const CONSTANTS = {
     MENU: {
       KEY: "sheet-menu",
       HINT: "CUSTOM_DND5E.menu.sheet.hint",
-      ICON: "fas fa-pen-to-square",
+      ICON: "fas fa-scroll",
       LABEL: "CUSTOM_DND5E.menu.sheet.label",
       NAME: "CUSTOM_DND5E.menu.sheet.name"
     },
@@ -704,7 +723,7 @@ export const CONSTANTS = {
     MENU: {
       KEY: "skills-menu",
       HINT: "CUSTOM_DND5E.menu.skills.hint",
-      ICON: "fas fa-pen-to-square",
+      ICON: "fas fa-person-running-fast",
       LABEL: "CUSTOM_DND5E.menu.skills.label",
       NAME: "CUSTOM_DND5E.menu.skills.name"
     },
@@ -726,7 +745,7 @@ export const CONSTANTS = {
     MENU: {
       KEY: "spell-schools-menu",
       HINT: "CUSTOM_DND5E.menu.spellSchools.hint",
-      ICON: "fas fa-pen-to-square",
+      ICON: "fas fa-book-sparkles",
       LABEL: "CUSTOM_DND5E.menu.spellSchools.label",
       NAME: "CUSTOM_DND5E.menu.spellSchools.name"
     },
@@ -768,7 +787,7 @@ export const CONSTANTS = {
     MENU: {
       KEY: "tool-ids-menu",
       HINT: "CUSTOM_DND5E.menu.tools.hint",
-      ICON: "fas fa-pen-to-square",
+      ICON: "fas fa-trowel",
       LABEL: "CUSTOM_DND5E.menu.tools.label",
       NAME: "CUSTOM_DND5E.menu.tools.name"
     },
@@ -791,7 +810,7 @@ export const CONSTANTS = {
     MENU: {
       KEY: "tool-proficiencies-menu",
       HINT: "CUSTOM_DND5E.menu.toolProficiencies.hint",
-      ICON: "fas fa-pen-to-square",
+      ICON: "fas fa-trowel-bricks",
       LABEL: "CUSTOM_DND5E.menu.toolProficiencies.label",
       NAME: "CUSTOM_DND5E.menu.toolProficiencies.name"
     },
@@ -826,7 +845,7 @@ export const CONSTANTS = {
     MENU: {
       KEY: "weapon-ids-menu",
       HINT: "CUSTOM_DND5E.menu.weaponIds.hint",
-      ICON: "fas fa-pen-to-square",
+      ICON: "fas fa-sword",
       LABEL: "CUSTOM_DND5E.menu.weaponIds.label",
       NAME: "CUSTOM_DND5E.menu.weaponIds.name"
     },
@@ -848,7 +867,7 @@ export const CONSTANTS = {
     MENU: {
       KEY: "weapon-proficiencies-menu",
       HINT: "CUSTOM_DND5E.menu.weaponProficiencies.hint",
-      ICON: "fas fa-pen-to-square",
+      ICON: "fas fa-swords",
       LABEL: "CUSTOM_DND5E.menu.weaponProficiencies.label",
       NAME: "CUSTOM_DND5E.menu.weaponProficiencies.name"
     },
