@@ -145,7 +145,7 @@ function buildConfig(settingData, isSubtype = false) {
  */
 function buildConfigEntry(data, isSubtype = false) {
   if ( isSubtype ) {
-    return game.i18n.localize(data.label);
+    return game.i18n.localize(data);
   } else {
     return {
       label: game.i18n.localize(data.label),
