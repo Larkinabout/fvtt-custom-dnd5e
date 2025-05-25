@@ -52,9 +52,9 @@ function registerSettings() {
     {
       scope: "world",
       config: false,
+      requiresReload: true,
       type: Boolean,
-      default: true,
-      requiresReload: true
+      default: false
     }
   );
 

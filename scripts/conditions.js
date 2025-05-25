@@ -59,7 +59,7 @@ function registerSettings() {
       config: false,
       requiresReload: true,
       type: Boolean,
-      default: true
+      default: false
     }
   );
 
