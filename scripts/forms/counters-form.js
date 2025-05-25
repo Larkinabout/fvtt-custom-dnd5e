@@ -93,6 +93,7 @@ export class CountersForm extends CustomDnd5eForm {
       npc: getSetting(CONSTANTS.COUNTERS.SETTING.NPC_COUNTERS.KEY) || {}
     };
     return {
+      counters: getSetting(CONSTANTS.COUNTERS.SETTING.COUNTERS.KEY) || false,
       settings: this.settings,
       selects: getSelects()
     };
@@ -193,7 +194,7 @@ export class CountersForm extends CustomDnd5eForm {
    * @returns {Promise<void>}
    */
   static async submit(event, form, formData) {
-    const ignore = ["actorType", "delete", "key"];
+    const ignore = ["actorType", "counters", "delete", "key"];
 
     // Get list of properties to delete
     const deleteKeys = Object.entries(formData.object)
@@ -230,6 +231,7 @@ export class CountersForm extends CustomDnd5eForm {
     });
 
     await Promise.all([
+      setSetting(CONSTANTS.COUNTERS.SETTING.COUNTERS.KEY, formData.object.counters),
       setSetting(CONSTANTS.COUNTERS.SETTING.CHARACTER_COUNTERS.KEY, this.settings.character),
       setSetting(CONSTANTS.COUNTERS.SETTING.GROUP_COUNTERS.KEY, this.settings.group),
       setSetting(CONSTANTS.COUNTERS.SETTING.ITEM_COUNTERS.KEY, this.settings.item),

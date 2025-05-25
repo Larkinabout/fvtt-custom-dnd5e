@@ -41,18 +41,6 @@ function registerSettings() {
     }
   );
 
-  registerSetting(
-    CONSTANTS.COUNTERS.SETTING.COUNTERS.KEY,
-    {
-      name: game.i18n.localize(CONSTANTS.COUNTERS.SETTING.COUNTERS.NAME),
-      hint: game.i18n.localize(CONSTANTS.COUNTERS.SETTING.COUNTERS.HINT),
-      scope: "world",
-      config: true,
-      type: Boolean,
-      default: true
-    }
-  );
-
   registerChatCommandsSetting();
   registerCursorLabelSettings();
 

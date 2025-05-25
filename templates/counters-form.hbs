@@ -1,4 +1,11 @@
 <div class="standard-form">
+    <div class="form-group">
+        <label class="flex1" style="min-width:80px; max-width:200px;">{{localize "CUSTOM_DND5E.enableCounters"}}</label>
+        <div class="form-fields">
+            <dnd5e-checkbox id="custom-dnd5e-counters" name="counters"{{#if (ne counters false)}} checked{{/if}}></dnd5e-checkbox>
+        </div>
+    </div>
+    <hr>
     <nav class="sheet-tabs tabs" style="flex: none;">
         <a class="item active" data-action="tab" data-group="primary" data-tab="characters">
             <span>

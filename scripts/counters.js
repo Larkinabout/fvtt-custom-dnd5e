@@ -43,6 +43,19 @@ function registerSettings() {
       scope: "world"
     }
   );
+
+  registerSetting(
+    CONSTANTS.COUNTERS.SETTING.COUNTERS.KEY,
+    {
+      name: game.i18n.localize(CONSTANTS.COUNTERS.SETTING.COUNTERS.NAME),
+      hint: game.i18n.localize(CONSTANTS.COUNTERS.SETTING.COUNTERS.HINT),
+      scope: "world",
+      config: false,
+      type: Boolean,
+      default: true
+    }
+  );
+  
 }
 
 /* -------------------------------------------- */
