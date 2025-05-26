@@ -40,7 +40,6 @@ import { register as registerItemActivationCostTypes, setConfig as setItemActiva
 import { register as registerItemProperties, setConfig as setItemProperties } from "./item-properties.js";
 import { register as registerItemRarity, setConfig as setItemRarity } from "./item-rarity.js";
 import { register as registerItemSheet } from "./item-sheet.js";
-import { register as registerJournalEntryPageSheet } from "./journal-entry-page-sheet.js";
 import { register as registerLanguages, setConfig as setLanguages } from "./languages.js";
 import { register as registerMigration, migrate } from "./migration.js";
 import { register as registerMisc, setMaxLevel } from "./misc.js";
@@ -107,7 +106,6 @@ Hooks.on("init", async () => {
 
   registerMigration();
   registerCharacterSheet();
-  registerJournalEntryPageSheet();
 
   registerHouseRules();
   registerAbilities();
