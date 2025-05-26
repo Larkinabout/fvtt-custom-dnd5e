@@ -1,8 +1,8 @@
 import { CONSTANTS, SHEET_TYPE } from "./constants.js";
 import { c5eLoadTemplates, getFlag, getSetting, registerMenu, registerSetting } from "./utils.js";
-import { SheetForm } from "./forms/sheet-form.js";
+import { ActorSheetForm } from "./forms/sheet-form.js";
 
-const constants = CONSTANTS.SHEET;
+const constants = CONSTANTS.ACTOR_SHEET;
 
 /**
  * Register settings and hooks, and load templates.
@@ -28,7 +28,7 @@ function registerSettings() {
       label: game.i18n.localize(constants.MENU.LABEL),
       name: game.i18n.localize(constants.MENU.NAME),
       icon: constants.MENU.ICON,
-      type: SheetForm,
+      type: ActorSheetForm,
       restricted: false,
       scope: "world"
     }

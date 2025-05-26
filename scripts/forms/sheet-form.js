@@ -5,15 +5,15 @@ import { CustomDnd5eForm } from "./custom-dnd5e-form.js";
 /**
  * Class representing the Sheet Form.
  */
-export class SheetForm extends CustomDnd5eForm {
+export class ActorSheetForm extends CustomDnd5eForm {
   /**
-   * Constructor for SheetForm.
+   * Constructor for ActorSheetForm.
    *
    * @param {...any} args The arguments for the form.
    */
   constructor(...args) {
     super(args);
-    this.type = "sheet";
+    this.type = "actorSheet";
   }
 
   /* -------------------------------------------- */
@@ -25,14 +25,14 @@ export class SheetForm extends CustomDnd5eForm {
    */
   static DEFAULT_OPTIONS = {
     actions: {
-      reset: SheetForm.reset
+      reset: ActorSheetForm.reset
     },
     form: {
-      handler: SheetForm.submit
+      handler: ActorSheetForm.submit
     },
-    id: `${MODULE.ID}-sheet-form`,
+    id: `${MODULE.ID}-actor-sheet-form`,
     window: {
-      title: "CUSTOM_DND5E.form.sheet.title"
+      title: "CUSTOM_DND5E.form.actorSheet.title"
     }
   };
 
@@ -45,7 +45,7 @@ export class SheetForm extends CustomDnd5eForm {
    */
   static PARTS = {
     form: {
-      template: CONSTANTS.SHEET.TEMPLATE.FORM
+      template: CONSTANTS.ACTOR_SHEET.TEMPLATE.FORM
     }
   };
 
@@ -59,18 +59,18 @@ export class SheetForm extends CustomDnd5eForm {
   async _prepareContext() {
     return {
       isGM: game.user.isGM,
-      autoFadeSheet: getFlag(game.user, CONSTANTS.SHEET.SETTING.AUTO_FADE_SHEET.KEY),
-      autoMinimiseSheet: getFlag(game.user, CONSTANTS.SHEET.SETTING.AUTO_MINIMISE_SHEET.KEY),
-      bannerImage: getSetting(CONSTANTS.SHEET.SETTING.BANNER_IMAGE.KEY),
-      sheetScale: getFlag(game.user, CONSTANTS.SHEET.SETTING.SHEET_SCALE.KEY),
-      showDeathSaves: getSetting(CONSTANTS.SHEET.SETTING.SHOW_DEATH_SAVES.KEY),
-      showEncumbrance: getSetting(CONSTANTS.SHEET.SETTING.SHOW_ENCUMBRANCE.KEY),
-      showExhaustion: getSetting(CONSTANTS.SHEET.SETTING.SHOW_EXHAUSTION.KEY),
-      showInspiration: getSetting(CONSTANTS.SHEET.SETTING.SHOW_INSPIRATION.KEY),
-      showLegendaryActions: getSetting(CONSTANTS.SHEET.SETTING.SHOW_LEGENDARY_ACTIONS.KEY),
-      showLegendaryResistance: getSetting(CONSTANTS.SHEET.SETTING.SHOW_LEGENDARY_RESISTANCE.KEY),
-      showManageCurrency: getSetting(CONSTANTS.SHEET.SETTING.SHOW_MANAGE_CURRENCY.KEY),
-      showUseLairAction: getSetting(CONSTANTS.SHEET.SETTING.SHOW_USE_LAIR_ACTION.KEY)
+      autoFadeSheet: getFlag(game.user, CONSTANTS.ACTOR_SHEET.SETTING.AUTO_FADE_SHEET.KEY),
+      autoMinimiseSheet: getFlag(game.user, CONSTANTS.ACTOR_SHEET.SETTING.AUTO_MINIMISE_SHEET.KEY),
+      bannerImage: getSetting(CONSTANTS.ACTOR_SHEET.SETTING.BANNER_IMAGE.KEY),
+      sheetScale: getFlag(game.user, CONSTANTS.ACTOR_SHEET.SETTING.SHEET_SCALE.KEY),
+      showDeathSaves: getSetting(CONSTANTS.ACTOR_SHEET.SETTING.SHOW_DEATH_SAVES.KEY),
+      showEncumbrance: getSetting(CONSTANTS.ACTOR_SHEET.SETTING.SHOW_ENCUMBRANCE.KEY),
+      showExhaustion: getSetting(CONSTANTS.ACTOR_SHEET.SETTING.SHOW_EXHAUSTION.KEY),
+      showInspiration: getSetting(CONSTANTS.ACTOR_SHEET.SETTING.SHOW_INSPIRATION.KEY),
+      showLegendaryActions: getSetting(CONSTANTS.ACTOR_SHEET.SETTING.SHOW_LEGENDARY_ACTIONS.KEY),
+      showLegendaryResistance: getSetting(CONSTANTS.ACTOR_SHEET.SETTING.SHOW_LEGENDARY_RESISTANCE.KEY),
+      showManageCurrency: getSetting(CONSTANTS.ACTOR_SHEET.SETTING.SHOW_MANAGE_CURRENCY.KEY),
+      showUseLairAction: getSetting(CONSTANTS.ACTOR_SHEET.SETTING.SHOW_USE_LAIR_ACTION.KEY)
     };
   }
 
@@ -113,22 +113,23 @@ export class SheetForm extends CustomDnd5eForm {
    */
   static async submit(event, form, formData) {
     await Promise.all([
-      setFlag(game.user, CONSTANTS.SHEET.SETTING.AUTO_FADE_SHEET.KEY, formData.object.autoFadeSheet),
-      setFlag(game.user, CONSTANTS.SHEET.SETTING.AUTO_MINIMISE_SHEET.KEY, formData.object.autoMinimiseSheet),
-      setFlag(game.user, CONSTANTS.SHEET.SETTING.SHEET_SCALE.KEY, formData.object.sheetScale)
+      setFlag(game.user, CONSTANTS.ACTOR_SHEET.SETTING.AUTO_FADE_SHEET.KEY, formData.object.autoFadeSheet),
+      setFlag(game.user, CONSTANTS.ACTOR_SHEET.SETTING.AUTO_MINIMISE_SHEET.KEY, formData.object.autoMinimiseSheet),
+      setFlag(game.user, CONSTANTS.ACTOR_SHEET.SETTING.SHEET_SCALE.KEY, formData.object.sheetScale)
     ]);
 
     if ( game.user.isGM ) {
       await Promise.all([
-        setSetting(CONSTANTS.SHEET.SETTING.BANNER_IMAGE.KEY, formData.object.bannerImage),
-        setSetting(CONSTANTS.SHEET.SETTING.SHOW_DEATH_SAVES.KEY, formData.object.showDeathSaves),
-        setSetting(CONSTANTS.SHEET.SETTING.SHOW_ENCUMBRANCE.KEY, formData.object.showEncumbrance),
-        setSetting(CONSTANTS.SHEET.SETTING.SHOW_EXHAUSTION.KEY, formData.object.showExhaustion),
-        setSetting(CONSTANTS.SHEET.SETTING.SHOW_INSPIRATION.KEY, formData.object.showInspiration),
-        setSetting(CONSTANTS.SHEET.SETTING.SHOW_LEGENDARY_ACTIONS.KEY, formData.object.showLegendaryActions),
-        setSetting(CONSTANTS.SHEET.SETTING.SHOW_LEGENDARY_RESISTANCE.KEY, formData.object.showLegendaryResistance),
-        setSetting(CONSTANTS.SHEET.SETTING.SHOW_MANAGE_CURRENCY.KEY, formData.object.showManageCurrency),
-        setSetting(CONSTANTS.SHEET.SETTING.SHOW_USE_LAIR_ACTION.KEY, formData.object.showUseLairAction)
+        setSetting(CONSTANTS.ACTOR_SHEET.SETTING.BANNER_IMAGE.KEY, formData.object.bannerImage),
+        setSetting(CONSTANTS.ACTOR_SHEET.SETTING.SHOW_DEATH_SAVES.KEY, formData.object.showDeathSaves),
+        setSetting(CONSTANTS.ACTOR_SHEET.SETTING.SHOW_ENCUMBRANCE.KEY, formData.object.showEncumbrance),
+        setSetting(CONSTANTS.ACTOR_SHEET.SETTING.SHOW_EXHAUSTION.KEY, formData.object.showExhaustion),
+        setSetting(CONSTANTS.ACTOR_SHEET.SETTING.SHOW_INSPIRATION.KEY, formData.object.showInspiration),
+        setSetting(CONSTANTS.ACTOR_SHEET.SETTING.SHOW_LEGENDARY_ACTIONS.KEY, formData.object.showLegendaryActions),
+        setSetting(CONSTANTS.ACTOR_SHEET.SETTING.SHOW_LEGENDARY_RESISTANCE.KEY,
+          formData.object.showLegendaryResistance),
+        setSetting(CONSTANTS.ACTOR_SHEET.SETTING.SHOW_MANAGE_CURRENCY.KEY, formData.object.showManageCurrency),
+        setSetting(CONSTANTS.ACTOR_SHEET.SETTING.SHOW_USE_LAIR_ACTION.KEY, formData.object.showUseLairAction)
       ]);
     }
   }

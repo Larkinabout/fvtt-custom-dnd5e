@@ -3,6 +3,7 @@ import { c5eLoadTemplates, getSetting, registerSetting } from "./utils.js";
 import { register as registerHouseRules, registerNegativeHp } from "./house-rules.js";
 import { register as registerAbilities, setConfig as setAbilities } from "./abilities.js";
 import { register as registerActivationCosts, setConfig as setActivationCosts } from "./activation-costs.js";
+import { register as registerActorSheet } from "./actor-sheet.js";
 import { register as registerActorSizes, setConfig as setActorSizes } from "./actor-sizes.js";
 import { register as registerArmorCalculations, setConfig as setArmorCalculations } from "./armor-calculations.js";
 import { register as registerArmorIds, setConfig as setArmorIds } from "./armor-ids.js";
@@ -44,7 +45,6 @@ import { register as registerMigration, migrate } from "./migration.js";
 import { register as registerMisc, setMaxLevel } from "./misc.js";
 import { register as registerRolls } from "./rolls.js";
 import { register as registerSenses, setConfig as setSenses } from "./senses.js";
-import { register as registerSheet } from "./sheet.js";
 import { register as registerSkills, setConfig as setSkills } from "./skills.js";
 import { register as registerSpellSchools, setConfig as setSpellSchools } from "./spell-schools.js";
 import { register as registerRadialStatusEffects } from "./radial-status-effects.js";
@@ -111,6 +111,7 @@ Hooks.on("init", async () => {
   registerHouseRules();
   registerAbilities();
   registerActivationCosts();
+  registerActorSheet();
   registerActorSizes();
   registerArmorCalculations();
   registerArmorIds();
@@ -131,7 +132,6 @@ Hooks.on("init", async () => {
   registerLanguages();
   registerRolls();
   registerSenses();
-  registerSheet();
   registerSkills();
   registerSpellSchools();
   registerToolIds();
@@ -158,8 +158,8 @@ Hooks.on("init", async () => {
     CONSTANTS.CONFIG.TEMPLATE.EDIT_IN_LIST,
     CONSTANTS.CONFIG.TEMPLATE.FORM,
     CONSTANTS.CONFIG.TEMPLATE.LIST,
-    CONSTANTS.SHEET.TEMPLATE.CHARACTER_SHEET_2,
-    CONSTANTS.SHEET.TEMPLATE.CHARACTER_DETAILS,
+    CONSTANTS.ACTOR_SHEET.TEMPLATE.CHARACTER_SHEET_2,
+    CONSTANTS.ACTOR_SHEET.TEMPLATE.CHARACTER_DETAILS,
     CONSTANTS.MESSAGE.TEMPLATE.ROLL_REQUEST_CARD,
     "modules/custom-dnd5e/templates/footer.hbs"
   ];
