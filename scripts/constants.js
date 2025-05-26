@@ -971,7 +971,7 @@ export const SHEET_TYPE = {
     npc: false,
     template: CONSTANTS.COUNTERS.TEMPLATE.DND5E_ACTOR,
     insert: {
-      class: ".tab[data-application-part='details'] > col-2 > .right .top",
+      class: ".tab[data-application-part='details'] > .col-2 > .right .top",
       position: "beforeend"
     }
   },
