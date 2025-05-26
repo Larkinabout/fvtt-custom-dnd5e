@@ -12,12 +12,12 @@ For help and advice on the house rules, either click the info buttons in the Con
 <details>
     <summary>See Image</summary>
 
-![Custom D&D 5e Bloodied Journal](./.github/readme/custom-dnd5e-bloodied-journal.png)
+![Custom D&D 5e Dead Journal](./.github/readme/custom-dnd5e-dead-journal.png)
 
 </details>
 
 ## Bloodied
-- Apply the Bloodied condition when a character or NPC is reduced to half HP or lower.
+- Apply the Bloodied condition when a character or NPC is reduced to the threshold or lower.
 - To stop a character or NPC from gaining the Bloodied condition, add Bloodied to their Condition Immunities.
 
 <details>
@@ -203,7 +203,7 @@ Customize the base die and roll mode for Ability Checks, Attack Rolls, Concentra
 
 </details>
 
-## Configure Sheet
+## Configure Actor Sheet
 - Auto-fade or auto-minimise the sheet when it's not hovered over.
 - Scale the new character sheet up or down.
 - Change the banner at the top of the sheet.
@@ -212,9 +212,12 @@ Customize the base die and roll mode for Ability Checks, Attack Rolls, Concentra
 <details>
     <summary>See Image</summary>
 
-![Custom D&D 5e Configure Sheet](./.github/readme/custom-dnd5e-configure-sheet.png)
+![Custom D&D 5e Configure Actor Sheet](./.github/readme/custom-dnd5e-configure-actor-sheet.png)
 
 </details>
+
+## Configure Item Sheet
+- Set the minimum role required to toggle Identified/Unidentified on the item.
 
 ## Chat Commands
 Enable additonal chat commands to roll an attack, roll damage or request checks and saving throws. For a list of available commands, view the **Chat Commands** journal within the **Custom D&D 5e** compendium.
