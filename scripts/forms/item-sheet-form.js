@@ -31,6 +31,9 @@ export class ItemSheetForm extends CustomDnd5eForm {
       handler: ItemSheetForm.submit
     },
     id: `${MODULE.ID}-item-sheet-form`,
+    position: {
+      height: 250
+    },
     window: {
       title: "CUSTOM_DND5E.form.itemSheet.title"
     }

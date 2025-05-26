@@ -38,6 +38,9 @@ export class SpellSchoolsEditForm extends ConfigEditForm {
    */
   static DEFAULT_OPTIONS = {
     id: `${MODULE.ID}-spell-schools-edit-form`,
+    position: {
+      height: 320
+    },
     window: {
       title: `CUSTOM_DND5E.form.${configKey}.edit.title`
     }

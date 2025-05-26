@@ -38,6 +38,9 @@ export class ToolsEditForm extends ConfigEditForm {
    */
   static DEFAULT_OPTIONS = {
     id: `${MODULE.ID}-tools-edit-form`,
+    position: {
+      height: 250
+    },
     window: {
       title: `CUSTOM_DND5E.form.${configKey}.edit.title`
     }

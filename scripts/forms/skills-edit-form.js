@@ -38,6 +38,9 @@ export class SkillsEditForm extends ConfigEditForm {
    */
   static DEFAULT_OPTIONS = {
     id: `${MODULE.ID}-skills-edit-form`,
+    position: {
+      height: 400
+    },
     window: {
       title: `CUSTOM_DND5E.form.${configKey}.edit.title`
     }

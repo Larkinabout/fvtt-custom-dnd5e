@@ -38,6 +38,9 @@ export class ItemPropertiesEditForm extends ConfigEditForm {
    */
   static DEFAULT_OPTIONS = {
     id: `${MODULE.ID}-item-properties-edit-form`,
+    position: {
+      height: 450
+    },
     window: {
       title: `CUSTOM_DND5E.form.${configKey}.edit.title`
     }
