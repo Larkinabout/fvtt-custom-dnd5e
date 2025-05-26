@@ -577,6 +577,22 @@ export const CONSTANTS = {
     },
     UUID: "Compendium.custom-dnd5e.custom-dnd5e-journals.JournalEntry.B48iqFBddUikMMer.JournalEntryPage.FIMLwqJ6ACWHbuDJ"
   },
+  ITEM_SHEET: {
+    ID: "item-sheet",
+    MENU: {
+      KEY: "item-sheet-menu",
+      HINT: "CUSTOM_DND5E.menu.itemSheet.hint",
+      ICON: "fas fa-scroll",
+      LABEL: "CUSTOM_DND5E.menu.itemSheet.label",
+      NAME: "CUSTOM_DND5E.menu.itemSheet.name"
+    },
+    SETTING: {
+      TOGGLE_IDENTIFIED_ROLE: { KEY: "toggle-identified-role" }
+    },
+    TEMPLATE: {
+      FORM: "modules/custom-dnd5e/templates/item-sheet-form.hbs"
+    }
+  },
   LANGUAGES: {
     ID: "languages",
     MENU: {

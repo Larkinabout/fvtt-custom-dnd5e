@@ -1,6 +1,6 @@
 import { CONSTANTS, SHEET_TYPE } from "./constants.js";
 import { c5eLoadTemplates, getFlag, getSetting, registerMenu, registerSetting } from "./utils.js";
-import { ActorSheetForm } from "./forms/sheet-form.js";
+import { ActorSheetForm } from "./forms/actor-sheet-form.js";
 
 const constants = CONSTANTS.ACTOR_SHEET;
 

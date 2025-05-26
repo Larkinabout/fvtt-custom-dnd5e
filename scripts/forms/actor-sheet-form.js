@@ -3,7 +3,7 @@ import { getFlag, setFlag, getSetting, setSetting } from "../utils.js";
 import { CustomDnd5eForm } from "./custom-dnd5e-form.js";
 
 /**
- * Class representing the Sheet Form.
+ * Class representing the Actor Sheet Form.
  */
 export class ActorSheetForm extends CustomDnd5eForm {
   /**

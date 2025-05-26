@@ -1,0 +1,18 @@
+<div class="standard-form">
+    <div class="standard-form scrollable">
+        <div class="form-group">
+            <label>{{localize "CUSTOM_DND5E.form.itemSheet.toggleIdentifiedRole.label"}}</label>
+            <div class="form-fields">
+                <select id="custom-dnd5e-toggle-identified-role" name="toggleIdentifiedRole">
+                        {{selectOptions selects.role.choices selected=toggleIdentifiedRole localize=true}}
+                    </select>
+            </div>
+            <p class="hint">{{localize "CUSTOM_DND5E.form.itemSheet.toggleIdentifiedRole.note"}}</p>
+        </div>
+    </div>
+    <footer class="form-footer" data-application-part="footer">
+        <button type="submit" class="save-button">
+            <i class="fas fa-solid fa-floppy-disk"></i>{{localize "CUSTOM_DND5E.form.button.save.label"}}
+        </button>
+    </footer>
+</div>
