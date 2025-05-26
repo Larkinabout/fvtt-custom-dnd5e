@@ -24,7 +24,6 @@ function registerHooks() {
   if ( foundry.utils.isNewerVersion(game.system.version, "4.1.2") ) {
     Hooks.on("renderLongRestDialog", addCampSupplies);
   } else {
-    Hooks.on("preRenderLongRestDialog", addCampSuppliesV1);
     Hooks.on("renderLongRestDialog", addCampSuppliesListener);
   }
 
@@ -64,34 +63,6 @@ async function addCampSupplies(dialog, html) {
 
   const spendCampSupplies = html.querySelector("#custom-dnd5e-spend-camp-supplies");
   spendCampSupplies.addEventListener("change", handleRestButtonToggle.bind(spendCampSupplies, html));
-}
-
-/* -------------------------------------------- */
-
-/**
- * Apply camp supplies logic to the pre-ApplicationV2 Long Rest dialog.
- * @param {object} dialog Long Rest dialog
- * @param {object} options Dialog options
- */
-async function addCampSuppliesV1(dialog, options) {
-  const campSupplies = dialog.actor.items.filter(item =>
-    item.system.identifier === "custom-dnd5e-camp-supplies" && item.system.quantity > 0);
-
-  if ( dialog.actor.type === "group" ) {
-    options.groupId = dialog.actor.id;
-  }
-
-  const required = (dialog.actor.type === "group")
-    ? dialog.actor.system.playerCharacters.length ?? 1
-    : 1;
-  const quantity = campSupplies.reduce((total, supply) => total + (supply.system?.quantity ?? 0), 0);
-  options.campSupplies = { quantity, required, spend: true };
-
-  if ( quantity < required && options.campSupplies.spend ) {
-    dialog.data.buttons.rest.disabled = true;
-  }
-
-  dialog.options.template = constants.TEMPLATE.LONG_REST_V1;
 }
 
 /* -------------------------------------------- */

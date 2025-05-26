@@ -20,8 +20,8 @@
                     {{counter.label}}
                     {{/if}}
                 </h4>
-                <input type="checkbox" name="flags.custom-dnd5e.{{counter.property}}"
-                    placeholder="false" data-dtype="Boolean" {{#if counter.value}}checked{{/if}}{{#unless counter.canEdit}} disabled{{/unless}}>
+                <dnd5e-checkbox name="flags.custom-dnd5e.{{counter.property}}"
+                    placeholder="false" data-dtype="Boolean" {{#if counter.value}}checked{{/if}}{{#unless counter.canEdit}} disabled{{/unless}}></dnd5e-checkbox>
             </div>
         </li>
         {{/if}}

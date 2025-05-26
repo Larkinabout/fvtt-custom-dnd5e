@@ -16,7 +16,7 @@
             <div class="form-group">
                 <label>{{localize "CUSTOM_DND5E.form.sheet.autoFadeSheet.label"}}</label>
                 <div class="form-fields">
-                    <input id="custom-dnd5e-auto-fade-sheet" name="autoFadeSheet" type="checkbox"{{#if autoFadeSheet}} checked{{/if}}> 
+                    <dnd5e-checkbox id="custom-dnd5e-auto-fade-sheet" name="autoFadeSheet" {{#if autoFadeSheet}} checked{{/if}}></dnd5e-checkbox> 
                 </div>
                 <p class="hint">{{localize "CUSTOM_DND5E.form.sheet.autoFadeSheet.note.1"}}</p>
                 <p class="custom-dnd5e-advice notes">{{localize "CUSTOM_DND5E.form.sheet.autoFadeSheet.note.2"}}</p>
@@ -24,7 +24,7 @@
             <div class="form-group">
                 <label>{{localize "CUSTOM_DND5E.form.sheet.autoMinimiseSheet.label"}}</label>
                 <div class="form-fields">
-                    <input id="custom-dnd5e-auto-minimise-sheet" name="autoMinimiseSheet" type="checkbox"{{#if autoMinimiseSheet}} checked{{/if}}> 
+                    <dnd5e-checkbox id="custom-dnd5e-auto-minimise-sheet" name="autoMinimiseSheet" {{#if autoMinimiseSheet}} checked{{/if}}></dnd5e-checkbox>
                 </div>
                 <p class="hint">{{localize "CUSTOM_DND5E.form.sheet.autoMinimiseSheet.note.1"}}</p>
                 <p class="custom-dnd5e-advice notes">{{localize "CUSTOM_DND5E.form.sheet.autoMinimiseSheet.note.2"}}</p>
@@ -46,35 +46,35 @@
             <div class="form-group">
                 <label>{{localize "CUSTOM_DND5E.form.sheet.showDeathSaves.label"}}</label>
                 <div class="form-fields">
-                    <input id="custom-dnd5e-show-death-saves" name="showDeathSaves" type="checkbox"{{#if showDeathSaves}} checked{{/if}}> 
+                    <dnd5e-checkbox id="custom-dnd5e-show-death-saves" name="showDeathSaves" {{#if showDeathSaves}} checked{{/if}}></dnd5e-checkbox>
                 </div>
                 <p class="hint">{{localize "CUSTOM_DND5E.form.sheet.showDeathSaves.note"}}</p>
             </div>
             <div class="form-group">
                 <label>{{localize "CUSTOM_DND5E.form.sheet.showEncumbrance.label"}}</label>
                 <div class="form-fields">
-                    <input id="custom-dnd5e-show-encumbrance" name="showEncumbrance" type="checkbox"{{#if showEncumbrance}} checked{{/if}}> 
+                    <dnd5e-checkbox id="custom-dnd5e-show-encumbrance" name="showEncumbrance" {{#if showEncumbrance}} checked{{/if}}></dnd5e-checkbox>
                 </div>
                 <p class="hint">{{localize "CUSTOM_DND5E.form.sheet.showEncumbrance.note"}}</p>
             </div>
             <div class="form-group">
                 <label>{{localize "CUSTOM_DND5E.form.sheet.showExhaustion.label"}}</label>
                 <div class="form-fields">
-                    <input id="custom-dnd5e-show-exhaustion" name="showExhaustion" type="checkbox"{{#if showExhaustion}} checked{{/if}}> 
+                    <dnd5e-checkbox id="custom-dnd5e-show-exhaustion" name="showExhaustion" {{#if showExhaustion}} checked{{/if}}></dnd5e-checkbox>
                 </div>
                 <p class="hint">{{localize "CUSTOM_DND5E.form.sheet.showExhaustion.note"}}</p>
             </div>
             <div class="form-group">
                 <label>{{localize "CUSTOM_DND5E.form.sheet.showInspiration.label"}}</label>
                 <div class="form-fields">
-                    <input id="custom-dnd5e-show-inspiration" name="showInspiration" type="checkbox"{{#if showInspiration}} checked{{/if}}> 
+                    <dnd5e-checkbox id="custom-dnd5e-show-inspiration" name="showInspiration" {{#if showInspiration}} checked{{/if}}></dnd5e-checkbox>
                 </div>
                 <p class="hint">{{localize "CUSTOM_DND5E.form.sheet.showInspiration.note"}}</p>
             </div>
             <div class="form-group">
                 <label>{{localize "CUSTOM_DND5E.form.sheet.showManageCurrency.label"}}</label>
                 <div class="form-fields">
-                    <input id="custom-dnd5e-show-manage-currency" name="showManageCurrency" type="checkbox"{{#if showManageCurrency}} checked{{/if}}> 
+                    <dnd5e-checkbox id="custom-dnd5e-show-manage-currency" name="showManageCurrency" {{#if showManageCurrency}} checked{{/if}}></dnd5e-checkbox>
                 </div>
                 <p class="hint">{{localize "CUSTOM_DND5E.form.sheet.showManageCurrency.note"}}</p>
             </div>
@@ -82,21 +82,21 @@
             <div class="form-group">
                 <label>{{localize "CUSTOM_DND5E.form.sheet.showLegendaryActions.label"}}</label>
                 <div class="form-fields">
-                    <input id="custom-dnd5e-show-legendary-actions" name="showLegendaryActions" type="checkbox"{{#if showLegendaryActions}} checked{{/if}}> 
+                    <dnd5e-checkbox id="custom-dnd5e-show-legendary-actions" name="showLegendaryActions" {{#if showLegendaryActions}} checked{{/if}}></dnd5e-checkbox>
                 </div>
                 <p class="hint">{{localize "CUSTOM_DND5E.form.sheet.showLegendaryActions.note"}}</p>
             </div>
             <div class="form-group">
                 <label>{{localize "CUSTOM_DND5E.form.sheet.showLegendaryResistance.label"}}</label>
                 <div class="form-fields">
-                    <input id="custom-dnd5e-show-legendary-resistance" name="showLegendaryResistance" type="checkbox"{{#if showLegendaryResistance}} checked{{/if}}> 
+                    <dnd5e-checkbox id="custom-dnd5e-show-legendary-resistance" name="showLegendaryResistance" {{#if showLegendaryResistance}} checked{{/if}}></dnd5e-checkbox>
                 </div>
                 <p class="hint">{{localize "CUSTOM_DND5E.form.sheet.showLegendaryResistance.note"}}</p>
             </div>
             <div class="form-group">
                 <label>{{localize "CUSTOM_DND5E.form.sheet.showUseLairAction.label"}}</label>
                 <div class="form-fields">
-                    <input id="custom-dnd5e-show-use-lair-action" name="showUseLairAction" type="checkbox"{{#if showUseLairAction}} checked{{/if}}> 
+                    <dnd5e-checkbox id="custom-dnd5e-show-use-lair-action" name="showUseLairAction" {{#if showUseLairAction}} checked{{/if}}></dnd5e-checkbox>
                 </div>
                 <p class="hint">{{localize "CUSTOM_DND5E.form.sheet.showUseLairAction.note"}}</p>
             </div>
