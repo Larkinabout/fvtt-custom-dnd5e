@@ -961,7 +961,7 @@ export const SHEET_TYPE = {
       position: "afterbegin"
     }
   },
-  CustomDnd5eSheetCharacter2: {
+  CustomDnd5eCharacterActorSheet: {
     countersSetting: CONSTANTS.COUNTERS.SETTING.CHARACTER_COUNTERS.KEY,
     character: true,
     custom: true,
@@ -971,7 +971,7 @@ export const SHEET_TYPE = {
     npc: false,
     template: CONSTANTS.COUNTERS.TEMPLATE.DND5E_ACTOR,
     insert: {
-      class: ".tab.details > .right .top",
+      class: ".tab[data-application-part='details'] > col-2 > .right .top",
       position: "beforeend"
     }
   },

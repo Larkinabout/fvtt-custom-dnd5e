@@ -1,28 +1,8 @@
-import { SHEET_TYPE } from "../constants.js";
-
-/**
- * Hook to modify the actor sheet before rendering.
- * @param {Application} app The application instance.
- * @param {object} data The data for rendering the sheet.
- */
-Hooks.on("preRenderActorSheet", (app, data) => {
-  const sheetType = SHEET_TYPE[app.constructor.name];
-
-  if ( !sheetType || !sheetType.custom ) return;
-
-  if ( data.abilityRows?.top?.length ) {
-    data.abilityRows.bottom = [...data.abilityRows.bottom, ...data.abilityRows.top];
-    data.abilityRows.top = [];
-  }
-});
-
-/* -------------------------------------------- */
-
 /**
  * Register the custom character sheet.
  */
 export function registerCharacterSheet() {
-  foundry.applications.apps.DocumentSheetConfig.registerSheet(Actor, "dnd5e", CustomDnd5eSheetCharacter2, {
+  foundry.applications.apps.DocumentSheetConfig.registerSheet(Actor, "dnd5e", CustomDnd5eCharacterActorSheet, {
     types: ["character"],
     makeDefault: false,
     label: "CUSTOM_DND5E.sheet.characterSheet"
@@ -34,33 +14,100 @@ export function registerCharacterSheet() {
 /**
  * Class representing the custom character sheet.
  */
-export class CustomDnd5eSheetCharacter2 extends dnd5e.applications.actor.ActorSheet5eCharacter2 {
-  /**
-   * Constructor for CustomDnd5eSheetCharacter2.
-   *
-   * @param {object} object The actor object.
-   * @param {object} [options={}] Additional options for the sheet.
-   */
-  constructor(object, options = {}) {
-    super(object, options);
-  }
+export class CustomDnd5eCharacterActorSheet extends dnd5e.applications.actor.CharacterActorSheet {
+  static DEFAULT_OPTIONS = {
+    classes: ["custom-dnd5e"]
+  };
 
-  /** @inheritDoc */
-  static get defaultOptions() {
-    return foundry.utils.mergeObject(super.defaultOptions, {
-      classes: ["custom-dnd5e", "dnd5e2", "sheet", "actor", "character", "vertical-tabs"]
-    });
+  /* -------------------------------------------- */
+
+  static PARTS = {
+    header: {
+      template: "systems/dnd5e/templates/actors/character-header.hbs"
+    },
+    sidebar: {
+      container: { classes: ["main-content"], id: "main" },
+      template: "systems/dnd5e/templates/actors/character-sidebar.hbs"
+    },
+    details: {
+      container: { classes: ["tab-body"], id: "tabs" },
+      template: "modules/custom-dnd5e/templates/sheet/character-details.hbs",
+      templates: ["systems/dnd5e/templates/actors/character-ability-scores.hbs"],
+      scrollable: [""]
+    },
+    inventory: {
+      container: { classes: ["tab-body"], id: "tabs" },
+      template: "systems/dnd5e/templates/actors/tabs/character-inventory.hbs",
+      templates: [
+        "systems/dnd5e/templates/inventory/inventory.hbs", "systems/dnd5e/templates/inventory/activity.hbs",
+        "systems/dnd5e/templates/inventory/encumbrance.hbs"
+      ],
+      scrollable: [""]
+    },
+    features: {
+      container: { classes: ["tab-body"], id: "tabs" },
+      template: "systems/dnd5e/templates/actors/tabs/character-features.hbs",
+      templates: ["systems/dnd5e/templates/inventory/inventory.hbs", "systems/dnd5e/templates/inventory/activity.hbs"],
+      scrollable: [""]
+    },
+    spells: {
+      container: { classes: ["tab-body"], id: "tabs" },
+      template: "systems/dnd5e/templates/actors/tabs/creature-spells.hbs",
+      templates: ["systems/dnd5e/templates/inventory/inventory.hbs", "systems/dnd5e/templates/inventory/activity.hbs"],
+      scrollable: [""]
+    },
+    effects: {
+      container: { classes: ["tab-body"], id: "tabs" },
+      template: "systems/dnd5e/templates/actors/tabs/actor-effects.hbs",
+      scrollable: [""]
+    },
+    biography: {
+      container: { classes: ["tab-body"], id: "tabs" },
+      template: "systems/dnd5e/templates/actors/tabs/character-biography.hbs",
+      scrollable: [""]
+    },
+    bastion: {
+      container: { classes: ["tab-body"], id: "tabs" },
+      template: "systems/dnd5e/templates/actors/tabs/character-bastion.hbs",
+      scrollable: [""]
+    },
+    specialTraits: {
+      classes: ["flexcol"],
+      container: { classes: ["tab-body"], id: "tabs" },
+      template: "systems/dnd5e/templates/actors/tabs/creature-special-traits.hbs",
+      scrollable: [""]
+    },
+    warnings: {
+      template: "systems/dnd5e/templates/actors/parts/actor-warnings-dialog.hbs"
+    },
+    tabs: {
+      id: "tabs",
+      classes: ["tabs-right"],
+      template: "systems/dnd5e/templates/shared/sidebar-tabs.hbs"
+    }
+  };
+
+  async _preparePartContext(partId, context, options) {
+    context = await super._preparePartContext(partId, context, options);
+    if ( partId === "details" ) {
+      return this._prepareAbilityScoresContext(context, options);
+    }
+    return context;
   }
 
   /* -------------------------------------------- */
 
   /**
-   * Get the template path for the sheet.
-   *
-   * @returns {string} The template path.
+   * Prepare rendering context for the ability scores.
+   * @param {ApplicationRenderContext} context  Context being prepared.
+   * @param {HandlebarsRenderOptions} options   Options which configure application rendering behavior.
+   * @returns {ApplicationRenderContext}
+   * @protected
    */
-  get template() {
-    if ( !game.user.isGM && this.actor.limited ) return "systems/dnd5e/templates/actors/limited-sheet-2.hbs";
-    return "modules/custom-dnd5e/templates/sheet/character-sheet-2.hbs";
+  async _prepareAbilityScoresContext(context, options) {
+    for ( const ability of this._prepareAbilities(context) ) {
+      context.abilityRows.bottom.push(ability);
+    }
+    return context;
   }
 }
