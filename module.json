@@ -5,7 +5,7 @@
   "version": "This is auto replaced",
   "library": "false",
   "compatibility": {
-    "minimum": 12.331,
+    "minimum": 13.342,
     "verified": 12.344,
     "maximum": 13.999
   },
