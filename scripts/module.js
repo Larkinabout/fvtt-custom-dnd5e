@@ -145,6 +145,10 @@ Hooks.on("init", async () => {
   registerDebug();
 
   setAbilities(getSetting(CONSTANTS.ABILITIES.SETTING.CONFIG.KEY));
+  const isV4 = foundry.utils.isNewerVersion(game.dnd5e.version, "3.3.1");
+  if ( isV4 ) {
+    setActivationCosts(getSetting(CONSTANTS.ACTIVATION_COSTS.SETTING.CONFIG.KEY));
+  }
   setCurrency(getSetting(CONSTANTS.CURRENCY.SETTING.CONFIG.KEY));
   await setEncumbrance(getSetting(CONSTANTS.ENCUMBRANCE.SETTING.CONFIG.KEY));
   setLanguages(getSetting(CONSTANTS.LANGUAGES.SETTING.CONFIG.KEY));
@@ -195,10 +199,6 @@ Hooks.on("ready", async () => {
   CONFIG.CUSTOM_DND5E.coreStatusEffects = foundry.utils.deepClone(CONFIG.statusEffects);
   registerConditions();
 
-  const isV4 = foundry.utils.isNewerVersion(game.dnd5e.version, "3.3.1");
-  if ( isV4 ) {
-    setActivationCosts(getSetting(CONSTANTS.ACTIVATION_COSTS.SETTING.CONFIG.KEY));
-  }
   setActorSizes(getSetting(CONSTANTS.ACTOR_SIZES.SETTING.CONFIG.KEY));
   setArmorCalculations(getSetting(CONSTANTS.ARMOR_CALCULATIONS.SETTING.CONFIG.KEY));
   setArmorIds(getSetting(CONSTANTS.ARMOR_IDS.SETTING.CONFIG.KEY));
@@ -207,6 +207,7 @@ Hooks.on("ready", async () => {
   setConditions(getSetting(CONSTANTS.CONDITIONS.SETTING.CONFIG.KEY));
   setConsumableTypes(getSetting(CONSTANTS.CONSUMABLE_TYPES.SETTING.CONFIG.KEY));
   setDamageTypes(getSetting(CONSTANTS.DAMAGE_TYPES.SETTING.CONFIG.KEY));
+  const isV4 = foundry.utils.isNewerVersion(game.dnd5e.version, "3.3.1");
   if ( !isV4 ) {
     setItemActionTypes(getSetting(CONSTANTS.ITEM_ACTION_TYPES.SETTING.CONFIG.KEY));
     setItemActivationCostTypes(getSetting(CONSTANTS.ITEM_ACTIVATION_COST_TYPES.SETTING.CONFIG.KEY));
