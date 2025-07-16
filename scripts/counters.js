@@ -88,7 +88,8 @@ function handlePreUpdateActor(actor, data, options, userId) {
   if ( actor.type === "group" || !actor.isOwner ) return;
   const currentHp = foundry.utils.getProperty(data, "system.attributes.hp.value");
   const previousHp = actor.system.attributes.hp.value;
-  const halfHp = actor.system.attributes.hp.max * 0.5;
+  const maxHp = actor?.system?.attributes?.hp?.effectiveMax ?? actor?.system?.attributes?.hp?.max ?? 0;
+  const halfHp = maxHp * 0.5;
   if ( currentHp !== undefined && currentHp <= halfHp && previousHp > halfHp ) {
     processTriggers({ actor, triggerType: "halfHp" });
   }

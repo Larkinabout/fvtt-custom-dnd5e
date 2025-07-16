@@ -241,7 +241,10 @@ export function updateBloodied(actor, updates, dead) {
   Logger.debug("Updating Bloodied...");
 
   const currentHp = foundry.utils.getProperty(updates, "system.attributes.hp.value") ?? actor?.system?.attributes?.hp?.value;
-  const maxHp = foundry.utils.getProperty(updates, "updates.system.attributes.hp.max") ?? actor?.system?.attributes?.hp?.max;
+  const maxHp = foundry.utils.getProperty(updates, "updates.system.attributes.hp.effectiveMax")
+    ?? actor?.system?.attributes?.hp?.effectiveMax
+    ?? foundry.utils.getProperty(updates, "updates.system.attributes.hp.max")
+    ?? actor?.system?.attributes?.hp?.max;
 
   if ( typeof currentHp === "undefined" ) return null;
 
