@@ -574,10 +574,14 @@ function updateDead(actor, updates) {
   Logger.debug("Updating Dead...");
 
   const currentHp = foundry.utils.getProperty(updates, "system.attributes.hp.value");
+  const maxHp = actor?.system?.attributes?.hp?.effectiveMax ?? actor?.system?.attributes?.hp?.max ?? 0;
 
   if ( typeof currentHp === "undefined" ) return null;
 
-  if ( currentHp <= 0 ) {
+  if ( maxHp === 0 ) {
+    Logger.debug("Dead not updated. Max HP is 0.");
+    return false;
+  } else if ( currentHp <= 0 ) {
     makeDead(actor, updates);
     Logger.debug("Dead updated", { dead: true });
     return true;
@@ -604,10 +608,14 @@ function updateUnconscious(actor, updates) {
   Logger.debug("Updating Unconscious...");
 
   const currentHp = foundry.utils.getProperty(updates, "system.attributes.hp.value");
+  const maxHp = actor?.system?.attributes?.hp?.effectiveMax ?? actor?.system?.attributes?.hp?.max ?? 0;
 
   if ( typeof currentHp === "undefined" ) return null;
 
-  if ( currentHp <= 0 ) {
+  if ( maxHp === 0 ) {
+    Logger.debug("Unconscious not updated. Max HP is 0.");
+    return false;
+  } else if ( currentHp <= 0 ) {
     makeUnconscious(actor, updates);
     Logger.debug("Unconscious updated", { unconscious: true });
     return true;

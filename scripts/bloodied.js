@@ -250,7 +250,10 @@ export function updateBloodied(actor, updates, dead) {
 
   const halfHp = Math.ceil(maxHp * 0.5);
 
-  if ( currentHp <= halfHp
+  if ( maxHp <= 1 ) {
+    Logger.debug("Bloodied not updated. Max HP is 1 or less.");
+    return false;
+  } else if ( currentHp <= halfHp
         && !actor.effects.has("dnd5ebloodied000")
         && !(dead && getSetting(CONSTANTS.BLOODIED.SETTING.REMOVE_BLOODIED_ON_DEAD.KEY)) ) {
     makeBloodied(actor);
