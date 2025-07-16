@@ -10,7 +10,7 @@ import {
 import { ToolIdsForm } from "./forms/config-form.js";
 
 const constants = CONSTANTS.TOOL_IDS;
-const configKey = "toolIds";
+const configKey = "tools";
 
 /**
  * Register settings.

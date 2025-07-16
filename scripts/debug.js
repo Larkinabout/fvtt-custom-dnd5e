@@ -77,7 +77,7 @@ export async function exportData() {
       senses: CONFIG.DND5E.senses,
       skills: CONFIG.DND5E.skills,
       spellSchools: CONFIG.DND5E.spellSchools,
-      toolIds: CONFIG.DND5E.toolIds,
+      tools: CONFIG.DND5E.tools,
       toolProficiencies: CONFIG.DND5E.toolProficiencies,
       toolTypes: CONFIG.DND5E.toolTypes,
       validProperties: convertSetsToArrays(CONFIG.DND5E.validProperties),
