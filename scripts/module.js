@@ -30,6 +30,7 @@ import {
   decreaseFailure,
   modifyFailure
 } from "./counters.js";
+import { register as registerCreatureTypes, setConfig as setCreatureTypes } from "./creature-types.js";
 import { register as registerCurrency, setConfig as setCurrency } from "./currency.js";
 import { register as registerDamageTypes, setConfig as setDamageTypes } from "./damage-types.js";
 import { register as registerDebug } from "./debug.js";
@@ -120,6 +121,7 @@ Hooks.on("init", async () => {
   registerConditionsMenu();
   registerConsumableTypes();
   registerCounters();
+  registerCreatureTypes();
   registerCurrency();
   registerDamageTypes();
   registerEncumbrance();
@@ -207,6 +209,7 @@ Hooks.on("ready", async () => {
   setBloodied(getSetting(CONSTANTS.BLOODIED.SETTING.CONFIG.KEY));
   setConditions(getSetting(CONSTANTS.CONDITIONS.SETTING.CONFIG.KEY));
   setConsumableTypes(getSetting(CONSTANTS.CONSUMABLE_TYPES.SETTING.CONFIG.KEY));
+  setCreatureTypes(getSetting(CONSTANTS.CREATURE_TYPES.SETTING.CONFIG.KEY));
   setDamageTypes(getSetting(CONSTANTS.DAMAGE_TYPES.SETTING.CONFIG.KEY));
   const isV4 = foundry.utils.isNewerVersion(game.dnd5e.version, "3.3.1");
   if ( !isV4 ) {

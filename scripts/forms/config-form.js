@@ -7,6 +7,7 @@ import { ActivationCostsEditForm } from "./activation-costs-edit-form.js";
 import { ActorSizesEditForm } from "./actor-sizes-edit-form.js";
 import { ArmorCalculationsEditForm } from "./armor-calculations-edit-form.js";
 import { ConditionsEditForm } from "./conditions-edit-form.js";
+import { CreatureTypesEditForm } from "./creature-types-edit-form.js";
 import { CurrencyEditForm } from "./currency-edit-form.js";
 import { DamageTypesEditForm } from "./damage-types-edit-form.js";
 import { ItemPropertiesEditForm } from "./item-properties-edit-form.js";
@@ -20,6 +21,7 @@ import { resetConfigSetting as resetArmorIds, setConfig as setArmorIds } from ".
 import { resetConfigSetting as resetActorSizes, setConfig as setActorSizes } from "../actor-sizes.js";
 import { resetConfigSetting as resetConsumableTypes, setConfig as setConsumableTypes } from "../consumable-types.js";
 import { resetConfigSetting as resetConditions, setConfig as setConditions } from "../conditions.js";
+import { resetConfigSetting as resetCreatureTypes, setConfig as setCreatureTypes } from "../creature-types.js";
 import { resetConfigSetting as resetCurrency, setConfig as setCurrency } from "../currency.js";
 import { resetConfigSetting as resetDamageTypes, setConfig as setDamageTypes } from "../damage-types.js";
 import { resetConfigSetting as resetItemActionTypes, setConfig as setItemActionTypes } from "../item-action-types.js";
@@ -608,6 +610,46 @@ export class ConditionsForm extends ConfigForm {
     id: `${MODULE.ID}-conditions-form`,
     window: {
       title: "CUSTOM_DND5E.form.conditions.title"
+    }
+  };
+}
+
+/* -------------------------------------------- */
+
+/**
+ * Class representing the Creature Types Form.
+ *
+ * @extends ConfigForm
+ */
+export class CreatureTypesForm extends ConfigForm {
+  /**
+   * Constructor for CreatureTypesForm.
+   */
+  constructor() {
+    super();
+    this.editForm = CreatureTypesEditForm;
+    this.requiresReload = false;
+    this.enableConfigKey = CONSTANTS.CREATURE_TYPES.SETTING.ENABLE.KEY;
+    this.settingKey = CONSTANTS.CREATURE_TYPES.SETTING.CONFIG.KEY;
+    this.resetConfigSetting = resetCreatureTypes;
+    this.setConfig = setCreatureTypes;
+    this.configKey = "creatureTypes";
+    this.actorProperties = ["system.traits.di.value", "system.traits.dr.value", "system.traits.dv.value"];
+    this.headerButton = JOURNAL_HELP_BUTTON;
+    this.headerButton.uuid = CONSTANTS.CREATURE_TYPES.UUID;
+  }
+
+  /* -------------------------------------------- */
+
+  /**
+   * Default options for the form.
+   *
+   * @type {object}
+   */
+  static DEFAULT_OPTIONS = {
+    id: `${MODULE.ID}-damage-types-form`,
+    window: {
+      title: "CUSTOM_DND5E.form.damageTypes.title"
     }
   };
 }

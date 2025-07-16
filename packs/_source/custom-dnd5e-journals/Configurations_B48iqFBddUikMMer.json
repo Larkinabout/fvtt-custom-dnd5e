@@ -1095,6 +1095,46 @@
       "category": null,
       "_id": "GjOBdXwapcYvUihc",
       "_key": "!journal.pages!B48iqFBddUikMMer.GjOBdXwapcYvUihc"
+    },
+    {
+      "sort": 900000,
+      "name": "Creature Types",
+      "type": "text",
+      "system": {},
+      "title": {
+        "show": true,
+        "level": 1
+      },
+      "image": {},
+      "text": {
+        "format": 1,
+        "content": "<p>Located in <strong>Game Settings</strong> &gt; <strong>Configure Settings</strong> &gt; <strong>Custom D&amp;D 5e</strong> &gt; <strong>Configure Creature Types</strong></p><h3>Create a Creature Type</h3><ol><li><p>Click <strong>Create New</strong>.</p></li><li><p>Enter a <strong>Key</strong>.</p></li><li><p>Enter a <strong>Label</strong>.</p></li><li><p>Enter a <strong>Plural</strong> label.</p></li><li><p>(Optional) Pick an <strong>Icon</strong>.</p></li><li><p>(Optional) Paste a journal entry's UUID into the <strong>Reference</strong>.</p><article class=\"custom-dnd5e-tip\"><header><img src=\"modules/custom-dnd5e/media/icons/tip.svg\" /><p>Tip</p></header><p>You can copy a journal entry's UUID by opening up the entry and left-clicking the passport icon in the window's header.</p></article><article class=\"custom-dnd5e-note\"><header><img src=\"modules/custom-dnd5e/media/icons/note.svg\" /><p>Note</p></header><p>For a tooltip to appear, the <strong>Reference</strong> must be linked to a journal entry with the \"Rule\" page type, and the tooltip content should be entered in the Tooltip section using the \"Damage Type\" rule type.</p></article></li><li><p>(Optional) Tick <strong>Detect Alignment</strong>.</p></li><li><p>Click <strong>Save and Close</strong>.</p></li></ol><h4>Example Damage Type</h4><table><tbody><tr><td style=\"min-width:120px\" data-colwidth=\"272\"><p><strong>Property</strong></p></td><td><p><strong>Value</strong></p></td></tr><tr><td data-colwidth=\"272\"><p>Key</p></td><td><p>slime</p></td></tr><tr><td data-colwidth=\"272\"><p>Label</p></td><td><p>Slime</p></td></tr><tr><td data-colwidth=\"272\"><p>Icon</p></td><td><p>my-icons/slime.webp</p></td></tr><tr><td data-colwidth=\"272\"><p>Reference</p></td><td><p>Compendium.world.my-rules.JournalEntry.B3Dfl7CbHMjHkb1O.JournalEntryPage.J1aGypGN0AaMjJtE</p></td></tr></tbody></table>"
+      },
+      "video": {
+        "controls": true,
+        "volume": 0.5
+      },
+      "src": null,
+      "ownership": {
+        "default": -1,
+        "0wJRsV2r9Hv1a7q0": 3,
+        "5bwQyYIyVQxjjJ3v": 3
+      },
+      "flags": {},
+      "_stats": {
+        "compendiumSource": null,
+        "duplicateSource": "Compendium.custom-dnd5e.custom-dnd5e-journals.JournalEntry.B48iqFBddUikMMer.JournalEntryPage.qkB3382uO7YUUApw",
+        "exportSource": null,
+        "coreVersion": "13.345",
+        "systemId": "dnd5e",
+        "systemVersion": "5.0.4",
+        "createdTime": 1752680784276,
+        "modifiedTime": 1752680987979,
+        "lastModifiedBy": "5bwQyYIyVQxjjJ3v"
+      },
+      "category": null,
+      "_id": "sRMUy8oNAZNCQOG0",
+      "_key": "!journal.pages!B48iqFBddUikMMer.sRMUy8oNAZNCQOG0"
     }
   ],
   "folder": null,

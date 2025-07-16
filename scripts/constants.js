@@ -307,6 +307,30 @@ export const CONSTANTS = {
       DND5E_ITEM_GROUP_LEGACY: "modules/custom-dnd5e/templates/counters/dnd5e/counters-item-group-legacy.hbs"
     }
   },
+  CREATURE_TYPES: {
+    ID: "creature-types",
+    MENU: {
+      KEY: "creature-types-menu",
+      HINT: "CUSTOM_DND5E.menu.creatureTypes.hint",
+      ICON: "fas fa-paw-claws",
+      LABEL: "CUSTOM_DND5E.menu.creatureTypes.label",
+      NAME: "CUSTOM_DND5E.menu.creatureTypes.name"
+    },
+    SETTING: {
+      ENABLE: {
+        KEY: "enable-creature-types"
+      },
+      CONFIG: {
+        KEY: "creature-types"
+      }
+    },
+    TEMPLATE: {
+      EDIT: "modules/custom-dnd5e/templates/creature-types-edit.hbs",
+      FORM: "modules/custom-dnd5e/templates/config-form.hbs",
+      LIST: "modules/custom-dnd5e/templates/config-list.hbs"
+    },
+    UUID: "Compendium.custom-dnd5e.custom-dnd5e-journals.JournalEntry.B48iqFBddUikMMer.JournalEntryPage.sRMUy8oNAZNCQOG0"
+  },
   CURRENCY: {
     ID: "currency",
     MENU: {
