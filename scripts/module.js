@@ -151,6 +151,7 @@ Hooks.on("init", async () => {
   }
   setCurrency(getSetting(CONSTANTS.CURRENCY.SETTING.CONFIG.KEY));
   await setEncumbrance(getSetting(CONSTANTS.ENCUMBRANCE.SETTING.CONFIG.KEY));
+  setItemRarity(getSetting(CONSTANTS.ITEM_RARITY.SETTING.CONFIG.KEY));
   setLanguages(getSetting(CONSTANTS.LANGUAGES.SETTING.CONFIG.KEY));
   // setSenses(getSetting(CONSTANTS.SENSES.SETTING.CONFIG.KEY));
   setSkills(getSetting(CONSTANTS.SKILLS.SETTING.CONFIG.KEY));
@@ -213,7 +214,6 @@ Hooks.on("ready", async () => {
     setItemActivationCostTypes(getSetting(CONSTANTS.ITEM_ACTIVATION_COST_TYPES.SETTING.CONFIG.KEY));
   }
   setItemProperties(getSetting(CONSTANTS.ITEM_PROPERTIES.SETTING.CONFIG.KEY));
-  setItemRarity(getSetting(CONSTANTS.ITEM_RARITY.SETTING.CONFIG.KEY));
   setSpellSchools(getSetting(CONSTANTS.SPELL_SCHOOLS.SETTING.CONFIG.KEY));
   setTools(getSetting(CONSTANTS.TOOLS.SETTING.CONFIG.KEY));
   setToolProficiencies(getSetting(CONSTANTS.TOOL_PROFICIENCIES.SETTING.CONFIG.KEY));
