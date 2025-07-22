@@ -195,7 +195,7 @@ export const CONSTANTS = {
     TEMPLATE: {
       FORM: "modules/custom-dnd5e/templates/automation-form.hbs"
     },
-    UUID: "Compendium.custom-dnd5e.custom-dnd5e-journals.JournalEntry.ngr8w6WBycK59brj"
+    UUID: "Compendium.custom-dnd5e.custom-dnd5e-journals.JournalEntry.xXEu642Urflb2Ekm"
   },
   BLOODIED: {
     MENU: {

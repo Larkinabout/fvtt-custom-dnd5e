@@ -15,7 +15,7 @@ export class AutomationForm extends CustomDnd5eForm {
     super(args);
     this.type = "automation";
     this.headerButton = JOURNAL_HELP_BUTTON;
-    this.headerButton.uuid = CONSTANTS.HOUSE_RULES.UUID;
+    this.headerButton.uuid = CONSTANTS.AUTOMATION.UUID;
   }
 
   /* -------------------------------------------- */
