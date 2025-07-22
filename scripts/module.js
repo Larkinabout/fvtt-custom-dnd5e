@@ -30,6 +30,7 @@ import {
   decreaseFailure,
   modifyFailure
 } from "./counters.js";
+import { register as registerAutomation } from "./automation.js";
 import { register as registerCreatureTypes, setConfig as setCreatureTypes } from "./creature-types.js";
 import { register as registerCurrency, setConfig as setCurrency } from "./currency.js";
 import { register as registerDamageTypes, setConfig as setDamageTypes } from "./damage-types.js";
@@ -108,6 +109,7 @@ Hooks.on("init", async () => {
   registerMigration();
   registerCharacterSheet();
 
+  registerAutomation();
   registerHouseRules();
   registerAbilities();
   registerActivationCosts();

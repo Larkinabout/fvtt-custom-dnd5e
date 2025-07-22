@@ -172,7 +172,30 @@ export const CONSTANTS = {
       FORM: "modules/custom-dnd5e/templates/config-form.hbs",
       LIST: "modules/custom-dnd5e/templates/config-edit-in-list.hbs"
     },
-    UUID: "Compendium.custom-dnd5e.custom-dnd5e-journals.JournalEntry.B48iqFBddUikMMer.JournalEntryPage.mTVSShsLO960Kmrk"
+    UUID: "Compendium.custom-dnd5e.custom-dnd5e-journals.JournalEntry.xXEu642Urflb2Ekm"
+  },
+  AUTOMATION: {
+    MENU: {
+      KEY: "automation-menu",
+      HINT: "CUSTOM_DND5E.menu.automation.hint",
+      ICON: "fas fa-robot",
+      LABEL: "CUSTOM_DND5E.menu.automation.label",
+      NAME: "CUSTOM_DND5E.menu.automation.name"
+    },
+    MOBS: {
+      SETTING: {
+        ENABLE: {
+          KEY: "enable-mobs"
+        },
+        USE_AVERAGE_DAMAGE: {
+          KEY: "mobs-average-damage"
+        }
+      }
+    },
+    TEMPLATE: {
+      FORM: "modules/custom-dnd5e/templates/automation-form.hbs"
+    },
+    UUID: "Compendium.custom-dnd5e.custom-dnd5e-journals.JournalEntry.ngr8w6WBycK59brj"
   },
   BLOODIED: {
     MENU: {
