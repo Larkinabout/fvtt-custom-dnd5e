@@ -207,7 +207,7 @@
     "CUSTOM_DND5E.form.armorIds.title": "Configure Armor",
     "CUSTOM_DND5E.form.armorProficiencies.title": "Configure Armor Proficiencies",
     "CUSTOM_DND5E.form.automation.mobs.enable.label": "Enable Mobs",
-    "CUSTOM_DND5E.form.automation.mobs.enable.note": "When rolling an attack against a targeted token while selecting 4 or more of the same token, the Mobs Average Results table (DMG 2024, p. 82) will be used in place of a single attack",
+    "CUSTOM_DND5E.form.automation.mobs.enable.note": "When making an attack against a targeted token while selecting four or more identical tokens, the Mobs Average Results table (DMG 2024, p. 82) will be used to calculate successful hits and roll damage instead",
     "CUSTOM_DND5E.form.automation.mobs.useAverageDamage.label": "Use Average Damage",
     "CUSTOM_DND5E.form.automation.mobs.useAverageDamage.note": "Use average damage for mobs instead of rolling",
     "CUSTOM_DND5E.form.automation.title": "Configure Automation",

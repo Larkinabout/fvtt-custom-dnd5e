@@ -6,6 +6,19 @@ A Foundry VTT module to customise the D&D 5e system.
 
 ![Custom D&D 5e Custom Banner](./.github/readme/custom-dnd5e-custom-banner.png)
 
+# Automation
+
+## Mobs
+- When making an attack against a targeted token while selecting four or more identical tokens, the **Mobs Average Results** table (Dungeon Master's Guide (2024), page 82) will be used to calculate successful hits and roll damage instead.
+- Choose to roll or use average damage.
+
+<details>
+    <summary>See Video</summary>
+
+![Custom D&D Mobs](./.github/readme/custom-dnd5e-mobs.gif)
+
+</details>
+
 # House Rules
 For help and advice on the house rules, either click the info buttons in the Configure House Rules window or open the House Rules journal within the Custom D&D 5e compendium.
 
