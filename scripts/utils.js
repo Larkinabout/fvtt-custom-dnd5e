@@ -581,7 +581,6 @@ function areKeysPressed(event, action) {
   return isPressed;
 }
 
-
 /* -------------------------------------------- */
 
 /**

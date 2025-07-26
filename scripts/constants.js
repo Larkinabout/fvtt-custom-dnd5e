@@ -174,29 +174,6 @@ export const CONSTANTS = {
     },
     UUID: "Compendium.custom-dnd5e.custom-dnd5e-journals.JournalEntry.B48iqFBddUikMMer.JournalEntryPage.mTVSShsLO960Kmrk"
   },
-  AUTOMATION: {
-    MENU: {
-      KEY: "automation-menu",
-      HINT: "CUSTOM_DND5E.menu.automation.hint",
-      ICON: "fas fa-robot",
-      LABEL: "CUSTOM_DND5E.menu.automation.label",
-      NAME: "CUSTOM_DND5E.menu.automation.name"
-    },
-    MOB_DAMAGE: {
-      SETTING: {
-        ENABLE: {
-          KEY: "enable-mob-damage"
-        },
-        USE_AVERAGE_DAMAGE: {
-          KEY: "mobs-average-damage"
-        }
-      }
-    },
-    TEMPLATE: {
-      FORM: "modules/custom-dnd5e/templates/automation-form.hbs"
-    },
-    UUID: "Compendium.custom-dnd5e.custom-dnd5e-journals.JournalEntry.xXEu642Urflb2Ekm"
-  },
   BLOODIED: {
     MENU: {
       KEY: "bloodied-menu",
