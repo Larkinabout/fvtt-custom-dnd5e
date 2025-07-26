@@ -1,6 +1,6 @@
 import { CONSTANTS, JOURNAL_HELP_BUTTON, MODULE } from "../constants.js";
 import { ConfigEditForm } from "./config-edit-form.js";
-import { getSettingDefault, resetConfigSetting, setConfig } from "../armor-calculations.js";
+import { getSettingDefault, resetConfigSetting, setConfig } from "../configurations/armor-calculations.js";
 
 const constants = CONSTANTS.ARMOR_CALCULATIONS;
 const configKey = "armorClasses";

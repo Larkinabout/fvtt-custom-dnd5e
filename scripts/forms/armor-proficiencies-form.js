@@ -1,7 +1,7 @@
 import { CONSTANTS, JOURNAL_HELP_BUTTON, MODULE } from "../constants.js";
 import { getSetting, setSetting } from "../utils.js";
 import { ConfigForm } from "./config-form.js";
-import { getSettingDefault, resetConfigSetting, setConfig } from "../armor-proficiencies.js";
+import { getSettingDefault, resetConfigSetting, setConfig } from "../configurations/armor-proficiencies.js";
 
 /**
  * Class representing the Armor Proficiencies Form.

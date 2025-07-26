@@ -1,6 +1,6 @@
 import { CONSTANTS, JOURNAL_HELP_BUTTON, MODULE } from "../constants.js";
 import { ConfigEditForm } from "./config-edit-form.js";
-import { getSettingDefault, resetConfigSetting, setConfig } from "../actor-sizes.js";
+import { getSettingDefault, resetConfigSetting, setConfig } from "../configurations/actor-sizes.js";
 
 const constants = CONSTANTS.ACTOR_SIZES;
 const configKey = "actorSizes";

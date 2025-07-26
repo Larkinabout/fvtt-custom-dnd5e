@@ -1,6 +1,6 @@
 import { CONSTANTS, JOURNAL_HELP_BUTTON, MODULE } from "../constants.js";
 import { ConfigEditForm } from "./config-edit-form.js";
-import { getSettingDefault, resetConfigSetting, setConfig } from "../conditions.js";
+import { getSettingDefault, resetConfigSetting, setConfig } from "../configurations/conditions.js";
 
 const constants = CONSTANTS.CONDITIONS;
 const configKey = "conditions";

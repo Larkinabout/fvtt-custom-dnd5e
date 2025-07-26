@@ -1,17 +1,17 @@
 import { CONSTANTS, MODULE } from "./constants.js";
 import { c5eLoadTemplates, getSetting, registerSetting } from "./utils.js";
-import { register as registerHouseRules, registerNegativeHp } from "./house-rules.js";
-import { register as registerAbilities, setConfig as setAbilities } from "./abilities.js";
-import { register as registerActivationCosts, setConfig as setActivationCosts } from "./activation-costs.js";
+import { register as registerGameplay, registerNegativeHp } from "./gameplay/gameplay.js";
+import { register as registerAbilities, setConfig as setAbilities } from "./configurations/abilities.js";
+import { register as registerActivationCosts, setConfig as setActivationCosts } from "./configurations/activation-costs.js";
 import { register as registerActorSheet } from "./actor-sheet.js";
-import { register as registerActorSizes, setConfig as setActorSizes } from "./actor-sizes.js";
-import { register as registerArmorCalculations, setConfig as setArmorCalculations } from "./armor-calculations.js";
-import { register as registerArmorIds, setConfig as setArmorIds } from "./armor-ids.js";
-import { register as registerArmorProficiencies, setConfig as setArmorProficiencies } from "./armor-proficiencies.js";
-import { register as registerBloodied, setConfig as setBloodied } from "./bloodied.js";
-import { register as registerCampSupplies } from "./camp-supplies.js";
-import { register as registerConditions, registerMenu as registerConditionsMenu, setConfig as setConditions } from "./conditions.js";
-import { register as registerConsumableTypes, setConfig as setConsumableTypes } from "./consumable-types.js";
+import { register as registerActorSizes, setConfig as setActorSizes } from "./configurations/actor-sizes.js";
+import { register as registerArmorCalculations, setConfig as setArmorCalculations } from "./configurations/armor-calculations.js";
+import { register as registerArmorIds, setConfig as setArmorIds } from "./configurations/armor-ids.js";
+import { register as registerArmorProficiencies, setConfig as setArmorProficiencies } from "./configurations/armor-proficiencies.js";
+import { register as registerBloodied, setConfig as setBloodied } from "./configurations/bloodied.js";
+import { register as registerCampSupplies } from "./gameplay/camp-supplies.js";
+import { register as registerConditions, registerMenu as registerConditionsMenu, setConfig as setConditions } from "./configurations/conditions.js";
+import { register as registerConsumableTypes, setConfig as setConsumableTypes } from "./configurations/consumable-types.js";
 import {
   register as registerCounters,
   checkCheckbox,
@@ -30,32 +30,31 @@ import {
   decreaseFailure,
   modifyFailure
 } from "./counters.js";
-import { register as registerAutomation } from "./automation.js";
-import { register as registerCreatureTypes, setConfig as setCreatureTypes } from "./creature-types.js";
-import { register as registerCurrency, setConfig as setCurrency } from "./currency.js";
-import { register as registerDamageTypes, setConfig as setDamageTypes } from "./damage-types.js";
+import { register as registerCreatureTypes, setConfig as setCreatureTypes } from "./configurations/creature-types.js";
+import { register as registerCurrency, setConfig as setCurrency } from "./configurations/currency.js";
+import { register as registerDamageTypes, setConfig as setDamageTypes } from "./configurations/damage-types.js";
 import { register as registerDebug } from "./debug.js";
-import { register as registerEncumbrance, setConfig as setEncumbrance } from "./encumbrance.js";
-import { register as registerExhaustion } from "./exhaustion.js";
-import { register as registerItemActionTypes, setConfig as setItemActionTypes } from "./item-action-types.js";
-import { register as registerItemActivationCostTypes, setConfig as setItemActivationCostTypes } from "./item-activation-cost-types.js";
-import { register as registerItemProperties, setConfig as setItemProperties } from "./item-properties.js";
-import { register as registerItemRarity, setConfig as setItemRarity } from "./item-rarity.js";
+import { register as registerEncumbrance, setConfig as setEncumbrance } from "./configurations/encumbrance.js";
+import { register as registerExhaustion } from "./gameplay/exhaustion.js";
+import { register as registerItemActionTypes, setConfig as setItemActionTypes } from "./configurations/item-action-types.js";
+import { register as registerItemActivationCostTypes, setConfig as setItemActivationCostTypes } from "./configurations/item-activation-cost-types.js";
+import { register as registerItemProperties, setConfig as setItemProperties } from "./configurations/item-properties.js";
+import { register as registerItemRarity, setConfig as setItemRarity } from "./configurations/item-rarity.js";
 import { register as registerItemSheet } from "./item-sheet.js";
-import { register as registerLanguages, setConfig as setLanguages } from "./languages.js";
+import { register as registerLanguages, setConfig as setLanguages } from "./configurations/languages.js";
 import { register as registerMigration, migrate } from "./migration.js";
 import { register as registerMisc, setMaxLevel } from "./misc.js";
 import { register as registerRolls } from "./rolls.js";
-import { register as registerSenses, setConfig as setSenses } from "./senses.js";
-import { register as registerSkills, setConfig as setSkills } from "./skills.js";
-import { register as registerSpellSchools, setConfig as setSpellSchools } from "./spell-schools.js";
+import { register as registerSenses, setConfig as setSenses } from "./configurations/senses.js";
+import { register as registerSkills, setConfig as setSkills } from "./configurations/skills.js";
+import { register as registerSpellSchools, setConfig as setSpellSchools } from "./configurations/spell-schools.js";
 import { register as registerRadialStatusEffects } from "./radial-status-effects.js";
 import { register as registerTokenBorder } from "./token-border.js";
 import { register as registerTokenEffects } from "./token-effects.js";
-import { register as registerTools, setConfig as setTools } from "./tools.js";
-import { register as registerToolProficiencies, setConfig as setToolProficiencies } from "./tool-proficiencies.js";
-import { register as registerWeaponIds, setConfig as setWeaponIds } from "./weapon-ids.js";
-import { register as registerWeaponProficiencies, setConfig as setWeaponProficiencies } from "./weapon-proficiencies.js";
+import { register as registerTools, setConfig as setTools } from "./configurations/tools.js";
+import { register as registerToolProficiencies, setConfig as setToolProficiencies } from "./configurations/tool-proficiencies.js";
+import { register as registerWeaponIds, setConfig as setWeaponIds } from "./configurations/weapon-ids.js";
+import { register as registerWeaponProficiencies, setConfig as setWeaponProficiencies } from "./configurations/weapon-proficiencies.js";
 import { patchModifyTokenAttribute } from "./patches/actor-modify-token-attribute.js";
 import { patchD20Die } from "./patches/d20-die.js";
 import { patchD20Roll } from "./patches/d20-roll.js";
@@ -109,8 +108,7 @@ Hooks.on("init", async () => {
   registerMigration();
   registerCharacterSheet();
 
-  registerAutomation();
-  registerHouseRules();
+  registerGameplay();
   registerAbilities();
   registerActivationCosts();
   registerActorSheet();

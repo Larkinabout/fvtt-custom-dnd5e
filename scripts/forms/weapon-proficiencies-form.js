@@ -1,7 +1,7 @@
 import { CONSTANTS, JOURNAL_HELP_BUTTON, MODULE } from "../constants.js";
 import { getSetting, setSetting } from "../utils.js";
 import { ConfigForm } from "./config-form.js";
-import { getSettingDefault, setConfig } from "../weapon-proficiencies.js";
+import { getSettingDefault, setConfig } from "../configurations/weapon-proficiencies.js";
 
 /**
  * Class representing the Weapon Proficiencies Form.

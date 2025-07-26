@@ -1,6 +1,6 @@
 import { CONSTANTS, JOURNAL_HELP_BUTTON, MODULE } from "../constants.js";
 import { ConfigEditForm } from "./config-edit-form.js";
-import { setConfig, getSettingDefault } from "../creature-types.js";
+import { setConfig, getSettingDefault } from "../configurations/creature-types.js";
 
 const constants = CONSTANTS.CREATURE_TYPES;
 const configKey = "creatureTypes";

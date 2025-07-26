@@ -6,21 +6,10 @@ A Foundry VTT module to customise the D&D 5e system.
 
 ![Custom D&D 5e Custom Banner](./.github/readme/custom-dnd5e-custom-banner.png)
 
-# Automation
+# Gameplay
+Configure game mechanics and automation of core rules, optional variants and house rules.
 
-## Mobs
-- When making an attack against a targeted token while selecting four or more identical tokens, the **Mobs Average Results** table (Dungeon Master's Guide (2024), page 82) will be used to calculate successful hits and roll damage instead.
-- Choose to roll or use average damage.
-
-<details>
-    <summary>See Video</summary>
-
-![Custom D&D Mobs](./.github/readme/custom-dnd5e-mobs.gif)
-
-</details>
-
-# House Rules
-For help and advice on the house rules, either click the info buttons in the Configure House Rules window or open the House Rules journal within the Custom D&D 5e compendium.
+For help and advice on gameplay settings, either click the info buttons in the Gameplay window or open the Gameplay journal within the Custom D&D 5e compendium.
 
 <details>
     <summary>See Image</summary>
@@ -135,6 +124,36 @@ Award Inspiration when a set value is rolled for an ability check, attack roll, 
     <summary>See Image</summary>
 
 ![Custom D&D 5e Award Inspiration](./.github/readme/custom-dnd5e-award-inspiration.png)
+
+</details>
+
+## Mob Damage
+- When attacking a single token with four or more identical tokens selected, the attack roll is replaced with a damage roll based on the **Mobs Average Results** table (Dungeon Master's Guide (2024), page 82).
+- Use average damage instead of rolling.
+
+<details>
+    <summary>See Video</summary>
+
+![Custom D&D Mob Damage](./.github/readme/custom-dnd5e-mob-damage.gif)
+
+</details>
+
+## Probabilistic Damage
+- When attacking a single token, the attack roll is replaced with a damage roll scaled by the chance to hit.
+- Enable per activity and actor type (Player Characters, NPCs or both)
+- Use average damage instead of rolling.
+
+<details>
+    <summary>See Video</summary>
+
+![Custom D&D Probabilistic Damage](./.github/readme/custom-dnd5e-probabilistic-damage.gif)
+
+</details>
+
+<details>
+    <summary>See Image</summary>
+
+![Custom D&D 5e Use Probabilistic Damage](./.github/readme/custom-dnd5e-use-probabilistic-damage.png)
 
 </details>
 
