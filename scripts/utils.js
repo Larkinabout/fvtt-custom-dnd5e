@@ -525,9 +525,9 @@ export async function c5eLoadTemplates(templates) {
 /* -------------------------------------------- */
 
 /**
- * Get the roll type based on the keyboard event.
+ * Get the advantage mode based on the keyboard event.
  * @param {KeyboardEvent} event The keyboard event.
- * @returns {string} The roll type ("normal", "advantage", or "disadvantage").
+ * @returns {string} The advantage mode ("normal", "advantage", or "disadvantage").
  */
 export function getAdvantageMode(event) {
   if ( !event ) return "normal";

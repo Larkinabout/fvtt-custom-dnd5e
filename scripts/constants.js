@@ -172,7 +172,7 @@ export const CONSTANTS = {
       FORM: "modules/custom-dnd5e/templates/config-form.hbs",
       LIST: "modules/custom-dnd5e/templates/config-edit-in-list.hbs"
     },
-    UUID: "Compendium.custom-dnd5e.custom-dnd5e-journals.JournalEntry.xXEu642Urflb2Ekm"
+    UUID: "Compendium.custom-dnd5e.custom-dnd5e-journals.JournalEntry.B48iqFBddUikMMer.JournalEntryPage.mTVSShsLO960Kmrk"
   },
   AUTOMATION: {
     MENU: {
@@ -772,6 +772,35 @@ export const CONSTANTS = {
       CONFIG_FORM_GROUP: "modules/custom-dnd5e/templates/movement-senses-config-form-group.hbs"
     },
     UUID: "Compendium.custom-dnd5e.custom-dnd5e-journals.JournalEntry.B48iqFBddUikMMer.JournalEntryPage.UC0cWoAGMtU6yISR"
+  },
+  SHEET: {
+    ID: "sheet",
+    MENU: {
+      KEY: "sheet-menu",
+      HINT: "CUSTOM_DND5E.menu.sheet.hint",
+      ICON: "fas fa-pen-to-square",
+      LABEL: "CUSTOM_DND5E.menu.sheet.label",
+      NAME: "CUSTOM_DND5E.menu.sheet.name"
+    },
+    SETTING: {
+      AUTO_FADE_SHEET: { KEY: "auto-fade-sheet" },
+      AUTO_MINIMISE_SHEET: { KEY: "auto-minimise-sheet" },
+      BANNER_IMAGE: { KEY: "banner-image" },
+      SHEET_SCALE: { KEY: "sheet-scale" },
+      SHOW_DEATH_SAVES: { KEY: "show-death-saves" },
+      SHOW_ENCUMBRANCE: { KEY: "show-encumbrance" },
+      SHOW_EXHAUSTION: { KEY: "show-exhaustion" },
+      SHOW_INSPIRATION: { KEY: "show-inspiration" },
+      SHOW_LEGENDARY_ACTIONS: { KEY: "show-legendary-actions" },
+      SHOW_LEGENDARY_RESISTANCE: { KEY: "show-legendary-resistance" },
+      SHOW_MANAGE_CURRENCY: { KEY: "show-manage-currency" },
+      SHOW_USE_LAIR_ACTION: { KEY: "show-use-lair-action" }
+    },
+    TEMPLATE: {
+      FORM: "modules/custom-dnd5e/templates/sheet-form.hbs",
+      CHARACTER_SHEET_2: "modules/custom-dnd5e/templates/sheet/character-sheet-2.hbs",
+      CHARACTER_DETAILS: "modules/custom-dnd5e/templates/sheet/character-details.hbs"
+    }
   },
   SHOW_PRESSED_KEYS: {
     SETTING: {

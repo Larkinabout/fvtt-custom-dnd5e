@@ -52,7 +52,7 @@ import { register as registerSpellSchools, setConfig as setSpellSchools } from "
 import { register as registerRadialStatusEffects } from "./radial-status-effects.js";
 import { register as registerTokenBorder } from "./token-border.js";
 import { register as registerTokenEffects } from "./token-effects.js";
-import { register as registerToolIds, setConfig as setTools } from "./tools.js";
+import { register as registerTools, setConfig as setTools } from "./tools.js";
 import { register as registerToolProficiencies, setConfig as setToolProficiencies } from "./tool-proficiencies.js";
 import { register as registerWeaponIds, setConfig as setWeaponIds } from "./weapon-ids.js";
 import { register as registerWeaponProficiencies, setConfig as setWeaponProficiencies } from "./weapon-proficiencies.js";
@@ -138,7 +138,7 @@ Hooks.on("init", async () => {
   registerSenses();
   registerSkills();
   registerSpellSchools();
-  registerToolIds();
+  registerTools();
   registerToolProficiencies();
   registerWeaponIds();
   registerWeaponProficiencies();
