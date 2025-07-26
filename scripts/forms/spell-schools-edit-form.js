@@ -1,6 +1,6 @@
 import { CONSTANTS, JOURNAL_HELP_BUTTON, MODULE } from "../constants.js";
 import { ConfigEditForm } from "./config-edit-form.js";
-import { setConfig, getSettingDefault } from "../spell-schools.js";
+import { setConfig, getSettingDefault } from "../configurations/spell-schools.js";
 
 const constants = CONSTANTS.SPELL_SCHOOLS;
 const configKey = "spellSchools";

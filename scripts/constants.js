@@ -29,7 +29,7 @@ export const CONSTANTS = {
       }
     },
     TEMPLATE: {
-      EDIT: "modules/custom-dnd5e/templates/abilities-edit.hbs",
+      EDIT: "modules/custom-dnd5e/templates/abilities-edit.hbs"
     },
     UUID: "Compendium.custom-dnd5e.custom-dnd5e-journals.JournalEntry.B48iqFBddUikMMer.JournalEntryPage.tVG6b7kBJUOVvpwP"
   },
@@ -104,7 +104,7 @@ export const CONSTANTS = {
       }
     },
     TEMPLATE: {
-      EDIT: "modules/custom-dnd5e/templates/actor-sizes-edit.hbs",
+      EDIT: "modules/custom-dnd5e/templates/actor-sizes-edit.hbs"
     },
     UUID: "Compendium.custom-dnd5e.custom-dnd5e-journals.JournalEntry.B48iqFBddUikMMer.JournalEntryPage.V3QbxNviHsZd8Ssb"
   },
@@ -126,7 +126,7 @@ export const CONSTANTS = {
       }
     },
     TEMPLATE: {
-      EDIT: "modules/custom-dnd5e/templates/armor-calculations-edit.hbs",
+      EDIT: "modules/custom-dnd5e/templates/armor-calculations-edit.hbs"
     },
     UUID: "Compendium.custom-dnd5e.custom-dnd5e-journals.JournalEntry.B48iqFBddUikMMer.JournalEntryPage.bjFllCYYW9paPCNG"
   },
@@ -174,29 +174,6 @@ export const CONSTANTS = {
     },
     UUID: "Compendium.custom-dnd5e.custom-dnd5e-journals.JournalEntry.B48iqFBddUikMMer.JournalEntryPage.mTVSShsLO960Kmrk"
   },
-  AUTOMATION: {
-    MENU: {
-      KEY: "automation-menu",
-      HINT: "CUSTOM_DND5E.menu.automation.hint",
-      ICON: "fas fa-robot",
-      LABEL: "CUSTOM_DND5E.menu.automation.label",
-      NAME: "CUSTOM_DND5E.menu.automation.name"
-    },
-    MOBS: {
-      SETTING: {
-        ENABLE: {
-          KEY: "enable-mobs"
-        },
-        USE_AVERAGE_DAMAGE: {
-          KEY: "mobs-average-damage"
-        }
-      }
-    },
-    TEMPLATE: {
-      FORM: "modules/custom-dnd5e/templates/automation-form.hbs"
-    },
-    UUID: "Compendium.custom-dnd5e.custom-dnd5e-journals.JournalEntry.xXEu642Urflb2Ekm"
-  },
   BLOODIED: {
     MENU: {
       KEY: "bloodied-menu",
@@ -229,7 +206,7 @@ export const CONSTANTS = {
       }
     },
     TEMPLATE: {
-      FORM: "modules/custom-dnd5e/templates/bloodied-form.hbs",
+      FORM: "modules/custom-dnd5e/templates/bloodied-form.hbs"
     },
     ICON: "modules/custom-dnd5e/media/icons/bloodied.svg",
     CONDITION_UUID: "Compendium.custom-dnd5e.custom-dnd5e-journals.JournalEntry.ngr8w6WBycK59brj.JournalEntryPage.sV0ZCKxwh4n4ZU1P",
@@ -373,7 +350,7 @@ export const CONSTANTS = {
       }
     },
     TEMPLATE: {
-      EDIT: "modules/custom-dnd5e/templates/currency-edit.hbs",
+      EDIT: "modules/custom-dnd5e/templates/currency-edit.hbs"
     },
     UUID: "Compendium.custom-dnd5e.custom-dnd5e-journals.JournalEntry.B48iqFBddUikMMer.JournalEntryPage.dmzCGf2LPoBlfu9m"
   },
@@ -516,16 +493,16 @@ export const CONSTANTS = {
       }
     }
   },
-  HOUSE_RULES: {
+  GAMEPLAY: {
     MENU: {
-      KEY: "house-rules-menu",
-      HINT: "CUSTOM_DND5E.menu.houseRules.hint",
-      ICON: "fas fa-house-chimney",
-      LABEL: "CUSTOM_DND5E.menu.houseRules.label",
-      NAME: "CUSTOM_DND5E.menu.houseRules.name"
+      KEY: "gameplay-menu",
+      HINT: "CUSTOM_DND5E.menu.gameplay.hint",
+      ICON: "fas fa-joystick",
+      LABEL: "CUSTOM_DND5E.menu.gameplay.label",
+      NAME: "CUSTOM_DND5E.menu.gameplay.name"
     },
     TEMPLATE: {
-      FORM: "modules/custom-dnd5e/templates/house-rules-form.hbs"
+      FORM: "modules/custom-dnd5e/templates/gameplay-form.hbs"
     },
     UUID: "Compendium.custom-dnd5e.custom-dnd5e-journals.JournalEntry.ngr8w6WBycK59brj"
   },
@@ -708,6 +685,29 @@ export const CONSTANTS = {
       SETTING: {
         KEY: "migration-version"
       }
+    }
+  },
+  MOB_DAMAGE: {
+    SETTING: {
+      ENABLE: {
+        KEY: "enable-mob-damage"
+      },
+      USE_AVERAGE_DAMAGE: {
+        KEY: "use-average-mob-damage"
+      }
+    }
+  },
+  PROBABILISTIC_DAMAGE: {
+    SETTING: {
+      ENABLE: {
+        KEY: "enable-probabilistic-damage"
+      },
+      USE_AVERAGE_DAMAGE: {
+        KEY: "use-average-probabilistic-damage"
+      }
+    },
+    TEMPLATE: {
+      PROBABILISTIC_DAMAGE: "modules/custom-dnd5e/templates/probabilistic-damage.hbs"
     }
   },
   PRONE: {

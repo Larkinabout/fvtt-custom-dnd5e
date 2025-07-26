@@ -66,6 +66,6 @@ function registerHooks() {
  * @param {object} html The HTML
  */
 function removeIdentified(html) {
-  const element = html.querySelector("button.toggle-identified");
+  const element = html[0].querySelector("[data-property='system.identified']");
   element?.remove();
 }
