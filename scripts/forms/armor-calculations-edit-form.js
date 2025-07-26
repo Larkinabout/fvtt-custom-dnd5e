@@ -40,7 +40,7 @@ export class ArmorCalculationsEditForm extends ConfigEditForm {
   static DEFAULT_OPTIONS = {
     id: `${MODULE.ID}-armor-calculations-edit-form`,
     position: {
-      height: 250
+      height: 260
     },
     window: {
       title: `CUSTOM_DND5E.form.${configKey}.edit.title`

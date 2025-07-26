@@ -521,3 +521,62 @@ export async function c5eLoadTemplates(templates) {
     Logger.debug("Failed to load templates", { templates, error });
   }
 }
+
+/* -------------------------------------------- */
+
+/**
+ * Get the advantage mode based on the keyboard event.
+ * @param {KeyboardEvent} event The keyboard event.
+ * @returns {string} The advantage mode ("normal", "advantage", or "disadvantage").
+ */
+export function getAdvantageMode(event) {
+  if ( !event ) return "normal";
+  const keysPressed = getDnd5eKeysPressed(event);
+  if ( keysPressed.advantage && keysPressed.disadvantage ) return "normal";
+  if ( keysPressed.advantage ) return "advantage";
+  if ( keysPressed.disadvantage ) return "disadvantage";
+  return "normal";
+}
+
+/* -------------------------------------------- */
+
+/**
+ * Get the keys pressed during the event related to D&D 5e-specific actions.
+ * @param {KeyboardEvent} event The keyboard event.
+ * @returns {object} Keys pressed during the event.
+ */
+export function getDnd5eKeysPressed(event) {
+  return {
+    normal: areKeysPressed(event, "skipDialogNormal"),
+    advantage: areKeysPressed(event, "skipDialogAdvantage"),
+    disadvantage: areKeysPressed(event, "skipDialogDisadvantage")
+  };
+}
+
+/* -------------------------------------------- */
+
+/**
+ * Check if specific keys are pressed during the event.
+ * @param {KeyboardEvent} event The keyboard event.
+ * @param {string} action The action to check.
+ * @returns {boolean} Whether the keys are pressed.
+ */
+function areKeysPressed(event, action) {
+  if ( !event ) return false;
+  const activeModifiers = {};
+  const addModifiers = (key, pressed) => {
+    activeModifiers[key] = pressed;
+    KeyboardManager.MODIFIER_CODES[key].forEach(n => activeModifiers[n] = pressed);
+  };
+  addModifiers(KeyboardManager.MODIFIER_KEYS.CONTROL, event.ctrlKey || event.metaKey);
+  addModifiers(KeyboardManager.MODIFIER_KEYS.SHIFT, event.shiftKey);
+  addModifiers(KeyboardManager.MODIFIER_KEYS.ALT, event.altKey);
+  const isPressed = game.keybindings.get("dnd5e", action).some(b => {
+    if ( !(event.type === "keyup" && b.key === event.code) && game.keyboard.downKeys.has(b.key) && b.modifiers.every(m => activeModifiers[m]) ) return true;
+    if ( b.modifiers.length ) return false;
+    return activeModifiers[b.key];
+  });
+  const downKeys = [...game.keyboard.downKeys];
+  Logger.debug(`Getting key pressed for ${action}`, { event, downKeys, isPressed });
+  return isPressed;
+}

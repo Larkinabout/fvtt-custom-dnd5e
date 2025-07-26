@@ -66,6 +66,7 @@ export async function exportData() {
       armorProficienciesMap: CONFIG.DND5E.armorProficienciesMap,
       armorTypes: CONFIG.DND5E.armorTypes,
       consumableTypes: CONFIG.DND5E.consumableTypes,
+      creatureTypes: CONFIG.DND5E.creatureTypes,
       currencies: CONFIG.DND5E.currencies,
       damageTypes: CONFIG.DND5E.damageTypes,
       encumbrance: CONFIG.DND5E.encumbrance,

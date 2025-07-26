@@ -2,44 +2,6 @@
     <div class="standard-form scrollable">
         <fieldset>
             <legend>
-                <span>{{localize "CUSTOM_DND5E.bloodied"}}</span>
-                <button type="button" class="unbutton control-button" data-action="help" data-uuid="Compendium.custom-dnd5e.custom-dnd5e-journals.JournalEntry.ngr8w6WBycK59brj.JournalEntryPage.P9uilIbvjoLg1l1l" data-tooltip="{{localize "CUSTOM_DND5E.openGuide"}}" aria-label="{{localize "CUSTOM_DND5E.openGuide"}}">
-                    <i class="fas fa-circle-info" inert></i>
-                </button>
-            </legend>
-            <div class="form-group">
-                <label>{{localize "CUSTOM_DND5E.form.houseRules.bloodied.applyBloodied.label"}}</label>
-                <div class="form-fields">
-                    <dnd5e-checkbox id="custom-dnd5e-apply-bloodied" name="applyBloodied"{{#if applyBloodied}} checked{{/if}}></dnd5e-checkbox>
-                </div>
-                <p class="hint">{{localize "CUSTOM_DND5E.form.houseRules.bloodied.applyBloodied.note1"}}</p>
-                <p class="custom-dnd5e-warning notes">{{localize "CUSTOM_DND5E.form.houseRules.bloodied.applyBloodied.note2"}}</p>
-            </div>
-              <div class="form-group">
-                <label>{{localize "CUSTOM_DND5E.form.houseRules.bloodied.removeBloodiedOnDead.label"}}</label>
-                <div class="form-fields">
-                    <dnd5e-checkbox id="custom-dnd5e-remove-bloodied-on-dead" name="removeBloodiedOnDead"{{#if removeBloodiedOnDead}} checked{{/if}}></dnd5e-checkbox>
-                </div>
-                <p class="hint">{{localize "CUSTOM_DND5E.form.houseRules.bloodied.removeBloodiedOnDead.note"}}</p>
-            </div>
-            <div class="form-group">
-                <label>{{localize "CUSTOM_DND5E.form.houseRules.bloodied.bloodiedIcon.label"}}</label>
-                <div class="form-fields">
-                    <file-picker id="custom-dnd5e-bloodied-icon" name="bloodiedIcon" type="image" value="{{bloodiedIcon}}"></file-picker>
-                </div>
-                <p class="hint">{{localize "CUSTOM_DND5E.form.houseRules.bloodied.bloodiedIcon.note"}}</p>
-            </div>
-            <div class="form-group">
-                <label>{{localize "CUSTOM_DND5E.tint"}}</label>
-                <div class="form-fields">
-                    <input id="custom-dnd5e-bloodied-tint" name="bloodiedTint" type="text" value="{{bloodiedTint}}"> 
-                </div>
-                <p class="hint">{{localize "CUSTOM_DND5E.form.houseRules.bloodied.bloodiedTint.note.1"}}</p>
-                <p class="custom-dnd5e-advice notes">{{localize "CUSTOM_DND5E.form.houseRules.bloodied.bloodiedTint.note.2"}}</p>
-            </div>
-        </fieldset>
-        <fieldset>
-            <legend>
                 <span>{{localize "CUSTOM_DND5E.dead"}}</span>
                 <button type="button" class="unbutton control-button" data-action="help" data-uuid="Compendium.custom-dnd5e.custom-dnd5e-journals.JournalEntry.ngr8w6WBycK59brj.JournalEntryPage.DePfY7KUVlToh5dx" data-tooltip="{{localize "CUSTOM_DND5E.openGuide"}}" aria-label="{{localize "CUSTOM_DND5E.openGuide"}}">
                     <i class="fas fa-circle-info" inert></i>
@@ -69,7 +31,7 @@
             <div class="form-group">
                 <label>{{localize "CUSTOM_DND5E.tint"}}</label>
                 <div class="form-fields">
-                    <input id="custom-dnd5e-dead-tint" name="deadTint" type="text" value="{{deadTint}}"> 
+                    <color-picker id="custom-dnd5e-dead-tint" name="deadTint" value="{{deadTint}}"></color-picker>
                 </div>
                 <p class="hint">{{localize "CUSTOM_DND5E.form.houseRules.dead.deadTint.note.1"}}</p>
                 <p class="custom-dnd5e-advice notes">{{localize "CUSTOM_DND5E.form.houseRules.dead.deadTint.note.2"}}</p>
@@ -252,11 +214,11 @@
             </legend>
             <h3>{{localize "CUSTOM_DND5E.awardInspiration"}}</h3>
             <div class="form-group">
-                <label>{{localize "CUSTOM_DND5E.form.houseRules.inspiration.awardInspirationD20Value.label"}}</label>
+                <label>{{localize "CUSTOM_DND5E.form.houseRules.inspiration.awardInspirationDiceValue.label"}}</label>
                 <div class="form-fields">
                     <input id="custom-dnd5e-award-inspiration-d20-value" name="awardInspirationD20Value" type="number" min="1" max="20" value="{{awardInspirationD20Value}}"> 
                 </div>
-                <p class="hint">{{localize "CUSTOM_DND5E.form.houseRules.inspiration.awardInspirationD20Value.note"}}</p>
+                <p class="hint">{{localize "CUSTOM_DND5E.form.houseRules.inspiration.awardInspirationDiceValue.note"}}</p>
             </div>
             <div class="form-group stacked checkbox-grid">
                 <label style="flex: 0 0 100%;">{{localize "CUSTOM_DND5E.rollTypes"}}</label>

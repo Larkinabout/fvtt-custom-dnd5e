@@ -1,0 +1,111 @@
+<div class="standard-form">
+    <div class="standard-form scrollable">
+        <fieldset>
+            <legend>{{localize "CUSTOM_DND5E.clientSettings.label"}}</legend>
+            {{#if isGM}}
+            <p>{{localize "CUSTOM_DND5E.clientSettings.note"}}</p>
+            {{/if}}
+            <div class="form-group">
+                <label>{{localize "CUSTOM_DND5E.form.actorSheet.sheetScale.label"}}</label>
+                <div class="form-fields">
+                    <input id="custom-dnd5e-sheet-scale" name="sheetScale" type="number" step=".05" value="{{sheetScale}}"> 
+                </div>
+                <p class="hint">{{localize "CUSTOM_DND5E.form.actorSheet.sheetScale.note.1"}}</p>
+                <p class="custom-dnd5e-advice notes">{{localize "CUSTOM_DND5E.form.actorSheet.sheetScale.note.2"}}</p>
+            </div>
+            <div class="form-group">
+                <label>{{localize "CUSTOM_DND5E.form.actorSheet.autoFadeSheet.label"}}</label>
+                <div class="form-fields">
+                    <dnd5e-checkbox id="custom-dnd5e-auto-fade-sheet" name="autoFadeSheet" {{#if autoFadeSheet}} checked{{/if}}></dnd5e-checkbox> 
+                </div>
+                <p class="hint">{{localize "CUSTOM_DND5E.form.actorSheet.autoFadeSheet.note.1"}}</p>
+                <p class="custom-dnd5e-advice notes">{{localize "CUSTOM_DND5E.form.actorSheet.autoFadeSheet.note.2"}}</p>
+            </div>
+            <div class="form-group">
+                <label>{{localize "CUSTOM_DND5E.form.actorSheet.autoMinimiseSheet.label"}}</label>
+                <div class="form-fields">
+                    <dnd5e-checkbox id="custom-dnd5e-auto-minimise-sheet" name="autoMinimiseSheet" {{#if autoMinimiseSheet}} checked{{/if}}></dnd5e-checkbox>
+                </div>
+                <p class="hint">{{localize "CUSTOM_DND5E.form.actorSheet.autoMinimiseSheet.note.1"}}</p>
+                <p class="custom-dnd5e-advice notes">{{localize "CUSTOM_DND5E.form.actorSheet.autoMinimiseSheet.note.2"}}</p>
+            </div>
+        </fieldset>
+        {{#if isGM}}
+        <fieldset>
+            <legend>{{localize "CUSTOM_DND5E.worldSettings.label"}}</legend>
+            <p>{{localize "CUSTOM_DND5E.worldSettings.note"}}</p>
+            <h3>{{localize "CUSTOM_DND5E.characters"}}</h3>
+            <div class="form-group">
+                <label>{{localize "CUSTOM_DND5E.form.actorSheet.bannerImage.label"}}</label>
+                <div class="form-fields">
+                    <file-picker name="bannerImage" type="image" id="custom-dnd5e-banner-image" value="{{bannerImage}}"></file-picker>
+                </div>
+                <p class="hint">{{localize "CUSTOM_DND5E.form.actorSheet.bannerImage.note.1"}}</p>
+                <p class="custom-dnd5e-advice notes">{{localize "CUSTOM_DND5E.form.actorSheet.bannerImage.note.2"}}</p>
+            </div>
+            <div class="form-group">
+                <label>{{localize "CUSTOM_DND5E.form.actorSheet.showDeathSaves.label"}}</label>
+                <div class="form-fields">
+                    <dnd5e-checkbox id="custom-dnd5e-show-death-saves" name="showDeathSaves" {{#if showDeathSaves}} checked{{/if}}></dnd5e-checkbox>
+                </div>
+                <p class="hint">{{localize "CUSTOM_DND5E.form.actorSheet.showDeathSaves.note"}}</p>
+            </div>
+            <div class="form-group">
+                <label>{{localize "CUSTOM_DND5E.form.actorSheet.showEncumbrance.label"}}</label>
+                <div class="form-fields">
+                    <dnd5e-checkbox id="custom-dnd5e-show-encumbrance" name="showEncumbrance" {{#if showEncumbrance}} checked{{/if}}></dnd5e-checkbox>
+                </div>
+                <p class="hint">{{localize "CUSTOM_DND5E.form.actorSheet.showEncumbrance.note"}}</p>
+            </div>
+            <div class="form-group">
+                <label>{{localize "CUSTOM_DND5E.form.actorSheet.showExhaustion.label"}}</label>
+                <div class="form-fields">
+                    <dnd5e-checkbox id="custom-dnd5e-show-exhaustion" name="showExhaustion" {{#if showExhaustion}} checked{{/if}}></dnd5e-checkbox>
+                </div>
+                <p class="hint">{{localize "CUSTOM_DND5E.form.actorSheet.showExhaustion.note"}}</p>
+            </div>
+            <div class="form-group">
+                <label>{{localize "CUSTOM_DND5E.form.actorSheet.showInspiration.label"}}</label>
+                <div class="form-fields">
+                    <dnd5e-checkbox id="custom-dnd5e-show-inspiration" name="showInspiration" {{#if showInspiration}} checked{{/if}}></dnd5e-checkbox>
+                </div>
+                <p class="hint">{{localize "CUSTOM_DND5E.form.actorSheet.showInspiration.note"}}</p>
+            </div>
+            <div class="form-group">
+                <label>{{localize "CUSTOM_DND5E.form.actorSheet.showManageCurrency.label"}}</label>
+                <div class="form-fields">
+                    <dnd5e-checkbox id="custom-dnd5e-show-manage-currency" name="showManageCurrency" {{#if showManageCurrency}} checked{{/if}}></dnd5e-checkbox>
+                </div>
+                <p class="hint">{{localize "CUSTOM_DND5E.form.actorSheet.showManageCurrency.note"}}</p>
+            </div>
+            <h3>{{localize "CUSTOM_DND5E.npcs"}}</h3>
+            <div class="form-group">
+                <label>{{localize "CUSTOM_DND5E.form.actorSheet.showLegendaryActions.label"}}</label>
+                <div class="form-fields">
+                    <dnd5e-checkbox id="custom-dnd5e-show-legendary-actions" name="showLegendaryActions" {{#if showLegendaryActions}} checked{{/if}}></dnd5e-checkbox>
+                </div>
+                <p class="hint">{{localize "CUSTOM_DND5E.form.actorSheet.showLegendaryActions.note"}}</p>
+            </div>
+            <div class="form-group">
+                <label>{{localize "CUSTOM_DND5E.form.actorSheet.showLegendaryResistance.label"}}</label>
+                <div class="form-fields">
+                    <dnd5e-checkbox id="custom-dnd5e-show-legendary-resistance" name="showLegendaryResistance" {{#if showLegendaryResistance}} checked{{/if}}></dnd5e-checkbox>
+                </div>
+                <p class="hint">{{localize "CUSTOM_DND5E.form.actorSheet.showLegendaryResistance.note"}}</p>
+            </div>
+            <div class="form-group">
+                <label>{{localize "CUSTOM_DND5E.form.actorSheet.showUseLairAction.label"}}</label>
+                <div class="form-fields">
+                    <dnd5e-checkbox id="custom-dnd5e-show-use-lair-action" name="showUseLairAction" {{#if showUseLairAction}} checked{{/if}}></dnd5e-checkbox>
+                </div>
+                <p class="hint">{{localize "CUSTOM_DND5E.form.actorSheet.showUseLairAction.note"}}</p>
+            </div>
+        </fieldset>
+        {{/if}}
+    </div>
+    <footer class="form-footer" data-application-part="footer">
+        <button type="submit" class="save-button">
+            <i class="fas fa-solid fa-floppy-disk"></i>{{localize "CUSTOM_DND5E.form.button.save.label"}}
+        </button>
+    </footer>
+</div>

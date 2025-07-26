@@ -45,7 +45,7 @@ function registerSettings() {
       config: false,
       requiresReload: true,
       type: Boolean,
-      default: true
+      default: false
     }
   );
 
@@ -99,6 +99,9 @@ export function setConfig(settingData = null) {
   );
 
   const configData = buildConfig(mergedSettingData);
+
+  Hooks.callAll("customDnd5e.setConsumableTypesConfig", configData);
+
   if ( configData ) {
     CONFIG.DND5E[configKey] = configData;
   }

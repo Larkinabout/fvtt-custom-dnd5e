@@ -43,6 +43,19 @@ function registerSettings() {
       scope: "world"
     }
   );
+
+  registerSetting(
+    CONSTANTS.COUNTERS.SETTING.COUNTERS.KEY,
+    {
+      name: game.i18n.localize(CONSTANTS.COUNTERS.SETTING.COUNTERS.NAME),
+      hint: game.i18n.localize(CONSTANTS.COUNTERS.SETTING.COUNTERS.HINT),
+      scope: "world",
+      config: false,
+      type: Boolean,
+      default: true
+    }
+  );
+  
 }
 
 /* -------------------------------------------- */
@@ -75,7 +88,8 @@ function handlePreUpdateActor(actor, data, options, userId) {
   if ( actor.type === "group" || !actor.isOwner ) return;
   const currentHp = foundry.utils.getProperty(data, "system.attributes.hp.value");
   const previousHp = actor.system.attributes.hp.value;
-  const halfHp = actor.system.attributes.hp.max * 0.5;
+  const maxHp = actor?.system?.attributes?.hp?.effectiveMax ?? actor?.system?.attributes?.hp?.max ?? 0;
+  const halfHp = maxHp * 0.5;
   if ( currentHp !== undefined && currentHp <= halfHp && previousHp > halfHp ) {
     processTriggers({ actor, triggerType: "halfHp" });
   }
@@ -426,7 +440,7 @@ function renderCountersTab(sheetType, html) {
  */
 async function insertCounters(sheetType, counters, app, html, data) {
   const context = { editable: data.editable, counters };
-  if ( app._tabs[0].active === "custom-dnd5e-counters" ) {
+  if ( app?._tabs?.[0]?.active === "custom-dnd5e-counters" ) {
     context.active = " active";
   }
   const template = await renderTemplate(sheetType.template, context);

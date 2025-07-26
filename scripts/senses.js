@@ -52,7 +52,7 @@ function registerSettings() {
       config: false,
       requiresReload: true,
       type: Boolean,
-      default: true
+      default: false
     }
   );
 
@@ -215,7 +215,7 @@ async function addCustomSensesToConfig(app, html) {
  */
 function addCustomSensesToSheet(app, data) {
   const senses = getSetting(constants.SETTING.CONFIG.KEY);
-  const actorSenses = data.senses;
+  const actorSenses = data.senses ?? {};
   const sensesData = {};
 
   for ( const key in senses) {

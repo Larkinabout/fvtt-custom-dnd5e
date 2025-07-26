@@ -41,18 +41,6 @@ function registerSettings() {
     }
   );
 
-  registerSetting(
-    CONSTANTS.COUNTERS.SETTING.COUNTERS.KEY,
-    {
-      name: game.i18n.localize(CONSTANTS.COUNTERS.SETTING.COUNTERS.NAME),
-      hint: game.i18n.localize(CONSTANTS.COUNTERS.SETTING.COUNTERS.HINT),
-      scope: "world",
-      config: true,
-      type: Boolean,
-      default: true
-    }
-  );
-
   registerChatCommandsSetting();
   registerCursorLabelSettings();
 
@@ -104,10 +92,12 @@ function registerSettings() {
 function registerHooks() {
   if ( getSetting(CONSTANTS.TOKEN.SETTING.TOGGLE_STATUS_EFFECT_ON_SELECTED_TOKENS.KEY) ) {
     Hooks.on("createActiveEffect", async (activeEffect, options, id) => {
+      if ( game.user.id !== id ) return;
       toggleEffectOnSelected(true, activeEffect);
     });
 
     Hooks.on("deleteActiveEffect", async (activeEffect, options, id) => {
+      if ( game.user.id !== id ) return;
       toggleEffectOnSelected(false, activeEffect);
     });
   }
@@ -153,6 +143,8 @@ async function toggleEffectOnSelected(active, activeEffect) {
  * @param {string} id The ID
  */
 function applyElevationToSelected(token, data, options, id) {
+  if ( game.user.id !== id ) return;
+
   const elevation = foundry.utils.getProperty(data, "elevation");
 
   if ( (!elevation && elevation !== 0) || canvas.tokens.controlled.length <= 1 ) return;

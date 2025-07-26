@@ -40,7 +40,7 @@ export class AbilitiesEditForm extends ConfigEditForm {
   static DEFAULT_OPTIONS = {
     id: `${MODULE.ID}-abilities-edit-form`,
     position: {
-      height: 480
+      height: 500
     },
     window: {
       title: `CUSTOM_DND5E.form.${configKey}.edit.title`

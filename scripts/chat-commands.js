@@ -134,14 +134,14 @@ function parseConfig(match="", { multiple = false }={}) {
  * @returns {Promise<void>}
  */
 async function createRollRequest(config) {
-  if ( !config.ability && !config.skill & !config.tool ) return;
+  if ( !config.ability && !config.skill & !config.tool && config.type !== "concentration" ) return;
 
   const MessageClass = getDocumentClass("ChatMessage");
 
   let buttons;
   if ( config.type === "check" ) buttons = createCheckRequestButtons(config);
   else if ( config.type === "save" ) buttons = createSaveRequestButtons(config);
-  else buttons = [createRequestButton({ ...config, format: "short" })];
+  else buttons = [createRequestButton({ ...config, format: "short", icon: true })];
 
   const chatData = {
     user: game.user.id,

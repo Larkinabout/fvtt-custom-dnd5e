@@ -16,6 +16,7 @@
 
 .custom-dnd5e-app.dnd5e2 .standard-form {
     gap: 0.75rem;
+    padding-top: 5px;
 }
 
 .custom-dnd5e-app.application .flexrow {

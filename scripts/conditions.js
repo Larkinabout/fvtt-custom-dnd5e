@@ -3,13 +3,13 @@ import {
   Logger,
   c5eLoadTemplates,
   checkEmpty,
-  registerMenu,
+  registerMenu as c5eRegisterMenu,
   getSetting,
   registerSetting,
   resetDnd5eConfig,
   resetSetting } from "./utils.js";
 import { ConditionsForm } from "./forms/config-form.js";
-import { buildBloodied, registerBloodied } from "./house-rules.js";
+import { buildBloodied, registerBloodied } from "./bloodied.js";
 
 const constants = CONSTANTS.CONDITIONS;
 const configKey = "conditionTypes";
@@ -29,10 +29,10 @@ export function register() {
 /* -------------------------------------------- */
 
 /**
- * Register settings.
+ * Register menu.
  */
-function registerSettings() {
-  registerMenu(
+export function registerMenu() {
+  c5eRegisterMenu(
     constants.MENU.KEY,
     {
       hint: game.i18n.localize(constants.MENU.HINT),
@@ -44,7 +44,14 @@ function registerSettings() {
       scope: "world"
     }
   );
+}
 
+/* -------------------------------------------- */
+
+/**
+ * Register settings.
+ */
+function registerSettings() {
   registerSetting(
     constants.SETTING.ENABLE.KEY,
     {
@@ -52,7 +59,7 @@ function registerSettings() {
       config: false,
       requiresReload: true,
       type: Boolean,
-      default: true
+      default: false
     }
   );
 

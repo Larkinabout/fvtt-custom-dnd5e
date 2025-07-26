@@ -1,5 +1,5 @@
 import { CONSTANTS } from "./constants.js";
-import { Logger, getSetting, registerSetting } from "./utils.js";
+import { Logger, getDnd5eKeysPressed, getSetting, registerSetting } from "./utils.js";
 
 const constants = CONSTANTS.SHOW_PRESSED_KEYS;
 
@@ -129,49 +129,6 @@ function handleCursorMove(event) {
     clientX: event.clientX,
     clientY: event.clientY
   };
-}
-
-/* -------------------------------------------- */
-
-/**
- * Get the keys pressed during the event related to D&D 5e-specific actions.
- * @param {KeyboardEvent} event The keyboard event.
- * @returns {object} Keys pressed during the event.
- */
-function getDnd5eKeysPressed(event) {
-  return {
-    normal: areKeysPressed(event, "skipDialogNormal"),
-    advantage: areKeysPressed(event, "skipDialogAdvantage"),
-    disadvantage: areKeysPressed(event, "skipDialogDisadvantage")
-  };
-}
-
-/* -------------------------------------------- */
-
-/**
- * Check if specific keys are pressed during the event.
- * @param {KeyboardEvent} event The keyboard event.
- * @param {string} action The action to check.
- * @returns {boolean} Whether the keys are pressed.
- */
-function areKeysPressed(event, action) {
-  if ( !event ) return false;
-  const activeModifiers = {};
-  const addModifiers = (key, pressed) => {
-    activeModifiers[key] = pressed;
-    KeyboardManager.MODIFIER_CODES[key].forEach(n => activeModifiers[n] = pressed);
-  };
-  addModifiers(KeyboardManager.MODIFIER_KEYS.CONTROL, event.ctrlKey || event.metaKey);
-  addModifiers(KeyboardManager.MODIFIER_KEYS.SHIFT, event.shiftKey);
-  addModifiers(KeyboardManager.MODIFIER_KEYS.ALT, event.altKey);
-  const isPressed = game.keybindings.get("dnd5e", action).some(b => {
-    if ( !(event.type === "keyup" && b.key === event.code) && game.keyboard.downKeys.has(b.key) && b.modifiers.every(m => activeModifiers[m]) ) return true;
-    if ( b.modifiers.length ) return false;
-    return activeModifiers[b.key];
-  });
-  const downKeys = [...game.keyboard.downKeys];
-  Logger.debug(`Getting key pressed for ${action}`, { event, downKeys, isPressed });
-  return isPressed;
 }
 
 /* -------------------------------------------- */

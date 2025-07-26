@@ -16,7 +16,7 @@ export class ConfigEditForm extends CustomDnd5eForm {
   constructor(args) {
     super(args);
     this.editForm = args.editForm ?? ConfigEditForm;
-    this.form = args.form;
+    this.configForm = args.form;
     this.key = args.data.key;
     this.system = args.data.system;
     this.setting = args.setting;
@@ -156,7 +156,7 @@ export class ConfigEditForm extends CustomDnd5eForm {
 
     await setSetting(this.settingKey, settingData);
     this.close();
-    this.form.render(true);
+    this.configForm.render(true);
   }
 
   /* -------------------------------------------- */

@@ -1,8 +1,8 @@
 import { CONSTANTS, SHEET_TYPE } from "./constants.js";
 import { c5eLoadTemplates, getFlag, getSetting, registerMenu, registerSetting } from "./utils.js";
-import { SheetForm } from "./forms/sheet-form.js";
+import { ActorSheetForm } from "./forms/actor-sheet-form.js";
 
-const constants = CONSTANTS.SHEET;
+const constants = CONSTANTS.ACTOR_SHEET;
 
 /**
  * Register settings and hooks, and load templates.
@@ -28,7 +28,7 @@ function registerSettings() {
       label: game.i18n.localize(constants.MENU.LABEL),
       name: game.i18n.localize(constants.MENU.NAME),
       icon: constants.MENU.ICON,
-      type: SheetForm,
+      type: ActorSheetForm,
       restricted: false,
       scope: "world"
     }
@@ -130,7 +130,7 @@ function registerSettings() {
  * Register hooks.
  */
 function registerHooks() {
-  Hooks.on("preRenderActorSheet", (app, data) => {
+  Hooks.on("renderActorSheetV2", (app, data) => {
     const sheetType = SHEET_TYPE[app.constructor.name];
 
     if ( !sheetType ) return;
@@ -138,40 +138,42 @@ function registerHooks() {
     setSheetScale(sheetType, app);
   });
 
-  Hooks.on("renderActorSheet", (app, html, data) => {
+  Hooks.on("renderActorSheetV2", (app, html, data) => {
     const sheetType = SHEET_TYPE[app.constructor.name];
 
     if ( !sheetType ) return;
 
-    if ( html[0].classList.contains("app") ) {
-      if ( getFlag(game.user, constants.SETTING.AUTO_FADE_SHEET.KEY) ) { enableAutoFade(html); }
-      if ( getFlag(game.user, constants.SETTING.AUTO_MINIMISE_SHEET.KEY) ) { enableAutoMinimise(app, html); }
+    const htmlJs = html[0] || html;
+
+    if ( htmlJs.classList.contains("app") ) {
+      if ( getFlag(game.user, constants.SETTING.AUTO_FADE_SHEET.KEY) ) { enableAutoFade(htmlJs); }
+      if ( getFlag(game.user, constants.SETTING.AUTO_MINIMISE_SHEET.KEY) ) { enableAutoMinimise(app, htmlJs); }
     }
 
-    setBannerImage(sheetType, html);
+    setBannerImage(sheetType, htmlJs);
     if ( !getSetting(constants.SETTING.SHOW_DEATH_SAVES.KEY) ) {
-      removeDeathSaves(sheetType, html);
+      removeDeathSaves(sheetType, htmlJs);
     }
     if ( !getSetting(constants.SETTING.SHOW_ENCUMBRANCE.KEY) ) {
-      removeEncumbrance(sheetType, html);
+      removeEncumbrance(sheetType, htmlJs);
     }
     if ( !getSetting(constants.SETTING.SHOW_EXHAUSTION.KEY) ) {
-      removeExhaustion(sheetType, html);
+      removeExhaustion(sheetType, htmlJs);
     }
     if ( !getSetting(constants.SETTING.SHOW_INSPIRATION.KEY) ) {
-      removeInspiration(sheetType, html);
+      removeInspiration(sheetType, htmlJs);
     }
     if ( !getSetting(constants.SETTING.SHOW_LEGENDARY_ACTIONS.KEY) ) {
-      removeLegendaryActions(sheetType, html);
+      removeLegendaryActions(sheetType, htmlJs);
     }
     if ( !getSetting(constants.SETTING.SHOW_LEGENDARY_RESISTANCE.KEY) ) {
-      removeLegendaryResistance(sheetType, html);
+      removeLegendaryResistance(sheetType, htmlJs);
     }
     if ( !getSetting(constants.SETTING.SHOW_MANAGE_CURRENCY.KEY) ) {
-      removeManageCurrency(sheetType, html);
+      removeManageCurrency(sheetType, htmlJs);
     }
     if ( !getSetting(constants.SETTING.SHOW_USE_LAIR_ACTION.KEY) ) {
-      removeUseLairAction(sheetType, html);
+      removeUseLairAction(sheetType, htmlJs);
     }
   });
 }
@@ -183,8 +185,8 @@ function registerHooks() {
  * @param {object} html The HTML
  */
 function enableAutoFade(html) {
-  html[0].addEventListener("mouseleave", event => { reduceOpacity(event, html); });
-  html[0].addEventListener("mouseenter", event => { increaseOpacity(event, html); });
+  html.addEventListener("mouseleave", event => { reduceOpacity(event, html); });
+  html.addEventListener("mouseenter", event => { increaseOpacity(event, html); });
 }
 
 /* -------------------------------------------- */
@@ -196,8 +198,8 @@ function enableAutoFade(html) {
  */
 function reduceOpacity(event, html) {
   if ( event.ctrlKey ) return;
-  html[0].style.transition = "opacity 0.2s ease 0s";
-  html[0].style.opacity = "0.2";
+  html.style.transition = "opacity 0.2s ease 0s";
+  html.style.opacity = "0.2";
 }
 
 /* -------------------------------------------- */
@@ -208,10 +210,10 @@ function reduceOpacity(event, html) {
  * @param {object} html The HTML
  */
 function increaseOpacity(event, html) {
-  const id = html[0].id;
+  const id = html.id;
   if ( !id || event.ctrlKey ) return;
   if ( event?.target?.closest(`#${id}`) ) {
-    html[0].style.opacity = "";
+    html.style.opacity = "";
   }
 }
 
@@ -223,8 +225,8 @@ function increaseOpacity(event, html) {
  * @param {object} html The HTML
  */
 function enableAutoMinimise(app, html) {
-  html[0].addEventListener("mouseleave", event => { minimise(event, app); });
-  html[0].addEventListener("mouseenter", event => { maximise(event, app); });
+  html.addEventListener("mouseleave", event => { minimise(event, app); });
+  html.addEventListener("mouseenter", event => { maximise(event, app); });
 }
 
 /* -------------------------------------------- */
@@ -249,7 +251,7 @@ function minimise(event, app) {
 function maximise(event, app) {
   if ( event.ctrlKey ) return;
   app.maximize(event);
-  app.bringToTop();
+  app.bringToFront();
 }
 
 /* -------------------------------------------- */
@@ -277,7 +279,7 @@ function setSheetScale(sheetType, app) {
  * @param {object} html The HTML
  */
 function setBannerImage(sheetType, html) {
-  if ( !sheetType.character || sheetType.legacy ) return;
+  if ( !sheetType.character ) return;
 
   const bannerImage = getSetting(constants.SETTING.BANNER_IMAGE.KEY);
 
@@ -289,10 +291,6 @@ function setBannerImage(sheetType, html) {
     .dnd5e-theme-dark .dnd5e2.sheet.actor.character .window-content::before,
     .dnd5e2.sheet.actor.character.dnd5e-theme-dark .window-content::before {
         background: url("${bannerImage}") no-repeat top center / cover;
-    }
-
-    .dnd5e2.sheet.actor.character .sheet-header {
-        background: transparent url("${bannerImage}") no-repeat center / cover;
     }
     `;
   document.head.append(style);
@@ -307,7 +305,7 @@ function setBannerImage(sheetType, html) {
  */
 function removeDeathSaves(sheetType, html) {
   if ( sheetType.character ) {
-    const deathSaves = (sheetType.legacy) ? html[0].querySelector(".death-saves") : html[0].querySelector(".death-tray");
+    const deathSaves = (sheetType.legacy) ? html.querySelector(".death-saves") : html.querySelector(".death-tray");
     if ( deathSaves ) {
       deathSaves.style.display = "none";
     }
@@ -323,7 +321,7 @@ function removeDeathSaves(sheetType, html) {
  */
 function removeEncumbrance(sheetType, html) {
   if ( sheetType.character ) {
-    const encumbrance = (sheetType.legacy) ? html[0].querySelector(".encumbrance") : html[0].querySelector(".encumbrance.card");
+    const encumbrance = (sheetType.legacy) ? html.querySelector(".encumbrance") : html.querySelector(".encumbrance.card");
     encumbrance?.remove();
   }
 }
@@ -338,17 +336,17 @@ function removeEncumbrance(sheetType, html) {
 function removeExhaustion(sheetType, html) {
   if ( sheetType.character ) {
     if ( sheetType.legacy ) {
-      const exhaustion = html[0].querySelector(".exhaustion");
+      const exhaustion = html.querySelector(".exhaustion");
       exhaustion?.remove();
     } else {
-      const exhaustion = html[0].querySelectorAll('[data-prop="system.attributes.exhaustion"]');
+      const exhaustion = html.querySelectorAll('[data-prop="system.attributes.exhaustion"]');
       exhaustion.forEach(e => e.remove());
-      const ac = html[0].querySelector(".ac");
+      const ac = html.querySelector(".ac");
       if ( ac ) {
         ac.style.marginTop = "-41px";
         ac.style.width = "100%";
       }
-      const lozenges = html[0].querySelector(".lozenges");
+      const lozenges = html.querySelector(".lozenges");
       if ( lozenges ) {
         lozenges.style.marginTop = "-15px";
       }
@@ -365,7 +363,7 @@ function removeExhaustion(sheetType, html) {
  */
 function removeInspiration(sheetType, html) {
   if ( sheetType.character ) {
-    const inspiration = (sheetType.legacy) ? html[0].querySelector(".inspiration") : html[0].querySelector("button.inspiration");
+    const inspiration = (sheetType.legacy) ? html.querySelector(".inspiration") : html.querySelector("button.inspiration");
     inspiration?.remove();
   }
 }
@@ -381,8 +379,8 @@ function removeLegendaryActions(sheetType, html) {
   if ( !sheetType.npc ) return;
 
   const legendaryActions = (sheetType.legacy)
-    ? html[0].querySelector('input[name="system.resources.legact.value"]')?.closest("div.legendary")
-    : html[0].querySelector(".legact");
+    ? html.querySelector('input[name="system.resources.legact.value"]')?.closest("div.legendary")
+    : html.querySelector(".legact");
 
   legendaryActions?.remove();
 }
@@ -398,8 +396,8 @@ function removeLegendaryResistance(sheetType, html) {
   if ( !sheetType.npc ) return;
 
   const legendaryResistance = (sheetType.legacy)
-    ? html[0].querySelector('input[name="system.resources.legres.value"]')?.closest("div.legendary")
-    : html[0].querySelector(".legres");
+    ? html.querySelector('input[name="system.resources.legres.value"]')?.closest("div.legendary")
+    : html.querySelector(".legres");
 
   legendaryResistance?.remove();
 }
@@ -413,7 +411,7 @@ function removeLegendaryResistance(sheetType, html) {
  */
 function removeManageCurrency(sheetType, html) {
   if ( sheetType.character && !sheetType.legacy ) {
-    const button = html[0].querySelector(".inventory .currency > button");
+    const button = html.querySelector("button[data-action='currency']");
     button?.remove();
   }
 }
@@ -428,7 +426,7 @@ function removeManageCurrency(sheetType, html) {
 function removeUseLairAction(sheetType, html) {
   if ( !sheetType.npc ) return;
 
-  const useLairAction = html[0].querySelector(".lair");
+  const useLairAction = html.querySelector(".lair");
 
   useLairAction?.remove();
 }

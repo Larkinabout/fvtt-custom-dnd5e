@@ -52,9 +52,9 @@ function registerSettings() {
     {
       scope: "world",
       config: false,
+      requiresReload: true,
       type: Boolean,
-      default: true,
-      requiresReload: true
+      default: false
     }
   );
 
@@ -103,11 +103,11 @@ function registerSettings() {
 
 /**
  * Set CONFIG.DND5E.encumbrance.
- * @param {object} data The data
+ * @param {object} [settingData=null] The setting data
  */
-export async function setConfig(data = null) {
+export async function setConfig(settingData = null) {
   if ( !getSetting(constants.SETTING.ENABLE.KEY) ) return;
-  if ( checkEmpty(data) ) {
+  if ( checkEmpty(settingData) ) {
     if ( checkEmpty(CONFIG.DND5E[configKey]) ) {
       resetDnd5eConfig(configKey);
     }
@@ -115,7 +115,7 @@ export async function setConfig(data = null) {
   }
 
   const defaultConfig = foundry.utils.deepClone(CONFIG.CUSTOM_DND5E[configKey]);
-  const config = foundry.utils.mergeObject(defaultConfig, data);
+  const config = foundry.utils.mergeObject(defaultConfig, settingData);
 
   if ( config?.effects?.encumbered?.name ) {
     config.effects.encumbered.name = game.i18n.localize(config.effects.encumbered.name);

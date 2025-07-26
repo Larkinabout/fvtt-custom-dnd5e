@@ -1,5 +1,5 @@
 import { CONSTANTS, JOURNAL_HELP_BUTTON, MODULE } from "../constants.js";
-import { Logger, getSetting, setSetting } from "../utils.js";
+import { Logger, getDefaultSetting, getSetting, setSetting } from "../utils.js";
 import { CustomDnd5eForm } from "./custom-dnd5e-form.js";
 import { ConfigEditForm } from "./config-edit-form.js";
 import { AbilitiesEditForm } from "./abilities-edit-form.js";
@@ -7,11 +7,13 @@ import { ActivationCostsEditForm } from "./activation-costs-edit-form.js";
 import { ActorSizesEditForm } from "./actor-sizes-edit-form.js";
 import { ArmorCalculationsEditForm } from "./armor-calculations-edit-form.js";
 import { ConditionsEditForm } from "./conditions-edit-form.js";
+import { CreatureTypesEditForm } from "./creature-types-edit-form.js";
 import { CurrencyEditForm } from "./currency-edit-form.js";
 import { DamageTypesEditForm } from "./damage-types-edit-form.js";
 import { ItemPropertiesEditForm } from "./item-properties-edit-form.js";
 import { SkillsEditForm } from "./skills-edit-form.js";
 import { SpellSchoolsEditForm } from "./spell-schools-edit-form.js";
+import { ToolsEditForm } from "./tools-edit-form.js";
 import { resetConfigSetting as resetAbilities, setConfig as setAbilities } from "../abilities.js";
 import { resetConfigSetting as resetActivationCosts, setConfig as setActivationCosts } from "../activation-costs.js";
 import { resetConfigSetting as resetArmorCalculations, setConfig as setArmorCalculations } from "../armor-calculations.js";
@@ -19,6 +21,7 @@ import { resetConfigSetting as resetArmorIds, setConfig as setArmorIds } from ".
 import { resetConfigSetting as resetActorSizes, setConfig as setActorSizes } from "../actor-sizes.js";
 import { resetConfigSetting as resetConsumableTypes, setConfig as setConsumableTypes } from "../consumable-types.js";
 import { resetConfigSetting as resetConditions, setConfig as setConditions } from "../conditions.js";
+import { resetConfigSetting as resetCreatureTypes, setConfig as setCreatureTypes } from "../creature-types.js";
 import { resetConfigSetting as resetCurrency, setConfig as setCurrency } from "../currency.js";
 import { resetConfigSetting as resetDamageTypes, setConfig as setDamageTypes } from "../damage-types.js";
 import { resetConfigSetting as resetItemActionTypes, setConfig as setItemActionTypes } from "../item-action-types.js";
@@ -29,7 +32,7 @@ import { resetConfigSetting as resetLanguages, setConfig as setLanguages } from 
 import { resetConfigSetting as resetSenses, setConfig as setSenses } from "../senses.js";
 import { resetConfigSetting as resetSkills, setConfig as setSkills } from "../skills.js";
 import { resetConfigSetting as resetSpellSchools, setConfig as setSpellSchools } from "../spell-schools.js";
-import { resetConfigSetting as resetToolIds, setConfig as setToolIds } from "../tool-ids.js";
+import { resetConfigSetting as resetTools, setConfig as setTools } from "../tools.js";
 import { resetConfigSetting as resetWeaponIds, setConfig as setWeaponIds } from "../weapon-ids.js";
 
 const listClass = `${MODULE.ID}-list`;
@@ -98,6 +101,9 @@ export class ConfigForm extends CustomDnd5eForm {
   async _prepareContext() {
     this.config = foundry.utils.deepClone(CONFIG.DND5E[this.configKey]);
     this.setting = getSetting(this.settingKey);
+    if ( !this.setting ) {
+      this.setting = getDefaultSetting(this.settingKey);
+    }
     const data = (this.includeConfig && this.config)
       ? foundry.utils.mergeObject(this.config, this.setting)
       : this.setting;
@@ -581,6 +587,7 @@ export class ConditionsForm extends ConfigForm {
   constructor() {
     super();
     this.editForm = ConditionsEditForm;
+    this.label = "CUSTOM_DND5E.name";
     this.includeConfig = false;
     this.requiresReload = false;
     this.enableConfigKey = CONSTANTS.CONDITIONS.SETTING.ENABLE.KEY;
@@ -610,6 +617,46 @@ export class ConditionsForm extends ConfigForm {
 /* -------------------------------------------- */
 
 /**
+ * Class representing the Creature Types Form.
+ *
+ * @extends ConfigForm
+ */
+export class CreatureTypesForm extends ConfigForm {
+  /**
+   * Constructor for CreatureTypesForm.
+   */
+  constructor() {
+    super();
+    this.editForm = CreatureTypesEditForm;
+    this.requiresReload = false;
+    this.enableConfigKey = CONSTANTS.CREATURE_TYPES.SETTING.ENABLE.KEY;
+    this.settingKey = CONSTANTS.CREATURE_TYPES.SETTING.CONFIG.KEY;
+    this.resetConfigSetting = resetCreatureTypes;
+    this.setConfig = setCreatureTypes;
+    this.configKey = "creatureTypes";
+    this.actorProperties = ["system.traits.di.value", "system.traits.dr.value", "system.traits.dv.value"];
+    this.headerButton = JOURNAL_HELP_BUTTON;
+    this.headerButton.uuid = CONSTANTS.CREATURE_TYPES.UUID;
+  }
+
+  /* -------------------------------------------- */
+
+  /**
+   * Default options for the form.
+   *
+   * @type {object}
+   */
+  static DEFAULT_OPTIONS = {
+    id: `${MODULE.ID}-damage-types-form`,
+    window: {
+      title: "CUSTOM_DND5E.form.damageTypes.title"
+    }
+  };
+}
+
+/* -------------------------------------------- */
+
+/**
  * Class representing the Currency Form.
  *
  * @extends ConfigForm
@@ -622,7 +669,7 @@ export class CurrencyForm extends ConfigForm {
     super();
     this.disableCreate = true;
     this.editForm = CurrencyEditForm;
-    this.requiresReload = false;
+    this.requiresReload = true;
     this.enableConfigKey = CONSTANTS.CURRENCY.SETTING.ENABLE.KEY;
     this.settingKey = CONSTANTS.CURRENCY.SETTING.CONFIG.KEY;
     this.resetConfigSetting = resetCurrency;
@@ -1003,21 +1050,22 @@ export class SpellSchoolsForm extends ConfigForm {
  *
  * @extends IdForm
  */
-export class ToolIdsForm extends IdForm {
+export class ToolsForm extends IdForm {
   /**
-   * Constructor for ToolIdsForm.
+   * Constructor for ToolsForm.
    */
   constructor() {
     super();
-    this.editInList = true;
+    this.editForm = ToolsEditForm;
+    this.editInList = false;
     this.requiresReload = true;
-    this.enableConfigKey = CONSTANTS.TOOL_IDS.SETTING.ENABLE.KEY;
-    this.settingKey = CONSTANTS.TOOL_IDS.SETTING.CONFIG.KEY;
-    this.resetConfigSetting = resetToolIds;
-    this.setConfig = setToolIds;
-    this.configKey = "toolIds";
+    this.enableConfigKey = CONSTANTS.TOOLS.SETTING.ENABLE.KEY;
+    this.settingKey = CONSTANTS.TOOLS.SETTING.CONFIG.KEY;
+    this.resetConfigSetting = resetTools;
+    this.setConfig = setTools;
+    this.configKey = "tools";
     this.headerButton = JOURNAL_HELP_BUTTON;
-    this.headerButton.uuid = CONSTANTS.TOOL_IDS.UUID;
+    this.headerButton.uuid = CONSTANTS.TOOLS.UUID;
   }
 
   /* -------------------------------------------- */
@@ -1028,37 +1076,11 @@ export class ToolIdsForm extends IdForm {
    * @type {object}
    */
   static DEFAULT_OPTIONS = {
-    id: `${MODULE.ID}-tool-ids-form`,
+    id: `${MODULE.ID}-tools-form`,
     window: {
-      title: "CUSTOM_DND5E.form.toolIds.title"
+      title: "CUSTOM_DND5E.form.tools.title"
     }
   };
-
-  /* -------------------------------------------- */
-
-  /**
-   * Parts of the form.
-   *
-   * @type {object}
-   */
-  static PARTS = {
-    form: {
-      template: CONSTANTS.TOOL_IDS.TEMPLATE.FORM
-    }
-  };
-
-  /* -------------------------------------------- */
-
-  /**
-   * Get the HTML template for the form.
-   *
-   * @param {object} data The data to be passed to the template.
-   * @returns {Promise<string>} The rendered template.
-   */
-  async _getHtml(data) {
-    const template = await renderTemplate(CONSTANTS.TOOL_IDS.TEMPLATE.LIST, data);
-    return template;
-  }
 }
 
 /* -------------------------------------------- */

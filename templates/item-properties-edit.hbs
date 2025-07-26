@@ -33,13 +33,13 @@
         <div class="form-group">
             <label class="flex1" style="min-width:80px; max-width:100px;">{{localize "CUSTOM_DND5E.physical"}}</label>
             <div class="form-fields">
-                <input id="custom-dnd5e-is-physical" name="{{key}}.isPhysical" type="checkbox"{{#if isPhysical}} checked{{/if}}>
+                <dnd5e-checkbox id="custom-dnd5e-is-physical" name="{{key}}.isPhysical" {{#if isPhysical}} checked{{/if}}></dnd5e-checkbox>
             </div>
         </div>
         <div class="form-group">
             <label class="flex1" style="min-width:80px; max-width:100px;">{{localize "CUSTOM_DND5E.tag"}}</label>
             <div class="form-fields">
-                <input id="custom-dnd5e-is-tag" name="{{key}}.isTag" type="checkbox"{{#if isTag}} checked{{/if}}>
+                <dnd5e-checkbox id="custom-dnd5e-is-tag" name="{{key}}.isTag" {{#if isTag}} checked{{/if}}></dnd5e-checkbox>
             </div>
         </div>
         <div class="form-group">
