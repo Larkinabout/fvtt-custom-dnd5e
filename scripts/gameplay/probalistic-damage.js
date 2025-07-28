@@ -154,7 +154,7 @@ async function rollProbalisticDamage(activity, usageConfig, dialogConfig, messag
       const maxRoll = Roll.create(formula).evaluate({ maximize: true });
       roll.parts = [Math.round(Math.floor(((await minRoll).total + (await maxRoll).total) / 2) * probability)];
     } else {
-      roll.parts = [`round(${roll.parts[0]} * ${probability})`];
+      roll.parts = [`round((${roll.parts[0]}) * ${probability})`];
     }
   }
 
