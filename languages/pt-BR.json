@@ -288,7 +288,7 @@
     "CUSTOM_DND5E.form.gameplay.inspiration.awardInspirationDiceValue.label": "Valor d20 para Inspiração",
     "CUSTOM_DND5E.form.gameplay.inspiration.awardInspirationDiceValue.note": "Valor rolado em um d20 para recompensar Inspiração",
     "CUSTOM_DND5E.form.gameplay.inspiration.awardInspirationRollTypes.note": "Tipos de rolagem para recompensar Inspiração",
-    "CUSTOM_DND5E.form.gameplay.mobDamage.enable.label": "Habilidar Dano de Grupo",
+    "CUSTOM_DND5E.form.gameplay.mobDamage.enable.label": "Habilitar Dano de Grupo",
     "CUSTOM_DND5E.form.gameplay.mobDamage.enable.note": "Ao atacar um único token com quatro ou mais tokens idênticos selecionados, a jogada de ataque é substituída por uma jogada de dano baseada na tabela de Resultados Médios dos Grupos (DMG 2024, pág. 82)",
     "CUSTOM_DND5E.form.gameplay.mobDamage.useAverageDamage.label": "Usar Média de Dano",
     "CUSTOM_DND5E.form.gameplay.mobDamage.useAverageDamage.note": "Usa o dano médio ao invés de rolar",
