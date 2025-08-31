@@ -6,7 +6,7 @@
   "library": "false",
   "compatibility": {
     "minimum": 13.342,
-    "verified": 12.345,
+    "verified": 12.348,
     "maximum": 13.999
   },
   "authors": [
@@ -74,7 +74,7 @@
         "id": "dnd5e",
         "compatibility":{
           "minimum": "5.0.0",
-          "verified": "5.0.4",
+          "verified": "5.1.4",
           "maximum": "5.99"
         }
       }
