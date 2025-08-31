@@ -1,6 +1,6 @@
 import { CONSTANTS, JOURNAL_HELP_BUTTON, MODULE } from "../constants.js";
 import { ConfigEditForm } from "./config-edit-form.js";
-import { setConfig, getSettingDefault } from "../damage-types.js";
+import { setConfig, getSettingDefault } from "../configurations/damage-types.js";
 
 const constants = CONSTANTS.DAMAGE_TYPES;
 const configKey = "damageTypes";

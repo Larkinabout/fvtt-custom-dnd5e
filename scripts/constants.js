@@ -29,7 +29,7 @@ export const CONSTANTS = {
       }
     },
     TEMPLATE: {
-      EDIT: "modules/custom-dnd5e/templates/abilities-edit.hbs",
+      EDIT: "modules/custom-dnd5e/templates/abilities-edit.hbs"
     },
     UUID: "Compendium.custom-dnd5e.custom-dnd5e-journals.JournalEntry.B48iqFBddUikMMer.JournalEntryPage.tVG6b7kBJUOVvpwP"
   },
@@ -104,7 +104,7 @@ export const CONSTANTS = {
       }
     },
     TEMPLATE: {
-      EDIT: "modules/custom-dnd5e/templates/actor-sizes-edit.hbs",
+      EDIT: "modules/custom-dnd5e/templates/actor-sizes-edit.hbs"
     },
     UUID: "Compendium.custom-dnd5e.custom-dnd5e-journals.JournalEntry.B48iqFBddUikMMer.JournalEntryPage.V3QbxNviHsZd8Ssb"
   },
@@ -126,7 +126,7 @@ export const CONSTANTS = {
       }
     },
     TEMPLATE: {
-      EDIT: "modules/custom-dnd5e/templates/armor-calculations-edit.hbs",
+      EDIT: "modules/custom-dnd5e/templates/armor-calculations-edit.hbs"
     },
     UUID: "Compendium.custom-dnd5e.custom-dnd5e-journals.JournalEntry.B48iqFBddUikMMer.JournalEntryPage.bjFllCYYW9paPCNG"
   },
@@ -172,30 +172,7 @@ export const CONSTANTS = {
       FORM: "modules/custom-dnd5e/templates/config-form.hbs",
       LIST: "modules/custom-dnd5e/templates/config-edit-in-list.hbs"
     },
-    UUID: "Compendium.custom-dnd5e.custom-dnd5e-journals.JournalEntry.xXEu642Urflb2Ekm"
-  },
-  AUTOMATION: {
-    MENU: {
-      KEY: "automation-menu",
-      HINT: "CUSTOM_DND5E.menu.automation.hint",
-      ICON: "fas fa-robot",
-      LABEL: "CUSTOM_DND5E.menu.automation.label",
-      NAME: "CUSTOM_DND5E.menu.automation.name"
-    },
-    MOBS: {
-      SETTING: {
-        ENABLE: {
-          KEY: "enable-mobs"
-        },
-        USE_AVERAGE_DAMAGE: {
-          KEY: "mobs-average-damage"
-        }
-      }
-    },
-    TEMPLATE: {
-      FORM: "modules/custom-dnd5e/templates/automation-form.hbs"
-    },
-    UUID: "Compendium.custom-dnd5e.custom-dnd5e-journals.JournalEntry.xXEu642Urflb2Ekm"
+    UUID: "Compendium.custom-dnd5e.custom-dnd5e-journals.JournalEntry.B48iqFBddUikMMer.JournalEntryPage.mTVSShsLO960Kmrk"
   },
   BLOODIED: {
     MENU: {
@@ -229,7 +206,7 @@ export const CONSTANTS = {
       }
     },
     TEMPLATE: {
-      FORM: "modules/custom-dnd5e/templates/bloodied-form.hbs",
+      FORM: "modules/custom-dnd5e/templates/bloodied-form.hbs"
     },
     ICON: "modules/custom-dnd5e/media/icons/bloodied.svg",
     CONDITION_UUID: "Compendium.custom-dnd5e.custom-dnd5e-journals.JournalEntry.ngr8w6WBycK59brj.JournalEntryPage.sV0ZCKxwh4n4ZU1P",
@@ -372,7 +349,7 @@ export const CONSTANTS = {
       }
     },
     TEMPLATE: {
-      EDIT: "modules/custom-dnd5e/templates/currency-edit.hbs",
+      EDIT: "modules/custom-dnd5e/templates/currency-edit.hbs"
     },
     UUID: "Compendium.custom-dnd5e.custom-dnd5e-journals.JournalEntry.B48iqFBddUikMMer.JournalEntryPage.dmzCGf2LPoBlfu9m"
   },
@@ -515,16 +492,16 @@ export const CONSTANTS = {
       }
     }
   },
-  HOUSE_RULES: {
+  GAMEPLAY: {
     MENU: {
-      KEY: "house-rules-menu",
-      HINT: "CUSTOM_DND5E.menu.houseRules.hint",
-      ICON: "fas fa-house-chimney",
-      LABEL: "CUSTOM_DND5E.menu.houseRules.label",
-      NAME: "CUSTOM_DND5E.menu.houseRules.name"
+      KEY: "gameplay-menu",
+      HINT: "CUSTOM_DND5E.menu.gameplay.hint",
+      ICON: "fas fa-joystick",
+      LABEL: "CUSTOM_DND5E.menu.gameplay.label",
+      NAME: "CUSTOM_DND5E.menu.gameplay.name"
     },
     TEMPLATE: {
-      FORM: "modules/custom-dnd5e/templates/house-rules-form.hbs"
+      FORM: "modules/custom-dnd5e/templates/gameplay-form.hbs"
     },
     UUID: "Compendium.custom-dnd5e.custom-dnd5e-journals.JournalEntry.ngr8w6WBycK59brj"
   },
@@ -709,6 +686,29 @@ export const CONSTANTS = {
       }
     }
   },
+  MOB_DAMAGE: {
+    SETTING: {
+      ENABLE: {
+        KEY: "enable-mob-damage"
+      },
+      USE_AVERAGE_DAMAGE: {
+        KEY: "use-average-mob-damage"
+      }
+    }
+  },
+  PROBABILISTIC_DAMAGE: {
+    SETTING: {
+      ENABLE: {
+        KEY: "enable-probabilistic-damage"
+      },
+      USE_AVERAGE_DAMAGE: {
+        KEY: "use-average-probabilistic-damage"
+      }
+    },
+    TEMPLATE: {
+      PROBABILISTIC_DAMAGE: "modules/custom-dnd5e/templates/probabilistic-damage.hbs"
+    }
+  },
   PRONE: {
     SETTING: {
       PRONE_ROTATION: {
@@ -772,6 +772,35 @@ export const CONSTANTS = {
       CONFIG_FORM_GROUP: "modules/custom-dnd5e/templates/movement-senses-config-form-group.hbs"
     },
     UUID: "Compendium.custom-dnd5e.custom-dnd5e-journals.JournalEntry.B48iqFBddUikMMer.JournalEntryPage.UC0cWoAGMtU6yISR"
+  },
+  SHEET: {
+    ID: "sheet",
+    MENU: {
+      KEY: "sheet-menu",
+      HINT: "CUSTOM_DND5E.menu.sheet.hint",
+      ICON: "fas fa-pen-to-square",
+      LABEL: "CUSTOM_DND5E.menu.sheet.label",
+      NAME: "CUSTOM_DND5E.menu.sheet.name"
+    },
+    SETTING: {
+      AUTO_FADE_SHEET: { KEY: "auto-fade-sheet" },
+      AUTO_MINIMISE_SHEET: { KEY: "auto-minimise-sheet" },
+      BANNER_IMAGE: { KEY: "banner-image" },
+      SHEET_SCALE: { KEY: "sheet-scale" },
+      SHOW_DEATH_SAVES: { KEY: "show-death-saves" },
+      SHOW_ENCUMBRANCE: { KEY: "show-encumbrance" },
+      SHOW_EXHAUSTION: { KEY: "show-exhaustion" },
+      SHOW_INSPIRATION: { KEY: "show-inspiration" },
+      SHOW_LEGENDARY_ACTIONS: { KEY: "show-legendary-actions" },
+      SHOW_LEGENDARY_RESISTANCE: { KEY: "show-legendary-resistance" },
+      SHOW_MANAGE_CURRENCY: { KEY: "show-manage-currency" },
+      SHOW_USE_LAIR_ACTION: { KEY: "show-use-lair-action" }
+    },
+    TEMPLATE: {
+      FORM: "modules/custom-dnd5e/templates/sheet-form.hbs",
+      CHARACTER_SHEET_2: "modules/custom-dnd5e/templates/sheet/character-sheet-2.hbs",
+      CHARACTER_DETAILS: "modules/custom-dnd5e/templates/sheet/character-details.hbs"
+    }
   },
   SHOW_PRESSED_KEYS: {
     SETTING: {

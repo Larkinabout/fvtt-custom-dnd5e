@@ -43,7 +43,6 @@
     font-size: var(--font-size-30);
     letter-spacing: 1px;
     overflow: hidden;
-    /* text-overflow: ellipsis; */
     white-space: nowrap;
 }
 
@@ -51,8 +50,6 @@
     --level-size: 60px;
     --padding-right: 1rem;
     flex-direction: row-reverse;
-    
-     0; */
 }
 
 .custom-dnd5e.dnd5e2.sheet.actor.character .sheet-header > .right .level {

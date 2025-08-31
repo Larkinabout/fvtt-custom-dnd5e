@@ -1,5 +1,5 @@
 import { CONSTANTS } from "./constants.js";
-import { updateBloodied } from "./bloodied.js";
+import { updateBloodied } from "./configurations/bloodied.js";
 import {
   Logger,
   getSetting,

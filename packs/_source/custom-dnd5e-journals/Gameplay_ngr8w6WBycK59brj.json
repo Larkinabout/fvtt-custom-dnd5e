@@ -1,0 +1,498 @@
+{
+  "name": "Gameplay",
+  "_id": "ngr8w6WBycK59brj",
+  "pages": [
+    {
+      "sort": 700000,
+      "name": "Unconscious",
+      "type": "text",
+      "_id": "DLpxGddzm7rKpgsO",
+      "system": {},
+      "title": {
+        "show": true,
+        "level": 1
+      },
+      "image": {},
+      "text": {
+        "format": 1,
+        "content": "<h2>Apply Unconscious</h2><p>When enabled, this setting automatically applies the Unconscious condition to a player character when they have no Hit Points remaining.</p>"
+      },
+      "video": {
+        "controls": true,
+        "volume": 0.5
+      },
+      "src": null,
+      "ownership": {
+        "default": -1,
+        "0wJRsV2r9Hv1a7q0": 3
+      },
+      "flags": {},
+      "_stats": {
+        "compendiumSource": null,
+        "duplicateSource": null,
+        "coreVersion": "13.342",
+        "systemId": "dnd5e",
+        "systemVersion": "4.0.0",
+        "createdTime": 1726519096751,
+        "modifiedTime": 1727380288923,
+        "lastModifiedBy": "0wJRsV2r9Hv1a7q0",
+        "exportSource": null
+      },
+      "category": null,
+      "_key": "!journal.pages!ngr8w6WBycK59brj.DLpxGddzm7rKpgsO"
+    },
+    {
+      "sort": 300000,
+      "name": "Dead",
+      "type": "text",
+      "_id": "DePfY7KUVlToh5dx",
+      "system": {},
+      "title": {
+        "show": true,
+        "level": 1
+      },
+      "image": {},
+      "text": {
+        "format": 1,
+        "content": "<h2>Apply Dead</h2><p>When enabled, this setting automatically applies the Dead status effect to an NPC's token when it reaches 0 Hit Points. The Dead status effect is automatically removed if the NPC regains at least 1 Hit Point.</p><h2>Apply Instant Death</h2><p>When enabled, this setting automatically applies the Dead status effect to a player character if they are reduced to 0 Hit Points and the remaining damage equals or exceeds their maximum Hit Points.</p><p>This represents the \"Instant Death\" rule from the Player's Handbook (2014), page 197.</p><h2>Rotation</h2><p>Enter an angle (in degrees) to rotate a token when it has the Dead status effect. This provides a visual cue for dead creatures on the map.</p><h2>Tint</h2><p><span style=\"font-family:'Roboto Condensed', sans-serif\">Enter a color in hex format (e.g., #ff0000 for red) to visually tint the token when it has the Dead status effect. This helps to quickly identify dead creatures on the map. Leave empty for no tint.</span></p>"
+      },
+      "video": {
+        "controls": true,
+        "volume": 0.5
+      },
+      "src": null,
+      "ownership": {
+        "default": -1,
+        "0wJRsV2r9Hv1a7q0": 3
+      },
+      "flags": {},
+      "_stats": {
+        "compendiumSource": null,
+        "duplicateSource": null,
+        "coreVersion": "13.345",
+        "systemId": "dnd5e",
+        "systemVersion": "4.0.0",
+        "createdTime": 1726519171783,
+        "modifiedTime": 1753217628971,
+        "lastModifiedBy": "5bwQyYIyVQxjjJ3v",
+        "exportSource": null
+      },
+      "category": null,
+      "_key": "!journal.pages!ngr8w6WBycK59brj.DePfY7KUVlToh5dx"
+    },
+    {
+      "sort": 350000,
+      "name": "Death Saving Throws",
+      "type": "text",
+      "_id": "qgLFKLoCIKJSEh5f",
+      "system": {},
+      "title": {
+        "show": true,
+        "level": 1
+      },
+      "image": {},
+      "text": {
+        "format": 1,
+        "content": "<h2>Roll Mode</h2><p>Choose how Death Saving Throws are displayed when rolled by players:</p><ul><li><p><strong>Public Roll: </strong>The roll is visible to all players and the DM.</p></li><li><p><strong>Private GM Roll: </strong>The roll is visible only to the rolling player and the DM.</p></li><li><p><strong>Blind GM Roll: </strong>The roll and its result are only visible to the DM. This option also hides the successes and failures on the player's character sheet.</p></li></ul><h2>Target Value</h2><p>Set the number required on the d20 to succeed on a Death Saving Throw. The default is 10.</p><h2>Remove Death Saves on Event</h2><p>Customize how Death Saving Throw successes and failures are removed when certain events occur:</p><ul><li><p><strong>On Regaining HP from 0: </strong>Number of successes and/or failures to remove when the character regains at least 1 Hit Point. The default is 3 for both.</p></li><li><p><strong>On Short Rest:</strong> Number of successes and/or failures to remove when the character takes a Short Rest.</p></li><li><p><strong>On Long Rest:</strong> Number of successes and/or failures to remove when the player character takes a Long Rest.</p></li></ul>"
+      },
+      "video": {
+        "controls": true,
+        "volume": 0.5
+      },
+      "src": null,
+      "ownership": {
+        "default": -1,
+        "0wJRsV2r9Hv1a7q0": 3
+      },
+      "flags": {},
+      "_stats": {
+        "compendiumSource": null,
+        "duplicateSource": null,
+        "coreVersion": "13.342",
+        "systemId": "dnd5e",
+        "systemVersion": "4.0.0",
+        "createdTime": 1726520156448,
+        "modifiedTime": 1726524100539,
+        "lastModifiedBy": "0wJRsV2r9Hv1a7q0",
+        "exportSource": null
+      },
+      "category": null,
+      "_key": "!journal.pages!ngr8w6WBycK59brj.qgLFKLoCIKJSEh5f"
+    },
+    {
+      "sort": 500000,
+      "name": "Hit Points",
+      "type": "text",
+      "_id": "MVXx2yD2pAfzQBU5",
+      "system": {},
+      "title": {
+        "show": true,
+        "level": 1
+      },
+      "image": {},
+      "text": {
+        "format": 1,
+        "content": "<h2>Massive Damage</h2><p>When enabled, this setting automatically prompts a DC 10 Constitution Saving Throw when a character takes damage equal to or greater than half their maximum Hit Points.</p><p>This represents the \"Massive Damage\" optional rule from the Dungeon Master's Guide (2014), page 273.</p><h2>Rolling Hit Points</h2><h3>Minimum Value</h3><p>When rolling for Hit Points, automatically reroll if the die result is below the minimum value.</p><h3>Reroll Once</h3><ul><li><p>If enabled: Reroll only once when the die result is below the minimum value.</p></li><li><p>If disabled: Continue rerolling until the die result meets or exceeds the minimum value.</p></li></ul><h3>Show Take Average</h3><p>Choose to display or hide the \"Take Average\" checkbox on the Hit Points Advancement Step dialog.</p><h3>Roll HP for NPCs</h3><p>When enabled, this setting automatically rolls for Hit Points when an NPC token is dragged onto the map.</p><h2>Negative Hit Points</h2><h3>Apply Negative Hit Points</h3><p>When enabled, a character's Hit Points can be reduced below zero into negative values.</p><h3>Heal from 0 HP</h3><ul><li><p>If enabled: When a character regains Hit Points, they recover from 0 HP regardless of their negative value.</p></li><li><p>If disabled: Characters recover from their actual negative HP value.</p></li></ul>"
+      },
+      "video": {
+        "controls": true,
+        "volume": 0.5
+      },
+      "src": null,
+      "ownership": {
+        "default": -1,
+        "0wJRsV2r9Hv1a7q0": 3
+      },
+      "flags": {},
+      "_stats": {
+        "compendiumSource": null,
+        "duplicateSource": null,
+        "coreVersion": "13.342",
+        "systemId": "dnd5e",
+        "systemVersion": "4.0.0",
+        "createdTime": 1726520913888,
+        "modifiedTime": 1726524136980,
+        "lastModifiedBy": "0wJRsV2r9Hv1a7q0",
+        "exportSource": null
+      },
+      "category": null,
+      "_key": "!journal.pages!ngr8w6WBycK59brj.MVXx2yD2pAfzQBU5"
+    },
+    {
+      "sort": 600000,
+      "name": "Inspiration",
+      "type": "text",
+      "_id": "HTh2Dt4vpGjpfSbE",
+      "system": {},
+      "title": {
+        "show": true,
+        "level": 1
+      },
+      "image": {},
+      "text": {
+        "format": 1,
+        "content": "<h2>Award Inspiration</h2><h3>Target Value</h3><p>Set a specific number on the d20. When a player rolls a qualifying roll and the die result matches the target value, they are automatically awarded Inspiration.</p><h3>Roll Types</h3><p>Choose which types of rolls can trigger the award of Inspiration:</p><ul><li><p>Ability Check</p></li><li><p>Attack Roll</p></li><li><p>Saving Throw</p></li><li><p>Skill Check</p></li></ul><p>Inspiration will only be awarded when the target value is rolled on one of the selected roll types.</p>"
+      },
+      "video": {
+        "controls": true,
+        "volume": 0.5
+      },
+      "src": null,
+      "ownership": {
+        "default": -1,
+        "0wJRsV2r9Hv1a7q0": 3
+      },
+      "flags": {},
+      "_stats": {
+        "compendiumSource": null,
+        "duplicateSource": null,
+        "coreVersion": "13.342",
+        "systemId": "dnd5e",
+        "systemVersion": "4.0.0",
+        "createdTime": 1726522006009,
+        "modifiedTime": 1726524161826,
+        "lastModifiedBy": "0wJRsV2r9Hv1a7q0",
+        "exportSource": null
+      },
+      "category": null,
+      "_key": "!journal.pages!ngr8w6WBycK59brj.HTh2Dt4vpGjpfSbE"
+    },
+    {
+      "sort": 650000,
+      "name": "Prone",
+      "type": "text",
+      "_id": "dTzGT5PWvgrhMohx",
+      "system": {},
+      "title": {
+        "show": true,
+        "level": 1
+      },
+      "image": {},
+      "text": {
+        "format": 1,
+        "content": "<h2>Rotation</h2><p><span style=\"font-family:'Roboto Condensed', sans-serif\">Enter an angle (in degrees) to rotate a token when it has the Prone condition. This provides a visual cue for prone creatures on the map.</span></p>"
+      },
+      "video": {
+        "controls": true,
+        "volume": 0.5
+      },
+      "src": null,
+      "ownership": {
+        "default": -1,
+        "0wJRsV2r9Hv1a7q0": 3
+      },
+      "flags": {},
+      "_stats": {
+        "compendiumSource": null,
+        "duplicateSource": null,
+        "coreVersion": "13.342",
+        "systemId": "dnd5e",
+        "systemVersion": "4.0.0",
+        "createdTime": 1726522498737,
+        "modifiedTime": 1726576375964,
+        "lastModifiedBy": "0wJRsV2r9Hv1a7q0",
+        "exportSource": null
+      },
+      "category": null,
+      "_key": "!journal.pages!ngr8w6WBycK59brj.dTzGT5PWvgrhMohx"
+    },
+    {
+      "sort": 800000,
+      "name": "Resting",
+      "type": "text",
+      "_id": "lR4mGZPNE02Lbe6t",
+      "system": {},
+      "title": {
+        "show": true,
+        "level": 1
+      },
+      "image": {},
+      "text": {
+        "format": 1,
+        "content": "<h2>Use Camp Supplies</h2><p>When enabled, this setting introduces a house rule that requires spending @UUID[Compendium.custom-dnd5e.custom-dnd5e-items.Item.l6pf6YtapHjBJ6UF]{Camp Supplies} during a Long Rest.</p><p>By default, a character must spend one Camp Supplies to take a Long Rest. However, if the Dungeon Master allows, the player can uncheck the \"Spend Camp Supplies?\" option in the Long Rest dialog to bypass this requirement.</p><p>Currently, when a player selects <strong>Long Rest</strong> on the character sheet, Camp Supplies are deducted from the character's personal inventory. When using the <strong>Long Rest</strong> option on a group sheet, supplies are taken from the group's inventory. Future updates may allow Camp Supplies to be drawn from other sources, such as shared group inventories or those of allies.</p><h3>Camp Supplies Item</h3><p>This house rule relies on the @UUID[Compendium.custom-dnd5e.custom-dnd5e-items.Item.l6pf6YtapHjBJ6UF]{Camp Supplies} item. To add it to your Items menu, click the link here to open the item and select <strong>Import</strong> from the item's window header. You can also find the item in the <strong>Custom D&amp;D 5e Items</strong> compendium.</p><p></p>"
+      },
+      "video": {
+        "controls": true,
+        "volume": 0.5
+      },
+      "src": null,
+      "ownership": {
+        "default": -1,
+        "0wJRsV2r9Hv1a7q0": 3
+      },
+      "flags": {},
+      "_stats": {
+        "compendiumSource": null,
+        "duplicateSource": null,
+        "coreVersion": "13.342",
+        "systemId": "dnd5e",
+        "systemVersion": "4.0.3",
+        "createdTime": 1727380263060,
+        "modifiedTime": 1727381817268,
+        "lastModifiedBy": "0wJRsV2r9Hv1a7q0",
+        "exportSource": null
+      },
+      "category": null,
+      "_key": "!journal.pages!ngr8w6WBycK59brj.lR4mGZPNE02Lbe6t"
+    },
+    {
+      "sort": 200000,
+      "name": "Bloodied Condition",
+      "type": "rule",
+      "_id": "sV0ZCKxwh4n4ZU1P",
+      "system": {
+        "tooltip": "<ul><li><p>A creature is Bloodied while it has half its Hit Points or fewer remaining.</p></li></ul>",
+        "type": "condition"
+      },
+      "title": {
+        "show": true,
+        "level": 1
+      },
+      "image": {},
+      "text": {
+        "format": 1,
+        "content": "<ul><li><p>A creature is Bloodied while it has half its Hit Points or fewer remaining.</p></li></ul>"
+      },
+      "video": {
+        "controls": true,
+        "volume": 0.5
+      },
+      "src": null,
+      "ownership": {
+        "default": -1,
+        "0wJRsV2r9Hv1a7q0": 3
+      },
+      "flags": {},
+      "_stats": {
+        "compendiumSource": null,
+        "duplicateSource": null,
+        "coreVersion": "13.342",
+        "systemId": "dnd5e",
+        "systemVersion": "4.3.0",
+        "createdTime": 1730413928146,
+        "modifiedTime": 1736893826542,
+        "lastModifiedBy": "n99Zmia1fjZIEb1T",
+        "exportSource": null
+      },
+      "category": null,
+      "_key": "!journal.pages!ngr8w6WBycK59brj.sV0ZCKxwh4n4ZU1P"
+    },
+    {
+      "sort": 550000,
+      "name": "Initiative",
+      "type": "text",
+      "_id": "PinXfgV1fJKcVAcG",
+      "system": {},
+      "title": {
+        "show": true,
+        "level": 1
+      },
+      "image": {},
+      "text": {
+        "format": 1,
+        "content": "<h2>Reroll Initiative Each Round</h2><p>When enabled, this setting automatically reroll initiative for every combatant at the start of each round.</p>"
+      },
+      "video": {
+        "controls": true,
+        "volume": 0.5
+      },
+      "src": null,
+      "ownership": {
+        "default": -1,
+        "0wJRsV2r9Hv1a7q0": 3
+      },
+      "flags": {},
+      "_stats": {
+        "compendiumSource": null,
+        "duplicateSource": null,
+        "coreVersion": "13.342",
+        "systemId": "dnd5e",
+        "systemVersion": "4.1.2",
+        "createdTime": 1732821331427,
+        "modifiedTime": 1732821385094,
+        "lastModifiedBy": "0wJRsV2r9Hv1a7q0",
+        "exportSource": null
+      },
+      "category": null,
+      "_key": "!journal.pages!ngr8w6WBycK59brj.PinXfgV1fJKcVAcG"
+    },
+    {
+      "sort": 350000,
+      "name": "Exhaustion",
+      "type": "text",
+      "system": {},
+      "title": {
+        "show": true,
+        "level": 1
+      },
+      "image": {},
+      "text": {
+        "format": 1,
+        "content": "<p>When Exhaustion is applied as a result of these settings, a message is posted to chat.</p><h2>Apply on 0 Hp</h2><p>Each time a character is reduced to 0 HP, automatically apply one level of Exhaustion.</p><h2>Apply on Combat End</h2><p>If a character is reduced to 0 HP during a combat, automatically apply one level of Exhaustion when the DM clicks <strong>End Combat</strong>.</p>"
+      },
+      "video": {
+        "controls": true,
+        "volume": 0.5
+      },
+      "src": null,
+      "ownership": {
+        "default": -1,
+        "0wJRsV2r9Hv1a7q0": 3,
+        "JdWLPbQd9x1aeEfz": 3
+      },
+      "flags": {},
+      "_stats": {
+        "compendiumSource": null,
+        "duplicateSource": "Compendium.custom-dnd5e.custom-dnd5e-journals.JournalEntry.ngr8w6WBycK59brj.JournalEntryPage.qgLFKLoCIKJSEh5f",
+        "coreVersion": "13.342",
+        "systemId": "dnd5e",
+        "systemVersion": "4.2.2",
+        "createdTime": 1739227597608,
+        "modifiedTime": 1739227994262,
+        "lastModifiedBy": "JdWLPbQd9x1aeEfz",
+        "exportSource": null
+      },
+      "_id": "vfBCdjS2G75Ll8Qz",
+      "category": null,
+      "_key": "!journal.pages!ngr8w6WBycK59brj.vfBCdjS2G75Ll8Qz"
+    },
+    {
+      "sort": 600000,
+      "name": "Mob Damage",
+      "type": "text",
+      "_id": "dIs1nJrpCky0jFwT",
+      "system": {},
+      "title": {
+        "show": true,
+        "level": 1
+      },
+      "image": {},
+      "text": {
+        "format": 1,
+        "content": "<article class=\"custom-dnd5e-note\"><header><img src=\"modules/custom-dnd5e/media/icons/note.svg\" /><p>Note</p></header><p>Consumption of ammunition or uses is not currently included with this setting.</p></article><h2>Enable Mob Damage</h2><p>When enabled, the <strong>Mobs Average Results</strong> table from the <em>Dungeon Master's Guide (2024),</em> page 82, will be used to roll mob damage in place of attack rolls when all the following conditions are met:</p><ul><li><p>Between <strong>four</strong> and <strong>ten</strong> identical tokens are selected.</p></li><li><p>Only <strong>one</strong> token is targeted.</p></li><li><p>The activity used is an <strong>Attack</strong>.</p></li></ul><p>Instead of rolling an attack, the number of successful hits is calculated using the table and a single damage roll is automatically posted to the chat. You can apply Advantage or Disadvantage by holding the appropriate key modifier when clicking the attack.</p><h2>Use Average Damage</h2><p>When enabled, mobs will deal average damage, otherwise damage wil be rolled instead.</p>"
+      },
+      "video": {
+        "controls": true,
+        "volume": 0.5
+      },
+      "src": null,
+      "category": null,
+      "ownership": {
+        "default": -1,
+        "5bwQyYIyVQxjjJ3v": 3
+      },
+      "flags": {},
+      "_stats": {
+        "compendiumSource": "Compendium.custom-dnd5e.custom-dnd5e-journals.JournalEntry.xXEu642Urflb2Ekm.JournalEntryPage.dIs1nJrpCky0jFwT",
+        "duplicateSource": null,
+        "exportSource": null,
+        "coreVersion": "13.345",
+        "systemId": "dnd5e",
+        "systemVersion": "5.0.4",
+        "createdTime": 1753557964913,
+        "modifiedTime": 1753567875902,
+        "lastModifiedBy": "5bwQyYIyVQxjjJ3v"
+      },
+      "_key": "!journal.pages!ngr8w6WBycK59brj.dIs1nJrpCky0jFwT"
+    },
+    {
+      "sort": 600000,
+      "name": "Probabilistic Damage",
+      "type": "text",
+      "system": {},
+      "title": {
+        "show": true,
+        "level": 1
+      },
+      "image": {},
+      "text": {
+        "format": 1,
+        "content": "<article class=\"custom-dnd5e-note\"><header><img src=\"modules/custom-dnd5e/media/icons/note.svg\" /><p>Note</p></header><p>Consumption of ammunition or uses is not currently included with this setting.</p></article><h2>Enable Option in Attack Activity</h2><p>Select which actor types can use Probabilistic Damage: Player Characters, NPCs, Both, or Neither (to disable the feature).</p><p>When enabled, a <strong>Use Probabilistic Damage</strong> option will appear under the <strong>Effects</strong> tab within the <strong>Attack Damage</strong> section of the Attack activity sheet.</p><h3>What is Probabilistic Damage?</h3><p>Probabilistic Damage replaces the attack roll of an Attack activity with a damage roll scaled by the chance to hit. This features activates only when the following conditions are met:</p><ul><li><p>Only <strong>one</strong> token is targeted.</p></li><li><p>The activity used is an <strong>Attack</strong>.</p></li></ul><p>Probabilistic damage is calculated as follows:</p><p><code>Scaled Damage = round(Damage Roll × Hit Chance)</code></p><p>When triggered, the damage roll is immediately posted to the chat. You can apply Advantage or Disadvantage by holding the appropriate key modifier (e.g., Alt, Ctrl) when clicking the attack.</p><h2>Use Average Damage</h2><p>When enabled, probabilistic damage will use the average damage, which is then scaled by the chance to hit. If disabled, damage is rolled before scaling.</p>"
+      },
+      "video": {
+        "controls": true,
+        "volume": 0.5
+      },
+      "src": null,
+      "category": null,
+      "ownership": {
+        "default": -1,
+        "5bwQyYIyVQxjjJ3v": 3
+      },
+      "flags": {},
+      "_stats": {
+        "compendiumSource": "Compendium.custom-dnd5e.custom-dnd5e-journals.JournalEntry.xXEu642Urflb2Ekm.JournalEntryPage.dIs1nJrpCky0jFwT",
+        "duplicateSource": "Compendium.custom-dnd5e.custom-dnd5e-journals.JournalEntry.ngr8w6WBycK59brj.JournalEntryPage.dIs1nJrpCky0jFwT",
+        "exportSource": null,
+        "coreVersion": "13.345",
+        "systemId": "dnd5e",
+        "systemVersion": "5.0.4",
+        "createdTime": 1753558878372,
+        "modifiedTime": 1753567888425,
+        "lastModifiedBy": "5bwQyYIyVQxjjJ3v"
+      },
+      "_id": "tWo28mw1ZAhLMqO5",
+      "_key": "!journal.pages!ngr8w6WBycK59brj.tWo28mw1ZAhLMqO5"
+    }
+  ],
+  "folder": null,
+  "sort": 0,
+  "ownership": {
+    "default": 0,
+    "0wJRsV2r9Hv1a7q0": 3
+  },
+  "flags": {},
+  "_stats": {
+    "compendiumSource": null,
+    "duplicateSource": null,
+    "coreVersion": "13.342",
+    "systemId": "dnd5e",
+    "systemVersion": "4.0.0",
+    "createdTime": 1726515885725,
+    "modifiedTime": 1726516256752,
+    "lastModifiedBy": "0wJRsV2r9Hv1a7q0",
+    "exportSource": null
+  },
+  "categories": [],
+  "_key": "!journal!ngr8w6WBycK59brj"
+}

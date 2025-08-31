@@ -525,9 +525,9 @@ export async function c5eLoadTemplates(templates) {
 /* -------------------------------------------- */
 
 /**
- * Get the roll type based on the keyboard event.
+ * Get the advantage mode based on the keyboard event.
  * @param {KeyboardEvent} event The keyboard event.
- * @returns {string} The roll type ("normal", "advantage", or "disadvantage").
+ * @returns {string} The advantage mode ("normal", "advantage", or "disadvantage").
  */
 export function getAdvantageMode(event) {
   if ( !event ) return "normal";
@@ -579,4 +579,44 @@ function areKeysPressed(event, action) {
   const downKeys = [...game.keyboard.downKeys];
   Logger.debug(`Getting key pressed for ${action}`, { event, downKeys, isPressed });
   return isPressed;
+}
+
+/* -------------------------------------------- */
+
+/**
+ * Calculate attack bonus
+ * @param {*} activity The activity being used.
+ * @returns {number} The attack bonus.
+ */
+export function calculateAttackBonus(activity) {
+  const item = activity.item;
+  const attackModeOptions = item.system.attackModes;
+  const attackMode = attackModeOptions?.[0]?.value;
+  const attackConfig = activity.getAttackData({ attackMode });
+  return parseInt(dnd5e.dice.simplifyRollFormula(
+    Roll.defaultImplementation.replaceFormulaData(attackConfig.parts.join(" + "), attackConfig.data)
+  )) ?? 0;
+}
+
+/* -------------------------------------------- */
+
+/**
+ * Calculates the probability of hitting.
+ * @param {string} advantageMode The advantage mode ("normal", "advantage", or "disadvantage").
+ * @param {number} attackBonus The bonus to the attack roll.
+ * @param {number} targetNumber The target number to hit.
+ * @returns {number} The probability of hitting (between 0 and 1).
+ */
+export function calculateHitProbability(advantageMode, attackBonus, targetNumber = 20) {
+  const rollNeeded = Math.max(1, targetNumber - attackBonus);
+  switch (advantageMode) {
+    case "advantage":
+      const failChance = (rollNeeded - 1) / 20;
+      return 1 - (failChance * failChance);
+    case "disadvantage":
+      const successChance = (21 - rollNeeded) / 20;
+      return successChance * successChance;
+    default:
+      return (21 - rollNeeded) / 20;
+  }
 }
