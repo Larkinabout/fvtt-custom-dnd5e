@@ -153,7 +153,7 @@ function buildData(config) {
       if ( !data[statusEffect.id].pseudo ) data[statusEffect.id].sheet = true;
     } else {
       data[statusEffect.id] = statusEffect;
-      data[statusEffect.id].img = statusEffect.img;
+      data[statusEffect.id].img = statusEffect?.img ?? statusEffect?.icon;
       data[statusEffect.id].name = statusEffect?.name ?? statusEffect?.label;
     }
   };
@@ -211,7 +211,7 @@ export function setConfig(data = null) {
 
       if ( value.sheet || value.pseudo ) {
         config.conditionTypes[key] = {
-          img: value.img,
+          img: value?.img ?? value?.icon,
           name: localisedName,
           ...(value.levels && { levels: value.levels }),
           ...(value.pseudo && { pseudo: value.pseudo }),
@@ -229,7 +229,7 @@ export function setConfig(data = null) {
         ...(value.coverBonus !== undefined && { coverBonus: value.coverBonus }),
         ...(value.exclusiveGroup !== undefined && { exclusiveGroup: value.exclusiveGroup }),
         id: key,
-        img: value.img,
+        img: value?.img ?? value?.icon,
         ...(value.levels !== undefined && { levels: value.levels }),
         name: localisedName,
         ...(value.order !== undefined && { order: value.order }),
