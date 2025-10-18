@@ -145,18 +145,20 @@ function getValidButton(element) {
         || element.dataset?.action === "rollRequest"
         || element.dataset?.action === "use"
         || element.classList.contains("rollable")
-        || element.classList.contains("item-use-button") // Tidy5eCharacterSheet
+        || element.classList.contains("item-use-button") // Tidy5eCharacterSheet classic
         || element.classList.contains("item-button") // Argon Combat HUD
-        || element.dataset?.action === "clickAction" ) {
+        || element.dataset?.action === "clickAction"
+        || ![undefined, "false"].includes(element.dataset.hasRollModes) ) { // Generic opt in
     return element;
   }
   return element.closest(('[data-action="use"]'))
         || element.closest('[data-action="rollAttack"]')
         || element.closest('[data-action="rollRequest"]')
         || element.closest(".rollable")
-        || element.closest(".item-use-button") // Tidy5eCharacterSheet
+        || element.closest(".item-use-button") // Tidy5eCharacterSheet classic
         || element.closest(".item-button") // Argon Combat HUD
-        || element.closest('[data-action="clickAction"]'); // Token Action HUD
+        || element.closest('[data-action="clickAction"]') // Token Action HUD
+        || element.closest('[data-has-roll-modes]:not([data-has-roll-modes="false"]'); // Generic opt in
 }
 
 /* -------------------------------------------- */
