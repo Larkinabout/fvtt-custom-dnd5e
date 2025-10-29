@@ -7,7 +7,7 @@ import {
   registerSetting,
   resetDnd5eConfig,
   resetSetting } from "../utils.js";
-import { FeatureTypesForm } from "./forms/feature-types-form.js";
+import { FeatureTypesForm } from "../forms/config-form.js";
 
 const constants = CONSTANTS.FEATURE_TYPES;
 const configKey = "featureTypes";
@@ -65,7 +65,7 @@ function registerSettings() {
 /**
  * Get default config.
  * @param {string|null} key The key
- * @returns {object} The config data
+ * @returns {object} The config
  */
 export function getSettingDefault(key = null) {
   return getDefaultDnd5eConfig(configKey, key);
@@ -107,6 +107,7 @@ export function setConfig(settingData = null) {
   }
 }
 
+
 /* -------------------------------------------- */
 
 /**
@@ -123,13 +124,14 @@ function handleEmptyData() {
 /**
  * Build config.
  * @param {object} settingData The setting data
+ * @param {boolean} [isSubtype=false] Whether the data is a subtype
  * @returns {object} The config data
  */
-function buildConfig(settingData) {
+function buildConfig(settingData, isSubtype = false) {
   return Object.fromEntries(
     Object.keys(settingData)
       .filter(key => settingData[key].visible || settingData[key].visible === undefined)
-      .map(key => [key, buildConfigEntry(settingData[key])])
+      .map(key => [key, buildConfigEntry(settingData[key], isSubtype)])
   );
 }
 
@@ -138,15 +140,18 @@ function buildConfig(settingData) {
 /**
  * Build config entry.
  * @param {object} data The data
+ * @param {boolean} [isSubtype=false] Whether the data is a subtype
  * @returns {object} The config entry
  */
-function buildConfigEntry(data) {
-  if ( data.children ) {
-    return {
-      label: game.i18n.localize(data.label),
-      children: buildConfig(data.children)
-    };
-  } else {
+function buildConfigEntry(data, isSubtype = false) {
+  if ( isSubtype ) {
     return game.i18n.localize(data.label || data);
+  } else {
+    return {
+      label: game.i18n.localize(data.label || data),
+      ...(data.subtypes !== undefined && {
+        subtypes: buildConfig(data.subtypes, true)
+      })
+    };
   }
 }

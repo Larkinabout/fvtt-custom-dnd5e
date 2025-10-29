@@ -1175,6 +1175,46 @@
       "category": null,
       "_id": "Jly3oGH0ntybdpBu",
       "_key": "!journal.pages!B48iqFBddUikMMer.Jly3oGH0ntybdpBu"
+    },
+    {
+      "sort": 1162500,
+      "name": "Feature Types",
+      "type": "text",
+      "system": {},
+      "title": {
+        "show": true,
+        "level": 1
+      },
+      "image": {},
+      "text": {
+        "format": 1,
+        "content": "<p>Located in <strong>Game Settings</strong> &gt; <strong>Configure Settings</strong> &gt; <strong>Custom D&amp;D 5e</strong> &gt; <strong>Configure Feature Types</strong></p><h3>Create a Feature Type</h3><ol><li><p>Click <strong>Create New</strong>.</p></li><li><p>Enter a <strong>Key</strong>.</p></li><li><p>Enter a <strong>Label</strong>.</p></li><li><p>(Optional) Drag and drop the feature type onto another to make it a subtype.</p></li><li><p>Click <strong>Save and Close</strong>.</p></li></ol><h4>Example Feature Type</h4><table><tbody><tr><td style=\"min-width:120px\" data-colwidth=\"272\"><p><strong>Property</strong></p></td><td><p><strong>Value</strong></p></td></tr><tr><td data-colwidth=\"272\"><p>Key</p></td><td><p>darkGift</p></td></tr><tr><td data-colwidth=\"272\"><p>Label</p></td><td><p>Dark Gift</p></td></tr></tbody></table>"
+      },
+      "video": {
+        "controls": true,
+        "volume": 0.5
+      },
+      "src": null,
+      "ownership": {
+        "default": -1,
+        "0wJRsV2r9Hv1a7q0": 3,
+        "5bwQyYIyVQxjjJ3v": 3
+      },
+      "flags": {},
+      "_stats": {
+        "compendiumSource": null,
+        "duplicateSource": "Compendium.custom-dnd5e.custom-dnd5e-journals.JournalEntry.B48iqFBddUikMMer.JournalEntryPage.OgMhctYM5NFh8neL",
+        "exportSource": null,
+        "coreVersion": "13.348",
+        "systemId": "dnd5e",
+        "systemVersion": "5.1.10",
+        "createdTime": 1761762721032,
+        "modifiedTime": 1761762766832,
+        "lastModifiedBy": "5bwQyYIyVQxjjJ3v"
+      },
+      "category": null,
+      "_id": "dgX7G9bkLoEif6pk",
+      "_key": "!journal.pages!B48iqFBddUikMMer.dgX7G9bkLoEif6pk"
     }
   ],
   "folder": null,

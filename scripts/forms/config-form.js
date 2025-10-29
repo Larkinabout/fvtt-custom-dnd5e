@@ -24,6 +24,7 @@ import { resetConfigSetting as resetConditions, setConfig as setConditions } fro
 import { resetConfigSetting as resetCreatureTypes, setConfig as setCreatureTypes } from "../configurations/creature-types.js";
 import { resetConfigSetting as resetCurrency, setConfig as setCurrency } from "../configurations/currency.js";
 import { resetConfigSetting as resetDamageTypes, setConfig as setDamageTypes } from "../configurations/damage-types.js";
+import { resetConfigSetting as resetFeatureTypes, setConfig as setFeatureTypes } from "../configurations/feature-types.js";
 import { resetConfigSetting as resetItemActionTypes, setConfig as setItemActionTypes } from "../configurations/item-action-types.js";
 import { resetConfigSetting as resetItemActivationCostTypes, setConfig as setItemActivationCostTypes } from "../configurations/item-activation-cost-types.js";
 import { resetConfigSetting as resetItemProperties, setConfig as setItemProperties } from "../configurations/item-properties.js";
@@ -734,6 +735,48 @@ export class DamageTypesForm extends ConfigForm {
     }
   };
 }
+
+/* -------------------------------------------- */
+
+/**
+ * Class representing the Feature Types Form.
+ *
+ * @extends ConfigForm
+ */
+export class FeatureTypesForm extends ConfigForm {
+  /**
+   * Constructor for FeatureTypesForm.
+   */
+  constructor() {
+    super();
+    this.editInList = true;
+    this.nestable = true;
+    this.nestType = "subtypes";
+    this.requiresReload = false;
+    this.enableConfigKey = CONSTANTS.FEATURE_TYPES.SETTING.ENABLE.KEY;
+    this.settingKey = CONSTANTS.FEATURE_TYPES.SETTING.CONFIG.KEY;
+    this.resetConfigSetting = resetFeatureTypes;
+    this.setConfig = setFeatureTypes;
+    this.configKey = "featureTypes";
+    this.headerButton = JOURNAL_HELP_BUTTON;
+    this.headerButton.uuid = CONSTANTS.FEATURE_TYPES.UUID;
+  }
+
+  /* -------------------------------------------- */
+
+  /**
+   * Default options for the form.
+   *
+   * @type {object}
+   */
+  static DEFAULT_OPTIONS = {
+    id: `${MODULE.ID}-feature-types-form`,
+    window: {
+      title: "CUSTOM_DND5E.form.featureTypes.title"
+    }
+  };
+}
+
 
 /* -------------------------------------------- */
 

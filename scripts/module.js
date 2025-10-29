@@ -36,6 +36,7 @@ import { register as registerDamageTypes, setConfig as setDamageTypes } from "./
 import { register as registerDebug } from "./debug.js";
 import { register as registerEncumbrance, setConfig as setEncumbrance } from "./configurations/encumbrance.js";
 import { register as registerExhaustion } from "./gameplay/exhaustion.js";
+import { register as registerFeatureTypes, setConfig as setFeatureTypes } from "./configurations/feature-types.js";
 import { register as registerItemActionTypes, setConfig as setItemActionTypes } from "./configurations/item-action-types.js";
 import { register as registerItemActivationCostTypes, setConfig as setItemActivationCostTypes } from "./configurations/item-activation-cost-types.js";
 import { register as registerItemProperties, setConfig as setItemProperties } from "./configurations/item-properties.js";
@@ -127,6 +128,7 @@ Hooks.on("init", async () => {
   registerDamageTypes();
   registerEncumbrance();
   registerExhaustion();
+  registerFeatureTypes();
   registerItemActionTypes();
   registerItemActivationCostTypes();
   registerItemProperties();
@@ -213,6 +215,7 @@ Hooks.on("ready", async () => {
   setConsumableTypes(getSetting(CONSTANTS.CONSUMABLE_TYPES.SETTING.CONFIG.KEY));
   setCreatureTypes(getSetting(CONSTANTS.CREATURE_TYPES.SETTING.CONFIG.KEY));
   setDamageTypes(getSetting(CONSTANTS.DAMAGE_TYPES.SETTING.CONFIG.KEY));
+  setFeatureTypes(getSetting(CONSTANTS.FEATURE_TYPES.SETTING.CONFIG.KEY));
   const isV4 = foundry.utils.isNewerVersion(game.dnd5e.version, "3.3.1");
   if ( !isV4 ) {
     setItemActionTypes(getSetting(CONSTANTS.ITEM_ACTION_TYPES.SETTING.CONFIG.KEY));

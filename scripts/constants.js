@@ -476,6 +476,25 @@ export const CONSTANTS = {
       }
     }
   },
+  FEATURE_TYPES: {
+    ID: "feature-types",
+    MENU: {
+      KEY: "feature-types-menu",
+      HINT: "CUSTOM_DND5E.menu.featureTypes.hint",
+      ICON: "fas fa-list",
+      LABEL: "CUSTOM_DND5E.menu.featureTypes.label",
+      NAME: "CUSTOM_DND5E.menu.featureTypes.name"
+    },
+    SETTING: {
+      ENABLE: {
+        KEY: "enable-feature-types"
+      },
+      CONFIG: {
+        KEY: "feature-types"
+      }
+    },
+    UUID: "Compendium.custom-dnd5e.custom-dnd5e-journals.JournalEntry.B48iqFBddUikMMer.JournalEntryPage.dgX7G9bkLoEif6pk"
+  },
   HIT_POINTS: {
     SETTING: {
       APPLY_MASSIVE_DAMAGE: {
