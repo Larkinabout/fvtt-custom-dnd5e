@@ -288,10 +288,13 @@ function registerHooks() {
   Hooks.on("dnd5e.rollSkill", (actor, roll, ability) => { awardInspiration("rollSkill", actor, roll); });
   Hooks.on("preUpdateActor", (actor, data, options, userId) => {
     capturePreviousData(actor, data, options, userId);
+    healActor(actor, data, options);
     updateDeathSaves("regainHp", actor, data, options);
   });
   Hooks.on("renderActorSheet", makeDeathSavesBlind);
   Hooks.on("renderActorSheet", updateHpMeter);
+  Hooks.on("renderActorSheetV2", makeDeathSavesBlind);
+  Hooks.on("renderActorSheetV2", updateHpMeter);
 }
 
 /* -------------------------------------------- */
@@ -493,6 +496,34 @@ function setDeathSavesRollMode(config, dialog, message) {
 /* -------------------------------------------- */
 
 /**
+ * Triggered by the 'preUpdateActor' hook.
+ * If 'Heal from 0 HP' is enabled, recalculate healing to increase HP from zero instead of the negative value.
+ * @param {object} actor The actor
+ * @param {object} data The data
+ * @param {object} options The options
+ */
+function healActor(actor, data, options) {
+  const { dnd5e } = options;
+
+  if ( !foundry.utils.hasProperty(data,"system.attributes.hp.value") ) return;
+
+  const applyNegativeHp = getSetting(CONSTANTS.HIT_POINTS.SETTING.APPLY_NEGATIVE_HP.KEY);
+  const applyInstantDeath = getSetting(CONSTANTS.DEAD.SETTING.APPLY_INSTANT_DEATH.KEY);
+  const healFromZero = getSetting(CONSTANTS.HIT_POINTS.SETTING.NEGATIVE_HP_HEAL_FROM_ZERO.KEY);
+
+  if ( !(applyNegativeHp || applyInstantDeath) || !healFromZero ) return;
+
+  if ( dnd5e.hp.value < 0 ) {
+    const newHp = data.system.attributes.hp.value - dnd5e.hp.value;
+    if ( newHp > 0 && newHp > data.system.attributes.hp.value ) {
+      data.system.attributes.hp.value = newHp;
+    }
+  }
+}
+
+/* -------------------------------------------- */
+
+/**
  * Triggered by the 'dnd5e.preApplyDamage' hook.
  * If 'Apply Negative HP' or 'Apply Instant Death' is enabled, recalculate damage to apply a negative value to HP.
  * If 'Heal from 0 HP' is enabled, recalculate healing to increase HP from zero instead of the negative value.
@@ -511,8 +542,7 @@ function recalculateDamage(actor, amount, updates, options) {
   const hpMax = actor?.system?.attributes?.hp?.effectiveMax ?? actor?.system?.attributes?.hp?.max ?? 0;
   const hpTemp = actor?.system?.attributes?.hp?.temp ?? 0;
   const hpValue = actor?.system?.attributes?.hp?.value ?? 0;
-  const healFromZero = getSetting(CONSTANTS.HIT_POINTS.SETTING.NEGATIVE_HP_HEAL_FROM_ZERO.KEY);
-  const startHp = (healFromZero && amount < 0 && hpValue < 0) ? 0 : hpValue;
+  const startHp = hpValue;
 
   let newHpValue = updates["system.attributes.hp.value"];
 
@@ -520,9 +550,6 @@ function recalculateDamage(actor, amount, updates, options) {
     newHpValue = hpValue - Math.max(amount - hpTemp, 0);
   } else {
     let healing = Math.abs(amount);
-    if ( hpValue < 0 && healFromZero && !isDelta ) {
-      healing = healing - Math.abs(hpValue);
-    }
     newHpValue = Math.min(startHp + healing, hpMax);
   }
 
@@ -709,7 +736,7 @@ function updateHp(actor, updates) {
 /* -------------------------------------------- */
 
 /**
- * Triggered by the 'renderActorSheet' hook.
+ * Triggered by the 'renderActorSheet' and 'renderActorSheetV2' hook.
  * If the current HP is negative, update the HP meter to show a red bar.
  * This will indicate that the character is below 0 HP.
  * @param {object} app The app
@@ -733,7 +760,7 @@ function updateHpMeter(app, html, data) {
   meter.classList.add("negative");
 
   const progress = html.querySelector(".progress.hit-points");
-  const pct = Math.abs(hpValue / hpMax) * 100;
+  const pct = Math.min(Math.abs(hpValue / hpMax) * 100, 100);
   progress.style = `--bar-percentage: ${pct}%;`;
 
   Logger.debug("HP meter updated");

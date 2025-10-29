@@ -439,7 +439,5 @@
 }
 
 .dnd5e2.sheet.actor.character .sheet-body .sidebar .card .meter.hit-points.negative .progress::before {
-    background: linear-gradient(to right, var(--dnd5e-color-maroon) -0%, var(--dnd5e-color-maroon) 100%);
-    border-radius: 4px 0 0 4px;
-    border-right: var(--border-width) solid var(--dnd5e-color-crimson);
+    background: linear-gradient(to right, var(--dnd5e-color-hd-1) -0%, var(--dnd5e-color-hd-2) 100%);
 }
