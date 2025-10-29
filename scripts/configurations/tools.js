@@ -104,6 +104,11 @@ export function setConfig(settingData = null) {
 
   if ( configData ) {
     CONFIG.DND5E[configKey] = configData;
+    CONFIG.DND5E.toolIds = new Proxy(CONFIG.DND5E[configKey], {
+      get(target, prop) {
+        return target[prop]?.id ?? target[prop];
+      }
+    });
   }
 }
 
