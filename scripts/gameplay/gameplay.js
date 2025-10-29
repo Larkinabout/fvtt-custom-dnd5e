@@ -339,10 +339,10 @@ export function modifyHitPointsFlowDialog(app, html, data) {
     const rerollOnce = getSetting(CONSTANTS.LEVEL_UP.HIT_POINTS.REROLL.ONCE.SETTING.KEY);
     const note = (rerollOnce) ? "CUSTOM_DND5E.dialog.levelUpHitPointsRerollOnce.note" : "CUSTOM_DND5E.dialog.levelUpHitPointsRerollForever.note";
     const h3 = element.querySelector("form h3");
-    const p = document.createElement("p");
-    p.classList.add("custom-dnd5e-advice", "notes", "hp-note");
-    p.textContent = game.i18n.format(note, { minimumValue });
-    h3.after(p);
+    const div = document.createElement("div");
+    div.classList.add("custom-dnd5e-note", "info");
+    div.textContent = game.i18n.format(note, { minimumValue });
+    h3.after(div);
   }
 
   if ( !getSetting(CONSTANTS.LEVEL_UP.HIT_POINTS.SHOW_TAKE_AVERAGE.SETTING.KEY) ) {
