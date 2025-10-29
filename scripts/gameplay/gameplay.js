@@ -279,13 +279,14 @@ function registerHooks() {
   Hooks.on("dnd5e.preRestCompleted", (actor, data) => updateDeathSaves("rest", actor, data));
   Hooks.on("dnd5e.preRollDeathSave", setDeathSavesRollMode);
   Hooks.on("dnd5e.rollAbilityCheck", (actor, roll, ability) => { awardInspiration("rollAbilityCheck", actor, roll); });
-  Hooks.on("dnd5e.rollAbilitySave", (actor, roll, ability) => { awardInspiration("rollAbilitySave", actor, roll); });
   Hooks.on("dnd5e.rollAbilityTest", (actor, roll, ability) => { awardInspiration("rollAbilityTest", actor, roll); });
   Hooks.on("dnd5e.rollAttack", (item, roll, ability) => {
     awardInspiration("rollAttack", item, roll);
     // applyHighLowGround(item, roll, ability);
   });
+  Hooks.on("dnd5e.rollSavingThrow", (actor, roll, ability) => { awardInspiration("rollSavingThrow", actor, roll); });
   Hooks.on("dnd5e.rollSkill", (actor, roll, ability) => { awardInspiration("rollSkill", actor, roll); });
+  Hooks.on("dnd5e.rollToolCheck", (actor, roll, ability) => { awardInspiration("rollToolCheck", actor, roll); });
   Hooks.on("preUpdateActor", (actor, data, options, userId) => {
     capturePreviousData(actor, data, options, userId);
     healActor(actor, data, options);
@@ -402,20 +403,21 @@ export function applyHighLowGround(item, roll, ability) {
 /* -------------------------------------------- */
 
 /**
- * Triggered by the 'dnd5e.rollAbilityCheck', 'dnd5e.rollAbilitySave', 'dnd5e.rollAbilityTest', 'dnd5e.rollAttack',
- * and 'dnd5e.rollSkill' hooks.
+ * Triggered by the 'dnd5e.rollAbilityCheck', 'dnd5e.rollAbilityTest', 'dnd5e.rollAttack',
+ * 'dnd5e.rollSavingThrow', 'dnd5e.rollSkill' and 'dnd5e.rollToolCheck' hooks.
  * If the roll matches the 'Award Inspiration D20 Value', award inspiration to the actor.
  * If the actor already has inspiration, do not award it again.
- * @param {string} rollType The roll type: rollAbilityCheck, rollAbilitySave, rollAbilityTest, rollAttack, rollSkill
+ * @param {string} rollType The roll type: rollAbilityCheck, rollAbilityTest, rollAttack,
+ *   rollSavingThrow, rollSkill, rollToolCheck
  * @param {object} roll The roll
  * @param {object} data The data
  */
 export function awardInspiration(rollType, roll, data) {
   Logger.debug("Triggering Award Inspiration...");
 
-  const actor = (rollType === "rollAttack") ? data.subject.actor : data.subject;
+  const actor = (rollType === "rollAttack") ? data.subject?.actor : data.subject;
 
-  if ( actor.type === "npc" || !getSetting(CONSTANTS.INSPIRATION.SETTING.AWARD_INSPIRATION_ROLL_TYPES.KEY)?.[rollType] ) return;
+  if ( actor?.type === "npc" || !getSetting(CONSTANTS.INSPIRATION.SETTING.AWARD_INSPIRATION_ROLL_TYPES.KEY)?.[rollType] ) return;
 
   const awardInspirationDieTotal = getSetting(CONSTANTS.INSPIRATION.SETTING.AWARD_INSPIRATION_DICE_VALUE.KEY);
   const diceTotal = roll[0].terms[0].total;

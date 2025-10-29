@@ -41,8 +41,8 @@ export function migrate() {
 
   let isSuccess = true;
   isSuccess = (!migrationVersion || foundry.utils.isNewerVersion("1.3.4", migrationVersion)) ? migrateRollMode() : true;
-  isSuccess = (!migrationVersion || foundry.utils.isNewerVersion("1.4.0", migrationVersion)) ? migrateAwardInspirationRollType() : true;
   isSuccess = (!migrationVersion || foundry.utils.isNewerVersion("2.2.4", migrationVersion)) ? migrateConditions() : true;
+  isSuccess = (!migrationVersion || foundry.utils.isNewerVersion("2.3.0", migrationVersion)) ? migrateAwardInspirationRollType() : true;
 
   if ( isSuccess ) {
     setSetting(constants.VERSION.SETTING.KEY, moduleVersion);
@@ -95,10 +95,17 @@ export async function migrateAwardInspirationRollType() {
   const rollTypes = getSetting(CONSTANTS.INSPIRATION.SETTING.AWARD_INSPIRATION_ROLL_TYPES.KEY);
   if ( !rollTypes ) return true;
   const newRollTypes = foundry.utils.deepClone(rollTypes);
+
+  if ( newRollTypes.rollAbilitySave ) {
+    newRollTypes.rollSavingThrow = newRollTypes.rollAbilitySave;
+    delete newRollTypes.rollAbilitySave;
+  }
+
   if ( newRollTypes.rollAbilityTest ) {
     newRollTypes.rollAbilityCheck = newRollTypes.rollAbilityTest;
     delete newRollTypes.rollAbilityTest;
   }
+
   await setSetting(CONSTANTS.INSPIRATION.SETTING.AWARD_INSPIRATION_ROLL_TYPES.KEY, newRollTypes);
   return true;
 }
