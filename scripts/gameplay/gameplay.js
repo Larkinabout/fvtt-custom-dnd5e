@@ -332,11 +332,12 @@ export function setHitDiceRollFormula(actor, item, rollData, messageData) {
  * @param {object} data The data
  */
 export function modifyHitPointsFlowDialog(app, html, data) {
+  const element = (html instanceof jQuery) ? html[0] : html;
   const minimumValue = getSetting(CONSTANTS.LEVEL_UP.HIT_POINTS.REROLL.MINIMUM_VALUE.SETTING.KEY);
   if ( minimumValue > 1 ) {
     const rerollOnce = getSetting(CONSTANTS.LEVEL_UP.HIT_POINTS.REROLL.ONCE.SETTING.KEY);
     const note = (rerollOnce) ? "CUSTOM_DND5E.dialog.levelUpHitPointsRerollOnce.note" : "CUSTOM_DND5E.dialog.levelUpHitPointsRerollForever.note";
-    const h3 = html.querySelector("form h3");
+    const h3 = element.querySelector("form h3");
     const p = document.createElement("p");
     p.classList.add("custom-dnd5e-advice", "notes", "hp-note");
     p.textContent = game.i18n.format(note, { minimumValue });
@@ -344,7 +345,7 @@ export function modifyHitPointsFlowDialog(app, html, data) {
   }
 
   if ( !getSetting(CONSTANTS.LEVEL_UP.HIT_POINTS.SHOW_TAKE_AVERAGE.SETTING.KEY) ) {
-    const averageLabel = html.querySelector(".averageLabel") ?? html.querySelector(".average-label");
+    const averageLabel = element.querySelector(".averageLabel") ?? element.querySelector(".average-label");
 
     if ( averageLabel ) {
       averageLabel.innerHTML = "";
