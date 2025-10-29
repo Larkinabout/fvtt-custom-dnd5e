@@ -115,8 +115,9 @@ function attachCursorLabelListeners() {
  * @param {object} data Actor sheet data.
  */
 function attachAppListeners(app, html, data) {
-  html.addEventListener("pointermove", handleCursorMove);
-  html.addEventListener("pointermove", updateCursorLabelPosition);
+  const element = ( html instanceof jQuery ) ? html[0] : html;
+  element.addEventListener("pointermove", handleCursorMove);
+  element.addEventListener("pointermove", updateCursorLabelPosition);
 }
 
 /* -------------------------------------------- */
