@@ -53,6 +53,7 @@ import { register as registerTokenBorder } from "./token-border.js";
 import { register as registerTokenEffects } from "./token-effects.js";
 import { register as registerTools, setConfig as setTools } from "./configurations/tools.js";
 import { register as registerToolProficiencies, setConfig as setToolProficiencies } from "./configurations/tool-proficiencies.js";
+import { register as registerToolTypes, setConfig as setToolTypes } from "./configurations/tool-types.js";
 import { register as registerWeaponIds, setConfig as setWeaponIds } from "./configurations/weapon-ids.js";
 import { register as registerWeaponProficiencies, setConfig as setWeaponProficiencies } from "./configurations/weapon-proficiencies.js";
 import { patchModifyTokenAttribute } from "./patches/actor-modify-token-attribute.js";
@@ -138,6 +139,7 @@ Hooks.on("init", async () => {
   registerSpellSchools();
   registerTools();
   registerToolProficiencies();
+  registerToolTypes();
   registerWeaponIds();
   registerWeaponProficiencies();
   registerMisc();
@@ -220,6 +222,7 @@ Hooks.on("ready", async () => {
   setSpellSchools(getSetting(CONSTANTS.SPELL_SCHOOLS.SETTING.CONFIG.KEY));
   setTools(getSetting(CONSTANTS.TOOLS.SETTING.CONFIG.KEY));
   setToolProficiencies(getSetting(CONSTANTS.TOOL_PROFICIENCIES.SETTING.CONFIG.KEY));
+  setToolTypes(getSetting(CONSTANTS.TOOL_TYPES.SETTING.CONFIG.KEY));
   setWeaponIds(getSetting(CONSTANTS.WEAPON_IDS.SETTING.CONFIG.KEY));
   setWeaponProficiencies(getSetting(CONSTANTS.WEAPON_PROFICIENCIES.SETTING.CONFIG.KEY));
   setMaxLevel(getSetting(CONSTANTS.MAX_LEVEL.SETTING.KEY));

@@ -33,6 +33,7 @@ import { resetConfigSetting as resetSenses, setConfig as setSenses } from "../co
 import { resetConfigSetting as resetSkills, setConfig as setSkills } from "../configurations/skills.js";
 import { resetConfigSetting as resetSpellSchools, setConfig as setSpellSchools } from "../configurations/spell-schools.js";
 import { resetConfigSetting as resetTools, setConfig as setTools } from "../configurations/tools.js";
+import { resetConfigSetting as resetToolTypes, setConfig as setToolTypes } from "../configurations/tool-types.js";
 import { resetConfigSetting as resetWeaponIds, setConfig as setWeaponIds } from "../configurations/weapon-ids.js";
 
 const listClass = `${MODULE.ID}-list`;
@@ -1079,6 +1080,44 @@ export class ToolsForm extends IdForm {
     id: `${MODULE.ID}-tools-form`,
     window: {
       title: "CUSTOM_DND5E.form.tools.title"
+    }
+  };
+}
+
+/* -------------------------------------------- */
+
+/**
+ * Class representing the Tool Types Form.
+ * @extends ConfigForm
+ */
+export class ToolTypesForm extends ConfigForm {
+  /**
+   * Constructor for ToolTypesForm.
+   */
+  constructor() {
+    super();
+    this.editInList = true;
+    this.requiresReload = false;
+    this.enableConfigKey = CONSTANTS.TOOL_TYPES.SETTING.ENABLE.KEY;
+    this.settingKey = CONSTANTS.TOOL_TYPES.SETTING.CONFIG.KEY;
+    this.resetConfigSetting = resetToolTypes;
+    this.setConfig = setToolTypes;
+    this.configKey = "toolTypes";
+    this.headerButton = JOURNAL_HELP_BUTTON;
+    this.headerButton.uuid = CONSTANTS.TOOL_TYPES.UUID;
+  }
+
+  /* -------------------------------------------- */
+
+  /**
+   * Default options for the form.
+   *
+   * @type {object}
+   */
+  static DEFAULT_OPTIONS = {
+    id: `${MODULE.ID}-tool-types-form`,
+    window: {
+      title: "CUSTOM_DND5E.form.toolTypes.title"
     }
   };
 }

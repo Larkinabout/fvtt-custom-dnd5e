@@ -919,6 +919,25 @@ export const CONSTANTS = {
     },
     UUID: "Compendium.custom-dnd5e.custom-dnd5e-journals.JournalEntry.B48iqFBddUikMMer.JournalEntryPage.Ls4Rn45UNhTBagHD"
   },
+  TOOL_TYPES: {
+    ID: "tool-types",
+    MENU: {
+      KEY: "tool-types-menu",
+      HINT: "CUSTOM_DND5E.menu.toolTypes.hint",
+      ICON: "fas fa-hammer-brush",
+      LABEL: "CUSTOM_DND5E.menu.toolTypes.label",
+      NAME: "CUSTOM_DND5E.menu.toolTypes.name"
+    },
+    SETTING: {
+      ENABLE: {
+        KEY: "enable-tool-types"
+      },
+      CONFIG: {
+        KEY: "tool-types"
+      }
+    },
+    UUID: "Compendium.custom-dnd5e.custom-dnd5e-journals.JournalEntry.B48iqFBddUikMMer.JournalEntryPage.Jly3oGH0ntybdpBu"
+  },
   UNCONSCIOUS: {
     SETTING: {
       APPLY_UNCONSCIOUS: {
