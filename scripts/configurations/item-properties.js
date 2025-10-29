@@ -117,6 +117,12 @@ export function setConfig(settingData = null) {
   if ( !getSetting(constants.SETTING.ENABLE.KEY) ) return;
   if ( checkEmpty(settingData) ) return handleEmptyData();
 
+  const itemTypesSet = new Set(
+    Object.keys(CONFIG.CUSTOM_DND5E.validProperties),
+    Object.keys(CONFIG.DND5E.validProperties)
+  );
+  const itemTypes = [...itemTypesSet];
+
   // Include item properties added by other modules
   Object.entries(CONFIG.DND5E[configKey]).forEach(([id, value]) => {
     if ( !settingData[id] ) {
@@ -143,7 +149,7 @@ export function setConfig(settingData = null) {
     CONFIG.DND5E[configKey] = itemPropertiesConfigData;
   }
 
-  setValidProperties(mergedSettingData);
+  setValidProperties(mergedSettingData, itemTypes);
 }
 
 /* -------------------------------------------- */
@@ -196,13 +202,9 @@ function buildItemPropertiesConfigEntry(data) {
 /**
  * Set valid item properties.
  * @param {object} settingData The setting data
+ * @param {string[]} itemTypes The item types
  */
-function setValidProperties(settingData) {
-  const itemTypesSet = new Set(
-    Object.keys(CONFIG.CUSTOM_DND5E.validProperties),
-    Object.keys(CONFIG.DND5E.validProperties)
-  );
-  const itemTypes = [...itemTypesSet];
+function setValidProperties(settingData, itemTypes) {
 
   const validProperties = {};
 
