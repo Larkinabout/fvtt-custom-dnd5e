@@ -43,6 +43,7 @@ import { register as registerItemProperties, setConfig as setItemProperties } fr
 import { register as registerItemRarity, setConfig as setItemRarity } from "./configurations/item-rarity.js";
 import { register as registerItemSheet } from "./item-sheet.js";
 import { register as registerLanguages, setConfig as setLanguages } from "./configurations/languages.js";
+import { register as registerLootTypes, setConfig as setLootTypes } from "./configurations/loot-types.js";
 import { register as registerMigration, migrate } from "./migration.js";
 import { register as registerMisc, setMaxLevel } from "./misc.js";
 import { register as registerRolls } from "./rolls.js";
@@ -54,7 +55,6 @@ import { register as registerTokenBorder } from "./token-border.js";
 import { register as registerTokenEffects } from "./token-effects.js";
 import { register as registerTools, setConfig as setTools } from "./configurations/tools.js";
 import { register as registerToolProficiencies, setConfig as setToolProficiencies } from "./configurations/tool-proficiencies.js";
-import { register as registerToolTypes, setConfig as setToolTypes } from "./configurations/tool-types.js";
 import { register as registerWeaponIds, setConfig as setWeaponIds } from "./configurations/weapon-ids.js";
 import { register as registerWeaponProficiencies, setConfig as setWeaponProficiencies } from "./configurations/weapon-proficiencies.js";
 import { patchModifyTokenAttribute } from "./patches/actor-modify-token-attribute.js";
@@ -135,13 +135,13 @@ Hooks.on("init", async () => {
   registerItemRarity();
   registerItemSheet();
   registerLanguages();
+  registerLootTypes();
   registerRolls();
   registerSenses();
   registerSkills();
   registerSpellSchools();
   registerTools();
   registerToolProficiencies();
-  registerToolTypes();
   registerWeaponIds();
   registerWeaponProficiencies();
   registerMisc();
@@ -222,10 +222,10 @@ Hooks.on("ready", async () => {
     setItemActivationCostTypes(getSetting(CONSTANTS.ITEM_ACTIVATION_COST_TYPES.SETTING.CONFIG.KEY));
   }
   setItemProperties(getSetting(CONSTANTS.ITEM_PROPERTIES.SETTING.CONFIG.KEY));
+  setLootTypes(getSetting(CONSTANTS.LOOT_TYPES.SETTING.CONFIG.KEY));
   setSpellSchools(getSetting(CONSTANTS.SPELL_SCHOOLS.SETTING.CONFIG.KEY));
   setTools(getSetting(CONSTANTS.TOOLS.SETTING.CONFIG.KEY));
   setToolProficiencies(getSetting(CONSTANTS.TOOL_PROFICIENCIES.SETTING.CONFIG.KEY));
-  setToolTypes(getSetting(CONSTANTS.TOOL_TYPES.SETTING.CONFIG.KEY));
   setWeaponIds(getSetting(CONSTANTS.WEAPON_IDS.SETTING.CONFIG.KEY));
   setWeaponProficiencies(getSetting(CONSTANTS.WEAPON_PROFICIENCIES.SETTING.CONFIG.KEY));
   setMaxLevel(getSetting(CONSTANTS.MAX_LEVEL.SETTING.KEY));

@@ -606,7 +606,7 @@ export const CONSTANTS = {
     MENU: {
       KEY: "item-rarity-menu",
       HINT: "CUSTOM_DND5E.menu.itemRarity.hint",
-      ICON: "fas fa-treasure-chest",
+      ICON: "fas fa-gem",
       LABEL: "CUSTOM_DND5E.menu.itemRarity.label",
       NAME: "CUSTOM_DND5E.menu.itemRarity.name"
     },
@@ -678,6 +678,25 @@ export const CONSTANTS = {
         }
       }
     }
+  },
+  LOOT_TYPES: {
+    ID: "lootTypes",
+    MENU: {
+      KEY: "loot-types-menu",
+      HINT: "CUSTOM_DND5E.menu.lootTypes.hint",
+      ICON: "fas fa-treasure-chest",
+      LABEL: "CUSTOM_DND5E.menu.lootTypes.label",
+      NAME: "CUSTOM_DND5E.menu.lootTypes.name"
+    },
+    SETTING: {
+      ENABLE: {
+        KEY: "enable-loot-types"
+      },
+      CONFIG: {
+        KEY: "loot-types"
+      }
+    },
+    UUID: "Compendium.custom-dnd5e.custom-dnd5e-journals.JournalEntry.B48iqFBddUikMMer.JournalEntryPage.Jly3oGH0ntybdpBu"
   },
   MAX_ABILITY_SCORE: {
     SETTING: {
@@ -920,7 +939,7 @@ export const CONSTANTS = {
     MENU: {
       KEY: "tool-proficiencies-menu",
       HINT: "CUSTOM_DND5E.menu.toolProficiencies.hint",
-      ICON: "fas fa-trowel-bricks",
+      ICON: "fas fa-hammer-brush",
       LABEL: "CUSTOM_DND5E.menu.toolProficiencies.label",
       NAME: "CUSTOM_DND5E.menu.toolProficiencies.name"
     },
@@ -937,25 +956,6 @@ export const CONSTANTS = {
       LIST: "modules/custom-dnd5e/templates/config-edit-in-list.hbs"
     },
     UUID: "Compendium.custom-dnd5e.custom-dnd5e-journals.JournalEntry.B48iqFBddUikMMer.JournalEntryPage.Ls4Rn45UNhTBagHD"
-  },
-  TOOL_TYPES: {
-    ID: "tool-types",
-    MENU: {
-      KEY: "tool-types-menu",
-      HINT: "CUSTOM_DND5E.menu.toolTypes.hint",
-      ICON: "fas fa-hammer-brush",
-      LABEL: "CUSTOM_DND5E.menu.toolTypes.label",
-      NAME: "CUSTOM_DND5E.menu.toolTypes.name"
-    },
-    SETTING: {
-      ENABLE: {
-        KEY: "enable-tool-types"
-      },
-      CONFIG: {
-        KEY: "tool-types"
-      }
-    },
-    UUID: "Compendium.custom-dnd5e.custom-dnd5e-journals.JournalEntry.B48iqFBddUikMMer.JournalEntryPage.Jly3oGH0ntybdpBu"
   },
   UNCONSCIOUS: {
     SETTING: {

@@ -795,7 +795,7 @@
       "image": {},
       "text": {
         "format": 1,
-        "content": "<p>Located in <strong>Game Settings</strong> &gt; <strong>Configure Settings</strong> &gt; <strong>Custom D&amp;D 5e</strong> &gt; <strong>Configure Weapons</strong></p><h3>Create a Weapon</h3><ol><li><p>Click <strong>Create New</strong>.</p></li><li><p>Enter a <strong>Key</strong>.</p></li><li><p>Create a base item for the weapon.</p><article class=\"custom-dnd5e-note\"><header><img src=\"modules/custom-dnd5e/media/icons/note.svg\" /><p>Note</p></header><p>Base weapon details, including its Weapon Type (e.g., Simple Melee, Simple Ranged, Martial Melee, etc.), are contained within an item stored within a compendium. To create a new tool, you will need to create an Item compendium and create a base item within it.</p></article></li><li><p>Paste the item's <strong>UUID</strong>.</p><article class=\"custom-dnd5e-tip\"><header><img src=\"modules/custom-dnd5e/media/icons/tip.svg\" /><p>Tip</p></header><p>You can copy an item's UUID by opening up the item and left-clicking the passport icon in the window's header.</p></article></li><li><p>Click <strong>Save and Close</strong>.</p></li></ol><h4>Example Weapon</h4><table><tbody><tr><td style=\"min-width:120px\" data-colwidth=\"272\"><p><strong>Property</strong></p></td><td><p><strong>Value</strong></p></td></tr><tr><td data-colwidth=\"272\"><p>Key</p></td><td><p>stiletto</p></td></tr><tr><td data-colwidth=\"272\"><p>ID</p></td><td><p>Compendium.world.my-items.Item.Hyd53SduzXC6DQy0</p></td></tr></tbody></table>"
+        "content": "<p>Located in <strong>Game Settings</strong> &gt; <strong>Configure Settings</strong> &gt; <strong>Custom D&amp;D 5e</strong> &gt; <strong>Configure Weapons</strong></p><h3>Create a Weapon</h3><ol><li><p>Click <strong>Create New</strong>.</p></li><li><p>Enter a <strong>Key</strong>.</p></li><li><p>Create a base item for the weapon.</p><article class=\"custom-dnd5e-note\"><header><img src=\"modules/custom-dnd5e/media/icons/note.svg\" /><p>Note</p></header><p>Base weapon details, including its Weapon Type (e.g., Simple Melee, Simple Ranged, Martial Melee, etc.), are contained within an item stored within a compendium. To create a new weapon, you will need to create an Item compendium and create a base item within it.</p></article></li><li><p>Paste the item's <strong>UUID</strong>.</p><article class=\"custom-dnd5e-tip\"><header><img src=\"modules/custom-dnd5e/media/icons/tip.svg\" /><p>Tip</p></header><p>You can copy an item's UUID by opening up the item and left-clicking the passport icon in the window's header.</p></article></li><li><p>Click <strong>Save and Close</strong>.</p></li></ol><h4>Example Weapon</h4><table><tbody><tr><td style=\"min-width:120px\" data-colwidth=\"272\"><p><strong>Property</strong></p></td><td><p><strong>Value</strong></p></td></tr><tr><td data-colwidth=\"272\"><p>Key</p></td><td><p>stiletto</p></td></tr><tr><td data-colwidth=\"272\"><p>ID</p></td><td><p>Compendium.world.my-items.Item.Hyd53SduzXC6DQy0</p></td></tr></tbody></table>"
       },
       "video": {
         "controls": true,
@@ -810,12 +810,12 @@
       "_stats": {
         "compendiumSource": null,
         "duplicateSource": null,
-        "coreVersion": "13.342",
+        "coreVersion": "13.348",
         "systemId": "dnd5e",
         "systemVersion": "4.0.1",
         "createdTime": 1726656205177,
-        "modifiedTime": 1738617852296,
-        "lastModifiedBy": "JdWLPbQd9x1aeEfz",
+        "modifiedTime": 1761769697889,
+        "lastModifiedBy": "5bwQyYIyVQxjjJ3v",
         "exportSource": null
       },
       "category": null,
@@ -926,12 +926,12 @@
       "_stats": {
         "compendiumSource": null,
         "duplicateSource": "Compendium.custom-dnd5e.custom-dandd-5e.JournalEntry.B48iqFBddUikMMer.JournalEntryPage.qkB3382uO7YUUApw",
-        "coreVersion": "13.342",
+        "coreVersion": "13.348",
         "systemId": "dnd5e",
         "systemVersion": "4.0.1",
         "createdTime": 1726662490438,
-        "modifiedTime": 1726662866895,
-        "lastModifiedBy": "0wJRsV2r9Hv1a7q0",
+        "modifiedTime": 1761762835636,
+        "lastModifiedBy": "5bwQyYIyVQxjjJ3v",
         "exportSource": null
       },
       "_id": "OgMhctYM5NFh8neL",
@@ -1137,8 +1137,8 @@
       "_key": "!journal.pages!B48iqFBddUikMMer.sRMUy8oNAZNCQOG0"
     },
     {
-      "sort": 2075000,
-      "name": "Tool Types",
+      "sort": 1525000,
+      "name": "Loot Types",
       "type": "text",
       "system": {},
       "title": {
@@ -1148,7 +1148,7 @@
       "image": {},
       "text": {
         "format": 1,
-        "content": "<p>Located in <strong>Game Settings</strong> &gt; <strong>Configure Settings</strong> &gt; <strong>Custom D&amp;D 5e</strong> &gt; <strong>Configure Tool Types</strong></p><h3>Create an Item Rarity</h3><ol><li><p>Click <strong>Create New</strong>.</p></li><li><p>Enter a <strong>Key</strong>.</p></li><li><p>Enter a <strong>Label</strong>.</p></li><li><p>Click <strong>Save and Close</strong>.</p></li></ol><h4>Example Tools</h4><table><tbody><tr><td style=\"min-width:120px\" data-colwidth=\"272\"><p><strong>Property</strong></p></td><td><p><strong>Value</strong></p></td></tr><tr><td data-colwidth=\"272\"><p>Key</p></td><td><p>kit</p></td></tr><tr><td data-colwidth=\"272\"><p>Label</p></td><td><p>Kits</p></td></tr></tbody></table>"
+        "content": "<p>Located in <strong>Game Settings</strong> &gt; <strong>Configure Settings</strong> &gt; <strong>Custom D&amp;D 5e</strong> &gt; <strong>Configure Loot Types</strong></p><h3>Create a Loot Type</h3><ol><li><p>Click <strong>Create New</strong>.</p></li><li><p>Enter a <strong>Key</strong>.</p></li><li><p>Enter a <strong>Label</strong>.</p></li><li><p>Click <strong>Save and Close</strong>.</p></li></ol><h4>Example Tools</h4><table><tbody><tr><td style=\"min-width:120px\" data-colwidth=\"272\"><p><strong>Property</strong></p></td><td><p><strong>Value</strong></p></td></tr><tr><td data-colwidth=\"272\"><p>Key</p></td><td><p>contraband</p></td></tr><tr><td data-colwidth=\"272\"><p>Label</p></td><td><p>Contraband</p></td></tr></tbody></table>"
       },
       "video": {
         "controls": true,
@@ -1169,7 +1169,7 @@
         "systemId": "dnd5e",
         "systemVersion": "5.1.10",
         "createdTime": 1761761136769,
-        "modifiedTime": 1761761206662,
+        "modifiedTime": 1761819008889,
         "lastModifiedBy": "5bwQyYIyVQxjjJ3v"
       },
       "category": null,
@@ -1215,6 +1215,46 @@
       "category": null,
       "_id": "dgX7G9bkLoEif6pk",
       "_key": "!journal.pages!B48iqFBddUikMMer.dgX7G9bkLoEif6pk"
+    },
+    {
+      "sort": 350000,
+      "name": "Ammunitions",
+      "type": "text",
+      "system": {},
+      "title": {
+        "show": true,
+        "level": 1
+      },
+      "image": {},
+      "text": {
+        "format": 1,
+        "content": "<p>Located in <strong>Game Settings</strong> &gt; <strong>Configure Settings</strong> &gt; <strong>Custom D&amp;D 5e</strong> &gt; <strong>Configure Ammunitions</strong></p><h3>Create an Ammunition</h3><ol><li><p>Click <strong>Create New</strong>.</p></li><li><p>Enter a <strong>Key</strong>.</p></li><li><p>Create a base item for the ammunition.</p><article class=\"custom-dnd5e-note\"><header><img src=\"modules/custom-dnd5e/media/icons/note.svg\" /><p>Note</p></header><p>Base ammunition details, including its Ammunition Type (e.g., Arrow; Bolt; Bullet, Firearm, etc.), are contained within an item stored within a compendium. To create a new ammunition, you will need to create an Item compendium and create a base item within it.</p></article></li><li><p>Paste the item's <strong>UUID</strong>.</p><article class=\"custom-dnd5e-tip\"><header><img src=\"modules/custom-dnd5e/media/icons/tip.svg\" /><p>Tip</p></header><p>You can copy an item's UUID by opening up the item and left-clicking the passport icon in the window's header.</p></article></li><li><p>Click <strong>Save and Close</strong>.</p></li></ol><h4>Example Ammunition</h4><table><tbody><tr><td style=\"min-width:120px\" data-colwidth=\"272\"><p><strong>Property</strong></p></td><td><p><strong>Value</strong></p></td></tr><tr><td data-colwidth=\"272\"><p>Key</p></td><td><p>explosive</p></td></tr><tr><td data-colwidth=\"272\"><p>ID</p></td><td><p>Compendium.world.my-items.Item.RNjtwII1uIgO0PNv</p></td></tr></tbody></table>"
+      },
+      "video": {
+        "controls": true,
+        "volume": 0.5
+      },
+      "src": null,
+      "ownership": {
+        "default": -1,
+        "0wJRsV2r9Hv1a7q0": 3,
+        "5bwQyYIyVQxjjJ3v": 3
+      },
+      "flags": {},
+      "_stats": {
+        "compendiumSource": null,
+        "duplicateSource": "Compendium.custom-dnd5e.custom-dnd5e-journals.JournalEntry.B48iqFBddUikMMer.JournalEntryPage.CeUiNZoH8giNsqNR",
+        "exportSource": null,
+        "coreVersion": "13.348",
+        "systemId": "dnd5e",
+        "systemVersion": "5.1.10",
+        "createdTime": 1761769380285,
+        "modifiedTime": 1761769745074,
+        "lastModifiedBy": "5bwQyYIyVQxjjJ3v"
+      },
+      "category": null,
+      "_id": "4uLAmx9CoUEOGAuT",
+      "_key": "!journal.pages!B48iqFBddUikMMer.4uLAmx9CoUEOGAuT"
     }
   ],
   "folder": null,

@@ -30,11 +30,11 @@ import { resetConfigSetting as resetItemActivationCostTypes, setConfig as setIte
 import { resetConfigSetting as resetItemProperties, setConfig as setItemProperties } from "../configurations/item-properties.js";
 import { resetConfigSetting as resetItemRarity, setConfig as setItemRarity } from "../configurations/item-rarity.js";
 import { resetConfigSetting as resetLanguages, setConfig as setLanguages } from "../configurations/languages.js";
+import { resetConfigSetting as resetLootTypes, setConfig as setLootTypes } from "../configurations/loot-types.js";
 import { resetConfigSetting as resetSenses, setConfig as setSenses } from "../configurations/senses.js";
 import { resetConfigSetting as resetSkills, setConfig as setSkills } from "../configurations/skills.js";
 import { resetConfigSetting as resetSpellSchools, setConfig as setSpellSchools } from "../configurations/spell-schools.js";
 import { resetConfigSetting as resetTools, setConfig as setTools } from "../configurations/tools.js";
-import { resetConfigSetting as resetToolTypes, setConfig as setToolTypes } from "../configurations/tool-types.js";
 import { resetConfigSetting as resetWeaponIds, setConfig as setWeaponIds } from "../configurations/weapon-ids.js";
 
 const listClass = `${MODULE.ID}-list`;
@@ -974,6 +974,44 @@ export class LanguagesForm extends ConfigForm {
 /* -------------------------------------------- */
 
 /**
+ * Class representing the Loot Types Form.
+ * @extends ConfigForm
+ */
+export class LootTypesForm extends ConfigForm {
+  /**
+   * Constructor for ItemRarityForm.
+   */
+  constructor() {
+    super();
+    this.editInList = true;
+    this.requiresReload = false;
+    this.enableConfigKey = CONSTANTS.LOOT_TYPES.SETTING.ENABLE.KEY;
+    this.settingKey = CONSTANTS.LOOT_TYPES.SETTING.CONFIG.KEY;
+    this.resetConfigSetting = resetLootTypes;
+    this.setConfig = setLootTypes;
+    this.configKey = "lootTypes";
+    this.headerButton = JOURNAL_HELP_BUTTON;
+    this.headerButton.uuid = CONSTANTS.LOOT_TYPES.UUID;
+  }
+
+  /* -------------------------------------------- */
+
+  /**
+   * Default options for the form.
+   *
+   * @type {object}
+   */
+  static DEFAULT_OPTIONS = {
+    id: `${MODULE.ID}-loot-types-form`,
+    window: {
+      title: "CUSTOM_DND5E.form.lootTypes.title"
+    }
+  };
+}
+
+/* -------------------------------------------- */
+
+/**
  * Class representing the Senses Form.
  * @extends ConfigForm
  */
@@ -1123,44 +1161,6 @@ export class ToolsForm extends IdForm {
     id: `${MODULE.ID}-tools-form`,
     window: {
       title: "CUSTOM_DND5E.form.tools.title"
-    }
-  };
-}
-
-/* -------------------------------------------- */
-
-/**
- * Class representing the Tool Types Form.
- * @extends ConfigForm
- */
-export class ToolTypesForm extends ConfigForm {
-  /**
-   * Constructor for ToolTypesForm.
-   */
-  constructor() {
-    super();
-    this.editInList = true;
-    this.requiresReload = false;
-    this.enableConfigKey = CONSTANTS.TOOL_TYPES.SETTING.ENABLE.KEY;
-    this.settingKey = CONSTANTS.TOOL_TYPES.SETTING.CONFIG.KEY;
-    this.resetConfigSetting = resetToolTypes;
-    this.setConfig = setToolTypes;
-    this.configKey = "toolTypes";
-    this.headerButton = JOURNAL_HELP_BUTTON;
-    this.headerButton.uuid = CONSTANTS.TOOL_TYPES.UUID;
-  }
-
-  /* -------------------------------------------- */
-
-  /**
-   * Default options for the form.
-   *
-   * @type {object}
-   */
-  static DEFAULT_OPTIONS = {
-    id: `${MODULE.ID}-tool-types-form`,
-    window: {
-      title: "CUSTOM_DND5E.form.toolTypes.title"
     }
   };
 }

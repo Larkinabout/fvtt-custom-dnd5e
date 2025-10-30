@@ -7,10 +7,10 @@ import {
   registerSetting,
   resetDnd5eConfig,
   resetSetting } from "../utils.js";
-import { ToolTypesForm } from "../forms/config-form.js";
+import { LootTypesForm } from "../forms/config-form.js";
 
-const constants = CONSTANTS.TOOL_TYPES;
-const configKey = "toolTypes";
+const constants = CONSTANTS.LOOT_TYPES;
+const configKey = "lootTypes";
 
 /**
  * Register settings and hooks.
@@ -32,7 +32,7 @@ function registerSettings() {
       label: game.i18n.localize(constants.MENU.LABEL),
       name: game.i18n.localize(constants.MENU.NAME),
       icon: constants.MENU.ICON,
-      type: ToolTypesForm,
+      type: LootTypesForm,
       restricted: true,
       scope: "world"
     }
@@ -84,7 +84,7 @@ export async function resetConfigSetting() {
 /* -------------------------------------------- */
 
 /**
- * Set CONFIG.DND5E.toolTypes.
+ * Set CONFIG.DND5E.lootTypes.
  * @param {object} [settingData=null] The setting data
  * @returns {void}
  */
@@ -100,7 +100,7 @@ export function setConfig(settingData = null) {
 
   const configData = buildConfig(mergedSettingData);
 
-  Hooks.callAll("customDnd5e.setToolTypesConfig", configData);
+  Hooks.callAll("customDnd5e.setLootTypesConfig", configData);
 
   if ( configData ) {
     CONFIG.DND5E[configKey] = configData;
@@ -141,5 +141,7 @@ function buildConfig(settingData) {
  * @returns {object} The config entry
  */
 function buildConfigEntry(data) {
-  return game.i18n.localize(data.label || data);
+  return {
+    label: game.i18n.localize(data.label || data),
+  };
 }
