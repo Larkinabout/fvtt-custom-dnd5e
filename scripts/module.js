@@ -35,6 +35,7 @@ import { register as registerCurrency, setConfig as setCurrency } from "./config
 import { register as registerDamageTypes, setConfig as setDamageTypes } from "./configurations/damage-types.js";
 import { register as registerDebug } from "./debug.js";
 import { register as registerEncumbrance, setConfig as setEncumbrance } from "./configurations/encumbrance.js";
+import { register as registerEquipmentTypes, setConfig as setEquipmentTypes } from "./configurations/misc-equipment-types.js";
 import { register as registerExhaustion } from "./gameplay/exhaustion.js";
 import { register as registerFeatureTypes, setConfig as setFeatureTypes } from "./configurations/feature-types.js";
 import { register as registerItemActionTypes, setConfig as setItemActionTypes } from "./configurations/item-action-types.js";
@@ -127,6 +128,7 @@ Hooks.on("init", async () => {
   registerCurrency();
   registerDamageTypes();
   registerEncumbrance();
+  registerEquipmentTypes();
   registerExhaustion();
   registerFeatureTypes();
   registerItemActionTypes();
@@ -215,6 +217,7 @@ Hooks.on("ready", async () => {
   setConsumableTypes(getSetting(CONSTANTS.CONSUMABLE_TYPES.SETTING.CONFIG.KEY));
   setCreatureTypes(getSetting(CONSTANTS.CREATURE_TYPES.SETTING.CONFIG.KEY));
   setDamageTypes(getSetting(CONSTANTS.DAMAGE_TYPES.SETTING.CONFIG.KEY));
+  setEquipmentTypes(getSetting(CONSTANTS.MISC_EQUIPMENT_TYPES.SETTING.CONFIG.KEY));
   setFeatureTypes(getSetting(CONSTANTS.FEATURE_TYPES.SETTING.CONFIG.KEY));
   const isV4 = foundry.utils.isNewerVersion(game.dnd5e.version, "3.3.1");
   if ( !isV4 ) {

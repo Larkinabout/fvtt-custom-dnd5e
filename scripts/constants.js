@@ -460,6 +460,25 @@ export const CONSTANTS = {
     },
     UUID: "Compendium.custom-dnd5e.custom-dnd5e-journals.JournalEntry.B48iqFBddUikMMer.JournalEntryPage.QK8bAMxx9x9IaTHl"
   },
+  MISC_EQUIPMENT_TYPES: {
+    ID: "miscEquipmentTypes",
+    MENU: {
+      KEY: "misc-equipment-types-menu",
+      HINT: "CUSTOM_DND5E.menu.miscEquipmentTypes.hint",
+      ICON: "fas fa-ring-diamond",
+      LABEL: "CUSTOM_DND5E.menu.miscEquipmentTypes.label",
+      NAME: "CUSTOM_DND5E.menu.miscEquipmentTypes.name"
+    },
+    SETTING: {
+      ENABLE: {
+        KEY: "enable-misc-equipment-types"
+      },
+      CONFIG: {
+        KEY: "misc-equipment-types"
+      }
+    },
+    UUID: "Compendium.custom-dnd5e.custom-dnd5e-journals.JournalEntry.B48iqFBddUikMMer.JournalEntryPage.koB9uAZtQ9f2n1f8"
+  },
   EXHAUSTION: {
     SETTING: {
       APPLY_EXHAUSTION_ON_ZERO_HP: {
