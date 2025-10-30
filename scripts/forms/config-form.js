@@ -670,7 +670,6 @@ export class CurrencyForm extends ConfigForm {
    */
   constructor() {
     super();
-    this.disableCreate = true;
     this.editForm = CurrencyEditForm;
     this.requiresReload = true;
     this.enableConfigKey = CONSTANTS.CURRENCY.SETTING.ENABLE.KEY;
