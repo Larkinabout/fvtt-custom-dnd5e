@@ -249,6 +249,23 @@
         </fieldset>
         <fieldset>
             <legend>
+                <span>{{localize "CUSTOM_DND5E.averageDamage"}}</span>
+                <button type="button" class="unbutton control-button" data-action="help" data-uuid="Compendium.custom-dnd5e.custom-dnd5e-journals.JournalEntry.ngr8w6WBycK59brj.JournalEntryPage.v2HNu6zP1mJYuxw0" data-tooltip="{{localize "CUSTOM_DND5E.openGuide"}}" aria-label="{{localize "CUSTOM_DND5E.openGuide"}}">
+                    <i class="fas fa-circle-info" inert></i>
+                </button>
+            </legend>
+            <div class="form-group">
+                <label>{{localize "CUSTOM_DND5E.form.gameplay.averageDamage.use.label"}}</label>
+                <div class="form-fields">
+                    <select id="custom-dnd5e-use-average-damage" name="useAverageDamage">
+                        {{selectOptions selects.averageDamage.choices selected=useAverageDamage localize=true}}
+                    </select>
+                </div>
+                <p class="hint">{{localize "CUSTOM_DND5E.form.gameplay.averageDamage.use.note"}}</p>
+            </div>
+        </fieldset>
+        <fieldset>
+            <legend>
                 <span>{{localize "CUSTOM_DND5E.mobDamage"}}</span>
                 <button type="button" class="unbutton control-button" data-action="help" data-uuid="Compendium.custom-dnd5e.custom-dnd5e-journals.JournalEntry.ngr8w6WBycK59brj.JournalEntryPage.dIs1nJrpCky0jFwT" data-tooltip="{{localize "CUSTOM_DND5E.openGuide"}}" aria-label="{{localize "CUSTOM_DND5E.openGuide"}}">
                     <i class="fas fa-circle-info" inert></i>

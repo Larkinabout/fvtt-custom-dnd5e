@@ -1,5 +1,6 @@
 import { CONSTANTS, SHEET_TYPE } from "../constants.js";
 import { updateBloodied } from "../configurations/bloodied.js";
+import { register as registerAverageDamage } from "./average-damage.js";
 import { register as registerMobDamage } from "./mob-damage.js";
 import { register as registerProbabilisticDamage } from "./probalistic-damage.js";
 import {
@@ -26,6 +27,7 @@ const constants = CONSTANTS.GAMEPLAY;
 export function register() {
   registerSettings();
   registerHooks();
+  registerAverageDamage();
   registerMobDamage();
   registerProbabilisticDamage();
 

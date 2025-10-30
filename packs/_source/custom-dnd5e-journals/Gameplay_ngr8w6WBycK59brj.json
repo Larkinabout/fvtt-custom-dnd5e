@@ -426,11 +426,11 @@
         "compendiumSource": "Compendium.custom-dnd5e.custom-dnd5e-journals.JournalEntry.xXEu642Urflb2Ekm.JournalEntryPage.dIs1nJrpCky0jFwT",
         "duplicateSource": null,
         "exportSource": null,
-        "coreVersion": "13.345",
+        "coreVersion": "13.348",
         "systemId": "dnd5e",
         "systemVersion": "5.0.4",
         "createdTime": 1753557964913,
-        "modifiedTime": 1753567875902,
+        "modifiedTime": 1761824313973,
         "lastModifiedBy": "5bwQyYIyVQxjjJ3v"
       },
       "_key": "!journal.pages!ngr8w6WBycK59brj.dIs1nJrpCky0jFwT"
@@ -473,6 +473,45 @@
       },
       "_id": "tWo28mw1ZAhLMqO5",
       "_key": "!journal.pages!ngr8w6WBycK59brj.tWo28mw1ZAhLMqO5"
+    },
+    {
+      "sort": 600000,
+      "name": "Average Damage",
+      "type": "text",
+      "system": {},
+      "title": {
+        "show": true,
+        "level": 1
+      },
+      "image": {},
+      "text": {
+        "format": 1,
+        "content": "<h2>Use Average Damage</h2><p>Choose whether character, NPCs or both will deal average damage, otherwise damage wil be rolled instead.</p>"
+      },
+      "video": {
+        "controls": true,
+        "volume": 0.5
+      },
+      "src": null,
+      "category": null,
+      "ownership": {
+        "default": -1,
+        "5bwQyYIyVQxjjJ3v": 3
+      },
+      "flags": {},
+      "_stats": {
+        "compendiumSource": "Compendium.custom-dnd5e.custom-dnd5e-journals.JournalEntry.xXEu642Urflb2Ekm.JournalEntryPage.dIs1nJrpCky0jFwT",
+        "duplicateSource": "Compendium.custom-dnd5e.custom-dnd5e-journals.JournalEntry.ngr8w6WBycK59brj.JournalEntryPage.dIs1nJrpCky0jFwT",
+        "exportSource": null,
+        "coreVersion": "13.348",
+        "systemId": "dnd5e",
+        "systemVersion": "5.1.10",
+        "createdTime": 1761824326863,
+        "modifiedTime": 1761824454246,
+        "lastModifiedBy": "5bwQyYIyVQxjjJ3v"
+      },
+      "_id": "v2HNu6zP1mJYuxw0",
+      "_key": "!journal.pages!ngr8w6WBycK59brj.v2HNu6zP1mJYuxw0"
     }
   ],
   "folder": null,

@@ -84,6 +84,7 @@ export class GameplayForm extends CustomDnd5eForm {
       rerollInitiativeEachRound: getSetting(CONSTANTS.INITIATIVE.SETTING.REROLL_INITIATIVE_EACH_ROUND.KEY),
       awardInspirationD20Value: getSetting(CONSTANTS.INSPIRATION.SETTING.AWARD_INSPIRATION_DICE_VALUE.KEY),
       awardInspirationRollTypes: getSetting(CONSTANTS.INSPIRATION.SETTING.AWARD_INSPIRATION_ROLL_TYPES.KEY),
+      useAverageDamage: getSetting(CONSTANTS.AVERAGE_DAMAGE.SETTING.USE.KEY),
       enableMobDamage: getSetting(CONSTANTS.MOB_DAMAGE.SETTING.ENABLE.KEY),
       useAverageMobDamage: getSetting(CONSTANTS.MOB_DAMAGE.SETTING.USE_AVERAGE_DAMAGE.KEY),
       enableProbabilisticDamage: getSetting(CONSTANTS.PROBABILISTIC_DAMAGE.SETTING.ENABLE.KEY),
@@ -91,6 +92,14 @@ export class GameplayForm extends CustomDnd5eForm {
       proneRotation: getSetting(CONSTANTS.PRONE.SETTING.PRONE_ROTATION.KEY),
       useCampSupplies: getSetting(CONSTANTS.RESTING.SETTING.USE_CAMP_SUPPLIES.KEY),
       selects: {
+        averageDamage: {
+          choices: {
+            neither: "CUSTOM_DND5E.neither",
+            character: "CUSTOM_DND5E.playerCharacters",
+            npc: "CUSTOM_DND5E.npcs",
+            both: "CUSTOM_DND5E.both"
+          }
+        },
         deathSavesRollMode: {
           choices: {
             publicroll: "CHAT.RollPublic",
@@ -142,6 +151,7 @@ export class GameplayForm extends CustomDnd5eForm {
         resetSetting(CONSTANTS.INITIATIVE.SETTING.REROLL_INITIATIVE_EACH_ROUND.KEY),
         resetSetting(CONSTANTS.INSPIRATION.SETTING.AWARD_INSPIRATION_DICE_VALUE.KEY),
         resetSetting(CONSTANTS.INSPIRATION.SETTING.AWARD_INSPIRATION_ROLL_TYPES.KEY),
+        resetSetting(CONSTANTS.AVERAGE_DAMAGE.SETTING.USE.KEY),
         resetSetting(CONSTANTS.MOB_DAMAGE.SETTING.ENABLE.KEY),
         resetSetting(CONSTANTS.MOB_DAMAGE.SETTING.USE_AVERAGE_DAMAGE.KEY),
         resetSetting(CONSTANTS.PROBABILISTIC_DAMAGE.SETTING.ENABLE.KEY),
@@ -222,6 +232,7 @@ export class GameplayForm extends CustomDnd5eForm {
       setSetting(CONSTANTS.INSPIRATION.SETTING.AWARD_INSPIRATION_DICE_VALUE.KEY,
         formData.object.awardInspirationD20Value),
       setSetting(CONSTANTS.INSPIRATION.SETTING.AWARD_INSPIRATION_ROLL_TYPES.KEY, awardInspirationRollTypes),
+      setSetting(CONSTANTS.AVERAGE_DAMAGE.SETTING.USE.KEY, formData.object.useAverageDamage),
       setSetting(CONSTANTS.MOB_DAMAGE.SETTING.ENABLE.KEY, formData.object.enableMobDamage),
       setSetting(CONSTANTS.MOB_DAMAGE.SETTING.USE_AVERAGE_DAMAGE.KEY, formData.object.useAverageMobDamage),
       setSetting(CONSTANTS.PROBABILISTIC_DAMAGE.SETTING.ENABLE.KEY, formData.object.enableProbabilisticDamage),
