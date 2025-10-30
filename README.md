@@ -127,6 +127,18 @@ Award Inspiration when a set value is rolled for an ability check, attack roll, 
 
 </details>
 
+## Average Damage
+- When rolling damage, the average result is used.
+- Enable per actor type (Player Characters, NPCs or both)
+- When the associated attack roll is a critical hit, the average damage includes the critical damage.
+
+<details>
+    <summary>See Video</summary>
+
+![Custom D&D Average Damage](./.github/readme/custom-dnd5e-average-damage.gif)
+
+</details>
+
 ## Mob Damage
 - When attacking a single token with four or more identical tokens selected, the attack roll is replaced with a damage roll based on the **Mobs Average Results** table (Dungeon Master's Guide (2024), page 82).
 - Use average damage instead of rolling.
@@ -216,7 +228,34 @@ For help and advice on modifying a configuration, either click the info button i
 
 </details>
 
-- Configure abilities, activation costs (dnd5e 4+ only), actor sizes, armor, armor calculations, armor proficiencies, conditions, consumable types, currencies, damage types, encumbrance, item action types (dnd5e 3 only), item activation cost types (dnd5e 3 only), item properties, item rarity, languages, senses, skills, spell schools, tools, tool proficiencies, weapons, weapon proficiencies, max ability score and max level. 
+
+- **Abilities**: Strength, Dexterity, Constitution, etc.
+- **Activation costs**: Action, Bonus Action, Reaction, etc.
+- **Actor sizes**: Tiny, Small, Medium, etc.
+- **Armor**: Breastplate, Chain Mail, Leather, etc.
+- **Armor calculations**: Flat, Mage Armor, Unarmored Defense, etc.
+- **Armor proficiencies/types**: Light, Medium, Heavy, Shields, etc.
+- **Conditions/Status Effects**: Blinded, Charmed, Dead, etc.
+- **Consumable types**: Ammo, Food, Poison, etc.
+- **Creature types**: Aberration, Beast, Celestial, etc.
+- **Currencies**: Copper, Silver, Gold, etc.
+- **Damage types**: Acid, Bludgeoning, Fire, etc.
+- **Encumbrance**: Encumbrance labels, icons, thresholds, weight modifiers, etc.
+- **Equipment types**: Clothing, Ring, Rod, etc.
+- **Feature types**: Background, Class, Enchantment, etc.
+- **Item properties**: Adamantine, Finesse, Heavy, etc.
+- **Item rarity**: Common, Uncommon, Rare, etc.
+- **Languages**: Common,  Dwarvish, Elvish, etc.
+- **Loot types**: Art Object, Adventuring Gear, Gemstone, etc.
+- **Senses**: Blindsight, Darkvision, Tremorsense, etc.
+- **Skills**: Athletics, Acrobatics, Stealth, etc.
+- **Spell schools**: Abjuration, Conjuration, Divination, etc.
+- **Tools**: Alchemist's Supplies, Bagpipes, Brewer's Supplies, etc.
+- **Tool proficiencies/types**: Artisan's Tools, Gaming Set, Musical Instrument, etc.
+- **Weapons**: Dagger, Longsword, Shortbow, etc.
+- **Weapon proficiencies/types**: Improvised, Simple, Martial, etc.
+- **Max ability score**
+- **Max level**
 
 ## Configure Encumbrance
 <details>
