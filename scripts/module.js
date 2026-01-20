@@ -69,7 +69,11 @@ import { registerCharacterSheet } from "./sheets/character-sheet.js";
  * Initialize the module and register settings, hooks, and templates.
  */
 Hooks.on("init", async () => {
+  // Suppress deprecation warnings during deep clone
+  const originalWarn = console.warn;
+  console.warn = () => {};
   CONFIG.CUSTOM_DND5E = foundry.utils.deepClone(CONFIG.DND5E);
+  console.warn = originalWarn;
 
   const module = game.modules.get(MODULE.ID);
   module.api = {

@@ -29,6 +29,6 @@ function modifyTokenAttributePatch(attribute, value, isDelta, isBar) {
     else newValue = value;
     return item?.update({ "system.uses.spent": item.system.uses.max - newValue });
   }
-  return Object.getPrototypeOf(dnd5e.documents.Actor5e).prototype.modifyTokenAttribute.apply(this, args);
+  return Object.getPrototypeOf(dnd5e.documents.Actor5e).prototype.modifyTokenAttribute.apply(this, [attribute, value, isDelta, isBar]);
   // return super.modifyTokenAttribute(attribute, value, isDelta, isBar);
 }

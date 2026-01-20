@@ -281,7 +281,6 @@ function registerHooks() {
   Hooks.on("dnd5e.preRestCompleted", (actor, data) => updateDeathSaves("rest", actor, data));
   Hooks.on("dnd5e.preRollDeathSave", setDeathSavesRollMode);
   Hooks.on("dnd5e.rollAbilityCheck", (actor, roll, ability) => { awardInspiration("rollAbilityCheck", actor, roll); });
-  Hooks.on("dnd5e.rollAbilityTest", (actor, roll, ability) => { awardInspiration("rollAbilityTest", actor, roll); });
   Hooks.on("dnd5e.rollAttack", (item, roll, ability) => {
     awardInspiration("rollAttack", item, roll);
     // applyHighLowGround(item, roll, ability);
