@@ -8,7 +8,7 @@ import { register as registerActorSizes, setConfig as setActorSizes } from "./co
 import { register as registerArmorCalculations, setConfig as setArmorCalculations } from "./configurations/armor-calculations.js";
 import { register as registerArmorIds, setConfig as setArmorIds } from "./configurations/armor-ids.js";
 import { register as registerArmorProficiencies, setConfig as setArmorProficiencies } from "./configurations/armor-proficiencies.js";
-import { register as registerBloodied, setConfig as setBloodied } from "./configurations/bloodied.js";
+import { register as registerBloodied, setConfig as setBloodied, addBloodiedCondition } from "./configurations/bloodied.js";
 import { register as registerCampSupplies } from "./gameplay/camp-supplies.js";
 import { register as registerConditions, registerMenu as registerConditionsMenu, setConfig as setConditions } from "./configurations/conditions.js";
 import { register as registerConsumableTypes, setConfig as setConsumableTypes } from "./configurations/consumable-types.js";
@@ -218,6 +218,7 @@ Hooks.on("ready", async () => {
   setArmorProficiencies(getSetting(CONSTANTS.ARMOR_PROFICIENCIES.SETTING.CONFIG.KEY));
   setBloodied(getSetting(CONSTANTS.BLOODIED.SETTING.CONFIG.KEY));
   setConditions(getSetting(CONSTANTS.CONDITIONS.SETTING.CONFIG.KEY));
+  addBloodiedCondition();
   setConsumableTypes(getSetting(CONSTANTS.CONSUMABLE_TYPES.SETTING.CONFIG.KEY));
   setCreatureTypes(getSetting(CONSTANTS.CREATURE_TYPES.SETTING.CONFIG.KEY));
   setDamageTypes(getSetting(CONSTANTS.DAMAGE_TYPES.SETTING.CONFIG.KEY));
