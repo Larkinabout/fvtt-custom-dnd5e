@@ -20,6 +20,23 @@ export class ConfigEditForm extends CustomDnd5eForm {
     this.key = args.data.key;
     this.system = args.data.system;
     this.setting = args.setting;
+    this.settingProperty = null; // Set in subclass for nested settings (e.g., "orders")
+  }
+
+  /* -------------------------------------------- */
+
+  /**
+   * Get the data object containing the items (handles nested settings).
+   * @returns {object} The data object.
+   */
+  _getItemsData() {
+    if ( this.settingProperty ) {
+      if ( !this.setting[this.settingProperty] ) {
+        this.setting[this.settingProperty] = {};
+      }
+      return this.setting[this.settingProperty];
+    }
+    return this.setting;
   }
 
   /* -------------------------------------------- */
@@ -65,8 +82,9 @@ export class ConfigEditForm extends CustomDnd5eForm {
    * @returns {Promise<object>} The context data.
    */
   async _prepareContext() {
+    const itemsData = this._getItemsData();
     const context = {
-      ...this.setting[this.key],
+      ...itemsData[this.key],
       key: this.key,
       selects: this._getSelects()
     };
@@ -98,7 +116,8 @@ export class ConfigEditForm extends CustomDnd5eForm {
    */
   static async reset() {
     const reset = async () => {
-      this.setting[this.key] = this.getSettingDefault(this.key);
+      const itemsData = this._getItemsData();
+      itemsData[this.key] = this.getSettingDefault(this.key);
       await setSetting(this.settingKey, this.setting);
       this.setConfig(this.setting);
       this.render(true);
@@ -140,18 +159,29 @@ export class ConfigEditForm extends CustomDnd5eForm {
     let settingData = foundry.utils.deepClone(this.setting);
     const processedFormData = this.processFormData(formData);
 
-    if ( !settingData[oldKey] || oldKey === newKey ) {
+    // Get the target object (nested property or root)
+    let targetData = this.settingProperty ? settingData[this.settingProperty] : settingData;
+    if ( this.settingProperty && !targetData ) {
+      settingData[this.settingProperty] = {};
+      targetData = settingData[this.settingProperty];
+    }
+
+    if ( !targetData[oldKey] || oldKey === newKey ) {
       // Add new item or update existing one
-      settingData[newKey] = processedFormData[oldKey];
+      targetData[newKey] = processedFormData[oldKey];
     } else {
       // Rebuild object to preserve order while replacing old key with new key
       const updatedData = Object.fromEntries(
-        Object.entries(settingData).map(([key, value]) => [
+        Object.entries(targetData).map(([key, value]) => [
           (key === oldKey) ? newKey : key,
           (key === oldKey) ? processedFormData[key] : foundry.utils.deepClone(value)
         ])
       );
-      settingData = updatedData;
+      if ( this.settingProperty ) {
+        settingData[this.settingProperty] = updatedData;
+      } else {
+        settingData = updatedData;
+      }
     }
 
     await setSetting(this.settingKey, settingData);
@@ -188,13 +218,14 @@ export class ConfigEditForm extends CustomDnd5eForm {
    */
   validateFormData(formData) {
     const newKey = formData.object[`${this.key}.key`];
+    const itemsData = this._getItemsData();
 
     if ( !newKey.match(/^[0-9a-zA-Z]+$/) ) {
       Logger.error(`Key '${newKey}' must only contain alphanumeric characters`, true);
       return false;
     }
 
-    if ( this.key !== newKey && this.setting[newKey] ) {
+    if ( this.key !== newKey && itemsData[newKey] ) {
       Logger.error(`Key '${newKey}' already exists`, true);
       return false;
     }

@@ -166,17 +166,29 @@ export class CustomDnd5eForm extends HandlebarsApplicationMixin(ApplicationV2) {
     this.items = Array.from(this.element.querySelectorAll(itemClassSelector));
 
     this.items.forEach(item => {
-      // This.#dragDrop.forEach((d) => d.bind(item))
-      item.addEventListener("dragstart", this._onDragStart.bind(this));
-      item.addEventListener("dragleave", this._onDragLeave.bind(this));
-      item.addEventListener("dragend", this._onDragEnd.bind(this));
-      item.addEventListener("dragover", this._onDragOver.bind(this));
-      item.addEventListener("drop", this._onDrop.bind(this));
+      this._attachDragListeners(item);
 
       const checkbox = item.querySelector("input[type='checkbox']");
       checkbox?.addEventListener("change", this._onChangeInput.bind(this));
       if ( checkbox?.checked ) this._onToggleList(checkbox);
     });
+  }
+
+  /* -------------------------------------------- */
+
+  /**
+   * Attach drag event listeners to an item.
+   *
+   * @param {HTMLElement} item The item element to attach listeners to.
+   */
+  _attachDragListeners(item) {
+    const dragElement = item.querySelector(".custom-dnd5e-drag");
+
+    item.addEventListener("dragend", this._onDragEnd.bind(this));
+    item.addEventListener("dragleave", this._onDragLeave.bind(this));
+    item.addEventListener("dragover", this._onDragOver.bind(this));
+    item.addEventListener("drop", this._onDrop.bind(this));
+    dragElement?.addEventListener("dragstart", this._onDragStart.bind(this));
   }
 
   /* -------------------------------------------- */
@@ -367,12 +379,23 @@ export class CustomDnd5eForm extends HandlebarsApplicationMixin(ApplicationV2) {
 
     items.forEach(item => {
       const key = item.dataset?.key;
-      const lastKey = key?.split(".").pop();
+      const keyParts = key?.split(".") ?? [];
+      const lastKey = keyParts.pop();
       if ( !lastKey ) return;
 
       const parentKey = item.closest("ul")?.closest("li")?.dataset?.key;
 
-      const newKey = parentKey ? `${parentKey}.${this.nestType}.${lastKey}` : lastKey;
+      let newKey;
+      if ( parentKey ) {
+        // Item is nested under a parent - use parent key + nestType + item key
+        newKey = `${parentKey}.${this.nestType}.${lastKey}`;
+      } else if ( keyParts.length > 0 ) {
+        // Item is at root level but has a prefix (e.g., "orders.build") - preserve it
+        newKey = key;
+      } else {
+        // Item has no prefix and no parent
+        newKey = lastKey;
+      }
 
       if ( item.dataset.key === newKey ) return;
 
@@ -508,8 +531,9 @@ export class CustomDnd5eForm extends HandlebarsApplicationMixin(ApplicationV2) {
 
       // If setting passed, initialise property with setting data
       if ( settingData ) {
-        if ( !processedFormData[propertyPath] && typeof settingData[propertyPath] === "object" ) {
-          foundry.utils.setProperty(processedFormData, propertyPath, settingData[propertyPath] ?? {});
+        const existingData = foundry.utils.getProperty(settingData, propertyPath);
+        if ( !foundry.utils.getProperty(processedFormData, propertyPath) && typeof existingData === "object" ) {
+          foundry.utils.setProperty(processedFormData, propertyPath, existingData ?? {});
         }
       }
 

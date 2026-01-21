@@ -181,6 +181,33 @@ export const CONSTANTS = {
       }
     }
   },
+  BASTIONS: {
+    ID: "bastions",
+    MENU: {
+      KEY: "bastions-menu",
+      HINT: "CUSTOM_DND5E.menu.bastions.hint",
+      ICON: "fas fa-fort",
+      LABEL: "CUSTOM_DND5E.menu.bastions.label",
+      NAME: "CUSTOM_DND5E.menu.bastions.name"
+    },
+    SETTING: {
+      ENABLE: {
+        KEY: "enable-bastions"
+      },
+      CONFIG: {
+        KEY: "bastions"
+      }
+    },
+    TEMPLATE: {
+      FORM: "modules/custom-dnd5e/templates/bastions-form.hbs",
+      SIZES_LIST: "modules/custom-dnd5e/templates/bastions-sizes-list.hbs",
+      SIZES_EDIT: "modules/custom-dnd5e/templates/bastions-sizes-edit.hbs",
+      TYPES_LIST: "modules/custom-dnd5e/templates/bastions-types-list.hbs",
+      ORDERS_LIST: "modules/custom-dnd5e/templates/bastions-orders-list.hbs",
+      ORDERS_EDIT: "modules/custom-dnd5e/templates/bastions-orders-edit.hbs"
+    },
+    UUID: "Compendium.custom-dnd5e.custom-dnd5e-journals.JournalEntry.B48iqFBddUikMMer.JournalEntryPage.bastionsPage"
+  },
   BLOODIED: {
     MENU: {
       KEY: "bloodied-menu",

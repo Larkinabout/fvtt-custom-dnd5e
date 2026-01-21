@@ -226,13 +226,7 @@ export class ConfigForm extends CustomDnd5eForm {
       list.insertAdjacentHTML("beforeend", template);
 
       const item = list.querySelector(`[data-key="${key}"]`);
-      const dragElement = item.querySelector(".custom-dnd5e-drag");
-
-      item.addEventListener("dragend", this._onDragEnd.bind(this));
-      item.addEventListener("dragleave", this._onDragLeave.bind(this));
-      item.addEventListener("dragover", this._onDragOver.bind(this));
-      item.addEventListener("drop", this._onDrop.bind(this));
-      dragElement.addEventListener("dragstart", this._onDragStart.bind(this));
+      this._attachDragListeners(item);
 
       if ( scrollable ) {
         scrollable.scrollTop = scrollable.scrollHeight;
