@@ -1057,6 +1057,44 @@
       "_key": "!journal.pages!B48iqFBddUikMMer.Ls4Rn45UNhTBagHD"
     },
     {
+      "sort": 550000,
+      "name": "Bastions",
+      "type": "text",
+      "_id": "qR7xKmNpL2vYbW4c",
+      "system": {},
+      "title": {
+        "show": true,
+        "level": 1
+      },
+      "image": {},
+      "text": {
+        "format": 1,
+        "content": "<p>Located in <strong>Game Settings</strong> &gt; <strong>Configure Settings</strong> &gt; <strong>Custom D&amp;D 5e</strong> &gt; <strong>Configure Bastions</strong></p><p>Check <strong>Enable Bastions</strong> to apply your custom configuration. The form contains four tabs: <strong>Sizes</strong>, <strong>Types</strong>, <strong>Orders</strong>, and <strong>Advancement</strong>.</p><h2>Sizes</h2><p>Facility sizes define the construction requirements for bastion facilities.</p><h3>Create a Size</h3><ol><li><p>Select the <strong>Sizes</strong> tab.</p></li><li><p>Click <strong>Create New</strong>.</p></li><li><p>Enter a <strong>Key</strong>.</p><article class=\"custom-dnd5e-note\"><header><img src=\"modules/custom-dnd5e/media/icons/note.svg\" /><p>Note</p></header><p>An auto-generated Key is provided, but you may replace it with a more meaningful key for custom sizes.</p></article></li><li><p>Enter a <strong>Label</strong>.</p></li><li><p>Enter the number of <strong>Days</strong> required to build the facility.</p></li><li><p>Enter the number of <strong>Squares</strong> the facility occupies.</p></li><li><p>Enter the <strong>Value</strong> (cost in gold pieces).</p></li><li><p>Click <strong>Save and Close</strong>.</p></li></ol><h4>Example Size</h4><table><tbody><tr><td style=\"min-width:120px\" data-colwidth=\"272\"><p><strong>Property</strong></p></td><td><p><strong>Value</strong></p></td></tr><tr><td data-colwidth=\"272\"><p>Key</p></td><td><p>vast</p></td></tr><tr><td data-colwidth=\"272\"><p>Label</p></td><td><p>Vast</p></td></tr><tr><td data-colwidth=\"272\"><p>Days</p></td><td><p>100</p></td></tr><tr><td data-colwidth=\"272\"><p>Squares</p></td><td><p>20</p></td></tr><tr><td data-colwidth=\"272\"><p>Value</p></td><td><p>10000</p></td></tr></tbody></table><h2>Types</h2><p>Facility types categorise facilities into Basic and Special types, each with their own subtypes.</p><h3>Create a Type</h3><ol><li><p>Select the <strong>Types</strong> tab.</p></li><li><p>Click <strong>Create New</strong>.</p></li><li><p>Enter a <strong>Label</strong>.</p></li><li><p>Click <strong>Save and Close</strong>.</p></li></ol><h3>Create a Subtype</h3><ol><li><p>Select the <strong>Types</strong> tab.</p></li><li><p>Click the caret to expand a type.</p></li><li><p>Click <strong>Create New</strong> next to the type.</p></li><li><p>Enter a <strong>Label</strong>.</p></li><li><p>Click <strong>Save and Close</strong>.</p></li></ol><h2>Orders</h2><p>Bastion orders define the available actions that can be issued to a facility.</p><h3>Create an Order</h3><ol><li><p>Select the <strong>Orders</strong> tab.</p></li><li><p>Click <strong>Create New</strong>.</p></li><li><p>Enter a <strong>Key</strong>.</p><article class=\"custom-dnd5e-note\"><header><img src=\"modules/custom-dnd5e/media/icons/note.svg\" /><p>Note</p></header><p>An auto-generated Key is provided, but you may replace it with a more meaningful key for custom orders.</p></article></li><li><p>Enter a <strong>Label</strong>.</p></li><li><p>(Optional) Enter an <strong>Icon</strong> path.</p></li><li><p>(Optional) Enter a <strong>Duration</strong> for the order.</p></li><li><p>(Optional) Check <strong>Basic</strong> if this order is a basic order.</p></li><li><p>(Optional) Check <strong>Hidden</strong> to hide this order from the list.</p></li><li><p>Click <strong>Save and Close</strong>.</p></li></ol><h4>Example Order</h4><table><tbody><tr><td style=\"min-width:120px\" data-colwidth=\"272\"><p><strong>Property</strong></p></td><td><p><strong>Value</strong></p></td></tr><tr><td data-colwidth=\"272\"><p>Key</p></td><td><p>patrol</p></td></tr><tr><td data-colwidth=\"272\"><p>Label</p></td><td><p>Patrol</p></td></tr><tr><td data-colwidth=\"272\"><p>Icon</p></td><td><p>icons/svg/patrol.svg</p></td></tr><tr><td data-colwidth=\"272\"><p>Duration</p></td><td><p>7</p></td></tr><tr><td data-colwidth=\"272\"><p>Basic</p></td><td><img class=\"custom-dnd5e-img\" src=\"modules/custom-dnd5e/media/icons/checked.svg\" /></td></tr></tbody></table><h2>Advancement</h2><p>The Advancement tab displays the level-based progression for gaining new basic and special facilities.</p>"
+      },
+      "video": {
+        "controls": true,
+        "volume": 0.5
+      },
+      "src": null,
+      "ownership": {
+        "default": -1
+      },
+      "flags": {},
+      "_stats": {
+        "compendiumSource": null,
+        "duplicateSource": null,
+        "coreVersion": "13.342",
+        "systemId": "dnd5e",
+        "systemVersion": "5.0.3",
+        "createdTime": null,
+        "modifiedTime": null,
+        "lastModifiedBy": null,
+        "exportSource": null
+      },
+      "category": null,
+      "_key": "!journal.pages!B48iqFBddUikMMer.qR7xKmNpL2vYbW4c"
+    },
+    {
       "sort": 600000,
       "name": "Bloodied",
       "type": "text",

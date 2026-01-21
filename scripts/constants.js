@@ -206,7 +206,7 @@ export const CONSTANTS = {
       ORDERS_LIST: "modules/custom-dnd5e/templates/bastions-orders-list.hbs",
       ORDERS_EDIT: "modules/custom-dnd5e/templates/bastions-orders-edit.hbs"
     },
-    UUID: "Compendium.custom-dnd5e.custom-dnd5e-journals.JournalEntry.B48iqFBddUikMMer.JournalEntryPage.bastionsPage"
+    UUID: "Compendium.custom-dnd5e.custom-dnd5e-journals.JournalEntry.B48iqFBddUikMMer.JournalEntryPage.qR7xKmNpL2vYbW4c"
   },
   BLOODIED: {
     MENU: {
