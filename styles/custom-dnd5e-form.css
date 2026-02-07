@@ -143,14 +143,45 @@
     text-shadow: 0 0 5px var(--color-shadow-primary);
 }
 
+/*************************************
+    TABBED FORM LAYOUT
+**************************************/
+
+.custom-dnd5e-app .standard-form.custom-dnd5e-tabbed {
+    min-height: 0;
+}
+
+.custom-dnd5e-app .custom-dnd5e-tabbed nav.sheet-tabs {
+    flex: none;
+}
+
+.custom-dnd5e-app .custom-dnd5e-tabbed .custom-dnd5e-tab-container {
+    display: flex;
+    flex: 1;
+    min-height: 0;
+}
+
+.custom-dnd5e-app .custom-dnd5e-tabbed section.tab {
+    flex: 1;
+    min-height: 0;
+}
+
+.custom-dnd5e-app .custom-dnd5e-tabbed section.tab > .scrollable {
+    flex: 1;
+}
+
+.custom-dnd5e-app .custom-dnd5e-tabbed section.tab > .scrollable.fieldset-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
 .custom-dnd5e-app .standard-form .form-footer > button.new-button {
     flex: 100%;
 }
 
-.custom-dnd5e-app button.new-button {
-    height: calc(1.25 * var(--input-height));
-    min-width: 180px;
-    margin-bottom: 0.5rem;
+.custom-dnd5e-app .custom-dnd5e-tabbed section.tab .form-footer > button {
+    flex: 1;
 }
 
 /*************************************

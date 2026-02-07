@@ -41,7 +41,8 @@ export class BastionsForm extends CustomDnd5eForm {
       editOrder: BastionsForm.editOrder,
       editSize: BastionsForm.editSize,
       new: BastionsForm.createItem,
-      reset: BastionsForm.reset
+      reset: BastionsForm.reset,
+      resetAll: BastionsForm.resetAll
     },
     form: {
       handler: BastionsForm.submit
@@ -393,11 +394,21 @@ export class BastionsForm extends CustomDnd5eForm {
   /* -------------------------------------------- */
 
   /**
-   * Reset the form to default settings.
+   * Reset the current section to default settings.
    */
   static async reset() {
+    const activeTab = this.element.querySelector(".tab.active");
+    const section = activeTab?.dataset?.tab;
+    if ( !section ) return;
+
     const reset = async () => {
-      await this.resetConfigSetting();
+      const defaults = getSettingDefault();
+      const currentSetting = foundry.utils.deepClone(this.setting);
+
+      // Replace only the current section with defaults
+      currentSetting[section] = defaults[section];
+
+      await setSetting(this.settingKey, currentSetting);
       this.render(true);
     };
 
@@ -406,6 +417,35 @@ export class BastionsForm extends CustomDnd5eForm {
         title: game.i18n.localize("CUSTOM_DND5E.dialog.reset.title")
       },
       content: `<p>${game.i18n.localize("CUSTOM_DND5E.dialog.reset.content")}</p>`,
+      modal: true,
+      yes: {
+        label: game.i18n.localize("CUSTOM_DND5E.yes"),
+        callback: async () => {
+          reset();
+        }
+      },
+      no: {
+        label: game.i18n.localize("CUSTOM_DND5E.no")
+      }
+    });
+  }
+
+  /* -------------------------------------------- */
+
+  /**
+   * Reset the form to default settings.
+   */
+  static async resetAll() {
+    const reset = async () => {
+      await this.resetConfigSetting();
+      this.render(true);
+    };
+
+    await foundry.applications.api.DialogV2.confirm({
+      window: {
+        title: game.i18n.localize("CUSTOM_DND5E.dialog.resetAll.title")
+      },
+      content: `<p>${game.i18n.localize("CUSTOM_DND5E.dialog.resetAll.content")}</p>`,
       modal: true,
       yes: {
         label: game.i18n.localize("CUSTOM_DND5E.yes"),

@@ -1,4 +1,4 @@
-<div class="standard-form">
+<div class="standard-form custom-dnd5e-tabbed">
     <div class="form-group">
         <label class="flex1" style="min-width:80px; max-width:200px;">{{localize "CUSTOM_DND5E.enableConfiguration"}}</label>
         <div class="form-fields">
@@ -6,7 +6,7 @@
         </div>
     </div>
     <hr>
-    <nav class="sheet-tabs tabs" style="flex: none;">
+    <nav class="sheet-tabs tabs">
         <a class="item{{#if (eq activeTab 'sizes')}} active{{/if}}" data-action="tab" data-group="primary" data-tab="sizes">
             <span>
                 <i class="fa-solid fa-expand"></i>
@@ -33,67 +33,100 @@
         </a>
     </nav>
     <hr>
-    <div class="standard-form scrollable">
+    <div class="standard-form custom-dnd5e-tab-container">
         {{!-- Sizes Tab --}}
         <section class="tab{{#if (eq activeTab 'sizes')}} active{{/if}}" data-group="primary" data-tab="sizes">
             <p class="hint">{{localize "CUSTOM_DND5E.bastions.sizesHint"}}</p>
-            <ul class="custom-dnd5e-list flexcol">
-                {{> "modules/custom-dnd5e/templates/bastions-sizes-list.hbs" sizes=sizes}}
-            </ul>
+            <div class="scrollable">
+                <ul class="custom-dnd5e-list flexcol">
+                    {{> "modules/custom-dnd5e/templates/bastions-sizes-list.hbs" sizes=sizes}}
+                </ul>
+            </div>
+            <div class="form-footer">
+                <button type="button" data-action="reset" class="reset-button bright">
+                    <i class="fas fa-arrow-rotate-left"></i>{{localize "CUSTOM_DND5E.form.button.reset.label"}}
+                </button>
+                <button type="button" data-action="new" class="new-button bright">
+                    <i class="fas fa-plus"></i>{{localize "CUSTOM_DND5E.form.button.new.label"}}
+                </button>
+            </div>
         </section>
 
         {{!-- Types Tab --}}
         <section class="tab{{#if (eq activeTab 'types')}} active{{/if}}" data-group="primary" data-tab="types">
             <p class="hint">{{localize "CUSTOM_DND5E.bastions.typesHint"}}</p>
-            <ul class="custom-dnd5e-list flexcol">
-                {{> "modules/custom-dnd5e/templates/bastions-types-list.hbs" types=types}}
-            </ul>
+            <div class="scrollable">
+                <ul class="custom-dnd5e-list flexcol">
+                    {{> "modules/custom-dnd5e/templates/bastions-types-list.hbs" types=types}}
+                </ul>
+            </div>
+            <div class="form-footer">
+                <button type="button" data-action="reset" class="reset-button bright">
+                    <i class="fas fa-arrow-rotate-left"></i>{{localize "CUSTOM_DND5E.form.button.reset.label"}}
+                </button>
+                <button type="button" data-action="new" class="new-button bright">
+                    <i class="fas fa-plus"></i>{{localize "CUSTOM_DND5E.form.button.new.label"}}
+                </button>
+            </div>
         </section>
 
         {{!-- Orders Tab --}}
         <section class="tab{{#if (eq activeTab 'orders')}} active{{/if}}" data-group="primary" data-tab="orders">
             <p class="hint">{{localize "CUSTOM_DND5E.bastions.ordersHint"}}</p>
-            <ul class="custom-dnd5e-list flexcol">
-                {{> "modules/custom-dnd5e/templates/bastions-orders-list.hbs" orders=orders}}
-            </ul>
+            <div class="scrollable">
+                <ul class="custom-dnd5e-list flexcol">
+                    {{> "modules/custom-dnd5e/templates/bastions-orders-list.hbs" orders=orders}}
+                </ul>
+            </div>
+            <div class="form-footer">
+                <button type="button" data-action="reset" class="reset-button bright">
+                    <i class="fas fa-arrow-rotate-left"></i>{{localize "CUSTOM_DND5E.form.button.reset.label"}}
+                </button>
+                <button type="button" data-action="new" class="new-button bright">
+                    <i class="fas fa-plus"></i>{{localize "CUSTOM_DND5E.form.button.new.label"}}
+                </button>
+            </div>
         </section>
 
         {{!-- Advancement Tab --}}
         <section class="tab{{#if (eq activeTab 'advancement')}} active{{/if}}" data-group="primary" data-tab="advancement">
             <p class="hint">{{localize "CUSTOM_DND5E.bastions.advancementHint"}}</p>
-            <fieldset>
-                <legend>{{localize "CUSTOM_DND5E.bastions.basicFacilities"}}</legend>
-                <div class="form-group">
-                    <p class="notes">{{localize "CUSTOM_DND5E.bastions.advancementNote"}}</p>
-                </div>
-                {{#each advancement.basic}}
-                <div class="form-group">
-                    <label>{{localize "CUSTOM_DND5E.bastions.level"}} {{this.level}}</label>
-                    <div class="form-fields">
-                        <input type="number" name="advancement.basic.{{this.level}}" value="{{this.count}}" min="0">
+            <div class="scrollable fieldset-list">
+                <fieldset>
+                    <legend>{{localize "CUSTOM_DND5E.bastions.basicFacilities"}}</legend>
+                    <div class="form-group">
+                        <p class="notes">{{localize "CUSTOM_DND5E.bastions.advancementNote"}}</p>
                     </div>
-                </div>
-                {{/each}}
-            </fieldset>
-            <fieldset>
-                <legend>{{localize "CUSTOM_DND5E.bastions.specialFacilities"}}</legend>
-                {{#each advancement.special}}
-                <div class="form-group">
-                    <label>{{localize "CUSTOM_DND5E.bastions.level"}} {{this.level}}</label>
-                    <div class="form-fields">
-                        <input type="number" name="advancement.special.{{this.level}}" value="{{this.count}}" min="0">
+                    {{#each advancement.basic}}
+                    <div class="form-group">
+                        <label>{{localize "CUSTOM_DND5E.bastions.level"}} {{this.level}}</label>
+                        <div class="form-fields">
+                            <input type="number" name="advancement.basic.{{this.level}}" value="{{this.count}}" min="0">
+                        </div>
                     </div>
-                </div>
-                {{/each}}
-            </fieldset>
+                    {{/each}}
+                </fieldset>
+                <fieldset>
+                    <legend>{{localize "CUSTOM_DND5E.bastions.specialFacilities"}}</legend>
+                    {{#each advancement.special}}
+                    <div class="form-group">
+                        <label>{{localize "CUSTOM_DND5E.bastions.level"}} {{this.level}}</label>
+                        <div class="form-fields">
+                            <input type="number" name="advancement.special.{{this.level}}" value="{{this.count}}" min="0">
+                        </div>
+                    </div>
+                    {{/each}}
+                </fieldset>
+            </div>
+            <button type="button" data-action="reset" class="reset-button bright">
+                <i class="fas fa-arrow-rotate-left"></i>{{localize "CUSTOM_DND5E.form.button.reset.label"}}
+            </button>
         </section>
     </div>
+    <hr>
     <footer class="form-footer" data-application-part="footer">
-        <button type="button" data-action="new" class="new-button bright">
-            <i class="fas fa-plus"></i>{{localize "CUSTOM_DND5E.form.button.new.label"}}
-        </button>
-        <button type="button" data-action="reset" class="reset-button bright">
-            <i class="fas fa-arrow-rotate-left"></i>{{localize "CUSTOM_DND5E.form.button.reset.label"}}
+        <button type="button" data-action="resetAll" class="reset-button bright">
+            <i class="fas fa-arrow-rotate-left"></i>{{localize "CUSTOM_DND5E.form.button.resetAll.label"}}
         </button>
         <button type="submit" class="save-button">
             <i class="fas fa-solid fa-floppy-disk"></i>{{localize "CUSTOM_DND5E.form.button.save.label"}}
