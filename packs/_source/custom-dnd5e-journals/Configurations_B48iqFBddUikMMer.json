@@ -861,6 +861,44 @@
       "_key": "!journal.pages!B48iqFBddUikMMer.Cy09wdPVi8XrkjJ2"
     },
     {
+      "sort": 2300000,
+      "name": "Weapon Masteries",
+      "type": "text",
+      "_id": "wM3kTpNxR7vYhD9c",
+      "system": {},
+      "title": {
+        "show": true,
+        "level": 1
+      },
+      "image": {},
+      "text": {
+        "format": 1,
+        "content": "<p>Located in <strong>Game Settings</strong> &gt; <strong>Configure Settings</strong> &gt; <strong>Custom D&amp;D 5e</strong> &gt; <strong>Configure Weapon Masteries</strong></p><p>The Weapon Masteries configuration allows you to add, edit, reorder, show/hide and delete weapon mastery properties (e.g., Cleave, Graze, Nick, Push, Sap, Slow, Topple, Vex).</p><h3>Create a Weapon Mastery</h3><ol><li><p>Click <strong>Create New</strong>.</p></li><li><p>Enter a <strong>Key</strong>.</p></li><li><p>Enter a <strong>Label</strong>.</p></li><li><p>Paste a journal entry's UUID into <strong>Reference</strong>.</p><article class=\"custom-dnd5e-tip\"><header><img src=\"modules/custom-dnd5e/media/icons/tip.svg\" /><p>Tip</p></header><p>You can copy a journal entry's UUID by opening up the entry and left-clicking the passport icon in the window's header.</p></article><article class=\"custom-dnd5e-note\"><header><img src=\"modules/custom-dnd5e/media/icons/note.svg\" /><p>Note</p></header><p>The <strong>Reference</strong> must be linked to a journal entry with the \"Rule\" page type.</p></article></li><li><p>Click <strong>Save and Close</strong>.</p></li></ol><h4>Example Weapon Mastery</h4><table><tbody><tr><td style=\"min-width:120px\" data-colwidth=\"272\"><p><strong>Property</strong></p></td><td><p><strong>Value</strong></p></td></tr><tr><td data-colwidth=\"272\"><p>Key</p></td><td><p>shatter</p></td></tr><tr><td data-colwidth=\"272\"><p>Label</p></td><td><p>Shatter</p></td></tr><tr><td data-colwidth=\"272\"><p>Reference</p></td><td><p>Compendium.world.my-rules.JournalEntry.r04xTaCjv1UK6GJn.JournalEntryPage.2H1TC6FJulrcA7jr</p></td></tr></tbody></table>"
+      },
+      "video": {
+        "controls": true,
+        "volume": 0.5
+      },
+      "src": null,
+      "ownership": {
+        "default": -1
+      },
+      "flags": {},
+      "_stats": {
+        "compendiumSource": null,
+        "duplicateSource": null,
+        "coreVersion": "13.351",
+        "systemId": "dnd5e",
+        "systemVersion": "5.2.5",
+        "createdTime": 1738923235998,
+        "modifiedTime": 1738923235998,
+        "lastModifiedBy": "JdWLPbQd9x1aeEfz",
+        "exportSource": null
+      },
+      "category": null,
+      "_key": "!journal.pages!B48iqFBddUikMMer.wM3kTpNxR7vYhD9c"
+    },
+    {
       "sort": 200000,
       "name": "Activation Costs",
       "type": "text",

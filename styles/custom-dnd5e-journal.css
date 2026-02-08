@@ -29,7 +29,7 @@ article.custom-dnd5e-warning > header > img {
 }
 
 article.custom-dnd5e-note > header > p,
-article.custom-dnd5e-tip > header > p
+article.custom-dnd5e-tip > header > p,
 article.custom-dnd5e-warning > header > p {
     font-weight: bold;
     margin-left: 0.5rem;

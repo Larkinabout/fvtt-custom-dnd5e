@@ -14,6 +14,7 @@ import { ItemPropertiesEditForm } from "./item-properties-edit-form.js";
 import { SkillsEditForm } from "./skills-edit-form.js";
 import { SpellSchoolsEditForm } from "./spell-schools-edit-form.js";
 import { ToolsEditForm } from "./tools-edit-form.js";
+import { WeaponMasteriesEditForm } from "./weapon-masteries-edit-form.js";
 import { resetConfigSetting as resetAbilities, setConfig as setAbilities } from "../configurations/abilities.js";
 import { resetConfigSetting as resetActivationCosts, setConfig as setActivationCosts } from "../configurations/activation-costs.js";
 import { resetConfigSetting as resetArmorCalculations, setConfig as setArmorCalculations } from "../configurations/armor-calculations.js";
@@ -37,6 +38,7 @@ import { resetConfigSetting as resetSkills, setConfig as setSkills } from "../co
 import { resetConfigSetting as resetSpellSchools, setConfig as setSpellSchools } from "../configurations/spell-schools.js";
 import { resetConfigSetting as resetTools, setConfig as setTools } from "../configurations/tools.js";
 import { resetConfigSetting as resetWeaponIds, setConfig as setWeaponIds } from "../configurations/weapon-ids.js";
+import { resetConfigSetting as resetWeaponMasteries, setConfig as setWeaponMasteries } from "../configurations/weapon-masteries.js";
 
 const listClass = `${MODULE.ID}-list`;
 const listClassSelector = `.${listClass}`;
@@ -1153,6 +1155,45 @@ export class SpellSchoolsForm extends ConfigForm {
     id: `${MODULE.ID}-spell-schools-form`,
     window: {
       title: "CUSTOM_DND5E.form.spellSchools.title"
+    }
+  };
+}
+
+/* -------------------------------------------- */
+
+/**
+ * Class representing the Weapon Masteries Form.
+ *
+ * @extends ConfigForm
+ */
+export class WeaponMasteriesForm extends ConfigForm {
+  /**
+   * Constructor for WeaponMasteriesForm.
+   */
+  constructor() {
+    super();
+    this.editForm = WeaponMasteriesEditForm;
+    this.requiresReload = false;
+    this.enableConfigKey = CONSTANTS.WEAPON_MASTERIES.SETTING.ENABLE.KEY;
+    this.settingKey = CONSTANTS.WEAPON_MASTERIES.SETTING.CONFIG.KEY;
+    this.resetConfigSetting = resetWeaponMasteries;
+    this.setConfig = setWeaponMasteries;
+    this.configKey = "weaponMasteries";
+    this.headerButton = JOURNAL_HELP_BUTTON;
+    this.headerButton.uuid = CONSTANTS.WEAPON_MASTERIES.UUID;
+  }
+
+  /* -------------------------------------------- */
+
+  /**
+   * Default options for the form.
+   *
+   * @type {object}
+   */
+  static DEFAULT_OPTIONS = {
+    id: `${MODULE.ID}-weapon-masteries-form`,
+    window: {
+      title: "CUSTOM_DND5E.form.weaponMasteries.title"
     }
   };
 }

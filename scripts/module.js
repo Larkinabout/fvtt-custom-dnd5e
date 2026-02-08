@@ -58,6 +58,7 @@ import { register as registerTokenEffects } from "./token-effects.js";
 import { register as registerTools, setConfig as setTools } from "./configurations/tools.js";
 import { register as registerToolProficiencies, setConfig as setToolProficiencies } from "./configurations/tool-proficiencies.js";
 import { register as registerWeaponIds, setConfig as setWeaponIds } from "./configurations/weapon-ids.js";
+import { register as registerWeaponMasteries, setConfig as setWeaponMasteries } from "./configurations/weapon-masteries.js";
 import { register as registerWeaponProficiencies, setConfig as setWeaponProficiencies } from "./configurations/weapon-proficiencies.js";
 import { patchModifyTokenAttribute } from "./patches/actor-modify-token-attribute.js";
 import { patchD20Die } from "./patches/d20-die.js";
@@ -151,6 +152,7 @@ Hooks.on("init", async () => {
   registerTools();
   registerToolProficiencies();
   registerWeaponIds();
+  registerWeaponMasteries();
   registerWeaponProficiencies();
   registerMisc();
   registerRadialStatusEffects();
@@ -238,6 +240,7 @@ Hooks.on("ready", async () => {
   setTools(getSetting(CONSTANTS.TOOLS.SETTING.CONFIG.KEY));
   setToolProficiencies(getSetting(CONSTANTS.TOOL_PROFICIENCIES.SETTING.CONFIG.KEY));
   setWeaponIds(getSetting(CONSTANTS.WEAPON_IDS.SETTING.CONFIG.KEY));
+  setWeaponMasteries(getSetting(CONSTANTS.WEAPON_MASTERIES.SETTING.CONFIG.KEY));
   setWeaponProficiencies(getSetting(CONSTANTS.WEAPON_PROFICIENCIES.SETTING.CONFIG.KEY));
   setMaxLevel(getSetting(CONSTANTS.MAX_LEVEL.SETTING.KEY));
 

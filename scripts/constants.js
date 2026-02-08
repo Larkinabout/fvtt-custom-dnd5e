@@ -1066,6 +1066,30 @@ export const CONSTANTS = {
       LIST: "modules/custom-dnd5e/templates/config-edit-in-list.hbs"
     },
     UUID: "Compendium.custom-dnd5e.custom-dnd5e-journals.JournalEntry.B48iqFBddUikMMer.JournalEntryPage.Cy09wdPVi8XrkjJ2"
+  },
+  WEAPON_MASTERIES: {
+    ID: "weapon-masteries",
+    MENU: {
+      KEY: "weapon-masteries-menu",
+      HINT: "CUSTOM_DND5E.menu.weaponMasteries.hint",
+      ICON: "fas fa-hand-fist",
+      LABEL: "CUSTOM_DND5E.menu.weaponMasteries.label",
+      NAME: "CUSTOM_DND5E.menu.weaponMasteries.name"
+    },
+    SETTING: {
+      ENABLE: {
+        KEY: "enable-weapon-masteries"
+      },
+      CONFIG: {
+        KEY: "weapon-masteries"
+      }
+    },
+    TEMPLATE: {
+      EDIT: "modules/custom-dnd5e/templates/weapon-masteries-edit.hbs",
+      FORM: "modules/custom-dnd5e/templates/config-form.hbs",
+      LIST: "modules/custom-dnd5e/templates/config-list.hbs"
+    },
+    UUID: "Compendium.custom-dnd5e.custom-dnd5e-journals.JournalEntry.B48iqFBddUikMMer.JournalEntryPage.wM3kTpNxR7vYhD9c"
   }
 };
 

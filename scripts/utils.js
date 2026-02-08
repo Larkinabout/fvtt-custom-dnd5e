@@ -78,7 +78,7 @@ export function deleteProperty(object, key) {
  */
 export async function openDocument(uuid) {
   const document = await fromUuid(uuid);
-  document?.sheet.render(true);
+  document.parent.sheet.render(true, {pageId: document.id, anchor: undefined});
 }
 
 /* -------------------------------------------- */
