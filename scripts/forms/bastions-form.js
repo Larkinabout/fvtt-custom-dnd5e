@@ -118,11 +118,10 @@ export class BastionsForm extends CustomDnd5eForm {
     const settingSizes = this.setting.sizes ?? {};
     const defaultSizes = CONFIG.CUSTOM_DND5E.facilities?.sizes ?? {};
 
-    // Merge default with setting
     const allSizes = foundry.utils.mergeObject(
-      foundry.utils.deepClone(defaultSizes),
-      settingSizes,
-      { overwrite: true }
+      foundry.utils.deepClone(settingSizes),
+      defaultSizes,
+      { overwrite: false }
     );
 
     Object.entries(allSizes).forEach(([key, value]) => {
@@ -151,11 +150,10 @@ export class BastionsForm extends CustomDnd5eForm {
     const settingTypes = this.setting.types ?? {};
     const defaultTypes = CONFIG.CUSTOM_DND5E.facilities?.types ?? {};
 
-    // Merge default with setting
     const allTypes = foundry.utils.mergeObject(
-      foundry.utils.deepClone(defaultTypes),
-      settingTypes,
-      { overwrite: true }
+      foundry.utils.deepClone(settingTypes),
+      defaultTypes,
+      { overwrite: false }
     );
 
     Object.entries(allTypes).forEach(([key, value]) => {
@@ -194,11 +192,10 @@ export class BastionsForm extends CustomDnd5eForm {
     const settingOrders = this.setting.orders ?? {};
     const defaultOrders = CONFIG.CUSTOM_DND5E.facilities?.orders ?? {};
 
-    // Merge default with setting
     const allOrders = foundry.utils.mergeObject(
-      foundry.utils.deepClone(defaultOrders),
-      settingOrders,
-      { overwrite: true }
+      foundry.utils.deepClone(settingOrders),
+      defaultOrders,
+      { overwrite: false }
     );
 
     Object.entries(allOrders).forEach(([key, value]) => {
@@ -232,11 +229,10 @@ export class BastionsForm extends CustomDnd5eForm {
     const settingAdvancement = this.setting.advancement ?? {};
     const defaultAdvancement = CONFIG.CUSTOM_DND5E.facilities?.advancement ?? {};
 
-    // Merge default with setting
     const allAdvancement = foundry.utils.mergeObject(
-      foundry.utils.deepClone(defaultAdvancement),
-      settingAdvancement,
-      { overwrite: true }
+      foundry.utils.deepClone(settingAdvancement),
+      defaultAdvancement,
+      { overwrite: false }
     );
 
     // Convert basic advancement to array format for template
@@ -335,14 +331,12 @@ export class BastionsForm extends CustomDnd5eForm {
     // Extract the order key from the full path (e.g., "orders.test" -> "test")
     const key = dataKey.split(".").pop();
 
-    // Merge setting with defaults so edit form has full order data
-    // (system orders may only exist in CONFIG defaults, not in stored setting)
     const defaultOrders = CONFIG.CUSTOM_DND5E.facilities?.orders ?? {};
     const settingWithDefaults = foundry.utils.deepClone(this.setting);
     settingWithDefaults.orders = foundry.utils.mergeObject(
-      foundry.utils.deepClone(defaultOrders),
       settingWithDefaults.orders ?? {},
-      { overwrite: true }
+      defaultOrders,
+      { overwrite: false }
     );
 
     const args = {
@@ -372,14 +366,12 @@ export class BastionsForm extends CustomDnd5eForm {
     // Extract the size key from the full path (e.g., "sizes.cramped" -> "cramped")
     const key = dataKey.split(".").pop();
 
-    // Merge setting with defaults so edit form has full size data
-    // (system sizes may only exist in CONFIG defaults, not in stored setting)
     const defaultSizes = CONFIG.CUSTOM_DND5E.facilities?.sizes ?? {};
     const settingWithDefaults = foundry.utils.deepClone(this.setting);
     settingWithDefaults.sizes = foundry.utils.mergeObject(
-      foundry.utils.deepClone(defaultSizes),
       settingWithDefaults.sizes ?? {},
-      { overwrite: true }
+      defaultSizes,
+      { overwrite: false }
     );
 
     const args = {

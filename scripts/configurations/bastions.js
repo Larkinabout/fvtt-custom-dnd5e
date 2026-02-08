@@ -72,27 +72,37 @@ function registerSettings() {
 /* -------------------------------------------- */
 
 /**
+ * Normalize config by transforming string subtypes to objects.
+ * @param {object} config The config to normalize.
+ * @returns {object} The normalized config.
+ */
+function normalizeConfig(config) {
+  if ( !config?.types ) return config;
+
+  for ( const [typeKey, typeValue] of Object.entries(config.types) ) {
+    if ( typeValue.subtypes ) {
+      const transformedSubtypes = {};
+      for ( const [subKey, subValue] of Object.entries(typeValue.subtypes) ) {
+        transformedSubtypes[subKey] = typeof subValue === "string"
+          ? { label: subValue, visible: true }
+          : subValue;
+      }
+      config.types[typeKey].subtypes = transformedSubtypes;
+    }
+  }
+
+  return config;
+}
+
+/* -------------------------------------------- */
+
+/**
  * Get default config.
  * @param {string} [key=null] Optional key to get a specific default value.
  * @returns {object} The config data
  */
 export function getSettingDefault(key = null) {
-  const config = foundry.utils.deepClone(CONFIG.CUSTOM_DND5E[configKey]) ?? {};
-
-  // Transform types subtypes from strings to objects
-  if ( config.types ) {
-    for ( const [typeKey, typeValue] of Object.entries(config.types) ) {
-      if ( typeValue.subtypes ) {
-        const transformedSubtypes = {};
-        for ( const [subKey, subValue] of Object.entries(typeValue.subtypes) ) {
-          transformedSubtypes[subKey] = typeof subValue === "string"
-            ? { label: subValue, visible: true }
-            : subValue;
-        }
-        config.types[typeKey].subtypes = transformedSubtypes;
-      }
-    }
-  }
+  const config = normalizeConfig(foundry.utils.deepClone(CONFIG.CUSTOM_DND5E[configKey]) ?? {});
 
   if ( key ) {
     return foundry.utils.getProperty(config, key);
@@ -127,8 +137,14 @@ export function setConfig(settingData = null) {
     return;
   }
 
-  const defaultConfig = foundry.utils.deepClone(CONFIG.CUSTOM_DND5E[configKey]);
-  const config = foundry.utils.mergeObject(defaultConfig, settingData, { overwrite: true });
+  const config = foundry.utils.mergeObject(
+    foundry.utils.mergeObject(
+      settingData,
+      normalizeConfig(foundry.utils.deepClone(CONFIG.DND5E[configKey])),
+      { overwrite: false }),
+    getSettingDefault(),
+    { overwrite: false }
+  );
 
   if ( config ) {
     // Process sizes

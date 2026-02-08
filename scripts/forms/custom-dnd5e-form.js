@@ -529,11 +529,14 @@ export class CustomDnd5eForm extends HandlebarsApplicationMixin(ApplicationV2) {
         if ( value ) return; // Don't set the 'system' value if it is true
       }
 
-      // If setting passed, initialise property with setting data
+      // If setting passed, initialise property with setting data (excluding nested objects)
       if ( settingData ) {
         const existingData = foundry.utils.getProperty(settingData, propertyPath);
         if ( !foundry.utils.getProperty(processedFormData, propertyPath) && typeof existingData === "object" ) {
-          foundry.utils.setProperty(processedFormData, propertyPath, existingData ?? {});
+          const shallowData = Object.fromEntries(
+            Object.entries(existingData).filter(([_, v]) => typeof v !== "object" || v === null)
+          );
+          foundry.utils.setProperty(processedFormData, propertyPath, shallowData);
         }
       }
 
