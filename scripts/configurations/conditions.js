@@ -211,7 +211,7 @@ export function setConfig(data = null) {
 
       if ( value.sheet || value.pseudo ) {
         config.conditionTypes[key] = {
-          img: value?.img ?? value?.icon,
+          img: value?.img ?? value?.icon ?? "icons/svg/hazard.svg",
           name: localisedName,
           ...(value.levels && { levels: value.levels }),
           ...(value.pseudo && { pseudo: value.pseudo }),
@@ -229,7 +229,7 @@ export function setConfig(data = null) {
         ...(value.coverBonus !== undefined && { coverBonus: value.coverBonus }),
         ...(value.exclusiveGroup !== undefined && { exclusiveGroup: value.exclusiveGroup }),
         id: key,
-        img: value?.img ?? value?.icon,
+        img: value?.img ?? value?.icon ?? "icons/svg/hazard.svg",
         ...(value.levels !== undefined && { levels: value.levels }),
         name: localisedName,
         ...(value.order !== undefined && { order: value.order }),
