@@ -14,6 +14,15 @@
 
 .custom-dnd5e-img {
     border: none;
+    height: 16px;
+    pointer-events: none;
+    object-position: -9999px;
+    overflow: hidden;
+    background-color: var(--color-text-primary);
+    -webkit-mask-image: url(../media/icons/checked.svg);
+    mask-image: url(../media/icons/checked.svg);
+    -webkit-mask-size: contain;
+    mask-size: contain;
 }
 
 article.custom-dnd5e-note > header,
