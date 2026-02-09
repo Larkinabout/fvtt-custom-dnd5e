@@ -40,6 +40,7 @@
     "CUSTOM_DND5E.circle": "Circle",
     "CUSTOM_DND5E.clientSettings.label": "Client Settings",
     "CUSTOM_DND5E.clientSettings.note": "These settings only affect the current user and are configurable by each user.",
+    "CUSTOM_DND5E.color": "Color",
     "CUSTOM_DND5E.concentrationSavingThrow": "Concentration Saving Throw",
     "CUSTOM_DND5E.configuration": "Configuration",
     "CUSTOM_DND5E.configureCounters": "Configure Counters",
