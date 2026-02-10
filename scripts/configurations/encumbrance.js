@@ -97,6 +97,57 @@ function registerSettings() {
       default: 1
     }
   );
+
+  registerSetting(
+    constants.SPEED_REDUCTION_MODE.SETTING.KEY,
+    {
+      scope: "world",
+      config: false,
+      requiresReload: true,
+      type: String,
+      default: "flat"
+    }
+  );
+
+  registerSetting(
+    constants.SPEED_REDUCTION_MULTIPLIER_ENCUMBERED.SETTING.KEY,
+    {
+      scope: "world",
+      config: false,
+      type: Number,
+      default: 0.67
+    }
+  );
+
+  registerSetting(
+    constants.SPEED_REDUCTION_MULTIPLIER_HEAVILY_ENCUMBERED.SETTING.KEY,
+    {
+      scope: "world",
+      config: false,
+      type: Number,
+      default: 0.33
+    }
+  );
+
+  registerSetting(
+    constants.SPEED_REDUCTION_MULTIPLIER_EXCEEDING_CARRYING_CAPACITY.SETTING.KEY,
+    {
+      scope: "world",
+      config: false,
+      type: Number,
+      default: 0
+    }
+  );
+
+  registerSetting(
+    constants.SPEED_REDUCTION_MULTIPLIER_ROUNDING.SETTING.KEY,
+    {
+      scope: "world",
+      config: false,
+      type: Number,
+      default: 5
+    }
+  );
 }
 
 /* -------------------------------------------- */

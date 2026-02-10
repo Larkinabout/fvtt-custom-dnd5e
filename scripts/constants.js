@@ -473,6 +473,31 @@ export const CONSTANTS = {
         KEY: "unequipped-item-weight-modifier"
       }
     },
+    SPEED_REDUCTION_MODE: {
+      SETTING: {
+        KEY: "speed-reduction-mode"
+      }
+    },
+    SPEED_REDUCTION_MULTIPLIER_ENCUMBERED: {
+      SETTING: {
+        KEY: "speed-reduction-multiplier-encumbered"
+      }
+    },
+    SPEED_REDUCTION_MULTIPLIER_HEAVILY_ENCUMBERED: {
+      SETTING: {
+        KEY: "speed-reduction-multiplier-heavily-encumbered"
+      }
+    },
+    SPEED_REDUCTION_MULTIPLIER_EXCEEDING_CARRYING_CAPACITY: {
+      SETTING: {
+        KEY: "speed-reduction-multiplier-exceeding-carrying-capacity"
+      }
+    },
+    SPEED_REDUCTION_MULTIPLIER_ROUNDING: {
+      SETTING: {
+        KEY: "speed-reduction-multiplier-rounding"
+      }
+    },
     ID: "encumbrance",
     MENU: {
       KEY: "encumbrance-menu",
