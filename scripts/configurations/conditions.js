@@ -20,10 +20,28 @@ const configKey = "conditionTypes";
 export function register() {
   registerSettings();
 
+  Hooks.on("preCreateActiveEffect", applyOverlay);
+
   const templates = [
     constants.TEMPLATE.EDIT
   ];
   c5eLoadTemplates(templates);
+}
+
+/* -------------------------------------------- */
+
+/**
+ * Apply overlay flag to active effects for conditions configured as overlays.
+ * @param {ActiveEffect} effect The active effect being created.
+ */
+function applyOverlay(effect) {
+  if ( !getSetting(constants.SETTING.ENABLE.KEY) ) return;
+  const statusId = [...(effect.statuses || [])][0];
+  if ( !statusId ) return;
+  const statusEffect = CONFIG.statusEffects.find(e => e.id === statusId);
+  if ( statusEffect?.overlay ) {
+    effect.updateSource({ "flags.core.overlay": true });
+  }
 }
 
 /* -------------------------------------------- */
@@ -235,6 +253,7 @@ export function setConfig(data = null) {
         ...(value.order !== undefined && { order: value.order }),
         ...(value.pseudo && { pseudo: value.pseudo }),
         ...(value.reference !== undefined && { reference: value.reference }),
+        ...(value.overlay && { overlay: value.overlay }),
         ...(value.riders !== undefined && { riders: value.riders }),
         ...(value.statuses !== undefined && { statuses: value.statuses })
       });

@@ -69,6 +69,12 @@
             </div>
         </div>
         <div class="form-group">
+            <label class="flex1" style="min-width:80px; max-width:120px;">{{localize "CUSTOM_DND5E.overlay"}}</label>
+            <div class="form-fields">
+                <dnd5e-checkbox id="custom-dnd5e-overlay" name="{{key}}.overlay"{{#if overlay}} checked{{/if}}></dnd5e-checkbox>
+            </div>
+        </div>
+        <div class="form-group">
             <label class="flex1" style="min-width:80px; max-width:120px;">{{localize "CUSTOM_DND5E.pseudo"}}</label>
             <div class="form-fields">
                 <dnd5e-checkbox id="custom-dnd5e-pseudo" name="{{key}}.pseudo"{{#if pseudo}} checked{{/if}}></dnd5e-checkbox>
