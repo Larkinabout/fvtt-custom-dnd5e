@@ -69,14 +69,33 @@ import { patchPrepareSenses } from "./patches/prepare-senses.js";
 import { registerCharacterSheet } from "./sheets/character-sheet.js";
 
 /**
+ * Clone specific CONFIG.DND5E properties to CONFIG.CUSTOM_DND5E.
+ */
+function cloneDnd5eConfig() {
+  CONFIG.CUSTOM_DND5E = {};
+  const propertiesToClone = [
+    "abilities", "abilityActivationTypes", "activityActivationTypes", "actorSizes",
+    "armorClasses", "armorIds", "armorProficiencies", "armorProficienciesMap", "armorTypes",
+    "bloodied", "conditionTypes", "consumableTypes", "creatureTypes", "currencies",
+    "damageTypes", "encumbrance", "facilities", "featureTypes",
+    "itemActionTypes", "itemProperties", "itemRarity", "languages", "lootTypes",
+    "maxAbilityScore", "maxLevel", "miscEquipmentTypes", "senses", "skills",
+    "spellSchools", "toolProficiencies", "toolTypes", "tools",
+    "validProperties", "weaponIds", "weaponMasteries", "weaponProficiencies",
+    "weaponProficienciesMap", "weaponProperties", "weaponTypes"
+  ];
+  for ( const key of propertiesToClone ) {
+    if ( key in CONFIG.DND5E ) {
+      CONFIG.CUSTOM_DND5E[key] = foundry.utils.deepClone(CONFIG.DND5E[key]);
+    }
+  }
+}
+
+/**
  * Initialize the module and register settings, hooks, and templates.
  */
 Hooks.on("init", async () => {
-  // Suppress deprecation warnings during deep clone
-  const originalWarn = console.warn;
-  console.warn = () => {};
-  CONFIG.CUSTOM_DND5E = foundry.utils.deepClone(CONFIG.DND5E);
-  console.warn = originalWarn;
+  cloneDnd5eConfig();
 
   const module = game.modules.get(MODULE.ID);
   module.api = {
