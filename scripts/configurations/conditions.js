@@ -138,6 +138,24 @@ export async function resetConfigSetting() {
 /* -------------------------------------------- */
 
 /**
+ * Merge data with CONFIG and setting defaults to include conditions from other modules.
+ * @param {object} data The setting data
+ * @returns {object} The merged data
+ */
+export function mergeConfig(data) {
+  const conditionTypes = foundry.utils.deepClone(CONFIG.DND5E.conditionTypes);
+  Object.values(conditionTypes).forEach(v => { if ( !v.pseudo ) v.sheet = true; });
+  data = foundry.utils.mergeObject(data, conditionTypes, { overwrite: false });
+  CONFIG.statusEffects.forEach(e => {
+    if ( data[e.id] ) foundry.utils.mergeObject(data[e.id], e, { overwrite: false });
+  });
+  data = foundry.utils.mergeObject(data, getSettingDefault(), { overwrite: false });
+  return data;
+}
+
+/* -------------------------------------------- */
+
+/**
  * Build setting data.
  * @param {object} config The config data
  * @returns {object} The setting data
@@ -211,6 +229,8 @@ export function setConfig(data = null) {
     });
     return;
   }
+
+  data = mergeConfig(data);
 
   // Initialise the config object
   const config = {

@@ -21,7 +21,7 @@ import { resetConfigSetting as resetArmorCalculations, setConfig as setArmorCalc
 import { resetConfigSetting as resetArmorIds, setConfig as setArmorIds } from "../configurations/armor-ids.js";
 import { resetConfigSetting as resetActorSizes, setConfig as setActorSizes } from "../configurations/actor-sizes.js";
 import { resetConfigSetting as resetConsumableTypes, setConfig as setConsumableTypes } from "../configurations/consumable-types.js";
-import { resetConfigSetting as resetConditions, setConfig as setConditions } from "../configurations/conditions.js";
+import { mergeConfig as mergeConditions, resetConfigSetting as resetConditions, setConfig as setConditions } from "../configurations/conditions.js";
 import { resetConfigSetting as resetCreatureTypes, setConfig as setCreatureTypes } from "../configurations/creature-types.js";
 import { resetConfigSetting as resetCurrency, setConfig as setCurrency } from "../configurations/currency.js";
 import { resetConfigSetting as resetDamageTypes, setConfig as setDamageTypes } from "../configurations/damage-types.js";
@@ -611,6 +611,14 @@ export class ConditionsForm extends ConfigForm {
       title: "CUSTOM_DND5E.form.conditions.title"
     }
   };
+
+  /* -------------------------------------------- */
+
+  async _prepareContext() {
+    const context = await super._prepareContext();
+    context.items = mergeConditions(context.items);
+    return context;
+  }
 }
 
 /* -------------------------------------------- */
