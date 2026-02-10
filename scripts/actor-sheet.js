@@ -286,10 +286,12 @@ function setBannerImage(sheetType, html) {
   const style = document.createElement("style");
 
   style.innerHTML = `
-    .dnd5e-theme-dark .dnd5e2.sheet.actor.character .window-content::before,
-    .dnd5e2.sheet.actor.character.dnd5e-theme-dark .window-content::before {
+    .dnd5e2.sheet.actor.character.theme-dark .window-content::before {
         background: url("${bannerImage}") no-repeat top center / cover;
     }
+    .dnd5e2.sheet.actor.character.theme-light .sheet-header {
+        background: url("${bannerImage}") no-repeat center / cover;
+    
     `;
   document.head.append(style);
 }
