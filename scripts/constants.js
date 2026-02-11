@@ -581,6 +581,9 @@ export const CONSTANTS = {
       APPLY_NEGATIVE_HP: {
         KEY: "apply-negative-hp"
       },
+      APPLY_NEGATIVE_HP_NPC: {
+        KEY: "apply-negative-hp-npc"
+      },
       NEGATIVE_HP_HEAL_FROM_ZERO: {
         KEY: "negative-hp-heal-from-zero"
       },

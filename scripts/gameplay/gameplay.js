@@ -207,6 +207,16 @@ function registerSettings() {
   );
 
   registerSetting(
+    CONSTANTS.HIT_POINTS.SETTING.APPLY_NEGATIVE_HP_NPC.KEY,
+    {
+      scope: "world",
+      config: false,
+      type: Boolean,
+      default: false
+    }
+  );
+
+  registerSetting(
     CONSTANTS.HIT_POINTS.SETTING.NEGATIVE_HP_HEAL_FROM_ZERO.KEY,
     {
       scope: "world",
@@ -362,12 +372,21 @@ export function modifyHitPointsFlowDialog(app, html, data) {
  * This will allow HP to go below 0.
  */
 export function registerNegativeHp() {
-  if ( !getSetting(CONSTANTS.DEAD.SETTING.APPLY_INSTANT_DEATH.KEY)
-        && !getSetting(CONSTANTS.HIT_POINTS.SETTING.APPLY_NEGATIVE_HP.KEY) ) return;
+  const applyNegativeHp = getSetting(CONSTANTS.HIT_POINTS.SETTING.APPLY_NEGATIVE_HP.KEY)
+        || getSetting(CONSTANTS.DEAD.SETTING.APPLY_INSTANT_DEATH.KEY);
+  const applyNegativeHpNpc = getSetting(CONSTANTS.HIT_POINTS.SETTING.APPLY_NEGATIVE_HP_NPC.KEY);
+
+  if ( !applyNegativeHp && !applyNegativeHpNpc ) return;
 
   Logger.debug("Registering Negative HP...");
 
-  dnd5e.dataModels.actor.CharacterData.schema.fields.attributes.fields.hp.fields.value.min = undefined;
+  if ( applyNegativeHp ) {
+    dnd5e.dataModels.actor.CharacterData.schema.fields.attributes.fields.hp.fields.value.min = undefined;
+  }
+
+  if ( applyNegativeHpNpc ) {
+    dnd5e.dataModels.actor.NPCData.schema.fields.attributes.fields.hp.fields.value.min = undefined;
+  }
 
   Logger.debug("Negative HP registered");
 }
@@ -512,10 +531,12 @@ function healActor(actor, data, options) {
   if ( !foundry.utils.hasProperty(data,"system.attributes.hp.value") ) return;
 
   const applyNegativeHp = getSetting(CONSTANTS.HIT_POINTS.SETTING.APPLY_NEGATIVE_HP.KEY);
+  const applyNegativeHpNpc = getSetting(CONSTANTS.HIT_POINTS.SETTING.APPLY_NEGATIVE_HP_NPC.KEY);
   const applyInstantDeath = getSetting(CONSTANTS.DEAD.SETTING.APPLY_INSTANT_DEATH.KEY);
   const healFromZero = getSetting(CONSTANTS.HIT_POINTS.SETTING.NEGATIVE_HP_HEAL_FROM_ZERO.KEY);
 
-  if ( !(applyNegativeHp || applyInstantDeath) || !healFromZero ) return;
+  const hasNegativeHp = (actor.type === "npc") ? applyNegativeHpNpc : (applyNegativeHp || applyInstantDeath);
+  if ( !hasNegativeHp || !healFromZero ) return;
 
   if ( dnd5e.hp.value < 0 ) {
     const newHp = data.system.attributes.hp.value - dnd5e.hp.value;
@@ -537,8 +558,11 @@ function healActor(actor, data, options) {
  * @param {object} options The options
  */
 function recalculateDamage(actor, amount, updates, options) {
-  if ( !getSetting(CONSTANTS.HIT_POINTS.SETTING.APPLY_NEGATIVE_HP.KEY)
-        && !getSetting(CONSTANTS.DEAD.SETTING.APPLY_INSTANT_DEATH.KEY) ) return;
+  const hasNegativeHp = (actor.type === "npc")
+    ? getSetting(CONSTANTS.HIT_POINTS.SETTING.APPLY_NEGATIVE_HP_NPC.KEY)
+    : (getSetting(CONSTANTS.HIT_POINTS.SETTING.APPLY_NEGATIVE_HP.KEY)
+        || getSetting(CONSTANTS.DEAD.SETTING.APPLY_INSTANT_DEATH.KEY));
+  if ( !hasNegativeHp ) return;
 
   Logger.debug("Recalculating damage...");
 
@@ -722,7 +746,8 @@ function updateDeathSaves(source, actor, data, options) {
  * @param {object} updates The updates
  */
 function updateHp(actor, updates) {
-  if ( getSetting(CONSTANTS.HIT_POINTS.SETTING.APPLY_NEGATIVE_HP.KEY) ) return;
+  if ( getSetting(CONSTANTS.HIT_POINTS.SETTING.APPLY_NEGATIVE_HP.KEY) && actor.type === "character" ) return;
+  if ( getSetting(CONSTANTS.HIT_POINTS.SETTING.APPLY_NEGATIVE_HP_NPC.KEY) && actor.type === "npc" ) return;
 
   Logger.debug("Updating HP...");
 
@@ -750,7 +775,8 @@ function updateHp(actor, updates) {
 function updateHpMeter(app, html, data) {
   const sheetType = SHEET_TYPE[app.constructor.name];
 
-  if ( !sheetType || sheetType.legacy || !sheetType.character ) return;
+  if ( !sheetType || sheetType.legacy ) return;
+  if ( !sheetType.character && !(sheetType.npc && getSetting(CONSTANTS.HIT_POINTS.SETTING.APPLY_NEGATIVE_HP_NPC.KEY)) ) return;
 
   Logger.debug("Updating HP meter...");
 
