@@ -60,7 +60,6 @@ import { register as registerToolProficiencies, setConfig as setToolProficiencie
 import { register as registerWeaponIds, setConfig as setWeaponIds } from "./configurations/weapon-ids.js";
 import { register as registerWeaponMasteries, setConfig as setWeaponMasteries } from "./configurations/weapon-masteries.js";
 import { register as registerWeaponProficiencies, setConfig as setWeaponProficiencies } from "./configurations/weapon-proficiencies.js";
-import { patchModifyTokenAttribute } from "./patches/actor-modify-token-attribute.js";
 import { patchD20Die } from "./patches/d20-die.js";
 import { patchD20Roll } from "./patches/d20-roll.js";
 import { patchPrepareEncumbrance } from "./patches/prepare-encumbrance.js";
@@ -128,7 +127,6 @@ Hooks.on("init", async () => {
     }
   );
 
-  patchModifyTokenAttribute();
   patchD20Die();
   patchD20Roll();
   patchPrepareEncumbrance();

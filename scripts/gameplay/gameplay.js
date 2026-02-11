@@ -19,6 +19,12 @@ import { GameplayForm } from "../forms/gameplay-form.js";
 
 const constants = CONSTANTS.GAMEPLAY;
 
+/**
+ * Whether to skip heal-from-zero logic in the preUpdateActor hook.
+ * Set when the HP update is handled by preApplyDamage or is an absolute set from the actor sheet.
+ */
+let _skipHealFromZero = false;
+
 /* -------------------------------------------- */
 
 /**
@@ -276,6 +282,7 @@ function registerHooks() {
   Hooks.on("combatRound", rerollInitiative);
   Hooks.on("createToken", rollNpcHp);
   Hooks.on("dnd5e.preApplyDamage", (actor, amount, updates, options) => {
+    if ( options.isDelta === false ) _skipHealFromZero = true;
     recalculateDamage(actor, amount, updates, options);
     const instantDeath = applyInstantDeath(actor, updates);
     updateHp(actor, updates);
@@ -307,6 +314,7 @@ function registerHooks() {
   Hooks.on("renderActorSheet", updateHpMeter);
   Hooks.on("renderActorSheetV2", makeDeathSavesBlind);
   Hooks.on("renderActorSheetV2", updateHpMeter);
+  Hooks.on("renderActorSheetV2", listenHpInput);
 }
 
 /* -------------------------------------------- */
@@ -538,6 +546,11 @@ function healActor(actor, data, options) {
   const hasNegativeHp = (actor.type === "npc") ? applyNegativeHpNpc : (applyNegativeHp || applyInstantDeath);
   if ( !hasNegativeHp || !healFromZero ) return;
 
+  if ( _skipHealFromZero ) {
+    _skipHealFromZero = false;
+    return;
+  }
+
   if ( dnd5e.hp.value < 0 ) {
     const newHp = data.system.attributes.hp.value - dnd5e.hp.value;
     if ( newHp > 0 && newHp > data.system.attributes.hp.value ) {
@@ -550,8 +563,7 @@ function healActor(actor, data, options) {
 
 /**
  * Triggered by the 'dnd5e.preApplyDamage' hook.
- * If 'Apply Negative HP' or 'Apply Instant Death' is enabled, recalculate damage to apply a negative value to HP.
- * If 'Heal from 0 HP' is enabled, recalculate healing to increase HP from zero instead of the negative value.
+ * If 'Apply Negative HP' or 'Apply Instant Death' is enabled, remove the 0 HP floor clamp to allow negative HP.
  * @param {object} actor The actor
  * @param {number} amount The damage amount
  * @param {object} updates The properties to update
@@ -564,26 +576,34 @@ function recalculateDamage(actor, amount, updates, options) {
         || getSetting(CONSTANTS.DEAD.SETTING.APPLY_INSTANT_DEATH.KEY));
   if ( !hasNegativeHp ) return;
 
-  Logger.debug("Recalculating damage...");
-
-  const isDelta = options.isDelta ?? false;
-  const hpMax = actor?.system?.attributes?.hp?.effectiveMax ?? actor?.system?.attributes?.hp?.max ?? 0;
-  const hpTemp = actor?.system?.attributes?.hp?.temp ?? 0;
   const hpValue = actor?.system?.attributes?.hp?.value ?? 0;
-  const startHp = hpValue;
-
-  let newHpValue = updates["system.attributes.hp.value"];
 
   if ( amount > 0 ) {
-    newHpValue = hpValue - Math.max(amount - hpTemp, 0);
-  } else {
-    let healing = Math.abs(amount);
-    newHpValue = Math.min(startHp + healing, hpMax);
+    Logger.debug("Recalculating damage...");
+
+    const hpTemp = actor?.system?.attributes?.hp?.temp ?? 0;
+    const tempAbsorbed = hpTemp - (updates["system.attributes.hp.temp"] ?? 0);
+    const newHpValue = hpValue - (amount - tempAbsorbed);
+
+    updates["system.attributes.hp.value"] = newHpValue;
+
+    Logger.debug("Damage recalculated");
+  } else if ( amount < 0 && hpValue < 0 ) {
+    Logger.debug("Recalculating healing...");
+
+    const hpMax = actor?.system?.attributes?.hp?.effectiveMax ?? actor?.system?.attributes?.hp?.max ?? 0;
+    const healFromZero = getSetting(CONSTANTS.HIT_POINTS.SETTING.NEGATIVE_HP_HEAL_FROM_ZERO.KEY);
+
+    if ( healFromZero && options.isDelta !== false ) {
+      updates["system.attributes.hp.value"] = Math.min(-amount, hpMax);
+    } else {
+      updates["system.attributes.hp.value"] = Math.min(hpValue - amount, hpMax);
+    }
+
+    _skipHealFromZero = true;
+
+    Logger.debug("Healing recalculated");
   }
-
-  updates["system.attributes.hp.value"] = newHpValue;
-
-  Logger.debug("Damage recalculated");
 }
 
 /* -------------------------------------------- */
@@ -794,6 +814,27 @@ function updateHpMeter(app, html, data) {
   progress.style = `--bar-percentage: ${pct}%;`;
 
   Logger.debug("HP meter updated");
+}
+
+/* -------------------------------------------- */
+
+/**
+ * Triggered by the 'renderActorSheetV2' hook.
+ * Adds a capture-phase listener to the HP input to detect absolute vs delta input.
+ * @param {object} app The app
+ * @param {object} html The HTML
+ */
+function listenHpInput(app, html) {
+  const sheetType = SHEET_TYPE[app.constructor.name];
+  if ( !sheetType || sheetType.legacy ) return;
+
+  const input = html.querySelector('input[name="system.attributes.hp.value"]');
+  if ( !input ) return;
+
+  input.addEventListener("change", (event) => {
+    const hpValue = event.target.value;
+    if ( !hpValue.startsWith("+") && !hpValue.startsWith("-") ) _skipHealFromZero = true;
+  }, { capture: true });
 }
 
 /* -------------------------------------------- */
