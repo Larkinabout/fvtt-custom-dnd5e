@@ -207,7 +207,9 @@
             <div class="form-group">
                 <label>{{localize "CUSTOM_DND5E.form.gameplay.initiative.rerollInitiativeEachRound.label"}}</label>
                 <div class="form-fields">
-                    <dnd5e-checkbox id="custom-dnd5e-reroll-initiative-each-round" name="rerollInitiativeEachRound"{{#if rerollInitiativeEachRound}} checked{{/if}}></dnd5e-checkbox>
+                    <select id="custom-dnd5e-reroll-initiative-each-round" name="rerollInitiativeEachRound">
+                        {{selectOptions selects.rerollInitiativeEachRound.choices selected=rerollInitiativeEachRound localize=true}}
+                    </select>
                 </div>
                 <p class="hint">{{localize "CUSTOM_DND5E.form.gameplay.initiative.rerollInitiativeEachRound.note"}}</p>
             </div>

@@ -330,7 +330,7 @@
       "image": {},
       "text": {
         "format": 1,
-        "content": "<h2>Reroll Initiative Each Round</h2><p>When enabled, this setting automatically reroll initiative for every combatant at the start of each round.</p>"
+        "content": "<h2>Reroll Initiative Each Round</h2><p>This setting controls how initiative is handled at the start of each round.</p><h3>Reroll All</h3><p>Reset and reroll initiative for every combatant at the start of each round.</p><h3>Reset Only</h3><p>Reset initiative for every combatant at the start of each round without automatically rerolling.</p><h3>Reset All, Reroll NPCs Only</h3><p>Reset initiative for every combatant at the start of each round, then automatically reroll only for NPCs. PCs must roll their initiative manually.</p>"
       },
       "video": {
         "controls": true,

@@ -115,6 +115,14 @@ export class GameplayForm extends CustomDnd5eForm {
             npc: "CUSTOM_DND5E.npcs",
             both: "CUSTOM_DND5E.both"
           }
+        },
+        rerollInitiativeEachRound: {
+          choices: {
+            off: "CUSTOM_DND5E.off",
+            rerollAll: "CUSTOM_DND5E.form.gameplay.initiative.rerollAll",
+            resetOnly: "CUSTOM_DND5E.form.gameplay.initiative.resetOnly",
+            rerollNpc: "CUSTOM_DND5E.form.gameplay.initiative.rerollNpc"
+          }
         }
       }
     };

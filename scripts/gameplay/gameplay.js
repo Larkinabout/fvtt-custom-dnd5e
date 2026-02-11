@@ -105,8 +105,8 @@ function registerSettings() {
     {
       scope: "world",
       config: false,
-      type: Boolean,
-      default: false
+      type: String,
+      default: "off"
     }
   );
 
@@ -404,16 +404,24 @@ export function registerNegativeHp() {
 /**
  * Reroll Initiative.
  * Triggered by the 'combatRound' hook.
- * If 'Reroll Initiative Each Round' is enabled, reset and reroll initiative each round.
+ * Reset and/or reroll initiative each round based on the selected mode.
  * @param {object} combat The combat
  * @param {object} data The data
  * @param {object} options The options
  */
 export async function rerollInitiative(combat, data, options) {
-  if ( !getSetting(CONSTANTS.INITIATIVE.SETTING.REROLL_INITIATIVE_EACH_ROUND.KEY) || data.turn !== 0 ) return;
+  let mode = getSetting(CONSTANTS.INITIATIVE.SETTING.REROLL_INITIATIVE_EACH_ROUND.KEY);
+  if ( mode === true ) mode = "rerollAll";
+  if ( !mode || mode === "off" || data.turn !== 0 ) return;
 
   await combat.resetAll();
-  await combat.rollAll();
+
+  if ( mode === "rerollAll" ) {
+    await combat.rollAll();
+  } else if ( mode === "rerollNpc" ) {
+    await combat.rollNPC();
+  }
+
   combat.update({ turn: 0 });
 }
 
