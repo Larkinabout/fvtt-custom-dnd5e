@@ -308,8 +308,6 @@
     "CUSTOM_DND5E.form.gameplay.resting.useCampSupplies.note": "Ao realizar um Descansar Longo, opcionalmente requer gastar Suprimentos de Acampamento",
     "CUSTOM_DND5E.form.gameplay.rollingHitPoints.minimumValue.label": "Valor Mínimo",
     "CUSTOM_DND5E.form.gameplay.rollingHitPoints.minimumValue.note": "Automaticamente rolar novamente quando o resultado estiver abaixo do valor mínimo",
-    "CUSTOM_DND5E.form.gameplay.rollingHitPoints.rollNpcHp.label": "Rolar PVs para PNJs",
-    "CUSTOM_DND5E.form.gameplay.rollingHitPoints.rollNpcHp.note": "Rolar pontos de vida para PNJs ao arrastar seus tokens para a tela",
     "CUSTOM_DND5E.form.gameplay.rollingHitPoints.rerollOnce.label": "Repetir Uma Vez",
     "CUSTOM_DND5E.form.gameplay.rollingHitPoints.rerollOnce.note": "Rolar novamente uma vez, caso contrário, rolar novamente até o mínimo ser alcançado",
     "CUSTOM_DND5E.form.gameplay.rollingHitPoints.showTakeAverage.label": "Mostrar Usar a Média",

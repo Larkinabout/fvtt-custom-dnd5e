@@ -305,8 +305,6 @@
     "CUSTOM_DND5E.form.gameplay.resting.useCampSupplies.note": "Podczas długiego odpoczynku opcjonalnie wymagane jest wydanie zapasów obozowych.",
     "CUSTOM_DND5E.form.gameplay.rollingHitPoints.minimumValue.label": "Minimalna wartość",
     "CUSTOM_DND5E.form.gameplay.rollingHitPoints.minimumValue.note": "Automatyczny ponowny rzut, gdy wynik jest poniżej wartości minimalnej",
-    "CUSTOM_DND5E.form.gameplay.rollingHitPoints.rollNpcHp.label": "Rzut PW dla postaci niezależnych",
-    "CUSTOM_DND5E.form.gameplay.rollingHitPoints.rollNpcHp.note": "Rzut PW dla postaci niezależnych podczas przeciągania ich tokenów na płótno.",
     "CUSTOM_DND5E.form.gameplay.rollingHitPoints.rerollOnce.label": "Powtórz raz",
     "CUSTOM_DND5E.form.gameplay.rollingHitPoints.rerollOnce.note": "Rzuć ponownie raz, w przeciwnym razie rzuć ponownie, aż zostanie osiągnięte minimum",
     "CUSTOM_DND5E.form.gameplay.rollingHitPoints.showTakeAverage.label": "Przyjmij średnią",

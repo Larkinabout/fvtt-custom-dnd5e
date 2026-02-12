@@ -620,9 +620,6 @@ export const CONSTANTS = {
       },
       NEGATIVE_HP_HEAL_FROM_ZERO: {
         KEY: "negative-hp-heal-from-zero"
-      },
-      ROLL_NPC_HP: {
-        KEY: "roll-npc-hp"
       }
     }
   },

@@ -93,16 +93,6 @@ function registerSettings() {
   );
 
   registerSetting(
-    CONSTANTS.HIT_POINTS.SETTING.ROLL_NPC_HP.KEY,
-    {
-      scope: "world",
-      config: false,
-      type: Boolean,
-      default: false
-    }
-  );
-
-  registerSetting(
     CONSTANTS.INITIATIVE.SETTING.REROLL_INITIATIVE_EACH_ROUND.KEY,
     {
       scope: "world",
@@ -302,7 +292,6 @@ function registerHooks() {
   Hooks.on("dnd5e.preRollClassHitPoints", setHitDiceRollFormula);
   Hooks.on("renderHitPointsFlow", modifyHitPointsFlowDialog);
   Hooks.on("combatRound", rerollInitiative);
-  Hooks.on("createToken", rollNpcHp);
   Hooks.on("dnd5e.preApplyDamage", (actor, amount, updates, options) => {
     if ( options.isDelta === false ) _skipHealFromZero = true;
     recalculateDamage(actor, amount, updates, options);
@@ -637,39 +626,6 @@ function recalculateDamage(actor, amount, updates, options) {
 
     Logger.debug("Healing recalculated");
   }
-}
-
-/* -------------------------------------------- */
-
-/**
- * Triggered by the 'preCreateToken' hook.
- * If 'Roll NPC HP' is enabled, roll NPC HP when a token is created.
- * @param {object} token The token
- * @param {object} data The data
- * @param {string} userId The user ID
- */
-async function rollNpcHp(token, data, userId) {
-  if ( game.user.id !== userId ) return;
-
-  const actor = token?.actor;
-
-  if ( actor?.type !== "npc" ) return;
-  if ( !getSetting(CONSTANTS.HIT_POINTS.SETTING.ROLL_NPC_HP.KEY) ) return;
-
-  Logger.debug("Rolling NPC HP...", token);
-
-  const formula = actor.system.attributes.hp.formula;
-
-  if ( !formula ) return;
-
-  const r = Roll.create(formula);
-  await r.evaluate();
-
-  if ( !r.total ) return;
-
-  actor.update({ "system.attributes.hp": { value: r.total, max: r.total } }, { isRest: true });
-
-  Logger.debug("NPC HP rolled", { token, hp: r.total });
 }
 
 /* -------------------------------------------- */

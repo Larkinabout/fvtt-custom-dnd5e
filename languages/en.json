@@ -395,8 +395,6 @@
     "CUSTOM_DND5E.form.gameplay.resting.useCampSupplies.note": "When taking a Long Rest, optionally require spending Camp Supplies",
     "CUSTOM_DND5E.form.gameplay.rollingHitPoints.minimumValue.label": "Minimum Value",
     "CUSTOM_DND5E.form.gameplay.rollingHitPoints.minimumValue.note": "Automatically reroll when result is below the minimum value",
-    "CUSTOM_DND5E.form.gameplay.rollingHitPoints.rollNpcHp.label": "Roll HP for NPCs",
-    "CUSTOM_DND5E.form.gameplay.rollingHitPoints.rollNpcHp.note": "Roll HP for NPCs when dragging their token onto the canvas",
     "CUSTOM_DND5E.form.gameplay.rollingHitPoints.rerollOnce.label": "Reroll Once",
     "CUSTOM_DND5E.form.gameplay.rollingHitPoints.rerollOnce.note": "Reroll once, otherwise reroll until minimum is met",
     "CUSTOM_DND5E.form.gameplay.rollingHitPoints.showTakeAverage.label": "Show Take Average",
