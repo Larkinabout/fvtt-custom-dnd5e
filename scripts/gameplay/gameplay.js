@@ -203,6 +203,16 @@ function registerSettings() {
   );
 
   registerSetting(
+    CONSTANTS.HIT_POINTS.SETTING.MASSIVE_DAMAGE_TABLE.KEY,
+    {
+      scope: "world",
+      config: false,
+      type: String,
+      default: ""
+    }
+  );
+
+  registerSetting(
     CONSTANTS.HIT_POINTS.SETTING.APPLY_NEGATIVE_HP.KEY,
     {
       scope: "world",
@@ -302,7 +312,10 @@ function registerHooks() {
     awardInspiration("rollAttack", item, roll);
     // applyHighLowGround(item, roll, ability);
   });
-  Hooks.on("dnd5e.rollSavingThrow", (actor, roll, ability) => { awardInspiration("rollSavingThrow", actor, roll); });
+  Hooks.on("dnd5e.rollSavingThrow", (rolls, data) => {
+    awardInspiration("rollSavingThrow", rolls, data);
+    handleMassiveDamageSaveResult(rolls, data);
+  });
   Hooks.on("dnd5e.rollSkill", (actor, roll, ability) => { awardInspiration("rollSkill", actor, roll); });
   Hooks.on("dnd5e.rollToolCheck", (actor, roll, ability) => { awardInspiration("rollToolCheck", actor, roll); });
   Hooks.on("preUpdateActor", (actor, data, options, userId) => {
@@ -953,6 +966,11 @@ function capturePreviousData(actor, data, options, userId) {
  * @returns {Promise<void>} The created chat message
  */
 async function createMassiveDamageCard(actor, data) {
+  const tableUuid = getSetting(CONSTANTS.HIT_POINTS.SETTING.MASSIVE_DAMAGE_TABLE.KEY);
+  if ( tableUuid ) {
+    await actor.setFlag("custom-dnd5e", "pendingMassiveDamageSave", true);
+  }
+
   const dataset = { ability: "con", dc: "15", type: "save" };
   let label = game.i18n.format("EDITOR.DND5E.Inline.DC", { dc: 15, check: game.i18n.localize(CONFIG.DND5E.abilities.con.label) });
   label = game.i18n.format("EDITOR.DND5E.Inline.SaveLong", { save: label });
@@ -969,4 +987,38 @@ async function createMassiveDamageCard(actor, data) {
     speaker: MessageClass.getSpeaker({ user: game.user })
   };
   return MessageClass.create(chatData);
+}
+
+/* -------------------------------------------- */
+
+/**
+ * Triggered by the 'dnd5e.rollSavingThrow' hook.
+ * If the actor has the 'pendingMassiveDamageSave' flag and fails a CON save, roll on the system shock table.
+ * @param {D20Roll[]} rolls The resulting rolls
+ * @param {object} data The hook data
+ * @param {string} data.ability ID of the ability that was rolled
+ * @param {Actor5e} data.subject Actor for which the roll has been performed
+ */
+async function handleMassiveDamageSaveResult(rolls, data) {
+  const actor = data.subject;
+  if ( !actor?.getFlag("custom-dnd5e", "pendingMassiveDamageSave") ) return;
+  if ( data.ability !== "con" ) return;
+
+  // Clear the flag regardless of result
+  await actor.unsetFlag("custom-dnd5e", "pendingMassiveDamageSave");
+
+  const total = rolls[0]?.total;
+  if ( total === undefined || total >= 15 ) return;
+
+  // Save failed — roll on system shock table
+  const tableUuid = getSetting(CONSTANTS.HIT_POINTS.SETTING.MASSIVE_DAMAGE_TABLE.KEY);
+  if ( !tableUuid ) return;
+
+  const table = await fromUuid(tableUuid);
+  if ( !table ) {
+    Logger.error(game.i18n.localize("CUSTOM_DND5E.message.massiveDamageTableNotFound"), true);
+    return;
+  }
+
+  await table.draw();
 }

@@ -81,7 +81,11 @@ export function deleteProperty(object, key) {
  */
 export async function openDocument(uuid) {
   const document = await fromUuid(uuid);
-  document.parent.sheet.render(true, {pageId: document.id, anchor: undefined});
+  if ( document instanceof JournalEntryPage ) {
+    document.parent.sheet.render(true, {pageId: document.id, anchor: undefined});
+  } else {
+    document.sheet.render(true);
+  }
 }
 
 /* -------------------------------------------- */

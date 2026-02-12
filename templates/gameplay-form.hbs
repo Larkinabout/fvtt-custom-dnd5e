@@ -133,8 +133,8 @@
         </fieldset>
         <fieldset>
             <legend>
-                <span>{{localize "CUSTOM_DND5E.hitPoints"}}</span>
-                <button type="button" class="unbutton control-button" data-action="help" data-uuid="Compendium.custom-dnd5e.custom-dnd5e-journals.JournalEntry.ngr8w6WBycK59brj.JournalEntryPage.MVXx2yD2pAfzQBU5" data-tooltip="{{localize "CUSTOM_DND5E.openGuide"}}" aria-label="{{localize "CUSTOM_DND5E.openGuide"}}">
+                <span>{{localize "CUSTOM_DND5E.massiveDamage"}}</span>
+                <button type="button" class="unbutton control-button" data-action="help" data-uuid="Compendium.custom-dnd5e.custom-dnd5e-journals.JournalEntry.ngr8w6WBycK59brj.JournalEntryPage.mD4kTbR2xWpLnQ7v" data-tooltip="{{localize "CUSTOM_DND5E.openGuide"}}" aria-label="{{localize "CUSTOM_DND5E.openGuide"}}">
                     <i class="fas fa-circle-info" inert></i>
                 </button>
             </legend>
@@ -145,6 +145,28 @@
                 </div>
                 <p class="hint">{{localize "CUSTOM_DND5E.form.gameplay.hitPoints.applyMassiveDamage.note"}}</p>
             </div>
+            <div class="form-group">
+                <label>{{localize "CUSTOM_DND5E.form.gameplay.hitPoints.massiveDamageTable.label"}}</label>
+                <div class="form-fields">
+                    <div class="massive-damage-table-field flex1{{#unless massiveDamageTableName}} hidden{{/unless}}">
+                        <span class="massive-damage-table-name">{{massiveDamageTableName}}</span>
+                        <button type="button" data-action="clearMassiveDamageTable" class="unbutton control-button" data-tooltip="{{localize 'CUSTOM_DND5E.form.gameplay.hitPoints.massiveDamageTable.clear'}}" aria-label="{{localize 'CUSTOM_DND5E.form.gameplay.hitPoints.massiveDamageTable.clear'}}">
+                            <i class="fa-solid fa-trash" inert></i>
+                        </button>
+                    </div>
+                    <div class="drop-area flex1{{#if massiveDamageTableName}} hidden{{/if}}">{{localize "CUSTOM_DND5E.form.gameplay.hitPoints.massiveDamageTable.dropHint"}}</div>
+                    <input type="hidden" name="massiveDamageTableUuid" value="{{massiveDamageTableUuid}}">
+                </div>
+                <p class="hint">{{localize "CUSTOM_DND5E.form.gameplay.hitPoints.massiveDamageTable.note"}}</p>
+            </div>
+        </fieldset>
+        <fieldset>
+            <legend>
+                <span>{{localize "CUSTOM_DND5E.hitPoints"}}</span>
+                <button type="button" class="unbutton control-button" data-action="help" data-uuid="Compendium.custom-dnd5e.custom-dnd5e-journals.JournalEntry.ngr8w6WBycK59brj.JournalEntryPage.MVXx2yD2pAfzQBU5" data-tooltip="{{localize "CUSTOM_DND5E.openGuide"}}" aria-label="{{localize "CUSTOM_DND5E.openGuide"}}">
+                    <i class="fas fa-circle-info" inert></i>
+                </button>
+            </legend>
             <h3>{{localize "CUSTOM_DND5E.rollingHitPoints"}}</h3>
             <div class="form-group">
                 <label>{{localize "CUSTOM_DND5E.form.gameplay.rollingHitPoints.minimumValue.label"}}</label>
