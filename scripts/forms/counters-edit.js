@@ -90,8 +90,7 @@ export class CountersEditForm extends CustomDnd5eForm {
     triggerChoices.endOfCombat = "CUSTOM_DND5E.endOfCombat";
     triggerChoices.startOfTurn = "CUSTOM_DND5E.startOfTurn";
     triggerChoices.endOfTurn = "CUSTOM_DND5E.endOfTurn";
-    // TriggerChoices.roll1 = 'CUSTOM_DND5E.form.counters.triggers.trigger.choices.roll1'
-    // triggerChoices.roll20 = 'CUSTOM_DND5E.form.counters.triggers.trigger.choices.roll20'
+    triggerChoices.rollAttack = "CUSTOM_DND5E.form.counters.triggers.trigger.choices.rollAttack";
 
     const actionChoices = {};
 
@@ -240,21 +239,24 @@ export class CountersEditForm extends CustomDnd5eForm {
    * @param {object} el The element.
    */
   #onChangeTrigger(el) {
-    const allowed = ["counterValue"];
+    const showTriggerValue = ["counterValue", "rollAttack"];
+
+    if ( showTriggerValue.includes(el.trigger.value) ) {
+      el.triggerValueGroup?.classList.remove("hidden");
+    } else {
+      el.triggerValueGroup?.classList.add("hidden");
+    }
 
     if ( el.trigger.value === "counterValue" ) {
       el.actionIncrease?.classList.add("hidden");
       el.actionDecrease?.classList.add("hidden");
       el.actionSet?.classList.add("hidden");
-      el.triggerValueGroup?.classList.remove("hidden");
       const type = this.setting[this.key]?.type || this.type;
       el.action.value = (type === "checkbox") ? "check" : "dead";
-    }
-    if ( !allowed.includes(el.trigger.value) ) {
+    } else {
       el.actionIncrease?.classList.remove("hidden");
       el.actionDecrease?.classList.remove("hidden");
       el.actionSet?.classList.remove("hidden");
-      el.triggerValueGroup?.classList.add("hidden");
     }
   }
 

@@ -72,6 +72,7 @@ function registerHooks() {
   Hooks.on("combatStart", handleCombatStart);
   Hooks.on("updateCombat", handleUpdateCombat);
   Hooks.on("dnd5e.preRestCompleted", handleRest);
+  Hooks.on("dnd5e.rollAttack", handleRollAttack);
 }
 
 /* -------------------------------------------- */
@@ -181,6 +182,21 @@ function handleRest(actor, data) {
 /* -------------------------------------------- */
 
 /**
+ * Handle attack roll triggers.
+ * @param {object[]} rolls The rolls
+ * @param {object} data The data
+ */
+function handleRollAttack(rolls, data) {
+  if ( !getSetting(constants.SETTING.COUNTERS.KEY) ) return;
+  const actor = data.subject?.actor;
+  if ( !actor?.isOwner ) return;
+  const dieTotal = rolls[0]?.terms[0]?.total;
+  if ( dieTotal !== undefined ) processTriggers({ actor, triggerType: "rollAttack", dieTotal });
+}
+
+/* -------------------------------------------- */
+
+/**
  * Whether the counter's value has changed.
  * @param {object} data The data
  * @returns {boolean} Whether the counter's value has changed
@@ -200,7 +216,7 @@ function hasDataChanged(data) {
  * @param {string} params.triggerType The trigger type, e.g., 'zeroHp', 'halfHp', 'longRest'
  * @param {string} [params.followUpFlag=null] Optional: flag to set for follow-up actions (e.g., 'zeroHpCombatEnd')
  */
-function processTriggers({ actor, data = null, triggerType, followUpFlag = null }) {
+function processTriggers({ actor, data = null, triggerType, followUpFlag = null, dieTotal = null }) {
   const counters = getCounters(actor);
   if ( !counters ) return;
 
@@ -209,7 +225,7 @@ function processTriggers({ actor, data = null, triggerType, followUpFlag = null 
     if ( !counter.triggers ) continue;
     for (const trigger of counter.triggers) {
       if ( trigger.trigger === triggerType ) {
-        handleAction(counterKey, counter, trigger, { actor, data });
+        handleAction(counterKey, counter, trigger, { actor, data, dieTotal });
       }
     }
   }
@@ -231,7 +247,10 @@ function processTriggers({ actor, data = null, triggerType, followUpFlag = null 
  * @param {Actor} params.actor The actor
  * @param {object} [params.data=null] The data
  */
-function handleAction(counterKey, counter, trigger, { actor, data }) {
+function handleAction(counterKey, counter, trigger, { actor, data, dieTotal = null }) {
+  // For rollAttack, only fire if die value matches trigger value
+  if ( trigger.trigger === "rollAttack" && dieTotal !== Number(trigger.triggerValue) ) return;
+
   switch (trigger.action) {
     case "check":
       checkCheckbox(actor, counterKey);
@@ -398,7 +417,7 @@ function processCounters(type, counters, entity) {
       if ( counter.type === "fraction" ) {
         counter.value = entity.getFlag(MODULE.ID, `${key}.value`) ?? 0;
         counter.canEditMax = (!counter.max && counter.canEdit);
-        counter.max = counter.max ?? entity.getFlag(MODULE.ID, `${key}.max`) ?? 0;
+        counter.max = resolveMax(entity, counter.max) ?? entity.getFlag(MODULE.ID, `${key}.max`) ?? 0;
       }
       if ( counter.type === "successFailure" ) {
         counter.success = entity.getFlag(MODULE.ID, `${key}.success`) ?? 0;
@@ -849,12 +868,27 @@ function getCounters(entity, key = null) {
 /* -------------------------------------------- */
 
 /**
+ * Resolve a max value, handling attribute paths (e.g. @scale.monk.ki-points).
+ * @param {object} entity The entity: actor or item
+ * @param {number|string} max The max value or attribute path
+ * @returns {number|null} The resolved max value
+ */
+function resolveMax(entity, max) {
+  if ( typeof max === "string" && max.startsWith("@") ) {
+    return foundry.utils.getProperty(entity.system, max.substring(1)) ?? null;
+  }
+  return max || null;
+}
+
+/* -------------------------------------------- */
+
+/**
  * Get the counter's max value.
  * @param {object} entity The entity: actor or item
  * @param {string} key The counter key
- * @returns {number} The max value
+ * @returns {number|null} The max value
  */
 function getMax(entity, key) {
   const setting = getCounters(entity, key);
-  return setting?.max;
+  return resolveMax(entity, setting?.max);
 }
