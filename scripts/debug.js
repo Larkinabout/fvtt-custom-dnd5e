@@ -1,5 +1,5 @@
 import { MODULE, CONSTANTS } from "./constants.js";
-import { c5eLoadTemplates, Logger, getSetting, setSetting, registerMenu } from "./utils.js";
+import { c5eLoadTemplates, Logger, getSetting, setSetting, registerMenu, showImportDialog } from "./utils.js";
 import { DebugForm } from "./forms/debug-form.js";
 
 const constants = CONSTANTS.DEBUG;
@@ -100,34 +100,7 @@ export async function exportData() {
  * @returns {Promise<boolean>} Whether the import was successful
  */
 export async function importData() {
-  const content = await foundry.applications.handlebars.renderTemplate(constants.TEMPLATE.IMPORT_DIALOG, {});
-  const dialog = new Promise((resolve, reject) => {
-    new Dialog({
-      title: game.i18n.localize("CUSTOM_DND5E.importData"),
-      content,
-      buttons: {
-        import: {
-          icon: '<i class="fas fa-file-import"></i>',
-          label: game.i18n.localize("CUSTOM_DND5E.importData"),
-          callback: async html => {
-            const form = html.find("form")[0];
-            if ( !form.data.files.length ) return Logger.error(game.i18n.localize("CUSTOM_DND5E.dialog.importData.noFile"), true);
-            const resolved = await processImport(form.data.files[0]);
-            resolve(resolved);
-          }
-        },
-        no: {
-          icon: '<i class="fas fa-times"></i>',
-          label: game.i18n.localize("CUSTOM_DND5E.cancel"),
-          callback: html => resolve(false)
-        }
-      },
-      default: "import"
-    }, {
-      width: 400
-    }).render(true);
-  });
-  return await dialog;
+  return showImportDialog(constants.TEMPLATE.IMPORT_DIALOG, {}, processImport);
 }
 
 /* -------------------------------------------- */

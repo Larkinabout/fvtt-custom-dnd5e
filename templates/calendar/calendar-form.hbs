@@ -1,0 +1,28 @@
+<div class="standard-form">
+    <div class="form-group">
+        <label class="flex1" style="min-width:80px; max-width:200px;">{{localize "CUSTOM_DND5E.enableConfiguration"}}</label>
+        <div class="form-fields">
+            <dnd5e-checkbox id="custom-dnd5e-enable-config" name="enableConfig"{{#if (ne enableConfig false)}} checked{{/if}}></dnd5e-checkbox>
+        </div>
+    </div>
+    <hr>
+    <div class="standard-form scrollable">
+        <ul class="custom-dnd5e-list flexcol">
+            {{> "modules/custom-dnd5e/templates/calendar/calendar-list.hbs" items=items}}
+        </ul>
+    </div>
+    <footer class="form-footer" data-application-part="footer">
+        <button type="button" data-action="new" class="new-button bright">
+            <i class="fas fa-plus"></i>{{localize "CUSTOM_DND5E.form.button.new.label"}}
+        </button>
+        <button type="button" data-action="export">
+            <i class="fas fa-file-export"></i>{{localize "CUSTOM_DND5E.exportData"}}
+        </button>
+        <button type="button" data-action="import">
+            <i class="fas fa-file-import"></i>{{localize "CUSTOM_DND5E.importData"}}
+        </button>
+        <button type="submit" class="save-button">
+            <i class="fas fa-solid fa-floppy-disk"></i>{{localize "CUSTOM_DND5E.form.button.save.label"}}
+        </button>
+    </footer>
+</div>

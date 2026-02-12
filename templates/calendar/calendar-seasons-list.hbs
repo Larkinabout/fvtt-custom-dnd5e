@@ -1,0 +1,12 @@
+{{#each seasons}}
+<li class="custom-dnd5e-item flexrow" data-index="{{this.index}}">
+    <div class="custom-dnd5e-col-group flexrow" style="gap: 0.25rem; align-items: center;">
+        <input type="text" name="seasons.{{this.index}}.name" value="{{this.name}}" placeholder="{{localize "CUSTOM_DND5E.form.calendars.seasonName"}}" style="flex: 2;">
+        <input type="number" name="seasons.{{this.index}}.dayStart" value="{{this.dayStart}}" placeholder="{{localize "CUSTOM_DND5E.form.calendars.dayStart"}}" style="flex: 1;" min="0">
+        <input type="number" name="seasons.{{this.index}}.dayEnd" value="{{this.dayEnd}}" placeholder="{{localize "CUSTOM_DND5E.form.calendars.dayEnd"}}" style="flex: 1;" min="0">
+        <button type="button" data-action="removeRow" data-section="seasons" data-index="{{this.index}}" class="flex0 custom-dnd5e-list-button" data-tooltip="{{localize "CUSTOM_DND5E.form.button.delete.tooltip"}}">
+            <i class="fas fa-xmark"></i>
+        </button>
+    </div>
+</li>
+{{/each}}

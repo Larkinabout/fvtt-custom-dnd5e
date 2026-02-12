@@ -30,14 +30,17 @@ export class Logger {
    * @param {*} data The data
    */
   static debug(message, data) {
-    if ( game.settings && game.settings.get(MODULE.ID, CONSTANTS.DEBUG.SETTING.KEY) ) {
-      if ( !data ) {
-        console.log(`${MODULE.NAME} Debug | ${message}`);
-        return;
-      }
-      const dataClone = foundry.utils.deepClone(data);
-      console.log(`${MODULE.NAME} Debug | ${message}`, dataClone);
+    try {
+      if ( !game.settings?.get(MODULE.ID, CONSTANTS.DEBUG.SETTING.KEY) ) return;
+    } catch {
+      return;
     }
+    if ( !data ) {
+      console.log(`${MODULE.NAME} Debug | ${message}`);
+      return;
+    }
+    const dataClone = foundry.utils.deepClone(data);
+    console.log(`${MODULE.NAME} Debug | ${message}`, dataClone);
   }
 }
 
@@ -520,6 +523,43 @@ export async function c5eLoadTemplates(templates) {
   } catch (error) {
     Logger.debug("Failed to load templates", { templates, error });
   }
+}
+
+/* -------------------------------------------- */
+
+/**
+ * Show an import file dialog.
+ * @param {string} templatePath The path to the Handlebars template for the dialog content
+ * @param {object} templateContext The context to pass to the template
+ * @param {Function} processCallback The callback to process the selected file, receives a File and returns a boolean
+ * @returns {Promise<boolean>} Whether the import was successful
+ */
+export async function showImportDialog(templatePath, templateContext, processCallback) {
+  const content = await foundry.applications.handlebars.renderTemplate(templatePath, templateContext);
+  return foundry.applications.api.DialogV2.confirm({
+    window: {
+      title: game.i18n.localize("CUSTOM_DND5E.importData")
+    },
+    content,
+    modal: true,
+    position: { width: 400 },
+    yes: {
+      icon: "fas fa-file-import",
+      label: game.i18n.localize("CUSTOM_DND5E.importData"),
+      callback: async (event, button, dialog) => {
+        const form = dialog.element.querySelector("form");
+        if ( !form.data.files.length ) {
+          Logger.error(game.i18n.localize("CUSTOM_DND5E.dialog.importData.noFile"), true);
+          return false;
+        }
+        return processCallback(form.data.files[0]);
+      }
+    },
+    no: {
+      icon: "fas fa-times",
+      label: game.i18n.localize("CUSTOM_DND5E.cancel")
+    }
+  });
 }
 
 /* -------------------------------------------- */

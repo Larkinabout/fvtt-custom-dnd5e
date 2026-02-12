@@ -186,7 +186,7 @@ export const CONSTANTS = {
     MENU: {
       KEY: "bastions-menu",
       HINT: "CUSTOM_DND5E.menu.bastions.hint",
-      ICON: "fas fa-fort",
+      ICON: "fas fa-chess-rook",
       LABEL: "CUSTOM_DND5E.menu.bastions.label",
       NAME: "CUSTOM_DND5E.menu.bastions.name"
     },
@@ -245,6 +245,34 @@ export const CONSTANTS = {
     ICON: "modules/custom-dnd5e/media/icons/bloodied.svg",
     CONDITION_UUID: "Compendium.custom-dnd5e.custom-dnd5e-journals.JournalEntry.ngr8w6WBycK59brj.JournalEntryPage.sV0ZCKxwh4n4ZU1P",
     UUID: "Compendium.custom-dnd5e.custom-dnd5e-journals.JournalEntry.B48iqFBddUikMMer.JournalEntryPage.GjOBdXwapcYvUihc"
+  },
+  CALENDAR: {
+    ID: "calendar",
+    MENU: {
+      KEY: "calendar-menu",
+      HINT: "CUSTOM_DND5E.menu.calendars.hint",
+      ICON: "fas fa-calendar-days",
+      LABEL: "CUSTOM_DND5E.menu.calendars.label",
+      NAME: "CUSTOM_DND5E.menu.calendars.name"
+    },
+    SETTING: {
+      ENABLE: {
+        KEY: "enable-calendar"
+      },
+      CONFIG: {
+        KEY: "calendar"
+      }
+    },
+    TEMPLATE: {
+      FORM: "modules/custom-dnd5e/templates/calendar/calendar-form.hbs",
+      LIST: "modules/custom-dnd5e/templates/calendar/calendar-list.hbs",
+      EDIT: "modules/custom-dnd5e/templates/calendar/calendar-edit-form.hbs",
+      MONTHS_LIST: "modules/custom-dnd5e/templates/calendar/calendar-months-list.hbs",
+      DAYS_LIST: "modules/custom-dnd5e/templates/calendar/calendar-days-list.hbs",
+      SEASONS_LIST: "modules/custom-dnd5e/templates/calendar/calendar-seasons-list.hbs",
+      FESTIVALS_LIST: "modules/custom-dnd5e/templates/calendar/calendar-festivals-list.hbs"
+    },
+    UUID: "Compendium.custom-dnd5e.custom-dnd5e-journals.JournalEntry.B48iqFBddUikMMer.JournalEntryPage.cR8kYmNpV3tZbW5d"
   },
   CHAT_COMMANDS: {
     SETTING: {

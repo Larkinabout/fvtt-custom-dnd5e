@@ -10,6 +10,7 @@ import { register as registerArmorIds, setConfig as setArmorIds } from "./config
 import { register as registerArmorProficiencies, setConfig as setArmorProficiencies } from "./configurations/armor-proficiencies.js";
 import { register as registerBastions, setConfig as setBastions } from "./configurations/bastions.js";
 import { register as registerBloodied, setConfig as setBloodied, addBloodiedCondition } from "./configurations/bloodied.js";
+import { register as registerCalendar } from "./configurations/calendar.js";
 import { register as registerCampSupplies } from "./gameplay/camp-supplies.js";
 import { register as registerConditions, registerMenu as registerConditionsMenu, setConfig as setConditions } from "./configurations/conditions.js";
 import { register as registerConsumableTypes, setConfig as setConsumableTypes } from "./configurations/consumable-types.js";
@@ -146,6 +147,7 @@ Hooks.on("init", async () => {
   registerArmorProficiencies();
   registerBastions();
   registerBloodied();
+  registerCalendar();
   registerCampSupplies();
   registerConditionsMenu();
   registerConsumableTypes();

@@ -491,3 +491,30 @@
   font-weight: bold;
   text-align: center;
 }
+
+/*************************************
+    CALENDAR EDIT FORM
+**************************************/
+
+#custom-dnd5e-calendar-edit-form .custom-dnd5e-list-header {
+    flex: none;
+    margin-right: calc(-1 * var(--scroll-margin, 0.75rem));
+    padding-right: var(--scroll-margin, 0.75rem);
+    overflow: hidden;
+    scrollbar-gutter: stable;
+}
+
+#custom-dnd5e-calendar-edit-form .custom-dnd5e-list-header > span:not(:last-child) {
+    box-sizing: border-box;
+    padding: 0 6px;
+    border: 1px solid transparent;
+}
+
+#custom-dnd5e-calendar-edit-form .custom-dnd5e-col-group {
+    border-left: none;
+    padding-left: 0;
+}
+
+#custom-dnd5e-calendar-edit-form .scrollable {
+    padding-top: 5px;
+}

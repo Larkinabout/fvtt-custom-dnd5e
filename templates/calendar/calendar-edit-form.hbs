@@ -1,0 +1,202 @@
+<div class="standard-form custom-dnd5e-tabbed">
+    <nav class="sheet-tabs tabs">
+        <a class="item{{#if (eq activeTab 'general')}} active{{/if}}" data-action="tab" data-group="primary" data-tab="general">
+            <span>
+                <i class="fa-solid fa-gear"></i>
+                {{localize "CUSTOM_DND5E.form.calendars.general"}}
+            </span>
+        </a>
+        <a class="item{{#if (eq activeTab 'months')}} active{{/if}}" data-action="tab" data-group="primary" data-tab="months">
+            <span>
+                <i class="fa-solid fa-calendar-days"></i>
+                {{localize "CUSTOM_DND5E.form.calendars.months"}}
+            </span>
+        </a>
+        <a class="item{{#if (eq activeTab 'days')}} active{{/if}}" data-action="tab" data-group="primary" data-tab="days">
+            <span>
+                <i class="fa-solid fa-calendar-week"></i>
+                {{localize "CUSTOM_DND5E.form.calendars.days"}}
+            </span>
+        </a>
+        <a class="item{{#if (eq activeTab 'seasons')}} active{{/if}}" data-action="tab" data-group="primary" data-tab="seasons">
+            <span>
+                <i class="fa-solid fa-sun"></i>
+                {{localize "CUSTOM_DND5E.form.calendars.seasons"}}
+            </span>
+        </a>
+        <a class="item{{#if (eq activeTab 'festivals')}} active{{/if}}" data-action="tab" data-group="primary" data-tab="festivals">
+            <span>
+                <i class="fa-solid fa-party-horn"></i>
+                {{localize "CUSTOM_DND5E.form.calendars.festivals"}}
+            </span>
+        </a>
+    </nav>
+    <hr>
+    <div class="standard-form custom-dnd5e-tab-container">
+        {{!-- General Tab --}}
+        <section class="tab{{#if (eq activeTab 'general')}} active{{/if}}" data-group="primary" data-tab="general">
+            <div class="scrollable fieldset-list">
+                <div class="form-group">
+                    <label>{{localize "CUSTOM_DND5E.form.calendars.name"}}</label>
+                    <div class="form-fields">
+                        <input type="text" name="name" value="{{name}}">
+                    </div>
+                </div>
+                <fieldset>
+                    <legend>{{localize "CUSTOM_DND5E.form.calendars.yearZero.label"}}</legend>
+                    <div class="form-group">
+                        <label>{{localize "CUSTOM_DND5E.form.calendars.yearZero.label"}}</label>
+                        <div class="form-fields">
+                            <input type="number" name="years.yearZero" value="{{years.yearZero}}">
+                        </div>
+                        <p class="hint">{{localize "CUSTOM_DND5E.form.calendars.yearZero.hint"}}</p>
+                    </div>
+                    <div class="form-group">
+                        <label>{{localize "CUSTOM_DND5E.form.calendars.firstWeekday.label"}}</label>
+                        <div class="form-fields">
+                            {{#if days.values.length}}
+                            <select name="years.firstWeekday">
+                                {{#each days.values}}
+                                <option value="{{this.index}}"{{#if (eq this.index ../years.firstWeekday)}} selected{{/if}}>{{this.name}}</option>
+                                {{/each}}
+                            </select>
+                            {{else}}
+                            <input type="number" name="years.firstWeekday" value="{{years.firstWeekdayDisplay}}" min="1">
+                            {{/if}}
+                        </div>
+                        <p class="hint">{{localize "CUSTOM_DND5E.form.calendars.firstWeekday.hint"}}</p>
+                    </div>
+                    <div class="form-group">
+                        <label>{{localize "CUSTOM_DND5E.form.calendars.leapStart.label"}}</label>
+                        <div class="form-fields">
+                            <input type="number" name="years.leapYear.leapStart" value="{{years.leapYear.leapStart}}">
+                        </div>
+                        <p class="hint">{{localize "CUSTOM_DND5E.form.calendars.leapStart.hint"}}</p>
+                    </div>
+                    <div class="form-group">
+                        <label>{{localize "CUSTOM_DND5E.form.calendars.leapInterval.label"}}</label>
+                        <div class="form-fields">
+                            <input type="number" name="years.leapYear.leapInterval" value="{{years.leapYear.leapInterval}}" min="0">
+                        </div>
+                        <p class="hint">{{localize "CUSTOM_DND5E.form.calendars.leapInterval.hint"}}</p>
+                    </div>
+                </fieldset>
+                <fieldset>
+                    <legend>{{localize "CUSTOM_DND5E.form.calendars.time"}}</legend>
+                    <div class="form-group">
+                        <label>{{localize "CUSTOM_DND5E.form.calendars.daysPerYear"}}</label>
+                        <div class="form-fields">
+                            <input type="number" name="days.daysPerYear" value="{{days.daysPerYear}}" min="1">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>{{localize "CUSTOM_DND5E.form.calendars.hoursPerDay"}}</label>
+                        <div class="form-fields">
+                            <input type="number" name="days.hoursPerDay" value="{{days.hoursPerDay}}" min="1">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>{{localize "CUSTOM_DND5E.form.calendars.minutesPerHour"}}</label>
+                        <div class="form-fields">
+                            <input type="number" name="days.minutesPerHour" value="{{days.minutesPerHour}}" min="1">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>{{localize "CUSTOM_DND5E.form.calendars.secondsPerMinute"}}</label>
+                        <div class="form-fields">
+                            <input type="number" name="days.secondsPerMinute" value="{{days.secondsPerMinute}}" min="1">
+                        </div>
+                    </div>
+                </fieldset>
+            </div>
+        </section>
+
+        {{!-- Months Tab --}}
+        <section class="tab{{#if (eq activeTab 'months')}} active{{/if}}" data-group="primary" data-tab="months">
+            <div class="custom-dnd5e-list-header flexrow" style="gap: 0.25rem; font-weight: bold; font-size: 0.75rem;">
+                <span style="flex: 2;">{{localize "CUSTOM_DND5E.form.calendars.monthName"}}</span>
+                <span style="flex: 1;">{{localize "CUSTOM_DND5E.form.calendars.abbreviation"}}</span>
+                <span style="flex: 0 0 3rem; text-align: center;">#</span>
+                <span style="flex: 0 0 3rem;">{{localize "CUSTOM_DND5E.form.calendars.daysInMonth"}}</span>
+                <span style="flex: 0 0 3rem;">{{localize "CUSTOM_DND5E.form.calendars.leapDays"}}</span>
+                <button type="button" class="flex0 custom-dnd5e-list-button" disabled style="visibility: hidden;"><i class="fas fa-xmark"></i></button>
+            </div>
+            <div class="scrollable">
+                <ul class="custom-dnd5e-list flexcol" data-section="months">
+                    {{> "modules/custom-dnd5e/templates/calendar/calendar-months-list.hbs" months=months}}
+                </ul>
+            </div>
+            <div class="form-footer">
+                <button type="button" data-action="addRow" data-section="months" class="new-button bright">
+                    <i class="fas fa-plus"></i>{{localize "CUSTOM_DND5E.form.button.new.label"}}
+                </button>
+            </div>
+        </section>
+
+        {{!-- Days Tab --}}
+        <section class="tab{{#if (eq activeTab 'days')}} active{{/if}}" data-group="primary" data-tab="days">
+            <div class="custom-dnd5e-list-header flexrow" style="gap: 0.25rem; font-weight: bold; font-size: 0.75rem;">
+                <span style="flex: 2;">{{localize "CUSTOM_DND5E.form.calendars.dayName"}}</span>
+                <span style="flex: 1;">{{localize "CUSTOM_DND5E.form.calendars.abbreviation"}}</span>
+                <span style="flex: 0 0 3rem; text-align: center;">#</span>
+                <button type="button" class="flex0 custom-dnd5e-list-button" disabled style="visibility: hidden;"><i class="fas fa-xmark"></i></button>
+            </div>
+            <div class="scrollable">
+                <ul class="custom-dnd5e-list flexcol" data-section="days">
+                    {{> "modules/custom-dnd5e/templates/calendar/calendar-days-list.hbs" days=days.values}}
+                </ul>
+            </div>
+            <div class="form-footer">
+                <button type="button" data-action="addRow" data-section="days" class="new-button bright">
+                    <i class="fas fa-plus"></i>{{localize "CUSTOM_DND5E.form.button.new.label"}}
+                </button>
+            </div>
+        </section>
+
+        {{!-- Seasons Tab --}}
+        <section class="tab{{#if (eq activeTab 'seasons')}} active{{/if}}" data-group="primary" data-tab="seasons">
+            <div class="custom-dnd5e-list-header flexrow" style="gap: 0.25rem; font-weight: bold; font-size: 0.75rem;">
+                <span style="flex: 2;">{{localize "CUSTOM_DND5E.form.calendars.seasonName"}}</span>
+                <span style="flex: 1; text-align: center;">{{localize "CUSTOM_DND5E.form.calendars.dayStart"}}</span>
+                <span style="flex: 1; text-align: center;">{{localize "CUSTOM_DND5E.form.calendars.dayEnd"}}</span>
+                <button type="button" class="flex0 custom-dnd5e-list-button" disabled style="visibility: hidden;"><i class="fas fa-xmark"></i></button>
+            </div>
+            <div class="scrollable">
+                <ul class="custom-dnd5e-list flexcol" data-section="seasons">
+                    {{> "modules/custom-dnd5e/templates/calendar/calendar-seasons-list.hbs" seasons=seasons}}
+                </ul>
+            </div>
+            <div class="form-footer">
+                <button type="button" data-action="addRow" data-section="seasons" class="new-button bright">
+                    <i class="fas fa-plus"></i>{{localize "CUSTOM_DND5E.form.button.new.label"}}
+                </button>
+            </div>
+        </section>
+
+        {{!-- Festivals Tab --}}
+        <section class="tab{{#if (eq activeTab 'festivals')}} active{{/if}}" data-group="primary" data-tab="festivals">
+            <div class="custom-dnd5e-list-header flexrow" style="gap: 0.25rem; font-weight: bold; font-size: 0.75rem;">
+                <span style="flex: 2;">{{localize "CUSTOM_DND5E.form.calendars.festivalName"}}</span>
+                <span style="flex: 1; text-align: center;">{{localize "CUSTOM_DND5E.form.calendars.month"}}</span>
+                <span style="flex: 1; text-align: center;">{{localize "CUSTOM_DND5E.form.calendars.day"}}</span>
+                <button type="button" class="flex0 custom-dnd5e-list-button" disabled style="visibility: hidden;"><i class="fas fa-xmark"></i></button>
+            </div>
+            <div class="scrollable">
+                <ul class="custom-dnd5e-list flexcol" data-section="festivals">
+                    {{> "modules/custom-dnd5e/templates/calendar/calendar-festivals-list.hbs" festivals=festivals}}
+                </ul>
+            </div>
+            <div class="form-footer">
+                <button type="button" data-action="addRow" data-section="festivals" class="new-button bright">
+                    <i class="fas fa-plus"></i>{{localize "CUSTOM_DND5E.form.button.new.label"}}
+                </button>
+            </div>
+        </section>
+    </div>
+    <hr>
+    <footer class="form-footer" data-application-part="footer">
+        <button type="submit" class="save-button">
+            <i class="fas fa-solid fa-floppy-disk"></i>{{localize "CUSTOM_DND5E.form.button.save.label"}}
+        </button>
+    </footer>
+</div>
