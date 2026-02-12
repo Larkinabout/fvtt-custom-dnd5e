@@ -20,6 +20,7 @@ function getSelects() {
         checkbox: "CUSTOM_DND5E.checkbox",
         fraction: "CUSTOM_DND5E.fraction",
         number: "CUSTOM_DND5E.number",
+        pips: "CUSTOM_DND5E.pips",
         successFailure: "CUSTOM_DND5E.successFailure"
       }
     }

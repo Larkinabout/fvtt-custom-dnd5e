@@ -1,0 +1,253 @@
+{
+  "name": "Counters",
+  "_id": "dR7kYmNpV3tZxW4q",
+  "pages": [
+    {
+      "sort": 100000,
+      "name": "Overview",
+      "type": "text",
+      "_id": "hT3mWqKpR8vXnJ6y",
+      "system": {},
+      "title": {
+        "show": true,
+        "level": 1
+      },
+      "image": {},
+      "text": {
+        "format": 1,
+        "content": "<p>Counters are custom trackable values that appear on actor and item sheets. They can be used to track anything from exhaustion levels to ki points, inspiration, or any other resource or state relevant to your game.</p><h2>Counter Types</h2><p>There are five counter types available:</p><ul><li><p><strong>Checkbox</strong> &mdash; A simple on/off toggle. Useful for tracking binary states like inspiration or whether a feature has been used.</p></li><li><p><strong>Fraction</strong> &mdash; A current/maximum value pair displayed as a fraction (e.g. 3/5). Ideal for limited-use resources like spell slots or charges.</p></li><li><p><strong>Number</strong> &mdash; A single numeric value. Suitable for tracking quantities with no defined maximum, or where the maximum is enforced separately.</p></li><li><p><strong>Pips</strong> &mdash; A row of circular dots that fill sequentially. Clicking a pip sets the counter to that value; clicking the currently active pip decreases it by one. Great for visual tracking of levels like exhaustion.</p></li><li><p><strong>Success/Failure</strong> &mdash; A dual counter that tracks both successes and failures independently. Useful for tracking progress toward goals with both positive and negative outcomes.</p></li></ul><h2>Where Counters Appear</h2><p>Counters can be configured for the following entity types:</p><ul><li><p><strong>Characters</strong> &mdash; Player character sheets</p></li><li><p><strong>NPCs</strong> &mdash; Non-player character sheets</p></li><li><p><strong>Groups</strong> &mdash; Group actor sheets</p></li><li><p><strong>Items</strong> &mdash; Item sheets</p></li></ul><p>Counters are displayed in a dedicated <strong>Counters</strong> section on each sheet. They are also compatible with the Tidy 5e Sheets module.</p>"
+      },
+      "video": {
+        "controls": true,
+        "volume": 0.5
+      },
+      "src": null,
+      "ownership": {
+        "default": -1
+      },
+      "flags": {},
+      "_stats": {
+        "compendiumSource": null,
+        "duplicateSource": null,
+        "coreVersion": "13.351",
+        "systemId": "dnd5e",
+        "systemVersion": "5.2.5",
+        "createdTime": null,
+        "modifiedTime": null,
+        "lastModifiedBy": null,
+        "exportSource": null
+      },
+      "category": null,
+      "_key": "!journal.pages!dR7kYmNpV3tZxW4q.hT3mWqKpR8vXnJ6y"
+    },
+    {
+      "sort": 200000,
+      "name": "Creating Counters",
+      "type": "text",
+      "_id": "kP5nXrYtQ2wBmF9z",
+      "system": {},
+      "title": {
+        "show": true,
+        "level": 1
+      },
+      "image": {},
+      "text": {
+        "format": 1,
+        "content": "<p>Located in <strong>Game Settings</strong> &gt; <strong>Configure Settings</strong> &gt; <strong>Custom D&amp;D 5e</strong> &gt; <strong>Configure Counters</strong></p><h2>Create a World Counter</h2><p>World counters apply to all entities of a given type (e.g. all characters or all NPCs).</p><ol><li><p>Open the <strong>Configure Counters</strong> form.</p></li><li><p>Select the tab for the entity type: <strong>Character</strong>, <strong>NPC</strong>, <strong>Group</strong>, or <strong>Item</strong>.</p></li><li><p>Click <strong>Create New</strong>.</p></li><li><p>Enter a <strong>Label</strong> for the counter.</p></li><li><p>Select a <strong>Type</strong>: Checkbox, Fraction, Number, Pips, or Success/Failure.</p></li><li><p>Toggle <strong>Visible</strong> to control whether the counter appears on sheets.</p></li><li><p>(Optional) Click the <strong>Edit</strong> button to open Advanced Options (see below).</p></li><li><p>Click <strong>Save and Close</strong>.</p></li></ol><article class=\"custom-dnd5e-note\"><header><img src=\"modules/custom-dnd5e/media/icons/note.svg\" /><p>Note</p></header><p>A unique key is auto-generated for each counter. You can change it in Advanced Options, but it must remain unique across all counters of the same entity type.</p></article><h2>Create an Entity Counter</h2><p>Entity counters are specific to a single actor or item. They override world counters of the same key.</p><ol><li><p>Open the actor or item sheet.</p></li><li><p>Click the <strong>Configure Counters</strong> button (cog icon) in the Counters section.</p></li><li><p>Click <strong>Create New</strong>.</p></li><li><p>Enter a <strong>Label</strong> and select a <strong>Type</strong>.</p></li><li><p>Click <strong>Save and Close</strong>.</p></li></ol><article class=\"custom-dnd5e-tip\"><header><img src=\"modules/custom-dnd5e/media/icons/tip.svg\" /><p>Tip</p></header><p>You can copy a counter's property path to the clipboard using the copy button next to each counter. This is useful for referencing counters in macros or other modules. The property path follows the format <code>@flags.custom-dnd5e.{key}</code>.</p></article>"
+      },
+      "video": {
+        "controls": true,
+        "volume": 0.5
+      },
+      "src": null,
+      "ownership": {
+        "default": -1
+      },
+      "flags": {},
+      "_stats": {
+        "compendiumSource": null,
+        "duplicateSource": null,
+        "coreVersion": "13.351",
+        "systemId": "dnd5e",
+        "systemVersion": "5.2.5",
+        "createdTime": null,
+        "modifiedTime": null,
+        "lastModifiedBy": null,
+        "exportSource": null
+      },
+      "category": null,
+      "_key": "!journal.pages!dR7kYmNpV3tZxW4q.kP5nXrYtQ2wBmF9z"
+    },
+    {
+      "sort": 300000,
+      "name": "Advanced Options",
+      "type": "text",
+      "_id": "mR7pZtWvS4yDnH2a",
+      "system": {},
+      "title": {
+        "show": true,
+        "level": 1
+      },
+      "image": {},
+      "text": {
+        "format": 1,
+        "content": "<p>Click the <strong>Edit</strong> button on any counter to open the Advanced Options form. This form has two tabs: <strong>Options</strong> and <strong>Triggers</strong>.</p><h2>Options</h2><h3>Key</h3><p>A unique identifier for the counter. Auto-generated when the counter is created. The key must be unique across all counters of the same entity type.</p><h3>Viewable By</h3><p>The minimum user role required to see this counter on a sheet. Choose from Player, Trusted, Assistant, or Gamemaster.</p><h3>Editable By</h3><p>The minimum user role required to modify this counter's value. Choose from Player, Trusted, Assistant, or Gamemaster.</p><h3>Maximum Value</h3><p>Sets an upper limit for the counter's value. This field is available for all types except Checkbox.</p><p>The maximum can be set in two ways:</p><ul><li><p><strong>Static number</strong> &mdash; Enter a number directly (e.g. <code>5</code>).</p></li><li><p><strong>Attribute path</strong> &mdash; Enter an attribute path prefixed with <code>@</code> to dynamically resolve the maximum from the entity's system data (e.g. <code>@scale.monk.ki-points</code> or <code>@abilities.wisdom.mod</code>).</p></li></ul><article class=\"custom-dnd5e-tip\"><header><img src=\"modules/custom-dnd5e/media/icons/tip.svg\" /><p>Tip</p></header><p>Attribute paths reference the entity's system data. For example, <code>@scale.monk.ki-points</code> resolves to the Monk's Ki Points value from their class scale, and <code>@abilities.wisdom.mod</code> resolves to their Wisdom modifier.</p></article><article class=\"custom-dnd5e-note\"><header><img src=\"modules/custom-dnd5e/media/icons/note.svg\" /><p>Note</p></header><p>For the <strong>Pips</strong> type, the Maximum Value determines the number of pips displayed. Without a maximum, no pips will appear.</p></article>"
+      },
+      "video": {
+        "controls": true,
+        "volume": 0.5
+      },
+      "src": null,
+      "ownership": {
+        "default": -1
+      },
+      "flags": {},
+      "_stats": {
+        "compendiumSource": null,
+        "duplicateSource": null,
+        "coreVersion": "13.351",
+        "systemId": "dnd5e",
+        "systemVersion": "5.2.5",
+        "createdTime": null,
+        "modifiedTime": null,
+        "lastModifiedBy": null,
+        "exportSource": null
+      },
+      "category": null,
+      "_key": "!journal.pages!dR7kYmNpV3tZxW4q.mR7pZtWvS4yDnH2a"
+    },
+    {
+      "sort": 400000,
+      "name": "Triggers",
+      "type": "text",
+      "_id": "nS8qAvXwT5zEoI3b",
+      "system": {},
+      "title": {
+        "show": true,
+        "level": 1
+      },
+      "image": {},
+      "text": {
+        "format": 1,
+        "content": "<p>Triggers allow counters to automatically respond to game events. Each counter can have multiple triggers. Open the <strong>Edit</strong> form for a counter and navigate to the <strong>Triggers</strong> tab to configure them.</p><h2>Adding a Trigger</h2><ol><li><p>Click <strong>Create New</strong> in the Triggers tab.</p></li><li><p>Select a <strong>Trigger</strong> event.</p></li><li><p>(If applicable) Set a <strong>Trigger Value</strong>.</p></li><li><p>Select an <strong>Action</strong> to perform.</p></li><li><p>(If applicable) Set an <strong>Action Value</strong>.</p></li><li><p>Click <strong>Save</strong>.</p></li></ol><article class=\"custom-dnd5e-tip\"><header><img src=\"modules/custom-dnd5e/media/icons/tip.svg\" /><p>Tip</p></header><p>Triggers can be reordered by dragging the grip handle on the left side of each trigger.</p></article><h2>Trigger Events</h2><p>The following trigger events are available:</p><table><thead><tr><th><p><strong>Trigger</strong></p></th><th><p><strong>Description</strong></p></th></tr></thead><tbody><tr><td><p>Counter Value</p></td><td><p>Fires when the counter's own value changes. Only available for non-checkbox types. When selected, the only available action is <strong>Dead</strong>.</p></td></tr><tr><td><p>0 HP</p></td><td><p>Fires when the actor's hit points drop to 0.</p></td></tr><tr><td><p>Combat End (0 HP)</p></td><td><p>Fires at the end of combat if the actor reached 0 HP during the combat.</p></td></tr><tr><td><p>Half HP or Lower</p></td><td><p>Fires when the actor's HP drops to 50% or below of their maximum (and was previously above 50%).</p></td></tr><tr><td><p>Short Rest</p></td><td><p>Fires when the actor completes a short rest.</p></td></tr><tr><td><p>Long Rest</p></td><td><p>Fires when the actor completes a long rest.</p></td></tr><tr><td><p>Start of Combat</p></td><td><p>Fires when combat begins, for all combatants.</p></td></tr><tr><td><p>End of Combat</p></td><td><p>Fires when combat ends, for all combatants.</p></td></tr><tr><td><p>Start of Turn</p></td><td><p>Fires at the start of the actor's turn in combat.</p></td></tr><tr><td><p>End of Turn</p></td><td><p>Fires at the end of the actor's turn in combat.</p></td></tr><tr><td><p>Attack Roll</p></td><td><p>Fires when the actor makes an attack roll. Requires a <strong>Trigger Value</strong> specifying the natural d20 result to match (1&ndash;20).</p></td></tr></tbody></table><article class=\"custom-dnd5e-note\"><header><img src=\"modules/custom-dnd5e/media/icons/note.svg\" /><p>Note</p></header><p>The <strong>Counter Value</strong> trigger is not available for Checkbox counters. The <strong>Attack Roll</strong> trigger requires a Trigger Value to specify which die result to match.</p></article><h2>Actions</h2><p>The available actions depend on the counter type.</p><h3>Checkbox Actions</h3><table><thead><tr><th><p><strong>Action</strong></p></th><th><p><strong>Description</strong></p></th></tr></thead><tbody><tr><td><p>Check</p></td><td><p>Sets the checkbox to checked (true).</p></td></tr><tr><td><p>Uncheck</p></td><td><p>Sets the checkbox to unchecked (false).</p></td></tr></tbody></table><h3>Fraction, Number, and Pips Actions</h3><table><thead><tr><th><p><strong>Action</strong></p></th><th><p><strong>Description</strong></p></th></tr></thead><tbody><tr><td><p>Increase</p></td><td><p>Increases the value by the Action Value (defaults to 1).</p></td></tr><tr><td><p>Decrease</p></td><td><p>Decreases the value by the Action Value (defaults to 1).</p></td></tr><tr><td><p>Set</p></td><td><p>Sets the value to the exact Action Value.</p></td></tr><tr><td><p>Dead</p></td><td><p>Applies the Dead status effect if the counter value reaches or exceeds the Trigger Value.</p></td></tr></tbody></table><h3>Success/Failure Actions</h3><table><thead><tr><th><p><strong>Action</strong></p></th><th><p><strong>Description</strong></p></th></tr></thead><tbody><tr><td><p>Increase</p></td><td><p>Increases the success value by the Action Value.</p></td></tr><tr><td><p>Decrease</p></td><td><p>Decreases the success value by the Action Value.</p></td></tr><tr><td><p>Set</p></td><td><p>Sets the success value to the Action Value.</p></td></tr><tr><td><p>Dead</p></td><td><p>Applies the Dead status effect based on the success or failure values.</p></td></tr></tbody></table>"
+      },
+      "video": {
+        "controls": true,
+        "volume": 0.5
+      },
+      "src": null,
+      "ownership": {
+        "default": -1
+      },
+      "flags": {},
+      "_stats": {
+        "compendiumSource": null,
+        "duplicateSource": null,
+        "coreVersion": "13.351",
+        "systemId": "dnd5e",
+        "systemVersion": "5.2.5",
+        "createdTime": null,
+        "modifiedTime": null,
+        "lastModifiedBy": null,
+        "exportSource": null
+      },
+      "category": null,
+      "_key": "!journal.pages!dR7kYmNpV3tZxW4q.nS8qAvXwT5zEoI3b"
+    },
+    {
+      "sort": 500000,
+      "name": "Examples",
+      "type": "text",
+      "_id": "pT9rBwYxU6aFpJ4c",
+      "system": {},
+      "title": {
+        "show": true,
+        "level": 1
+      },
+      "image": {},
+      "text": {
+        "format": 1,
+        "content": "<p>The following examples demonstrate common counter configurations.</p><h2>Exhaustion (Pips)</h2><p>Track exhaustion levels as visual pips, similar to the built-in dnd5e exhaustion tracker.</p><table><caption>Exhaustion Counter</caption><thead><tr><th><p><strong>Property</strong></p></th><th><p><strong>Value</strong></p></th></tr></thead><tbody><tr><td><p>Label</p></td><td><p>Exhaustion</p></td></tr><tr><td><p>Type</p></td><td><p>Pips</p></td></tr><tr><td><p>Maximum Value</p></td><td><p>6</p></td></tr></tbody></table><article class=\"custom-dnd5e-tip\"><header><img src=\"modules/custom-dnd5e/media/icons/tip.svg\" /><p>Tip</p></header><p>Add a trigger with the <strong>Counter Value</strong> event and the <strong>Dead</strong> action with a Trigger Value of 6 to automatically kill a character when they reach 6 levels of exhaustion.</p></article><h2>Ki Points (Pips with Attribute Path)</h2><p>Track a Monk's ki points using an attribute path for the maximum value so it scales with level.</p><table><caption>Ki Points Counter</caption><thead><tr><th><p><strong>Property</strong></p></th><th><p><strong>Value</strong></p></th></tr></thead><tbody><tr><td><p>Label</p></td><td><p>Ki Points</p></td></tr><tr><td><p>Type</p></td><td><p>Pips</p></td></tr><tr><td><p>Maximum Value</p></td><td><p><code>@scale.monk.ki-points</code></p></td></tr></tbody></table><p>Add a trigger to reset ki points on a long rest:</p><table><caption>Ki Points Reset Trigger</caption><thead><tr><th><p><strong>Property</strong></p></th><th><p><strong>Value</strong></p></th></tr></thead><tbody><tr><td><p>Trigger</p></td><td><p>Long Rest</p></td></tr><tr><td><p>Action</p></td><td><p>Set</p></td></tr><tr><td><p>Action Value</p></td><td><p>0</p></td></tr></tbody></table><h2>Inspiration (Checkbox)</h2><p>A simple on/off toggle for tracking inspiration.</p><table><caption>Inspiration Counter</caption><thead><tr><th><p><strong>Property</strong></p></th><th><p><strong>Value</strong></p></th></tr></thead><tbody><tr><td><p>Label</p></td><td><p>Inspired</p></td></tr><tr><td><p>Type</p></td><td><p>Checkbox</p></td></tr></tbody></table><h2>Critical Hit Tracker (Number)</h2><p>Automatically count how many natural 20s a character rolls on attack rolls.</p><table><caption>Critical Hit Counter</caption><thead><tr><th><p><strong>Property</strong></p></th><th><p><strong>Value</strong></p></th></tr></thead><tbody><tr><td><p>Label</p></td><td><p>Critical Hits</p></td></tr><tr><td><p>Type</p></td><td><p>Number</p></td></tr></tbody></table><p>Add a trigger to increase on natural 20:</p><table><caption>Critical Hit Trigger</caption><thead><tr><th><p><strong>Property</strong></p></th><th><p><strong>Value</strong></p></th></tr></thead><tbody><tr><td><p>Trigger</p></td><td><p>Attack Roll</p></td></tr><tr><td><p>Trigger Value</p></td><td><p>20</p></td></tr><tr><td><p>Action</p></td><td><p>Increase</p></td></tr><tr><td><p>Action Value</p></td><td><p>1</p></td></tr></tbody></table><h2>Wound Tracker (Fraction)</h2><p>Track wounds sustained versus a maximum threshold, resetting on a long rest.</p><table><caption>Wounds Counter</caption><thead><tr><th><p><strong>Property</strong></p></th><th><p><strong>Value</strong></p></th></tr></thead><tbody><tr><td><p>Label</p></td><td><p>Wounds</p></td></tr><tr><td><p>Type</p></td><td><p>Fraction</p></td></tr><tr><td><p>Maximum Value</p></td><td><p>5</p></td></tr></tbody></table><p>Add triggers to increase on 0 HP and reset on a long rest:</p><table><caption>Wound Triggers</caption><thead><tr><th><p><strong>Trigger</strong></p></th><th><p><strong>Action</strong></p></th><th><p><strong>Action Value</strong></p></th></tr></thead><tbody><tr><td><p>0 HP</p></td><td><p>Increase</p></td><td><p>1</p></td></tr><tr><td><p>Long Rest</p></td><td><p>Set</p></td><td><p>0</p></td></tr></tbody></table><h2>Death Save Tracker (Success/Failure)</h2><p>Track death saving throw successes and failures independently.</p><table><caption>Death Save Counter</caption><thead><tr><th><p><strong>Property</strong></p></th><th><p><strong>Value</strong></p></th></tr></thead><tbody><tr><td><p>Label</p></td><td><p>Death Saves</p></td></tr><tr><td><p>Type</p></td><td><p>Success/Failure</p></td></tr></tbody></table>"
+      },
+      "video": {
+        "controls": true,
+        "volume": 0.5
+      },
+      "src": null,
+      "ownership": {
+        "default": -1
+      },
+      "flags": {},
+      "_stats": {
+        "compendiumSource": null,
+        "duplicateSource": null,
+        "coreVersion": "13.351",
+        "systemId": "dnd5e",
+        "systemVersion": "5.2.5",
+        "createdTime": null,
+        "modifiedTime": null,
+        "lastModifiedBy": null,
+        "exportSource": null
+      },
+      "category": null,
+      "_key": "!journal.pages!dR7kYmNpV3tZxW4q.pT9rBwYxU6aFpJ4c"
+    },
+    {
+      "sort": 600000,
+      "name": "Module API",
+      "type": "text",
+      "_id": "qU0sCxZyV7bGqK5d",
+      "system": {},
+      "title": {
+        "show": true,
+        "level": 1
+      },
+      "image": {},
+      "text": {
+        "format": 1,
+        "content": "<p>Counter values can be modified programmatically through the module API, accessed via <code>game.modules.get('custom-dnd5e').api.counters</code>.</p><h2>Checkbox Functions</h2><table><thead><tr><th><p><strong>Function</strong></p></th><th><p><strong>Description</strong></p></th></tr></thead><tbody><tr><td><p><code>checkCheckbox(entity, counterKey)</code></p></td><td><p>Sets the checkbox to checked (true).</p></td></tr><tr><td><p><code>uncheckCheckbox(entity, counterKey)</code></p></td><td><p>Sets the checkbox to unchecked (false).</p></td></tr><tr><td><p><code>toggleCheckbox(entity, counterKey)</code></p></td><td><p>Toggles the checkbox between checked and unchecked.</p></td></tr></tbody></table><h2>Number Functions</h2><table><thead><tr><th><p><strong>Function</strong></p></th><th><p><strong>Description</strong></p></th></tr></thead><tbody><tr><td><p><code>increaseNumber(entity, key, value)</code></p></td><td><p>Increases the value by the given amount (default: 1).</p></td></tr><tr><td><p><code>decreaseNumber(entity, key, value)</code></p></td><td><p>Decreases the value by the given amount (default: 1).</p></td></tr><tr><td><p><code>modifyNumber(entity, key, value)</code></p></td><td><p>Adds the given value (can be negative) to the current value.</p></td></tr><tr><td><p><code>setNumber(entity, key, value)</code></p></td><td><p>Sets the value to the given amount (default: 0).</p></td></tr></tbody></table><h2>Fraction Functions</h2><table><thead><tr><th><p><strong>Function</strong></p></th><th><p><strong>Description</strong></p></th></tr></thead><tbody><tr><td><p><code>increaseFraction(entity, key, value)</code></p></td><td><p>Increases the fraction value by the given amount (default: 1).</p></td></tr><tr><td><p><code>decreaseFraction(entity, key, value)</code></p></td><td><p>Decreases the fraction value by the given amount (default: 1).</p></td></tr><tr><td><p><code>modifyFraction(entity, key, value)</code></p></td><td><p>Adds the given value (can be negative) to the fraction value.</p></td></tr><tr><td><p><code>setFraction(entity, key, value)</code></p></td><td><p>Sets the fraction value to the given amount (default: 0).</p></td></tr></tbody></table><h2>Pips Functions</h2><table><thead><tr><th><p><strong>Function</strong></p></th><th><p><strong>Description</strong></p></th></tr></thead><tbody><tr><td><p><code>togglePip(entity, counterKey, n)</code></p></td><td><p>Toggles pip number <code>n</code>. If the current value equals <code>n</code>, decreases to <code>n - 1</code>; otherwise sets to <code>n</code>.</p></td></tr></tbody></table><h2>Success/Failure Functions</h2><table><thead><tr><th><p><strong>Function</strong></p></th><th><p><strong>Description</strong></p></th></tr></thead><tbody><tr><td><p><code>increaseSuccess(entity, key, value)</code></p></td><td><p>Increases the success count by the given amount (default: 1).</p></td></tr><tr><td><p><code>decreaseSuccess(entity, key, value)</code></p></td><td><p>Decreases the success count by the given amount (default: 1).</p></td></tr><tr><td><p><code>modifySuccess(entity, key, value)</code></p></td><td><p>Adds the given value to the success count.</p></td></tr><tr><td><p><code>increaseFailure(entity, key, value)</code></p></td><td><p>Increases the failure count by the given amount (default: 1).</p></td></tr><tr><td><p><code>decreaseFailure(entity, key, value)</code></p></td><td><p>Decreases the failure count by the given amount (default: 1).</p></td></tr><tr><td><p><code>modifyFailure(entity, key, value)</code></p></td><td><p>Adds the given value to the failure count.</p></td></tr></tbody></table><h2>Example Usage</h2><p>The following example increases a number counter called <code>wounds</code> on a token's actor:</p><p><code>const api = game.modules.get('custom-dnd5e').api.counters;</code></p><p><code>const actor = token.actor;</code></p><p><code>api.increaseNumber(actor, 'wounds.value', 1);</code></p><article class=\"custom-dnd5e-note\"><header><img src=\"modules/custom-dnd5e/media/icons/note.svg\" /><p>Note</p></header><p>For entity counters (stored as flags on individual actors), the counter key includes a <code>.value</code> suffix for Checkbox, Number, and Pips types (e.g. <code>wounds.value</code>). For Fraction types, use <code>wounds.value</code> for the current value and <code>wounds.max</code> for the maximum. For Success/Failure types, use <code>wounds.success</code> and <code>wounds.failure</code>.</p></article>"
+      },
+      "video": {
+        "controls": true,
+        "volume": 0.5
+      },
+      "src": null,
+      "ownership": {
+        "default": -1
+      },
+      "flags": {},
+      "_stats": {
+        "compendiumSource": null,
+        "duplicateSource": null,
+        "coreVersion": "13.351",
+        "systemId": "dnd5e",
+        "systemVersion": "5.2.5",
+        "createdTime": null,
+        "modifiedTime": null,
+        "lastModifiedBy": null,
+        "exportSource": null
+      },
+      "category": null,
+      "_key": "!journal.pages!dR7kYmNpV3tZxW4q.qU0sCxZyV7bGqK5d"
+    }
+  ],
+  "folder": null,
+  "sort": 0,
+  "ownership": {
+    "default": 0
+  },
+  "flags": {},
+  "_stats": {
+    "compendiumSource": null,
+    "duplicateSource": null,
+    "coreVersion": "13.351",
+    "systemId": "dnd5e",
+    "systemVersion": "5.2.5",
+    "createdTime": null,
+    "modifiedTime": null,
+    "lastModifiedBy": null,
+    "exportSource": null
+  },
+  "categories": [],
+  "_key": "!journal!dR7kYmNpV3tZxW4q"
+}

@@ -293,6 +293,7 @@ function increaseCounter(actor, key, trigger, type) {
       increaseFraction(actor, key, trigger.actionValue);
       break;
     case "number":
+    case "pips":
       increaseNumber(actor, key, trigger.actionValue);
       break;
   }
@@ -313,6 +314,7 @@ function decreaseCounter(actor, key, trigger, type) {
       decreaseFraction(actor, key, trigger.actionValue);
       break;
     case "number":
+    case "pips":
       decreaseNumber(actor, key, trigger.actionValue);
       break;
   }
@@ -331,6 +333,7 @@ function setCounter(actor, key, trigger, type) {
       setFraction(actor, key, trigger.actionValue);
       break;
     case "number":
+    case "pips":
       setNumber(actor, key, trigger.actionValue);
       break;
   }
@@ -409,10 +412,18 @@ function processCounters(type, counters, entity) {
   return Object.entries(foundry.utils.deepClone(counters))
     .filter(([_, counter]) => counter.visible && game.user.role >= (counter.viewRole ?? 1))
     .reduce((acc, [key, counter]) => {
-      counter.property = (type === "entity" && ["checkbox", "number"].includes(counter.type)) ? `${key}.value` : key;
+      counter.property = (type === "entity" && ["checkbox", "number", "pips"].includes(counter.type)) ? `${key}.value` : key;
       counter.canEdit = (!counter.editRole || game.user.role >= counter.editRole);
-      if ( ["checkbox", "number"].includes(counter.type) ) {
+      if ( ["checkbox", "number", "pips"].includes(counter.type) ) {
         counter.value = entity.getFlag(MODULE.ID, counter.property);
+      }
+      if ( counter.type === "pips" ) {
+        counter.max = resolveMax(entity, counter.max) ?? entity.getFlag(MODULE.ID, `${key}.max`) ?? 0;
+        counter.pips = Array.fromRange(counter.max, 1).map(n => ({
+          n,
+          filled: (counter.value ?? 0) >= n,
+          canEdit: counter.canEdit
+        }));
       }
       if ( counter.type === "fraction" ) {
         counter.value = entity.getFlag(MODULE.ID, `${key}.value`) ?? 0;
@@ -516,6 +527,11 @@ export function setupCounterInteractions(entity, counters, container, editable) 
           }
         });
         break;
+      case "pips":
+        counterElement.querySelectorAll(".pip").forEach(pip => {
+          pip.addEventListener("click", () => togglePip(entity, counter.property, Number(pip.dataset.n)));
+        });
+        break;
       case "successFailure":
         links.forEach(link => {
           if ( link.dataset?.input === "success" ) {
@@ -606,6 +622,22 @@ export function toggleCheckbox(entity, counterKey) {
   counterKey = (counterKey.startsWith("counters.")) ? `${counterKey}.value` : counterKey;
   const flag = entity.getFlag(MODULE.ID, counterKey);
   entity.setFlag(MODULE.ID, counterKey, !flag);
+}
+
+/* -------------------------------------------- */
+
+/**
+ * Toggle a pip on a pips counter.
+ * @param {object} entity The entity: actor or item
+ * @param {string} counterKey The counter key
+ * @param {number} n The pip number to toggle
+ */
+export function togglePip(entity, counterKey, n) {
+  const currentValue = entity.getFlag(MODULE.ID, counterKey) ?? 0;
+  const max = getMax(entity, counterKey);
+  const newValue = (currentValue === n) ? n - 1 : n;
+  if ( max && newValue > max ) return;
+  entity.setFlag(MODULE.ID, counterKey, newValue);
 }
 
 /* -------------------------------------------- */

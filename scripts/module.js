@@ -30,7 +30,8 @@ import {
   modifySuccess,
   increaseFailure,
   decreaseFailure,
-  modifyFailure
+  modifyFailure,
+  togglePip
 } from "./counters/counters.js";
 import { register as registerCreatureTypes, setConfig as setCreatureTypes } from "./configurations/creature-types.js";
 import { register as registerCurrency, setConfig as setCurrency } from "./configurations/currency.js";
@@ -115,7 +116,8 @@ Hooks.on("init", async () => {
       modifySuccess,
       increaseFailure,
       decreaseFailure,
-      modifyFailure
+      modifyFailure,
+      togglePip
     }
   };
 

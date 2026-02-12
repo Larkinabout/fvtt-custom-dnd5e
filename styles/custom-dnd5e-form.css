@@ -83,6 +83,11 @@
     padding-right: 0.5rem;
 }
 
+.custom-dnd5e-app.dnd5e2 .standard-form .form-group:not(.label-top, .checkbox),
+.custom-dnd5e-app.dnd5e2.standard-form .form-group:not(.label-top, .checkbox) {
+    gap: 0.5rem;
+}
+
 .custom-dnd5e-app .custom-dnd5e-drag {
     cursor: move;
 }
