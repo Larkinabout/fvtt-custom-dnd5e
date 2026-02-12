@@ -35,7 +35,7 @@
 .dnd5e-theme-dark .dnd5e2:is(.character, .npc)
     .custom-dnd5e-counters-counter input:disabled {
     background-color: var(--dnd5e-color-iron-gray);
-    color: var(--color-text-dark-primary);
+    color: var(--color-text-primary);
 }
 
 .dnd5e-theme-dark :is(.character, .npc)
