@@ -13,7 +13,9 @@ import {
   makeDead,
   unmakeDead,
   makeUnconscious,
-  unmakeUnconscious
+  unmakeUnconscious,
+  shakeScreen,
+  flashScreen
 } from "../utils.js";
 import { GameplayForm } from "../forms/gameplay-form.js";
 
@@ -194,6 +196,16 @@ function registerSettings() {
 
   registerSetting(
     CONSTANTS.HIT_POINTS.SETTING.APPLY_MASSIVE_DAMAGE.KEY,
+    {
+      scope: "world",
+      config: false,
+      type: Boolean,
+      default: false
+    }
+  );
+
+  registerSetting(
+    CONSTANTS.HIT_POINTS.SETTING.MASSIVE_DAMAGE_ANIMATION.KEY,
     {
       scope: "world",
       config: false,
@@ -969,6 +981,11 @@ async function createMassiveDamageCard(actor, data) {
   const tableUuid = getSetting(CONSTANTS.HIT_POINTS.SETTING.MASSIVE_DAMAGE_TABLE.KEY);
   if ( tableUuid ) {
     await actor.setFlag("custom-dnd5e", "pendingMassiveDamageSave", true);
+  }
+
+  if ( getSetting(CONSTANTS.HIT_POINTS.SETTING.MASSIVE_DAMAGE_ANIMATION.KEY) ) {
+    shakeScreen({ intensity: 8, duration: 750 });
+    flashScreen({ duration: 750 });
   }
 
   const dataset = { ability: "con", dc: "15", type: "save" };

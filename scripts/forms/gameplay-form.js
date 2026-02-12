@@ -62,6 +62,7 @@ export class GameplayForm extends CustomDnd5eForm {
   async _prepareContext() {
     const massiveDamageTableUuid = getSetting(CONSTANTS.HIT_POINTS.SETTING.MASSIVE_DAMAGE_TABLE.KEY);
     return {
+      massiveDamageAnimation: getSetting(CONSTANTS.HIT_POINTS.SETTING.MASSIVE_DAMAGE_ANIMATION.KEY),
       massiveDamageTableUuid,
       massiveDamageTableName: await this._resolveTableName(massiveDamageTableUuid),
       levelUpHitPointsRerollMinimumValue: getSetting(CONSTANTS.LEVEL_UP.HIT_POINTS.REROLL.MINIMUM_VALUE.SETTING.KEY),
@@ -229,6 +230,7 @@ export class GameplayForm extends CustomDnd5eForm {
         resetSetting(CONSTANTS.EXHAUSTION.SETTING.APPLY_EXHAUSTION_ON_ZERO_HP.KEY),
         resetSetting(CONSTANTS.EXHAUSTION.SETTING.APPLY_EXHAUSTION_ON_COMBAT_END.KEY),
         resetSetting(CONSTANTS.HIT_POINTS.SETTING.APPLY_MASSIVE_DAMAGE.KEY),
+        resetSetting(CONSTANTS.HIT_POINTS.SETTING.MASSIVE_DAMAGE_ANIMATION.KEY),
         resetSetting(CONSTANTS.HIT_POINTS.SETTING.MASSIVE_DAMAGE_TABLE.KEY),
         resetSetting(CONSTANTS.HIT_POINTS.SETTING.APPLY_NEGATIVE_HP.KEY),
         resetSetting(CONSTANTS.HIT_POINTS.SETTING.NEGATIVE_HP_HEAL_FROM_ZERO.KEY),
@@ -309,6 +311,7 @@ export class GameplayForm extends CustomDnd5eForm {
       setSetting(CONSTANTS.EXHAUSTION.SETTING.APPLY_EXHAUSTION_ON_COMBAT_END.KEY,
         formData.object.applyExhaustionOnCombatEnd),
       setSetting(CONSTANTS.HIT_POINTS.SETTING.APPLY_MASSIVE_DAMAGE.KEY, formData.object.applyMassiveDamage),
+      setSetting(CONSTANTS.HIT_POINTS.SETTING.MASSIVE_DAMAGE_ANIMATION.KEY, formData.object.massiveDamageAnimation),
       setSetting(CONSTANTS.HIT_POINTS.SETTING.MASSIVE_DAMAGE_TABLE.KEY, formData.object.massiveDamageTableUuid),
       setSetting(CONSTANTS.HIT_POINTS.SETTING.APPLY_NEGATIVE_HP.KEY, formData.object.applyNegativeHp),
       setSetting(CONSTANTS.HIT_POINTS.SETTING.APPLY_NEGATIVE_HP_NPC.KEY, formData.object.applyNegativeHpNpc),

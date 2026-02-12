@@ -132,7 +132,7 @@
       "image": {},
       "text": {
         "format": 1,
-        "content": "<h2>Apply Massive Damage</h2><p>When enabled, this setting automatically prompts a DC 15 Constitution Saving Throw when a character takes damage equal to or greater than half their maximum Hit Points.</p><p>This represents the \"Massive Damage\" optional rule from the Dungeon Master's Guide (2014), page 273.</p><h2>Massive Damage Table</h2><p>Optionally assign a Rollable Table to roll on when a character fails the massive damage saving throw. To assign a table, drag and drop a Rollable Table from the sidebar or a compendium onto the Massive Damage Table field.</p><p>To remove the table, click the <i class=\"fa-solid fa-trash\"></i> button.</p>"
+        "content": "<h2>Apply Massive Damage</h2><p>When enabled, this setting automatically prompts a DC 15 Constitution Saving Throw when a character takes damage equal to or greater than half their maximum Hit Points.</p><p>This represents the \"Massive Damage\" optional rule from the Dungeon Master's Guide (2014), page 273.</p><h2>Massive Damage Animation</h2><p>When enabled, a screen shake and red flash effect will play when massive damage is triggered. This effect is skipped when Foundry's Photosensitive Mode is enabled in the core settings.</p><h2>Massive Damage Table</h2><p>Optionally assign a Rollable Table to roll on when a character fails the massive damage saving throw. To assign a table, drag and drop a Rollable Table from the sidebar or a compendium onto the Massive Damage Table field.</p><p>To remove the table, click the <i class=\"fa-solid fa-trash\"></i> button.</p>"
       },
       "video": {
         "controls": true,

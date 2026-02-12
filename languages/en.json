@@ -361,6 +361,8 @@
     "CUSTOM_DND5E.form.gameplay.exhaustion.applyExhaustionOnCombatEnd.note": "If a character is reduced to 0 HP in combat, apply Exhaustion when the combat ends",
     "CUSTOM_DND5E.form.gameplay.hitPoints.applyMassiveDamage.label": "Apply Massive Damage",
     "CUSTOM_DND5E.form.gameplay.hitPoints.applyMassiveDamage.note": "Apply Massive Damage when a character suffers damage equal to or greater than half their max HP",
+    "CUSTOM_DND5E.form.gameplay.hitPoints.massiveDamageAnimation.label": "Massive Damage Animation",
+    "CUSTOM_DND5E.form.gameplay.hitPoints.massiveDamageAnimation.note": "Play a screen shake and red flash when massive damage is triggered",
     "CUSTOM_DND5E.form.gameplay.hitPoints.massiveDamageTable.clear": "Remove Table",
     "CUSTOM_DND5E.form.gameplay.hitPoints.massiveDamageTable.dropHint": "Drag & drop a Rollable Table",
     "CUSTOM_DND5E.form.gameplay.hitPoints.massiveDamageTable.label": "Massive Damage Table",

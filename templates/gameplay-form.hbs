@@ -146,6 +146,13 @@
                 <p class="hint">{{localize "CUSTOM_DND5E.form.gameplay.hitPoints.applyMassiveDamage.note"}}</p>
             </div>
             <div class="form-group">
+                <label>{{localize "CUSTOM_DND5E.form.gameplay.hitPoints.massiveDamageAnimation.label"}}</label>
+                <div class="form-fields">
+                    <dnd5e-checkbox id="custom-dnd5e-massive-damage-animation" name="massiveDamageAnimation"{{#if massiveDamageAnimation}} checked{{/if}}></dnd5e-checkbox>
+                </div>
+                <p class="hint">{{localize "CUSTOM_DND5E.form.gameplay.hitPoints.massiveDamageAnimation.note"}}</p>
+            </div>
+            <div class="form-group">
                 <label>{{localize "CUSTOM_DND5E.form.gameplay.hitPoints.massiveDamageTable.label"}}</label>
                 <div class="form-fields">
                     <div class="massive-damage-table-field flex1{{#unless massiveDamageTableName}} hidden{{/unless}}">

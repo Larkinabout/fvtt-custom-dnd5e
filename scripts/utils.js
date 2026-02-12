@@ -664,3 +664,146 @@ export function calculateHitProbability(advantageMode, attackBonus, targetNumber
       return (21 - rollNeeded) / 20;
   }
 }
+
+/* -------------------------------------------- */
+
+/**
+ * Shake the canvas with decaying intensity.
+ * @param {object} [options] The options.
+ * @param {number} [options.intensity=25] The shake intensity in screen pixels.
+ * @param {number} [options.duration=500] The shake duration in milliseconds.
+ */
+export async function shakeCanvas({ intensity = 25, duration = 500 } = {}) {
+  if ( !canvas?.stage ) return;
+  const origin = { x: canvas.stage.pivot.x, y: canvas.stage.pivot.y };
+  const scale = canvas.stage.scale.x || 1;
+
+  await CanvasAnimation.animate([], {
+    name: "custom-dnd5e.shakeCanvas",
+    duration,
+    ontick: (dt, animation) => {
+      const progress = animation.time / duration;
+      const decay = Math.pow(1 - progress, 2);
+      const adjusted = intensity / scale;
+      canvas.stage.pivot.x = origin.x + (Math.random() - 0.5) * adjusted * decay;
+      canvas.stage.pivot.y = origin.y + (Math.random() - 0.5) * adjusted * decay;
+    }
+  });
+
+  canvas.stage.pivot.set(origin.x, origin.y);
+}
+
+/* -------------------------------------------- */
+
+/**
+ * Flash the canvas with a color overlay.
+ * Skipped when photosensitive mode is enabled.
+ * @param {object} [options] The options.
+ * @param {number} [options.color=0xFF0000] The flash color as a hex number.
+ * @param {number} [options.opacity=0.4] The peak opacity (0-1).
+ * @param {number} [options.duration=500] The total flash duration in milliseconds.
+ */
+export async function flashCanvas({ color = 0xFF0000, opacity = 0.4, duration = 500 } = {}) {
+  if ( !canvas?.interface ) return;
+  if ( game.settings.get("core", "photosensitiveMode") ) return;
+
+  const scale = canvas.stage.scale.x || 1;
+  const { x: pivotX, y: pivotY } = canvas.stage.pivot;
+  const w = canvas.app.screen.width / scale;
+  const h = canvas.app.screen.height / scale;
+
+  const flash = new PIXI.Graphics();
+  flash.beginFill(color);
+  flash.drawRect(pivotX - w / 2, pivotY - h / 2, w, h);
+  flash.endFill();
+  flash.alpha = 0;
+  canvas.interface.addChild(flash);
+
+  const fadeIn = duration * 0.2;
+  const fadeOut = duration * 0.8;
+
+  await CanvasAnimation.animate(
+    [{ parent: flash, attribute: "alpha", to: opacity }],
+    { duration: fadeIn, name: "custom-dnd5e.flashCanvas.in" }
+  );
+  await CanvasAnimation.animate(
+    [{ parent: flash, attribute: "alpha", to: 0 }],
+    { duration: fadeOut, name: "custom-dnd5e.flashCanvas.out" }
+  );
+
+  canvas.interface.removeChild(flash);
+  flash.destroy();
+}
+
+/* -------------------------------------------- */
+
+/**
+ * Shake the entire screen (including UI) with decaying intensity.
+ * @param {object} [options] The options.
+ * @param {number} [options.intensity=5] The shake intensity in pixels.
+ * @param {number} [options.duration=500] The shake duration in milliseconds.
+ */
+export async function shakeScreen({ intensity = 5, duration = 500 } = {}) {
+  const element = document.body;
+  const startTime = performance.now();
+
+  return new Promise(resolve => {
+    function animate(currentTime) {
+      const elapsed = currentTime - startTime;
+      const progress = elapsed / duration;
+
+      if ( progress >= 1 ) {
+        element.style.transform = "";
+        resolve();
+        return;
+      }
+
+      const decay = Math.pow(1 - progress, 2);
+      const x = (Math.random() - 0.5) * intensity * decay;
+      const y = (Math.random() - 0.5) * intensity * decay;
+      element.style.transform = `translate(${x}px, ${y}px)`;
+      requestAnimationFrame(animate);
+    }
+
+    requestAnimationFrame(animate);
+  });
+}
+
+/* -------------------------------------------- */
+
+/**
+ * Flash the entire screen (including UI) with a color overlay.
+ * Skipped when photosensitive mode is enabled.
+ * @param {object} [options] The options.
+ * @param {string} [options.color="#ff0000"] The flash color as a CSS color string.
+ * @param {number} [options.opacity=0.4] The peak opacity (0-1).
+ * @param {number} [options.duration=500] The total flash duration in milliseconds.
+ */
+export async function flashScreen({ color = "#ff0000", opacity = 0.4, duration = 500 } = {}) {
+  if ( game.settings.get("core", "photosensitiveMode") ) return;
+
+  const flash = document.createElement("div");
+  flash.style.cssText = `
+    position: fixed;
+    inset: 0;
+    background: ${color};
+    opacity: 0;
+    pointer-events: none;
+    z-index: 10000;
+  `;
+  document.body.appendChild(flash);
+
+  const fadeIn = duration * 0.2;
+  const fadeOut = duration * 0.8;
+
+  await flash.animate(
+    [{ opacity: 0 }, { opacity }],
+    { duration: fadeIn, fill: "forwards" }
+  ).finished;
+  await flash.animate(
+    [{ opacity }, { opacity: 0 }],
+    { duration: fadeOut, fill: "forwards" }
+  ).finished;
+
+  flash.remove();
+}

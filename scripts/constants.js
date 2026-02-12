@@ -606,6 +606,9 @@ export const CONSTANTS = {
       APPLY_MASSIVE_DAMAGE: {
         KEY: "apply-massive-damage"
       },
+      MASSIVE_DAMAGE_ANIMATION: {
+        KEY: "massive-damage-animation"
+      },
       MASSIVE_DAMAGE_TABLE: {
         KEY: "massive-damage-table"
       },
