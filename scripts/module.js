@@ -31,7 +31,7 @@ import {
   increaseFailure,
   decreaseFailure,
   modifyFailure
-} from "./counters.js";
+} from "./counters/counters.js";
 import { register as registerCreatureTypes, setConfig as setCreatureTypes } from "./configurations/creature-types.js";
 import { register as registerCurrency, setConfig as setCurrency } from "./configurations/currency.js";
 import { register as registerDamageTypes, setConfig as setDamageTypes } from "./configurations/damage-types.js";
@@ -54,6 +54,7 @@ import { register as registerSenses, setConfig as setSenses } from "./configurat
 import { register as registerSkills, setConfig as setSkills } from "./configurations/skills.js";
 import { register as registerSpellSchools, setConfig as setSpellSchools } from "./configurations/spell-schools.js";
 import { register as registerRadialStatusEffects } from "./radial-status-effects.js";
+import { register as registerTidy5eCounters } from "./counters/counters-tidy5e.js";
 import { register as registerTokenBorder } from "./token-border.js";
 import { register as registerTokenEffects } from "./token-effects.js";
 import { register as registerTools, setConfig as setTools } from "./configurations/tools.js";
@@ -152,6 +153,7 @@ Hooks.on("init", async () => {
   registerConditionsMenu();
   registerConsumableTypes();
   registerCounters();
+  registerTidy5eCounters();
   registerCreatureTypes();
   registerCurrency();
   registerDamageTypes();

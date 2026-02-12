@@ -1,7 +1,7 @@
-import { CONSTANTS, MODULE, SETTING_BY_ENTITY_TYPE, SHEET_TYPE } from "./constants.js";
-import { c5eLoadTemplates, checkEmpty, getFlag, setFlag, unsetFlag, getSetting, registerMenu, registerSetting, makeDead } from "./utils.js";
-import { CountersForm } from "./forms/counters-form.js";
-import { CountersFormIndividual } from "./forms/counters-form-individual.js";
+import { CONSTANTS, MODULE, SETTING_BY_ENTITY_TYPE, SHEET_TYPE } from "../constants.js";
+import { c5eLoadTemplates, checkEmpty, getFlag, setFlag, unsetFlag, getSetting, registerMenu, registerSetting, makeDead } from "../utils.js";
+import { CountersForm } from "../forms/counters-form.js";
+import { CountersFormIndividual } from "../forms/counters-form-individual.js";
 
 const constants = CONSTANTS.COUNTERS;
 
@@ -366,7 +366,7 @@ async function addCounters(app, html, data) {
  * @param {string} settingKey The setting key
  * @returns {object} The merged counters
  */
-function mergeCounters(entity, settingKey) {
+export function mergeCounters(entity, settingKey) {
   if ( entity.document ) entity = entity.document;
   const worldCounters = game.settings.get(MODULE.ID, settingKey) ?? {};
   const entityCounters = getFlag(entity, "counters") ?? {};
@@ -458,7 +458,7 @@ async function insertCounters(sheetType, counters, app, html, data) {
  * @param {HTMLElement} container The container DOM element for the counters
  * @param {boolean} editable Whether the sheet is editable
  */
-function setupCounterInteractions(entity, counters, container, editable) {
+export function setupCounterInteractions(entity, counters, container, editable) {
   if ( !container ) return;
 
   // If sheet is set to editable, add the config button
@@ -478,12 +478,12 @@ function setupCounterInteractions(entity, counters, container, editable) {
 
     switch (counter.type) {
       case "fraction":
-        links[0].addEventListener("click", () => increaseFraction(entity, key));
-        links[0].addEventListener("contextmenu", () => decreaseFraction(entity, key));
+        links[0].addEventListener("click", () => increaseFraction(entity, counter.property));
+        links[0].addEventListener("contextmenu", () => decreaseFraction(entity, counter.property));
         inputs.forEach(input => {
           input.addEventListener("click", selectInputContent);
           if ( input.dataset?.input === "value" ) {
-            input.addEventListener("keyup", () => checkValue(input, entity, key), true);
+            input.addEventListener("keyup", () => checkValue(input, entity, counter.property), true);
           }
         });
         break;
@@ -500,11 +500,11 @@ function setupCounterInteractions(entity, counters, container, editable) {
       case "successFailure":
         links.forEach(link => {
           if ( link.dataset?.input === "success" ) {
-            link.addEventListener("click", () => increaseSuccess(entity, key));
-            link.addEventListener("contextmenu", () => decreaseSuccess(entity, key));
+            link.addEventListener("click", () => increaseSuccess(entity, counter.property));
+            link.addEventListener("contextmenu", () => decreaseSuccess(entity, counter.property));
           } else if ( link.dataset?.input === "failure" ) {
-            link.addEventListener("click", () => increaseFailure(entity, key));
-            link.addEventListener("contextmenu", () => decreaseFailure(entity, key));
+            link.addEventListener("click", () => increaseFailure(entity, counter.property));
+            link.addEventListener("contextmenu", () => decreaseFailure(entity, counter.property));
           }
         });
         inputs.forEach(input => {
@@ -520,7 +520,7 @@ function setupCounterInteractions(entity, counters, container, editable) {
  * Open the individual counters form.
  * @param {object} entity The entity
  */
-function openForm(entity) {
+export function openForm(entity) {
   const form = new CountersFormIndividual(entity);
   form.render(true);
 }

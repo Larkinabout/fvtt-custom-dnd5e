@@ -199,6 +199,15 @@
 }
 
 /*
+ * TIDY 5E
+ */
+.tidy5e-sheet #custom-dnd5e-counters #custom-dnd5e-counters-edit-button {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 0.5rem;
+}
+
+/*
  * GROUP SHEET
  */
 .dnd5e.sheet.group .custom-dnd5e-counters-number input[type="number"],
