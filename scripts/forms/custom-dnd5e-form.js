@@ -534,7 +534,7 @@ export class CustomDnd5eForm extends HandlebarsApplicationMixin(ApplicationV2) {
         const existingData = foundry.utils.getProperty(settingData, propertyPath);
         if ( !foundry.utils.getProperty(processedFormData, propertyPath) && typeof existingData === "object" ) {
           const shallowData = Object.fromEntries(
-            Object.entries(existingData).filter(([_, v]) => typeof v !== "object" || v === null)
+            Object.entries(existingData).filter(([_, v]) => typeof v !== "object" || v === null || Array.isArray(v))
           );
           foundry.utils.setProperty(processedFormData, propertyPath, shallowData);
         }
