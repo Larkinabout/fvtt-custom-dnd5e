@@ -366,6 +366,7 @@ export const CONSTANTS = {
       EDIT: "modules/custom-dnd5e/templates/counters-edit.hbs",
       TRIGGERS_LIST: "modules/custom-dnd5e/templates/counters-triggers-list.hbs",
       DND5E_ACTOR: "modules/custom-dnd5e/templates/counters/dnd5e/counters-actor.hbs",
+      DND5E_ITEM_GROUP: "modules/custom-dnd5e/templates/counters/dnd5e/counters-item-group.hbs",
       DND5E_ITEM_GROUP_LEGACY: "modules/custom-dnd5e/templates/counters/dnd5e/counters-item-group-legacy.hbs"
     }
   },
@@ -1265,11 +1266,11 @@ export const SHEET_TYPE = {
     custom: false,
     group: false,
     item: true,
-    legacy: true,
+    legacy: false,
     npc: false,
-    template: CONSTANTS.COUNTERS.TEMPLATE.DND5E_ITEM_GROUP_LEGACY,
+    template: CONSTANTS.COUNTERS.TEMPLATE.DND5E_ITEM_GROUP,
     insert: {
-      class: "section.sheet-body",
+      class: "section.window-content",
       position: "beforeend"
     }
   },

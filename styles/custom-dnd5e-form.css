@@ -525,7 +525,8 @@
 }
 
 .custom-dnd5e-app .drop-area,
-.custom-dnd5e-app .massive-damage-table-field {
+.custom-dnd5e-app .massive-damage-table-field,
+.custom-dnd5e-app .custom-dnd5e-macro-field {
     border: var(--dnd5e-border-dashed);
     border-radius: 4px;
     padding-inline: 4px;
@@ -534,7 +535,8 @@
     align-items: center;
 }
 
-.custom-dnd5e-app .massive-damage-table-field {
+.custom-dnd5e-app .massive-damage-table-field,
+.custom-dnd5e-app .custom-dnd5e-macro-field {
     justify-content: space-between;
 }
 
