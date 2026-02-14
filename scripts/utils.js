@@ -738,12 +738,42 @@ export async function flashCanvas({ color = 0xFF0000, opacity = 0.4, duration = 
 /* -------------------------------------------- */
 
 /**
+ * Get the IDs of non-GM users who own the given actor.
+ * Falls back to the current user's ID if no non-GM owner is found.
+ * @param {object} actor The actor
+ * @returns {string[]} The user IDs
+ */
+export function getActorOwnerIds(actor) {
+  const owners = game.users.filter(u => !u.isGM && actor.testUserPermission(u, "OWNER"));
+  return owners.length ? owners.map(u => u.id) : [game.user.id];
+}
+
+/* -------------------------------------------- */
+
+/**
+ * Check whether a socket is needed to reach the given user IDs.
+ * Returns true if any of the user IDs belong to a different client.
+ * @param {string[]} userIds The target user IDs
+ * @returns {boolean} Whether a socket emission is needed
+ */
+export function requiresSocket(userIds) {
+  return userIds.some(id => id !== game.user.id);
+}
+
+/* -------------------------------------------- */
+
+/**
  * Shake the entire screen (including UI) with decaying intensity.
  * @param {object} [options] The options.
  * @param {number} [options.intensity=5] The shake intensity in pixels.
  * @param {number} [options.duration=500] The shake duration in milliseconds.
+ * @param {string[]} [options.userIds] If provided, only play for these users. Automatically emits via socket to reach remote clients.
  */
-export async function shakeScreen({ intensity = 5, duration = 500 } = {}) {
+export async function shakeScreen({ intensity = 5, duration = 500, userIds } = {}) {
+  if ( userIds && requiresSocket(userIds) ) {
+    game.socket.emit(`module.${MODULE.ID}`, { action: "animation", type: "shakeScreen", options: { intensity, duration, userIds } });
+  }
+  if ( userIds && !userIds.includes(game.user.id) ) return;
   const element = document.body;
   const startTime = performance.now();
 
@@ -778,8 +808,13 @@ export async function shakeScreen({ intensity = 5, duration = 500 } = {}) {
  * @param {string} [options.color="#ff0000"] The flash color as a CSS color string.
  * @param {number} [options.opacity=0.4] The peak opacity (0-1).
  * @param {number} [options.duration=500] The total flash duration in milliseconds.
+ * @param {string[]} [options.userIds] If provided, only play for these users. Automatically emits via socket to reach remote clients.
  */
-export async function flashScreen({ color = "#ff0000", opacity = 0.4, duration = 500 } = {}) {
+export async function flashScreen({ color = "#ff0000", opacity = 0.4, duration = 500, userIds } = {}) {
+  if ( userIds && requiresSocket(userIds) ) {
+    game.socket.emit(`module.${MODULE.ID}`, { action: "animation", type: "flashScreen", options: { color, opacity, duration, userIds } });
+  }
+  if ( userIds && !userIds.includes(game.user.id) ) return;
   if ( game.settings.get("core", "photosensitiveMode") ) return;
 
   const flash = document.createElement("div");
@@ -806,4 +841,131 @@ export async function flashScreen({ color = "#ff0000", opacity = 0.4, duration =
   ).finished;
 
   flash.remove();
+}
+
+/* -------------------------------------------- */
+
+/**
+ * Blur the entire screen (including UI) to simulate losing consciousness.
+ * @param {object} [options] The options.
+ * @param {number} [options.intensity=5] The max blur in pixels.
+ * @param {number} [options.duration=1500] The total duration in milliseconds.
+ * @param {string[]} [options.userIds] If provided, only play for these users. Automatically emits via socket to reach remote clients.
+ */
+export async function blurScreen({ intensity = 5, duration = 1500, userIds } = {}) {
+  if ( userIds && requiresSocket(userIds) ) {
+    game.socket.emit(`module.${MODULE.ID}`, { action: "animation", type: "blurScreen", options: { intensity, duration, userIds } });
+  }
+  if ( userIds && !userIds.includes(game.user.id) ) return;
+  const element = document.body;
+  const startTime = performance.now();
+
+  return new Promise(resolve => {
+    function animate(currentTime) {
+      const elapsed = currentTime - startTime;
+      const progress = elapsed / duration;
+
+      if ( progress >= 1 ) {
+        element.style.filter = "";
+        resolve();
+        return;
+      }
+
+      const blur = intensity * Math.sin(progress * Math.PI);
+      element.style.filter = `blur(${blur}px)`;
+      requestAnimationFrame(animate);
+    }
+
+    requestAnimationFrame(animate);
+  });
+}
+
+/* -------------------------------------------- */
+
+/**
+ * Sway the entire screen (including UI) with a decaying oscillation to simulate heavy breathing.
+ * @param {object} [options] The options.
+ * @param {number} [options.intensity=2] The max rotation in degrees.
+ * @param {number} [options.duration=2000] The total duration in milliseconds.
+ * @param {number} [options.frequency=2] The oscillation frequency (cycles per second).
+ * @param {string[]} [options.userIds] If provided, only play for these users. Automatically emits via socket to reach remote clients.
+ */
+export async function swayScreen({ intensity = 2, duration = 2000, frequency = 2, userIds } = {}) {
+  if ( userIds && requiresSocket(userIds) ) {
+    game.socket.emit(`module.${MODULE.ID}`, { action: "animation", type: "swayScreen", options: { intensity, duration, frequency, userIds } });
+  }
+  if ( userIds && !userIds.includes(game.user.id) ) return;
+  const element = document.body;
+  const startTime = performance.now();
+
+  return new Promise(resolve => {
+    function animate(currentTime) {
+      const elapsed = currentTime - startTime;
+      const progress = elapsed / duration;
+
+      if ( progress >= 1 ) {
+        element.style.transform = "";
+        resolve();
+        return;
+      }
+
+      const decay = Math.pow(1 - progress, 2);
+      const angle = Math.sin(elapsed / 1000 * Math.PI * frequency) * intensity * decay;
+      const x = Math.sin(elapsed / 1000 * Math.PI * frequency * 0.7) * intensity * 2 * decay;
+      element.style.transform = `rotate(${angle}deg) translateX(${x}px)`;
+      requestAnimationFrame(animate);
+    }
+
+    requestAnimationFrame(animate);
+  });
+}
+
+/* -------------------------------------------- */
+
+/**
+ * Darken the screen edges to simulate tunnel vision / losing consciousness.
+ * A radial vignette creeps inward from the periphery, then fades back.
+ * @param {object} [options] The options.
+ * @param {number} [options.intensity=0.8] The peak darkness (0-1).
+ * @param {number} [options.duration=2000] The total duration in milliseconds.
+ * @param {string[]} [options.userIds] If provided, only play for these users. Automatically emits via socket to reach remote clients.
+ */
+export async function vignetteScreen({ intensity = 0.8, duration = 2000, userIds } = {}) {
+  if ( userIds && requiresSocket(userIds) ) {
+    game.socket.emit(`module.${MODULE.ID}`, { action: "animation", type: "vignetteScreen", options: { intensity, duration, userIds } });
+  }
+  if ( userIds && !userIds.includes(game.user.id) ) return;
+
+  const overlay = document.createElement("div");
+  overlay.style.cssText = `
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 10000;
+  `;
+  document.body.appendChild(overlay);
+
+  const startTime = performance.now();
+
+  return new Promise(resolve => {
+    function animate(currentTime) {
+      const elapsed = currentTime - startTime;
+      const progress = elapsed / duration;
+
+      if ( progress >= 1 ) {
+        overlay.remove();
+        resolve();
+        return;
+      }
+
+      const amount = Math.sin(progress * Math.PI) * intensity;
+      const innerRadius = 50 - (amount * 30);
+      const outerRadius = 80 - (amount * 20);
+      const edgeOpacity = Math.min(amount * 1.5, 1);
+      overlay.style.background = `radial-gradient(circle at center, transparent ${innerRadius}%, rgba(0,0,0,${amount}) ${outerRadius}%, rgba(0,0,0,${edgeOpacity}) 100%)`;
+      requestAnimationFrame(animate);
+    }
+
+    requestAnimationFrame(animate);
+  });
 }

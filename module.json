@@ -4,6 +4,7 @@
   "description": "A Foundry VTT utility to customise the D&D 5e system",
   "version": "This is auto replaced",
   "library": "false",
+  "socket": true,
   "compatibility": {
     "minimum": 13.342,
     "verified": 13.351,

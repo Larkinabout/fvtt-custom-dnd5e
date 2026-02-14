@@ -82,6 +82,10 @@ export class GameplayForm extends CustomDnd5eForm {
       deathSavesTargetValue: getSetting(CONSTANTS.DEATH_SAVES.SETTING.DEATH_SAVES_TARGET_VALUE.KEY),
       applyExhaustionOnZeroHp: getSetting(CONSTANTS.EXHAUSTION.SETTING.APPLY_EXHAUSTION_ON_ZERO_HP.KEY),
       applyExhaustionOnCombatEnd: getSetting(CONSTANTS.EXHAUSTION.SETTING.APPLY_EXHAUSTION_ON_COMBAT_END.KEY),
+      exhaustionRequestSavingThrow: getSetting(CONSTANTS.EXHAUSTION.SETTING.EXHAUSTION_REQUEST_SAVING_THROW.KEY),
+      exhaustionSavingThrowDc: getSetting(CONSTANTS.EXHAUSTION.SETTING.EXHAUSTION_SAVING_THROW_DC.KEY),
+      exhaustionSavingThrowDcScaling: getSetting(CONSTANTS.EXHAUSTION.SETTING.EXHAUSTION_SAVING_THROW_DC_SCALING.KEY),
+      exhaustionAnimation: getSetting(CONSTANTS.EXHAUSTION.SETTING.EXHAUSTION_ANIMATION.KEY),
       applyMassiveDamage: getSetting(CONSTANTS.HIT_POINTS.SETTING.APPLY_MASSIVE_DAMAGE.KEY),
       applyNegativeHp: getSetting(CONSTANTS.HIT_POINTS.SETTING.APPLY_NEGATIVE_HP.KEY),
       applyNegativeHpNpc: getSetting(CONSTANTS.HIT_POINTS.SETTING.APPLY_NEGATIVE_HP_NPC.KEY),
@@ -160,6 +164,14 @@ export class GameplayForm extends CustomDnd5eForm {
     if ( dropZone ) {
       dropZone.closest(".form-fields").addEventListener("drop", this._onDropTable.bind(this));
     }
+
+    const exhaustionSaveCheckbox = this.element.querySelector("#custom-dnd5e-exhaustion-request-saving-throw");
+    const exhaustionSaveOptions = this.element.querySelector(".exhaustion-save-options");
+    if ( exhaustionSaveCheckbox && exhaustionSaveOptions ) {
+      exhaustionSaveCheckbox.addEventListener("change", () => {
+        exhaustionSaveOptions.classList.toggle("hidden", !exhaustionSaveCheckbox.checked);
+      });
+    }
   }
 
   /* -------------------------------------------- */
@@ -227,6 +239,10 @@ export class GameplayForm extends CustomDnd5eForm {
         resetSetting(CONSTANTS.DEATH_SAVES.SETTING.DEATH_SAVES_TARGET_VALUE.KEY),
         resetSetting(CONSTANTS.EXHAUSTION.SETTING.APPLY_EXHAUSTION_ON_ZERO_HP.KEY),
         resetSetting(CONSTANTS.EXHAUSTION.SETTING.APPLY_EXHAUSTION_ON_COMBAT_END.KEY),
+        resetSetting(CONSTANTS.EXHAUSTION.SETTING.EXHAUSTION_REQUEST_SAVING_THROW.KEY),
+        resetSetting(CONSTANTS.EXHAUSTION.SETTING.EXHAUSTION_SAVING_THROW_DC.KEY),
+        resetSetting(CONSTANTS.EXHAUSTION.SETTING.EXHAUSTION_SAVING_THROW_DC_SCALING.KEY),
+        resetSetting(CONSTANTS.EXHAUSTION.SETTING.EXHAUSTION_ANIMATION.KEY),
         resetSetting(CONSTANTS.HIT_POINTS.SETTING.APPLY_MASSIVE_DAMAGE.KEY),
         resetSetting(CONSTANTS.HIT_POINTS.SETTING.MASSIVE_DAMAGE_ANIMATION.KEY),
         resetSetting(CONSTANTS.HIT_POINTS.SETTING.MASSIVE_DAMAGE_TABLE.KEY),
@@ -307,6 +323,13 @@ export class GameplayForm extends CustomDnd5eForm {
       setSetting(CONSTANTS.EXHAUSTION.SETTING.APPLY_EXHAUSTION_ON_ZERO_HP.KEY, formData.object.applyExhaustionOnZeroHp),
       setSetting(CONSTANTS.EXHAUSTION.SETTING.APPLY_EXHAUSTION_ON_COMBAT_END.KEY,
         formData.object.applyExhaustionOnCombatEnd),
+      setSetting(CONSTANTS.EXHAUSTION.SETTING.EXHAUSTION_REQUEST_SAVING_THROW.KEY,
+        formData.object.exhaustionRequestSavingThrow),
+      setSetting(CONSTANTS.EXHAUSTION.SETTING.EXHAUSTION_SAVING_THROW_DC.KEY,
+        formData.object.exhaustionSavingThrowDc),
+      setSetting(CONSTANTS.EXHAUSTION.SETTING.EXHAUSTION_SAVING_THROW_DC_SCALING.KEY,
+        formData.object.exhaustionSavingThrowDcScaling),
+      setSetting(CONSTANTS.EXHAUSTION.SETTING.EXHAUSTION_ANIMATION.KEY, formData.object.exhaustionAnimation),
       setSetting(CONSTANTS.HIT_POINTS.SETTING.APPLY_MASSIVE_DAMAGE.KEY, formData.object.applyMassiveDamage),
       setSetting(CONSTANTS.HIT_POINTS.SETTING.MASSIVE_DAMAGE_ANIMATION.KEY, formData.object.massiveDamageAnimation),
       setSetting(CONSTANTS.HIT_POINTS.SETTING.MASSIVE_DAMAGE_TABLE.KEY, formData.object.massiveDamageTableUuid),

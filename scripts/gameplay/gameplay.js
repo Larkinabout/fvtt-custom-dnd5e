@@ -15,7 +15,8 @@ import {
   makeUnconscious,
   unmakeUnconscious,
   shakeScreen,
-  flashScreen
+  flashScreen,
+  getActorOwnerIds
 } from "../utils.js";
 import { GameplayForm } from "../forms/gameplay-form.js";
 
@@ -927,6 +928,19 @@ function capturePreviousData(actor, data, options, userId) {
 /* -------------------------------------------- */
 
 /**
+ * Play the massive damage animation for the actor's owners.
+ * @param {object} actor The actor
+ */
+function playMassiveDamageAnimation(actor) {
+  if ( !getSetting(CONSTANTS.HIT_POINTS.SETTING.MASSIVE_DAMAGE_ANIMATION.KEY) ) return;
+  const userIds = getActorOwnerIds(actor);
+  shakeScreen({ intensity: 8, duration: 750, userIds });
+  flashScreen({ duration: 750, userIds });
+}
+
+/* -------------------------------------------- */
+
+/**
  * Triggered by the 'applyMassiveDamage' function.
  * Create a chat message with a button to make a CON save against a DC of 15.
  * @param {object} actor The actor
@@ -939,27 +953,18 @@ async function createMassiveDamageCard(actor, data) {
     await actor.setFlag("custom-dnd5e", "pendingMassiveDamageSave", true);
   }
 
-  if ( getSetting(CONSTANTS.HIT_POINTS.SETTING.MASSIVE_DAMAGE_ANIMATION.KEY) ) {
-    shakeScreen({ intensity: 8, duration: 750 });
-    flashScreen({ duration: 750 });
-  }
-
   const dataset = { ability: "con", dc: "15", type: "save" };
   let label = game.i18n.format("EDITOR.DND5E.Inline.DC", { dc: 15, check: game.i18n.localize(CONFIG.DND5E.abilities.con.label) });
   label = game.i18n.format("EDITOR.DND5E.Inline.SaveLong", { save: label });
-  const MessageClass = getDocumentClass("ChatMessage");
-  const chatData = {
-    user: game.user.id,
-    style: CONST.CHAT_MESSAGE_STYLES.OTHER,
-    content: await foundry.applications.handlebars.renderTemplate(CONSTANTS.MESSAGE.TEMPLATE.ROLL_REQUEST_CARD, {
-      buttonLabel: `<i class="fas fa-shield-heart"></i>${label}`,
-      hiddenLabel: `<i class="fas fa-shield-heart"></i>${label}`,
-      description: game.i18n.format("CUSTOM_DND5E.message.massiveDamage", { name: actor.name }),
-      dataset: { ...dataset, action: "rollRequest" }
-    }),
-    speaker: MessageClass.getSpeaker({ user: game.user })
-  };
-  return MessageClass.create(chatData);
+  const content = await foundry.applications.handlebars.renderTemplate(CONSTANTS.MESSAGE.TEMPLATE.ROLL_REQUEST_CARD, {
+    buttonLabel: `<i class="fas fa-shield-heart"></i>${label}`,
+    hiddenLabel: `<i class="fas fa-shield-heart"></i>${label}`,
+    description: game.i18n.format("CUSTOM_DND5E.message.massiveDamage", { name: actor.name }),
+    dataset: { ...dataset, action: "rollRequest" }
+  });
+  const speaker = ChatMessage.getSpeaker({ user: game.user });
+  const flags = { "custom-dnd5e": { source: "massiveDamage" } };
+  return await ChatMessage.create({ content, speaker, flags });
 }
 
 /* -------------------------------------------- */
@@ -977,13 +982,18 @@ async function handleMassiveDamageSaveResult(rolls, data) {
   if ( !actor?.getFlag("custom-dnd5e", "pendingMassiveDamageSave") ) return;
   if ( data.ability !== "con" ) return;
 
+  // Trace back from the save card to the originating request card
+  const requestCard = rolls[0]?.parent?.getOriginatingMessage();
+  if ( requestCard?.flags?.["custom-dnd5e"]?.source !== "massiveDamage" ) return;
+
   // Clear the flag regardless of result
   await actor.unsetFlag("custom-dnd5e", "pendingMassiveDamageSave");
 
   const total = rolls[0]?.total;
   if ( total === undefined || total >= 15 ) return;
 
-  // Save failed — roll on system shock table
+  // Save failed — play animation and roll on system shock table
+  playMassiveDamageAnimation(actor);
   const tableUuid = getSetting(CONSTANTS.HIT_POINTS.SETTING.MASSIVE_DAMAGE_TABLE.KEY);
   if ( !tableUuid ) return;
 

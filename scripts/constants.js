@@ -579,6 +579,12 @@ export const CONSTANTS = {
       },
       EXHAUSTION_SAVING_THROW_DC: {
         KEY: "exhaustion-saving-throw-dc"
+      },
+      EXHAUSTION_SAVING_THROW_DC_SCALING: {
+        KEY: "exhaustion-saving-throw-dc-scaling"
+      },
+      EXHAUSTION_ANIMATION: {
+        KEY: "exhaustion-animation"
       }
     }
   },
