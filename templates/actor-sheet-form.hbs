@@ -80,6 +80,13 @@
             </div>
             <h3>{{localize "CUSTOM_DND5E.npcs"}}</h3>
             <div class="form-group">
+                <label>{{localize "CUSTOM_DND5E.form.actorSheet.showTokenDisposition.label"}}</label>
+                <div class="form-fields">
+                    <dnd5e-checkbox id="custom-dnd5e-show-token-disposition" name="showTokenDisposition" {{#if showTokenDisposition}} checked{{/if}}></dnd5e-checkbox>
+                </div>
+                <p class="hint">{{localize "CUSTOM_DND5E.form.actorSheet.showTokenDisposition.note"}}</p>
+            </div>
+            <div class="form-group">
                 <label>{{localize "CUSTOM_DND5E.form.actorSheet.showLegendaryActions.label"}}</label>
                 <div class="form-fields">
                     <dnd5e-checkbox id="custom-dnd5e-show-legendary-actions" name="showLegendaryActions" {{#if showLegendaryActions}} checked{{/if}}></dnd5e-checkbox>

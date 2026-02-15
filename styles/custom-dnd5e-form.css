@@ -521,3 +521,88 @@
     color: var(--color-text-secondary);
     justify-content: center;
 }
+
+/*************************************
+    TOKEN DISPOSITION
+**************************************/
+
+.custom-dnd5e-disposition-buttons {
+    display: flex;
+    gap: 0.25rem;
+    justify-content: center;
+}
+
+/* Base button */
+
+.custom-dnd5e-disposition-button,
+.tidy5e-sheet.application:where(.quadrone) :is(button,.button):where(:not(.header-control):not(.controls-dropdown .control)).custom-dnd5e-disposition-button,
+.tidy5e-sheet.application:where(.quadrone) :is(button,.button):where(:not(.header-control):not(.controls-dropdown .control)).custom-dnd5e-disposition-button.active,
+.tidy5e-sheet.application:where(.quadrone) :is(button,.button):where(:not(.header-control):not(.controls-dropdown .control)):active:not(:disabled).custom-dnd5e-disposition-button {
+    background: transparent;
+    border: none;
+    border-radius: 0;
+    box-shadow: none;
+    cursor: pointer;
+    font-size: var(--font-size-20);
+    min-height: unset;
+    padding: 0.25rem 0.5rem;
+    transition: none;
+}
+
+/* Base button icon (Tidy 5e override) */
+
+.tidy5e-sheet.application:where(.quadrone) :is(button,.button):where(:not(.header-control):not(.controls-dropdown .control)).custom-dnd5e-disposition-button i {
+    font-size: var(--font-size-20);
+}
+
+/* Theme colors */
+
+.theme-dark .custom-dnd5e-disposition-button,
+.tidy5e-sheet.application.theme-dark:where(.quadrone) :is(button,.button):where(:not(.header-control):not(.controls-dropdown .control)).custom-dnd5e-disposition-button,
+.tidy5e-sheet.application.theme-dark:where(.quadrone) :is(button,.button):where(:not(.header-control):not(.controls-dropdown .control)).custom-dnd5e-disposition-button i {
+    color: var(--dnd5e-color-blue-gray-3);
+}
+
+.theme-light .custom-dnd5e-disposition-button,
+.tidy5e-sheet.application.theme-light:where(.quadrone) :is(button,.button):where(:not(.header-control):not(.controls-dropdown .control)).custom-dnd5e-disposition-button,
+.tidy5e-sheet.application.theme-light:where(.quadrone) :is(button,.button):where(:not(.header-control):not(.controls-dropdown .control)).custom-dnd5e-disposition-button i {
+    color: var(--color-border-light-2);
+}
+
+/* Hover */
+
+.custom-dnd5e-disposition-button:hover,
+.tidy5e-sheet.application:where(.quadrone) :is(button,.button):where(:not(.header-control):not(.controls-dropdown .control)).custom-dnd5e-disposition-button:hover,
+.tidy5e-sheet.application:where(.quadrone) :is(button,.button).custom-dnd5e-disposition-button:hover:not(:disabled) i {
+    background: transparent;
+    border: none;
+    box-shadow: none;
+    color: var(--color-text-primary);
+    text-shadow: 0 0 5px var(--color-shadow-primary);
+}
+
+/* Click / :active / focus */
+
+.tidy5e-sheet.application:where(.quadrone) :is(button,.button):where(:not(.header-control):not(.controls-dropdown .control)).custom-dnd5e-disposition-button:active:not(:disabled),
+.tidy5e-sheet.application:where(.quadrone) :is(button,.button):where(:not(.header-control):not(.controls-dropdown .control)).custom-dnd5e-disposition-button:active:not(:disabled):hover,
+.tidy5e-sheet.application:where(.quadrone) :is(button,.button).custom-dnd5e-disposition-button:focus-within:not(.button-toggle):not(:disabled) {
+    background: transparent;
+    border: none;
+    box-shadow: none;
+}
+
+.custom-dnd5e-disposition-button:focus {
+    text-shadow: none;
+}
+
+/* Active (selected disposition) */
+
+.theme-dark .custom-dnd5e-disposition-button.active i,
+.tidy5e-sheet.application.theme-dark:where(.quadrone) :is(button,.button):where(:not(.header-control):not(.controls-dropdown .control)).custom-dnd5e-disposition-button.active i {
+    color: var(--dnd5e-color-gold);
+}
+
+.theme-light .custom-dnd5e-disposition-button.active i,
+.tidy5e-sheet.application.theme-light:where(.quadrone) :is(button,.button):where(:not(.header-control):not(.controls-dropdown .control)).custom-dnd5e-disposition-button.active i {
+    color: var(--color-text-primary);
+}

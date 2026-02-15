@@ -11,7 +11,7 @@ export function register() {
   registerSettings();
   registerHooks();
 
-  const templates = [constants.TEMPLATE.FORM];
+  const templates = [constants.TEMPLATE.FORM, constants.TEMPLATE.TOKEN_DISPOSITION];
   c5eLoadTemplates(templates);
 }
 
@@ -122,6 +122,16 @@ function registerSettings() {
       default: true
     }
   );
+
+  registerSetting(
+    constants.SETTING.SHOW_TOKEN_DISPOSITION.KEY,
+    {
+      scope: "world",
+      config: false,
+      type: Boolean,
+      default: true
+    }
+  );
 }
 
 /* -------------------------------------------- */
@@ -172,6 +182,9 @@ function registerHooks() {
     }
     if ( !getSetting(constants.SETTING.SHOW_USE_LAIR_ACTION.KEY) ) {
       removeUseLairAction(sheetType, html);
+    }
+    if ( sheetType.npc && getSetting(constants.SETTING.SHOW_TOKEN_DISPOSITION.KEY) ) {
+      insertTokenDisposition(app, html);
     }
   });
 }
@@ -429,4 +442,44 @@ function removeUseLairAction(sheetType, html) {
   const useLairAction = html.querySelector(".lair");
 
   useLairAction?.remove();
+}
+
+/* -------------------------------------------- */
+
+/**
+ * Insert token disposition buttons into the NPC sheet sidebar.
+ * @param {object} app The app
+ * @param {object} html The HTML
+ */
+async function insertTokenDisposition(app, html) {
+  const sidebar = html.querySelector(".sidebar");
+  if ( !sidebar ) return;
+
+  const isToken = app.document.isToken;
+  const disposition = isToken
+    ? app.document.token.disposition
+    : app.document.prototypeToken.disposition;
+
+  const existing = sidebar.querySelector(".custom-dnd5e-token-disposition");
+  if ( existing ) existing.remove();
+
+  const template = await foundry.applications.handlebars.renderTemplate(
+    constants.TEMPLATE.TOKEN_DISPOSITION,
+    { disposition }
+  );
+  sidebar.insertAdjacentHTML("afterbegin", template);
+
+  const buttons = sidebar.querySelectorAll(".custom-dnd5e-disposition-button");
+  buttons.forEach(button => {
+    button.addEventListener("click", async (event) => {
+      event.preventDefault();
+      const value = Number(button.dataset.disposition);
+      if ( isToken ) {
+        await app.document.token.update({ disposition: value });
+      } else {
+        await app.document.update({ "prototypeToken.disposition": value });
+      }
+      buttons.forEach(b => b.classList.toggle("active", Number(b.dataset.disposition) === value));
+    });
+  });
 }

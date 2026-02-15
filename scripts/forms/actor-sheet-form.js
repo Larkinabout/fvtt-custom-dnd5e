@@ -70,6 +70,7 @@ export class ActorSheetForm extends CustomDnd5eForm {
       showLegendaryActions: getSetting(CONSTANTS.ACTOR_SHEET.SETTING.SHOW_LEGENDARY_ACTIONS.KEY),
       showLegendaryResistance: getSetting(CONSTANTS.ACTOR_SHEET.SETTING.SHOW_LEGENDARY_RESISTANCE.KEY),
       showManageCurrency: getSetting(CONSTANTS.ACTOR_SHEET.SETTING.SHOW_MANAGE_CURRENCY.KEY),
+      showTokenDisposition: getSetting(CONSTANTS.ACTOR_SHEET.SETTING.SHOW_TOKEN_DISPOSITION.KEY),
       showUseLairAction: getSetting(CONSTANTS.ACTOR_SHEET.SETTING.SHOW_USE_LAIR_ACTION.KEY)
     };
   }
@@ -129,6 +130,7 @@ export class ActorSheetForm extends CustomDnd5eForm {
         setSetting(CONSTANTS.ACTOR_SHEET.SETTING.SHOW_LEGENDARY_RESISTANCE.KEY,
           formData.object.showLegendaryResistance),
         setSetting(CONSTANTS.ACTOR_SHEET.SETTING.SHOW_MANAGE_CURRENCY.KEY, formData.object.showManageCurrency),
+        setSetting(CONSTANTS.ACTOR_SHEET.SETTING.SHOW_TOKEN_DISPOSITION.KEY, formData.object.showTokenDisposition),
         setSetting(CONSTANTS.ACTOR_SHEET.SETTING.SHOW_USE_LAIR_ACTION.KEY, formData.object.showUseLairAction)
       ]);
     }

@@ -78,12 +78,15 @@ export const CONSTANTS = {
       SHOW_LEGENDARY_ACTIONS: { KEY: "show-legendary-actions" },
       SHOW_LEGENDARY_RESISTANCE: { KEY: "show-legendary-resistance" },
       SHOW_MANAGE_CURRENCY: { KEY: "show-manage-currency" },
+      SHOW_TOKEN_DISPOSITION: { KEY: "show-token-disposition" },
       SHOW_USE_LAIR_ACTION: { KEY: "show-use-lair-action" }
     },
     TEMPLATE: {
       FORM: "modules/custom-dnd5e/templates/actor-sheet-form.hbs",
       CHARACTER_SHEET_2: "modules/custom-dnd5e/templates/sheet/character-sheet-2.hbs",
-      CHARACTER_DETAILS: "modules/custom-dnd5e/templates/sheet/character-details.hbs"
+      CHARACTER_DETAILS: "modules/custom-dnd5e/templates/sheet/character-details.hbs",
+      TOKEN_DISPOSITION: "modules/custom-dnd5e/templates/token-disposition.hbs",
+      TOKEN_DISPOSITION_TIDY5E: "/modules/custom-dnd5e/templates/token-disposition-tidy5e.hbs"
     }
   },
   ACTOR_SIZES: {
