@@ -384,6 +384,9 @@ function handleAction(counterKey, counter, trigger, { actor, data, dieTotal = nu
     case "destroy":
       destroyItem(actor);
       break;
+    case "reduceQuantity":
+      reduceItemQuantity(actor);
+      break;
     case "macro":
       executeMacro(actor, counterKey, trigger, data);
       break;
@@ -399,6 +402,18 @@ function handleAction(counterKey, counter, trigger, { actor, data, dieTotal = nu
 async function destroyItem(item) {
   if ( item.documentName !== "Item" ) return;
   await item.delete();
+}
+
+/* -------------------------------------------- */
+
+/**
+ * Reduce an item's quantity by 1.
+ * @param {Item} item The item
+ */
+async function reduceItemQuantity(item) {
+  if ( item.documentName !== "Item" ) return;
+  const quantity = item.system.quantity ?? 0;
+  await item.update({ "system.quantity": Math.max(quantity - 1, 0) });
 }
 
 /* -------------------------------------------- */
