@@ -70,6 +70,7 @@ function registerHooks() {
   Hooks.on("dnd5e.prepareSheetContext", prepareItemCountersContext);
   Hooks.on("preUpdateActor", handlePreUpdateActor);
   Hooks.on("updateActor", handleUpdateActor);
+  Hooks.on("updateItem", handleUpdateItem);
   Hooks.on("deleteCombat", handleDeleteCombat);
   Hooks.on("combatStart", handleCombatStart);
   Hooks.on("updateCombat", handleUpdateCombat);
@@ -176,6 +177,27 @@ function handleUpdateActor(actor, data, options, userId) {
 /* -------------------------------------------- */
 
 /**
+ * Handle item update triggers.
+ * @param {object} item The item
+ * @param {object} data The data
+ * @param {object} options The options
+ * @param {string} userId The user ID
+ */
+function handleUpdateItem(item, data, options, userId) {
+  if ( !getSetting(constants.SETTING.COUNTERS.KEY) ) return;
+  if ( !item.isOwner ) return;
+  if ( hasDataChanged(data) ) {
+    processTriggers({ actor: item, data, triggerType: "counterValue" });
+    processTriggers({ actor: item, data, triggerType: "successValue" });
+    processTriggers({ actor: item, data, triggerType: "failureValue" });
+    processTriggers({ actor: item, data, triggerType: "checked" });
+    processTriggers({ actor: item, data, triggerType: "unchecked" });
+  }
+}
+
+/* -------------------------------------------- */
+
+/**
  * Handle combat start triggers.
  * @param {object} combat The combat
  * @param {object} data The data
@@ -251,7 +273,13 @@ function handleRollAttack(rolls, data) {
   const actor = data.subject?.actor;
   if ( !actor?.isOwner ) return;
   const dieTotal = rolls[0]?.terms[0]?.total;
-  if ( dieTotal !== undefined ) processTriggers({ actor, triggerType: "rollAttack", dieTotal });
+  if ( dieTotal !== undefined ) {
+    processTriggers({ actor, triggerType: "rollAttack", dieTotal });
+    const item = data.subject?.item;
+    if ( item ) {
+      processTriggers({ actor: item, triggerType: "rollAttack", dieTotal });
+    }
+  }
 }
 
 /* -------------------------------------------- */
@@ -308,8 +336,10 @@ function processTriggers({ actor, data = null, triggerType, followUpFlag = null,
  * @param {object} [params.data=null] The data
  */
 function handleAction(counterKey, counter, trigger, { actor, data, dieTotal = null }) {
-  // For rollAttack, only fire if die value matches trigger value
-  if ( trigger.trigger === "rollAttack" && dieTotal !== Number(trigger.triggerValue) ) return;
+  // For rollAttack, compare die value using operator
+  if ( trigger.trigger === "rollAttack" ) {
+    if ( !compareValues(dieTotal, trigger.triggerOperator, Number(trigger.triggerValue)) ) return;
+  }
 
   // For counterValue/successValue/failureValue, compare using operator
   const valueTriggerMap = {
@@ -346,8 +376,13 @@ function handleAction(counterKey, counter, trigger, { actor, data, dieTotal = nu
     case "set":
       setCounter(actor, counterKey, trigger, counter.type);
       break;
-    case "dead":
-      makeDead(actor);
+    case "dead": {
+      const deadActor = (actor.documentName === "Item") ? actor.actor : actor;
+      if ( deadActor ) makeDead(deadActor);
+      break;
+    }
+    case "destroy":
+      destroyItem(actor);
       break;
     case "macro":
       executeMacro(actor, counterKey, trigger, data);
@@ -358,24 +393,38 @@ function handleAction(counterKey, counter, trigger, { actor, data, dieTotal = nu
 /* -------------------------------------------- */
 
 /**
+ * Destroy an item.
+ * @param {Item} item The item to destroy
+ */
+async function destroyItem(item) {
+  if ( item.documentName !== "Item" ) return;
+  await item.delete();
+}
+
+/* -------------------------------------------- */
+
+/**
  * Execute a macro from a trigger.
- * @param {Actor} actor The actor
+ * @param {Actor|Item} entity The actor or item
  * @param {string} counterKey The counter key
  * @param {object} trigger The trigger
  * @param {object} data The update data
  */
-async function executeMacro(actor, counterKey, trigger, data) {
+async function executeMacro(entity, counterKey, trigger, data) {
   if ( !trigger.macroUuid ) return;
   const macro = await fromUuid(trigger.macroUuid);
   if ( !macro ) {
     Logger.error(`Macro not found: ${trigger.macroUuid}`, true);
     return;
   }
-  const token = actor.isToken ? actor.token : actor.getActiveTokens()[0];
-  const counterValue = getCounterValue(data, counterKey);
+  const isItem = entity.documentName === "Item";
+  const actor = isItem ? entity.actor : entity;
+  const token = actor?.isToken ? actor.token : actor?.getActiveTokens()[0];
+  const counterValue = data ? getCounterValue(data, counterKey) : null;
   macro.execute({
     actor,
     token,
+    item: isItem ? entity : null,
     counter: counterKey,
     counterValue,
     trigger: trigger.trigger,

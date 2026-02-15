@@ -110,6 +110,7 @@ export class CountersEditForm extends CustomDnd5eForm {
       actionChoices.check = "CUSTOM_DND5E.check";
       actionChoices.uncheck = "CUSTOM_DND5E.uncheck";
     }
+    actionChoices.destroy = "CUSTOM_DND5E.destroyItem";
     actionChoices.macro = "CUSTOM_DND5E.macro";
 
     return {
