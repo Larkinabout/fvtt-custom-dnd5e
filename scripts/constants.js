@@ -368,7 +368,8 @@ export const CONSTANTS = {
       DND5E_ACTOR: "modules/custom-dnd5e/templates/counters/dnd5e/counters-actor.hbs",
       DND5E_ITEM_GROUP: "modules/custom-dnd5e/templates/counters/dnd5e/counters-item-group.hbs",
       DND5E_ITEM_GROUP_LEGACY: "modules/custom-dnd5e/templates/counters/dnd5e/counters-item-group-legacy.hbs"
-    }
+    },
+    UUID: "Compendium.custom-dnd5e.custom-dnd5e-journals.JournalEntry.dR7kYmNpV3tZxW4q"
   },
   CREATURE_TYPES: {
     ID: "creature-types",

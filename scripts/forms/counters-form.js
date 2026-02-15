@@ -1,4 +1,4 @@
-import { CONSTANTS, MODULE } from "../constants.js";
+import { CONSTANTS, JOURNAL_HELP_BUTTON, MODULE } from "../constants.js";
 import { deleteProperty, unsetFlag, getSetting, setSetting } from "../utils.js";
 import { CustomDnd5eForm } from "./custom-dnd5e-form.js";
 import { CountersEditForm } from "./counters-edit.js";
@@ -42,6 +42,8 @@ export class CountersForm extends CustomDnd5eForm {
    */
   constructor(...args) {
     super(args);
+    this.headerButton = JOURNAL_HELP_BUTTON;
+    this.headerButton.uuid = CONSTANTS.COUNTERS.UUID;
   }
 
   /* -------------------------------------------- */
