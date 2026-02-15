@@ -87,7 +87,8 @@ export const CONSTANTS = {
       CHARACTER_DETAILS: "modules/custom-dnd5e/templates/sheet/character-details.hbs",
       TOKEN_DISPOSITION: "modules/custom-dnd5e/templates/token-disposition.hbs",
       TOKEN_DISPOSITION_TIDY5E: "/modules/custom-dnd5e/templates/token-disposition-tidy5e.hbs"
-    }
+    },
+    UUID: "Compendium.custom-dnd5e.custom-dnd5e-journals.JournalEntry.JEUbYgjIv28ICsFg"
   },
   ACTOR_SIZES: {
     ID: "actor-sizes",

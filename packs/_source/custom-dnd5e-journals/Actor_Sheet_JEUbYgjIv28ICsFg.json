@@ -1,0 +1,62 @@
+{
+  "name": "Actor Sheet",
+  "_id": "JEUbYgjIv28ICsFg",
+  "pages": [
+    {
+      "sort": 100000,
+      "name": "Actor Sheet",
+      "type": "text",
+      "_id": "0vkHIJUGcTY0ROpp",
+      "system": {},
+      "title": {
+        "show": false,
+        "level": 1
+      },
+      "image": {},
+      "text": {
+        "format": 1,
+        "content": "<p>Located in <strong>Game Settings</strong> &gt; <strong>Configure Settings</strong> &gt; <strong>Custom D&amp;D 5e</strong> &gt; <strong>Configure Actor Sheet</strong></p><article class=\"custom-dnd5e-note\"><header><i class=\"fa-solid fa-note-sticky\"></i><p>Note</p></header><p>Settings under Client Settings are per-user. Settings under World Settings are GM-only and apply to all users.</p></article><h2>Client Settings</h2><h3>Sheet Scale</h3><p>Change the scale of the character sheet. A value of 1 is 100%, 0.5 is 50%, etc.</p><h3>Enable Auto-Fade</h3><p>When enabled, the actor sheet automatically fades out when the mouse leaves the sheet. Press CTRL to keep the faded view while moving onto the sheet, and press CTRL to keep the full view while moving off the sheet.</p><h3>Enable Auto-Minimise</h3><p>When enabled, the actor sheet automatically minimises when the mouse leaves the sheet. Press CTRL to keep the minimised view while moving onto the sheet, and press CTRL to keep the maximised view while moving off the sheet.</p><h2>World Settings</h2><h3>Characters</h3><h4>Banner Image</h4><p>Select an image to use as the banner on the character sheet. Recommended image size is 800px by 170px. Leave blank to use the default.</p><h4>Show Death Saves</h4><p>When enabled, death saves tracking is shown on the character sheet. When disabled, it is hidden.</p><h4>Show Encumbrance</h4><p>When enabled, the encumbrance bar is shown on the character sheet. When disabled, it is hidden.</p><h4>Show Exhaustion</h4><p>When enabled, exhaustion tracking is shown on the character sheet. When disabled, it is hidden.</p><h4>Show Inspiration</h4><p>When enabled, the Inspiration button is shown on the character sheet. When disabled, it is hidden.</p><h4>Show Manage Currency</h4><p>When enabled, the Manage Currency button is shown on the character sheet. When disabled, it is hidden.</p><h3>NPCs</h3><h4>Show Disposition</h4><p>When enabled, disposition buttons are shown in the NPC sheet sidebar. These buttons allow you to quickly change a token's disposition (Secret, Hostile, Neutral, Friendly) directly from the NPC sheet without opening the Token Configuration dialog.</p><article class=\"custom-dnd5e-note\"><header><i class=\"fa-solid fa-note-sticky\"></i><p>Note</p></header><p>For unlinked tokens (the default for NPCs), changing the disposition updates only that specific token. For linked tokens or when opening the NPC from the sidebar, it updates the prototype token.</p></article><h4>Show Legendary Actions</h4><p>When enabled, Legendary Actions are shown on the NPC sheet. When disabled, they are hidden.</p><h4>Show Legendary Resistance</h4><p>When enabled, Legendary Resistance is shown on the NPC sheet. When disabled, it is hidden.</p><h4>Show Use Lair Action</h4><p>When enabled, the Use Lair Action button is shown on the NPC sheet. When disabled, it is hidden.</p>"
+      },
+      "video": {
+        "controls": true,
+        "volume": 0.5
+      },
+      "src": null,
+      "ownership": {
+        "default": -1
+      },
+      "flags": {},
+      "_stats": {
+        "compendiumSource": null,
+        "duplicateSource": null,
+        "coreVersion": "13.342",
+        "systemId": "dnd5e",
+        "systemVersion": "5.2.5",
+        "createdTime": 1739577600000,
+        "modifiedTime": 1739577600000,
+        "lastModifiedBy": "custom-dnd5e",
+        "exportSource": null
+      },
+      "category": null,
+      "_key": "!journal.pages!JEUbYgjIv28ICsFg.0vkHIJUGcTY0ROpp"
+    }
+  ],
+  "folder": null,
+  "sort": 0,
+  "ownership": {
+    "default": 0
+  },
+  "flags": {},
+  "_stats": {
+    "compendiumSource": null,
+    "duplicateSource": null,
+    "coreVersion": "13.342",
+    "systemId": "dnd5e",
+    "systemVersion": "5.2.5",
+    "createdTime": 1739577600000,
+    "modifiedTime": 1739577600000,
+    "lastModifiedBy": "custom-dnd5e",
+    "exportSource": null
+  },
+  "_key": "!journal!JEUbYgjIv28ICsFg"
+}

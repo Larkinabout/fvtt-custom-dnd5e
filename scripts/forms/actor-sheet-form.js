@@ -1,4 +1,4 @@
-import { CONSTANTS, MODULE } from "../constants.js";
+import { CONSTANTS, JOURNAL_HELP_BUTTON, MODULE } from "../constants.js";
 import { getFlag, setFlag, getSetting, setSetting } from "../utils.js";
 import { CustomDnd5eForm } from "./custom-dnd5e-form.js";
 
@@ -14,6 +14,8 @@ export class ActorSheetForm extends CustomDnd5eForm {
   constructor(...args) {
     super(args);
     this.type = "actorSheet";
+    this.headerButton = JOURNAL_HELP_BUTTON;
+    this.headerButton.uuid = CONSTANTS.ACTOR_SHEET.UUID;
   }
 
   /* -------------------------------------------- */

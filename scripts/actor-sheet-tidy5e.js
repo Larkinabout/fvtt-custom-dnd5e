@@ -45,6 +45,10 @@ function registerNpcDisposition(api) {
             await app.document.token.update({ disposition: value });
           } else {
             await app.document.update({ "prototypeToken.disposition": value });
+            const tokens = app.document.getActiveTokens(false, true);
+            for ( const token of tokens ) {
+              await token.update({ disposition: value });
+            }
           }
           buttons.forEach(b => b.classList.toggle("active", Number(b.dataset.disposition) === value));
         });
