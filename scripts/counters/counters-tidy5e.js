@@ -13,6 +13,9 @@ export function register() {
       CONSTANTS.COUNTERS.SETTING.CHARACTER_COUNTERS.KEY);
     registerTab(api, "registerNpcTab",
       CONSTANTS.COUNTERS.SETTING.NPC_COUNTERS.KEY);
+    registerTab(api, "registerGroupTab",
+      CONSTANTS.COUNTERS.SETTING.GROUP_COUNTERS.KEY, "group-tab-content group-description-content flexcol");
+    registerItemTab(api);
   });
 }
 
@@ -23,8 +26,9 @@ export function register() {
  * @param {object} api The Tidy 5e Sheets API
  * @param {string} method The registration method name
  * @param {string} settingKey The counter setting key
+ * @param {string} [classes=""] CSS classes for the tab content wrapper
  */
-function registerTab(api, method, settingKey) {
+function registerTab(api, method, settingKey, classes = "") {
   const tab = new api.models.HandlebarsTab({
     tabId: "custom-dnd5e-counters",
     title: game.i18n.localize("CUSTOM_DND5E.counters"),
@@ -34,7 +38,7 @@ function registerTab(api, method, settingKey) {
     getData: context => {
       const actor = context.actor;
       const counters = mergeCounters(actor, settingKey);
-      return { ...context, counters, unlocked: context.unlocked };
+      return { ...context, counters, unlocked: context.unlocked, classes };
     },
     onRender: ({ app, tabContentsElement }) => {
       const actor = app.actor;
@@ -46,4 +50,35 @@ function registerTab(api, method, settingKey) {
   });
 
   api[method](tab, { layout: "all" });
+}
+
+/* -------------------------------------------- */
+
+/**
+ * Register an item counters tab with the Tidy 5e Sheets API.
+ * @param {object} api The Tidy 5e Sheets API
+ */
+function registerItemTab(api) {
+  const settingKey = CONSTANTS.COUNTERS.SETTING.ITEM_COUNTERS.KEY;
+  const tab = new api.models.HandlebarsTab({
+    tabId: "custom-dnd5e-counters",
+    title: game.i18n.localize("CUSTOM_DND5E.counters"),
+    iconClass: "fas fa-tally",
+    path: "/modules/custom-dnd5e/templates/counters/tidy5e/counters-actor.hbs",
+    enabled: context => getSetting(CONSTANTS.COUNTERS.SETTING.COUNTERS.KEY),
+    getData: context => {
+      const item = context.item;
+      const counters = mergeCounters(item, settingKey);
+      return { ...context, counters, unlocked: context.unlocked, classes: "" };
+    },
+    onRender: ({ app, tabContentsElement }) => {
+      const item = app.document;
+      const container = tabContentsElement.querySelector("#custom-dnd5e-counters");
+      if ( !container ) return;
+      const counters = mergeCounters(item, settingKey);
+      setupCounterInteractions(item, counters, container, app.isEditable);
+    }
+  });
+
+  api.registerItemTab(tab, { layout: "all" });
 }

@@ -1,3 +1,8 @@
+#custom-dnd5e-counters h3 {
+    max-width: calc(var(--skills-col-width) + 100px);
+    min-width: var(--skills-col-width);
+}
+
 #custom-dnd5e-counters ul {
     display: flex;
     flex-direction: column;
@@ -183,14 +188,14 @@
     opacity: 0.5;
 }
 
-.dnd5e-theme-dark :is(.character, .npc)
+.dnd5e-theme-dark
     .custom-dnd5e-counters-pips .pip {
     background: var(--dnd5e-color-iron-gray, #3c3c3c);
     border-color: var(--dnd5e-color-gold, #c9a95e);
     box-shadow: none;
 }
 
-.dnd5e-theme-dark :is(.character, .npc)
+.dnd5e-theme-dark
     .custom-dnd5e-counters-pips .pip.filled {
     background: var(--dnd5e-color-gold, #c9a95e);
 }
@@ -203,7 +208,7 @@
 }
 
 .tidy5e-sheet .custom-dnd5e-counters-pips button.pip {
-    background: var(--dnd5e-background-alt-1, #f0e8d0);
+    background: var(--app-background, #000000);
     border: 2px solid var(--dnd5e-color-gold, #c9a95e);
     border-radius: 100%;
     width: var(--pip-size, 16px);
@@ -232,6 +237,15 @@
  * TIDY 5E
  */
 .tidy5e-sheet #custom-dnd5e-counters #custom-dnd5e-counters-edit-button {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 0.5rem;
+}
+
+/*
+ * ITEM & GROUP SHEET
+ */
+#custom-dnd5e-counters #custom-dnd5e-counters-edit-button {
     display: flex;
     justify-content: flex-end;
     margin-bottom: 0.5rem;

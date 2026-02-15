@@ -141,7 +141,6 @@ function prepareCountersContext(sheet, partId, context, options) {
   } else {
     return;
   }
-  context.editable = sheet.isEditable;
 }
 
 /* -------------------------------------------- */
