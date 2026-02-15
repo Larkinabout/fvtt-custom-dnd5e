@@ -13,7 +13,7 @@
             <i class="fa-solid fa-pen-to-square"></i>
         </button>
         <button{{#unless (customDnd5eBoolFalse system)}} disabled{{/unless}} type="button" {{#if (customDnd5eBoolFalse system)}}data-action="delete" data-tooltip="{{localize "CUSTOM_DND5E.form.button.delete.tooltip"}}"{{/if}} class="flex0 custom-dnd5e-list-button">
-            <i class="fas fa-xmark"></i>
+            <i class="fas fa-trash"></i>
         </button>
         <input id="custom-dnd5e-delete" name="orders.{{key}}.delete" type="hidden" value="false">
     </div>

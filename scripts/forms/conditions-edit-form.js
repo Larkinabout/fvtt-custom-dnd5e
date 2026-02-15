@@ -37,6 +37,9 @@ export class ConditionsEditForm extends ConfigEditForm {
    * @type {object}
    */
   static DEFAULT_OPTIONS = {
+    actions: {
+      clearMacro: ConditionsEditForm.clearMacro
+    },
     id: `${MODULE.ID}-conditions-edit`,
     position: {
       height: 600
@@ -71,5 +74,78 @@ export class ConditionsEditForm extends ConfigEditForm {
       CONFIG.statusEffects.map(statusEffect => [statusEffect.id, statusEffect.name])
     );
     return { riders: statusEffects, statuses: statusEffects };
+  }
+
+  /* -------------------------------------------- */
+
+  /**
+   * Prepare the context for rendering the form.
+   *
+   * @returns {Promise<object>} The context data.
+   */
+  async _prepareContext() {
+    const context = await super._prepareContext();
+    if ( context.macroUuid ) {
+      const macro = await fromUuid(context.macroUuid);
+      context.macroName = macro?.name ?? "";
+    }
+    return context;
+  }
+
+  /* -------------------------------------------- */
+
+  /**
+   * Handle form rendering.
+   * @param {object} context The context data.
+   * @param {object} options The options for rendering.
+   */
+  _onRender(context, options) {
+    super._onRender(context, options);
+    const macroDrop = this.element.querySelector(".custom-dnd5e-macro-drop");
+    if ( macroDrop ) {
+      macroDrop.addEventListener("drop", (event) => this.#onDropMacro(event));
+    }
+  }
+
+  /* -------------------------------------------- */
+
+  /**
+   * Handle dropping a Macro onto the form.
+   * @param {DragEvent} event The drop event.
+   */
+  async #onDropMacro(event) {
+    event.preventDefault();
+    event.stopPropagation();
+    const data = foundry.applications.ux.TextEditor.implementation.getDragEventData(event);
+    if ( data?.type !== "Macro" ) return;
+    const macro = await Macro.implementation.fromDropData(data);
+    if ( !macro ) return;
+
+    const input = this.element.querySelector('input[name$=".macroUuid"]');
+    if ( input ) input.value = macro.uuid;
+
+    const macroField = this.element.querySelector(".custom-dnd5e-macro-field");
+    const dropArea = this.element.querySelector(".custom-dnd5e-macro-drop .drop-area");
+    const nameEl = this.element.querySelector(".custom-dnd5e-macro-name");
+    if ( nameEl ) nameEl.textContent = macro.name;
+    if ( macroField ) macroField.classList.remove("hidden");
+    if ( dropArea ) dropArea.classList.add("hidden");
+  }
+
+  /* -------------------------------------------- */
+
+  /**
+   * Clear the macro selection.
+   * @param {Event} event The event that triggered the action.
+   * @param {HTMLElement} target The target element.
+   */
+  static clearMacro(event, target) {
+    const input = this.element.querySelector('input[name$=".macroUuid"]');
+    if ( input ) input.value = "";
+
+    const macroField = this.element.querySelector(".custom-dnd5e-macro-field");
+    const dropArea = this.element.querySelector(".custom-dnd5e-macro-drop .drop-area");
+    if ( macroField ) macroField.classList.add("hidden");
+    if ( dropArea ) dropArea.classList.remove("hidden");
   }
 }

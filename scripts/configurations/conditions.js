@@ -21,6 +21,7 @@ export function register() {
   registerSettings();
 
   Hooks.on("preCreateActiveEffect", applyOverlay);
+  Hooks.on("createActiveEffect", executeConditionMacro);
 
   const templates = [
     constants.TEMPLATE.EDIT
@@ -42,6 +43,43 @@ function applyOverlay(effect) {
   if ( statusEffect?.overlay ) {
     effect.updateSource({ "flags.core.overlay": true });
   }
+}
+
+/* -------------------------------------------- */
+
+/**
+ * Execute a macro when a condition with a configured macro is applied.
+ * @param {ActiveEffect} effect The active effect being created.
+ * @param {object} options The creation options.
+ * @param {string} userId The ID of the user who created the effect.
+ */
+async function executeConditionMacro(effect, options, userId) {
+  if ( !getSetting(constants.SETTING.ENABLE.KEY) ) return;
+  if ( game.user.id !== userId ) return;
+
+  const statusId = [...(effect.statuses || [])][0];
+  if ( !statusId ) return;
+
+  const conditionsData = getSetting(constants.SETTING.CONFIG.KEY);
+  const conditionConfig = conditionsData?.[statusId];
+  if ( !conditionConfig?.macroUuid ) return;
+
+  const macro = await fromUuid(conditionConfig.macroUuid);
+  if ( !macro ) {
+    Logger.error(`Condition macro not found: ${conditionConfig.macroUuid}`, true);
+    return;
+  }
+
+  const actor = effect.parent;
+  const token = actor?.isToken ? actor.token : actor?.getActiveTokens()[0];
+
+  macro.execute({
+    actor,
+    token,
+    condition: statusId,
+    conditionName: game.i18n.localize(conditionConfig.name),
+    effect
+  });
 }
 
 /* -------------------------------------------- */

@@ -19,7 +19,7 @@
         </div>
     </div>
     <button{{#unless (customDnd5eBoolFalse system)}} disabled{{/unless}} type="button" {{#if (customDnd5eBoolFalse system)}}data-action="delete" data-tooltip="{{localize "CUSTOM_DND5E.form.button.delete.tooltip"}}"{{/if}} class="flex0 custom-dnd5e-list-button">
-        <i class="fas fa-xmark"></i>
+        <i class="fas fa-trash"></i>
     </button>
     <input id="custom-dnd5e-delete" name="types.{{key}}.delete" type="hidden" value="false">
     {{#if subtypes}}
@@ -45,7 +45,7 @@
                 </div>
             </div>
             <button{{#unless (customDnd5eBoolFalse system)}} disabled{{/unless}} type="button" {{#if (customDnd5eBoolFalse system)}}data-action="delete" data-tooltip="{{localize "CUSTOM_DND5E.form.button.delete.tooltip"}}"{{/if}} class="flex0 custom-dnd5e-list-button">
-                <i class="fas fa-xmark"></i>
+                <i class="fas fa-trash"></i>
             </button>
             <input id="custom-dnd5e-delete" name="types.{{@../key}}.subtypes.{{subkey}}.delete" type="hidden" value="false">
         </li>
