@@ -65,9 +65,11 @@ function registerSettings() {
  */
 function registerHooks() {
   registerItemSheetTab();
+  registerGroupSheetTab();
   Hooks.on("renderActorSheetV2", addCounters);
   Hooks.on("renderItemSheet5e", addItemCounters);
-  Hooks.on("dnd5e.prepareSheetContext", prepareItemCountersContext);
+  Hooks.on("renderGroupActorSheet", addGroupCounters);
+  Hooks.on("dnd5e.prepareSheetContext", prepareCountersContext);
   Hooks.on("preUpdateActor", handlePreUpdateActor);
   Hooks.on("updateActor", handleUpdateActor);
   Hooks.on("updateItem", handleUpdateItem);
@@ -92,6 +94,7 @@ function registerItemSheetTab() {
     });
   }
   ItemSheet5e.PARTS.counters = {
+    tab: "counters",
     template: constants.TEMPLATE.DND5E_ITEM_GROUP,
     scrollable: [""]
   };
@@ -100,16 +103,44 @@ function registerItemSheetTab() {
 /* -------------------------------------------- */
 
 /**
- * Prepare counter data for the item sheet counters part.
+ * Register the counters tab on the group actor sheet.
+ */
+function registerGroupSheetTab() {
+  const GroupActorSheet = dnd5e.applications.actor.GroupActorSheet;
+  if ( !GroupActorSheet.TABS.find(t => t.tab === "counters") ) {
+    GroupActorSheet.TABS.push({
+      tab: "counters",
+      label: "CUSTOM_DND5E.counters",
+      icon: "fas fa-tally"
+    });
+  }
+  GroupActorSheet.PARTS.counters = {
+    tab: "counters",
+    container: { classes: ["tab-body"], id: "tabs" },
+    template: constants.TEMPLATE.DND5E_ITEM_GROUP,
+    scrollable: [""]
+  };
+}
+
+/* -------------------------------------------- */
+
+/**
+ * Prepare counter data for the counters sheet part.
  * @param {object} sheet The sheet
  * @param {string} partId The part ID
  * @param {object} context The context
  * @param {object} options The options
  */
-function prepareItemCountersContext(sheet, partId, context, options) {
-  if ( partId !== "counters" || sheet.document?.documentName !== "Item" ) return;
-  const settingKey = CONSTANTS.COUNTERS.SETTING.ITEM_COUNTERS.KEY;
-  context.counters = mergeCounters(sheet.document, settingKey);
+function prepareCountersContext(sheet, partId, context, options) {
+  if ( partId !== "counters" ) return;
+  const docName = sheet.document?.documentName;
+  if ( docName === "Item" ) {
+    context.counters = mergeCounters(sheet.document, CONSTANTS.COUNTERS.SETTING.ITEM_COUNTERS.KEY);
+  } else if ( docName === "Actor" && sheet.document?.type === "group" ) {
+    context.counters = mergeCounters(sheet.document, CONSTANTS.COUNTERS.SETTING.GROUP_COUNTERS.KEY);
+  } else {
+    return;
+  }
   context.editable = sheet.isEditable;
 }
 
@@ -126,6 +157,23 @@ function addItemCounters(app, html, data) {
   const container = html.querySelector("#custom-dnd5e-counters");
   if ( !container ) return;
   const settingKey = CONSTANTS.COUNTERS.SETTING.ITEM_COUNTERS.KEY;
+  const counters = mergeCounters(app.document, settingKey);
+  setupCounterInteractions(app.document, counters, container, app.isEditable);
+}
+
+/* -------------------------------------------- */
+
+/**
+ * Set up counter interactions on the group actor sheet.
+ * @param {object} app The app
+ * @param {object} html The HTML
+ * @param {object} data The data
+ */
+function addGroupCounters(app, html, data) {
+  if ( !getSetting(constants.SETTING.COUNTERS.KEY) ) return;
+  const container = html.querySelector("#custom-dnd5e-counters");
+  if ( !container ) return;
+  const settingKey = CONSTANTS.COUNTERS.SETTING.GROUP_COUNTERS.KEY;
   const counters = mergeCounters(app.document, settingKey);
   setupCounterInteractions(app.document, counters, container, app.isEditable);
 }

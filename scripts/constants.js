@@ -1246,20 +1246,6 @@ export const SHEET_TYPE = {
       position: "afterbegin"
     }
   },
-  GroupActorSheet: {
-    countersSetting: CONSTANTS.COUNTERS.SETTING.GROUP_COUNTERS.KEY,
-    character: false,
-    custom: false,
-    group: true,
-    item: false,
-    legacy: true,
-    npc: false,
-    template: CONSTANTS.COUNTERS.TEMPLATE.DND5E_ITEM_GROUP_LEGACY,
-    insert: {
-      class: "section.sheet-body",
-      position: "beforeend"
-    }
-  },
   ItemSheet5e: {
     countersSetting: CONSTANTS.COUNTERS.SETTING.ITEM_COUNTERS.KEY,
     character: false,

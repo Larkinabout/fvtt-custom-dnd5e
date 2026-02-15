@@ -42,10 +42,8 @@
     color: var(--color-text-light-7);
 }
 
-:is(.character, .npc)
-    .custom-dnd5e-counters-counter input,
-.dnd5e2:is(.character, .npc)
-    .custom-dnd5e-counters-counter input:disabled {
+.custom-dnd5e-counters-counter input,
+.dnd5e2 .custom-dnd5e-counters-counter input:disabled {
     color: var(--color-text-primary);
     border: none;
     border-bottom: 2px solid var(--dnd5e-color-gold);
@@ -242,23 +240,6 @@
 /*
  * GROUP SHEET
  */
-.dnd5e.sheet.group .custom-dnd5e-counters-number input[type="number"],
-.custom-dnd5e-counters-number > input {
-    grid-column-start: 4;
-}
-
-.dnd5e.sheet.group .custom-dnd5e-counters ul {
-    display: flex;
-    flex-direction: column;
-    gap: 0rem;
-}
-
-.dnd5e.sheet.group .custom-dnd5e-counters-counter input[type="text"],
-.dnd5e.sheet.group .custom-dnd5e-counters-counter input[type="number"] {
-    height: var(--form-field-height);
-}
-
-.dnd5e.sheet.group .custom-dnd5e-counters-number input[type="number"] {
-    background-color: var(--dnd5e-color-parchment);
-    border: 1px solid var(--color-border-light-tertiary);
+.dnd5e2.sheet.group .custom-dnd5e-counters {
+    padding: 6px 12px 0px 12px;
 }
