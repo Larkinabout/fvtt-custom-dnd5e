@@ -210,7 +210,7 @@
       "image": {},
       "text": {
         "format": 1,
-        "content": "<h2>Award Inspiration</h2><h3>Target Value</h3><p>Set a specific number on the d20. When a player rolls a qualifying roll and the die result matches the target value, they are automatically awarded Inspiration.</p><h3>Roll Types</h3><p>Choose which types of rolls can trigger the award of Inspiration:</p><ul><li><p>Ability Check</p></li><li><p>Attack Roll</p></li><li><p>Saving Throw</p></li><li><p>Skill Check</p></li></ul><p>Inspiration will only be awarded when the target value is rolled on one of the selected roll types.</p>"
+        "content": "<h2>Award Inspiration</h2><h3>Target Value</h3><p>Set a specific number on the d20. When a player rolls a qualifying roll and the die result matches the target value, they are automatically awarded Inspiration.</p><h3>Roll Types</h3><p>Choose which types of rolls can trigger the award of Inspiration:</p><ul><li><p>Ability Check</p></li><li><p>Attack Roll</p></li><li><p>Saving Throw</p></li><li><p>Skill Check</p></li><li><p>Tool Check</p></li></ul><p>Inspiration will only be awarded when the target value is rolled on one of the selected roll types.</p><h2>Animation</h2><p>When enabled, a light rays animation will play for the affected player when inspiration is awarded. This effect is skipped when Foundry's Photosensitive Mode is enabled in the core settings.</p>"
       },
       "video": {
         "controls": true,

@@ -405,6 +405,8 @@
     "CUSTOM_DND5E.form.gameplay.inspiration.awardInspirationDiceValue.label": "Award Inspiration Dice Value",
     "CUSTOM_DND5E.form.gameplay.inspiration.awardInspirationDiceValue.note": "Value to roll on the dice to award Inspiration",
     "CUSTOM_DND5E.form.gameplay.inspiration.awardInspirationRollTypes.note": "Roll types to award Inspiration",
+    "CUSTOM_DND5E.form.gameplay.inspiration.inspirationAnimation.label": "Animation",
+    "CUSTOM_DND5E.form.gameplay.inspiration.inspirationAnimation.note": "Play a light rays animation when inspiration is awarded",
     "CUSTOM_DND5E.form.gameplay.mobDamage.enable.label": "Enable Mob Damage",
     "CUSTOM_DND5E.form.gameplay.mobDamage.enable.note": "When attacking a single token with four or more identical tokens selected, the attack roll is replaced with a damage roll based on the Mobs Average Results table (DMG 2024, p. 82)",
     "CUSTOM_DND5E.form.gameplay.mobDamage.useAverageDamage.label": "Use Average Damage",

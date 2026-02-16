@@ -662,6 +662,9 @@ export const CONSTANTS = {
       },
       AWARD_INSPIRATION_ROLL_TYPES: {
         KEY: "award-inspiration-roll-types"
+      },
+      INSPIRATION_ANIMATION: {
+        KEY: "inspiration-animation"
       }
     }
   },

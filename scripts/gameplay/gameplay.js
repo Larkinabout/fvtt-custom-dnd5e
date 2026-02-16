@@ -16,6 +16,7 @@ import {
   unmakeUnconscious,
   shakeScreen,
   flashScreen,
+  lightRaysScreen,
   getActorOwnerIds
 } from "../utils.js";
 import { GameplayForm } from "../forms/gameplay-form.js";
@@ -265,6 +266,16 @@ function registerSettings() {
   );
 
   registerSetting(
+    CONSTANTS.INSPIRATION.SETTING.INSPIRATION_ANIMATION.KEY,
+    {
+      scope: "world",
+      config: false,
+      type: Boolean,
+      default: false
+    }
+  );
+
+  registerSetting(
     CONSTANTS.PRONE.SETTING.PRONE_ROTATION.KEY,
     {
       scope: "world",
@@ -482,6 +493,7 @@ export function awardInspiration(rollType, roll, data) {
       message = "CUSTOM_DND5E.message.awardInspirationAlready";
     } else {
       actor.update({ "system.attributes.inspiration": true });
+      playInspirationAnimation(actor);
     }
 
     ChatMessage.create({
@@ -490,6 +502,18 @@ export function awardInspiration(rollType, roll, data) {
 
     Logger.debug("Inspiration awarded");
   }
+}
+
+/* -------------------------------------------- */
+
+/**
+ * Play the inspiration animation for the actor's owners.
+ * @param {object} actor The actor
+ */
+function playInspirationAnimation(actor) {
+  if ( !getSetting(CONSTANTS.INSPIRATION.SETTING.INSPIRATION_ANIMATION.KEY) ) return;
+  const userIds = getActorOwnerIds(actor);
+  lightRaysScreen({ userIds });
 }
 
 /* -------------------------------------------- */

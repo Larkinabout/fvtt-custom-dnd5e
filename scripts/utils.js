@@ -1,4 +1,5 @@
 import { CONSTANTS, MODULE } from "./constants.js";
+import { LIGHT_RAYS_VS, LIGHT_RAYS_FS } from "./shaders/light-rays.js";
 
 /**
  * Console logger
@@ -685,8 +686,8 @@ export async function shakeCanvas({ intensity = 25, duration = 500 } = {}) {
       const progress = animation.time / duration;
       const decay = Math.pow(1 - progress, 2);
       const adjusted = intensity / scale;
-      canvas.stage.pivot.x = origin.x + (Math.random() - 0.5) * adjusted * decay;
-      canvas.stage.pivot.y = origin.y + (Math.random() - 0.5) * adjusted * decay;
+      canvas.stage.pivot.x = origin.x + ((Math.random() - 0.5) * adjusted * decay);
+      canvas.stage.pivot.y = origin.y + ((Math.random() - 0.5) * adjusted * decay);
     }
   });
 
@@ -714,7 +715,7 @@ export async function flashCanvas({ color = 0xFF0000, opacity = 0.4, duration = 
 
   const flash = new PIXI.Graphics();
   flash.beginFill(color);
-  flash.drawRect(pivotX - w / 2, pivotY - h / 2, w, h);
+  flash.drawRect(pivotX - (w / 2), pivotY - (h / 2), w, h);
   flash.endFill();
   flash.alpha = 0;
   canvas.interface.addChild(flash);
@@ -763,11 +764,11 @@ export function requiresSocket(userIds) {
 /* -------------------------------------------- */
 
 /**
- * Shake the entire screen (including UI) with decaying intensity.
+ * Shake the entire screen with decaying intensity.
  * @param {object} [options] The options.
  * @param {number} [options.intensity=5] The shake intensity in pixels.
  * @param {number} [options.duration=500] The shake duration in milliseconds.
- * @param {string[]} [options.userIds] If provided, only play for these users. Automatically emits via socket to reach remote clients.
+ * @param {string[]} [options.userIds] If provided, only play for these users.
  */
 export async function shakeScreen({ intensity = 5, duration = 500, userIds } = {}) {
   if ( userIds && requiresSocket(userIds) ) {
@@ -778,6 +779,10 @@ export async function shakeScreen({ intensity = 5, duration = 500, userIds } = {
   const startTime = performance.now();
 
   return new Promise(resolve => {
+    /**
+     * Handle a single animation frame for the shake effect.
+     * @param {number} currentTime The current time in milliseconds supplied by requestAnimationFrame.
+     */
     function animate(currentTime) {
       const elapsed = currentTime - startTime;
       const progress = elapsed / duration;
@@ -802,13 +807,13 @@ export async function shakeScreen({ intensity = 5, duration = 500, userIds } = {
 /* -------------------------------------------- */
 
 /**
- * Flash the entire screen (including UI) with a color overlay.
+ * Flash the entire screen with a color overlay.
  * Skipped when photosensitive mode is enabled.
  * @param {object} [options] The options.
  * @param {string} [options.color="#ff0000"] The flash color as a CSS color string.
  * @param {number} [options.opacity=0.4] The peak opacity (0-1).
  * @param {number} [options.duration=500] The total flash duration in milliseconds.
- * @param {string[]} [options.userIds] If provided, only play for these users. Automatically emits via socket to reach remote clients.
+ * @param {string[]} [options.userIds] If provided, only play for these users.
  */
 export async function flashScreen({ color = "#ff0000", opacity = 0.4, duration = 500, userIds } = {}) {
   if ( userIds && requiresSocket(userIds) ) {
@@ -846,11 +851,11 @@ export async function flashScreen({ color = "#ff0000", opacity = 0.4, duration =
 /* -------------------------------------------- */
 
 /**
- * Blur the entire screen (including UI) to simulate losing consciousness.
+ * Blur the entire screen.
  * @param {object} [options] The options.
  * @param {number} [options.intensity=5] The max blur in pixels.
  * @param {number} [options.duration=1500] The total duration in milliseconds.
- * @param {string[]} [options.userIds] If provided, only play for these users. Automatically emits via socket to reach remote clients.
+ * @param {string[]} [options.userIds] If provided, only play for these users.
  */
 export async function blurScreen({ intensity = 5, duration = 1500, userIds } = {}) {
   if ( userIds && requiresSocket(userIds) ) {
@@ -861,6 +866,10 @@ export async function blurScreen({ intensity = 5, duration = 1500, userIds } = {
   const startTime = performance.now();
 
   return new Promise(resolve => {
+    /**
+     * Animate a single frame of the blur effect.
+     * @param {number} currentTime The current time in milliseconds supplied by requestAnimationFrame.
+     */
     function animate(currentTime) {
       const elapsed = currentTime - startTime;
       const progress = elapsed / duration;
@@ -883,12 +892,12 @@ export async function blurScreen({ intensity = 5, duration = 1500, userIds } = {
 /* -------------------------------------------- */
 
 /**
- * Sway the entire screen (including UI) with a decaying oscillation to simulate heavy breathing.
+ * Sway the entire screen.
  * @param {object} [options] The options.
  * @param {number} [options.intensity=2] The max rotation in degrees.
  * @param {number} [options.duration=2000] The total duration in milliseconds.
  * @param {number} [options.frequency=2] The oscillation frequency (cycles per second).
- * @param {string[]} [options.userIds] If provided, only play for these users. Automatically emits via socket to reach remote clients.
+ * @param {string[]} [options.userIds] If provided, only play for these users.
  */
 export async function swayScreen({ intensity = 2, duration = 2000, frequency = 2, userIds } = {}) {
   if ( userIds && requiresSocket(userIds) ) {
@@ -899,6 +908,10 @@ export async function swayScreen({ intensity = 2, duration = 2000, frequency = 2
   const startTime = performance.now();
 
   return new Promise(resolve => {
+    /**
+     * Animate a single frame of the sway effect.
+     * @param {number} currentTime The current time in milliseconds supplied by requestAnimationFrame.
+     */
     function animate(currentTime) {
       const elapsed = currentTime - startTime;
       const progress = elapsed / duration;
@@ -923,12 +936,126 @@ export async function swayScreen({ intensity = 2, duration = 2000, frequency = 2
 /* -------------------------------------------- */
 
 /**
- * Darken the screen edges to simulate tunnel vision / losing consciousness.
- * A radial vignette creeps inward from the periphery, then fades back.
+ * Play a light rays screen effect.
  * @param {object} [options] The options.
- * @param {number} [options.intensity=0.8] The peak darkness (0-1).
+ * @param {string} [options.color="#fff5d6"] The color of the rays.
+ * @param {number} [options.rays=12] The number of light rays.
+ * @param {number} [options.duration=2500] The total duration in milliseconds.
+ * @param {string[]} [options.userIds] If provided, only play for these users.
+ */
+export async function lightRaysScreen({ color = "#fff5d6", rays = 12, duration = 2500, userIds } = {}) {
+  if ( userIds && requiresSocket(userIds) ) {
+    game.socket.emit(`module.${MODULE.ID}`, { action: "animation", type: "lightRaysScreen", options: { color, rays, duration, userIds } });
+  }
+  if ( userIds && !userIds.includes(game.user.id) ) return;
+  if ( game.settings.get("core", "photosensitiveMode") ) return;
+
+  const canvas = document.createElement("canvas");
+  canvas.style.cssText = `
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 10000;
+  `;
+  document.body.appendChild(canvas);
+  canvas.width = canvas.clientWidth;
+  canvas.height = canvas.clientHeight;
+
+  const gl = canvas.getContext("webgl");
+  if ( !gl ) {
+    canvas.remove();
+    return;
+  }
+
+  /**
+   * Compile a WebGL shader from source.
+   * @param {number} type The shader type (e.g. gl.VERTEX_SHADER or gl.FRAGMENT_SHADER).
+   * @param {string} source The GLSL source code for the shader.
+   * @returns {WebGLShader} The compiled shader object.
+   */
+  function compileShader(type, source) {
+    const shader = gl.createShader(type);
+    gl.shaderSource(shader, source);
+    gl.compileShader(shader);
+    return shader;
+  }
+
+  const vs = compileShader(gl.VERTEX_SHADER, LIGHT_RAYS_VS);
+  const fs = compileShader(gl.FRAGMENT_SHADER, LIGHT_RAYS_FS);
+  const program = gl.createProgram();
+  gl.attachShader(program, vs);
+  gl.attachShader(program, fs);
+  gl.linkProgram(program);
+  gl.useProgram(program);
+
+  const buffer = gl.createBuffer();
+  gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
+  gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, 1, -1, -1, 1, 1, 1]), gl.STATIC_DRAW);
+
+  const aPos = gl.getAttribLocation(program, "a_position");
+  gl.enableVertexAttribArray(aPos);
+  gl.vertexAttribPointer(aPos, 2, gl.FLOAT, false, 0, 0);
+
+  const uTime = gl.getUniformLocation(program, "u_time");
+  const uResolution = gl.getUniformLocation(program, "u_resolution");
+  const uColor = gl.getUniformLocation(program, "u_color");
+  const uRays = gl.getUniformLocation(program, "u_rays");
+  const uSeed = gl.getUniformLocation(program, "u_seed");
+
+  // Parse hex color to RGB floats
+  const r = parseInt(color.slice(1, 3), 16) / 255;
+  const g = parseInt(color.slice(3, 5), 16) / 255;
+  const b = parseInt(color.slice(5, 7), 16) / 255;
+
+  gl.uniform2f(uResolution, canvas.width, canvas.height);
+  gl.uniform3f(uColor, r, g, b);
+  gl.uniform1f(uRays, rays);
+  gl.uniform1f(uSeed, Math.random() * 100.0);
+  gl.enable(gl.BLEND);
+  gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
+
+  const startTime = performance.now();
+
+  return new Promise(resolve => {
+    /**
+     *
+     * @param currentTime
+     */
+    function animate(currentTime) {
+      const elapsed = currentTime - startTime;
+      const progress = Math.min(elapsed / duration, 1.0);
+
+      if ( progress >= 1.0 ) {
+        gl.deleteProgram(program);
+        gl.deleteShader(vs);
+        gl.deleteShader(fs);
+        gl.deleteBuffer(buffer);
+        canvas.remove();
+        resolve();
+        return;
+      }
+
+      gl.uniform1f(uTime, progress);
+      gl.clearColor(0, 0, 0, 0);
+      gl.clear(gl.COLOR_BUFFER_BIT);
+      gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+      requestAnimationFrame(animate);
+    }
+
+    requestAnimationFrame(animate);
+  });
+}
+
+/* -------------------------------------------- */
+
+/**
+ * Play a vignette effect to darken edges of screen.
+ * @param {object} [options] The options.
+ * @param {number} [options.intensity=0.8] The max intensity.
  * @param {number} [options.duration=2000] The total duration in milliseconds.
- * @param {string[]} [options.userIds] If provided, only play for these users. Automatically emits via socket to reach remote clients.
+ * @param {string[]} [options.userIds] If provided, only play for these users.
  */
 export async function vignetteScreen({ intensity = 0.8, duration = 2000, userIds } = {}) {
   if ( userIds && requiresSocket(userIds) ) {
@@ -948,6 +1075,12 @@ export async function vignetteScreen({ intensity = 0.8, duration = 2000, userIds
   const startTime = performance.now();
 
   return new Promise(resolve => {
+    /**
+     * Handle a single animation frame for the vignette effect.
+     *
+     * @param {number} currentTime The current time in milliseconds supplied by requestAnimationFrame.
+     * @returns {void}
+     */
     function animate(currentTime) {
       const elapsed = currentTime - startTime;
       const progress = elapsed / duration;
