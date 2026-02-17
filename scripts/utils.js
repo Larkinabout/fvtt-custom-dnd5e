@@ -1,4 +1,5 @@
 import { CONSTANTS, MODULE } from "./constants.js";
+import { SPLATTER_VS, SPLATTER_FS } from "./shaders/splatter.js";
 import { LIGHT_RAYS_VS, LIGHT_RAYS_FS } from "./shaders/light-rays.js";
 
 /**
@@ -1022,6 +1023,125 @@ export async function lightRaysScreen({ color = "#fff5d6", rays = 12, duration =
     /**
      *
      * @param currentTime
+     */
+    function animate(currentTime) {
+      const elapsed = currentTime - startTime;
+      const progress = Math.min(elapsed / duration, 1.0);
+
+      if ( progress >= 1.0 ) {
+        gl.deleteProgram(program);
+        gl.deleteShader(vs);
+        gl.deleteShader(fs);
+        gl.deleteBuffer(buffer);
+        canvas.remove();
+        resolve();
+        return;
+      }
+
+      gl.uniform1f(uTime, progress);
+      gl.clearColor(0, 0, 0, 0);
+      gl.clear(gl.COLOR_BUFFER_BIT);
+      gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+      requestAnimationFrame(animate);
+    }
+
+    requestAnimationFrame(animate);
+  });
+}
+
+/* -------------------------------------------- */
+
+/**
+ * Play a liquid splatter screen effect.
+ * Uses a WebGL shader for organic splatter shapes with drip trails.
+ * @param {object} [options] The options.
+ * @param {string} [options.color="#8b0000"] The splatter color.
+ * @param {number} [options.density=0.5] Splat density from 0 (sparse) to 1 (heavy). Controls number of impacts, cluster blobs, and droplets.
+ * @param {number} [options.duration=3500] The total duration in milliseconds.
+ * @param {number} [options.fluidity=1.0] Drip fluidity from 0 (frozen) to 2 (watery). Controls how fast drips flow down.
+ * @param {string[]} [options.userIds] If provided, only play for these users. Automatically emits via socket to reach remote clients.
+ */
+export async function splatterScreen({ color = "#8b0000", density = 0.5, duration = 3500, fluidity = 1.0, userIds } = {}) {
+  if ( userIds && requiresSocket(userIds) ) {
+    game.socket.emit(`module.${MODULE.ID}`, { action: "animation", type: "splatterScreen", options: { color, density, duration, fluidity, userIds } });
+  }
+  if ( userIds && !userIds.includes(game.user.id) ) return;
+  if ( game.settings.get("core", "photosensitiveMode") ) return;
+
+  const canvas = document.createElement("canvas");
+  canvas.style.cssText = `
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 10000;
+  `;
+  document.body.appendChild(canvas);
+  canvas.width = canvas.clientWidth;
+  canvas.height = canvas.clientHeight;
+
+  const gl = canvas.getContext("webgl");
+  if ( !gl ) {
+    canvas.remove();
+    return;
+  }
+
+  /**
+   * Compile a WebGL shader from source.
+   * @param {number} type The shader type (e.g. gl.VERTEX_SHADER or gl.FRAGMENT_SHADER).
+   * @param {string} source The GLSL source code for the shader.
+   * @returns {WebGLShader} The compiled shader object.
+   */
+  function compileShader(type, source) {
+    const shader = gl.createShader(type);
+    gl.shaderSource(shader, source);
+    gl.compileShader(shader);
+    return shader;
+  }
+
+  const vs = compileShader(gl.VERTEX_SHADER, SPLATTER_VS);
+  const fs = compileShader(gl.FRAGMENT_SHADER, SPLATTER_FS);
+  const program = gl.createProgram();
+  gl.attachShader(program, vs);
+  gl.attachShader(program, fs);
+  gl.linkProgram(program);
+  gl.useProgram(program);
+
+  const buffer = gl.createBuffer();
+  gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
+  gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, 1, -1, -1, 1, 1, 1]), gl.STATIC_DRAW);
+
+  const aPos = gl.getAttribLocation(program, "a_position");
+  gl.enableVertexAttribArray(aPos);
+  gl.vertexAttribPointer(aPos, 2, gl.FLOAT, false, 0, 0);
+
+  const uTime = gl.getUniformLocation(program, "u_time");
+  const uResolution = gl.getUniformLocation(program, "u_resolution");
+  const uColor = gl.getUniformLocation(program, "u_color");
+  const uSeed = gl.getUniformLocation(program, "u_seed");
+  const uDensity = gl.getUniformLocation(program, "u_density");
+  const uFluidity = gl.getUniformLocation(program, "u_fluidity");
+
+  // Parse hex color to RGB floats
+  const r = parseInt(color.slice(1, 3), 16) / 255;
+  const g = parseInt(color.slice(3, 5), 16) / 255;
+  const b = parseInt(color.slice(5, 7), 16) / 255;
+
+  gl.uniform2f(uResolution, canvas.width, canvas.height);
+  gl.uniform3f(uColor, r, g, b);
+  gl.uniform1f(uSeed, Math.random() * 100.0);
+  gl.uniform1f(uDensity, Math.max(0, Math.min(1, density)));
+  gl.uniform1f(uFluidity, Math.max(0, Math.min(2, fluidity)));
+  gl.enable(gl.BLEND);
+  gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
+
+  const startTime = performance.now();
+
+  return new Promise(resolve => {
+    /**
+     * Handle a single animation frame for the splatter effect.
+     * @param {number} currentTime The current time in milliseconds supplied by requestAnimationFrame.
      */
     function animate(currentTime) {
       const elapsed = currentTime - startTime;

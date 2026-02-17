@@ -17,6 +17,7 @@ import {
   shakeScreen,
   flashScreen,
   lightRaysScreen,
+  splatterScreen,
   getActorOwnerIds
 } from "../utils.js";
 import { GameplayForm } from "../forms/gameplay-form.js";
@@ -960,6 +961,7 @@ function playMassiveDamageAnimation(actor) {
   const userIds = getActorOwnerIds(actor);
   shakeScreen({ intensity: 8, duration: 750, userIds });
   flashScreen({ duration: 750, userIds });
+  splatterScreen({ duration: 3500, userIds });
 }
 
 /* -------------------------------------------- */
