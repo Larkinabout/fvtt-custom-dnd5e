@@ -32,28 +32,53 @@
  */
 #custom-dnd5e-cursor-label {
     display: flex;
-    gap: 0.15rem;
+    direction: rtl;
+    gap: 0.25rem;
     font-family: var(--font-primary);
     font-size: var(--font-size-16);
     position: absolute;
+    transform: translateX(-100%);
     visibility: hidden;
     z-index: 9999;
 }
 
-#custom-dnd5e-cursor-label-advantage {
-    color: var(--dnd5e-color-success);
+#custom-dnd5e-cursor-label {
+    text-shadow:
+        -1px 0 1px rgba(0, 0, 0, 1),
+        0 -1px 1px rgba(0, 0, 0, 1),
+        0 1px 1px rgba(0, 0, 0, 0.8),
+        1px 0 1px rgba(0, 0, 0, 0.8),
+        1px 1px 3px rgba(0, 0, 0, 0.8);
+}
+
+.custom-dnd5e-cursor-label-icon {
     display: none;
-    text-shadow: -1px 0 1px white, 1px 0 1px white, 0 -1px 1px white, 0 1px 1px white;
+    position: relative;
+}
+
+.custom-dnd5e-cursor-label-icon .fa-dice-d20 {
+    font-size: 1.5em;
+}
+
+.custom-dnd5e-cursor-label-icon .fa-up-long,
+.custom-dnd5e-cursor-label-icon .fa-down-long {
+    color: white;
+    font-size: 0.8em;
+    left: 50%;
+    position: absolute;
+    top: 50%;
+    transform: translate(-50%, -50%);
+}
+
+#custom-dnd5e-cursor-label-advantage {
+    color: #228b22;
 }
 
 #custom-dnd5e-cursor-label-disadvantage {
-    color: var(--dnd5e-color-failure);
-    display: none;
-    text-shadow: -1px 0 1px white, 1px 0 1px white, 0 -1px 1px white, 0 1px 1px white;
+    color: #e34234;
 }
 
 #custom-dnd5e-cursor-label-skip-dialog {
     color: var(--dnd5e-color-gold);
-    display: none;
-    text-shadow: -1px 0 1px rgba(255,255,255,0.8), 1px 0 1px rgba(255,255,255,0.8), 0 -1px 1px rgba(255,255,255,0.8), 0 1px 1px rgba(255,255,255,0.8);
+    font-size: 1.5em;
 }
