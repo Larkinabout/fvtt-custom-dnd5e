@@ -1191,7 +1191,7 @@ export const SHEET_TYPE = {
     group: false,
     item: false,
     legacy: false,
-    npc: true,
+    npc: false,
     template: CONSTANTS.COUNTERS.TEMPLATE.DND5E_ACTOR,
     insert: {
       class: ".tab.details > .right .top",
@@ -1205,7 +1205,7 @@ export const SHEET_TYPE = {
     group: false,
     item: false,
     legacy: false,
-    npc: true,
+    npc: false,
     template: CONSTANTS.COUNTERS.TEMPLATE.DND5E_ACTOR,
     insert: {
       class: ".tab[data-application-part='details'] > .right .top",
