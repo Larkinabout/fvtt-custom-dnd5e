@@ -851,9 +851,10 @@ function selectInputContent(event) {
  * @param {string} key The counter key
  */
 function checkValue(input, entity, key) {
-  const max = getMax(entity, key) ?? entity.getFlag(MODULE.ID, `${key}.max`);
-  if ( max && input.value > max ) {
+  const max = Number(getMax(entity, key) ?? entity.getFlag(MODULE.ID, `${key}.max`));
+  if ( max && Number(input.value) > max ) {
     input.value = max;
+    ui.notifications.info(game.i18n.localize("CUSTOM_DND5E.reachedCounterLimit"));
   }
 }
 
