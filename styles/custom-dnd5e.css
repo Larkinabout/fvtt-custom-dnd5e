@@ -35,7 +35,6 @@
     direction: rtl;
     gap: 0.25rem;
     font-family: var(--font-primary);
-    font-size: var(--font-size-16);
     position: absolute;
     transform: translateX(-100%);
     visibility: hidden;
