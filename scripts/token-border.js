@@ -58,7 +58,7 @@ function tokenRefreshBorderPatch(wrapped) {
 
   if ( shape === "circle" ) {
     this.border.clear();
-    this.border.lineStyle({ width: thickness / 2, color: 0xFFFFFF, alignment: 1, join: PIXI.LINE_JOIN.ROUND });
-    this.border.drawCircle(this.h / 2, this.w / 2, (this.w - thickness) / 2);
+    this.border.lineStyle({ width: thickness, color: 0xFFFFFF, alignment: 0, join: PIXI.LINE_JOIN.ROUND });
+    this.border.drawCircle(this.h / 2, this.w / 2, this.w / 2);
   }
 }
