@@ -8,6 +8,7 @@ export const SPLATTER_VS = `
 export const SPLATTER_FS = `
   precision mediump float;
   uniform float u_time;
+  uniform float u_fade;
   uniform vec2 u_resolution;
   uniform vec3 u_color;
   uniform float u_seed;
@@ -80,9 +81,9 @@ export const SPLATTER_FS = `
   // Skeleton-based drip trail
   float dripTrail(vec2 auv, vec2 center, float bSize, float dBase, float seed, float pw) {
     float below = center.y - auv.y;
-    if (below < -dBase || abs(auv.x - center.x) > dBase * 2.0 || below > bSize * 4.0) return 0.0;
     float speed = (0.75 + hash(vec2(seed * 5.3, seed * 9.7)) * 0.5) * u_fluidity;
-    float dripLen = bSize * 1.3 + bSize * 2.0 * u_time * speed;
+    float dripLen = bSize * 1.3 + bSize * 1.0 * u_time * speed;
+    if (below < -dBase || abs(auv.x - center.x) > dBase * 2.0 || below > dripLen + dBase) return 0.0;
     float skY = clamp(below, 0.0, dripLen);
     float t = skY / dripLen;
     float nPos = skY / bSize;
@@ -112,54 +113,48 @@ export const SPLATTER_FS = `
 
     float splat = 0.0;
 
-    // Impact splats (density controls how many appear)
-    float maxImpacts = 3.0 + u_density * 6.0;
-    for (int i = 0; i < 9; i++) {
+    // Impact splats (u_density = number of splats)
+    for (int i = 0; i < 20; i++) {
       float fi = float(i);
+      if (fi >= u_density) break;
       float si = fi * 13.7 + u_seed;
-      // Each impact activates based on density threshold with random variation
-      float threshold = fi + hash(vec2(fi * 31.7 + u_seed, u_seed * 19.3));
-      if (threshold < maxImpacts) {
-        vec2 impact = impactCenter(fi, aspect);
+      vec2 impact = impactCenter(fi, aspect);
 
-        // Main blob: larger for first impacts, smaller for later
-        float bSize = (fi < 1.0) ? 0.06 + hash(vec2(si, si * 3.1)) * 0.04
-                    : (fi < 3.0) ? 0.04 + hash(vec2(si, si * 3.1)) * 0.03
-                    :              0.02 + hash(vec2(si, si * 3.1)) * 0.025;
-        float dBase = bSize * ((fi < 2.0) ? 0.5 : 0.4);
+      // Main blob: varied sizes per impact
+      float bSize = (fi < 1.0) ? 0.06 + hash(vec2(si, si * 3.1)) * 0.04
+                  : (fi < 3.0) ? 0.04 + hash(vec2(si, si * 3.1)) * 0.03
+                  :              0.02 + hash(vec2(si, si * 3.1)) * 0.025;
+      float dBase = bSize * ((fi < 2.0) ? 0.5 : 0.4);
 
-        splat += splatBlob(auv, impact, bSize, si);
-        splat += dripTrail(auv, impact, bSize, dBase, si, pw);
+      splat += splatBlob(auv, impact, bSize, si);
+      splat += dripTrail(auv, impact, bSize, dBase, si, pw);
 
-        // Cluster blobs around this impact
-        float baseMaxJ = (fi < 1.0) ? 5.0 : (fi < 3.0) ? 4.0 : 3.0;
-        float maxJ = max(2.0, baseMaxJ * u_density);
-        for (int j = 0; j < 5; j++) {
-          float fj = float(j);
-          if (fj < maxJ) {
-            float cs = (fi * 10.0 + fj + 1.0) * 7.3 + u_seed;
-            float cAng = hash(vec2(cs * 11.3, cs * 5.7)) * 6.28318;
-            float cRad = 0.02 + hash(vec2(cs * 19.1, cs * 3.3)) * 0.05;
-            vec2 cc = impact + vec2(cos(cAng), sin(cAng)) * cRad;
-            float cSize = bSize * (0.3 + hash(vec2(cs, cs * 3.1)) * 0.4);
-            splat += splatBlob(auv, cc, cSize, cs);
+      // Cluster blobs around this impact
+      float maxJ = (fi < 1.0) ? 5.0 : (fi < 3.0) ? 4.0 : 3.0;
+      for (int j = 0; j < 5; j++) {
+        float fj = float(j);
+        if (fj >= maxJ) break;
+        float cs = (fi * 10.0 + fj + 1.0) * 7.3 + u_seed;
+        float cAng = hash(vec2(cs * 11.3, cs * 5.7)) * 6.28318;
+        float cRad = 0.02 + hash(vec2(cs * 19.1, cs * 3.3)) * 0.05;
+        vec2 cc = impact + vec2(cos(cAng), sin(cAng)) * cRad;
+        float cSize = bSize * (0.3 + hash(vec2(cs, cs * 3.1)) * 0.4);
+        splat += splatBlob(auv, cc, cSize, cs);
 
-            // Drip from first 2 cluster blobs
-            if (j < 2) {
-              splat += dripTrail(auv, cc, cSize, cSize * 0.4, cs, pw);
-            }
-          }
+        // Drip from first 2 cluster blobs
+        if (j < 2) {
+          splat += dripTrail(auv, cc, cSize, cSize * 0.4, cs, pw);
         }
       }
     }
 
     // Scattered droplets near impacts
-    float maxDroplets = 8.0 + u_density * 17.0;
-    for (int i = 0; i < 25; i++) {
+    float maxDroplets = u_density * 5.0;
+    for (int i = 0; i < 100; i++) {
       if (float(i) >= maxDroplets) break;
       float fi = float(i) + 50.0;
       float s = fi * 5.7 + u_seed;
-      float parentIdx = floor(hash(vec2(s * 41.0, s * 17.0)) * min(maxImpacts, 7.0));
+      float parentIdx = floor(hash(vec2(s * 41.0, s * 17.0)) * min(u_density, 20.0));
       vec2 parent = impactCenter(parentIdx, aspect);
       float angleOff = hash(vec2(s * 31.3, s * 11.7)) * 6.28318;
       float radius = 0.05 + hash(vec2(s * 43.1, s * 29.3)) * 0.12;
@@ -176,9 +171,7 @@ export const SPLATTER_FS = `
     float thicknessVar = 0.7 + internalNoise * 0.3;
     splat *= thicknessVar;
 
-    // Instant appear, slow fade out
-    float fade = 1.0 - smoothstep(0.4, 1.0, u_time);
-    splat *= fade;
+    splat *= u_fade;
 
     // Two-tone color: darker where thick, brighter where thin
     vec3 darkTone = u_color * 0.35;

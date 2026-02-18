@@ -1,15 +1,13 @@
 import { CONSTANTS } from "../constants.js";
 import {
+  animations,
   Logger,
   getFlag,
   setFlag,
   unsetFlag,
   getSetting,
   registerSetting,
-  getActorOwnerIds,
-  blurScreen,
-  swayScreen,
-  vignetteScreen
+  getActorOwnerIds
 } from "../utils.js";
 
 const constants = CONSTANTS.EXHAUSTION;
@@ -163,9 +161,9 @@ function handleDeleteCombat(combat, options, userId) {
 function playExhaustionAnimation(actor) {
   if ( !getSetting(constants.SETTING.EXHAUSTION_ANIMATION.KEY) ) return;
   const userIds = getActorOwnerIds(actor);
-  vignetteScreen({ intensity: 0.8, duration: 2500, userIds });
-  setTimeout(() => blurScreen({ intensity: 5, duration: 1500, userIds }), 400);
-  setTimeout(() => swayScreen({ intensity: 1, duration: 2000, userIds }), 300);
+  animations.vignetteScreen({ intensity: 0.8, duration: 2500, userIds });
+  setTimeout(() => animations.blurScreen({ intensity: 5, duration: 1500, userIds }), 400);
+  setTimeout(() => animations.swayScreen({ intensity: 1, duration: 2000, userIds }), 300);
 }
 
 /* -------------------------------------------- */

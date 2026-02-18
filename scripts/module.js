@@ -1,5 +1,5 @@
 import { CONSTANTS, MODULE } from "./constants.js";
-import { c5eLoadTemplates, getSetting, registerSetting, blurScreen, flashScreen, lightRaysScreen, shakeScreen, splatterScreen, swayScreen, vignetteScreen } from "./utils.js";
+import { animations, c5eLoadTemplates, getSetting, registerSetting } from "./utils.js";
 import { register as registerGameplay, registerNegativeHp } from "./gameplay/gameplay.js";
 import { register as registerAbilities, setConfig as setAbilities } from "./configurations/abilities.js";
 import { register as registerActivationCosts, setConfig as setActivationCosts } from "./configurations/activation-costs.js";
@@ -102,15 +102,7 @@ Hooks.on("init", async () => {
 
   const module = game.modules.get(MODULE.ID);
   module.api = {
-    animations: {
-      blurScreen,
-      flashScreen,
-      lightRaysScreen,
-      shakeScreen,
-      splatterScreen,
-      swayScreen,
-      vignetteScreen
-    },
+    animations,
     counters: {
       checkCheckbox,
       uncheckCheckbox,
@@ -131,10 +123,9 @@ Hooks.on("init", async () => {
     }
   };
 
-  const animationHandlers = { blurScreen, flashScreen, lightRaysScreen, shakeScreen, splatterScreen, swayScreen, vignetteScreen };
   game.socket.on(`module.${MODULE.ID}`, (data) => {
     if ( data.action === "animation" ) {
-      const handler = animationHandlers[data.type];
+      const handler = animations[data.type];
       if ( handler ) handler(data.options);
     }
   });

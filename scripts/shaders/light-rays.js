@@ -8,6 +8,7 @@ export const LIGHT_RAYS_VS = `
 export const LIGHT_RAYS_FS = `
   precision mediump float;
   uniform float u_time;
+  uniform float u_fade;
   uniform vec2 u_resolution;
   uniform vec3 u_color;
   uniform float u_rays;
@@ -42,15 +43,10 @@ export const LIGHT_RAYS_FS = `
     // Gentle brightness variation flowing inward
     float flow = sin(dist * 3.0 + u_time * 8.0) * 0.15 + 0.85;
 
-    // Asymmetric fade: quick appear, slow fade out
-    float fade = (u_time < 0.3)
-      ? smoothstep(0.0, 0.3, u_time)
-      : 1.0 - smoothstep(0.3, 1.0, u_time);
-
     // Screen-wide wash of light
-    float wash = fade * 0.35;
+    float wash = u_fade * 0.35;
 
-    float rayIntensity = rayPattern * flow * fade;
+    float rayIntensity = rayPattern * flow * u_fade;
 
     float intensity = rayIntensity + wash;
     gl_FragColor = vec4(u_color * intensity, intensity);

@@ -4,6 +4,7 @@ import { register as registerAverageDamage } from "./average-damage.js";
 import { register as registerMobDamage } from "./mob-damage.js";
 import { register as registerProbabilisticDamage } from "./probalistic-damage.js";
 import {
+  animations,
   c5eLoadTemplates,
   Logger,
   getDefaultSetting,
@@ -14,10 +15,6 @@ import {
   unmakeDead,
   makeUnconscious,
   unmakeUnconscious,
-  shakeScreen,
-  flashScreen,
-  lightRaysScreen,
-  splatterScreen,
   getActorOwnerIds
 } from "../utils.js";
 import { GameplayForm } from "../forms/gameplay-form.js";
@@ -514,7 +511,7 @@ export function awardInspiration(rollType, roll, data) {
 function playInspirationAnimation(actor) {
   if ( !getSetting(CONSTANTS.INSPIRATION.SETTING.INSPIRATION_ANIMATION.KEY) ) return;
   const userIds = getActorOwnerIds(actor);
-  lightRaysScreen({ userIds });
+  animations.lightRaysScreen({ userIds });
 }
 
 /* -------------------------------------------- */
@@ -959,9 +956,9 @@ function capturePreviousData(actor, data, options, userId) {
 function playMassiveDamageAnimation(actor) {
   if ( !getSetting(CONSTANTS.HIT_POINTS.SETTING.MASSIVE_DAMAGE_ANIMATION.KEY) ) return;
   const userIds = getActorOwnerIds(actor);
-  shakeScreen({ intensity: 8, duration: 750, userIds });
-  flashScreen({ duration: 750, userIds });
-  splatterScreen({ duration: 3500, userIds });
+  animations.shakeScreen({ intensity: 8, duration: 750, userIds });
+  animations.flashScreen({ duration: 750, userIds });
+  animations.splatterScreen({ duration: 3500, userIds });
 }
 
 /* -------------------------------------------- */

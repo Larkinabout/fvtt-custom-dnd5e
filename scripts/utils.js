@@ -1,6 +1,13 @@
 import { CONSTANTS, MODULE } from "./constants.js";
 import { SPLATTER_VS, SPLATTER_FS } from "./shaders/splatter.js";
 import { LIGHT_RAYS_VS, LIGHT_RAYS_FS } from "./shaders/light-rays.js";
+import { COLOR_SPLIT_FS } from "./shaders/color-split.js";
+import { WAVE_FS } from "./shaders/wave.js";
+
+/**
+ * Animation functions.
+ */
+export const animations = {};
 
 /**
  * Console logger
@@ -675,7 +682,7 @@ export function calculateHitProbability(advantageMode, attackBonus, targetNumber
  * @param {number} [options.intensity=25] The shake intensity in screen pixels.
  * @param {number} [options.duration=500] The shake duration in milliseconds.
  */
-export async function shakeCanvas({ intensity = 25, duration = 500 } = {}) {
+animations.shakeCanvas = async function({ intensity = 25, duration = 500 } = {}) {
   if ( !canvas?.stage ) return;
   const origin = { x: canvas.stage.pivot.x, y: canvas.stage.pivot.y };
   const scale = canvas.stage.scale.x || 1;
@@ -693,7 +700,7 @@ export async function shakeCanvas({ intensity = 25, duration = 500 } = {}) {
   });
 
   canvas.stage.pivot.set(origin.x, origin.y);
-}
+};
 
 /* -------------------------------------------- */
 
@@ -705,7 +712,7 @@ export async function shakeCanvas({ intensity = 25, duration = 500 } = {}) {
  * @param {number} [options.opacity=0.4] The peak opacity (0-1).
  * @param {number} [options.duration=500] The total flash duration in milliseconds.
  */
-export async function flashCanvas({ color = 0xFF0000, opacity = 0.4, duration = 500 } = {}) {
+animations.flashCanvas = async function({ color = 0xFF0000, opacity = 0.4, duration = 500 } = {}) {
   if ( !canvas?.interface ) return;
   if ( game.settings.get("core", "photosensitiveMode") ) return;
 
@@ -735,7 +742,7 @@ export async function flashCanvas({ color = 0xFF0000, opacity = 0.4, duration = 
 
   canvas.interface.removeChild(flash);
   flash.destroy();
-}
+};
 
 /* -------------------------------------------- */
 
@@ -758,7 +765,7 @@ export function getActorOwnerIds(actor) {
  * @param {string[]} userIds The target user IDs
  * @returns {boolean} Whether a socket emission is needed
  */
-export function requiresSocket(userIds) {
+function requiresSocket(userIds) {
   return userIds.some(id => id !== game.user.id);
 }
 
@@ -771,12 +778,13 @@ export function requiresSocket(userIds) {
  * @param {number} [options.duration=500] The shake duration in milliseconds.
  * @param {string[]} [options.userIds] If provided, only play for these users.
  */
-export async function shakeScreen({ intensity = 5, duration = 500, userIds } = {}) {
+animations.shakeScreen = async function({ intensity = 5, duration = 500, userIds } = {}) {
   if ( userIds && requiresSocket(userIds) ) {
     game.socket.emit(`module.${MODULE.ID}`, { action: "animation", type: "shakeScreen", options: { intensity, duration, userIds } });
   }
   if ( userIds && !userIds.includes(game.user.id) ) return;
   const element = document.body;
+  const decayDuration = Math.min(duration, 1000);
   const startTime = performance.now();
 
   return new Promise(resolve => {
@@ -794,7 +802,8 @@ export async function shakeScreen({ intensity = 5, duration = 500, userIds } = {
         return;
       }
 
-      const decay = Math.pow(1 - progress, 2);
+      const decayProgress = Math.min(elapsed / decayDuration, 1);
+      const decay = Math.pow(1 - decayProgress, 2);
       const x = (Math.random() - 0.5) * intensity * decay;
       const y = (Math.random() - 0.5) * intensity * decay;
       element.style.transform = `translate(${x}px, ${y}px)`;
@@ -803,7 +812,7 @@ export async function shakeScreen({ intensity = 5, duration = 500, userIds } = {
 
     requestAnimationFrame(animate);
   });
-}
+};
 
 /* -------------------------------------------- */
 
@@ -816,7 +825,7 @@ export async function shakeScreen({ intensity = 5, duration = 500, userIds } = {
  * @param {number} [options.duration=500] The total flash duration in milliseconds.
  * @param {string[]} [options.userIds] If provided, only play for these users.
  */
-export async function flashScreen({ color = "#ff0000", opacity = 0.4, duration = 500, userIds } = {}) {
+animations.flashScreen = async function({ color = "#ff0000", opacity = 0.4, duration = 500, userIds } = {}) {
   if ( userIds && requiresSocket(userIds) ) {
     game.socket.emit(`module.${MODULE.ID}`, { action: "animation", type: "flashScreen", options: { color, opacity, duration, userIds } });
   }
@@ -834,8 +843,8 @@ export async function flashScreen({ color = "#ff0000", opacity = 0.4, duration =
   `;
   document.body.appendChild(flash);
 
-  const fadeIn = duration * 0.2;
-  const fadeOut = duration * 0.8;
+  const fadeIn = Math.min(duration * 0.2, 200);
+  const fadeOut = Math.min(duration * 0.8, 800);
 
   await flash.animate(
     [{ opacity: 0 }, { opacity }],
@@ -847,7 +856,7 @@ export async function flashScreen({ color = "#ff0000", opacity = 0.4, duration =
   ).finished;
 
   flash.remove();
-}
+};
 
 /* -------------------------------------------- */
 
@@ -858,12 +867,14 @@ export async function flashScreen({ color = "#ff0000", opacity = 0.4, duration =
  * @param {number} [options.duration=1500] The total duration in milliseconds.
  * @param {string[]} [options.userIds] If provided, only play for these users.
  */
-export async function blurScreen({ intensity = 5, duration = 1500, userIds } = {}) {
+animations.blurScreen = async function({ intensity = 5, duration = 1500, userIds } = {}) {
   if ( userIds && requiresSocket(userIds) ) {
     game.socket.emit(`module.${MODULE.ID}`, { action: "animation", type: "blurScreen", options: { intensity, duration, userIds } });
   }
   if ( userIds && !userIds.includes(game.user.id) ) return;
   const element = document.body;
+  const fadeIn = Math.min(duration * 0.5, 500);
+  const fadeOut = Math.min(duration * 0.5, 1000);
   const startTime = performance.now();
 
   return new Promise(resolve => {
@@ -881,14 +892,80 @@ export async function blurScreen({ intensity = 5, duration = 1500, userIds } = {
         return;
       }
 
-      const blur = intensity * Math.sin(progress * Math.PI);
+      let env;
+      if ( elapsed < fadeIn ) env = elapsed / fadeIn;
+      else if ( elapsed > duration - fadeOut ) env = (duration - elapsed) / fadeOut;
+      else env = 1.0;
+      env = Math.max(0, Math.min(1, env));
+
+      const blur = intensity * env;
       element.style.filter = `blur(${blur}px)`;
       requestAnimationFrame(animate);
     }
 
     requestAnimationFrame(animate);
   });
-}
+};
+
+/* -------------------------------------------- */
+
+/**
+ * Blur the game canvas using a PIXI BlurFilter.
+ * @param {object} [options] The options.
+ * @param {number} [options.intensity=5] The max blur strength.
+ * @param {number} [options.duration=1500] The total duration in milliseconds.
+ * @param {string[]} [options.userIds] If provided, only play for these users.
+ */
+animations.blurCanvas = async function({ intensity = 5, duration = 1500, userIds } = {}) {
+  if ( userIds && requiresSocket(userIds) ) {
+    game.socket.emit(`module.${MODULE.ID}`, { action: "animation", type: "blurCanvas", options: { intensity, duration, userIds } });
+  }
+  if ( userIds && !userIds.includes(game.user.id) ) return;
+  if ( typeof canvas === "undefined" || !canvas?.stage ) return;
+
+  const filter = new PIXI.BlurFilter(0);
+
+  if ( !canvas.stage.filterArea ) {
+    canvas.stage.filterArea = canvas.app.renderer.screen;
+  }
+
+  const existing = canvas.stage.filters || [];
+  canvas.stage.filters = [...existing, filter];
+
+  const fadeIn = Math.min(duration * 0.5, 500);
+  const fadeOut = Math.min(duration * 0.5, 1000);
+  const startTime = performance.now();
+
+  return new Promise(resolve => {
+    /**
+     * Animate a single frame of the canvas blur effect.
+     * @param {number} currentTime The current time in milliseconds supplied by requestAnimationFrame.
+     */
+    function animate(currentTime) {
+      const elapsed = currentTime - startTime;
+      const progress = Math.min(elapsed / duration, 1.0);
+
+      if ( progress >= 1.0 ) {
+        canvas.stage.filters = (canvas.stage.filters || []).filter(f => f !== filter);
+        filter.destroy();
+        resolve();
+        return;
+      }
+
+      let env;
+      if ( elapsed < fadeIn ) env = elapsed / fadeIn;
+      else if ( elapsed > duration - fadeOut ) env = (duration - elapsed) / fadeOut;
+      else env = 1.0;
+      env = Math.max(0, Math.min(1, env));
+
+      filter.blur = intensity * env;
+
+      requestAnimationFrame(animate);
+    }
+
+    requestAnimationFrame(animate);
+  });
+};
 
 /* -------------------------------------------- */
 
@@ -900,12 +977,13 @@ export async function blurScreen({ intensity = 5, duration = 1500, userIds } = {
  * @param {number} [options.frequency=2] The oscillation frequency (cycles per second).
  * @param {string[]} [options.userIds] If provided, only play for these users.
  */
-export async function swayScreen({ intensity = 2, duration = 2000, frequency = 2, userIds } = {}) {
+animations.swayScreen = async function({ intensity = 2, duration = 2000, frequency = 2, userIds } = {}) {
   if ( userIds && requiresSocket(userIds) ) {
     game.socket.emit(`module.${MODULE.ID}`, { action: "animation", type: "swayScreen", options: { intensity, duration, frequency, userIds } });
   }
   if ( userIds && !userIds.includes(game.user.id) ) return;
   const element = document.body;
+  const decayDuration = Math.min(duration, 2000);
   const startTime = performance.now();
 
   return new Promise(resolve => {
@@ -923,7 +1001,8 @@ export async function swayScreen({ intensity = 2, duration = 2000, frequency = 2
         return;
       }
 
-      const decay = Math.pow(1 - progress, 2);
+      const decayProgress = Math.min(elapsed / decayDuration, 1);
+      const decay = Math.pow(1 - decayProgress, 2);
       const angle = Math.sin(elapsed / 1000 * Math.PI * frequency) * intensity * decay;
       const x = Math.sin(elapsed / 1000 * Math.PI * frequency * 0.7) * intensity * 2 * decay;
       element.style.transform = `rotate(${angle}deg) translateX(${x}px)`;
@@ -932,7 +1011,7 @@ export async function swayScreen({ intensity = 2, duration = 2000, frequency = 2
 
     requestAnimationFrame(animate);
   });
-}
+};
 
 /* -------------------------------------------- */
 
@@ -944,7 +1023,7 @@ export async function swayScreen({ intensity = 2, duration = 2000, frequency = 2
  * @param {number} [options.duration=2500] The total duration in milliseconds.
  * @param {string[]} [options.userIds] If provided, only play for these users.
  */
-export async function lightRaysScreen({ color = "#fff5d6", rays = 12, duration = 2500, userIds } = {}) {
+animations.lightRaysScreen = async function({ color = "#fff5d6", rays = 12, duration = 2500, userIds } = {}) {
   if ( userIds && requiresSocket(userIds) ) {
     game.socket.emit(`module.${MODULE.ID}`, { action: "animation", type: "lightRaysScreen", options: { color, rays, duration, userIds } });
   }
@@ -1000,6 +1079,7 @@ export async function lightRaysScreen({ color = "#fff5d6", rays = 12, duration =
   gl.vertexAttribPointer(aPos, 2, gl.FLOAT, false, 0, 0);
 
   const uTime = gl.getUniformLocation(program, "u_time");
+  const uFade = gl.getUniformLocation(program, "u_fade");
   const uResolution = gl.getUniformLocation(program, "u_resolution");
   const uColor = gl.getUniformLocation(program, "u_color");
   const uRays = gl.getUniformLocation(program, "u_rays");
@@ -1017,12 +1097,15 @@ export async function lightRaysScreen({ color = "#fff5d6", rays = 12, duration =
   gl.enable(gl.BLEND);
   gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
 
+  const fadeIn = Math.min(duration * 0.3, 500);
+  const fadeOut = Math.min(duration * 0.7, 1500);
+
   const startTime = performance.now();
 
   return new Promise(resolve => {
     /**
-     *
-     * @param currentTime
+     * Animate a single frame for the light rays effect.
+     * @param {number} currentTime The current time in milliseconds supplied by requestAnimationFrame.
      */
     function animate(currentTime) {
       const elapsed = currentTime - startTime;
@@ -1038,7 +1121,18 @@ export async function lightRaysScreen({ color = "#fff5d6", rays = 12, duration =
         return;
       }
 
+      let fade;
+      if ( elapsed < fadeIn ) {
+        fade = elapsed / fadeIn;
+      } else if ( elapsed > duration - fadeOut ) {
+        fade = (duration - elapsed) / fadeOut;
+      } else {
+        fade = 1.0;
+      }
+      fade = Math.max(0, Math.min(1, fade));
+
       gl.uniform1f(uTime, progress);
+      gl.uniform1f(uFade, fade);
       gl.clearColor(0, 0, 0, 0);
       gl.clear(gl.COLOR_BUFFER_BIT);
       gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
@@ -1047,21 +1141,20 @@ export async function lightRaysScreen({ color = "#fff5d6", rays = 12, duration =
 
     requestAnimationFrame(animate);
   });
-}
+};
 
 /* -------------------------------------------- */
 
 /**
  * Play a liquid splatter screen effect.
- * Uses a WebGL shader for organic splatter shapes with drip trails.
  * @param {object} [options] The options.
  * @param {string} [options.color="#8b0000"] The splatter color.
- * @param {number} [options.density=0.5] Splat density from 0 (sparse) to 1 (heavy). Controls number of impacts, cluster blobs, and droplets.
+ * @param {number} [options.density=10] Number of splat impacts (max 20).
  * @param {number} [options.duration=3500] The total duration in milliseconds.
- * @param {number} [options.fluidity=1.0] Drip fluidity from 0 (frozen) to 2 (watery). Controls how fast drips flow down.
- * @param {string[]} [options.userIds] If provided, only play for these users. Automatically emits via socket to reach remote clients.
+ * @param {number} [options.fluidity=1.0] Drip fluidity from 0 (frozen) to 2 (watery).
+ * @param {string[]} [options.userIds] If provided, only play for these users.
  */
-export async function splatterScreen({ color = "#8b0000", density = 0.5, duration = 3500, fluidity = 1.0, userIds } = {}) {
+animations.splatterScreen = async function({ color = "#8b0000", density = 10, duration = 3500, fluidity = 1.0, userIds } = {}) {
   if ( userIds && requiresSocket(userIds) ) {
     game.socket.emit(`module.${MODULE.ID}`, { action: "animation", type: "splatterScreen", options: { color, density, duration, fluidity, userIds } });
   }
@@ -1117,6 +1210,7 @@ export async function splatterScreen({ color = "#8b0000", density = 0.5, duratio
   gl.vertexAttribPointer(aPos, 2, gl.FLOAT, false, 0, 0);
 
   const uTime = gl.getUniformLocation(program, "u_time");
+  const uFade = gl.getUniformLocation(program, "u_fade");
   const uResolution = gl.getUniformLocation(program, "u_resolution");
   const uColor = gl.getUniformLocation(program, "u_color");
   const uSeed = gl.getUniformLocation(program, "u_seed");
@@ -1131,10 +1225,12 @@ export async function splatterScreen({ color = "#8b0000", density = 0.5, duratio
   gl.uniform2f(uResolution, canvas.width, canvas.height);
   gl.uniform3f(uColor, r, g, b);
   gl.uniform1f(uSeed, Math.random() * 100.0);
-  gl.uniform1f(uDensity, Math.max(0, Math.min(1, density)));
+  gl.uniform1f(uDensity, Math.max(1, Math.min(20, density)));
   gl.uniform1f(uFluidity, Math.max(0, Math.min(2, fluidity)));
   gl.enable(gl.BLEND);
   gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
+
+  const fadeOut = Math.min(duration * 0.6, 2000);
 
   const startTime = performance.now();
 
@@ -1157,7 +1253,12 @@ export async function splatterScreen({ color = "#8b0000", density = 0.5, duratio
         return;
       }
 
-      gl.uniform1f(uTime, progress);
+      const fade = elapsed > duration - fadeOut
+        ? Math.max(0, (duration - elapsed) / fadeOut)
+        : 1.0;
+
+      gl.uniform1f(uTime, elapsed / 1000);
+      gl.uniform1f(uFade, fade);
       gl.clearColor(0, 0, 0, 0);
       gl.clear(gl.COLOR_BUFFER_BIT);
       gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
@@ -1166,7 +1267,94 @@ export async function splatterScreen({ color = "#8b0000", density = 0.5, duratio
 
     requestAnimationFrame(animate);
   });
-}
+};
+
+/* -------------------------------------------- */
+
+/**
+ * Play a color-split screen effect.
+ * @param {object} [options] The options.
+ * @param {string[]} [options.colors=["#ff0000","#00ff00","#0000ff"]] Up to three hex colors for the split layers.
+ * @param {number} [options.intensity=25] Maximum pixel offset for layer movement.
+ * @param {number} [options.duration=4000] The total duration in milliseconds.
+ * @param {string[]} [options.userIds] If provided, only play for these users.
+ */
+animations.colorSplitCanvas = async function({ colors = ["#ff0000", "#00ff00", "#0000ff"], intensity = 25, duration = 4000, userIds } = {}) {
+  if ( userIds && requiresSocket(userIds) ) {
+    game.socket.emit(`module.${MODULE.ID}`, { action: "animation", type: "colorSplitCanvas", options: { colors, intensity, duration, userIds } });
+  }
+  if ( userIds && !userIds.includes(game.user.id) ) return;
+  if ( game.settings.get("core", "photosensitiveMode") ) return;
+  if ( typeof canvas === "undefined" || !canvas?.stage ) return;
+
+  // Parse hex colors to 0-1 RGB
+  const rgb = colors.slice(0, 3).map(hex => [
+    parseInt(hex.slice(1, 3), 16) / 255,
+    parseInt(hex.slice(3, 5), 16) / 255,
+    parseInt(hex.slice(5, 7), 16) / 255
+  ]);
+  while ( rgb.length < 3 ) rgb.push(rgb.length === 1 ? [0, 1, 0] : [0, 0, 1]);
+
+  const filter = new PIXI.Filter(undefined, COLOR_SPLIT_FS, {
+    u_offset0: new Float32Array([0, 0]),
+    u_offset1: new Float32Array([0, 0]),
+    u_offset2: new Float32Array([0, 0]),
+    u_color0: new Float32Array(rgb[0]),
+    u_color1: new Float32Array(rgb[1]),
+    u_color2: new Float32Array(rgb[2]),
+    u_env: 0
+  });
+  filter.padding = intensity;
+
+  if ( !canvas.stage.filterArea ) {
+    canvas.stage.filterArea = canvas.app.renderer.screen;
+  }
+
+  const existing = canvas.stage.filters || [];
+  canvas.stage.filters = [...existing, filter];
+
+  const arcs = [
+    { fx: 1.0, fy: 1.3, px: 0, py: 0 },
+    { fx: 1.7, fy: 0.9, px: 2.094, py: 1.047 },
+    { fx: 0.8, fy: 1.6, px: 4.189, py: 3.142 }
+  ];
+
+  const startTime = performance.now();
+
+  return new Promise(resolve => {
+    /**
+     * Handle a single animation frame for the split effect.
+     * @param {number} currentTime The current time in milliseconds supplied by requestAnimationFrame.
+     */
+    function animate(currentTime) {
+      const elapsed = currentTime - startTime;
+      const progress = Math.min(elapsed / duration, 1.0);
+
+      if ( progress >= 1.0 ) {
+        canvas.stage.filters = (canvas.stage.filters || []).filter(f => f !== filter);
+        filter.destroy();
+        resolve();
+        return;
+      }
+
+      const env = Math.sin(progress * Math.PI);
+      const amp = intensity * env;
+      const t = progress * Math.PI * 2 * 1.5;
+
+      for ( let i = 0; i < 3; i++ ) {
+        const arc = arcs[i];
+        filter.uniforms[`u_offset${i}`][0] = Math.cos((t * arc.fx) + arc.px) * amp;
+        filter.uniforms[`u_offset${i}`][1] = Math.sin((t * arc.fy) + arc.py) * amp;
+      }
+
+      filter.uniforms.u_env = env;
+
+      requestAnimationFrame(animate);
+    }
+
+    requestAnimationFrame(animate);
+  });
+};
 
 /* -------------------------------------------- */
 
@@ -1177,7 +1365,7 @@ export async function splatterScreen({ color = "#8b0000", density = 0.5, duratio
  * @param {number} [options.duration=2000] The total duration in milliseconds.
  * @param {string[]} [options.userIds] If provided, only play for these users.
  */
-export async function vignetteScreen({ intensity = 0.8, duration = 2000, userIds } = {}) {
+animations.vignetteScreen = async function({ intensity = 0.8, duration = 2000, userIds } = {}) {
   if ( userIds && requiresSocket(userIds) ) {
     game.socket.emit(`module.${MODULE.ID}`, { action: "animation", type: "vignetteScreen", options: { intensity, duration, userIds } });
   }
@@ -1192,6 +1380,8 @@ export async function vignetteScreen({ intensity = 0.8, duration = 2000, userIds
   `;
   document.body.appendChild(overlay);
 
+  const fadeIn = Math.min(duration * 0.5, 500);
+  const fadeOut = Math.min(duration * 0.5, 1000);
   const startTime = performance.now();
 
   return new Promise(resolve => {
@@ -1211,7 +1401,13 @@ export async function vignetteScreen({ intensity = 0.8, duration = 2000, userIds
         return;
       }
 
-      const amount = Math.sin(progress * Math.PI) * intensity;
+      let env;
+      if ( elapsed < fadeIn ) env = elapsed / fadeIn;
+      else if ( elapsed > duration - fadeOut ) env = (duration - elapsed) / fadeOut;
+      else env = 1.0;
+      env = Math.max(0, Math.min(1, env));
+
+      const amount = env * intensity;
       const innerRadius = 50 - (amount * 30);
       const outerRadius = 80 - (amount * 20);
       const edgeOpacity = Math.min(amount * 1.5, 1);
@@ -1221,4 +1417,66 @@ export async function vignetteScreen({ intensity = 0.8, duration = 2000, userIds
 
     requestAnimationFrame(animate);
   });
-}
+};
+
+/* -------------------------------------------- */
+
+/**
+ * Play a wave distortion screen effect.
+ * @param {object} [options] The options.
+ * @param {number} [options.intensity=30] Maximum displacement scale in pixels.
+ * @param {number} [options.speed=1] Animation speed multiplier.
+ * @param {number} [options.duration=4000] The total duration in milliseconds.
+ * @param {string[]} [options.userIds] If provided, only play for these users.
+ */
+animations.waveCanvas = async function({ intensity = 30, speed = 1, duration = 4000, userIds } = {}) {
+  if ( userIds && requiresSocket(userIds) ) {
+    game.socket.emit(`module.${MODULE.ID}`, { action: "animation", type: "waveCanvas", options: { intensity, speed, duration, userIds } });
+  }
+  if ( userIds && !userIds.includes(game.user.id) ) return;
+  if ( game.settings.get("core", "photosensitiveMode") ) return;
+  if ( typeof canvas === "undefined" || !canvas?.stage ) return;
+
+  const filter = new PIXI.Filter(undefined, WAVE_FS, {
+    u_time: 0,
+    u_intensity: 0
+  });
+  filter.padding = intensity;
+
+  if ( !canvas.stage.filterArea ) {
+    canvas.stage.filterArea = canvas.app.renderer.screen;
+  }
+
+  const existing = canvas.stage.filters || [];
+  canvas.stage.filters = [...existing, filter];
+
+  const startTime = performance.now();
+
+  return new Promise(resolve => {
+    /**
+     * Handle a single animation frame for the wave effect.
+     * @param {number} currentTime The current time in milliseconds supplied by requestAnimationFrame.
+     */
+    function animate(currentTime) {
+      const elapsed = currentTime - startTime;
+      const progress = Math.min(elapsed / duration, 1.0);
+
+      if ( progress >= 1.0 ) {
+        canvas.stage.filters = (canvas.stage.filters || []).filter(f => f !== filter);
+        filter.destroy();
+        resolve();
+        return;
+      }
+
+      const sine = Math.sin(progress * Math.PI);
+      const env = sine * sine;
+
+      filter.uniforms.u_time = (elapsed / 1000) * speed;
+      filter.uniforms.u_intensity = intensity * env;
+
+      requestAnimationFrame(animate);
+    }
+
+    requestAnimationFrame(animate);
+  });
+};
