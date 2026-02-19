@@ -64,7 +64,7 @@ function refreshEffectsPatch(wrapped, ...args) {
   const halfGridSize = gridSize * tokenTileFactor / 2;
   const bg = this.effects.bg.clear();
 
-  if ( !bg.filters?.length ) {
+  if ( !bg.filters?.length && PIXI.filters?.DropShadowFilter ) {
     bg.filters = [new PIXI.filters.DropShadowFilter({
       blur: 2,
       quality: 2,
