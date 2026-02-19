@@ -84,7 +84,7 @@ function cloneDnd5eConfig() {
     "damageTypes", "encumbrance", "facilities", "featureTypes",
     "itemActionTypes", "itemProperties", "itemRarity", "languages", "lootTypes",
     "maxAbilityScore", "maxLevel", "miscEquipmentTypes", "senses", "skills",
-    "spellSchools", "toolProficiencies", "toolTypes", "tools",
+    "spellSchools", "toolProficiencies", "tools", "toolTypes",
     "validProperties", "weaponIds", "weaponMasteries", "weaponProficiencies",
     "weaponProficienciesMap", "weaponProperties", "weaponTypes"
   ];
