@@ -105,7 +105,7 @@ Apply Massive Damage as per the variant rule (DMG pg. 273).
 <details>
     <summary>See Video</summary>
 
-<video src="./.github/readme/custom-dnd5e-massive-damage.mp4" width="800" />
+![Custom D&D 5e Massive Damage](./.github/readme/custom-dnd5e-massive-damage.gif)
 
 </details>
 
@@ -132,8 +132,10 @@ Apply Massive Damage as per the variant rule (DMG pg. 273).
 
 </details>
 
-### Reroll Initiative Each Round
-Reroll Initiative for all combatants at the start of each round.
+### Initiative Each Round
+- **Reroll All:** Reroll Initiative for all combatants at the start of each round.
+- **Reset Only:** Reset Initiative for all combatants without rerolling.
+- **Reroll NPC:** Reroll Initiative for NPCs only at the start of each round.
 
 <details>
     <summary>See Video</summary>
@@ -232,9 +234,9 @@ Add counters to character sheets with four types: checkbox, fraction, number and
 </details>
 
 <details>
-    <summary>See Image</summary>
+    <summary>See Video</summary>
 
-![Custom D&D 5e Counter Triggers](./.github/readme/custom-dnd5e-counter-triggers.png)
+![Custom D&D 5e Counter Triggers](./.github/readme/custom-dnd5e-counter-triggers.gif)
 
 </details>
 
@@ -342,13 +344,6 @@ Customise the actor sheet with client and world settings for characters and NPCs
 - **Show/Hide Legendary Resistance:** Show or hide Legendary Resistance on the NPC sheet.
 - **Show/Hide Use Lair Action:** Show or hide the Use Lair Action button on the NPC sheet.
 
-<details>
-    <summary>See Image</summary>
-
-![Custom D&D 5e Configure Actor Sheet](./.github/readme/custom-dnd5e-configure-actor-sheet.png)
-
-</details>
-
 <p align="right">(<a href="#custom-dd-5e">back to top</a>)</p>
 
 ---
@@ -396,11 +391,9 @@ Enable additional chat commands to roll an attack, roll damage or request checks
 Display an icon near the cursor when the Skip Dialog, Advantage or Disadvantage keys are pressed.
 
 <details>
-    <summary>See Image</summary>
+    <summary>See Video</summary>
 
-![Custom D&D 5e Show Pressed Keys - Skip Dialog](./.github/readme/custom-dnd5e-show-pressed-keys-skip-dialog.png)
-
-![Custom D&D 5e Show Pressed Keys - Advantage](./.github/readme/custom-dnd5e-show-pressed-keys-advantage.png)
+![Custom D&D 5e Show Pressed Keys](./.github/readme/custom-dnd5e-show-pressed-keys.gif)
 
 </details>
 
@@ -412,6 +405,13 @@ Display an icon near the cursor when the Skip Dialog, Advantage or Disadvantage 
 
 When measuring distances with the ruler tool, travel time estimates are displayed for three D&D 5e travel paces: fast, normal and slow. Times are shown in days, hours and minutes, calculated based on standard 8-hour travel days.
 
+<details>
+    <summary>See Image</summary>
+
+![Custom D&D 5e Ruler Travel Time](./.github/readme/custom-dnd5e-travel-time-ruler.png)
+
+</details>
+
 <p align="right">(<a href="#custom-dd-5e">back to top</a>)</p>
 
 ---
@@ -419,6 +419,13 @@ When measuring distances with the ruler tool, travel time estimates are displaye
 ## Animations
 
 Screen animations can be triggered via the module API or socket events. Available animations include Splatter, Light Rays, Color Split and Wave. Animations can also be triggered automatically for events such as Massive Damage and Inspiration.
+
+<details>
+    <summary>See Video</summary>
+
+![Custom D&D 5e Animations](./.github/readme/custom-dnd5e-animations.gif)
+
+</details>
 
 <p align="right">(<a href="#custom-dd-5e">back to top</a>)</p>
 

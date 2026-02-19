@@ -1,8 +1,12 @@
+.dnd5e2 .top #custom-dnd5e-counters {
+    padding-right: 0.5rem;
+}
+
 #custom-dnd5e-counters h3 {
     max-width: calc(var(--skills-col-width) + 100px);
     min-width: var(--skills-col-width);
 }
-
+s
 #custom-dnd5e-counters ul {
     display: flex;
     flex-direction: column;
