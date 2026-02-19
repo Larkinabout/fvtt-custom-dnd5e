@@ -69,6 +69,12 @@
             </div>
         </div>
         <div class="form-group">
+            <label class="flex1" style="min-width:80px; max-width:120px;">{{localize "CUSTOM_DND5E.overlay"}}</label>
+            <div class="form-fields">
+                <dnd5e-checkbox id="custom-dnd5e-overlay" name="{{key}}.overlay"{{#if overlay}} checked{{/if}}></dnd5e-checkbox>
+            </div>
+        </div>
+        <div class="form-group">
             <label class="flex1" style="min-width:80px; max-width:120px;">{{localize "CUSTOM_DND5E.pseudo"}}</label>
             <div class="form-fields">
                 <dnd5e-checkbox id="custom-dnd5e-pseudo" name="{{key}}.pseudo"{{#if pseudo}} checked{{/if}}></dnd5e-checkbox>
@@ -88,6 +94,19 @@
                 <multi-select name="{{key}}.statuses">
                     {{selectOptions selects.statuses selected=statuses}}
                 </multi-select>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="flex1" style="min-width:80px; max-width:120px;">{{localize "CUSTOM_DND5E.macro"}}</label>
+            <div class="form-fields custom-dnd5e-macro-drop">
+                <div class="custom-dnd5e-macro-field flex1{{#unless macroName}} hidden{{/unless}}">
+                    <span class="custom-dnd5e-macro-name">{{macroName}}</span>
+                    <button type="button" data-action="clearMacro" class="unbutton control-button" data-tooltip="{{localize 'CUSTOM_DND5E.form.counters.triggers.macro.clear'}}" aria-label="{{localize 'CUSTOM_DND5E.form.counters.triggers.macro.clear'}}">
+                        <i class="fa-solid fa-trash" inert></i>
+                    </button>
+                </div>
+                <div class="drop-area flex1{{#if macroName}} hidden{{/if}}">{{localize "CUSTOM_DND5E.form.counters.triggers.macro.dropHint"}}</div>
+                <input type="hidden" name="{{key}}.macroUuid" value="{{macroUuid}}">
             </div>
         </div>
     </div>

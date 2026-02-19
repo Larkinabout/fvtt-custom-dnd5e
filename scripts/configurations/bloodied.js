@@ -155,9 +155,9 @@ export function overrideBloodied(applyBloodied, bloodiedStatus) {
  * Add the Bloodied condition to CONFIG.DND5E.conditionTypes.
  * Add the Bloodied status effect to CONFIG.statusEffects.
  */
-export function registerBloodied() {
+export function addBloodiedCondition() {
   if ( !getSetting(CONSTANTS.BLOODIED.SETTING.APPLY_BLOODIED.KEY)
-    || !getSetting(CONSTANTS.BLOODIED.SETTING.BLOODIED_STATUS.KEY) === "none" ) return;
+    || getSetting(CONSTANTS.BLOODIED.SETTING.BLOODIED_STATUS.KEY) === "none" ) return;
 
   Logger.debug("Registering Bloodied...");
 
@@ -170,8 +170,10 @@ export function registerBloodied() {
 
   const bloodied = buildBloodied();
 
-  // Add bloodied to CONFIG.statusEffects
-  CONFIG.statusEffects.push(bloodied.statusEffect);
+  // Add bloodied to CONFIG.statusEffects if not already present
+  if ( !CONFIG.statusEffects.some(e => e.id === "bloodied") ) {
+    CONFIG.statusEffects.push(bloodied.statusEffect);
+  }
 
   const conditionTypes = {};
 
@@ -204,19 +206,20 @@ export function buildBloodied() {
     ?? CONFIG.DND5E.bloodied.name
     ?? "CUSTOM_DND5E.bloodied");
   const img = bloodied.img ?? CONSTANTS.BLOODIED.ICON;
+  const reference = bloodied?.reference || CONSTANTS.BLOODIED.CONDITION_UUID;
 
   return {
     conditionType: {
       img,
       name,
-      reference: CONSTANTS.BLOODIED.CONDITION_UUID
+      reference
     },
     statusEffect: {
       _id: "dnd5ebloodied000",
       id: "bloodied",
       img,
       name,
-      reference: CONSTANTS.BLOODIED.CONDITION_UUID
+      reference
     }
   };
 }

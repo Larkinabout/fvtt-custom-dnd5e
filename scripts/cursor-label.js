@@ -68,24 +68,26 @@ function createCursorLabelElement() {
 
   const skipDialogIcon = document.createElement("i");
   skipDialogIcon.id = "custom-dnd5e-cursor-label-skip-dialog";
-  skipDialogIcon.classList.add("fa-solid", "fa-forward");
+  skipDialogIcon.classList.add("fa-regular", "fa-forward");
   container.appendChild(skipDialogIcon);
 
-  const advantageIcon = document.createElement("i");
-  advantageIcon.id = "custom-dnd5e-cursor-label-advantage";
-  advantageIcon.classList.add("fa-solid", "fa-up-long");
-  container.appendChild(advantageIcon);
+  const advantageGroup = document.createElement("span");
+  advantageGroup.id = "custom-dnd5e-cursor-label-advantage";
+  advantageGroup.classList.add("custom-dnd5e-cursor-label-icon");
+  advantageGroup.innerHTML = '<i class="fa-sharp fa-regular fa-dice-d20"></i><i class="fa-solid fa-up-long"></i>';
+  container.appendChild(advantageGroup);
 
-  const disadvantageIcon = document.createElement("i");
-  disadvantageIcon.id = "custom-dnd5e-cursor-label-disadvantage";
-  disadvantageIcon.classList.add("fa-solid", "fa-down-long");
-  container.appendChild(disadvantageIcon);
+  const disadvantageGroup = document.createElement("span");
+  disadvantageGroup.id = "custom-dnd5e-cursor-label-disadvantage";
+  disadvantageGroup.classList.add("custom-dnd5e-cursor-label-icon");
+  disadvantageGroup.innerHTML = '<i class="fa-sharp fa-regular fa-dice-d20"></i><i class="fa-solid fa-down-long"></i>';
+  container.appendChild(disadvantageGroup);
 
   document.body.appendChild(container);
   window.customDnd5eCursorLabel = {
     container,
-    advantage: advantageIcon,
-    disadvantage: disadvantageIcon,
+    advantage: advantageGroup,
+    disadvantage: disadvantageGroup,
     skipDialog: skipDialogIcon
   };
 }
@@ -189,8 +191,8 @@ function updateCursorLabelVisibility(event) {
  * @param {PointerEvent} event The pointer move event.
  */
 function updateCursorLabelPosition(event) {
-  window.customDnd5eCursorLabel.container.style.left = `${event.clientX + 15}px`;
-  window.customDnd5eCursorLabel.container.style.top = `${event.clientY}px`;
+  window.customDnd5eCursorLabel.container.style.left = `${event.clientX - 5}px`;
+  window.customDnd5eCursorLabel.container.style.top = `${event.clientY + 15}px`;
 
   updateCursorLabelVisibility(event);
 }

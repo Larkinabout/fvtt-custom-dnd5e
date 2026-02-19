@@ -62,6 +62,18 @@
         </li>
         {{/if}}
 
+        {{#if (eq counter.type "pips")}}
+        <li class="custom-dnd5e-counters-counter custom-dnd5e-counters-pips flexrow" data-id="{{key}}">
+            <h4>{{counter.label}}</h4>
+            <div class="pips">
+                {{#each counter.pips}}
+                <button type="button" class="pip{{#if filled}} filled{{/if}}"
+                    data-n="{{n}}"{{#unless canEdit}} disabled{{/unless}}></button>
+                {{/each}}
+            </div>
+        </li>
+        {{/if}}
+
         {{#if (eq counter.type "successFailure")}}
         <li class="custom-dnd5e-counters-counter custom-dnd5e-counters-success-failure flexrow" data-id="{{key}}">
             <h4>{{counter.label}}</h4>

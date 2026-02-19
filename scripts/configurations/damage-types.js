@@ -148,7 +148,7 @@ function buildConfig(settingData) {
  */
 function buildConfigEntry(data) {
   return {
-    color: data.color,
+    color: Color.fromString(data.color || "#ffffff"),
     icon: data.icon,
     ...(data.isPhysical !== undefined && { isPhysical: data.isPhysical }),
     label: game.i18n.localize(data.label),

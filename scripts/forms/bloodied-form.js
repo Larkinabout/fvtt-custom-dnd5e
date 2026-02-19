@@ -63,6 +63,7 @@ export class BloodiedForm extends CustomDnd5eForm {
     context.bloodiedStatus = getSetting(CONSTANTS.BLOODIED.SETTING.BLOODIED_STATUS.KEY) || "player";
     context.bloodiedTint = getSetting(CONSTANTS.BLOODIED.SETTING.BLOODIED_TINT.KEY);
     context.removeBloodiedOnDead = getSetting(CONSTANTS.BLOODIED.SETTING.REMOVE_BLOODIED_ON_DEAD.KEY);
+    context.reference = this.setting.reference || CONSTANTS.BLOODIED.CONDITION_UUID;
     context.selects = this.#getSelects();
 
     if ( this.enableConfigKey ) {

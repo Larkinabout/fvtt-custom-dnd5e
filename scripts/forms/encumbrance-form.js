@@ -53,6 +53,27 @@ export class EncumbranceForm extends CustomDnd5eForm {
   /* -------------------------------------------- */
 
   /**
+   * Handle rendering the form and attaching event listeners.
+   *
+   * @param {object} context The rendering context.
+   * @param {object} options The rendering options.
+   */
+  _onRender(context, options) {
+    super._onRender(context, options);
+
+    const modeSelect = this.element.querySelector("#custom-dnd5e-speed-reduction-mode");
+    const flatElements = this.element.querySelectorAll(".speed-reduction-flat");
+    const multiplierElements = this.element.querySelectorAll(".speed-reduction-multiplier");
+
+    modeSelect?.addEventListener("change", () => {
+      flatElements.forEach(el => el.classList.toggle("hidden", modeSelect.value !== "flat"));
+      multiplierElements.forEach(el => el.classList.toggle("hidden", modeSelect.value !== "multiplier"));
+    });
+  }
+
+  /* -------------------------------------------- */
+
+  /**
    * Prepare the context for rendering the form.
    *
    * @returns {Promise<object>} The context data.
@@ -67,6 +88,16 @@ export class EncumbranceForm extends CustomDnd5eForm {
       getSetting(CONSTANTS.ENCUMBRANCE.PROFICIENT_EQUIPPED_ITEM_WEIGHT_MODIFIER.SETTING.KEY);
     context.unequippedItemWeightModifier =
       getSetting(CONSTANTS.ENCUMBRANCE.UNEQUIPPED_ITEM_WEIGHT_MODIFIER.SETTING.KEY);
+    context.speedReductionMode =
+      getSetting(CONSTANTS.ENCUMBRANCE.SPEED_REDUCTION_MODE.SETTING.KEY);
+    context.speedReductionMultiplierEncumbered =
+      getSetting(CONSTANTS.ENCUMBRANCE.SPEED_REDUCTION_MULTIPLIER_ENCUMBERED.SETTING.KEY);
+    context.speedReductionMultiplierHeavilyEncumbered =
+      getSetting(CONSTANTS.ENCUMBRANCE.SPEED_REDUCTION_MULTIPLIER_HEAVILY_ENCUMBERED.SETTING.KEY);
+    context.speedReductionMultiplierExceedingCarryingCapacity =
+      getSetting(CONSTANTS.ENCUMBRANCE.SPEED_REDUCTION_MULTIPLIER_EXCEEDING_CARRYING_CAPACITY.SETTING.KEY);
+    context.speedReductionMultiplierRounding =
+      getSetting(CONSTANTS.ENCUMBRANCE.SPEED_REDUCTION_MULTIPLIER_ROUNDING.SETTING.KEY);
 
     if ( this.enableConfigKey ) {
       context.enableConfig = getSetting(this.enableConfigKey);
@@ -86,7 +117,12 @@ export class EncumbranceForm extends CustomDnd5eForm {
         setSetting(this.settingKey, CONFIG.CUSTOM_DND5E[this.type]),
         resetSetting(CONSTANTS.ENCUMBRANCE.EQUIPPED_ITEM_WEIGHT_MODIFIER.SETTING.KEY),
         resetSetting(CONSTANTS.ENCUMBRANCE.PROFICIENT_EQUIPPED_ITEM_WEIGHT_MODIFIER.SETTING.KEY),
-        resetSetting(CONSTANTS.ENCUMBRANCE.UNEQUIPPED_ITEM_WEIGHT_MODIFIER.SETTING.KEY)
+        resetSetting(CONSTANTS.ENCUMBRANCE.UNEQUIPPED_ITEM_WEIGHT_MODIFIER.SETTING.KEY),
+        resetSetting(CONSTANTS.ENCUMBRANCE.SPEED_REDUCTION_MODE.SETTING.KEY),
+        resetSetting(CONSTANTS.ENCUMBRANCE.SPEED_REDUCTION_MULTIPLIER_ENCUMBERED.SETTING.KEY),
+        resetSetting(CONSTANTS.ENCUMBRANCE.SPEED_REDUCTION_MULTIPLIER_HEAVILY_ENCUMBERED.SETTING.KEY),
+        resetSetting(CONSTANTS.ENCUMBRANCE.SPEED_REDUCTION_MULTIPLIER_EXCEEDING_CARRYING_CAPACITY.SETTING.KEY),
+        resetSetting(CONSTANTS.ENCUMBRANCE.SPEED_REDUCTION_MULTIPLIER_ROUNDING.SETTING.KEY)
       ]);
       this.setConfig(CONFIG.CUSTOM_DND5E[this.type]);
       this.render(true);
@@ -120,7 +156,7 @@ export class EncumbranceForm extends CustomDnd5eForm {
    * @param {object} formData The form data.
    */
   static async submit(event, form, formData) {
-    const ignore = ["enableConfig", "equippedItemWeightModifier", "metric", "partId", "proficientEquippedItemWeightModifier", "unequippedItemWeightModifier"];
+    const ignore = ["enableConfig", "equippedItemWeightModifier", "metric", "partId", "proficientEquippedItemWeightModifier", "speedReductionMode", "speedReductionMultiplierEncumbered", "speedReductionMultiplierExceedingCarryingCapacity", "speedReductionMultiplierHeavilyEncumbered", "speedReductionMultiplierRounding", "unequippedItemWeightModifier"];
 
     this.enableConfig = formData.object.enableConfig;
     await setSetting(this.enableConfigKey, this.enableConfig);
@@ -139,7 +175,17 @@ export class EncumbranceForm extends CustomDnd5eForm {
       setSetting(CONSTANTS.ENCUMBRANCE.PROFICIENT_EQUIPPED_ITEM_WEIGHT_MODIFIER.SETTING.KEY,
         formData.object.proficientEquippedItemWeightModifier),
       setSetting(CONSTANTS.ENCUMBRANCE.UNEQUIPPED_ITEM_WEIGHT_MODIFIER.SETTING.KEY,
-        formData.object.unequippedItemWeightModifier)
+        formData.object.unequippedItemWeightModifier),
+      setSetting(CONSTANTS.ENCUMBRANCE.SPEED_REDUCTION_MODE.SETTING.KEY,
+        formData.object.speedReductionMode),
+      setSetting(CONSTANTS.ENCUMBRANCE.SPEED_REDUCTION_MULTIPLIER_ENCUMBERED.SETTING.KEY,
+        formData.object.speedReductionMultiplierEncumbered),
+      setSetting(CONSTANTS.ENCUMBRANCE.SPEED_REDUCTION_MULTIPLIER_HEAVILY_ENCUMBERED.SETTING.KEY,
+        formData.object.speedReductionMultiplierHeavilyEncumbered),
+      setSetting(CONSTANTS.ENCUMBRANCE.SPEED_REDUCTION_MULTIPLIER_EXCEEDING_CARRYING_CAPACITY.SETTING.KEY,
+        formData.object.speedReductionMultiplierExceedingCarryingCapacity),
+      setSetting(CONSTANTS.ENCUMBRANCE.SPEED_REDUCTION_MULTIPLIER_ROUNDING.SETTING.KEY,
+        formData.object.speedReductionMultiplierRounding)
     ]);
 
     this.setConfig(this.setting);

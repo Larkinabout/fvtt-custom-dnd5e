@@ -6,7 +6,31 @@ A Foundry VTT module to customise the D&D 5e system.
 
 ![Custom D&D 5e Custom Banner](./.github/readme/custom-dnd5e-custom-banner.png)
 
-# Gameplay
+## Table of Contents
+
+- [Gameplay](#gameplay)
+- [Counters](#counters)
+- [Configurations](#configurations)
+- [Configure Encumbrance](#configure-encumbrance)
+- [Configure Rolls](#configure-rolls)
+- [Actor Sheet](#actor-sheet)
+- [Item Sheet](#item-sheet)
+- [Smaller Form Character Sheet](#smaller-form-character-sheet)
+- [Chat Commands](#chat-commands)
+- [Show Pressed Keys](#show-pressed-keys)
+- [Ruler Travel Time](#ruler-travel-time)
+- [Animations](#animations)
+- [Radial Status Effects](#radial-status-effects)
+- [Token Border Shape](#token-border-shape)
+- [Apply Elevation to Selected Tokens](#apply-elevation-to-selected-tokens)
+- [Toggle Status Effects on Selected Tokens](#toggle-status-effects-on-selected-tokens)
+- [Compatibility](#compatibility)
+- [Required Modules](#required-modules)
+
+---
+
+## Gameplay
+
 Configure game mechanics and automation of core rules, optional variants and house rules.
 
 For help and advice on gameplay settings, either click the info buttons in the Gameplay window or open the Gameplay journal within the Custom D&D 5e compendium.
@@ -18,8 +42,9 @@ For help and advice on gameplay settings, either click the info buttons in the G
 
 </details>
 
-## Bloodied
+### Bloodied
 - Apply the Bloodied condition when a character or NPC is reduced to the threshold or lower.
+- Customise the Bloodied threshold.
 - To stop a character or NPC from gaining the Bloodied condition, add Bloodied to their Condition Immunities.
 
 <details>
@@ -29,7 +54,7 @@ For help and advice on gameplay settings, either click the info buttons in the G
 
 </details>
 
-## Instant Death
+### Instant Death
 Apply Instant Death when a character suffers damage equal to or greater than their remaining HP plus their max HP.
 
 <details>
@@ -39,7 +64,7 @@ Apply Instant Death when a character suffers damage equal to or greater than the
 
 </details>
 
-## Dead
+### Dead
 - Apply the Dead status effect when an NPC is reduced to zero HP.
 - Tint and/or rotate the token when it gains the Dead status effect.
 
@@ -50,7 +75,7 @@ Apply Instant Death when a character suffers damage equal to or greater than the
 
 </details>
 
-## Unconscious
+### Unconscious
 Apply the Unconscious status effect when a PC is reduced to zero HP.
 
 <details>
@@ -60,7 +85,7 @@ Apply the Unconscious status effect when a PC is reduced to zero HP.
 
 </details>
 
-## Death Saving Throws
+### Death Saving Throws
 - Set the roll mode to Public Roll, Blind GM Roll or Private GM Roll. When using Blind GM Roll, successes and failures will not appear on the character sheet for the player.
 - Set the target value required to succeed a death saving throw.
 - Remove a number of successes or failures for each event: On Regaining HP from 0, On Short Rest and On Long Rest.
@@ -72,8 +97,9 @@ Apply the Unconscious status effect when a PC is reduced to zero HP.
 
 </details>
 
-## Hit Points
-### Massive Damage
+### Hit Points
+
+#### Massive Damage
 Apply Massive Damage as per the variant rule (DMG pg. 273).
 
 <details>
@@ -83,11 +109,10 @@ Apply Massive Damage as per the variant rule (DMG pg. 273).
 
 </details>
 
-### Rolling Hit Points
+#### Rolling Hit Points
 - When rolling for Hit Points, automatically reroll based on a minimum value.
 - Reroll once or until the minimum value is met.
 - Hide the Take Average option when rolling for Hit Points.
-- Roll Hit Points for NPCs when dragging their token onto the canvas.
 
 <details>
     <summary>See Image</summary>
@@ -96,8 +121,8 @@ Apply Massive Damage as per the variant rule (DMG pg. 273).
 
 </details>
 
-### Negative Hit Points
-- Apply negative hit points.
+#### Negative Hit Points
+- Apply negative hit points to characters and/or NPCs.
 - Choose to heal from negative HP or from 0 HP.
 
 <details>
@@ -107,8 +132,10 @@ Apply Massive Damage as per the variant rule (DMG pg. 273).
 
 </details>
 
-## Reroll Initiative Each Round
-Reroll Initiative for all combatants at the start of each round.
+### Initiative Each Round
+- **Reroll All:** Reroll Initiative for all combatants at the start of each round.
+- **Reset Only:** Reset Initiative for all combatants without rerolling.
+- **Reroll NPC:** Reroll Initiative for NPCs only at the start of each round.
 
 <details>
     <summary>See Video</summary>
@@ -117,7 +144,7 @@ Reroll Initiative for all combatants at the start of each round.
 
 </details>
 
-## Award Inspiration
+### Award Inspiration
 Award Inspiration when a set value is rolled for an ability check, attack roll, saving throw and/or skill check.
 
 <details>
@@ -127,9 +154,9 @@ Award Inspiration when a set value is rolled for an ability check, attack roll, 
 
 </details>
 
-## Average Damage
+### Average Damage
 - When rolling damage, the average result is used.
-- Enable per actor type (Player Characters, NPCs or both)
+- Enable per actor type (Player Characters, NPCs or both).
 - When the associated attack roll is a critical hit, the average damage includes the critical damage.
 
 <details>
@@ -139,7 +166,7 @@ Award Inspiration when a set value is rolled for an ability check, attack roll, 
 
 </details>
 
-## Mob Damage
+### Mob Damage
 - When attacking a single token with four or more identical tokens selected, the attack roll is replaced with a damage roll based on the **Mobs Average Results** table (Dungeon Master's Guide (2024), page 82).
 - Use average damage instead of rolling.
 
@@ -150,9 +177,9 @@ Award Inspiration when a set value is rolled for an ability check, attack roll, 
 
 </details>
 
-## Probabilistic Damage
+### Probabilistic Damage
 - When attacking a single token, the attack roll is replaced with a damage roll scaled by the chance to hit.
-- Enable per activity and actor type (Player Characters, NPCs or both)
+- Enable per activity and actor type (Player Characters, NPCs or both).
 - Use average damage instead of rolling.
 
 <details>
@@ -169,7 +196,7 @@ Award Inspiration when a set value is rolled for an ability check, attack roll, 
 
 </details>
 
-## Prone
+### Prone
 Rotate the token when it gains the Prone status effect.
 
 <details>
@@ -179,8 +206,9 @@ Rotate the token when it gains the Prone status effect.
 
 </details>
 
-## Resting
-### Use Camp Supplies
+### Resting
+
+#### Use Camp Supplies
 When taking a Long Rest, optionally requires spending Camp Supplies.
 
 <details>
@@ -190,10 +218,13 @@ When taking a Long Rest, optionally requires spending Camp Supplies.
 
 </details>
 
-## Counters
-**Counter Types:** Add four types of counter to the character sheets: checkbox, fraction, number and success/failure.
+<p align="right">(<a href="#custom-dd-5e">back to top</a>)</p>
 
-**Triggers:** Set triggers to automatically change a counter value when an actor hits 0 HP, half HP, or when combat ends if they hit 0 HP any time during combat. Set a trigger to automatically make an actor dead when a counter hits a defined value.
+---
+
+## Counters
+
+Add counters to character sheets with four types: checkbox, fraction, number and success/failure. Set triggers to automatically change counter values based on HP thresholds, combat events, or item attack rolls. Triggers can execute macros with custom operators. Counter actions include increasing or decreasing values, destroying items, and reducing item quantities. Counters can also be added to items and group actor sheets, and are compatible with Tidy5e character sheets.
 
 <details>
     <summary>See Video</summary>
@@ -201,14 +232,132 @@ When taking a Long Rest, optionally requires spending Camp Supplies.
 ![Custom D&D 5e Counters](./.github/readme/custom-dnd5e-counters.gif)
 
 </details>
-<details>
-    <summary>See Image</summary>
 
-![Custom D&D 5e Counter Triggers](./.github/readme/custom-dnd5e-counter-triggers.png)
+<details>
+    <summary>See Video</summary>
+
+![Custom D&D 5e Counter Triggers](./.github/readme/custom-dnd5e-counter-triggers.gif)
 
 </details>
 
+<p align="right">(<a href="#custom-dd-5e">back to top</a>)</p>
+
+---
+
+## Configurations
+
+Customise D&D 5e system configurations. For help and advice on modifying a configuration, either click the info button in the header of the configuration window or open the Configurations journal within the Custom D&D 5e compendium.
+
+<details>
+    <summary>See Image</summary>
+
+![Custom D&D 5e Damage Types Journal](./.github/readme/custom-dnd5e-damage-types-journal.png)
+
+</details>
+
+- **Abilities**: Strength, Dexterity, Constitution, etc.
+- **Activation Costs**: Action, Bonus Action, Reaction, etc.
+- **Actor Sizes**: Tiny, Small, Medium, etc.
+- **Armor**: Breastplate, Chain Mail, Leather, etc.
+- **Armor Calculations**: Flat, Mage Armor, Unarmored Defense, etc.
+- **Armor Proficiencies/Types**: Light, Medium, Heavy, Shields, etc.
+- **Bastions**: Facilities, sizes, build orders and subtypes.
+- **Calendar**: Custom campaign calendars with months, days and seasons.
+- **Conditions/Status Effects**: Blinded, Charmed, Dead, etc. Includes overlay options.
+- **Consumable Types**: Ammo, Food, Poison, etc.
+- **Creature Types**: Aberration, Beast, Celestial, etc.
+- **Currencies**: Copper, Silver, Gold, etc. Includes conversion configuration.
+- **Damage Types**: Acid, Bludgeoning, Fire, etc.
+- **Encumbrance**: Encumbrance labels, icons, thresholds, weight modifiers, speed multiplier, etc.
+- **Equipment Types**: Clothing, Ring, Rod, etc.
+- **Feature Types**: Background, Class, Enchantment, etc.
+- **Item Properties**: Adamantine, Finesse, Heavy, etc.
+- **Item Rarity**: Common, Uncommon, Rare, etc.
+- **Languages**: Common, Dwarvish, Elvish, etc.
+- **Loot Types**: Art Object, Adventuring Gear, Gemstone, etc.
+- **Senses**: Blindsight, Darkvision, Tremorsense, etc.
+- **Skills**: Athletics, Acrobatics, Stealth, etc.
+- **Spell Schools**: Abjuration, Conjuration, Divination, etc.
+- **Tools**: Alchemist's Supplies, Bagpipes, Brewer's Supplies, etc.
+- **Tool Proficiencies/Types**: Artisan's Tools, Gaming Set, Musical Instrument, etc.
+- **Weapons**: Dagger, Longsword, Shortbow, etc.
+- **Weapon Masteries**: Customise weapon mastery effects and labels.
+- **Weapon Proficiencies/Types**: Improvised, Simple, Martial, etc.
+- **Max Ability Score**
+- **Max Level**
+
+<p align="right">(<a href="#custom-dd-5e">back to top</a>)</p>
+
+---
+
+## Configure Encumbrance
+
+Customise encumbrance labels, icons, thresholds and weight modifiers. Includes an optional speed multiplier for encumbrance-based movement reduction.
+
+<details>
+    <summary>See Image</summary>
+
+![Custom D&D 5e Configure Encumbrance](./.github/readme/custom-dnd5e-configure-encumbrance.png)
+
+</details>
+
+<p align="right">(<a href="#custom-dd-5e">back to top</a>)</p>
+
+---
+
+## Configure Rolls
+
+Customize the base die and roll mode for Ability Checks, Attack Rolls, Concentration Saving Throws, Initiative Rolls, Saving Throws, Skills Checks and Tool Checks.
+
+<details>
+    <summary>See Video</summary>
+
+![Custom D&D 5e Configure Rolls](./.github/readme/custom-dnd5e-configure-rolls.gif)
+
+</details>
+
+<p align="right">(<a href="#custom-dd-5e">back to top</a>)</p>
+
+---
+
+## Actor Sheet
+
+Customise the actor sheet with client and world settings for characters and NPCs.
+
+### Client Settings
+- **Sheet Scale:** Change the scale of the character sheet.
+- **Auto-Fade:** Automatically fade out the actor sheet when the mouse leaves it.
+- **Auto-Minimise:** Automatically minimise the actor sheet when the mouse leaves it.
+
+### Characters
+- **Banner Image:** Select an image to use as the banner on the character sheet.
+- **Show/Hide Death Saves:** Show or hide death saves tracking on the character sheet.
+- **Show/Hide Encumbrance:** Show or hide the encumbrance bar on the character sheet.
+- **Show/Hide Exhaustion:** Show or hide exhaustion tracking on the character sheet.
+- **Show/Hide Inspiration:** Show or hide the Inspiration button on the character sheet.
+- **Show Jump Distance:** Display Long Jump and High Jump distances in the Speed tooltip on character sheets. Shows running and standing variants calculated from the character's Strength score and modifier.
+- **Show/Hide Manage Currency:** Show or hide the Manage Currency button on the character sheet.
+
+### NPCs
+- **Show Disposition:** Show disposition buttons (Secret, Hostile, Neutral, Friendly) in the NPC sheet sidebar for quick token disposition changes.
+- **Show/Hide Legendary Actions:** Show or hide Legendary Actions on the NPC sheet.
+- **Show/Hide Legendary Resistance:** Show or hide Legendary Resistance on the NPC sheet.
+- **Show/Hide Use Lair Action:** Show or hide the Use Lair Action button on the NPC sheet.
+
+<p align="right">(<a href="#custom-dd-5e">back to top</a>)</p>
+
+---
+
+## Item Sheet
+
+Set the minimum role required to toggle Identified/Unidentified on the item.
+
+<p align="right">(<a href="#custom-dd-5e">back to top</a>)</p>
+
+---
+
 ## Smaller Form Character Sheet
+
 Select 'Custom D&D 5e Character Sheet' from the Sheet Configuration dialog (cog on the sheet's header) to enable a smaller form character sheet.
 
 <details>
@@ -218,102 +367,72 @@ Select 'Custom D&D 5e Character Sheet' from the Sheet Configuration dialog (cog 
 
 </details>
 
-## Configurations
-For help and advice on modifying a configuration, either click the info button in the header of the configuration window or open the Configurations journal within the Custom D&D 5e compendium.
+<p align="right">(<a href="#custom-dd-5e">back to top</a>)</p>
 
-<details>
-    <summary>See Image</summary>
-
-![Custom D&D 5e Damage Types Journal](./.github/readme/custom-dnd5e-damage-types-journal.png)
-
-</details>
-
-
-- **Abilities**: Strength, Dexterity, Constitution, etc.
-- **Activation costs**: Action, Bonus Action, Reaction, etc.
-- **Actor sizes**: Tiny, Small, Medium, etc.
-- **Armor**: Breastplate, Chain Mail, Leather, etc.
-- **Armor calculations**: Flat, Mage Armor, Unarmored Defense, etc.
-- **Armor proficiencies/types**: Light, Medium, Heavy, Shields, etc.
-- **Conditions/Status Effects**: Blinded, Charmed, Dead, etc.
-- **Consumable types**: Ammo, Food, Poison, etc.
-- **Creature types**: Aberration, Beast, Celestial, etc.
-- **Currencies**: Copper, Silver, Gold, etc.
-- **Damage types**: Acid, Bludgeoning, Fire, etc.
-- **Encumbrance**: Encumbrance labels, icons, thresholds, weight modifiers, etc.
-- **Equipment types**: Clothing, Ring, Rod, etc.
-- **Feature types**: Background, Class, Enchantment, etc.
-- **Item properties**: Adamantine, Finesse, Heavy, etc.
-- **Item rarity**: Common, Uncommon, Rare, etc.
-- **Languages**: Common,  Dwarvish, Elvish, etc.
-- **Loot types**: Art Object, Adventuring Gear, Gemstone, etc.
-- **Senses**: Blindsight, Darkvision, Tremorsense, etc.
-- **Skills**: Athletics, Acrobatics, Stealth, etc.
-- **Spell schools**: Abjuration, Conjuration, Divination, etc.
-- **Tools**: Alchemist's Supplies, Bagpipes, Brewer's Supplies, etc.
-- **Tool proficiencies/types**: Artisan's Tools, Gaming Set, Musical Instrument, etc.
-- **Weapons**: Dagger, Longsword, Shortbow, etc.
-- **Weapon proficiencies/types**: Improvised, Simple, Martial, etc.
-- **Max ability score**
-- **Max level**
-
-## Configure Encumbrance
-<details>
-    <summary>See Image</summary>
-
-![Custom D&D 5e Configure Encumbrance](./.github/readme/custom-dnd5e-configure-encumbrance.png)
-
-</details>
-
-## Configure Rolls
-Customize the base die and roll mode for Ability Checks, Attack Rolls, Concentration Saving Throws, Initiative Rolls, Saving Throws, Skills Checks and Tool Checks.
-<details>
-    <summary>See Video</summary>
-
-![Custom D&D 5e Configure Rolls](./.github/readme/custom-dnd5e-configure-rolls.gif)
-
-</details>
-
-## Configure Actor Sheet
-- Auto-fade or auto-minimise the sheet when it's not hovered over.
-- Scale the new character sheet up or down.
-- Change the banner at the top of the sheet.
-- Hide death saves, encumbrance, exhaustion, inspiration, the Manage Currency button, Legendary Actions, Legendary Resistances and Use Lair Action.
-
-<details>
-    <summary>See Image</summary>
-
-![Custom D&D 5e Configure Actor Sheet](./.github/readme/custom-dnd5e-configure-actor-sheet.png)
-
-</details>
-
-## Configure Item Sheet
-- Set the minimum role required to toggle Identified/Unidentified on the item.
+---
 
 ## Chat Commands
-Enable additonal chat commands to roll an attack, roll damage or request checks and saving throws. For a list of available commands, view the **Chat Commands** journal within the **Custom D&D 5e** compendium.
+
+Enable additional chat commands to roll an attack, roll damage or request checks and saving throws. For a list of available commands, view the **Chat Commands** journal within the **Custom D&D 5e** compendium.
 
 <details>
     <summary>See Video</summary>
 
-![Custom D&D 5e Chat Commanfs](./.github/readme/custom-dnd5e-chat-commands.gif)
+![Custom D&D 5e Chat Commands](./.github/readme/custom-dnd5e-chat-commands.gif)
 
 </details>
 
+<p align="right">(<a href="#custom-dd-5e">back to top</a>)</p>
+
+---
 
 ## Show Pressed Keys
+
 Display an icon near the cursor when the Skip Dialog, Advantage or Disadvantage keys are pressed.
 
 <details>
-    <summary>See Image</summary>
+    <summary>See Video</summary>
 
-![Custom D&D 5e Show Pressed Keys - Skip Dialog](./.github/readme/custom-dnd5e-show-pressed-keys-skip-dialog.png)
-
-![Custom D&D 5e Show Pressed Keys - Advantage](./.github/readme/custom-dnd5e-show-pressed-keys-advantage.png)
+![Custom D&D 5e Show Pressed Keys](./.github/readme/custom-dnd5e-show-pressed-keys.gif)
 
 </details>
 
+<p align="right">(<a href="#custom-dd-5e">back to top</a>)</p>
+
+---
+
+## Ruler Travel Time
+
+When measuring distances with the ruler tool, travel time estimates are displayed for three D&D 5e travel paces: fast, normal and slow. Times are shown in days, hours and minutes, calculated based on standard 8-hour travel days.
+
+<details>
+    <summary>See Image</summary>
+
+![Custom D&D 5e Ruler Travel Time](./.github/readme/custom-dnd5e-travel-time-ruler.png)
+
+</details>
+
+<p align="right">(<a href="#custom-dd-5e">back to top</a>)</p>
+
+---
+
+## Animations
+
+Screen animations can be triggered via the module API or socket events. Available animations include Splatter, Light Rays, Color Split and Wave. Animations can also be triggered automatically for events such as Massive Damage and Inspiration.
+
+<details>
+    <summary>See Video</summary>
+
+![Custom D&D 5e Animations](./.github/readme/custom-dnd5e-animations.gif)
+
+</details>
+
+<p align="right">(<a href="#custom-dd-5e">back to top</a>)</p>
+
+---
+
 ## Radial Status Effects
+
 Display status effects in a circle around the token.
 
 <details>
@@ -323,7 +442,12 @@ Display status effects in a circle around the token.
 
 </details>
 
+<p align="right">(<a href="#custom-dd-5e">back to top</a>)</p>
+
+---
+
 ## Token Border Shape
+
 Choose the shape of the token's border when it is selected or hovered.
 
 <details>
@@ -333,8 +457,13 @@ Choose the shape of the token's border when it is selected or hovered.
 
 </details>
 
+<p align="right">(<a href="#custom-dd-5e">back to top</a>)</p>
+
+---
+
 ## Apply Elevation to Selected Tokens
-- Apply elevation to all selected tokens.
+
+Apply elevation to all selected tokens.
 
 <details>
     <summary>See Video</summary>
@@ -343,8 +472,13 @@ Choose the shape of the token's border when it is selected or hovered.
 
 </details>
 
+<p align="right">(<a href="#custom-dd-5e">back to top</a>)</p>
+
+---
+
 ## Toggle Status Effects on Selected Tokens
-- Toggle status effects on all selected tokens.
+
+Toggle status effects on all selected tokens.
 
 <details>
     <summary>See Video</summary>
@@ -353,22 +487,31 @@ Choose the shape of the token's border when it is selected or hovered.
 
 </details>
 
+<p align="right">(<a href="#custom-dd-5e">back to top</a>)</p>
+
+---
+
 ## Compatibility
 ### Variant Encumbrance + Midi
 Custom D&D 5e will defer to the [Variant Encumbrance + Midi](https://foundryvtt.com/packages/variant-encumbrance-dnd5e) module for encumbrance configuration when it is active.
 
+<p align="right">(<a href="#custom-dd-5e">back to top</a>)</p>
+
+---
+
 ## Required Modules
 ### [libWrapper](https://foundryvtt.com/packages/lib-wrapper)
 For developers, LibWrapper is used to patch:
-- **`Application.prototype._render`:** Allows adding data to the character sheets without editing the HTML. This should no longer be required with the release of Application V2.
-- **`CONFIG.Actor.documentClass.prototype._prepareEncumbrance`:** Patched when the D&D 5e's 'Encumbrance Tracking' setting is set to 'Variant'. Avoids recalculating encumbrance as well as issues with encumbrance active effects applied during item updates/deletions.
+- **`CONFIG.Actor.documentClass.prototype._prepareMovementAttribution`:** Patched when 'Show Jump Distance' is enabled. Appends Long Jump and High Jump distances to the movement tooltip for characters.
+- **`CONFIG.Canvas.rulerClass.prototype._getWaypointLabelContext`:** Patched when 'Ruler Travel Time' is enabled. Adds travel time estimates to ruler waypoint labels.
 - **`CONFIG.Dice.D20Die.prototype.applyAdvantage`**: Patched when at least one roll is configured. Replaces roll formula to allow different numbers and faces of dice.
 - **`CONFIG.Dice.D20Roll.fromConfig`**: Patched when at least one roll is configured. Replaces the d20 die formula with the custom die formula.
 - **`CONFIG.Dice.D20Roll.prototype.configureModifiers`**: Patched when at least one roll is configured. Adds the custom die formula to the d20 options to make it available to `validD20Roll`.
 - **`CONFIG.Dice.D20Roll.prototype.validD20Roll`**: Patched when at least one roll is configured. Additionally returns true when a custom die exists.
-- **`Token.prototype._refreshEffects`:** Patched when Custom D&D 5e's 'Radial Status Effects' setting is enabled.
-- **`Token.prototype._drawEffect`:** Patched when Custom D&D 5e's 'Radial Status Effects' setting is enabled.
-- **`Token.prototype._drawOverlay`:** Patched when Custom D&D 5e's 'Radial Status Effects' setting is enabled.
+- **`dnd5e.applications.actor.BaseActorSheet.prototype._prepareSenses`:** Patched when senses configuration is enabled. Applies custom senses modifications.
+- **`dnd5e.dataModels.actor.AttributesFields.prepareEncumbrance`:** Patched when the D&D 5e's 'Encumbrance Tracking' setting is set to 'Variant'. Avoids recalculating encumbrance as well as issues with encumbrance active effects applied during item updates/deletions.
+- **`dnd5e.dataModels.actor.AttributesFields.prepareMovement`:** Patched when encumbrance speed reduction mode is set to 'Multiplier'. Applies multiplier-based speed reductions to movement values.
+- **`foundry.canvas.placeables.Token.prototype._refreshBorder`:** Patched when Custom D&D 5e's 'Token Border Shape' setting is enabled.
+- **`foundry.canvas.placeables.Token.prototype._refreshEffects`:** Patched when Custom D&D 5e's 'Radial Status Effects' setting is enabled.
 
-## Credits
-The Radial Status Effects feature is a modification of code developed by [Dorako](https://github.com/Dorako) under the MIT License, which is reproduced here: [Licence](./scripts/radial-status-effects.js)
+<p align="right">(<a href="#custom-dd-5e">back to top</a>)</p>

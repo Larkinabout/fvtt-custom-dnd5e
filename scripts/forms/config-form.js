@@ -14,13 +14,14 @@ import { ItemPropertiesEditForm } from "./item-properties-edit-form.js";
 import { SkillsEditForm } from "./skills-edit-form.js";
 import { SpellSchoolsEditForm } from "./spell-schools-edit-form.js";
 import { ToolsEditForm } from "./tools-edit-form.js";
+import { WeaponMasteriesEditForm } from "./weapon-masteries-edit-form.js";
 import { resetConfigSetting as resetAbilities, setConfig as setAbilities } from "../configurations/abilities.js";
 import { resetConfigSetting as resetActivationCosts, setConfig as setActivationCosts } from "../configurations/activation-costs.js";
 import { resetConfigSetting as resetArmorCalculations, setConfig as setArmorCalculations } from "../configurations/armor-calculations.js";
 import { resetConfigSetting as resetArmorIds, setConfig as setArmorIds } from "../configurations/armor-ids.js";
 import { resetConfigSetting as resetActorSizes, setConfig as setActorSizes } from "../configurations/actor-sizes.js";
 import { resetConfigSetting as resetConsumableTypes, setConfig as setConsumableTypes } from "../configurations/consumable-types.js";
-import { resetConfigSetting as resetConditions, setConfig as setConditions } from "../configurations/conditions.js";
+import { mergeConfig as mergeConditions, resetConfigSetting as resetConditions, setConfig as setConditions } from "../configurations/conditions.js";
 import { resetConfigSetting as resetCreatureTypes, setConfig as setCreatureTypes } from "../configurations/creature-types.js";
 import { resetConfigSetting as resetCurrency, setConfig as setCurrency } from "../configurations/currency.js";
 import { resetConfigSetting as resetDamageTypes, setConfig as setDamageTypes } from "../configurations/damage-types.js";
@@ -37,6 +38,7 @@ import { resetConfigSetting as resetSkills, setConfig as setSkills } from "../co
 import { resetConfigSetting as resetSpellSchools, setConfig as setSpellSchools } from "../configurations/spell-schools.js";
 import { resetConfigSetting as resetTools, setConfig as setTools } from "../configurations/tools.js";
 import { resetConfigSetting as resetWeaponIds, setConfig as setWeaponIds } from "../configurations/weapon-ids.js";
+import { resetConfigSetting as resetWeaponMasteries, setConfig as setWeaponMasteries } from "../configurations/weapon-masteries.js";
 
 const listClass = `${MODULE.ID}-list`;
 const listClassSelector = `.${listClass}`;
@@ -226,13 +228,7 @@ export class ConfigForm extends CustomDnd5eForm {
       list.insertAdjacentHTML("beforeend", template);
 
       const item = list.querySelector(`[data-key="${key}"]`);
-      const dragElement = item.querySelector(".custom-dnd5e-drag");
-
-      item.addEventListener("dragend", this._onDragEnd.bind(this));
-      item.addEventListener("dragleave", this._onDragLeave.bind(this));
-      item.addEventListener("dragover", this._onDragOver.bind(this));
-      item.addEventListener("drop", this._onDrop.bind(this));
-      dragElement.addEventListener("dragstart", this._onDragStart.bind(this));
+      this._attachDragListeners(item);
 
       if ( scrollable ) {
         scrollable.scrollTop = scrollable.scrollHeight;
@@ -615,6 +611,14 @@ export class ConditionsForm extends ConfigForm {
       title: "CUSTOM_DND5E.form.conditions.title"
     }
   };
+
+  /* -------------------------------------------- */
+
+  async _prepareContext() {
+    const context = await super._prepareContext();
+    context.items = mergeConditions(context.items);
+    return context;
+  }
 }
 
 /* -------------------------------------------- */
@@ -1159,6 +1163,45 @@ export class SpellSchoolsForm extends ConfigForm {
     id: `${MODULE.ID}-spell-schools-form`,
     window: {
       title: "CUSTOM_DND5E.form.spellSchools.title"
+    }
+  };
+}
+
+/* -------------------------------------------- */
+
+/**
+ * Class representing the Weapon Masteries Form.
+ *
+ * @extends ConfigForm
+ */
+export class WeaponMasteriesForm extends ConfigForm {
+  /**
+   * Constructor for WeaponMasteriesForm.
+   */
+  constructor() {
+    super();
+    this.editForm = WeaponMasteriesEditForm;
+    this.requiresReload = false;
+    this.enableConfigKey = CONSTANTS.WEAPON_MASTERIES.SETTING.ENABLE.KEY;
+    this.settingKey = CONSTANTS.WEAPON_MASTERIES.SETTING.CONFIG.KEY;
+    this.resetConfigSetting = resetWeaponMasteries;
+    this.setConfig = setWeaponMasteries;
+    this.configKey = "weaponMasteries";
+    this.headerButton = JOURNAL_HELP_BUTTON;
+    this.headerButton.uuid = CONSTANTS.WEAPON_MASTERIES.UUID;
+  }
+
+  /* -------------------------------------------- */
+
+  /**
+   * Default options for the form.
+   *
+   * @type {object}
+   */
+  static DEFAULT_OPTIONS = {
+    id: `${MODULE.ID}-weapon-masteries-form`,
+    window: {
+      title: "CUSTOM_DND5E.form.weaponMasteries.title"
     }
   };
 }

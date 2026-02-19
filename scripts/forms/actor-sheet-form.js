@@ -1,4 +1,4 @@
-import { CONSTANTS, MODULE } from "../constants.js";
+import { CONSTANTS, JOURNAL_HELP_BUTTON, MODULE } from "../constants.js";
 import { getFlag, setFlag, getSetting, setSetting } from "../utils.js";
 import { CustomDnd5eForm } from "./custom-dnd5e-form.js";
 
@@ -14,6 +14,8 @@ export class ActorSheetForm extends CustomDnd5eForm {
   constructor(...args) {
     super(args);
     this.type = "actorSheet";
+    this.headerButton = JOURNAL_HELP_BUTTON;
+    this.headerButton.uuid = CONSTANTS.ACTOR_SHEET.UUID;
   }
 
   /* -------------------------------------------- */
@@ -67,9 +69,11 @@ export class ActorSheetForm extends CustomDnd5eForm {
       showEncumbrance: getSetting(CONSTANTS.ACTOR_SHEET.SETTING.SHOW_ENCUMBRANCE.KEY),
       showExhaustion: getSetting(CONSTANTS.ACTOR_SHEET.SETTING.SHOW_EXHAUSTION.KEY),
       showInspiration: getSetting(CONSTANTS.ACTOR_SHEET.SETTING.SHOW_INSPIRATION.KEY),
+      showJumpDistance: getSetting(CONSTANTS.ACTOR_SHEET.SETTING.SHOW_JUMP_DISTANCE.KEY),
       showLegendaryActions: getSetting(CONSTANTS.ACTOR_SHEET.SETTING.SHOW_LEGENDARY_ACTIONS.KEY),
       showLegendaryResistance: getSetting(CONSTANTS.ACTOR_SHEET.SETTING.SHOW_LEGENDARY_RESISTANCE.KEY),
       showManageCurrency: getSetting(CONSTANTS.ACTOR_SHEET.SETTING.SHOW_MANAGE_CURRENCY.KEY),
+      showTokenDisposition: getSetting(CONSTANTS.ACTOR_SHEET.SETTING.SHOW_TOKEN_DISPOSITION.KEY),
       showUseLairAction: getSetting(CONSTANTS.ACTOR_SHEET.SETTING.SHOW_USE_LAIR_ACTION.KEY)
     };
   }
@@ -125,10 +129,12 @@ export class ActorSheetForm extends CustomDnd5eForm {
         setSetting(CONSTANTS.ACTOR_SHEET.SETTING.SHOW_ENCUMBRANCE.KEY, formData.object.showEncumbrance),
         setSetting(CONSTANTS.ACTOR_SHEET.SETTING.SHOW_EXHAUSTION.KEY, formData.object.showExhaustion),
         setSetting(CONSTANTS.ACTOR_SHEET.SETTING.SHOW_INSPIRATION.KEY, formData.object.showInspiration),
+        setSetting(CONSTANTS.ACTOR_SHEET.SETTING.SHOW_JUMP_DISTANCE.KEY, formData.object.showJumpDistance),
         setSetting(CONSTANTS.ACTOR_SHEET.SETTING.SHOW_LEGENDARY_ACTIONS.KEY, formData.object.showLegendaryActions),
         setSetting(CONSTANTS.ACTOR_SHEET.SETTING.SHOW_LEGENDARY_RESISTANCE.KEY,
           formData.object.showLegendaryResistance),
         setSetting(CONSTANTS.ACTOR_SHEET.SETTING.SHOW_MANAGE_CURRENCY.KEY, formData.object.showManageCurrency),
+        setSetting(CONSTANTS.ACTOR_SHEET.SETTING.SHOW_TOKEN_DISPOSITION.KEY, formData.object.showTokenDisposition),
         setSetting(CONSTANTS.ACTOR_SHEET.SETTING.SHOW_USE_LAIR_ACTION.KEY, formData.object.showUseLairAction)
       ]);
     }

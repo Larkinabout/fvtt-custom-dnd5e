@@ -41,6 +41,7 @@ export class CountersEditForm extends CustomDnd5eForm {
    */
   static DEFAULT_OPTIONS = {
     actions: {
+      clearMacro: CountersEditForm.clearMacro,
       new: CountersEditForm.createItem
     },
     form: {
@@ -77,7 +78,13 @@ export class CountersEditForm extends CustomDnd5eForm {
   #getSelects(type) {
     const triggerChoices = {};
 
-    if ( type !== "checkbox" ) {
+    if ( type === "checkbox" ) {
+      triggerChoices.checked = "CUSTOM_DND5E.form.counters.triggers.trigger.choices.checked";
+      triggerChoices.unchecked = "CUSTOM_DND5E.form.counters.triggers.trigger.choices.unchecked";
+    } else if ( type === "successFailure" ) {
+      triggerChoices.successValue = "CUSTOM_DND5E.form.counters.triggers.trigger.choices.successValue";
+      triggerChoices.failureValue = "CUSTOM_DND5E.form.counters.triggers.trigger.choices.failureValue";
+    } else {
       triggerChoices.counterValue = "CUSTOM_DND5E.form.counters.triggers.trigger.choices.counterValue";
     }
 
@@ -90,8 +97,7 @@ export class CountersEditForm extends CustomDnd5eForm {
     triggerChoices.endOfCombat = "CUSTOM_DND5E.endOfCombat";
     triggerChoices.startOfTurn = "CUSTOM_DND5E.startOfTurn";
     triggerChoices.endOfTurn = "CUSTOM_DND5E.endOfTurn";
-    // TriggerChoices.roll1 = 'CUSTOM_DND5E.form.counters.triggers.trigger.choices.roll1'
-    // triggerChoices.roll20 = 'CUSTOM_DND5E.form.counters.triggers.trigger.choices.roll20'
+    triggerChoices.rollAttack = "CUSTOM_DND5E.form.counters.triggers.trigger.choices.rollAttack";
 
     const actionChoices = {};
 
@@ -104,6 +110,11 @@ export class CountersEditForm extends CustomDnd5eForm {
       actionChoices.check = "CUSTOM_DND5E.check";
       actionChoices.uncheck = "CUSTOM_DND5E.uncheck";
     }
+    if ( this.actorType === "item" || this.entity?.documentName === "Item" ) {
+      actionChoices.destroy = "CUSTOM_DND5E.destroyItem";
+      actionChoices.reduceQuantity = "CUSTOM_DND5E.reduceQuantity";
+    }
+    actionChoices.macro = "CUSTOM_DND5E.macro";
 
     return {
       role: {
@@ -119,6 +130,14 @@ export class CountersEditForm extends CustomDnd5eForm {
       },
       action: {
         choices: actionChoices
+      },
+      triggerOperator: {
+        choices: {
+          eq: "CUSTOM_DND5E.form.counters.triggers.triggerOperator.choices.eq",
+          lt: "CUSTOM_DND5E.form.counters.triggers.triggerOperator.choices.lt",
+          gt: "CUSTOM_DND5E.form.counters.triggers.triggerOperator.choices.gt",
+          neq: "CUSTOM_DND5E.form.counters.triggers.triggerOperator.choices.neq"
+        }
       }
     };
   }
@@ -139,9 +158,25 @@ export class CountersEditForm extends CustomDnd5eForm {
       editRole: this.setting[this.key]?.editRole || 1,
       max: this.setting[this.key]?.max,
       type: this.setting[this.key]?.type || this.type,
-      triggers: this.setting[this.key]?.triggers || [],
+      triggers: await this.#resolveTriggersContext(this.setting[this.key]?.triggers || []),
       selects: this.#getSelects(type)
     };
+  }
+
+  /* -------------------------------------------- */
+
+  /**
+   * Resolve macro names for triggers that have a macroUuid.
+   *
+   * @param {object[]} triggers The triggers array.
+   * @returns {Promise<object[]>} The triggers with macroName resolved.
+   */
+  async #resolveTriggersContext(triggers) {
+    return Promise.all(triggers.map(async (trigger) => {
+      if ( !trigger.macroUuid ) return trigger;
+      const macro = await fromUuid(trigger.macroUuid);
+      return { ...trigger, macroName: macro?.name ?? "" };
+    }));
   }
 
   /* -------------------------------------------- */
@@ -156,21 +191,41 @@ export class CountersEditForm extends CustomDnd5eForm {
     super._onRender(context, options);
 
     this.items.forEach(item => {
-      const el = {};
-      el.trigger = item.querySelector("#custom-dnd5e-trigger");
-      el.triggerValueGroup = item.querySelector("#custom-dnd5e-trigger-value").closest(".form-group");
-      el.trigger.addEventListener("change", () => { this.#onChangeTrigger(el); });
-
-      el.action = item.querySelector("#custom-dnd5e-action");
-      el.actionIncrease = el.action.querySelector("#custom-dnd5e-increase");
-      el.actionDecrease = el.action.querySelector("#custom-dnd5e-decrease");
-      el.actionSet = el.action.querySelector("#custom-dnd5e-set-to");
-      el.actionValueGroup = item.querySelector("#custom-dnd5e-action-value").closest(".form-group");
-      el.action.addEventListener("change", () => { this.#onChangeAction(el); });
-
-      this.#onChangeTrigger(el);
-      this.#onChangeAction(el);
+      this.#setupTriggerItem(item);
     });
+  }
+
+  /* -------------------------------------------- */
+
+  /**
+   * Set up event listeners and element references for a trigger item.
+   *
+   * @param {HTMLElement} item The trigger list item element.
+   */
+  #setupTriggerItem(item) {
+    const el = {};
+    el.trigger = item.querySelector("#custom-dnd5e-trigger");
+    el.triggerValueGroup = item.querySelector("#custom-dnd5e-trigger-value").closest(".form-group");
+    el.trigger.addEventListener("change", () => { this.#onChangeTrigger(el); });
+
+    el.action = item.querySelector("#custom-dnd5e-action");
+    el.actionIncrease = el.action.querySelector("#custom-dnd5e-increase");
+    el.actionDecrease = el.action.querySelector("#custom-dnd5e-decrease");
+    el.actionSet = el.action.querySelector("#custom-dnd5e-set-to");
+    el.actionCheck = el.action.querySelector('option[value="check"]');
+    el.actionUncheck = el.action.querySelector('option[value="uncheck"]');
+    el.actionMacro = el.action.querySelector('option[value="macro"]');
+    el.actionValueGroup = item.querySelector("#custom-dnd5e-action-value").closest(".form-group");
+    el.macroGroup = item.querySelector(".custom-dnd5e-macro-drop")?.closest(".form-group");
+    el.action.addEventListener("change", () => { this.#onChangeAction(el); });
+
+    const macroDrop = item.querySelector(".custom-dnd5e-macro-drop");
+    if ( macroDrop ) {
+      macroDrop.addEventListener("drop", (event) => this.#onDropMacro(event, item));
+    }
+
+    this.#onChangeTrigger(el);
+    this.#onChangeAction(el);
   }
 
   /* -------------------------------------------- */
@@ -179,13 +234,12 @@ export class CountersEditForm extends CustomDnd5eForm {
    * Create a new item.
    */
   static async createItem() {
-    const el = {};
     const list = this.element.querySelector(listClassSelector);
     const scrollable = list.closest(".scrollable");
 
     const key = foundry.utils.randomID();
     const type = this.setting[this.key]?.type || this.type;
-    const trigger = (type === "checkbox") ? "zeroHp" : "counterValue";
+    const trigger = (type === "checkbox") ? "zeroHp" : (type === "successFailure") ? "successValue" : "counterValue";
     const action = (type === "checkbox") ? "check" : "dead";
 
     const template = await this._getHtml({
@@ -198,21 +252,14 @@ export class CountersEditForm extends CustomDnd5eForm {
 
     const item = list.querySelector(`[data-key="${key}"]`);
     const dragElement = item.querySelector(".custom-dnd5e-drag");
-    el.trigger = item.querySelector("#custom-dnd5e-trigger");
-    el.triggerValueGroup = item.querySelector("#custom-dnd5e-trigger-value").closest(".form-group");
-    el.action = item.querySelector("#custom-dnd5e-action");
-    el.actionValueGroup = item.querySelector("#custom-dnd5e-action-value").closest(".form-group");
-    el.actionIncrease = el.action.querySelector("#custom-dnd5e-increase");
-    el.actionDecrease = el.action.querySelector("#custom-dnd5e-decrease");
-    el.actionSet = el.action.querySelector("#custom-dnd5e-set-to");
 
     item.addEventListener("dragend", this._onDragEnd.bind(this));
     item.addEventListener("dragleave", this._onDragLeave.bind(this));
     item.addEventListener("dragover", this._onDragOver.bind(this));
     item.addEventListener("drop", this._onDrop.bind(this));
     dragElement.addEventListener("dragstart", this._onDragStart.bind(this));
-    el.trigger.addEventListener("change", () => this.#onChangeTrigger(el));
-    el.action.addEventListener("change", () => this.#onChangeAction(el));
+
+    this.#setupTriggerItem(item);
 
     if ( scrollable ) {
       scrollable.scrollTop = scrollable.scrollHeight;
@@ -240,21 +287,57 @@ export class CountersEditForm extends CustomDnd5eForm {
    * @param {object} el The element.
    */
   #onChangeTrigger(el) {
-    const allowed = ["counterValue"];
+    const showTriggerValue = ["counterValue", "successValue", "failureValue", "rollAttack"];
+    const macroTriggers = ["counterValue", "successValue", "failureValue", "checked", "unchecked"];
+    const valueTriggers = ["counterValue", "successValue", "failureValue"];
 
-    if ( el.trigger.value === "counterValue" ) {
+    if ( showTriggerValue.includes(el.trigger.value) ) {
+      el.triggerValueGroup?.classList.remove("hidden");
+    } else {
+      el.triggerValueGroup?.classList.add("hidden");
+    }
+
+    if ( valueTriggers.includes(el.trigger.value) ) {
       el.actionIncrease?.classList.add("hidden");
       el.actionDecrease?.classList.add("hidden");
       el.actionSet?.classList.add("hidden");
-      el.triggerValueGroup?.classList.remove("hidden");
-      const type = this.setting[this.key]?.type || this.type;
-      el.action.value = (type === "checkbox") ? "check" : "dead";
-    }
-    if ( !allowed.includes(el.trigger.value) ) {
+      const hiddenActions = ["increase", "decrease", "set"];
+      if ( hiddenActions.includes(el.action.value) ) {
+        const type = this.setting[this.key]?.type || this.type;
+        el.action.value = (type === "checkbox") ? "check" : "dead";
+      }
+    } else {
       el.actionIncrease?.classList.remove("hidden");
       el.actionDecrease?.classList.remove("hidden");
       el.actionSet?.classList.remove("hidden");
-      el.triggerValueGroup?.classList.add("hidden");
+    }
+
+    if ( macroTriggers.includes(el.trigger.value) ) {
+      el.actionMacro?.classList.remove("hidden");
+    } else {
+      el.actionMacro?.classList.add("hidden");
+      if ( el.action.value === "macro" ) {
+        const type = this.setting[this.key]?.type || this.type;
+        el.action.value = (type === "checkbox") ? "check" : "dead";
+        this.#onChangeAction(el);
+      }
+    }
+
+    if ( el.trigger.value === "checked" ) {
+      el.actionCheck?.classList.add("hidden");
+      el.actionUncheck?.classList.remove("hidden");
+      if ( el.action.value === "check" ) {
+        el.action.value = "uncheck";
+      }
+    } else if ( el.trigger.value === "unchecked" ) {
+      el.actionUncheck?.classList.add("hidden");
+      el.actionCheck?.classList.remove("hidden");
+      if ( el.action.value === "uncheck" ) {
+        el.action.value = "check";
+      }
+    } else {
+      el.actionCheck?.classList.remove("hidden");
+      el.actionUncheck?.classList.remove("hidden");
     }
   }
 
@@ -265,11 +348,66 @@ export class CountersEditForm extends CustomDnd5eForm {
    * @param {object} el The element.
    */
   #onChangeAction(el) {
-    const allowed = ["increase", "decrease", "set"];
-    el.actionValueGroup?.classList.remove("hidden");
-    if ( !allowed.includes(el.action.value) ) {
+    const showActionValue = ["increase", "decrease", "set"];
+    if ( showActionValue.includes(el.action.value) ) {
+      el.actionValueGroup?.classList.remove("hidden");
+    } else {
       el.actionValueGroup?.classList.add("hidden");
     }
+
+    if ( el.action.value === "macro" ) {
+      el.macroGroup?.classList.remove("hidden");
+    } else {
+      el.macroGroup?.classList.add("hidden");
+    }
+  }
+
+  /* -------------------------------------------- */
+
+  /**
+   * Handle dropping a Macro onto a trigger item.
+   *
+   * @param {DragEvent} event The drop event.
+   * @param {HTMLElement} item The trigger list item element.
+   */
+  async #onDropMacro(event, item) {
+    event.preventDefault();
+    event.stopPropagation();
+    const data = foundry.applications.ux.TextEditor.implementation.getDragEventData(event);
+    if ( data?.type !== "Macro" ) return;
+    const macro = await Macro.implementation.fromDropData(data);
+    if ( !macro ) return;
+
+    const input = item.querySelector('input[name="macroUuid"]');
+    if ( input ) input.value = macro.uuid;
+
+    const macroField = item.querySelector(".custom-dnd5e-macro-field");
+    const dropArea = item.querySelector(".custom-dnd5e-macro-drop .drop-area");
+    const nameEl = item.querySelector(".custom-dnd5e-macro-name");
+    if ( nameEl ) nameEl.textContent = macro.name;
+    if ( macroField ) macroField.classList.remove("hidden");
+    if ( dropArea ) dropArea.classList.add("hidden");
+  }
+
+  /* -------------------------------------------- */
+
+  /**
+   * Clear the macro selection for a trigger item.
+   *
+   * @param {Event} event The event that triggered the action.
+   * @param {HTMLElement} target The target element.
+   */
+  static clearMacro(event, target) {
+    const item = target.closest(".custom-dnd5e-item");
+    if ( !item ) return;
+
+    const input = item.querySelector('input[name="macroUuid"]');
+    if ( input ) input.value = "";
+
+    const macroField = item.querySelector(".custom-dnd5e-macro-field");
+    const dropArea = item.querySelector(".custom-dnd5e-macro-drop .drop-area");
+    if ( macroField ) macroField.classList.add("hidden");
+    if ( dropArea ) dropArea.classList.remove("hidden");
   }
 
   /* -------------------------------------------- */
@@ -293,7 +431,7 @@ export class CountersEditForm extends CustomDnd5eForm {
     }
 
     const ints = ["editRole", "viewRole"];
-    const triggerProperties = ["action", "actionValue", "delete", "trigger", "triggerValue"];
+    const triggerProperties = ["action", "actionValue", "delete", "macroUuid", "trigger", "triggerOperator", "triggerValue"];
 
     // Ensure trigger properties are arrays if at least one exists
     if ( formData.object.action ) {
@@ -348,7 +486,9 @@ export class CountersEditForm extends CustomDnd5eForm {
       const triggers = formData.object.action.map((_, index) => ({
         action: formData.object.action[index],
         actionValue: formData.object.actionValue[index],
+        macroUuid: formData.object.macroUuid[index],
         trigger: formData.object.trigger[index],
+        triggerOperator: formData.object.triggerOperator[index],
         triggerValue: formData.object.triggerValue[index]
       })).filter((_, index) => formData.object.delete[index] !== "true");
 

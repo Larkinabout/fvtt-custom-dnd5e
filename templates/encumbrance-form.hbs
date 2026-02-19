@@ -79,21 +79,56 @@
         <fieldset>
             <legend>{{localize "CUSTOM_DND5E.speedReduction"}}</legend>
             <div class="form-group">
+                <label>{{localize "CUSTOM_DND5E.speedReductionMode"}}</label>
+                <div class="form-fields">
+                    <select id="custom-dnd5e-speed-reduction-mode" name="speedReductionMode">
+                        <option value="flat" {{#if (customDnd5eEq speedReductionMode "flat")}}selected{{/if}}>{{localize "CUSTOM_DND5E.flat"}}</option>
+                        <option value="multiplier" {{#if (customDnd5eEq speedReductionMode "multiplier")}}selected{{/if}}>{{localize "CUSTOM_DND5E.multiplier"}}</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group speed-reduction-flat{{#unless (customDnd5eEq speedReductionMode "flat")}} hidden{{/unless}}">
                 <label>{{localize "EFFECT.DND5E.StatusEncumbered"}}</label>
                 <div class="form-fields">
                     <input id="custom-dnd5e-speed-reduction-encumbered" name="speedReduction.encumbered.{{#if metric}}m{{else}}ft{{/if}}" type="number" value="{{#if metric}}{{speedReduction.encumbered.m}}{{else}}{{speedReduction.encumbered.ft}}{{/if}}">
                 </div>
             </div>
-            <div class="form-group">
+            <div class="form-group speed-reduction-flat{{#unless (customDnd5eEq speedReductionMode "flat")}} hidden{{/unless}}">
                 <label>{{localize "EFFECT.DND5E.StatusHeavilyEncumbered"}}</label>
                 <div class="form-fields">
-                    <input id="custom-dnd5e-speed-reduction-heavily-encumbered" name="speedReduction.heavilyEncumbered.{{#if metric}}m{{else}}ft{{/if}}" type="number" value="{{#if metric}}{{speedReduction.heavilyEncumbered.m}}{{else}}{{speedReduction.heavilyEncumbered.ft}}{{/if}}"> 
+                    <input id="custom-dnd5e-speed-reduction-heavily-encumbered" name="speedReduction.heavilyEncumbered.{{#if metric}}m{{else}}ft{{/if}}" type="number" value="{{#if metric}}{{speedReduction.heavilyEncumbered.m}}{{else}}{{speedReduction.heavilyEncumbered.ft}}{{/if}}">
                 </div>
             </div>
-            <div class="form-group">
+            <div class="form-group speed-reduction-flat{{#unless (customDnd5eEq speedReductionMode "flat")}} hidden{{/unless}}">
                 <label>{{localize "EFFECT.DND5E.StatusExceedingCarryingCapacity"}}</label>
                 <div class="form-fields">
-                    <input id="custom-dnd5e-speed-reduction-exceeding-carrying-capacity" name="speedReduction.exceedingCarryingCapacity.{{#if metric}}m{{else}}ft{{/if}}" type="number" value="{{#if metric}}{{speedReduction.exceedingCarryingCapacity.m}}{{else}}{{speedReduction.exceedingCarryingCapacity.ft}}{{/if}}"> 
+                    <input id="custom-dnd5e-speed-reduction-exceeding-carrying-capacity" name="speedReduction.exceedingCarryingCapacity.{{#if metric}}m{{else}}ft{{/if}}" type="number" value="{{#if metric}}{{speedReduction.exceedingCarryingCapacity.m}}{{else}}{{speedReduction.exceedingCarryingCapacity.ft}}{{/if}}">
+                </div>
+            </div>
+            <p class="custom-dnd5e-advice notes speed-reduction-multiplier{{#unless (customDnd5eEq speedReductionMode "multiplier")}} hidden{{/unless}}">{{localize "CUSTOM_DND5E.speedReductionMultiplier.note"}}</p>
+            <div class="form-group speed-reduction-multiplier{{#unless (customDnd5eEq speedReductionMode "multiplier")}} hidden{{/unless}}">
+                <label>{{localize "EFFECT.DND5E.StatusEncumbered"}}</label>
+                <div class="form-fields">
+                    <input id="custom-dnd5e-speed-reduction-multiplier-encumbered" name="speedReductionMultiplierEncumbered" type="number" step="0.01" min="0" max="1" value="{{speedReductionMultiplierEncumbered}}">
+                </div>
+            </div>
+            <div class="form-group speed-reduction-multiplier{{#unless (customDnd5eEq speedReductionMode "multiplier")}} hidden{{/unless}}">
+                <label>{{localize "EFFECT.DND5E.StatusHeavilyEncumbered"}}</label>
+                <div class="form-fields">
+                    <input id="custom-dnd5e-speed-reduction-multiplier-heavily-encumbered" name="speedReductionMultiplierHeavilyEncumbered" type="number" step="0.01" min="0" max="1" value="{{speedReductionMultiplierHeavilyEncumbered}}">
+                </div>
+            </div>
+            <div class="form-group speed-reduction-multiplier{{#unless (customDnd5eEq speedReductionMode "multiplier")}} hidden{{/unless}}">
+                <label>{{localize "EFFECT.DND5E.StatusExceedingCarryingCapacity"}}</label>
+                <div class="form-fields">
+                    <input id="custom-dnd5e-speed-reduction-multiplier-exceeding-carrying-capacity" name="speedReductionMultiplierExceedingCarryingCapacity" type="number" step="0.01" min="0" max="1" value="{{speedReductionMultiplierExceedingCarryingCapacity}}">
+                </div>
+            </div>
+            <p class="custom-dnd5e-advice notes speed-reduction-multiplier{{#unless (customDnd5eEq speedReductionMode "multiplier")}} hidden{{/unless}}">{{localize "CUSTOM_DND5E.speedReductionMultiplier.rounding.note"}}</p>
+            <div class="form-group speed-reduction-multiplier{{#unless (customDnd5eEq speedReductionMode "multiplier")}} hidden{{/unless}}">
+                <label>{{localize "CUSTOM_DND5E.rounding"}}</label>
+                <div class="form-fields">
+                    <input id="custom-dnd5e-speed-reduction-multiplier-rounding" name="speedReductionMultiplierRounding" type="number" step="0.1" min="0.1" value="{{speedReductionMultiplierRounding}}">
                 </div>
             </div>
         </fieldset>

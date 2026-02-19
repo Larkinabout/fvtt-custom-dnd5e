@@ -130,11 +130,44 @@
                 </div>
                 <p class="hint">{{localize "CUSTOM_DND5E.form.gameplay.exhaustion.applyExhaustionOnCombatEnd.note"}}</p>
             </div>
+            <div class="form-group">
+                <label>{{localize "CUSTOM_DND5E.form.gameplay.exhaustion.exhaustionAnimation.label"}}</label>
+                <div class="form-fields">
+                    <dnd5e-checkbox id="custom-dnd5e-exhaustion-animation" name="exhaustionAnimation"{{#if exhaustionAnimation}} checked{{/if}}></dnd5e-checkbox>
+                </div>
+                <p class="hint">{{localize "CUSTOM_DND5E.form.gameplay.exhaustion.exhaustionAnimation.note"}}</p>
+            </div>
+            <fieldset>
+                <legend>{{localize "CUSTOM_DND5E.savingThrow"}}</legend>
+                <div class="form-group">
+                    <label>{{localize "CUSTOM_DND5E.form.gameplay.exhaustion.exhaustionRequestSavingThrow.label"}}</label>
+                    <div class="form-fields">
+                        <dnd5e-checkbox id="custom-dnd5e-exhaustion-request-saving-throw" name="exhaustionRequestSavingThrow"{{#if exhaustionRequestSavingThrow}} checked{{/if}}></dnd5e-checkbox>
+                    </div>
+                    <p class="hint">{{localize "CUSTOM_DND5E.form.gameplay.exhaustion.exhaustionRequestSavingThrow.note"}}</p>
+                </div>
+                <div class="exhaustion-save-options{{#unless exhaustionRequestSavingThrow}} hidden{{/unless}}">
+                    <div class="form-group">
+                        <label>{{localize "CUSTOM_DND5E.form.gameplay.exhaustion.exhaustionSavingThrowDc.label"}}</label>
+                        <div class="form-fields">
+                            <input id="custom-dnd5e-exhaustion-saving-throw-dc" name="exhaustionSavingThrowDc" type="number" min="1" value="{{exhaustionSavingThrowDc}}">
+                        </div>
+                        <p class="hint">{{localize "CUSTOM_DND5E.form.gameplay.exhaustion.exhaustionSavingThrowDc.note"}}</p>
+                    </div>
+                    <div class="form-group">
+                        <label>{{localize "CUSTOM_DND5E.form.gameplay.exhaustion.exhaustionSavingThrowDcScaling.label"}}</label>
+                        <div class="form-fields">
+                            <dnd5e-checkbox id="custom-dnd5e-exhaustion-saving-throw-dc-scaling" name="exhaustionSavingThrowDcScaling"{{#if exhaustionSavingThrowDcScaling}} checked{{/if}}></dnd5e-checkbox>
+                        </div>
+                        <p class="hint">{{localize "CUSTOM_DND5E.form.gameplay.exhaustion.exhaustionSavingThrowDcScaling.note"}}</p>
+                    </div>
+                </div>
+            </fieldset>
         </fieldset>
         <fieldset>
             <legend>
-                <span>{{localize "CUSTOM_DND5E.hitPoints"}}</span>
-                <button type="button" class="unbutton control-button" data-action="help" data-uuid="Compendium.custom-dnd5e.custom-dnd5e-journals.JournalEntry.ngr8w6WBycK59brj.JournalEntryPage.MVXx2yD2pAfzQBU5" data-tooltip="{{localize "CUSTOM_DND5E.openGuide"}}" aria-label="{{localize "CUSTOM_DND5E.openGuide"}}">
+                <span>{{localize "CUSTOM_DND5E.massiveDamage"}}</span>
+                <button type="button" class="unbutton control-button" data-action="help" data-uuid="Compendium.custom-dnd5e.custom-dnd5e-journals.JournalEntry.ngr8w6WBycK59brj.JournalEntryPage.mD4kTbR2xWpLnQ7v" data-tooltip="{{localize "CUSTOM_DND5E.openGuide"}}" aria-label="{{localize "CUSTOM_DND5E.openGuide"}}">
                     <i class="fas fa-circle-info" inert></i>
                 </button>
             </legend>
@@ -145,6 +178,35 @@
                 </div>
                 <p class="hint">{{localize "CUSTOM_DND5E.form.gameplay.hitPoints.applyMassiveDamage.note"}}</p>
             </div>
+            <div class="form-group">
+                <label>{{localize "CUSTOM_DND5E.form.gameplay.hitPoints.massiveDamageTable.label"}}</label>
+                <div class="form-fields">
+                    <div class="massive-damage-table-field flex1{{#unless massiveDamageTableName}} hidden{{/unless}}">
+                        <span class="massive-damage-table-name">{{massiveDamageTableName}}</span>
+                        <button type="button" data-action="clearMassiveDamageTable" class="unbutton control-button" data-tooltip="{{localize 'CUSTOM_DND5E.form.gameplay.hitPoints.massiveDamageTable.clear'}}" aria-label="{{localize 'CUSTOM_DND5E.form.gameplay.hitPoints.massiveDamageTable.clear'}}">
+                            <i class="fa-solid fa-trash" inert></i>
+                        </button>
+                    </div>
+                    <div class="drop-area flex1{{#if massiveDamageTableName}} hidden{{/if}}">{{localize "CUSTOM_DND5E.form.gameplay.hitPoints.massiveDamageTable.dropHint"}}</div>
+                    <input type="hidden" name="massiveDamageTableUuid" value="{{massiveDamageTableUuid}}">
+                </div>
+                <p class="hint">{{localize "CUSTOM_DND5E.form.gameplay.hitPoints.massiveDamageTable.note"}}</p>
+            </div>
+            <div class="form-group">
+                <label>{{localize "CUSTOM_DND5E.form.gameplay.hitPoints.massiveDamageAnimation.label"}}</label>
+                <div class="form-fields">
+                    <dnd5e-checkbox id="custom-dnd5e-massive-damage-animation" name="massiveDamageAnimation"{{#if massiveDamageAnimation}} checked{{/if}}></dnd5e-checkbox>
+                </div>
+                <p class="hint">{{localize "CUSTOM_DND5E.form.gameplay.hitPoints.massiveDamageAnimation.note"}}</p>
+            </div>
+        </fieldset>
+        <fieldset>
+            <legend>
+                <span>{{localize "CUSTOM_DND5E.hitPoints"}}</span>
+                <button type="button" class="unbutton control-button" data-action="help" data-uuid="Compendium.custom-dnd5e.custom-dnd5e-journals.JournalEntry.ngr8w6WBycK59brj.JournalEntryPage.MVXx2yD2pAfzQBU5" data-tooltip="{{localize "CUSTOM_DND5E.openGuide"}}" aria-label="{{localize "CUSTOM_DND5E.openGuide"}}">
+                    <i class="fas fa-circle-info" inert></i>
+                </button>
+            </legend>
             <h3>{{localize "CUSTOM_DND5E.rollingHitPoints"}}</h3>
             <div class="form-group">
                 <label>{{localize "CUSTOM_DND5E.form.gameplay.rollingHitPoints.minimumValue.label"}}</label>
@@ -167,20 +229,20 @@
                 </div>
                 <p class="hint">{{localize "CUSTOM_DND5E.form.gameplay.rollingHitPoints.showTakeAverage.note"}}</p>
             </div>
-            <div class="form-group">
-                <label>{{localize "CUSTOM_DND5E.form.gameplay.rollingHitPoints.rollNpcHp.label"}}</label>
-                <div class="form-fields">
-                    <dnd5e-checkbox id="custom-dnd5e-roll-npc-hp" name="rollNpcHp"{{#if rollNpcHp}} checked{{/if}}></dnd5e-checkbox>
-                </div>
-                <p class="hint">{{localize "CUSTOM_DND5E.form.gameplay.rollingHitPoints.rollNpcHp.note"}}</p>
-            </div>
             <h3>{{localize "CUSTOM_DND5E.negativeHitPoints"}}</h3>
             <div class="form-group">
-                <label>{{localize "CUSTOM_DND5E.form.gameplay.hitPoints.applyNegativeHp.label"}}</label>
+                <label style="flex: 3;">{{localize "CUSTOM_DND5E.form.gameplay.hitPoints.applyNegativeHp.label"}}</label>
                 <div class="form-fields">
                     <dnd5e-checkbox id="custom-dnd5e-apply-negative-hp" name="applyNegativeHp"{{#if applyNegativeHp}} checked{{/if}}></dnd5e-checkbox>
                 </div>
                 <p class="hint">{{localize "CUSTOM_DND5E.form.gameplay.hitPoints.applyNegativeHp.note"}}</p>
+            </div>
+            <div class="form-group">
+                <label>{{localize "CUSTOM_DND5E.form.gameplay.hitPoints.applyNegativeHpNpc.label"}}</label>
+                <div class="form-fields">
+                    <dnd5e-checkbox id="custom-dnd5e-apply-negative-hp-npc" name="applyNegativeHpNpc"{{#if applyNegativeHpNpc}} checked{{/if}}></dnd5e-checkbox>
+                </div>
+                <p class="hint">{{localize "CUSTOM_DND5E.form.gameplay.hitPoints.applyNegativeHpNpc.note"}}</p>
             </div>
             <div class="form-group">
                 <label>{{localize "CUSTOM_DND5E.form.gameplay.hitPoints.negativeHpHealFromZero.label"}}</label>
@@ -200,7 +262,9 @@
             <div class="form-group">
                 <label>{{localize "CUSTOM_DND5E.form.gameplay.initiative.rerollInitiativeEachRound.label"}}</label>
                 <div class="form-fields">
-                    <dnd5e-checkbox id="custom-dnd5e-reroll-initiative-each-round" name="rerollInitiativeEachRound"{{#if rerollInitiativeEachRound}} checked{{/if}}></dnd5e-checkbox>
+                    <select id="custom-dnd5e-reroll-initiative-each-round" name="rerollInitiativeEachRound">
+                        {{selectOptions selects.rerollInitiativeEachRound.choices selected=rerollInitiativeEachRound localize=true}}
+                    </select>
                 </div>
                 <p class="hint">{{localize "CUSTOM_DND5E.form.gameplay.initiative.rerollInitiativeEachRound.note"}}</p>
             </div>
@@ -245,6 +309,13 @@
                         <span>{{localize "CUSTOM_DND5E.toolCheck"}}</span>
                     </label>
                     </div>
+            </div>
+            <div class="form-group">
+                <label>{{localize "CUSTOM_DND5E.form.gameplay.inspiration.inspirationAnimation.label"}}</label>
+                <div class="form-fields">
+                    <dnd5e-checkbox id="custom-dnd5e-inspiration-animation" name="inspirationAnimation"{{#if inspirationAnimation}} checked{{/if}}></dnd5e-checkbox>
+                </div>
+                <p class="hint">{{localize "CUSTOM_DND5E.form.gameplay.inspiration.inspirationAnimation.note"}}</p>
             </div>
         </fieldset>
         <fieldset>

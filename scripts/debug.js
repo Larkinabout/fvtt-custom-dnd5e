@@ -1,5 +1,5 @@
 import { MODULE, CONSTANTS } from "./constants.js";
-import { c5eLoadTemplates, Logger, getSetting, setSetting, registerMenu } from "./utils.js";
+import { c5eLoadTemplates, Logger, getSetting, setSetting, registerMenu, showImportDialog } from "./utils.js";
 import { DebugForm } from "./forms/debug-form.js";
 
 const constants = CONSTANTS.DEBUG;
@@ -65,16 +65,23 @@ export async function exportData() {
       armorProficiencies: CONFIG.DND5E.armorProficiencies,
       armorProficienciesMap: CONFIG.DND5E.armorProficienciesMap,
       armorTypes: CONFIG.DND5E.armorTypes,
+      bloodied: CONFIG.DND5E.bloodied,
+      conditionTypes: CONFIG.DND5E.conditionTypes,
       consumableTypes: CONFIG.DND5E.consumableTypes,
       creatureTypes: CONFIG.DND5E.creatureTypes,
       currencies: CONFIG.DND5E.currencies,
       damageTypes: CONFIG.DND5E.damageTypes,
       encumbrance: CONFIG.DND5E.encumbrance,
+      facilities: CONFIG.DND5E.facilities,
+      featureTypes: CONFIG.DND5E.featureTypes,
       itemActionTypes: CONFIG.DND5E.itemActionTypes,
       itemProperties: CONFIG.DND5E.itemProperties,
       itemRarity: CONFIG.DND5E.itemRarity,
       languages: CONFIG.DND5E.languages,
+      lootTypes: CONFIG.DND5E.lootTypes,
+      maxAbilityScore: CONFIG.DND5E.maxAbilityScore,
       maxLevel: CONFIG.DND5E.maxLevel,
+      miscEquipmentTypes: CONFIG.DND5E.miscEquipmentTypes,
       senses: CONFIG.DND5E.senses,
       skills: CONFIG.DND5E.skills,
       spellSchools: CONFIG.DND5E.spellSchools,
@@ -83,8 +90,10 @@ export async function exportData() {
       toolTypes: CONFIG.DND5E.toolTypes,
       validProperties: convertSetsToArrays(CONFIG.DND5E.validProperties),
       weaponIds: CONFIG.DND5E.weaponIds,
+      weaponMasteries: CONFIG.DND5E.weaponMasteries,
       weaponProficiencies: CONFIG.DND5E.weaponProficiencies,
       weaponProficienciesMap: CONFIG.DND5E.weaponProficienciesMap,
+      weaponProperties: CONFIG.DND5E.weaponProperties,
       weaponTypes: CONFIG.DND5E.weaponTypes
     }
   };
@@ -100,34 +109,7 @@ export async function exportData() {
  * @returns {Promise<boolean>} Whether the import was successful
  */
 export async function importData() {
-  const content = await foundry.applications.handlebars.renderTemplate(constants.TEMPLATE.IMPORT_DIALOG, {});
-  const dialog = new Promise((resolve, reject) => {
-    new Dialog({
-      title: game.i18n.localize("CUSTOM_DND5E.importData"),
-      content,
-      buttons: {
-        import: {
-          icon: '<i class="fas fa-file-import"></i>',
-          label: game.i18n.localize("CUSTOM_DND5E.importData"),
-          callback: async html => {
-            const form = html.find("form")[0];
-            if ( !form.data.files.length ) return Logger.error(game.i18n.localize("CUSTOM_DND5E.dialog.importData.noFile"), true);
-            const resolved = await processImport(form.data.files[0]);
-            resolve(resolved);
-          }
-        },
-        no: {
-          icon: '<i class="fas fa-times"></i>',
-          label: game.i18n.localize("CUSTOM_DND5E.cancel"),
-          callback: html => resolve(false)
-        }
-      },
-      default: "import"
-    }, {
-      width: 400
-    }).render(true);
-  });
-  return await dialog;
+  return showImportDialog(constants.TEMPLATE.IMPORT_DIALOG, {}, processImport);
 }
 
 /* -------------------------------------------- */

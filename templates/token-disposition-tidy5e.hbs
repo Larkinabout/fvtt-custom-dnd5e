@@ -1,0 +1,25 @@
+<div class="list-entry custom-dnd5e-token-disposition">
+    <div class="list-label flexrow">
+        <h4 class="font-weight-label">
+            <i class="fa-solid fa-masks-theater"></i> {{localize "CUSTOM_DND5E.form.actorSheet.tokenDisposition.label"}}
+        </h4>
+    </div>
+    <div class="list-content">
+        <div class="list-values">
+            <div class="custom-dnd5e-disposition-buttons">
+                <button type="button" data-disposition="-2" data-tooltip="{{localize 'TOKEN.DISPOSITION.SECRET'}}" data-tooltip-direction="UP" class="custom-dnd5e-disposition-button{{#if (eq disposition -2)}} active{{/if}}">
+                    <i class="fa-solid fa-face-disguise"></i>
+                </button>
+                <button type="button" data-disposition="-1" data-tooltip="{{localize 'TOKEN.DISPOSITION.HOSTILE'}}" data-tooltip-direction="UP" class="custom-dnd5e-disposition-button{{#if (eq disposition -1)}} active{{/if}}">
+                    <i class="fa-solid fa-face-angry"></i>
+                </button>
+                <button type="button" data-disposition="0" data-tooltip="{{localize 'TOKEN.DISPOSITION.NEUTRAL'}}" data-tooltip-direction="UP" class="custom-dnd5e-disposition-button{{#if (eq disposition 0)}} active{{/if}}">
+                    <i class="fa-solid fa-face-expressionless"></i>
+                </button>
+                <button type="button" data-disposition="1" data-tooltip="{{localize 'TOKEN.DISPOSITION.FRIENDLY'}}" data-tooltip-direction="UP" class="custom-dnd5e-disposition-button{{#if (eq disposition 1)}} active{{/if}}">
+                    <i class="fa-solid fa-face-smile"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

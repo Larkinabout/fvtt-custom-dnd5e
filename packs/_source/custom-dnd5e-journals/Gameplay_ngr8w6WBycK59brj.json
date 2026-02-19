@@ -120,6 +120,45 @@
       "_key": "!journal.pages!ngr8w6WBycK59brj.qgLFKLoCIKJSEh5f"
     },
     {
+      "sort": 450000,
+      "name": "Massive Damage",
+      "type": "text",
+      "_id": "mD4kTbR2xWpLnQ7v",
+      "system": {},
+      "title": {
+        "show": true,
+        "level": 1
+      },
+      "image": {},
+      "text": {
+        "format": 1,
+        "content": "<h2>Apply Massive Damage</h2><p>When enabled, this setting automatically prompts a DC 15 Constitution Saving Throw when a character takes damage equal to or greater than half their maximum Hit Points.</p><p>This represents the \"Massive Damage\" optional rule from the Dungeon Master's Guide (2014), page 273.</p><h2>Massive Damage Table</h2><p>Optionally assign a Rollable Table to roll on when a character fails the massive damage saving throw. To assign a table, drag and drop a Rollable Table from the sidebar or a compendium onto the Massive Damage Table field.</p><p>To remove the table, click the <i class=\"fa-solid fa-trash\"></i> button.</p><h2>Animation</h2><p>When enabled, a screen shake and red flash effect will play for the affected player when the massive damage saving throw is failed. This effect is skipped when Foundry's Photosensitive Mode is enabled in the core settings.</p>"
+      },
+      "video": {
+        "controls": true,
+        "volume": 0.5
+      },
+      "src": null,
+      "ownership": {
+        "default": -1,
+        "0wJRsV2r9Hv1a7q0": 3
+      },
+      "flags": {},
+      "_stats": {
+        "compendiumSource": null,
+        "duplicateSource": null,
+        "coreVersion": "13.351",
+        "systemId": "dnd5e",
+        "systemVersion": "5.2.5",
+        "createdTime": 1739227597608,
+        "modifiedTime": 1739227994262,
+        "lastModifiedBy": "0wJRsV2r9Hv1a7q0",
+        "exportSource": null
+      },
+      "category": null,
+      "_key": "!journal.pages!ngr8w6WBycK59brj.mD4kTbR2xWpLnQ7v"
+    },
+    {
       "sort": 500000,
       "name": "Hit Points",
       "type": "text",
@@ -132,7 +171,7 @@
       "image": {},
       "text": {
         "format": 1,
-        "content": "<h2>Massive Damage</h2><p>When enabled, this setting automatically prompts a DC 10 Constitution Saving Throw when a character takes damage equal to or greater than half their maximum Hit Points.</p><p>This represents the \"Massive Damage\" optional rule from the Dungeon Master's Guide (2014), page 273.</p><h2>Rolling Hit Points</h2><h3>Minimum Value</h3><p>When rolling for Hit Points, automatically reroll if the die result is below the minimum value.</p><h3>Reroll Once</h3><ul><li><p>If enabled: Reroll only once when the die result is below the minimum value.</p></li><li><p>If disabled: Continue rerolling until the die result meets or exceeds the minimum value.</p></li></ul><h3>Show Take Average</h3><p>Choose to display or hide the \"Take Average\" checkbox on the Hit Points Advancement Step dialog.</p><h3>Roll HP for NPCs</h3><p>When enabled, this setting automatically rolls for Hit Points when an NPC token is dragged onto the map.</p><h2>Negative Hit Points</h2><h3>Apply Negative Hit Points</h3><p>When enabled, a character's Hit Points can be reduced below zero into negative values.</p><h3>Heal from 0 HP</h3><ul><li><p>If enabled: When a character regains Hit Points, they recover from 0 HP regardless of their negative value.</p></li><li><p>If disabled: Characters recover from their actual negative HP value.</p></li></ul>"
+        "content": "<h2>Rolling Hit Points</h2><h3>Minimum Value</h3><p>When rolling for Hit Points, automatically reroll if the die result is below the minimum value.</p><h3>Reroll Once</h3><ul><li><p>If enabled: Reroll only once when the die result is below the minimum value.</p></li><li><p>If disabled: Continue rerolling until the die result meets or exceeds the minimum value.</p></li></ul><h3>Show Take Average</h3><p>Choose to display or hide the \"Take Average\" checkbox on the Hit Points Advancement Step dialog.</p><h2>Negative Hit Points</h2><h3>Apply Negative Hit Points for Player Characters</h3><p>When enabled, a player character's Hit Points can be reduced below zero into negative values.</p><h3>Apply Negative Hit Points for NPCs</h3><p>When enabled, an NPC's Hit Points can be reduced below zero into negative values.</p><h3>Heal from 0 HP</h3><ul><li><p>If enabled: When a creature regains Hit Points, they recover from 0 HP regardless of their negative value.</p></li><li><p>If disabled: Creatures recover from their actual negative HP value.</p></li></ul>"
       },
       "video": {
         "controls": true,
@@ -171,7 +210,7 @@
       "image": {},
       "text": {
         "format": 1,
-        "content": "<h2>Award Inspiration</h2><h3>Target Value</h3><p>Set a specific number on the d20. When a player rolls a qualifying roll and the die result matches the target value, they are automatically awarded Inspiration.</p><h3>Roll Types</h3><p>Choose which types of rolls can trigger the award of Inspiration:</p><ul><li><p>Ability Check</p></li><li><p>Attack Roll</p></li><li><p>Saving Throw</p></li><li><p>Skill Check</p></li></ul><p>Inspiration will only be awarded when the target value is rolled on one of the selected roll types.</p>"
+        "content": "<h2>Award Inspiration</h2><h3>Target Value</h3><p>Set a specific number on the d20. When a player rolls a qualifying roll and the die result matches the target value, they are automatically awarded Inspiration.</p><h3>Roll Types</h3><p>Choose which types of rolls can trigger the award of Inspiration:</p><ul><li><p>Ability Check</p></li><li><p>Attack Roll</p></li><li><p>Saving Throw</p></li><li><p>Skill Check</p></li><li><p>Tool Check</p></li></ul><p>Inspiration will only be awarded when the target value is rolled on one of the selected roll types.</p><h2>Animation</h2><p>When enabled, a light rays animation will play for the affected player when inspiration is awarded. This effect is skipped when Foundry's Photosensitive Mode is enabled in the core settings.</p>"
       },
       "video": {
         "controls": true,
@@ -330,7 +369,7 @@
       "image": {},
       "text": {
         "format": 1,
-        "content": "<h2>Reroll Initiative Each Round</h2><p>When enabled, this setting automatically reroll initiative for every combatant at the start of each round.</p>"
+        "content": "<h2>Reroll Initiative Each Round</h2><p>This setting controls how initiative is handled at the start of each round.</p><h3>Reroll All</h3><p>Reset and reroll initiative for every combatant at the start of each round.</p><h3>Reset Only</h3><p>Reset initiative for every combatant at the start of each round without automatically rerolling.</p><h3>Reset All, Reroll NPCs Only</h3><p>Reset initiative for every combatant at the start of each round, then automatically reroll only for NPCs. PCs must roll their initiative manually.</p>"
       },
       "video": {
         "controls": true,
@@ -368,7 +407,7 @@
       "image": {},
       "text": {
         "format": 1,
-        "content": "<p>When Exhaustion is applied as a result of these settings, a message is posted to chat.</p><h2>Apply on 0 Hp</h2><p>Each time a character is reduced to 0 HP, automatically apply one level of Exhaustion.</p><h2>Apply on Combat End</h2><p>If a character is reduced to 0 HP during a combat, automatically apply one level of Exhaustion when the DM clicks <strong>End Combat</strong>.</p>"
+        "content": "<p>When Exhaustion is applied as a result of these settings, a message is posted to chat.</p><h2>Apply on 0 HP</h2><p>Each time a character is reduced to 0 HP, automatically apply one level of Exhaustion.</p><h2>Apply on Combat End</h2><p>If a character is reduced to 0 HP during a combat, automatically apply one level of Exhaustion when the DM clicks <strong>End Combat</strong>.</p><h2>Animation</h2><p>When enabled, a screen animation will play for the affected player when Exhaustion is suffered. This effect is skipped when Foundry's Photosensitive Mode is enabled in the core settings.</p><h2>Saving Throw</h2><h3>Request Saving Throw</h3><p>When enabled alongside <strong>Apply on 0 HP</strong> or <strong>Apply on Combat End</strong>, a chat card will request a Constitution saving throw instead of immediately applying Exhaustion. Exhaustion is only applied if the save fails.</p><h3>Saving Throw DC</h3><p>The DC for the Constitution saving throw to avoid Exhaustion. Defaults to 15.</p><h3>Scaling DC</h3><p>When enabled, the character's current exhaustion level is added to the base DC, making it progressively harder to resist additional Exhaustion. For example, with a base DC of 15 and 2 levels of Exhaustion, the effective DC becomes 17.</p>"
       },
       "video": {
         "controls": true,
@@ -409,7 +448,7 @@
       "image": {},
       "text": {
         "format": 1,
-        "content": "<article class=\"custom-dnd5e-note\"><header><img src=\"modules/custom-dnd5e/media/icons/note.svg\" /><p>Note</p></header><p>Consumption of ammunition or uses is not currently included with this setting.</p></article><h2>Enable Mob Damage</h2><p>When enabled, the <strong>Mobs Average Results</strong> table from the <em>Dungeon Master's Guide (2024),</em> page 82, will be used to roll mob damage in place of attack rolls when all the following conditions are met:</p><ul><li><p>Between <strong>four</strong> and <strong>ten</strong> identical tokens are selected.</p></li><li><p>Only <strong>one</strong> token is targeted.</p></li><li><p>The activity used is an <strong>Attack</strong>.</p></li></ul><p>Instead of rolling an attack, the number of successful hits is calculated using the table and a single damage roll is automatically posted to the chat. You can apply Advantage or Disadvantage by holding the appropriate key modifier when clicking the attack.</p><h2>Use Average Damage</h2><p>When enabled, mobs will deal average damage, otherwise damage wil be rolled instead.</p>"
+        "content": "<article class=\"custom-dnd5e-note\"><header><i class=\"fa-solid fa-note-sticky\"></i><p>Note</p></header><p>Consumption of ammunition or uses is not currently included with this setting.</p></article><h2>Enable Mob Damage</h2><p>When enabled, the <strong>Mobs Average Results</strong> table from the <em>Dungeon Master's Guide (2024),</em> page 82, will be used to roll mob damage in place of attack rolls when all the following conditions are met:</p><ul><li><p>Between <strong>four</strong> and <strong>ten</strong> identical tokens are selected.</p></li><li><p>Only <strong>one</strong> token is targeted.</p></li><li><p>The activity used is an <strong>Attack</strong>.</p></li></ul><p>Instead of rolling an attack, the number of successful hits is calculated using the table and a single damage roll is automatically posted to the chat. You can apply Advantage or Disadvantage by holding the appropriate key modifier when clicking the attack.</p><h2>Use Average Damage</h2><p>When enabled, mobs will deal average damage, otherwise damage wil be rolled instead.</p>"
       },
       "video": {
         "controls": true,
@@ -447,7 +486,7 @@
       "image": {},
       "text": {
         "format": 1,
-        "content": "<article class=\"custom-dnd5e-note\"><header><img src=\"modules/custom-dnd5e/media/icons/note.svg\" /><p>Note</p></header><p>Consumption of ammunition or uses is not currently included with this setting.</p></article><h2>Enable Option in Attack Activity</h2><p>Select which actor types can use Probabilistic Damage: Player Characters, NPCs, Both, or Neither (to disable the feature).</p><p>When enabled, a <strong>Use Probabilistic Damage</strong> option will appear under the <strong>Effects</strong> tab within the <strong>Attack Damage</strong> section of the Attack activity sheet.</p><h3>What is Probabilistic Damage?</h3><p>Probabilistic Damage replaces the attack roll of an Attack activity with a damage roll scaled by the chance to hit. This features activates only when the following conditions are met:</p><ul><li><p>Only <strong>one</strong> token is targeted.</p></li><li><p>The activity used is an <strong>Attack</strong>.</p></li></ul><p>Probabilistic damage is calculated as follows:</p><p><code>Scaled Damage = round(Damage Roll × Hit Chance)</code></p><p>When triggered, the damage roll is immediately posted to the chat. You can apply Advantage or Disadvantage by holding the appropriate key modifier (e.g., Alt, Ctrl) when clicking the attack.</p><h2>Use Average Damage</h2><p>When enabled, probabilistic damage will use the average damage, which is then scaled by the chance to hit. If disabled, damage is rolled before scaling.</p>"
+        "content": "<article class=\"custom-dnd5e-note\"><header><i class=\"fa-solid fa-note-sticky\"></i><p>Note</p></header><p>Consumption of ammunition or uses is not currently included with this setting.</p></article><h2>Enable Option in Attack Activity</h2><p>Select which actor types can use Probabilistic Damage: Player Characters, NPCs, Both, or Neither (to disable the feature).</p><p>When enabled, a <strong>Use Probabilistic Damage</strong> option will appear under the <strong>Effects</strong> tab within the <strong>Attack Damage</strong> section of the Attack activity sheet.</p><h3>What is Probabilistic Damage?</h3><p>Probabilistic Damage replaces the attack roll of an Attack activity with a damage roll scaled by the chance to hit. This features activates only when the following conditions are met:</p><ul><li><p>Only <strong>one</strong> token is targeted.</p></li><li><p>The activity used is an <strong>Attack</strong>.</p></li></ul><p>Probabilistic damage is calculated as follows:</p><p><code>Scaled Damage = round(Damage Roll × Hit Chance)</code></p><p>When triggered, the damage roll is immediately posted to the chat. You can apply Advantage or Disadvantage by holding the appropriate key modifier (e.g., Alt, Ctrl) when clicking the attack.</p><h2>Use Average Damage</h2><p>When enabled, probabilistic damage will use the average damage, which is then scaled by the chance to hit. If disabled, damage is rolled before scaling.</p>"
       },
       "video": {
         "controls": true,

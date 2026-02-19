@@ -1,0 +1,56 @@
+{{#each types as |item key|}}
+<li class="custom-dnd5e-item flexrow" data-key="types.{{key}}">
+    <i class="custom-dnd5e-drag flex0 fas fa-grip-lines" draggable="true"></i>
+    <dnd5e-checkbox id="custom-dnd5e-visible" class="flex0" name="types.{{key}}.visible" data-tooltip="{{localize "CUSTOM_DND5E.form.checkbox.visible.tooltip"}}"{{#unless (customDnd5eBoolFalse visible)}} checked{{/unless}}></dnd5e-checkbox>
+    <input id="custom-dnd5e-system" name="types.{{key}}.system" type="hidden" value="{{#if (customDnd5eBoolFalse system)}}false{{else}}true{{/if}}">
+    <div class="fields flexrow">
+        <div class="form-group">
+            <label class="flex0">{{localize "CUSTOM_DND5E.key"}}</label>
+            <div class="form-fields">
+                <input{{#unless (customDnd5eBoolFalse system)}} disabled{{/unless}} id="key" {{#if (customDnd5eBoolFalse system)}}name="types.{{key}}.key"{{/if}} type="text" value="{{key}}">
+                {{#unless (customDnd5eBoolFalse system)}}<input id="custom-dnd5e-key" name="types.{{key}}.key" type="hidden" value="{{key}}">{{/unless}}
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="flex0">{{localize "CUSTOM_DND5E.label"}}</label>
+            <div class="form-fields">
+                <input id="custom-dnd5e-label" name="types.{{key}}.label" type="text" value="{{label}}">
+            </div>
+        </div>
+    </div>
+    <button{{#unless (customDnd5eBoolFalse system)}} disabled{{/unless}} type="button" {{#if (customDnd5eBoolFalse system)}}data-action="delete" data-tooltip="{{localize "CUSTOM_DND5E.form.button.delete.tooltip"}}"{{/if}} class="flex0 custom-dnd5e-list-button">
+        <i class="fas fa-trash"></i>
+    </button>
+    <input id="custom-dnd5e-delete" name="types.{{key}}.delete" type="hidden" value="false">
+    {{#if subtypes}}
+    <ul class="custom-dnd5e-list flexcol">
+        {{#each subtypes as |subitem subkey|}}
+        <li class="custom-dnd5e-item flexrow" data-key="types.{{@../key}}.subtypes.{{subkey}}">
+            <i class="custom-dnd5e-drag flex0 fas fa-grip-lines" draggable="true"></i>
+            <dnd5e-checkbox id="custom-dnd5e-visible" class="flex0" name="types.{{@../key}}.subtypes.{{subkey}}.visible" data-tooltip="{{localize "CUSTOM_DND5E.form.checkbox.visible.tooltip"}}"{{#unless (customDnd5eBoolFalse visible)}} checked{{/unless}}></dnd5e-checkbox>
+            <input id="custom-dnd5e-system" name="types.{{@../key}}.subtypes.{{subkey}}.system" type="hidden" value="{{#if (customDnd5eBoolFalse system)}}false{{else}}true{{/if}}">
+            <div class="fields flexrow">
+                <div class="form-group">
+                    <label class="flex0">{{localize "CUSTOM_DND5E.key"}}</label>
+                    <div class="form-fields">
+                        <input{{#unless (customDnd5eBoolFalse system)}} disabled{{/unless}} id="key" {{#if (customDnd5eBoolFalse system)}}name="types.{{@../key}}.subtypes.{{subkey}}.key"{{/if}} type="text" value="{{subkey}}">
+                        {{#unless (customDnd5eBoolFalse system)}}<input id="custom-dnd5e-key" name="types.{{@../key}}.subtypes.{{subkey}}.key" type="hidden" value="{{subkey}}">{{/unless}}
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="flex0">{{localize "CUSTOM_DND5E.label"}}</label>
+                    <div class="form-fields">
+                        <input id="custom-dnd5e-label" name="types.{{@../key}}.subtypes.{{subkey}}.label" type="text" value="{{label}}">
+                    </div>
+                </div>
+            </div>
+            <button{{#unless (customDnd5eBoolFalse system)}} disabled{{/unless}} type="button" {{#if (customDnd5eBoolFalse system)}}data-action="delete" data-tooltip="{{localize "CUSTOM_DND5E.form.button.delete.tooltip"}}"{{/if}} class="flex0 custom-dnd5e-list-button">
+                <i class="fas fa-trash"></i>
+            </button>
+            <input id="custom-dnd5e-delete" name="types.{{@../key}}.subtypes.{{subkey}}.delete" type="hidden" value="false">
+        </li>
+        {{/each}}
+    </ul>
+    {{/if}}
+</li>
+{{/each}}

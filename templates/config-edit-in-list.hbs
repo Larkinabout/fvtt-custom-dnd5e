@@ -20,7 +20,7 @@
         <input id="custom-dnd5e-system" name="{{customDnd5eDotNotateChild ../childType ../parentKey key}}.system" type="hidden" value="{{#if (customDnd5eBoolFalse system)}}false{{else}}true{{/if}}">
     </div>
     <button{{#unless (customDnd5eBoolFalse system)}} disabled{{/unless}} type="button" {{#if (customDnd5eBoolFalse system)}}data-action="delete" data-tooltip="{{localize "CUSTOM_DND5E.form.button.delete.tooltip"}}" {{/if}} class="flex0 custom-dnd5e-list-button">
-        <i class="fas fa-xmark"></i>
+        <i class="fas fa-trash"></i>
     </button>
     <input id="custom-dnd5e-delete" name="{{customDnd5eDotNotateChild ../childType ../parentKey key}}.delete" type="hidden" value="false">
     {{#if item.children}}

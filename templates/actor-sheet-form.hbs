@@ -72,6 +72,13 @@
                 <p class="hint">{{localize "CUSTOM_DND5E.form.actorSheet.showInspiration.note"}}</p>
             </div>
             <div class="form-group">
+                <label>{{localize "CUSTOM_DND5E.form.actorSheet.showJumpDistance.label"}}</label>
+                <div class="form-fields">
+                    <dnd5e-checkbox id="custom-dnd5e-show-jump-distance" name="showJumpDistance" {{#if showJumpDistance}} checked{{/if}}></dnd5e-checkbox>
+                </div>
+                <p class="hint">{{localize "CUSTOM_DND5E.form.actorSheet.showJumpDistance.note"}}</p>
+            </div>
+            <div class="form-group">
                 <label>{{localize "CUSTOM_DND5E.form.actorSheet.showManageCurrency.label"}}</label>
                 <div class="form-fields">
                     <dnd5e-checkbox id="custom-dnd5e-show-manage-currency" name="showManageCurrency" {{#if showManageCurrency}} checked{{/if}}></dnd5e-checkbox>
@@ -79,6 +86,13 @@
                 <p class="hint">{{localize "CUSTOM_DND5E.form.actorSheet.showManageCurrency.note"}}</p>
             </div>
             <h3>{{localize "CUSTOM_DND5E.npcs"}}</h3>
+            <div class="form-group">
+                <label>{{localize "CUSTOM_DND5E.form.actorSheet.showTokenDisposition.label"}}</label>
+                <div class="form-fields">
+                    <dnd5e-checkbox id="custom-dnd5e-show-token-disposition" name="showTokenDisposition" {{#if showTokenDisposition}} checked{{/if}}></dnd5e-checkbox>
+                </div>
+                <p class="hint">{{localize "CUSTOM_DND5E.form.actorSheet.showTokenDisposition.note"}}</p>
+            </div>
             <div class="form-group">
                 <label>{{localize "CUSTOM_DND5E.form.actorSheet.showLegendaryActions.label"}}</label>
                 <div class="form-fields">

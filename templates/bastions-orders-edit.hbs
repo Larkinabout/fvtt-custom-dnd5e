@@ -1,0 +1,47 @@
+<div class="standard-form">
+    <div class="standard-form scrollable">
+        <input id="custom-dnd5e-system" name="{{key}}.system" type="hidden" value="{{#if (customDnd5eBoolFalse system)}}false{{else}}true{{/if}}">
+        <div class="form-group">
+            <label class="flex1" style="min-width:80px; max-width:100px;">{{localize "CUSTOM_DND5E.key"}}</label>
+            <div class="form-fields">
+                {{#if (customDnd5eBoolFalse system)}}
+                <input id="custom-dnd5e-key" name="{{key}}.key" type="text" value="{{key}}">
+                {{else}}
+                <input id="custom-dnd5e-disabled-key" disabled name="{{key}}.disabledKey" type="text" value="{{key}}">
+                <input id="custom-dnd5e-key" name="{{key}}.key" type="hidden" value="{{key}}">
+                {{/if}}
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="flex1" style="min-width:80px; max-width:100px;">{{localize "CUSTOM_DND5E.label"}}</label>
+            <div class="form-fields">
+                <input id="custom-dnd5e-label" name="{{key}}.label" type="text" value="{{label}}">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="flex1" style="min-width:80px; max-width:100px;">{{localize "CUSTOM_DND5E.icon"}}</label>
+            <div class="form-fields">
+                <file-picker name="{{key}}.icon" type="image" value="{{icon}}"></file-picker>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="flex1" style="min-width:80px; max-width:100px;">{{localize "CUSTOM_DND5E.bastions.duration"}}</label>
+            <div class="form-fields">
+                <input type="number" name="{{key}}.duration" value="{{duration}}" min="0" placeholder="—">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="flex1" style="min-width:80px; max-width:100px;" data-tooltip="{{localize 'CUSTOM_DND5E.bastions.basicTooltip'}}">{{localize "CUSTOM_DND5E.bastions.basic"}}</label>
+            <div class="form-fields">
+                <dnd5e-checkbox id="custom-dnd5e-basic" name="{{key}}.basic" {{#if basic}}checked{{/if}}></dnd5e-checkbox>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="flex1" style="min-width:80px; max-width:100px;" data-tooltip="{{localize 'CUSTOM_DND5E.bastions.hiddenTooltip'}}">{{localize "CUSTOM_DND5E.bastions.hidden"}}</label>
+            <div class="form-fields">
+                <dnd5e-checkbox id="custom-dnd5e-hidden" name="{{key}}.hidden" {{#if hidden}}checked{{/if}}></dnd5e-checkbox>
+            </div>
+        </div>
+    </div>
+    {{> "modules/custom-dnd5e/templates/footer.hbs" system=system}}
+</div>

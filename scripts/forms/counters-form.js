@@ -1,4 +1,4 @@
-import { CONSTANTS, MODULE } from "../constants.js";
+import { CONSTANTS, JOURNAL_HELP_BUTTON, MODULE } from "../constants.js";
 import { deleteProperty, unsetFlag, getSetting, setSetting } from "../utils.js";
 import { CustomDnd5eForm } from "./custom-dnd5e-form.js";
 import { CountersEditForm } from "./counters-edit.js";
@@ -20,6 +20,7 @@ function getSelects() {
         checkbox: "CUSTOM_DND5E.checkbox",
         fraction: "CUSTOM_DND5E.fraction",
         number: "CUSTOM_DND5E.number",
+        pips: "CUSTOM_DND5E.pips",
         successFailure: "CUSTOM_DND5E.successFailure"
       }
     }
@@ -41,6 +42,8 @@ export class CountersForm extends CustomDnd5eForm {
    */
   constructor(...args) {
     super(args);
+    this.headerButton = JOURNAL_HELP_BUTTON;
+    this.headerButton.uuid = CONSTANTS.COUNTERS.UUID;
   }
 
   /* -------------------------------------------- */

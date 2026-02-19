@@ -1,0 +1,44 @@
+<div class="waypoint-label {{cssClass}}">
+    {{#if action.img}}
+    <div class="img" style="background-image: url('{{ action.img }}');"></div>
+    {{else if action.icon}}
+    <i class="icon {{action.icon}}"></i>
+    {{else if action.label}}
+    <label class="action-label">{{localize action.label}}</label>
+    {{/if}}
+    {{#if cost}}
+    <div class="custom-dnd5e-measurement-group">
+        <span class="total-measurement">{{cost.total}} {{cost.units}}</span>
+        {{#if cost.delta}}
+        <span class="delta-measurement">({{cost.delta}})</span>
+        {{/if}}
+    </div>
+    {{else}}
+    <div class="custom-dnd5e-measurement-group">
+        <span class="total-measurement">{{distance.total}} {{units}}</span>
+        {{#if distance.delta}}
+        <span class="delta-measurement">({{distance.delta}})</span>
+        {{/if}}
+    </div>
+    {{/if}}
+    {{#if (and elevation (not elevation.hidden))}}
+    <i class="icon {{elevation.icon}}"></i>
+    <span class="total-elevation">{{elevation.total}} {{units}}</span>
+    {{#if elevation.delta}}
+    <span class="delta-elevation">({{elevation.delta}})</span>
+    {{/if}}
+    {{/if}}
+    {{#if secret}}
+    <i class="icon fa-solid fa-eye-slash"></i>
+    {{/if}}
+    {{#if travelTime}}
+    <div class="custom-dnd5e-travel-time">
+        {{#each travelTime.paces}}
+        <div class="pace">
+            <i class="{{this.icon}}"></i>
+            <span>{{this.time}}</span>
+        </div>
+        {{/each}}
+    </div>
+    {{/if}}
+</div>

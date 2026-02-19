@@ -438,6 +438,7 @@
     min-width: 200px;
 }
 
-.dnd5e2.sheet.actor.character .sheet-body .sidebar .card .meter.hit-points.negative .progress::before {
+.dnd5e2.sheet.actor.character .sheet-body .sidebar .card .meter.hit-points.negative .progress::before,
+.dnd5e2.sheet.actor.npc .sheet-header .meter.hit-points.negative .progress::before {
     background: linear-gradient(to right, var(--dnd5e-color-hd-1) -0%, var(--dnd5e-color-hd-2) 100%);
 }

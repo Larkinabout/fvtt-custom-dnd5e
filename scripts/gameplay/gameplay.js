@@ -4,6 +4,7 @@ import { register as registerAverageDamage } from "./average-damage.js";
 import { register as registerMobDamage } from "./mob-damage.js";
 import { register as registerProbabilisticDamage } from "./probalistic-damage.js";
 import {
+  animations,
   c5eLoadTemplates,
   Logger,
   getDefaultSetting,
@@ -13,11 +14,18 @@ import {
   makeDead,
   unmakeDead,
   makeUnconscious,
-  unmakeUnconscious
+  unmakeUnconscious,
+  getActorOwnerIds
 } from "../utils.js";
 import { GameplayForm } from "../forms/gameplay-form.js";
 
 const constants = CONSTANTS.GAMEPLAY;
+
+/**
+ * Whether to skip heal-from-zero logic in the preUpdateActor hook.
+ * Set when the HP update is handled by preApplyDamage or is an absolute set from the actor sheet.
+ */
+let _skipHealFromZero = false;
 
 /* -------------------------------------------- */
 
@@ -85,22 +93,12 @@ function registerSettings() {
   );
 
   registerSetting(
-    CONSTANTS.HIT_POINTS.SETTING.ROLL_NPC_HP.KEY,
-    {
-      scope: "world",
-      config: false,
-      type: Boolean,
-      default: false
-    }
-  );
-
-  registerSetting(
     CONSTANTS.INITIATIVE.SETTING.REROLL_INITIATIVE_EACH_ROUND.KEY,
     {
       scope: "world",
       config: false,
-      type: Boolean,
-      default: false
+      type: String,
+      default: "off"
     }
   );
 
@@ -197,7 +195,37 @@ function registerSettings() {
   );
 
   registerSetting(
+    CONSTANTS.HIT_POINTS.SETTING.MASSIVE_DAMAGE_ANIMATION.KEY,
+    {
+      scope: "world",
+      config: false,
+      type: Boolean,
+      default: false
+    }
+  );
+
+  registerSetting(
+    CONSTANTS.HIT_POINTS.SETTING.MASSIVE_DAMAGE_TABLE.KEY,
+    {
+      scope: "world",
+      config: false,
+      type: String,
+      default: ""
+    }
+  );
+
+  registerSetting(
     CONSTANTS.HIT_POINTS.SETTING.APPLY_NEGATIVE_HP.KEY,
+    {
+      scope: "world",
+      config: false,
+      type: Boolean,
+      default: false
+    }
+  );
+
+  registerSetting(
+    CONSTANTS.HIT_POINTS.SETTING.APPLY_NEGATIVE_HP_NPC.KEY,
     {
       scope: "world",
       config: false,
@@ -236,6 +264,16 @@ function registerSettings() {
   );
 
   registerSetting(
+    CONSTANTS.INSPIRATION.SETTING.INSPIRATION_ANIMATION.KEY,
+    {
+      scope: "world",
+      config: false,
+      type: Boolean,
+      default: false
+    }
+  );
+
+  registerSetting(
     CONSTANTS.PRONE.SETTING.PRONE_ROTATION.KEY,
     {
       scope: "world",
@@ -264,8 +302,8 @@ function registerHooks() {
   Hooks.on("dnd5e.preRollClassHitPoints", setHitDiceRollFormula);
   Hooks.on("renderHitPointsFlow", modifyHitPointsFlowDialog);
   Hooks.on("combatRound", rerollInitiative);
-  Hooks.on("createToken", rollNpcHp);
   Hooks.on("dnd5e.preApplyDamage", (actor, amount, updates, options) => {
+    if ( options.isDelta === false ) _skipHealFromZero = true;
     recalculateDamage(actor, amount, updates, options);
     const instantDeath = applyInstantDeath(actor, updates);
     updateHp(actor, updates);
@@ -281,12 +319,14 @@ function registerHooks() {
   Hooks.on("dnd5e.preRestCompleted", (actor, data) => updateDeathSaves("rest", actor, data));
   Hooks.on("dnd5e.preRollDeathSave", setDeathSavesRollMode);
   Hooks.on("dnd5e.rollAbilityCheck", (actor, roll, ability) => { awardInspiration("rollAbilityCheck", actor, roll); });
-  Hooks.on("dnd5e.rollAbilityTest", (actor, roll, ability) => { awardInspiration("rollAbilityTest", actor, roll); });
   Hooks.on("dnd5e.rollAttack", (item, roll, ability) => {
     awardInspiration("rollAttack", item, roll);
     // applyHighLowGround(item, roll, ability);
   });
-  Hooks.on("dnd5e.rollSavingThrow", (actor, roll, ability) => { awardInspiration("rollSavingThrow", actor, roll); });
+  Hooks.on("dnd5e.rollSavingThrow", (rolls, data) => {
+    awardInspiration("rollSavingThrow", rolls, data);
+    handleMassiveDamageSaveResult(rolls, data);
+  });
   Hooks.on("dnd5e.rollSkill", (actor, roll, ability) => { awardInspiration("rollSkill", actor, roll); });
   Hooks.on("dnd5e.rollToolCheck", (actor, roll, ability) => { awardInspiration("rollToolCheck", actor, roll); });
   Hooks.on("preUpdateActor", (actor, data, options, userId) => {
@@ -298,6 +338,7 @@ function registerHooks() {
   Hooks.on("renderActorSheet", updateHpMeter);
   Hooks.on("renderActorSheetV2", makeDeathSavesBlind);
   Hooks.on("renderActorSheetV2", updateHpMeter);
+  Hooks.on("renderActorSheetV2", listenHpInput);
 }
 
 /* -------------------------------------------- */
@@ -363,12 +404,21 @@ export function modifyHitPointsFlowDialog(app, html, data) {
  * This will allow HP to go below 0.
  */
 export function registerNegativeHp() {
-  if ( !getSetting(CONSTANTS.DEAD.SETTING.APPLY_INSTANT_DEATH.KEY)
-        && !getSetting(CONSTANTS.HIT_POINTS.SETTING.APPLY_NEGATIVE_HP.KEY) ) return;
+  const applyNegativeHp = getSetting(CONSTANTS.HIT_POINTS.SETTING.APPLY_NEGATIVE_HP.KEY)
+        || getSetting(CONSTANTS.DEAD.SETTING.APPLY_INSTANT_DEATH.KEY);
+  const applyNegativeHpNpc = getSetting(CONSTANTS.HIT_POINTS.SETTING.APPLY_NEGATIVE_HP_NPC.KEY);
+
+  if ( !applyNegativeHp && !applyNegativeHpNpc ) return;
 
   Logger.debug("Registering Negative HP...");
 
-  dnd5e.dataModels.actor.CharacterData.schema.fields.attributes.fields.hp.fields.value.min = undefined;
+  if ( applyNegativeHp ) {
+    dnd5e.dataModels.actor.CharacterData.schema.fields.attributes.fields.hp.fields.value.min = undefined;
+  }
+
+  if ( applyNegativeHpNpc ) {
+    dnd5e.dataModels.actor.NPCData.schema.fields.attributes.fields.hp.fields.value.min = undefined;
+  }
 
   Logger.debug("Negative HP registered");
 }
@@ -378,16 +428,24 @@ export function registerNegativeHp() {
 /**
  * Reroll Initiative.
  * Triggered by the 'combatRound' hook.
- * If 'Reroll Initiative Each Round' is enabled, reset and reroll initiative each round.
+ * Reset and/or reroll initiative each round based on the selected mode.
  * @param {object} combat The combat
  * @param {object} data The data
  * @param {object} options The options
  */
 export async function rerollInitiative(combat, data, options) {
-  if ( !getSetting(CONSTANTS.INITIATIVE.SETTING.REROLL_INITIATIVE_EACH_ROUND.KEY) || data.turn !== 0 ) return;
+  let mode = getSetting(CONSTANTS.INITIATIVE.SETTING.REROLL_INITIATIVE_EACH_ROUND.KEY);
+  if ( mode === true ) mode = "rerollAll";
+  if ( !mode || mode === "off" || data.turn !== 0 ) return;
 
   await combat.resetAll();
-  await combat.rollAll();
+
+  if ( mode === "rerollAll" ) {
+    await combat.rollAll();
+  } else if ( mode === "rerollNpc" ) {
+    await combat.rollNPC();
+  }
+
   combat.update({ turn: 0 });
 }
 
@@ -433,6 +491,7 @@ export function awardInspiration(rollType, roll, data) {
       message = "CUSTOM_DND5E.message.awardInspirationAlready";
     } else {
       actor.update({ "system.attributes.inspiration": true });
+      playInspirationAnimation(actor);
     }
 
     ChatMessage.create({
@@ -441,6 +500,18 @@ export function awardInspiration(rollType, roll, data) {
 
     Logger.debug("Inspiration awarded");
   }
+}
+
+/* -------------------------------------------- */
+
+/**
+ * Play the inspiration animation for the actor's owners.
+ * @param {object} actor The actor
+ */
+function playInspirationAnimation(actor) {
+  if ( !getSetting(CONSTANTS.INSPIRATION.SETTING.INSPIRATION_ANIMATION.KEY) ) return;
+  const userIds = getActorOwnerIds(actor);
+  animations.lightRaysScreen({ userIds });
 }
 
 /* -------------------------------------------- */
@@ -513,10 +584,17 @@ function healActor(actor, data, options) {
   if ( !foundry.utils.hasProperty(data,"system.attributes.hp.value") ) return;
 
   const applyNegativeHp = getSetting(CONSTANTS.HIT_POINTS.SETTING.APPLY_NEGATIVE_HP.KEY);
+  const applyNegativeHpNpc = getSetting(CONSTANTS.HIT_POINTS.SETTING.APPLY_NEGATIVE_HP_NPC.KEY);
   const applyInstantDeath = getSetting(CONSTANTS.DEAD.SETTING.APPLY_INSTANT_DEATH.KEY);
   const healFromZero = getSetting(CONSTANTS.HIT_POINTS.SETTING.NEGATIVE_HP_HEAL_FROM_ZERO.KEY);
 
-  if ( !(applyNegativeHp || applyInstantDeath) || !healFromZero ) return;
+  const hasNegativeHp = (actor.type === "npc") ? applyNegativeHpNpc : (applyNegativeHp || applyInstantDeath);
+  if ( !hasNegativeHp || !healFromZero ) return;
+
+  if ( _skipHealFromZero ) {
+    _skipHealFromZero = false;
+    return;
+  }
 
   if ( dnd5e.hp.value < 0 ) {
     const newHp = data.system.attributes.hp.value - dnd5e.hp.value;
@@ -530,70 +608,47 @@ function healActor(actor, data, options) {
 
 /**
  * Triggered by the 'dnd5e.preApplyDamage' hook.
- * If 'Apply Negative HP' or 'Apply Instant Death' is enabled, recalculate damage to apply a negative value to HP.
- * If 'Heal from 0 HP' is enabled, recalculate healing to increase HP from zero instead of the negative value.
+ * If 'Apply Negative HP' or 'Apply Instant Death' is enabled, remove the 0 HP floor clamp to allow negative HP.
  * @param {object} actor The actor
  * @param {number} amount The damage amount
  * @param {object} updates The properties to update
  * @param {object} options The options
  */
 function recalculateDamage(actor, amount, updates, options) {
-  if ( !getSetting(CONSTANTS.HIT_POINTS.SETTING.APPLY_NEGATIVE_HP.KEY)
-        && !getSetting(CONSTANTS.DEAD.SETTING.APPLY_INSTANT_DEATH.KEY) ) return;
+  const hasNegativeHp = (actor.type === "npc")
+    ? getSetting(CONSTANTS.HIT_POINTS.SETTING.APPLY_NEGATIVE_HP_NPC.KEY)
+    : (getSetting(CONSTANTS.HIT_POINTS.SETTING.APPLY_NEGATIVE_HP.KEY)
+        || getSetting(CONSTANTS.DEAD.SETTING.APPLY_INSTANT_DEATH.KEY));
+  if ( !hasNegativeHp ) return;
 
-  Logger.debug("Recalculating damage...");
-
-  const isDelta = options.isDelta ?? false;
-  const hpMax = actor?.system?.attributes?.hp?.effectiveMax ?? actor?.system?.attributes?.hp?.max ?? 0;
-  const hpTemp = actor?.system?.attributes?.hp?.temp ?? 0;
   const hpValue = actor?.system?.attributes?.hp?.value ?? 0;
-  const startHp = hpValue;
-
-  let newHpValue = updates["system.attributes.hp.value"];
 
   if ( amount > 0 ) {
-    newHpValue = hpValue - Math.max(amount - hpTemp, 0);
-  } else {
-    let healing = Math.abs(amount);
-    newHpValue = Math.min(startHp + healing, hpMax);
+    Logger.debug("Recalculating damage...");
+
+    const hpTemp = actor?.system?.attributes?.hp?.temp ?? 0;
+    const tempAbsorbed = hpTemp - (updates["system.attributes.hp.temp"] ?? 0);
+    const newHpValue = hpValue - (amount - tempAbsorbed);
+
+    updates["system.attributes.hp.value"] = newHpValue;
+
+    Logger.debug("Damage recalculated");
+  } else if ( amount < 0 && hpValue < 0 ) {
+    Logger.debug("Recalculating healing...");
+
+    const hpMax = actor?.system?.attributes?.hp?.effectiveMax ?? actor?.system?.attributes?.hp?.max ?? 0;
+    const healFromZero = getSetting(CONSTANTS.HIT_POINTS.SETTING.NEGATIVE_HP_HEAL_FROM_ZERO.KEY);
+
+    if ( healFromZero && options.isDelta !== false ) {
+      updates["system.attributes.hp.value"] = Math.min(-amount, hpMax);
+    } else {
+      updates["system.attributes.hp.value"] = Math.min(hpValue - amount, hpMax);
+    }
+
+    _skipHealFromZero = true;
+
+    Logger.debug("Healing recalculated");
   }
-
-  updates["system.attributes.hp.value"] = newHpValue;
-
-  Logger.debug("Damage recalculated");
-}
-
-/* -------------------------------------------- */
-
-/**
- * Triggered by the 'preCreateToken' hook.
- * If 'Roll NPC HP' is enabled, roll NPC HP when a token is created.
- * @param {object} token The token
- * @param {object} data The data
- * @param {string} userId The user ID
- */
-async function rollNpcHp(token, data, userId) {
-  if ( game.user.id !== userId ) return;
-
-  const actor = token?.actor;
-
-  if ( actor?.type !== "npc" ) return;
-  if ( !getSetting(CONSTANTS.HIT_POINTS.SETTING.ROLL_NPC_HP.KEY) ) return;
-
-  Logger.debug("Rolling NPC HP...", token);
-
-  const formula = actor.system.attributes.hp.formula;
-
-  if ( !formula ) return;
-
-  const r = Roll.create(formula);
-  await r.evaluate();
-
-  if ( !r.total ) return;
-
-  actor.update({ "system.attributes.hp": { value: r.total, max: r.total } }, { isRest: true });
-
-  Logger.debug("NPC HP rolled", { token, hp: r.total });
 }
 
 /* -------------------------------------------- */
@@ -723,7 +778,8 @@ function updateDeathSaves(source, actor, data, options) {
  * @param {object} updates The updates
  */
 function updateHp(actor, updates) {
-  if ( getSetting(CONSTANTS.HIT_POINTS.SETTING.APPLY_NEGATIVE_HP.KEY) ) return;
+  if ( getSetting(CONSTANTS.HIT_POINTS.SETTING.APPLY_NEGATIVE_HP.KEY) && actor.type === "character" ) return;
+  if ( getSetting(CONSTANTS.HIT_POINTS.SETTING.APPLY_NEGATIVE_HP_NPC.KEY) && actor.type === "npc" ) return;
 
   Logger.debug("Updating HP...");
 
@@ -751,7 +807,8 @@ function updateHp(actor, updates) {
 function updateHpMeter(app, html, data) {
   const sheetType = SHEET_TYPE[app.constructor.name];
 
-  if ( !sheetType || sheetType.legacy || !sheetType.character ) return;
+  if ( !sheetType || sheetType.legacy ) return;
+  if ( !sheetType.character && !(sheetType.npc && getSetting(CONSTANTS.HIT_POINTS.SETTING.APPLY_NEGATIVE_HP_NPC.KEY)) ) return;
 
   Logger.debug("Updating HP meter...");
 
@@ -769,6 +826,27 @@ function updateHpMeter(app, html, data) {
   progress.style = `--bar-percentage: ${pct}%;`;
 
   Logger.debug("HP meter updated");
+}
+
+/* -------------------------------------------- */
+
+/**
+ * Triggered by the 'renderActorSheetV2' hook.
+ * Adds a capture-phase listener to the HP input to detect absolute vs delta input.
+ * @param {object} app The app
+ * @param {object} html The HTML
+ */
+function listenHpInput(app, html) {
+  const sheetType = SHEET_TYPE[app.constructor.name];
+  if ( !sheetType || sheetType.legacy ) return;
+
+  const input = html.querySelector('input[name="system.attributes.hp.value"]');
+  if ( !input ) return;
+
+  input.addEventListener("change", (event) => {
+    const hpValue = event.target.value;
+    if ( !hpValue.startsWith("+") && !hpValue.startsWith("-") ) _skipHealFromZero = true;
+  }, { capture: true });
 }
 
 /* -------------------------------------------- */
@@ -872,6 +950,20 @@ function capturePreviousData(actor, data, options, userId) {
 /* -------------------------------------------- */
 
 /**
+ * Play the massive damage animation for the actor's owners.
+ * @param {object} actor The actor
+ */
+function playMassiveDamageAnimation(actor) {
+  if ( !getSetting(CONSTANTS.HIT_POINTS.SETTING.MASSIVE_DAMAGE_ANIMATION.KEY) ) return;
+  const userIds = getActorOwnerIds(actor);
+  animations.shakeScreen({ intensity: 8, duration: 750, userIds });
+  animations.flashScreen({ duration: 750, userIds });
+  animations.splatterScreen({ duration: 3500, userIds });
+}
+
+/* -------------------------------------------- */
+
+/**
  * Triggered by the 'applyMassiveDamage' function.
  * Create a chat message with a button to make a CON save against a DC of 15.
  * @param {object} actor The actor
@@ -879,20 +971,60 @@ function capturePreviousData(actor, data, options, userId) {
  * @returns {Promise<void>} The created chat message
  */
 async function createMassiveDamageCard(actor, data) {
+  const tableUuid = getSetting(CONSTANTS.HIT_POINTS.SETTING.MASSIVE_DAMAGE_TABLE.KEY);
+  if ( tableUuid ) {
+    await actor.setFlag("custom-dnd5e", "pendingMassiveDamageSave", true);
+  }
+
   const dataset = { ability: "con", dc: "15", type: "save" };
   let label = game.i18n.format("EDITOR.DND5E.Inline.DC", { dc: 15, check: game.i18n.localize(CONFIG.DND5E.abilities.con.label) });
   label = game.i18n.format("EDITOR.DND5E.Inline.SaveLong", { save: label });
-  const MessageClass = getDocumentClass("ChatMessage");
-  const chatData = {
-    user: game.user.id,
-    style: CONST.CHAT_MESSAGE_STYLES.OTHER,
-    content: await foundry.applications.handlebars.renderTemplate(CONSTANTS.MESSAGE.TEMPLATE.ROLL_REQUEST_CARD, {
-      buttonLabel: `<i class="fas fa-shield-heart"></i>${label}`,
-      hiddenLabel: `<i class="fas fa-shield-heart"></i>${label}`,
-      description: game.i18n.format("CUSTOM_DND5E.message.massiveDamage", { name: actor.name }),
-      dataset: { ...dataset, action: "rollRequest" }
-    }),
-    speaker: MessageClass.getSpeaker({ user: game.user })
-  };
-  return MessageClass.create(chatData);
+  const content = await foundry.applications.handlebars.renderTemplate(CONSTANTS.MESSAGE.TEMPLATE.ROLL_REQUEST_CARD, {
+    buttonLabel: `<i class="fas fa-shield-heart"></i>${label}`,
+    hiddenLabel: `<i class="fas fa-shield-heart"></i>${label}`,
+    description: game.i18n.format("CUSTOM_DND5E.message.massiveDamage", { name: actor.name }),
+    dataset: { ...dataset, action: "rollRequest" }
+  });
+  const speaker = ChatMessage.getSpeaker({ user: game.user });
+  const flags = { "custom-dnd5e": { source: "massiveDamage" } };
+  return await ChatMessage.create({ content, speaker, flags });
+}
+
+/* -------------------------------------------- */
+
+/**
+ * Triggered by the 'dnd5e.rollSavingThrow' hook.
+ * If the actor has the 'pendingMassiveDamageSave' flag and fails a CON save, roll on the system shock table.
+ * @param {D20Roll[]} rolls The resulting rolls
+ * @param {object} data The hook data
+ * @param {string} data.ability ID of the ability that was rolled
+ * @param {Actor5e} data.subject Actor for which the roll has been performed
+ */
+async function handleMassiveDamageSaveResult(rolls, data) {
+  const actor = data.subject;
+  if ( !actor?.getFlag("custom-dnd5e", "pendingMassiveDamageSave") ) return;
+  if ( data.ability !== "con" ) return;
+
+  // Trace back from the save card to the originating request card
+  const requestCard = rolls[0]?.parent?.getOriginatingMessage();
+  if ( requestCard?.flags?.["custom-dnd5e"]?.source !== "massiveDamage" ) return;
+
+  // Clear the flag regardless of result
+  await actor.unsetFlag("custom-dnd5e", "pendingMassiveDamageSave");
+
+  const total = rolls[0]?.total;
+  if ( total === undefined || total >= 15 ) return;
+
+  // Save failed — play animation and roll on system shock table
+  playMassiveDamageAnimation(actor);
+  const tableUuid = getSetting(CONSTANTS.HIT_POINTS.SETTING.MASSIVE_DAMAGE_TABLE.KEY);
+  if ( !tableUuid ) return;
+
+  const table = await fromUuid(tableUuid);
+  if ( !table ) {
+    Logger.error(game.i18n.localize("CUSTOM_DND5E.message.massiveDamageTableNotFound"), true);
+    return;
+  }
+
+  await table.draw();
 }

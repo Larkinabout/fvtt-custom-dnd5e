@@ -1,0 +1,14 @@
+{{#each months}}
+<li class="custom-dnd5e-item flexrow" data-index="{{this.index}}">
+    <div class="custom-dnd5e-col-group flexrow" style="gap: 0.25rem; align-items: center;">
+        <input type="text" name="months.{{this.index}}.name" value="{{this.name}}" placeholder="{{localize "CUSTOM_DND5E.form.calendars.monthName"}}" style="flex: 2;">
+        <input type="text" name="months.{{this.index}}.abbreviation" value="{{this.abbreviation}}" placeholder="{{localize "CUSTOM_DND5E.form.calendars.abbreviation"}}" style="flex: 1;">
+        <input type="number" name="months.{{this.index}}.ordinal" value="{{this.ordinal}}" placeholder="#" style="flex: 0 0 3rem;" min="1">
+        <input type="number" name="months.{{this.index}}.days" value="{{this.days}}" placeholder="{{localize "CUSTOM_DND5E.form.calendars.daysInMonth"}}" style="flex: 0 0 3rem;" min="1">
+        <input type="number" name="months.{{this.index}}.leapDays" value="{{this.leapDays}}" placeholder="{{localize "CUSTOM_DND5E.form.calendars.leapDays"}}" style="flex: 0 0 3rem;" min="0">
+        <button type="button" data-action="removeRow" data-section="months" data-index="{{this.index}}" class="flex0 custom-dnd5e-list-button" data-tooltip="{{localize "CUSTOM_DND5E.form.button.delete.tooltip"}}">
+            <i class="fas fa-trash"></i>
+        </button>
+    </div>
+</li>
+{{/each}}

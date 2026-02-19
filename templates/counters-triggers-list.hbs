@@ -13,7 +13,10 @@
         <div class="form-group{{#unless (customDnd5eShowTriggerValue trigger)}} hidden{{/unless}}">
             <label class="flex1" style="min-width:80px; max-width:100px;">{{localize "CUSTOM_DND5E.triggerValue"}}</label>
             <div class="form-fields">
-                <input id="custom-dnd5e-trigger-value" name="triggerValue" type="number" value="{{triggerValue}}">
+                <select id="custom-dnd5e-trigger-operator" name="triggerOperator">
+                    {{selectOptions ../selects.triggerOperator.choices selected=triggerOperator localize=true}}
+                </select>
+                <input id="custom-dnd5e-trigger-value" name="triggerValue" type="text" value="{{triggerValue}}">
             </div>
         </div>
         <div class="form-group">
@@ -30,9 +33,22 @@
                 <input id="custom-dnd5e-action-value" name="actionValue" type="number" value="{{actionValue}}">
             </div>
         </div>
+        <div class="form-group{{#unless (customDnd5eEq action "macro")}} hidden{{/unless}}">
+            <label class="flex1" style="min-width:80px; max-width:100px;">{{localize "CUSTOM_DND5E.macro"}}</label>
+            <div class="form-fields custom-dnd5e-macro-drop">
+                <div class="custom-dnd5e-macro-field flex1{{#unless macroName}} hidden{{/unless}}">
+                    <span class="custom-dnd5e-macro-name">{{macroName}}</span>
+                    <button type="button" data-action="clearMacro" class="unbutton control-button" data-tooltip="{{localize 'CUSTOM_DND5E.form.counters.triggers.macro.clear'}}" aria-label="{{localize 'CUSTOM_DND5E.form.counters.triggers.macro.clear'}}">
+                        <i class="fa-solid fa-trash" inert></i>
+                    </button>
+                </div>
+                <div class="drop-area flex1{{#if macroName}} hidden{{/if}}">{{localize "CUSTOM_DND5E.form.counters.triggers.macro.dropHint"}}</div>
+                <input type="hidden" name="macroUuid" value="{{macroUuid}}">
+            </div>
+        </div>
     </div>
     <button type="button" data-action="delete" data-tooltip="{{localize "CUSTOM_DND5E.form.button.delete.tooltip"}}"  class="flex0 custom-dnd5e-list-button">
-        <i class="fas fa-xmark"></i>
+        <i class="fas fa-trash"></i>
     </button>
     <input id="custom-dnd5e-delete" name="delete" type="hidden" value="false">
 </li>

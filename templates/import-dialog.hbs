@@ -1,6 +1,6 @@
 <form autocomplete="off" onsubmit="event.preventDefault();">
-    <p class="hint">{{localize "CUSTOM_DND5E.dialog.importData.note.1"}}</p>
-    <p class="custom-dnd5e-warning notes">{{localize "CUSTOM_DND5E.dialog.importData.note.2"}}</p>
+    <p class="hint">{{#if hint}}{{hint}}{{else}}{{localize "CUSTOM_DND5E.dialog.importData.note.1"}}{{/if}}</p>
+    <p class="custom-dnd5e-warning notes">{{#if warning}}{{warning}}{{else}}{{localize "CUSTOM_DND5E.dialog.importData.note.2"}}{{/if}}</p>
     <div class="form-group">
         <input type="file" name="data" accept=".json" style="padding: 0.25rem 0;"/>
     </div>

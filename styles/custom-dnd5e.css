@@ -17,7 +17,7 @@
 }
 
 .custom-dnd5e-camp-supplies > p {
-    color: var(--color-text-dark-primary);
+    color: var(--color-text-primary);
     font-family: var(--dnd5e-font-roboto-slab);
     font-size: var(--font-size-15);
     font-weight: bold;
@@ -32,28 +32,96 @@
  */
 #custom-dnd5e-cursor-label {
     display: flex;
-    gap: 0.15rem;
+    direction: rtl;
+    gap: 0.25rem;
     font-family: var(--font-primary);
-    font-size: var(--font-size-16);
     position: absolute;
+    transform: translateX(-100%);
     visibility: hidden;
     z-index: 9999;
 }
 
-#custom-dnd5e-cursor-label-advantage {
-    color: var(--dnd5e-color-success);
+#custom-dnd5e-cursor-label {
+    text-shadow:
+        -1px 0 1px rgba(0, 0, 0, 1),
+        0 -1px 1px rgba(0, 0, 0, 1),
+        0 1px 1px rgba(0, 0, 0, 0.8),
+        1px 0 1px rgba(0, 0, 0, 0.8),
+        1px 1px 3px rgba(0, 0, 0, 0.8);
+}
+
+.custom-dnd5e-cursor-label-icon {
     display: none;
-    text-shadow: -1px 0 1px white, 1px 0 1px white, 0 -1px 1px white, 0 1px 1px white;
+    position: relative;
+}
+
+.custom-dnd5e-cursor-label-icon .fa-dice-d20 {
+    font-size: 1.5em;
+}
+
+.custom-dnd5e-cursor-label-icon .fa-up-long,
+.custom-dnd5e-cursor-label-icon .fa-down-long {
+    color: white;
+    font-size: 0.8em;
+    left: 50%;
+    position: absolute;
+    top: 50%;
+    transform: translate(-50%, -50%);
+}
+
+#custom-dnd5e-cursor-label-advantage {
+    color: #228b22;
 }
 
 #custom-dnd5e-cursor-label-disadvantage {
-    color: var(--dnd5e-color-failure);
-    display: none;
-    text-shadow: -1px 0 1px white, 1px 0 1px white, 0 -1px 1px white, 0 1px 1px white;
+    color: #e34234;
 }
 
 #custom-dnd5e-cursor-label-skip-dialog {
     color: var(--dnd5e-color-gold);
-    display: none;
-    text-shadow: -1px 0 1px rgba(255,255,255,0.8), 1px 0 1px rgba(255,255,255,0.8), 0 -1px 1px rgba(255,255,255,0.8), 0 1px 1px rgba(255,255,255,0.8);
+    font-size: 1.5em;
+}
+
+/*
+ * RULER TRAVEL TIME
+ */
+.custom-dnd5e-measurement-group {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.custom-dnd5e-travel-time {
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+    font-size: var(--font-size-14);
+    padding-top: 0.25rem;
+    transform-origin: top center;
+}
+
+.custom-dnd5e-travel-time .pace {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--color-text-subtle);
+}
+
+.custom-dnd5e-travel-time .pace i {
+    width: 1rem;
+    text-align: right;
+}
+
+/*
+ * JUMP DISTANCE
+ */
+:is(#tooltip, .locked-tooltip).property-attribution .custom-dnd5e-jump-separator {
+    border: none;
+    border-top: 1px solid rgba(255, 255, 255, 0.2);
+    margin: 4px 0;
+}
+
+:is(#tooltip, .locked-tooltip).property-attribution .row.custom-dnd5e-secondary {
+    padding-left: 22px;
+    opacity: 0.7;
+    font-size: var(--font-size-12);
 }

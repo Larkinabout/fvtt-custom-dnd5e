@@ -1,0 +1,19 @@
+{{#each items as |item key|}}
+<li class="custom-dnd5e-item flexrow" data-key="{{key}}">
+    <i class="custom-dnd5e-drag flex0 fas fa-grip-lines" draggable="true"></i>
+    <div class="custom-dnd5e-col-group flexcol">
+        <div class="form-group">
+            <label class="flex1">{{name}}</label>
+        </div>
+    </div>
+    <div class="custom-dnd5e-list-buttons">
+        <button type="button" data-action="edit" data-tooltip="{{localize "CUSTOM_DND5E.edit"}}" data-tooltip-direction="UP" class="flex0 custom-dnd5e-list-button">
+            <i class="fa-solid fa-pen-to-square"></i>
+        </button>
+        <button type="button" data-action="delete" data-tooltip="{{localize "CUSTOM_DND5E.form.button.delete.tooltip"}}" class="flex0 custom-dnd5e-list-button">
+            <i class="fas fa-trash"></i>
+        </button>
+        <input id="custom-dnd5e-delete" name="{{key}}.delete" type="hidden" value="false">
+    </div>
+</li>
+{{/each}}
