@@ -77,6 +77,7 @@ export const CONSTANTS = {
       SHOW_INSPIRATION: { KEY: "show-inspiration" },
       SHOW_LEGENDARY_ACTIONS: { KEY: "show-legendary-actions" },
       SHOW_LEGENDARY_RESISTANCE: { KEY: "show-legendary-resistance" },
+      SHOW_JUMP_DISTANCE: { KEY: "show-jump-distance" },
       SHOW_MANAGE_CURRENCY: { KEY: "show-manage-currency" },
       SHOW_TOKEN_DISPOSITION: { KEY: "show-token-disposition" },
       SHOW_USE_LAIR_ACTION: { KEY: "show-use-lair-action" }

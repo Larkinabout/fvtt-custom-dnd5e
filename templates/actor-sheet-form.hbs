@@ -72,6 +72,13 @@
                 <p class="hint">{{localize "CUSTOM_DND5E.form.actorSheet.showInspiration.note"}}</p>
             </div>
             <div class="form-group">
+                <label>{{localize "CUSTOM_DND5E.form.actorSheet.showJumpDistance.label"}}</label>
+                <div class="form-fields">
+                    <dnd5e-checkbox id="custom-dnd5e-show-jump-distance" name="showJumpDistance" {{#if showJumpDistance}} checked{{/if}}></dnd5e-checkbox>
+                </div>
+                <p class="hint">{{localize "CUSTOM_DND5E.form.actorSheet.showJumpDistance.note"}}</p>
+            </div>
+            <div class="form-group">
                 <label>{{localize "CUSTOM_DND5E.form.actorSheet.showManageCurrency.label"}}</label>
                 <div class="form-fields">
                     <dnd5e-checkbox id="custom-dnd5e-show-manage-currency" name="showManageCurrency" {{#if showManageCurrency}} checked{{/if}}></dnd5e-checkbox>

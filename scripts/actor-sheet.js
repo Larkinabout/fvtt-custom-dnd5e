@@ -94,6 +94,16 @@ function registerSettings() {
   );
 
   registerSetting(
+    constants.SETTING.SHOW_JUMP_DISTANCE.KEY,
+    {
+      scope: "world",
+      config: false,
+      type: Boolean,
+      default: true
+    }
+  );
+
+  registerSetting(
     constants.SETTING.SHOW_LEGENDARY_ACTIONS.KEY,
     {
       scope: "world",

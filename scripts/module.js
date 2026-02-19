@@ -69,6 +69,7 @@ import { patchD20Die } from "./patches/d20-die.js";
 import { patchD20Roll } from "./patches/d20-roll.js";
 import { patchPrepareEncumbrance } from "./patches/prepare-encumbrance.js";
 import { patchPrepareMovement } from "./patches/prepare-movement.js";
+import { patchPrepareMovementAttribution } from "./patches/prepare-movement-attribution.js";
 import { patchPrepareSenses } from "./patches/prepare-senses.js";
 import { registerCharacterSheet } from "./sheets/character-sheet.js";
 
@@ -145,6 +146,7 @@ Hooks.on("init", async () => {
   patchD20Roll();
   patchPrepareEncumbrance();
   patchPrepareMovement();
+  patchPrepareMovementAttribution();
   patchPrepareSenses();
 
   registerMigration();
