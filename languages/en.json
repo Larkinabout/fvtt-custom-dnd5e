@@ -578,6 +578,8 @@
     "CUSTOM_DND5E.setting.maxLevel.name": "Max Level",
     "CUSTOM_DND5E.setting.radialStatusEffects.name": "Radial Status Effects",
     "CUSTOM_DND5E.setting.radialStatusEffects.hint": "Display status effects in a circle around the token",
+    "CUSTOM_DND5E.setting.rulerTravelTime.name": "Ruler Travel Time",
+    "CUSTOM_DND5E.setting.rulerTravelTime.hint": "Display estimated travel time when using the measuring tool",
     "CUSTOM_DND5E.setting.tokenBorderShape.name": "Token Border Shape",
     "CUSTOM_DND5E.setting.tokenBorderShape.hint": "Choose the shape of the token's border when it is selected or hovered",
     "CUSTOM_DND5E.setting.applyElevationToSelectedTokens.name": "Apply Elevation to Selected",

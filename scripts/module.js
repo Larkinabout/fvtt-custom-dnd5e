@@ -56,6 +56,7 @@ import { register as registerSenses, setConfig as setSenses } from "./configurat
 import { register as registerSkills, setConfig as setSkills } from "./configurations/skills.js";
 import { register as registerSpellSchools, setConfig as setSpellSchools } from "./configurations/spell-schools.js";
 import { register as registerRadialStatusEffects } from "./radial-status-effects.js";
+import { register as registerRulerTravelTime } from "./ruler-travel-time.js";
 import { register as registerTidy5eCounters } from "./counters/counters-tidy5e.js";
 import { register as registerTokenBorder } from "./token-border.js";
 import { register as registerTokenEffects } from "./token-effects.js";
@@ -191,6 +192,7 @@ Hooks.on("init", async () => {
   registerWeaponProficiencies();
   registerMisc();
   registerRadialStatusEffects();
+  registerRulerTravelTime();
   registerTokenBorder();
   registerTokenEffects();
   registerDebug();

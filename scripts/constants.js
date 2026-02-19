@@ -916,6 +916,13 @@ export const CONSTANTS = {
     },
     UUID: "Compendium.custom-dnd5e.custom-dnd5e-journals.JournalEntry.B48iqFBddUikMMer.JournalEntryPage.eIWacCPaiwpIZCBL"
   },
+  RULER_TRAVEL_TIME: {
+    SETTING: {
+      KEY: "ruler-travel-time",
+      NAME: "CUSTOM_DND5E.setting.rulerTravelTime.name",
+      HINT: "CUSTOM_DND5E.setting.rulerTravelTime.hint"
+    }
+  },
   SENSES: {
     ID: "senses",
     MENU: {

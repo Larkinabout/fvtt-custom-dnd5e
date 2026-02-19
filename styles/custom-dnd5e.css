@@ -81,3 +81,32 @@
     color: var(--dnd5e-color-gold);
     font-size: 1.5em;
 }
+
+/*
+ * RULER TRAVEL TIME
+ */
+.custom-dnd5e-measurement-group {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.custom-dnd5e-travel-time {
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+    font-size: var(--font-size-14);
+    padding-top: 0.25rem;
+    transform-origin: top center;
+}
+
+.custom-dnd5e-travel-time .pace {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--color-text-subtle);
+}
+
+.custom-dnd5e-travel-time .pace i {
+    width: 1rem;
+    text-align: right;
+}
