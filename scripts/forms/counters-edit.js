@@ -86,6 +86,8 @@ export class CountersEditForm extends CustomDnd5eForm {
       triggerChoices.failureValue = "CUSTOM_DND5E.form.counters.triggers.trigger.choices.failureValue";
     } else {
       triggerChoices.counterValue = "CUSTOM_DND5E.form.counters.triggers.trigger.choices.counterValue";
+      triggerChoices.counterValueIncrease = "CUSTOM_DND5E.form.counters.triggers.trigger.choices.counterValueIncrease";
+      triggerChoices.counterValueDecrease = "CUSTOM_DND5E.form.counters.triggers.trigger.choices.counterValueDecrease";
     }
 
     triggerChoices.zeroHp = "CUSTOM_DND5E.form.counters.triggers.trigger.choices.zeroHp";
@@ -288,7 +290,7 @@ export class CountersEditForm extends CustomDnd5eForm {
    */
   #onChangeTrigger(el) {
     const showTriggerValue = ["counterValue", "successValue", "failureValue", "rollAttack"];
-    const macroTriggers = ["counterValue", "successValue", "failureValue", "checked", "unchecked"];
+    const macroTriggers = ["counterValue", "successValue", "failureValue", "checked", "unchecked", "counterValueIncrease", "counterValueDecrease"];
     const valueTriggers = ["counterValue", "successValue", "failureValue"];
 
     if ( showTriggerValue.includes(el.trigger.value) ) {

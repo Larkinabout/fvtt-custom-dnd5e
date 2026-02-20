@@ -1,0 +1,397 @@
+<div class="badges">
+    <img src="https://img.shields.io/github/downloads/Larkinabout/fvtt-custom-dnd5e/latest/module.zip?color=2b82fc&amp;label=DOWNLOADS&amp;style=for-the-badge" alt="Downloads">
+    <a href="https://forge-vtt.com/bazaar#package=custom-dnd5e"><img src="https://img.shields.io/badge/dynamic/json?label=Forge%20Installs&amp;query=package.installs&amp;suffix=%25&amp;url=https%3A%2F%2Fforge-vtt.com%2Fapi%2Fbazaar%2Fpackage%2Fcustom-dnd5e&amp;colorB=448d34&amp;style=for-the-badge" alt="Forge Installs"></a>
+</div>
+
+<h1 id="custom-dd-5e">Custom D&amp;D 5e</h1>
+
+<p>A Foundry VTT module to customise the D&amp;D 5e system.</p>
+
+<p><img src="https://github.com/Larkinabout/fvtt-custom-dnd5e/blob/main/.github/readme/custom-dnd5e-custom-banner.png?raw=true" alt="Custom D&amp;D 5e Custom Banner"></p>
+
+<h2>Table of Contents</h2>
+
+<ul>
+    <li><a href="#gameplay">Gameplay</a></li>
+    <li><a href="#counters">Counters</a></li>
+    <li><a href="#configurations">Configurations</a></li>
+    <li><a href="#configure-encumbrance">Configure Encumbrance</a></li>
+    <li><a href="#configure-rolls">Configure Rolls</a></li>
+    <li><a href="#actor-sheet">Actor Sheet</a></li>
+    <li><a href="#item-sheet">Item Sheet</a></li>
+    <li><a href="#smaller-form-character-sheet">Smaller Form Character Sheet</a></li>
+    <li><a href="#chat-commands">Chat Commands</a></li>
+    <li><a href="#show-pressed-keys">Show Pressed Keys</a></li>
+    <li><a href="#ruler-travel-time">Ruler Travel Time</a></li>
+    <li><a href="#animations">Animations</a></li>
+    <li><a href="#radial-status-effects">Radial Status Effects</a></li>
+    <li><a href="#token-border-shape">Token Border Shape</a></li>
+    <li><a href="#apply-elevation-to-selected-tokens">Apply Elevation to Selected Tokens</a></li>
+    <li><a href="#toggle-status-effects-on-selected-tokens">Toggle Status Effects on Selected Tokens</a></li>
+    <li><a href="#compatibility">Compatibility</a></li>
+    <li><a href="#required-modules">Required Modules</a></li>
+</ul>
+
+<hr>
+
+<h2 id="gameplay">Gameplay</h2>
+
+<p>Configure game mechanics and automation of core rules, optional variants and house rules.</p>
+
+<p>For help and advice on gameplay settings, either click the info buttons in the Gameplay window or open the Gameplay journal within the Custom D&amp;D 5e compendium.</p>
+
+<p><img src="https://github.com/Larkinabout/fvtt-custom-dnd5e/blob/main/.github/readme/custom-dnd5e-dead-journal.png?raw=true" alt="Custom D&amp;D 5e Dead Journal"></p>
+
+<h3>Bloodied</h3>
+<ul>
+    <li>Apply the Bloodied condition when a character or NPC is reduced to the threshold or lower.</li>
+    <li>Customise the Bloodied threshold.</li>
+    <li>To stop a character or NPC from gaining the Bloodied condition, add Bloodied to their Condition Immunities.</li>
+</ul>
+
+<p><img src="https://github.com/Larkinabout/fvtt-custom-dnd5e/blob/main/.github/readme/custom-dnd5e-bloodied.gif?raw=true" alt="Custom D&amp;D 5e Bloodied"></p>
+
+<h3>Instant Death</h3>
+<p>Apply Instant Death when a character suffers damage equal to or greater than their remaining HP plus their max HP.</p>
+
+<p><img src="https://github.com/Larkinabout/fvtt-custom-dnd5e/blob/main/.github/readme/custom-dnd5e-instant-death.gif?raw=true" alt="Custom D&amp;D 5e Instant Death"></p>
+
+<h3>Dead</h3>
+<ul>
+    <li>Apply the Dead status effect when an NPC is reduced to zero HP.</li>
+    <li>Tint and/or rotate the token when it gains the Dead status effect.</li>
+</ul>
+
+<p><img src="https://github.com/Larkinabout/fvtt-custom-dnd5e/blob/main/.github/readme/custom-dnd5e-dead.gif?raw=true" alt="Custom D&amp;D 5e Dead"></p>
+
+<h3>Unconscious</h3>
+<p>Apply the Unconscious status effect when a PC is reduced to zero HP.</p>
+
+<p><img src="https://github.com/Larkinabout/fvtt-custom-dnd5e/blob/main/.github/readme/custom-dnd5e-unconscious.gif?raw=true" alt="Custom D&amp;D 5e Unconscious"></p>
+
+<h3>Death Saving Throws</h3>
+<ul>
+    <li>Set the roll mode to Public Roll, Blind GM Roll or Private GM Roll. When using Blind GM Roll, successes and failures will not appear on the character sheet for the player.</li>
+    <li>Set the target value required to succeed a death saving throw.</li>
+    <li>Remove a number of successes or failures for each event: On Regaining HP from 0, On Short Rest and On Long Rest.</li>
+</ul>
+
+<p><img src="https://github.com/Larkinabout/fvtt-custom-dnd5e/blob/main/.github/readme/custom-dnd5e-death-saves-target-value.png?raw=true" alt="Custom D&amp;D 5e Death Saves Target Value"></p>
+
+<h3>Hit Points</h3>
+
+<h4>Massive Damage</h4>
+<p>Apply Massive Damage as per the variant rule (DMG pg. 273).</p>
+
+<p><img src="https://github.com/Larkinabout/fvtt-custom-dnd5e/blob/main/.github/readme/custom-dnd5e-massive-damage.gif?raw=true" alt="Custom D&amp;D 5e Massive Damage"></p>
+
+<h4>Rolling Hit Points</h4>
+<ul>
+    <li>When rolling for Hit Points, automatically reroll based on a minimum value.</li>
+    <li>Reroll once or until the minimum value is met.</li>
+    <li>Hide the Take Average option when rolling for Hit Points.</li>
+</ul>
+
+<p><img src="https://github.com/Larkinabout/fvtt-custom-dnd5e/blob/main/.github/readme/custom-dnd5e-level-up-hit-points.png?raw=true" alt="Custom D&amp;D 5e Level Up Hit Points"></p>
+
+<h4>Negative Hit Points</h4>
+<ul>
+    <li>Apply negative hit points to characters and/or NPCs.</li>
+    <li>Choose to heal from negative HP or from 0 HP.</li>
+</ul>
+
+<p><img src="https://github.com/Larkinabout/fvtt-custom-dnd5e/blob/main/.github/readme/custom-dnd5e-negative-hit-points.png?raw=true" alt="Custom D&amp;D 5e Negative Hit Points"></p>
+
+<h3>Initiative Each Round</h3>
+<ul>
+    <li><strong>Reroll All:</strong> Reroll Initiative for all combatants at the start of each round.</li>
+    <li><strong>Reset Only:</strong> Reset Initiative for all combatants without rerolling.</li>
+    <li><strong>Reroll NPC:</strong> Reroll Initiative for NPCs only at the start of each round.</li>
+</ul>
+
+<p><img src="https://github.com/Larkinabout/fvtt-custom-dnd5e/blob/main/.github/readme/custom-dnd5e-reroll-initiative.gif?raw=true" alt="Custom D&amp;D 5e Reroll Initiative"></p>
+
+<h3>Award Inspiration</h3>
+<p>Award Inspiration when a set value is rolled for an ability check, attack roll, saving throw and/or skill check.</p>
+
+<p><img src="https://github.com/Larkinabout/fvtt-custom-dnd5e/blob/main/.github/readme/custom-dnd5e-award-inspiration.gif?raw=true" alt="Custom D&amp;D 5e Award Inspiration"></p>
+
+<h3>Average Damage</h3>
+<ul>
+    <li>When rolling damage, the average result is used.</li>
+    <li>Enable per actor type (Player Characters, NPCs or both).</li>
+    <li>When the associated attack roll is a critical hit, the average damage includes the critical damage.</li>
+</ul>
+
+<p><img src="https://github.com/Larkinabout/fvtt-custom-dnd5e/blob/main/.github/readme/custom-dnd5e-average-damage.gif?raw=true" alt="Custom D&amp;D Average Damage"></p>
+
+<h3>Mob Damage</h3>
+<ul>
+    <li>When attacking a single token with four or more identical tokens selected, the attack roll is replaced with a damage roll based on the <strong>Mobs Average Results</strong> table (Dungeon Master's Guide (2024), page 82).</li>
+    <li>Use average damage instead of rolling.</li>
+</ul>
+
+<p><img src="https://github.com/Larkinabout/fvtt-custom-dnd5e/blob/main/.github/readme/custom-dnd5e-mob-damage.gif?raw=true" alt="Custom D&amp;D Mob Damage"></p>
+
+<h3>Probabilistic Damage</h3>
+<ul>
+    <li>When attacking a single token, the attack roll is replaced with a damage roll scaled by the chance to hit.</li>
+    <li>Enable per activity and actor type (Player Characters, NPCs or both).</li>
+    <li>Use average damage instead of rolling.</li>
+</ul>
+
+<p><img src="https://github.com/Larkinabout/fvtt-custom-dnd5e/blob/main/.github/readme/custom-dnd5e-probabilistic-damage.gif?raw=true" alt="Custom D&amp;D Probabilistic Damage"></p>
+
+<p><img src="https://github.com/Larkinabout/fvtt-custom-dnd5e/blob/main/.github/readme/custom-dnd5e-use-probabilistic-damage.png?raw=true" alt="Custom D&amp;D 5e Use Probabilistic Damage"></p>
+
+<h3>Prone</h3>
+<p>Rotate the token when it gains the Prone status effect.</p>
+
+<p><img src="https://github.com/Larkinabout/fvtt-custom-dnd5e/blob/main/.github/readme/custom-dnd5e-prone-rotation.gif?raw=true" alt="Custom D&amp;D 5e Prone"></p>
+
+<h3>Resting</h3>
+
+<h4>Use Camp Supplies</h4>
+<p>When taking a Long Rest, optionally requires spending Camp Supplies.</p>
+
+<p><img src="https://github.com/Larkinabout/fvtt-custom-dnd5e/blob/main/.github/readme/custom-dnd5e-camp-supplies.png?raw=true" alt="Custom D&amp;D 5e Camp Supplies"></p>
+
+<p align="right">(<a href="#custom-dd-5e">back to top</a>)</p>
+
+<hr>
+
+<h2 id="counters">Counters</h2>
+
+<p>Add counters to character sheets with five types: checkbox, fraction, number, pips and success/failure. Set triggers to automatically change counter values based on HP thresholds, combat events, or item attack rolls. Triggers can execute macros with custom operators. Counter actions include increasing or decreasing values, destroying items, and reducing item quantities. Counters can also be added to items and group actor sheets, and are compatible with Tidy5e character sheets.</p>
+
+<p><img src="https://github.com/Larkinabout/fvtt-custom-dnd5e/blob/main/.github/readme/custom-dnd5e-counters.gif?raw=true" alt="Custom D&amp;D 5e Counters"></p>
+
+<p><img src="https://github.com/Larkinabout/fvtt-custom-dnd5e/blob/main/.github/readme/custom-dnd5e-counter-triggers.gif?raw=true" alt="Custom D&amp;D 5e Counter Triggers"></p>
+
+<p align="right">(<a href="#custom-dd-5e">back to top</a>)</p>
+
+<hr>
+
+<h2 id="configurations">Configurations</h2>
+
+<p>Customise D&amp;D 5e system configurations. For help and advice on modifying a configuration, either click the info button in the header of the configuration window or open the Configurations journal within the Custom D&amp;D 5e compendium.</p>
+
+<p><img src="https://github.com/Larkinabout/fvtt-custom-dnd5e/blob/main/.github/readme/custom-dnd5e-damage-types-journal.png?raw=true" alt="Custom D&amp;D 5e Damage Types Journal"></p>
+
+<ul>
+    <li><strong>Abilities</strong>: Strength, Dexterity, Constitution, etc.</li>
+    <li><strong>Activation Costs</strong>: Action, Bonus Action, Reaction, etc.</li>
+    <li><strong>Actor Sizes</strong>: Tiny, Small, Medium, etc.</li>
+    <li><strong>Armor</strong>: Breastplate, Chain Mail, Leather, etc.</li>
+    <li><strong>Armor Calculations</strong>: Flat, Mage Armor, Unarmored Defense, etc.</li>
+    <li><strong>Armor Proficiencies/Types</strong>: Light, Medium, Heavy, Shields, etc.</li>
+    <li><strong>Bastions</strong>: Facilities, sizes, build orders and subtypes.</li>
+    <li><strong>Calendar</strong>: Custom campaign calendars with months, days and seasons.</li>
+    <li><strong>Conditions/Status Effects</strong>: Blinded, Charmed, Dead, etc. Includes overlay options and macro functionality.</li>
+    <li><strong>Consumable Types</strong>: Ammo, Food, Poison, etc.</li>
+    <li><strong>Creature Types</strong>: Aberration, Beast, Celestial, etc.</li>
+    <li><strong>Currencies</strong>: Copper, Silver, Gold, etc. Includes conversion configuration.</li>
+    <li><strong>Damage Types</strong>: Acid, Bludgeoning, Fire, etc.</li>
+    <li><strong>Encumbrance</strong>: Encumbrance labels, icons, thresholds, weight modifiers, speed multiplier, etc.</li>
+    <li><strong>Equipment Types</strong>: Clothing, Ring, Rod, etc.</li>
+    <li><strong>Feature Types</strong>: Background, Class, Enchantment, etc.</li>
+    <li><strong>Item Properties</strong>: Adamantine, Finesse, Heavy, etc.</li>
+    <li><strong>Item Rarity</strong>: Common, Uncommon, Rare, etc.</li>
+    <li><strong>Languages</strong>: Common, Dwarvish, Elvish, etc.</li>
+    <li><strong>Loot Types</strong>: Art Object, Adventuring Gear, Gemstone, etc.</li>
+    <li><strong>Senses</strong>: Blindsight, Darkvision, Tremorsense, etc.</li>
+    <li><strong>Skills</strong>: Athletics, Acrobatics, Stealth, etc.</li>
+    <li><strong>Spell Schools</strong>: Abjuration, Conjuration, Divination, etc.</li>
+    <li><strong>Tools</strong>: Alchemist's Supplies, Bagpipes, Brewer's Supplies, etc.</li>
+    <li><strong>Tool Proficiencies/Types</strong>: Artisan's Tools, Gaming Set, Musical Instrument, etc.</li>
+    <li><strong>Weapons</strong>: Dagger, Longsword, Shortbow, etc.</li>
+    <li><strong>Weapon Masteries</strong>: Customise weapon mastery effects and labels.</li>
+    <li><strong>Weapon Proficiencies/Types</strong>: Improvised, Simple, Martial, etc.</li>
+    <li><strong>Max Ability Score</strong></li>
+    <li><strong>Max Level</strong></li>
+</ul>
+
+<p align="right">(<a href="#custom-dd-5e">back to top</a>)</p>
+
+<hr>
+
+<h2 id="configure-encumbrance">Configure Encumbrance</h2>
+
+<p>Customise encumbrance labels, icons, thresholds and weight modifiers. Includes an optional speed multiplier for encumbrance-based movement reduction.</p>
+
+<p><img src="https://github.com/Larkinabout/fvtt-custom-dnd5e/blob/main/.github/readme/custom-dnd5e-configure-encumbrance.png?raw=true" alt="Custom D&amp;D 5e Configure Encumbrance"></p>
+
+<p align="right">(<a href="#custom-dd-5e">back to top</a>)</p>
+
+<hr>
+
+<h2 id="configure-rolls">Configure Rolls</h2>
+
+<p>Customize the base die and roll mode for Ability Checks, Attack Rolls, Concentration Saving Throws, Initiative Rolls, Saving Throws, Skills Checks and Tool Checks.</p>
+
+<p><img src="https://github.com/Larkinabout/fvtt-custom-dnd5e/blob/main/.github/readme/custom-dnd5e-configure-rolls.gif?raw=true" alt="Custom D&amp;D 5e Configure Rolls"></p>
+
+<p align="right">(<a href="#custom-dd-5e">back to top</a>)</p>
+
+<hr>
+
+<h2 id="actor-sheet">Actor Sheet</h2>
+
+<p>Customise the actor sheet with client and world settings for characters and NPCs.</p>
+
+<h3>Client Settings</h3>
+<ul>
+    <li><strong>Sheet Scale:</strong> Change the scale of the character sheet.</li>
+    <li><strong>Auto-Fade:</strong> Automatically fade out the actor sheet when the mouse leaves it.</li>
+    <li><strong>Auto-Minimise:</strong> Automatically minimise the actor sheet when the mouse leaves it.</li>
+</ul>
+
+<h3>Characters</h3>
+<ul>
+    <li><strong>Banner Image:</strong> Select an image to use as the banner on the character sheet.</li>
+    <li><strong>Show/Hide Death Saves:</strong> Show or hide death saves tracking on the character sheet.</li>
+    <li><strong>Show/Hide Encumbrance:</strong> Show or hide the encumbrance bar on the character sheet.</li>
+    <li><strong>Show/Hide Exhaustion:</strong> Show or hide exhaustion tracking on the character sheet.</li>
+    <li><strong>Show/Hide Inspiration:</strong> Show or hide the Inspiration button on the character sheet.</li>
+    <li><strong>Show Jump Distance:</strong> Display Long Jump and High Jump distances in the Speed tooltip on character sheets. Shows running and standing variants calculated from the character's Strength score and modifier.</li>
+    <li><strong>Show/Hide Manage Currency:</strong> Show or hide the Manage Currency button on the character sheet.</li>
+</ul>
+
+<h3>NPCs</h3>
+<ul>
+    <li><strong>Show Disposition:</strong> Show disposition buttons (Secret, Hostile, Neutral, Friendly) in the NPC sheet sidebar for quick token disposition changes.</li>
+    <li><strong>Show/Hide Legendary Actions:</strong> Show or hide Legendary Actions on the NPC sheet.</li>
+    <li><strong>Show/Hide Legendary Resistance:</strong> Show or hide Legendary Resistance on the NPC sheet.</li>
+    <li><strong>Show/Hide Use Lair Action:</strong> Show or hide the Use Lair Action button on the NPC sheet.</li>
+</ul>
+
+<p align="right">(<a href="#custom-dd-5e">back to top</a>)</p>
+
+<hr>
+
+<h2 id="item-sheet">Item Sheet</h2>
+
+<p>Set the minimum role required to toggle Identified/Unidentified on the item.</p>
+
+<p align="right">(<a href="#custom-dd-5e">back to top</a>)</p>
+
+<hr>
+
+<h2 id="smaller-form-character-sheet">Smaller Form Character Sheet</h2>
+
+<p>Select 'Custom D&amp;D 5e Character Sheet' from the Sheet Configuration dialog (cog on the sheet's header) to enable a smaller form character sheet.</p>
+
+<p><img src="https://github.com/Larkinabout/fvtt-custom-dnd5e/blob/main/.github/readme/custom-dnd5e-character-sheet.png?raw=true" alt="Custom D&amp;D 5e Character Sheet"></p>
+
+<p align="right">(<a href="#custom-dd-5e">back to top</a>)</p>
+
+<hr>
+
+<h2 id="chat-commands">Chat Commands</h2>
+
+<p>Enable additional chat commands to roll an attack, roll damage or request checks and saving throws. For a list of available commands, view the <strong>Chat Commands</strong> journal within the <strong>Custom D&amp;D 5e</strong> compendium.</p>
+
+<p><img src="https://github.com/Larkinabout/fvtt-custom-dnd5e/blob/main/.github/readme/custom-dnd5e-chat-commands.gif?raw=true" alt="Custom D&amp;D 5e Chat Commands"></p>
+
+<p align="right">(<a href="#custom-dd-5e">back to top</a>)</p>
+
+<hr>
+
+<h2 id="show-pressed-keys">Show Pressed Keys</h2>
+
+<p>Display an icon near the cursor when the Skip Dialog, Advantage or Disadvantage keys are pressed.</p>
+
+<p><img src="https://github.com/Larkinabout/fvtt-custom-dnd5e/blob/main/.github/readme/custom-dnd5e-show-pressed-keys.gif?raw=true" alt="Custom D&amp;D 5e Show Pressed Keys"></p>
+
+<p align="right">(<a href="#custom-dd-5e">back to top</a>)</p>
+
+<hr>
+
+<h2 id="ruler-travel-time">Ruler Travel Time</h2>
+
+<p>When measuring distances with the ruler tool, travel time estimates are displayed for three D&amp;D 5e travel paces: fast, normal and slow. Times are shown in days, hours and minutes, calculated based on standard 8-hour travel days.</p>
+
+<p><img src="https://github.com/Larkinabout/fvtt-custom-dnd5e/blob/main/.github/readme/custom-dnd5e-travel-time-ruler.png?raw=true" alt="Custom D&amp;D 5e Ruler Travel Time"></p>
+
+<p align="right">(<a href="#custom-dd-5e">back to top</a>)</p>
+
+<hr>
+
+<h2 id="animations">Animations</h2>
+
+<p>Screen animations can be triggered via the module API or socket events. Available animations include Splatter, Light Rays, Color Split and Wave. Animations can also be triggered automatically for events such as Massive Damage and Inspiration.</p>
+
+<p><img src="https://github.com/Larkinabout/fvtt-custom-dnd5e/blob/main/.github/readme/custom-dnd5e-animations.gif?raw=true" alt="Custom D&amp;D 5e Animations"></p>
+
+<p align="right">(<a href="#custom-dd-5e">back to top</a>)</p>
+
+<hr>
+
+<h2 id="radial-status-effects">Radial Status Effects</h2>
+
+<p>Display status effects in a circle around the token.</p>
+
+<p><img src="https://github.com/Larkinabout/fvtt-custom-dnd5e/blob/main/.github/readme/custom-dnd5e-radial-status-effects.png?raw=true" alt="Custom D&amp;D 5e Radial Status Effects"></p>
+
+<p align="right">(<a href="#custom-dd-5e">back to top</a>)</p>
+
+<hr>
+
+<h2 id="token-border-shape">Token Border Shape</h2>
+
+<p>Choose the shape of the token's border when it is selected or hovered.</p>
+
+<p><img src="https://github.com/Larkinabout/fvtt-custom-dnd5e/blob/main/.github/readme/custom-dnd5e-token-border-shape.png?raw=true" alt="Custom D&amp;D 5e Token Border Shape"></p>
+
+<p align="right">(<a href="#custom-dd-5e">back to top</a>)</p>
+
+<hr>
+
+<h2 id="apply-elevation-to-selected-tokens">Apply Elevation to Selected Tokens</h2>
+
+<p>Apply elevation to all selected tokens.</p>
+
+<p><img src="https://github.com/Larkinabout/fvtt-custom-dnd5e/blob/main/.github/readme/custom-dnd5e-apply-elevation-to-selected.gif?raw=true" alt="Custom D&amp;D 5e Apply Elevation to Selected"></p>
+
+<p align="right">(<a href="#custom-dd-5e">back to top</a>)</p>
+
+<hr>
+
+<h2 id="toggle-status-effects-on-selected-tokens">Toggle Status Effects on Selected Tokens</h2>
+
+<p>Toggle status effects on all selected tokens.</p>
+
+<p><img src="https://github.com/Larkinabout/fvtt-custom-dnd5e/blob/main/.github/readme/custom-dnd5e-toggle-status-effects-on-selected.gif?raw=true" alt="Custom D&amp;D 5e Toggle Status Effects on Selected"></p>
+
+<p align="right">(<a href="#custom-dd-5e">back to top</a>)</p>
+
+<hr>
+
+<h2 id="compatibility">Compatibility</h2>
+
+<h3>Variant Encumbrance + Midi</h3>
+<p>Custom D&amp;D 5e will defer to the <a href="https://foundryvtt.com/packages/variant-encumbrance-dnd5e">Variant Encumbrance + Midi</a> module for encumbrance configuration when it is active.</p>
+
+<p align="right">(<a href="#custom-dd-5e">back to top</a>)</p>
+
+<hr>
+
+<h2 id="required-modules">Required Modules</h2>
+
+<h3><a href="https://foundryvtt.com/packages/lib-wrapper">libWrapper</a></h3>
+<p>For developers, LibWrapper is used to patch:</p>
+<ul>
+    <li><strong><code>CONFIG.Actor.documentClass.prototype._prepareMovementAttribution</code>:</strong> Patched when 'Show Jump Distance' is enabled. Appends Long Jump and High Jump distances to the movement tooltip for characters.</li>
+    <li><strong><code>CONFIG.Canvas.rulerClass.prototype._getWaypointLabelContext</code>:</strong> Patched when 'Ruler Travel Time' is enabled. Adds travel time estimates to ruler waypoint labels.</li>
+    <li><strong><code>CONFIG.Dice.D20Die.prototype.applyAdvantage</code>:</strong> Patched when at least one roll is configured. Replaces roll formula to allow different numbers and faces of dice.</li>
+    <li><strong><code>CONFIG.Dice.D20Roll.fromConfig</code>:</strong> Patched when at least one roll is configured. Replaces the d20 die formula with the custom die formula.</li>
+    <li><strong><code>CONFIG.Dice.D20Roll.prototype.configureModifiers</code>:</strong> Patched when at least one roll is configured. Adds the custom die formula to the d20 options to make it available to <code>validD20Roll</code>.</li>
+    <li><strong><code>CONFIG.Dice.D20Roll.prototype.validD20Roll</code>:</strong> Patched when at least one roll is configured. Additionally returns true when a custom die exists.</li>
+    <li><strong><code>dnd5e.applications.actor.BaseActorSheet.prototype._prepareSenses</code>:</strong> Patched when senses configuration is enabled. Applies custom senses modifications.</li>
+    <li><strong><code>dnd5e.dataModels.actor.AttributesFields.prepareEncumbrance</code>:</strong> Patched when the D&amp;D 5e's 'Encumbrance Tracking' setting is set to 'Variant'. Avoids recalculating encumbrance as well as issues with encumbrance active effects applied during item updates/deletions.</li>
+    <li><strong><code>dnd5e.dataModels.actor.AttributesFields.prepareMovement</code>:</strong> Patched when encumbrance speed reduction mode is set to 'Multiplier'. Applies multiplier-based speed reductions to movement values.</li>
+    <li><strong><code>foundry.canvas.placeables.Token.prototype._refreshBorder</code>:</strong> Patched when Custom D&amp;D 5e's 'Token Border Shape' setting is enabled.</li>
+    <li><strong><code>foundry.canvas.placeables.Token.prototype._refreshEffects</code>:</strong> Patched when Custom D&amp;D 5e's 'Radial Status Effects' setting is enabled.</li>
+</ul>
+
+<p align="right">(<a href="#custom-dd-5e">back to top</a>)</p>
