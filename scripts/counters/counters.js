@@ -71,6 +71,7 @@ function registerHooks() {
   Hooks.on("renderGroupActorSheet", addGroupCounters);
   Hooks.on("dnd5e.prepareSheetContext", prepareCountersContext);
   Hooks.on("preUpdateActor", handlePreUpdateActor);
+  Hooks.on("preUpdateItem", handlePreUpdateItem);
   Hooks.on("updateActor", handleUpdateActor);
   Hooks.on("updateItem", handleUpdateItem);
   Hooks.on("deleteCombat", handleDeleteCombat);
@@ -138,8 +139,6 @@ function prepareCountersContext(sheet, partId, context, options) {
     context.counters = mergeCounters(sheet.document, CONSTANTS.COUNTERS.SETTING.ITEM_COUNTERS.KEY);
   } else if ( docName === "Actor" && sheet.document?.type === "group" ) {
     context.counters = mergeCounters(sheet.document, CONSTANTS.COUNTERS.SETTING.GROUP_COUNTERS.KEY);
-  } else {
-    return;
   }
 }
 
@@ -188,7 +187,9 @@ function addGroupCounters(app, html, data) {
  */
 function handlePreUpdateActor(actor, data, options, userId) {
   if ( !getSetting(constants.SETTING.COUNTERS.KEY) ) return;
-  if ( actor.type === "group" || !actor.isOwner ) return;
+  if ( !actor.isOwner ) return;
+  captureOldCounterValues(actor, data, options);
+  if ( actor.type === "group" ) return;
   const currentHp = foundry.utils.getProperty(data, "system.attributes.hp.value");
   const previousHp = actor.system.attributes.hp.value;
   const maxHp = actor?.system?.attributes?.hp?.effectiveMax ?? actor?.system?.attributes?.hp?.max ?? 0;
@@ -196,6 +197,41 @@ function handlePreUpdateActor(actor, data, options, userId) {
   if ( currentHp !== undefined && currentHp <= halfHp && previousHp > halfHp ) {
     processTriggers({ actor, triggerType: "halfHp" });
   }
+}
+
+/* -------------------------------------------- */
+
+/**
+ * Handle item pre-update triggers.
+ * @param {object} item The item
+ * @param {object} data The data
+ * @param {object} options The options
+ * @param {string} userId The user ID
+ */
+function handlePreUpdateItem(item, data, options, userId) {
+  if ( !getSetting(constants.SETTING.COUNTERS.KEY) ) return;
+  if ( !item.isOwner ) return;
+  captureOldCounterValues(item, data, options);
+}
+
+/* -------------------------------------------- */
+
+/**
+ * Capture old counter values.
+ * @param {Actor|Item} entity The entity
+ * @param {object} data The data
+ * @param {object} options The options
+ */
+function captureOldCounterValues(entity, data, options) {
+  if ( !hasDataChanged(data) ) return;
+  const counters = getCounters(entity);
+  if ( !counters ) return;
+  const previousValues = {};
+  for ( const [counterKey, counter] of Object.entries(counters) ) {
+    if ( !["fraction", "number", "pips"].includes(counter.type) ) continue;
+    previousValues[counterKey] = counter.value ?? 0;
+  }
+  options.customDnd5ePreviousCounterValues = previousValues;
 }
 
 /* -------------------------------------------- */
@@ -218,6 +254,11 @@ function handleUpdateActor(actor, data, options, userId) {
     processTriggers({ actor, data, triggerType: "failureValue" });
     processTriggers({ actor, data, triggerType: "checked" });
     processTriggers({ actor, data, triggerType: "unchecked" });
+    const previousCounterValues = options.customDnd5ePreviousCounterValues;
+    if ( previousCounterValues ) {
+      processTriggers({ actor, data, triggerType: "counterValueIncrease", previousCounterValues });
+      processTriggers({ actor, data, triggerType: "counterValueDecrease", previousCounterValues });
+    }
   }
 }
 
@@ -239,6 +280,11 @@ function handleUpdateItem(item, data, options, userId) {
     processTriggers({ actor: item, data, triggerType: "failureValue" });
     processTriggers({ actor: item, data, triggerType: "checked" });
     processTriggers({ actor: item, data, triggerType: "unchecked" });
+    const previousCounterValues = options.customDnd5ePreviousCounterValues;
+    if ( previousCounterValues ) {
+      processTriggers({ actor: item, data, triggerType: "counterValueIncrease", previousCounterValues });
+      processTriggers({ actor: item, data, triggerType: "counterValueDecrease", previousCounterValues });
+    }
   }
 }
 
@@ -349,9 +395,14 @@ function hasDataChanged(data) {
  * @param {Actor} params.actor The actor
  * @param {object} [params.data=null] The data
  * @param {string} params.triggerType The trigger type, e.g., 'zeroHp', 'halfHp', 'longRest'
- * @param {string} [params.followUpFlag=null] Optional: flag to set for follow-up actions (e.g., 'zeroHpCombatEnd')
+ * @param {string} [params.followUpFlag=null] Optional flag for follow-up actions
+ * @param {number} [params.dieTotal=null] The die total
+ * @param {object} [params.previousCounterValues=null] Previous counter values
  */
-function processTriggers({ actor, data = null, triggerType, followUpFlag = null, dieTotal = null }) {
+function processTriggers({
+  actor, data = null, triggerType, followUpFlag = null,
+  dieTotal = null, previousCounterValues = null
+}) {
   const counters = getCounters(actor);
   if ( !counters ) return;
 
@@ -360,7 +411,7 @@ function processTriggers({ actor, data = null, triggerType, followUpFlag = null,
     if ( !counter.triggers ) continue;
     for (const trigger of counter.triggers) {
       if ( trigger.trigger === triggerType ) {
-        handleAction(counterKey, counter, trigger, { actor, data, dieTotal });
+        handleAction(counterKey, counter, trigger, { actor, data, dieTotal, previousCounterValues });
       }
     }
   }
@@ -381,8 +432,13 @@ function processTriggers({ actor, data = null, triggerType, followUpFlag = null,
  * @param {object} params Miscellaneous parameters
  * @param {Actor} params.actor The actor
  * @param {object} [params.data=null] The data
+ * @param {number} [params.dieTotal=null] The die total
+ * @param {object} [params.previousCounterValues=null] Previous counter values
  */
-function handleAction(counterKey, counter, trigger, { actor, data, dieTotal = null }) {
+function handleAction(
+  counterKey, counter, trigger,
+  { actor, data, dieTotal = null, previousCounterValues = null }
+) {
   // For rollAttack, compare die value using operator
   if ( trigger.trigger === "rollAttack" ) {
     if ( !compareValues(dieTotal, trigger.triggerOperator, Number(trigger.triggerValue)) ) return;
@@ -406,6 +462,15 @@ function handleAction(counterKey, counter, trigger, { actor, data, dieTotal = nu
   // For checked/unchecked, only fire if counter value matches
   if ( trigger.trigger === "checked" && getCounterValue(data, counterKey) !== true ) return;
   if ( trigger.trigger === "unchecked" && getCounterValue(data, counterKey) !== false ) return;
+
+  // For counterValueIncrease/counterValueDecrease, compare old and new values
+  if ( trigger.trigger === "counterValueIncrease" || trigger.trigger === "counterValueDecrease" ) {
+    const newValue = getCounterValue(data, counterKey);
+    if ( newValue === null || newValue === undefined ) return;
+    const oldValue = previousCounterValues?.[counterKey] ?? 0;
+    if ( trigger.trigger === "counterValueIncrease" && newValue <= oldValue ) return;
+    if ( trigger.trigger === "counterValueDecrease" && newValue >= oldValue ) return;
+  }
 
   switch (trigger.action) {
     case "check":

@@ -148,9 +148,9 @@ Apply Massive Damage as per the variant rule (DMG pg. 273).
 Award Inspiration when a set value is rolled for an ability check, attack roll, saving throw and/or skill check.
 
 <details>
-    <summary>See Image</summary>
+    <summary>See Video</summary>
 
-![Custom D&D 5e Award Inspiration](./.github/readme/custom-dnd5e-award-inspiration.png)
+![Custom D&D 5e Award Inspiration](./.github/readme/custom-dnd5e-award-inspiration.gif)
 
 </details>
 
@@ -224,7 +224,7 @@ When taking a Long Rest, optionally requires spending Camp Supplies.
 
 ## Counters
 
-Add counters to character sheets with four types: checkbox, fraction, number and success/failure. Set triggers to automatically change counter values based on HP thresholds, combat events, or item attack rolls. Triggers can execute macros with custom operators. Counter actions include increasing or decreasing values, destroying items, and reducing item quantities. Counters can also be added to items and group actor sheets, and are compatible with Tidy5e character sheets.
+Add counters to character sheets with five types: checkbox, fraction, number, pips and success/failure. Set triggers to automatically change counter values based on HP thresholds, combat events, or item attack rolls. Triggers can execute macros with custom operators. Counter actions include increasing or decreasing values, destroying items, and reducing item quantities. Counters can also be added to items and group actor sheets, and are compatible with Tidy5e character sheets.
 
 <details>
     <summary>See Video</summary>
