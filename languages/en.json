@@ -96,6 +96,8 @@
     "CUSTOM_DND5E.longRest": "Long Rest",
     "CUSTOM_DND5E.loot": "Loot",
     "CUSTOM_DND5E.macro": "Macro",
+    "CUSTOM_DND5E.macroOnApply": "Macro (On Apply)",
+    "CUSTOM_DND5E.macroOnRemove": "Macro (On Remove)",
     "CUSTOM_DND5E.massiveDamage": "Massive Damage",
     "CUSTOM_DND5E.maximum": "Maximum",
     "CUSTOM_DND5E.reachedCounterLimit": "You've reached the limit for this counter!",

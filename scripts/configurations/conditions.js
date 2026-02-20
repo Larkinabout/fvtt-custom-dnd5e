@@ -22,6 +22,7 @@ export function register() {
 
   Hooks.on("preCreateActiveEffect", applyOverlay);
   Hooks.on("createActiveEffect", executeConditionMacro);
+  Hooks.on("deleteActiveEffect", executeConditionDisabledMacro);
 
   const templates = [
     constants.TEMPLATE.EDIT
@@ -72,6 +73,48 @@ async function executeConditionMacro(effect, options, userId) {
 
   const actor = effect.parent;
   const token = actor?.isToken ? actor.token : actor?.getActiveTokens()[0];
+
+  macro.execute({
+    actor,
+    token,
+    condition: statusId,
+    conditionName: game.i18n.localize(conditionConfig.name),
+    effect
+  });
+}
+
+/* -------------------------------------------- */
+
+/**
+ * Execute a macro when a condition with a configured disabled macro is removed.
+ * @param {ActiveEffect} effect The active effect being deleted.
+ * @param {object} options The deletion options.
+ * @param {string} userId The ID of the user who deleted the effect.
+ */
+async function executeConditionDisabledMacro(effect, options, userId) {
+  if ( !getSetting(constants.SETTING.ENABLE.KEY) ) return;
+  if ( game.user.id !== userId ) return;
+
+  const statusId = [...(effect.statuses || [])][0];
+  if ( !statusId ) return;
+
+  const conditionsData = getSetting(constants.SETTING.CONFIG.KEY);
+  const conditionConfig = conditionsData?.[statusId];
+  if ( !conditionConfig?.macroDisabledUuid ) return;
+
+  const macro = await fromUuid(conditionConfig.macroDisabledUuid);
+  if ( !macro ) {
+    Logger.error(
+      `Condition disabled macro not found: ${conditionConfig.macroDisabledUuid}`,
+      true
+    );
+    return;
+  }
+
+  const actor = effect.parent;
+  const token = actor?.isToken
+    ? actor.token
+    : actor?.getActiveTokens()[0];
 
   macro.execute({
     actor,

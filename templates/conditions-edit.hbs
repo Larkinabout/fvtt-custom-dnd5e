@@ -97,7 +97,7 @@
             </div>
         </div>
         <div class="form-group">
-            <label class="flex1" style="min-width:80px; max-width:120px;">{{localize "CUSTOM_DND5E.macro"}}</label>
+            <label class="flex1" style="min-width:80px; max-width:120px;">{{localize "CUSTOM_DND5E.macroOnApply"}}</label>
             <div class="form-fields custom-dnd5e-macro-drop">
                 <div class="custom-dnd5e-macro-field flex1{{#unless macroName}} hidden{{/unless}}">
                     <span class="custom-dnd5e-macro-name">{{macroName}}</span>
@@ -107,6 +107,19 @@
                 </div>
                 <div class="drop-area flex1{{#if macroName}} hidden{{/if}}">{{localize "CUSTOM_DND5E.form.counters.triggers.macro.dropHint"}}</div>
                 <input type="hidden" name="{{key}}.macroUuid" value="{{macroUuid}}">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="flex1" style="min-width:80px; max-width:120px;">{{localize "CUSTOM_DND5E.macroOnRemove"}}</label>
+            <div class="form-fields custom-dnd5e-macro-drop">
+                <div class="custom-dnd5e-macro-field flex1{{#unless macroDisabledName}} hidden{{/unless}}">
+                    <span class="custom-dnd5e-macro-name">{{macroDisabledName}}</span>
+                    <button type="button" data-action="clearMacro" class="unbutton control-button" data-tooltip="{{localize 'CUSTOM_DND5E.form.counters.triggers.macro.clear'}}" aria-label="{{localize 'CUSTOM_DND5E.form.counters.triggers.macro.clear'}}">
+                        <i class="fa-solid fa-trash" inert></i>
+                    </button>
+                </div>
+                <div class="drop-area flex1{{#if macroDisabledName}} hidden{{/if}}">{{localize "CUSTOM_DND5E.form.counters.triggers.macro.dropHint"}}</div>
+                <input type="hidden" name="{{key}}.macroDisabledUuid" value="{{macroDisabledUuid}}">
             </div>
         </div>
     </div>

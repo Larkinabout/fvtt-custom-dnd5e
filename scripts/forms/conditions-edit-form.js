@@ -89,6 +89,10 @@ export class ConditionsEditForm extends ConfigEditForm {
       const macro = await fromUuid(context.macroUuid);
       context.macroName = macro?.name ?? "";
     }
+    if ( context.macroDisabledUuid ) {
+      const macro = await fromUuid(context.macroDisabledUuid);
+      context.macroDisabledName = macro?.name ?? "";
+    }
     return context;
   }
 
@@ -101,8 +105,8 @@ export class ConditionsEditForm extends ConfigEditForm {
    */
   _onRender(context, options) {
     super._onRender(context, options);
-    const macroDrop = this.element.querySelector(".custom-dnd5e-macro-drop");
-    if ( macroDrop ) {
+    const macroDrops = this.element.querySelectorAll(".custom-dnd5e-macro-drop");
+    for ( const macroDrop of macroDrops ) {
       macroDrop.addEventListener("drop", (event) => this.#onDropMacro(event));
     }
   }
@@ -121,12 +125,13 @@ export class ConditionsEditForm extends ConfigEditForm {
     const macro = await Macro.implementation.fromDropData(data);
     if ( !macro ) return;
 
-    const input = this.element.querySelector('input[name$=".macroUuid"]');
+    const container = event.currentTarget;
+    const input = container.querySelector('input[type="hidden"]');
     if ( input ) input.value = macro.uuid;
 
-    const macroField = this.element.querySelector(".custom-dnd5e-macro-field");
-    const dropArea = this.element.querySelector(".custom-dnd5e-macro-drop .drop-area");
-    const nameEl = this.element.querySelector(".custom-dnd5e-macro-name");
+    const macroField = container.querySelector(".custom-dnd5e-macro-field");
+    const dropArea = container.querySelector(".drop-area");
+    const nameEl = container.querySelector(".custom-dnd5e-macro-name");
     if ( nameEl ) nameEl.textContent = macro.name;
     if ( macroField ) macroField.classList.remove("hidden");
     if ( dropArea ) dropArea.classList.add("hidden");
@@ -140,11 +145,12 @@ export class ConditionsEditForm extends ConfigEditForm {
    * @param {HTMLElement} target The target element.
    */
   static clearMacro(event, target) {
-    const input = this.element.querySelector('input[name$=".macroUuid"]');
+    const container = target.closest(".custom-dnd5e-macro-drop");
+    const input = container.querySelector('input[type="hidden"]');
     if ( input ) input.value = "";
 
-    const macroField = this.element.querySelector(".custom-dnd5e-macro-field");
-    const dropArea = this.element.querySelector(".custom-dnd5e-macro-drop .drop-area");
+    const macroField = container.querySelector(".custom-dnd5e-macro-field");
+    const dropArea = container.querySelector(".drop-area");
     if ( macroField ) macroField.classList.add("hidden");
     if ( dropArea ) dropArea.classList.remove("hidden");
   }
