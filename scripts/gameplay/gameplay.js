@@ -1005,20 +1005,36 @@ async function handleMassiveDamageSaveResult(rolls, data) {
   if ( !actor?.getFlag("custom-dnd5e", "pendingMassiveDamageSave") ) return;
   if ( data.ability !== "con" ) return;
 
+  Logger.debug("Massive Damage save rolled", { actor: actor.name, ability: data.ability });
+
   // Trace back from the save card to the originating request card
   const requestCard = rolls[0]?.parent?.getOriginatingMessage();
-  if ( requestCard?.flags?.["custom-dnd5e"]?.source !== "massiveDamage" ) return;
+  if ( requestCard?.flags?.["custom-dnd5e"]?.source !== "massiveDamage" ) {
+    Logger.debug("Massive Damage originating message check failed", {
+      hasParent: !!rolls[0]?.parent,
+      requestCardId: requestCard?.id,
+      source: requestCard?.flags?.["custom-dnd5e"]?.source
+    });
+    return;
+  }
 
   // Clear the flag regardless of result
   await actor.unsetFlag("custom-dnd5e", "pendingMassiveDamageSave");
 
   const total = rolls[0]?.total;
-  if ( total === undefined || total >= 15 ) return;
+  if ( total === undefined || total >= 15 ) {
+    Logger.debug("Massive Damage save passed", { total });
+    return;
+  }
 
   // Save failed — play animation and roll on system shock table
+  Logger.debug("Massive Damage save failed, rolling on table", { total });
   playMassiveDamageAnimation(actor);
   const tableUuid = getSetting(CONSTANTS.HIT_POINTS.SETTING.MASSIVE_DAMAGE_TABLE.KEY);
-  if ( !tableUuid ) return;
+  if ( !tableUuid ) {
+    Logger.debug("Massive Damage table UUID not configured");
+    return;
+  }
 
   const table = await fromUuid(tableUuid);
   if ( !table ) {
