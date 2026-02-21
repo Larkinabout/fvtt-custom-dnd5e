@@ -125,3 +125,66 @@
     opacity: 0.7;
     font-size: var(--font-size-12);
 }
+
+/*
+ * TOKEN HUD
+ */
+
+#token-hud.custom-dnd5e-hud .col.left {
+    align-items: center;
+    margin-left: 0.5rem;
+}
+
+#token-hud.custom-dnd5e-hud .status-effects .effect-control:hover {
+    filter: drop-shadow(0 0 1px var(--control-hover-border-color)) drop-shadow(0 0 1px var(--control-hover-border-color));
+    opacity: 1;
+}
+
+#token-hud.custom-dnd5e-hud .status-effects .effect-control.active {
+    border: none;
+    opacity: 1;
+}
+
+#token-hud.custom-dnd5e-hud .status-effects .effect-control.active:not(.overlay):not(:hover) {
+    filter: drop-shadow(0 0 1px var(--control-active-border-color)) drop-shadow(0 0 2px var(--control-active-border-color));
+}
+
+#token-hud.custom-dnd5e-hud .status-effects .effect-control.active.overlay:not(:hover) {
+    background-color: color-mix(in srgb, var(--toggle-active-bg-color) 50%, transparent);
+    border-radius: 2px;
+    filter: drop-shadow(0 0 1px var(--toggle-active-bg-color)) drop-shadow(0 0 1px var(--toggle-active-bg-color));
+}
+
+#token-hud.custom-dnd5e-hud.placeable-hud .control-icon {
+    height: calc(var(--control-size) + 5px);
+    width: calc(var(--control-size) + 5px);
+    line-height: calc(var(--control-size) + 5px);
+    flex: 0 0 calc(var(--control-size) + 5px);
+    padding: 7px;
+}
+
+#token-hud.custom-dnd5e-hud.placeable-hud .control-icon:not([data-action="togglePalette"]) {
+    border-radius: 100%;
+}
+
+#token-hud.custom-dnd5e-hud.placeable-hud .control-icon:hover {
+    border-color: var(--control-hover-border-color);
+}
+
+#token-hud.custom-dnd5e-hud.placeable-hud .control-icon:hover img,
+#token-hud.custom-dnd5e-hud.placeable-hud .control-icon:hover i {
+    filter: drop-shadow(0 0 1px var(--control-hover-border-color)) drop-shadow(0 0 1px var(--control-hover-border-color));
+}
+
+#token-hud.custom-dnd5e-hud.placeable-hud .control-icon.active:not(:hover) {
+    border-color: var(--control-active-border-color);
+}
+
+#token-hud.custom-dnd5e-hud.placeable-hud .control-icon i.fa-gear {
+    margin-top: 1px;
+}
+
+#token-hud.custom-dnd5e-hud.placeable-hud .control-icon.active:not(:hover) img,
+#token-hud.custom-dnd5e-hud.placeable-hud .control-icon.active:not(:hover) i {
+    filter: drop-shadow(0 0 1px var(--control-active-border-color)) drop-shadow(0 0 1px var(--control-active-border-color));
+}

@@ -22,6 +22,7 @@ A Foundry VTT module to customise the D&D 5e system.
 - [Animations](#animations)
 - [Radial Status Effects](#radial-status-effects)
 - [Token Border Shape](#token-border-shape)
+- [Token HUD Improvements](#token-hud-improvements)
 - [Apply Elevation to Selected Tokens](#apply-elevation-to-selected-tokens)
 - [Toggle Status Effects on Selected Tokens](#toggle-status-effects-on-selected-tokens)
 - [Compatibility](#compatibility)
@@ -456,6 +457,18 @@ Choose the shape of the token's border when it is selected or hovered.
 ![Custom D&D 5e Token Border Shape](./.github/readme/custom-dnd5e-token-border-shape.png)
 
 </details>
+
+<p align="right">(<a href="#custom-dd-5e">back to top</a>)</p>
+
+---
+
+## Token HUD Improvements
+
+Improves the Token HUD with hover-to-open palettes, button styling, and fixed HUD size across zoom levels.
+
+- **Hover-to-open palettes:** Hovering over the Status Effects or Movement Actions buttons opens the palette automatically.
+- **Button styling:** Enhanced visual feedback for status effect icons and control buttons.
+- **Fixed HUD size:** The Token HUD maintains a consistent size on screen regardless of the canvas zoom level.
 
 <p align="right">(<a href="#custom-dd-5e">back to top</a>)</p>
 

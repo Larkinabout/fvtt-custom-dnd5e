@@ -60,6 +60,7 @@ import { register as registerRulerTravelTime } from "./ruler-travel-time.js";
 import { register as registerTidy5eCounters } from "./counters/counters-tidy5e.js";
 import { register as registerTokenBorder } from "./token-border.js";
 import { register as registerTokenEffects } from "./token-effects.js";
+import { register as registerTokenHudImprovements } from "./token-hud-improvements.js";
 import { register as registerTools, setConfig as setTools } from "./configurations/tools.js";
 import { register as registerToolProficiencies, setConfig as setToolProficiencies } from "./configurations/tool-proficiencies.js";
 import { register as registerWeaponIds, setConfig as setWeaponIds } from "./configurations/weapon-ids.js";
@@ -197,6 +198,7 @@ Hooks.on("init", async () => {
   registerRulerTravelTime();
   registerTokenBorder();
   registerTokenEffects();
+  registerTokenHudImprovements();
   registerDebug();
 
   setAbilities(getSetting(CONSTANTS.ABILITIES.SETTING.CONFIG.KEY));

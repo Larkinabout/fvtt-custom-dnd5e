@@ -1044,6 +1044,9 @@ export const CONSTANTS = {
         KEY: "token-border-shape",
         HINT: "CUSTOM_DND5E.setting.tokenBorderShape.hint",
         NAME: "CUSTOM_DND5E.setting.tokenBorderShape.name"
+      },
+      HUD_IMPROVEMENTS: {
+        KEY: "token-hud-improvements"
       }
     }
   },
