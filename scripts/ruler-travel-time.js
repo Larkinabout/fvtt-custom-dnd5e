@@ -5,6 +5,11 @@ const constants = CONSTANTS.RULER_TRAVEL_TIME;
 const TEMPLATE = "modules/custom-dnd5e/templates/waypoint-label.hbs";
 
 /**
+ * Module-level state for the hovered token ID.
+ */
+let hoveredTokenId = null;
+
+/**
  * Register settings and patches.
  */
 export function register() {
@@ -49,6 +54,8 @@ function registerPatches() {
     getWaypointLabelContextPatch,
     "WRAPPER"
   );
+
+  Hooks.on("hoverToken", onHoverToken);
 }
 
 /* -------------------------------------------- */
@@ -61,6 +68,23 @@ const PACE = [
   { fpm: 300, icon: "fa-solid fa-person-walking" },
   { fpm: 200, icon: "fa-solid fa-person-hiking" }
 ];
+
+/**
+ * Pace multipliers for deriving fast/normal/slow from a token's speed.
+ */
+const PACE_MULTIPLIERS = [
+  { multiplier: 4 / 3 },
+  { multiplier: 1 },
+  { multiplier: 2 / 3 }
+];
+
+/**
+ * Map movement actions to actor movement speed properties.
+ */
+const ACTION_SPEED_MAP = {
+  walk: "walk", fly: "fly", swim: "swim",
+  burrow: "burrow", climb: "climb", crawl: "walk", jump: "walk"
+};
 
 /* -------------------------------------------- */
 
@@ -88,14 +112,78 @@ function getWaypointLabelContextPatch(wrapped, waypoint, state) {
 
   context.uiScale = 1 / (canvas.stage.scale.x || 1);
 
-  context.travelTime = {
-    paces: PACE.map(pace => ({
-      icon: pace.icon,
-      time: formatTime(distanceFeet / pace.fpm)
-    }))
-  };
+  let token = hoveredTokenId
+    ? canvas.tokens.get(hoveredTokenId) : null;
+
+  // Verify the measurement originates from the hovered token
+  if ( token ) {
+    let firstWaypoint = waypoint;
+    while ( firstWaypoint.previous ) firstWaypoint = firstWaypoint.previous;
+    if ( !token.bounds.contains(firstWaypoint.x, firstWaypoint.y) ) {
+      token = null;
+    }
+  }
+
+  const baseFpm = getTokenSpeed(token);
+
+  if ( baseFpm ) {
+    const action = token.document?.movementAction || "walk";
+    const actionConfig = CONFIG.Token.movement.actions[action];
+    const label = game.i18n.localize(actionConfig?.label);
+    context.travelTime = {
+      label,
+      paces: PACE_MULTIPLIERS.map((pace, i) => ({
+        icon: PACE[i].icon,
+        time: formatTime(distanceFeet / (baseFpm * pace.multiplier))
+      }))
+    };
+  } else {
+    context.travelTime = {
+      paces: PACE.map(pace => ({
+        icon: pace.icon,
+        time: formatTime(distanceFeet / pace.fpm)
+      }))
+    };
+  }
 
   return context;
+}
+
+/* -------------------------------------------- */
+
+/**
+ * Handle token hover to track the hovered token.
+ * @param {Token} token The token
+ * @param {boolean} hovered Whether the token is hovered
+ */
+function onHoverToken(token, hovered) {
+  if ( hovered ) hoveredTokenId = token.id;
+}
+
+/* -------------------------------------------- */
+
+/**
+ * Get the hovered token's movement speed in feet per minute.
+ * @param {Token} token The token
+ * @returns {number|null} The speed in fpm, or null if unavailable
+ */
+function getTokenSpeed(token) {
+  const actor = token?.actor;
+  const movement = actor?.system?.attributes?.movement;
+  if ( !movement ) return null;
+  const action = token.document?.movementAction || "walk";
+  if ( ["blink", "displace"].includes(action) ) return null;
+
+  const speedType = ACTION_SPEED_MAP[action] || "walk";
+  let speed = movement[speedType] || movement.walk || 0;
+
+  if ( ["crawl", "jump"].includes(action) ) speed /= 2;
+  if ( action === "climb" && !movement.climb ) {
+    speed = (movement.walk || 0) / 2;
+  }
+
+  if ( speed <= 0 ) return null;
+  return speed * 10;
 }
 
 /* -------------------------------------------- */

@@ -33,6 +33,9 @@
     {{/if}}
     {{#if travelTime}}
     <div class="custom-dnd5e-travel-time">
+        {{#if travelTime.label}}
+        <div class="movement-label">{{travelTime.label}}</div>
+        {{/if}}
         {{#each travelTime.paces}}
         <div class="pace">
             <i class="{{this.icon}}"></i>

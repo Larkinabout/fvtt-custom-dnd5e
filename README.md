@@ -406,6 +406,8 @@ Display an icon near the cursor when the Skip Dialog, Advantage or Disadvantage 
 
 When measuring distances with the ruler tool, travel time estimates are displayed for three D&D 5e travel paces: fast, normal and slow. Times are shown in days, hours and minutes, calculated based on standard 8-hour travel days.
 
+When the ruler is started from a hovered token, the travel time is based on the token's current movement action (Walk, Fly, Swim, etc.) and speed. When started from empty space, the standard 30 feet per round speed is used.
+
 <details>
     <summary>See Image</summary>
 
