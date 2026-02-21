@@ -1,7 +1,6 @@
 import { CONSTANTS } from "../constants.js";
 import {
   animations,
-  Logger,
   getFlag,
   setFlag,
   unsetFlag,
@@ -108,11 +107,12 @@ function registerHooks() {
  * @param {string} userId The user ID
  */
 async function handleUpdateActor(actor, data, options, userId) {
-  if ( !actor.isOwner ) return;
+  if ( !actor.isOwner || actor.type !== "character" ) return;
   const hp = foundry.utils.getProperty(data, "system.attributes.hp.value");
   const previousHp = options.customDnd5e?.hp?.value;
 
-  if ( getSetting(constants.SETTING.APPLY_EXHAUSTION_ON_ZERO_HP.KEY) && hp <= 0 && previousHp > 0 && game.user.id === userId ) {
+  const applyOnZeroHp = getSetting(constants.SETTING.APPLY_EXHAUSTION_ON_ZERO_HP.KEY);
+  if ( applyOnZeroHp && hp <= 0 && previousHp > 0 && game.user.id === userId ) {
     const requestSave = getSetting(constants.SETTING.EXHAUSTION_REQUEST_SAVING_THROW.KEY);
     if ( requestSave ) {
       await createExhaustionSaveCard(actor);
@@ -121,7 +121,8 @@ async function handleUpdateActor(actor, data, options, userId) {
     }
   }
 
-  if ( getSetting(constants.SETTING.APPLY_EXHAUSTION_ON_COMBAT_END.KEY) && hp <= 0 && previousHp > 0 && actor.inCombat ) {
+  const applyOnCombatEnd = getSetting(constants.SETTING.APPLY_EXHAUSTION_ON_COMBAT_END.KEY);
+  if ( applyOnCombatEnd && hp <= 0 && previousHp > 0 && actor.inCombat ) {
     if ( game.user.id === userId ) {
       await setExhaustionZeroHpCombatEnd(actor);
     }
@@ -141,6 +142,7 @@ function handleDeleteCombat(combat, options, userId) {
   const requestSave = getSetting(constants.SETTING.EXHAUSTION_REQUEST_SAVING_THROW.KEY);
   combat.combatants.forEach(combatant => {
     const actor = combatant.actor;
+    if ( !actor || actor.type !== "character" ) return;
     if ( getFlag(actor, "exhaustionZeroHpCombatEnd") ) {
       if ( requestSave ) {
         createExhaustionSaveCard(actor);
