@@ -258,7 +258,9 @@ async function handleExhaustionSaveResult(rolls, data) {
   if ( data.ability !== "con" ) return;
 
   // Trace back from the save card to the originating request card
-  const requestCard = rolls[0]?.parent?.getOriginatingMessage();
+  const requestCard = rolls[0]?.parent?.getOriginatingMessage()
+    ?? game.messages.get(rolls[0]?.options?.originatingMessage);
+
   if ( requestCard?.flags?.["custom-dnd5e"]?.source !== "exhaustion" ) return;
 
   // Clear the flag regardless of result

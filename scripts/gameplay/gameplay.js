@@ -1008,7 +1008,9 @@ async function handleMassiveDamageSaveResult(rolls, data) {
   Logger.debug("Massive Damage save rolled", { actor: actor.name, ability: data.ability });
 
   // Trace back from the save card to the originating request card
-  const requestCard = rolls[0]?.parent?.getOriginatingMessage();
+  const requestCard = rolls[0]?.parent?.getOriginatingMessage()
+    ?? game.messages.get(rolls[0]?.options?.originatingMessage);
+
   if ( requestCard?.flags?.["custom-dnd5e"]?.source !== "massiveDamage" ) {
     Logger.debug("Massive Damage originating message check failed", {
       hasParent: !!rolls[0]?.parent,
