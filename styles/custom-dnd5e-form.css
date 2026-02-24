@@ -499,9 +499,7 @@
     padding-top: 5px;
 }
 
-.custom-dnd5e-app .drop-area,
-.custom-dnd5e-app .massive-damage-table-field,
-.custom-dnd5e-app .custom-dnd5e-macro-field {
+.custom-dnd5e-drop-area {
     border: var(--dnd5e-border-dashed);
     border-radius: 4px;
     padding-inline: 4px;
@@ -510,16 +508,15 @@
     align-items: center;
 }
 
-.custom-dnd5e-app .massive-damage-table-field,
-.custom-dnd5e-app .custom-dnd5e-macro-field {
-    justify-content: space-between;
-}
-
-.custom-dnd5e-app .drop-area {
+.custom-dnd5e-drop-area.drop-area {
     font-style: italic;
     font-size: var(--font-size-11);
     color: var(--color-text-secondary);
     justify-content: center;
+}
+
+.custom-dnd5e-drop-area:not(.drop-area) {
+    justify-content: space-between;
 }
 
 /*************************************

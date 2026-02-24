@@ -181,13 +181,13 @@
             <div class="form-group">
                 <label>{{localize "CUSTOM_DND5E.form.gameplay.hitPoints.massiveDamageTable.label"}}</label>
                 <div class="form-fields">
-                    <div class="massive-damage-table-field flex1{{#unless massiveDamageTableName}} hidden{{/unless}}">
+                    <div class="custom-dnd5e-drop-area massive-damage-table-field flex1{{#unless massiveDamageTableName}} hidden{{/unless}}">
                         <span class="massive-damage-table-name">{{massiveDamageTableName}}</span>
                         <button type="button" data-action="clearMassiveDamageTable" class="unbutton control-button" data-tooltip="{{localize 'CUSTOM_DND5E.form.gameplay.hitPoints.massiveDamageTable.clear'}}" aria-label="{{localize 'CUSTOM_DND5E.form.gameplay.hitPoints.massiveDamageTable.clear'}}">
                             <i class="fa-solid fa-trash" inert></i>
                         </button>
                     </div>
-                    <div class="drop-area flex1{{#if massiveDamageTableName}} hidden{{/if}}">{{localize "CUSTOM_DND5E.form.gameplay.hitPoints.massiveDamageTable.dropHint"}}</div>
+                    <div class="custom-dnd5e-drop-area drop-area flex1{{#if massiveDamageTableName}} hidden{{/if}}">{{localize "CUSTOM_DND5E.dropHint.rollableTable"}}</div>
                     <input type="hidden" name="massiveDamageTableUuid" value="{{massiveDamageTableUuid}}">
                 </div>
                 <p class="hint">{{localize "CUSTOM_DND5E.form.gameplay.hitPoints.massiveDamageTable.note"}}</p>

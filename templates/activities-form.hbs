@@ -1,0 +1,15 @@
+<div id="custom-dnd5e-form" class="standard-form">
+    <div class="standard-form scrollable">
+        <fieldset>
+            <legend>{{ localize "CUSTOM_DND5E.form.activities.title" }}</legend>
+            <div class="form-group">
+                <label>{{ localize "CUSTOM_DND5E.activities.macro.enable.label" }}</label>
+                <div class="form-fields">
+                    <dnd5e-checkbox name="macro"{{#if macro}} checked{{/if}}></dnd5e-checkbox>
+                </div>
+                <p class="hint">{{ localize "CUSTOM_DND5E.activities.macro.enable.hint" }}</p>
+            </div>
+        </fieldset>
+    </div>
+    {{> "modules/custom-dnd5e/templates/footer.hbs"}}
+</div>

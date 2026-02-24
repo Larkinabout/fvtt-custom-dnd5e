@@ -242,12 +242,13 @@
   "_stats": {
     "compendiumSource": null,
     "duplicateSource": null,
-    "coreVersion": "12.331",
+    "coreVersion": "13.351",
     "systemId": "dnd5e",
     "systemVersion": "4.0.3",
     "createdTime": 1726783176616,
     "modifiedTime": 1727380147804,
-    "lastModifiedBy": "0wJRsV2r9Hv1a7q0"
+    "lastModifiedBy": "0wJRsV2r9Hv1a7q0",
+    "exportSource": null
   },
   "_id": "Fjvot2yuU2nHmyiA",
   "sort": 100000,

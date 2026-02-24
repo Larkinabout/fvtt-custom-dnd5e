@@ -1,13 +1,18 @@
+:root {
+    --custom-dnd5e-h-color: light-dark(#5a0507, rgb(95, 127, 153));
+    --custom-dnd5e-h2-border-color: light-dark(color(srgb 0.900816 0.74032 0.420752), var(--dnd5e-color-gold));
+}
+
 .theme-dark {
-    --custom-dnd5e-note-color: #478be6;
+    --custom-dnd5e-note-color: var(--dnd5e-color-note-info);
     --custom-dnd5e-tip-color: #57ab5a;
-    --custom-dnd5e-warning-color: #e6a447;
+    --custom-dnd5e-warning-color: var(--dnd5e-color-note-warn);
 }
 
 .theme-light {
-    --custom-dnd5e-note-color: #1a5fb4;
+    --custom-dnd5e-note-color: var(--dnd5e-color-note-info);
     --custom-dnd5e-tip-color: #2d7d32;
-    --custom-dnd5e-warning-color: #b8860b;
+    --custom-dnd5e-warning-color: var(--dnd5e-color-note-warn);
 }
 
 .sheet.journal-entry-page > .window-content {
@@ -91,4 +96,101 @@
 .journal-sheet .custom-dnd5e-warning > header > i,
 .journal-sheet .custom-dnd5e-warning > header > p {
     color: var(--custom-dnd5e-warning-color);
+}
+
+.sheet.journal-entry-page > .window-content {
+    padding: 1rem;
+}
+
+.sheet.journal-entry-page > .window-content > .journal-page-header {
+    flex: 0;
+}
+
+.custom-dnd5e-img {
+    border: none;
+    height: 16px;
+    pointer-events: none;
+    object-position: -9999px;
+    overflow: hidden;
+    background-color: var(--color-text-primary);
+    -webkit-mask-image: url(../media/icons/checked.svg);
+    mask-image: url(../media/icons/checked.svg);
+    -webkit-mask-size: contain;
+    mask-size: contain;
+}
+
+.journal-sheet .custom-dnd5e-note,
+.journal-sheet .custom-dnd5e-tip,
+.journal-sheet .custom-dnd5e-warning {
+    margin: 0.75rem;
+    padding-left: 0.75rem;
+}
+
+.journal-sheet .custom-dnd5e-note {
+    border: 2px solid var(--custom-dnd5e-note-color);
+}
+
+.journal-sheet .custom-dnd5e-tip {
+    border: 2px solid var(--custom-dnd5e-tip-color);
+}
+
+.journal-sheet .custom-dnd5e-warning {
+    border: 2px solid var(--custom-dnd5e-warning-color);
+}
+
+.theme-dark .journal-sheet .custom-dnd5e-note,
+.theme-dark .journal-sheet .custom-dnd5e-tip,
+.theme-dark .journal-sheet .custom-dnd5e-warning {
+    background: var(--dnd5e-block-background);
+}
+
+.theme-light .journal-sheet .custom-dnd5e-note,
+.theme-light .journal-sheet .custom-dnd5e-tip,
+.theme-light .journal-sheet .custom-dnd5e-warning {
+    background: url("../../../systems/dnd5e/ui/parchment.jpg");
+}
+
+.journal-sheet .custom-dnd5e-note > header,
+.journal-sheet .custom-dnd5e-tip > header,
+.journal-sheet .custom-dnd5e-warning > header {
+    align-items: center;
+    display: flex;
+    font-size: var(--font-size-16);
+}
+
+.journal-sheet .custom-dnd5e-note > header > p,
+.journal-sheet .custom-dnd5e-tip > header > p,
+.journal-sheet .custom-dnd5e-warning > header > p {
+    font-weight: bold;
+    margin-left: 0.5rem;
+    text-transform: capitalize;
+}
+
+.journal-sheet .custom-dnd5e-note > header > span,
+.journal-sheet .custom-dnd5e-note > header > p {
+    color: var(--custom-dnd5e-note-color);
+}
+
+.journal-sheet .custom-dnd5e-tip > header > span,
+.journal-sheet .custom-dnd5e-tip > header > p {
+    color: var(--custom-dnd5e-tip-color);
+}
+
+.journal-sheet .custom-dnd5e-warning > header > span,
+.journal-sheet .custom-dnd5e-warning > header > p {
+    color: var(--custom-dnd5e-warning-color);
+}
+
+form[id*="custom-dnd5e"].dnd5e2-journal :is(h1, h2, h3, h4) {
+    color: var(--custom-dnd5e-h-color);
+}
+
+form[id*="custom-dnd5e"].dnd5e2-journal h2 {
+    border-bottom: 2px solid var(--custom-dnd5e-h2-border-color);
+    border-image: linear-gradient(
+        to right,
+        var(--custom-dnd5e-h2-border-color),
+        transparent 90%
+    );
+    border-image-slice: 0 0 1 0;
 }

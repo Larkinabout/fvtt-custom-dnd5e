@@ -11,6 +11,26 @@ export const CONSTANTS = {
       LIST: "modules/custom-dnd5e/templates/config-list.hbs"
     }
   },
+  ACTIVITIES: {
+    ID: "activities",
+    MENU: {
+      KEY: "activities-menu",
+      HINT: "CUSTOM_DND5E.menu.activities.hint",
+      ICON: "fas fa-cogs",
+      LABEL: "CUSTOM_DND5E.menu.activities.label",
+      NAME: "CUSTOM_DND5E.menu.activities.name"
+    },
+    SETTING: {
+      CONFIG: {
+        KEY: "activities"
+      }
+    },
+    TEMPLATE: {
+      FORM: "modules/custom-dnd5e/templates/activities-form.hbs",
+      MACRO_EFFECT: "modules/custom-dnd5e/templates/activity/macro-effect.hbs"
+    },
+    UUID: "Compendium.custom-dnd5e.custom-dnd5e-journals.JournalEntry.xK7mNpV3tZwQ4rY2"
+  },
   ABILITIES: {
     ID: "abilities",
     MENU: {

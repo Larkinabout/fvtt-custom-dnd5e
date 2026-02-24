@@ -15,7 +15,7 @@
       "image": {},
       "text": {
         "format": 1,
-        "content": "<h2>Apply Unconscious</h2><p>When enabled, this setting automatically applies the Unconscious condition to a player character when they have no Hit Points remaining.</p>"
+        "content": "<h2 class=\"custom-dnd5e-h2\">Apply Unconscious</h2><p>When enabled, this setting automatically applies the Unconscious condition to a player character when they have no Hit Points remaining.</p>"
       },
       "video": {
         "controls": true,
@@ -54,7 +54,7 @@
       "image": {},
       "text": {
         "format": 1,
-        "content": "<h2>Apply Dead</h2><p>When enabled, this setting automatically applies the Dead status effect to an NPC's token when it reaches 0 Hit Points. The Dead status effect is automatically removed if the NPC regains at least 1 Hit Point.</p><h2>Apply Instant Death</h2><p>When enabled, this setting automatically applies the Dead status effect to a player character if they are reduced to 0 Hit Points and the remaining damage equals or exceeds their maximum Hit Points.</p><p>This represents the \"Instant Death\" rule from the Player's Handbook (2014), page 197.</p><h2>Rotation</h2><p>Enter an angle (in degrees) to rotate a token when it has the Dead status effect. This provides a visual cue for dead creatures on the map.</p><h2>Tint</h2><p><span style=\"font-family:'Roboto Condensed', sans-serif\">Enter a color in hex format (e.g., #ff0000 for red) to visually tint the token when it has the Dead status effect. This helps to quickly identify dead creatures on the map. Leave empty for no tint.</span></p>"
+        "content": "<h2 class=\"custom-dnd5e-h2\">Apply Dead</h2><p>When enabled, this setting automatically applies the Dead status effect to an NPC's token when it reaches 0 Hit Points. The Dead status effect is automatically removed if the NPC regains at least 1 Hit Point.</p><h2 class=\"custom-dnd5e-h2\">Apply Instant Death</h2><p>When enabled, this setting automatically applies the Dead status effect to a player character if they are reduced to 0 Hit Points and the remaining damage equals or exceeds their maximum Hit Points.</p><p>This represents the \"Instant Death\" rule from the Player's Handbook (2014), page 197.</p><h2 class=\"custom-dnd5e-h2\">Rotation</h2><p>Enter an angle (in degrees) to rotate a token when it has the Dead status effect. This provides a visual cue for dead creatures on the map.</p><h2 class=\"custom-dnd5e-h2\">Tint</h2><p><span style=\"font-family:'Roboto Condensed', sans-serif\">Enter a color in hex format (e.g., #ff0000 for red) to visually tint the token when it has the Dead status effect. This helps to quickly identify dead creatures on the map. Leave empty for no tint.</span></p>"
       },
       "video": {
         "controls": true,
@@ -69,12 +69,12 @@
       "_stats": {
         "compendiumSource": null,
         "duplicateSource": null,
-        "coreVersion": "13.345",
+        "coreVersion": "13.351",
         "systemId": "dnd5e",
         "systemVersion": "4.0.0",
         "createdTime": 1726519171783,
-        "modifiedTime": 1753217628971,
-        "lastModifiedBy": "5bwQyYIyVQxjjJ3v",
+        "modifiedTime": 1771961378938,
+        "lastModifiedBy": "nwvwWRm7rUrAK4Jo",
         "exportSource": null
       },
       "category": null,
@@ -93,7 +93,7 @@
       "image": {},
       "text": {
         "format": 1,
-        "content": "<h2>Roll Mode</h2><p>Choose how Death Saving Throws are displayed when rolled by players:</p><ul><li><p><strong>Public Roll: </strong>The roll is visible to all players and the DM.</p></li><li><p><strong>Private GM Roll: </strong>The roll is visible only to the rolling player and the DM.</p></li><li><p><strong>Blind GM Roll: </strong>The roll and its result are only visible to the DM. This option also hides the successes and failures on the player's character sheet.</p></li></ul><h2>Target Value</h2><p>Set the number required on the d20 to succeed on a Death Saving Throw. The default is 10.</p><h2>Remove Death Saves on Event</h2><p>Customize how Death Saving Throw successes and failures are removed when certain events occur:</p><ul><li><p><strong>On Regaining HP from 0: </strong>Number of successes and/or failures to remove when the character regains at least 1 Hit Point. The default is 3 for both.</p></li><li><p><strong>On Short Rest:</strong> Number of successes and/or failures to remove when the character takes a Short Rest.</p></li><li><p><strong>On Long Rest:</strong> Number of successes and/or failures to remove when the player character takes a Long Rest.</p></li></ul>"
+        "content": "<h2 class=\"custom-dnd5e-h2\">Roll Mode</h2><p>Choose how Death Saving Throws are displayed when rolled by players:</p><ul><li><p><strong>Public Roll: </strong>The roll is visible to all players and the DM.</p></li><li><p><strong>Private GM Roll: </strong>The roll is visible only to the rolling player and the DM.</p></li><li><p><strong>Blind GM Roll: </strong>The roll and its result are only visible to the DM. This option also hides the successes and failures on the player's character sheet.</p></li></ul><h2 class=\"custom-dnd5e-h2\">Target Value</h2><p>Set the number required on the d20 to succeed on a Death Saving Throw. The default is 10.</p><h2 class=\"custom-dnd5e-h2\">Remove Death Saves on Event</h2><p>Customize how Death Saving Throw successes and failures are removed when certain events occur:</p><ul><li><p><strong>On Regaining HP from 0: </strong>Number of successes and/or failures to remove when the character regains at least 1 Hit Point. The default is 3 for both.</p></li><li><p><strong>On Short Rest:</strong> Number of successes and/or failures to remove when the character takes a Short Rest.</p></li><li><p><strong>On Long Rest:</strong> Number of successes and/or failures to remove when the player character takes a Long Rest.</p></li></ul>"
       },
       "video": {
         "controls": true,
@@ -132,7 +132,7 @@
       "image": {},
       "text": {
         "format": 1,
-        "content": "<h2>Apply Massive Damage</h2><p>When enabled, this setting automatically prompts a DC 15 Constitution Saving Throw when a character takes damage equal to or greater than half their maximum Hit Points.</p><p>This represents the \"Massive Damage\" optional rule from the Dungeon Master's Guide (2014), page 273.</p><h2>Massive Damage Table</h2><p>Optionally assign a Rollable Table to roll on when a character fails the massive damage saving throw. To assign a table, drag and drop a Rollable Table from the sidebar or a compendium onto the Massive Damage Table field.</p><p>To remove the table, click the <i class=\"fa-solid fa-trash\"></i> button.</p><h2>Animation</h2><p>When enabled, a screen shake and red flash effect will play for the affected player when the massive damage saving throw is failed. This effect is skipped when Foundry's Photosensitive Mode is enabled in the core settings.</p>"
+        "content": "<h2 class=\"custom-dnd5e-h2\">Apply Massive Damage</h2><p>When enabled, this setting automatically prompts a DC 15 Constitution Saving Throw when a character takes damage equal to or greater than half their maximum Hit Points.</p><p>This represents the \"Massive Damage\" optional rule from the Dungeon Master's Guide (2014), page 273.</p><h2 class=\"custom-dnd5e-h2\">Massive Damage Table</h2><p>Optionally assign a Rollable Table to roll on when a character fails the massive damage saving throw. To assign a table, drag and drop a Rollable Table from the sidebar or a compendium onto the Massive Damage Table field.</p><p>To remove the table, click the <span class=\"fa-solid fa-trash\">&#8203;</span> button.</p><h2 class=\"custom-dnd5e-h2\">Animation</h2><p>When enabled, a screen shake and red flash effect will play for the affected player when the massive damage saving throw is failed. This effect is skipped when Foundry's Photosensitive Mode is enabled in the core settings.</p>"
       },
       "video": {
         "controls": true,
@@ -171,7 +171,7 @@
       "image": {},
       "text": {
         "format": 1,
-        "content": "<h2>Rolling Hit Points</h2><h3>Minimum Value</h3><p>When rolling for Hit Points, automatically reroll if the die result is below the minimum value.</p><h3>Reroll Once</h3><ul><li><p>If enabled: Reroll only once when the die result is below the minimum value.</p></li><li><p>If disabled: Continue rerolling until the die result meets or exceeds the minimum value.</p></li></ul><h3>Show Take Average</h3><p>Choose to display or hide the \"Take Average\" checkbox on the Hit Points Advancement Step dialog.</p><h2>Negative Hit Points</h2><h3>Apply Negative Hit Points for Player Characters</h3><p>When enabled, a player character's Hit Points can be reduced below zero into negative values.</p><h3>Apply Negative Hit Points for NPCs</h3><p>When enabled, an NPC's Hit Points can be reduced below zero into negative values.</p><h3>Heal from 0 HP</h3><ul><li><p>If enabled: When a creature regains Hit Points, they recover from 0 HP regardless of their negative value.</p></li><li><p>If disabled: Creatures recover from their actual negative HP value.</p></li></ul>"
+        "content": "<h2 class=\"custom-dnd5e-h2\">Rolling Hit Points</h2><h3 class=\"custom-dnd5e-h3\">Minimum Value</h3><p>When rolling for Hit Points, automatically reroll if the die result is below the minimum value.</p><h3 class=\"custom-dnd5e-h3\">Reroll Once</h3><ul><li><p>If enabled: Reroll only once when the die result is below the minimum value.</p></li><li><p>If disabled: Continue rerolling until the die result meets or exceeds the minimum value.</p></li></ul><h3 class=\"custom-dnd5e-h3\">Show Take Average</h3><p>Choose to display or hide the \"Take Average\" checkbox on the Hit Points Advancement Step dialog.</p><h2 class=\"custom-dnd5e-h2\">Negative Hit Points</h2><h3 class=\"custom-dnd5e-h3\">Apply Negative Hit Points for Player Characters</h3><p>When enabled, a player character's Hit Points can be reduced below zero into negative values.</p><h3 class=\"custom-dnd5e-h3\">Apply Negative Hit Points for NPCs</h3><p>When enabled, an NPC's Hit Points can be reduced below zero into negative values.</p><h3 class=\"custom-dnd5e-h3\">Heal from 0 HP</h3><ul><li><p>If enabled: When a creature regains Hit Points, they recover from 0 HP regardless of their negative value.</p></li><li><p>If disabled: Creatures recover from their actual negative HP value.</p></li></ul>"
       },
       "video": {
         "controls": true,
@@ -210,7 +210,7 @@
       "image": {},
       "text": {
         "format": 1,
-        "content": "<h2>Award Inspiration</h2><h3>Target Value</h3><p>Set a specific number on the d20. When a player rolls a qualifying roll and the die result matches the target value, they are automatically awarded Inspiration.</p><h3>Roll Types</h3><p>Choose which types of rolls can trigger the award of Inspiration:</p><ul><li><p>Ability Check</p></li><li><p>Attack Roll</p></li><li><p>Saving Throw</p></li><li><p>Skill Check</p></li><li><p>Tool Check</p></li></ul><p>Inspiration will only be awarded when the target value is rolled on one of the selected roll types.</p><h2>Animation</h2><p>When enabled, a light rays animation will play for the affected player when inspiration is awarded. This effect is skipped when Foundry's Photosensitive Mode is enabled in the core settings.</p>"
+        "content": "<h2 class=\"custom-dnd5e-h2\">Award Inspiration</h2><h3 class=\"custom-dnd5e-h3\">Target Value</h3><p>Set a specific number on the d20. When a player rolls a qualifying roll and the die result matches the target value, they are automatically awarded Inspiration.</p><h3 class=\"custom-dnd5e-h3\">Roll Types</h3><p>Choose which types of rolls can trigger the award of Inspiration:</p><ul><li><p>Ability Check</p></li><li><p>Attack Roll</p></li><li><p>Saving Throw</p></li><li><p>Skill Check</p></li><li><p>Tool Check</p></li></ul><p>Inspiration will only be awarded when the target value is rolled on one of the selected roll types.</p><h2 class=\"custom-dnd5e-h2\">Animation</h2><p>When enabled, a light rays animation will play for the affected player when inspiration is awarded. This effect is skipped when Foundry's Photosensitive Mode is enabled in the core settings.</p>"
       },
       "video": {
         "controls": true,
@@ -249,7 +249,7 @@
       "image": {},
       "text": {
         "format": 1,
-        "content": "<h2>Rotation</h2><p><span style=\"font-family:'Roboto Condensed', sans-serif\">Enter an angle (in degrees) to rotate a token when it has the Prone condition. This provides a visual cue for prone creatures on the map.</span></p>"
+        "content": "<h2 class=\"custom-dnd5e-h2\">Rotation</h2><p><span style=\"font-family:'Roboto Condensed', sans-serif\">Enter an angle (in degrees) to rotate a token when it has the Prone condition. This provides a visual cue for prone creatures on the map.</span></p>"
       },
       "video": {
         "controls": true,
@@ -288,7 +288,7 @@
       "image": {},
       "text": {
         "format": 1,
-        "content": "<h2>Use Camp Supplies</h2><p>When enabled, this setting introduces a house rule that requires spending @UUID[Compendium.custom-dnd5e.custom-dnd5e-items.Item.l6pf6YtapHjBJ6UF]{Camp Supplies} during a Long Rest.</p><p>By default, a character must spend one Camp Supplies to take a Long Rest. However, if the Dungeon Master allows, the player can uncheck the \"Spend Camp Supplies?\" option in the Long Rest dialog to bypass this requirement.</p><p>Currently, when a player selects <strong>Long Rest</strong> on the character sheet, Camp Supplies are deducted from the character's personal inventory. When using the <strong>Long Rest</strong> option on a group sheet, supplies are taken from the group's inventory. Future updates may allow Camp Supplies to be drawn from other sources, such as shared group inventories or those of allies.</p><h3>Camp Supplies Item</h3><p>This house rule relies on the @UUID[Compendium.custom-dnd5e.custom-dnd5e-items.Item.l6pf6YtapHjBJ6UF]{Camp Supplies} item. To add it to your Items menu, click the link here to open the item and select <strong>Import</strong> from the item's window header. You can also find the item in the <strong>Custom D&amp;D 5e Items</strong> compendium.</p><p></p>"
+        "content": "<h2 class=\"custom-dnd5e-h2\">Use Camp Supplies</h2><p>When enabled, this setting introduces a house rule that requires spending @UUID[Compendium.custom-dnd5e.custom-dnd5e-items.Item.l6pf6YtapHjBJ6UF]{Camp Supplies} during a Long Rest.</p><p>By default, a character must spend one Camp Supplies to take a Long Rest. However, if the Dungeon Master allows, the player can uncheck the \"Spend Camp Supplies?\" option in the Long Rest dialog to bypass this requirement.</p><p>Currently, when a player selects <strong>Long Rest</strong> on the character sheet, Camp Supplies are deducted from the character's personal inventory. When using the <strong>Long Rest</strong> option on a group sheet, supplies are taken from the group's inventory. Future updates may allow Camp Supplies to be drawn from other sources, such as shared group inventories or those of allies.</p><h3 class=\"custom-dnd5e-h3\">Camp Supplies Item</h3><p>This house rule relies on the @UUID[Compendium.custom-dnd5e.custom-dnd5e-items.Item.l6pf6YtapHjBJ6UF]{Camp Supplies} item. To add it to your Items menu, click the link here to open the item and select <strong>Import</strong> from the item's window header. You can also find the item in the <strong>Custom D&amp;D 5e Items</strong> compendium.</p><p></p>"
       },
       "video": {
         "controls": true,
@@ -369,7 +369,7 @@
       "image": {},
       "text": {
         "format": 1,
-        "content": "<h2>Reroll Initiative Each Round</h2><p>This setting controls how initiative is handled at the start of each round.</p><h3>Reroll All</h3><p>Reset and reroll initiative for every combatant at the start of each round.</p><h3>Reset Only</h3><p>Reset initiative for every combatant at the start of each round without automatically rerolling.</p><h3>Reset All, Reroll NPCs Only</h3><p>Reset initiative for every combatant at the start of each round, then automatically reroll only for NPCs. PCs must roll their initiative manually.</p>"
+        "content": "<h2 class=\"custom-dnd5e-h2\">Reroll Initiative Each Round</h2><p>This setting controls how initiative is handled at the start of each round.</p><h3 class=\"custom-dnd5e-h3\">Reroll All</h3><p>Reset and reroll initiative for every combatant at the start of each round.</p><h3 class=\"custom-dnd5e-h3\">Reset Only</h3><p>Reset initiative for every combatant at the start of each round without automatically rerolling.</p><h3 class=\"custom-dnd5e-h3\">Reset All, Reroll NPCs Only</h3><p>Reset initiative for every combatant at the start of each round, then automatically reroll only for NPCs. PCs must roll their initiative manually.</p>"
       },
       "video": {
         "controls": true,
@@ -407,7 +407,7 @@
       "image": {},
       "text": {
         "format": 1,
-        "content": "<p>When Exhaustion is applied as a result of these settings, a message is posted to chat.</p><h2>Apply on 0 HP</h2><p>Each time a character is reduced to 0 HP, automatically apply one level of Exhaustion.</p><h2>Apply on Combat End</h2><p>If a character is reduced to 0 HP during a combat, automatically apply one level of Exhaustion when the DM clicks <strong>End Combat</strong>.</p><h2>Animation</h2><p>When enabled, a screen animation will play for the affected player when Exhaustion is suffered. This effect is skipped when Foundry's Photosensitive Mode is enabled in the core settings.</p><h2>Saving Throw</h2><h3>Request Saving Throw</h3><p>When enabled alongside <strong>Apply on 0 HP</strong> or <strong>Apply on Combat End</strong>, a chat card will request a Constitution saving throw instead of immediately applying Exhaustion. Exhaustion is only applied if the save fails.</p><h3>Saving Throw DC</h3><p>The DC for the Constitution saving throw to avoid Exhaustion. Defaults to 15.</p><h3>Scaling DC</h3><p>When enabled, the character's current exhaustion level is added to the base DC, making it progressively harder to resist additional Exhaustion. For example, with a base DC of 15 and 2 levels of Exhaustion, the effective DC becomes 17.</p>"
+        "content": "<p>When Exhaustion is applied as a result of these settings, a message is posted to chat.</p><h2 class=\"custom-dnd5e-h2\">Apply on 0 HP</h2><p>Each time a character is reduced to 0 HP, automatically apply one level of Exhaustion.</p><h2 class=\"custom-dnd5e-h2\">Apply on Combat End</h2><p>If a character is reduced to 0 HP during a combat, automatically apply one level of Exhaustion when the DM clicks <strong>End Combat</strong>.</p><h2 class=\"custom-dnd5e-h2\">Animation</h2><p>When enabled, a screen animation will play for the affected player when Exhaustion is suffered. This effect is skipped when Foundry's Photosensitive Mode is enabled in the core settings.</p><h2 class=\"custom-dnd5e-h2\">Saving Throw</h2><h3 class=\"custom-dnd5e-h3\">Request Saving Throw</h3><p>When enabled alongside <strong>Apply on 0 HP</strong> or <strong>Apply on Combat End</strong>, a chat card will request a Constitution saving throw instead of immediately applying Exhaustion. Exhaustion is only applied if the save fails.</p><h3 class=\"custom-dnd5e-h3\">Saving Throw DC</h3><p>The DC for the Constitution saving throw to avoid Exhaustion. Defaults to 15.</p><h3 class=\"custom-dnd5e-h3\">Scaling DC</h3><p>When enabled, the character's current exhaustion level is added to the base DC, making it progressively harder to resist additional Exhaustion. For example, with a base DC of 15 and 2 levels of Exhaustion, the effective DC becomes 17.</p>"
       },
       "video": {
         "controls": true,
@@ -448,7 +448,7 @@
       "image": {},
       "text": {
         "format": 1,
-        "content": "<article class=\"custom-dnd5e-note\"><header><i class=\"fa-solid fa-note-sticky\"></i><p>Note</p></header><p>Consumption of ammunition or uses is not currently included with this setting.</p></article><h2>Enable Mob Damage</h2><p>When enabled, the <strong>Mobs Average Results</strong> table from the <em>Dungeon Master's Guide (2024),</em> page 82, will be used to roll mob damage in place of attack rolls when all the following conditions are met:</p><ul><li><p>Between <strong>four</strong> and <strong>ten</strong> identical tokens are selected.</p></li><li><p>Only <strong>one</strong> token is targeted.</p></li><li><p>The activity used is an <strong>Attack</strong>.</p></li></ul><p>Instead of rolling an attack, the number of successful hits is calculated using the table and a single damage roll is automatically posted to the chat. You can apply Advantage or Disadvantage by holding the appropriate key modifier when clicking the attack.</p><h2>Use Average Damage</h2><p>When enabled, mobs will deal average damage, otherwise damage wil be rolled instead.</p>"
+        "content": "<article class=\"custom-dnd5e-note\"><header><span class=\"fa-solid fa-note-sticky\">&#8203;</span><p>Note</p></header><p>Consumption of ammunition or uses is not currently included with this setting.</p></article><h2 class=\"custom-dnd5e-h2\">Enable Mob Damage</h2><p>When enabled, the <strong>Mobs Average Results</strong> table from the <em>Dungeon Master's Guide (2024),</em> page 82, will be used to roll mob damage in place of attack rolls when all the following conditions are met:</p><ul><li><p>Between <strong>four</strong> and <strong>ten</strong> identical tokens are selected.</p></li><li><p>Only <strong>one</strong> token is targeted.</p></li><li><p>The activity used is an <strong>Attack</strong>.</p></li></ul><p>Instead of rolling an attack, the number of successful hits is calculated using the table and a single damage roll is automatically posted to the chat. You can apply Advantage or Disadvantage by holding the appropriate key modifier when clicking the attack.</p><h2 class=\"custom-dnd5e-h2\">Use Average Damage</h2><p>When enabled, mobs will deal average damage, otherwise damage wil be rolled instead.</p>"
       },
       "video": {
         "controls": true,
@@ -486,7 +486,7 @@
       "image": {},
       "text": {
         "format": 1,
-        "content": "<article class=\"custom-dnd5e-note\"><header><i class=\"fa-solid fa-note-sticky\"></i><p>Note</p></header><p>Consumption of ammunition or uses is not currently included with this setting.</p></article><h2>Enable Option in Attack Activity</h2><p>Select which actor types can use Probabilistic Damage: Player Characters, NPCs, Both, or Neither (to disable the feature).</p><p>When enabled, a <strong>Use Probabilistic Damage</strong> option will appear under the <strong>Effects</strong> tab within the <strong>Attack Damage</strong> section of the Attack activity sheet.</p><h3>What is Probabilistic Damage?</h3><p>Probabilistic Damage replaces the attack roll of an Attack activity with a damage roll scaled by the chance to hit. This features activates only when the following conditions are met:</p><ul><li><p>Only <strong>one</strong> token is targeted.</p></li><li><p>The activity used is an <strong>Attack</strong>.</p></li></ul><p>Probabilistic damage is calculated as follows:</p><p><code>Scaled Damage = round(Damage Roll × Hit Chance)</code></p><p>When triggered, the damage roll is immediately posted to the chat. You can apply Advantage or Disadvantage by holding the appropriate key modifier (e.g., Alt, Ctrl) when clicking the attack.</p><h2>Use Average Damage</h2><p>When enabled, probabilistic damage will use the average damage, which is then scaled by the chance to hit. If disabled, damage is rolled before scaling.</p>"
+        "content": "<article class=\"custom-dnd5e-note\"><header><span class=\"fa-solid fa-note-sticky\">&#8203;</span><p>Note</p></header><p>Consumption of ammunition or uses is not currently included with this setting.</p></article><h2 class=\"custom-dnd5e-h2\">Enable Option in Attack Activity</h2><p>Select which actor types can use Probabilistic Damage: Player Characters, NPCs, Both, or Neither (to disable the feature).</p><p>When enabled, a <strong>Use Probabilistic Damage</strong> option will appear under the <strong>Effects</strong> tab within the <strong>Attack Damage</strong> section of the Attack activity sheet.</p><h3 class=\"custom-dnd5e-h3\">What is Probabilistic Damage?</h3><p>Probabilistic Damage replaces the attack roll of an Attack activity with a damage roll scaled by the chance to hit. This features activates only when the following conditions are met:</p><ul><li><p>Only <strong>one</strong> token is targeted.</p></li><li><p>The activity used is an <strong>Attack</strong>.</p></li></ul><p>Probabilistic damage is calculated as follows:</p><p><code>Scaled Damage = round(Damage Roll × Hit Chance)</code></p><p>When triggered, the damage roll is immediately posted to the chat. You can apply Advantage or Disadvantage by holding the appropriate key modifier (e.g., Alt, Ctrl) when clicking the attack.</p><h2 class=\"custom-dnd5e-h2\">Use Average Damage</h2><p>When enabled, probabilistic damage will use the average damage, which is then scaled by the chance to hit. If disabled, damage is rolled before scaling.</p>"
       },
       "video": {
         "controls": true,
@@ -525,7 +525,7 @@
       "image": {},
       "text": {
         "format": 1,
-        "content": "<h2>Use Average Damage</h2><p>Choose whether character, NPCs or both will deal average damage, otherwise damage wil be rolled instead.</p>"
+        "content": "<h2 class=\"custom-dnd5e-h2\">Use Average Damage</h2><p>Choose whether character, NPCs or both will deal average damage, otherwise damage wil be rolled instead.</p>"
       },
       "video": {
         "controls": true,

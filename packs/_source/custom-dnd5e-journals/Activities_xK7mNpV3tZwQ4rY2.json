@@ -1,0 +1,101 @@
+{
+  "name": "Activities",
+  "_id": "xK7mNpV3tZwQ4rY2",
+  "pages": [
+    {
+      "sort": 100000,
+      "name": "Overview",
+      "type": "text",
+      "_id": "aR2nYuXwT4zDpK9c",
+      "system": {},
+      "title": {
+        "show": true,
+        "level": 1
+      },
+      "image": {},
+      "text": {
+        "format": 1,
+        "content": "<p>Located in <strong>Game Settings &gt; Configure Settings &gt; Custom D&amp;D 5e &gt; Configure Activities</strong></p><p>Adds more activites for features, items and spells. All custom activities are disabled by default and a reload is required after enabling.</p>"
+      },
+      "video": {
+        "controls": true,
+        "volume": 0.5
+      },
+      "src": null,
+      "ownership": {
+        "default": -1
+      },
+      "flags": {},
+      "_stats": {
+        "compendiumSource": null,
+        "duplicateSource": null,
+        "coreVersion": "13.351",
+        "systemId": "dnd5e",
+        "systemVersion": "5.2.5",
+        "createdTime": null,
+        "modifiedTime": 1771964025579,
+        "lastModifiedBy": "nwvwWRm7rUrAK4Jo",
+        "exportSource": null
+      },
+      "category": null,
+      "_key": "!journal.pages!xK7mNpV3tZwQ4rY2.aR2nYuXwT4zDpK9c"
+    },
+    {
+      "sort": 200000,
+      "name": "Macro Activity",
+      "type": "text",
+      "_id": "bS3oZvYxU5aEqL0d",
+      "system": {},
+      "title": {
+        "show": true,
+        "level": 1
+      },
+      "image": {},
+      "text": {
+        "format": 1,
+        "content": "<p>The Macro activity executes a macro when the activity is used.</p><h2 class=\"custom-dnd5e-h2\">Adding a Macro Activity</h2><p>After enabling the Macro activity:</p><ol><li><p>Click to <strong>Edit</strong> on a feature, item or spell.</p></li><li><p>Navigate to the <strong>Activities</strong> tab.</p></li><li><p>Click the <span class=\"fa-solid fa-plus\">​</span> button.</p></li><li><p>Select <strong>Macro </strong>in the list.</p></li><li><p>Click <span class=\"fa-solid fa-check\">​</span> <strong>Create Activity.</strong></p></li></ol><h2 class=\"custom-dnd5e-h2\">Assigning a Macro</h2><ol><li><p>Navigate to the <span class=\"fa-solid fa-sun\">​</span> <strong>Effect</strong> tab.</p></li><li><p>Drag and drop a macro from the <span class=\"fa-solid fa-code\">​</span> <strong>Macros</strong> sidebar or a compendium onto the <em>Drag and drop a Macro</em> area.</p><article class=\"custom-dnd5e-note\"><header><p><span class=\"fa-solid fa-note-sticky\">​</span></p><p>Note</p></header><p>The macro's name will appear once assigned. To remove the macro, click the <span class=\"fa-solid fa-trash\">​</span> button.</p></article></li></ol><h2 class=\"custom-dnd5e-h2\">Auto Execute</h2><p>The <strong>Auto Execute</strong> checkbox on the <span class=\"fa-solid fa-sun\">​</span> <strong>Effect</strong> tab controls when the macro runs:</p><ul><li><p><strong>Checked (default):</strong> The macro executes automatically when the activity is used.</p></li><li><p><strong>Unchecked:</strong> A button appears on the chat card. The macro only runs when a user clicks the button.</p></li></ul><h2 class=\"custom-dnd5e-h2\">Macro Context</h2><p>The following variables are available as within the macro script:</p><table><thead><tr><th><p><strong>Variable</strong></p></th><th><p><strong>Description</strong></p></th></tr></thead><tbody><tr><td><p><code>actor</code></p></td><td><p>The actor that owns the item.</p></td></tr><tr><td><p><code>token</code></p></td><td><p>The active token for the actor.</p></td></tr><tr><td><p><code>item</code></p></td><td><p>The item the activity belongs to.</p></td></tr><tr><td><p><code>activity</code></p></td><td><p>The macro activity instance.</p></td></tr><tr><td><p><code>targets</code></p></td><td><p>The targeted tokens at the time of use.</p></td></tr><tr><td><p><code>config</code></p></td><td><p>The activity usage configuration.</p></td></tr><tr><td><p><code>message</code></p></td><td><p>The chat message associated with the usage.</p></td></tr></tbody></table>"
+      },
+      "video": {
+        "controls": true,
+        "volume": 0.5
+      },
+      "src": null,
+      "ownership": {
+        "default": -1
+      },
+      "flags": {},
+      "_stats": {
+        "compendiumSource": null,
+        "duplicateSource": null,
+        "coreVersion": "13.351",
+        "systemId": "dnd5e",
+        "systemVersion": "5.2.5",
+        "createdTime": null,
+        "modifiedTime": 1771963938420,
+        "lastModifiedBy": "nwvwWRm7rUrAK4Jo",
+        "exportSource": null
+      },
+      "category": null,
+      "_key": "!journal.pages!xK7mNpV3tZwQ4rY2.bS3oZvYxU5aEqL0d"
+    }
+  ],
+  "folder": null,
+  "sort": 0,
+  "ownership": {
+    "default": 0
+  },
+  "flags": {},
+  "_stats": {
+    "compendiumSource": null,
+    "duplicateSource": null,
+    "coreVersion": "13.351",
+    "systemId": "dnd5e",
+    "systemVersion": "5.2.5",
+    "createdTime": null,
+    "modifiedTime": null,
+    "lastModifiedBy": null,
+    "exportSource": null
+  },
+  "categories": [],
+  "_key": "!journal!xK7mNpV3tZwQ4rY2"
+}

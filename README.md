@@ -9,6 +9,7 @@ A Foundry VTT module to customise the D&D 5e system.
 ## Table of Contents
 
 - [Gameplay](#gameplay)
+- [Activities](#activities)
 - [Counters](#counters)
 - [Configurations](#configurations)
 - [Configure Encumbrance](#configure-encumbrance)
@@ -218,6 +219,18 @@ When taking a Long Rest, optionally requires spending Camp Supplies.
 ![Custom D&D 5e Camp Supplies](./.github/readme/custom-dnd5e-camp-supplies.png)
 
 </details>
+
+<p align="right">(<a href="#custom-dd-5e">back to top</a>)</p>
+
+---
+
+## Activities
+
+Add more activities for features, items and spells.
+
+### Macro Activity
+
+The Macro activity executes a macro when the activity is used.
 
 <p align="right">(<a href="#custom-dd-5e">back to top</a>)</p>
 

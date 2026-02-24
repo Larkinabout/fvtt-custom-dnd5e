@@ -1,0 +1,29 @@
+<section class="tab activity-{{ tab.id }} {{ tab.cssClass }}" data-tab="{{ tab.id }}" data-group="{{ tab.group }}">
+    {{#if appliedEffects}}{{> "systems/dnd5e/templates/activity/parts/activity-effects.hbs" }}{{/if}}
+    <fieldset>
+        <legend>{{ localize "CUSTOM_DND5E.macro" }}</legend>
+        <div class="form-group">
+            <label>{{ localize "CUSTOM_DND5E.macro" }}</label>
+            <div class="form-fields custom-dnd5e-macro-drop">
+                <div class="custom-dnd5e-drop-area custom-dnd5e-macro-field flex1{{#unless macroName}} hidden{{/unless}}">
+                    <span class="custom-dnd5e-macro-name">{{macroName}}</span>
+                    <button type="button" data-action="clearMacro" class="unbutton control-button"
+                            data-tooltip="{{ localize 'CUSTOM_DND5E.activities.macro.clearMacro' }}"
+                            aria-label="{{ localize 'CUSTOM_DND5E.activities.macro.clearMacro' }}">
+                        <i class="fa-solid fa-trash" inert></i>
+                    </button>
+                </div>
+                <div class="custom-dnd5e-drop-area drop-area flex1{{#if macroName}} hidden{{/if}}">
+                    {{ localize "CUSTOM_DND5E.dropHint.macro" }}
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <label>{{ localize "CUSTOM_DND5E.activities.macro.fields.autoExecute.label" }}</label>
+            <div class="form-fields">
+                <dnd5e-checkbox name="macro.autoExecute"{{#if source.macro.autoExecute}} checked{{/if}}></dnd5e-checkbox>
+            </div>
+            <p class="hint">{{ localize "CUSTOM_DND5E.activities.macro.fields.autoExecute.hint" }}</p>
+        </div>
+    </fieldset>
+</section>
