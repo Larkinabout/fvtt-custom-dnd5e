@@ -2,6 +2,7 @@ import { CONSTANTS } from "../constants.js";
 import { c5eLoadTemplates, getSetting, registerMenu, registerSetting } from "../utils.js";
 import { ActivitiesForm } from "../forms/activities-form.js";
 import { MacroActivity } from "./activity-macro.js";
+import { MoveActivity } from "./activity-move.js";
 
 const constants = CONSTANTS.ACTIVITIES;
 
@@ -15,7 +16,7 @@ export function register() {
       scope: "world",
       config: false,
       type: Object,
-      default: { macro: false }
+      default: { macro: false, move: false }
     }
   );
 
@@ -40,6 +41,12 @@ export function register() {
     };
   }
 
-  const templates = [constants.TEMPLATE.FORM, constants.TEMPLATE.MACRO_EFFECT];
+  if ( setting?.move ) {
+    CONFIG.DND5E.activityTypes["custom-dnd5e-move"] = {
+      documentClass: MoveActivity
+    };
+  }
+
+  const templates = [constants.TEMPLATE.FORM, constants.TEMPLATE.MACRO_EFFECT, constants.TEMPLATE.MOVE_EFFECT];
   c5eLoadTemplates(templates);
 }

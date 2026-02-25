@@ -5,6 +5,42 @@ import { COLOR_SPLIT_FS } from "./shaders/color-split.js";
 import { WAVE_FS } from "./shaders/wave.js";
 
 /**
+ * Hide all open application windows overlaying the canvas.
+ * @param {object} [options]
+ * @param {number} [options.duration=200] Fade duration in milliseconds
+ * @returns {Promise<Function>} A function that restores the hidden applications
+ */
+export async function hideApplications({ duration = 200 } = {}) {
+  const hidden = [];
+  const uiElements = new Set(Object.values(ui));
+
+  for ( const app of foundry.applications.instances.values() ) {
+    if ( !app.rendered || !app.element ) continue;
+    if ( app.element.ownerDocument.defaultView !== window ) continue;
+    if ( uiElements.has(app) ) continue;
+    hidden.push(app);
+  }
+
+  await Promise.all(hidden.map(app =>
+    app.element.animate([{ opacity: 1 }, { opacity: 0 }], { duration, fill: "forwards" }).finished
+  ));
+
+  for ( const app of hidden ) {
+    app.element.style.display = "none";
+    app.element.getAnimations().forEach(a => a.cancel());
+  }
+
+  return async () => {
+    await Promise.all(hidden.filter(app => app.element).map(app => {
+      app.element.style.display = "";
+      return app.element.animate([{ opacity: 0 }, { opacity: 1 }], { duration }).finished;
+    }));
+  };
+}
+
+/* -------------------------------------------- */
+
+/**
  * Animation functions.
  */
 export const animations = {};

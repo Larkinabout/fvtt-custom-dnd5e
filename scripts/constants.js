@@ -27,7 +27,8 @@ export const CONSTANTS = {
     },
     TEMPLATE: {
       FORM: "modules/custom-dnd5e/templates/activities-form.hbs",
-      MACRO_EFFECT: "modules/custom-dnd5e/templates/activity/macro-effect.hbs"
+      MACRO_EFFECT: "modules/custom-dnd5e/templates/activity/macro-effect.hbs",
+      MOVE_EFFECT: "modules/custom-dnd5e/templates/activity/move-effect.hbs"
     },
     UUID: "Compendium.custom-dnd5e.custom-dnd5e-journals.JournalEntry.xK7mNpV3tZwQ4rY2"
   },

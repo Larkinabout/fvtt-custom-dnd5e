@@ -53,7 +53,7 @@
       "image": {},
       "text": {
         "format": 1,
-        "content": "<p>The Macro activity executes a macro when the activity is used.</p><h2 class=\"custom-dnd5e-h2\">Adding a Macro Activity</h2><p>After enabling the Macro activity:</p><ol><li><p>Click to <strong>Edit</strong> on a feature, item or spell.</p></li><li><p>Navigate to the <strong>Activities</strong> tab.</p></li><li><p>Click the <span class=\"fa-solid fa-plus\">​</span> button.</p></li><li><p>Select <strong>Macro </strong>in the list.</p></li><li><p>Click <span class=\"fa-solid fa-check\">​</span> <strong>Create Activity.</strong></p></li></ol><h2 class=\"custom-dnd5e-h2\">Assigning a Macro</h2><ol><li><p>Navigate to the <span class=\"fa-solid fa-sun\">​</span> <strong>Effect</strong> tab.</p></li><li><p>Drag and drop a macro from the <span class=\"fa-solid fa-code\">​</span> <strong>Macros</strong> sidebar or a compendium onto the <em>Drag and drop a Macro</em> area.</p><article class=\"custom-dnd5e-note\"><header><p><span class=\"fa-solid fa-note-sticky\">​</span></p><p>Note</p></header><p>The macro's name will appear once assigned. To remove the macro, click the <span class=\"fa-solid fa-trash\">​</span> button.</p></article></li></ol><h2 class=\"custom-dnd5e-h2\">Auto Execute</h2><p>The <strong>Auto Execute</strong> checkbox on the <span class=\"fa-solid fa-sun\">​</span> <strong>Effect</strong> tab controls when the macro runs:</p><ul><li><p><strong>Checked (default):</strong> The macro executes automatically when the activity is used.</p></li><li><p><strong>Unchecked:</strong> A button appears on the chat card. The macro only runs when a user clicks the button.</p></li></ul><h2 class=\"custom-dnd5e-h2\">Macro Context</h2><p>The following variables are available as within the macro script:</p><table><thead><tr><th><p><strong>Variable</strong></p></th><th><p><strong>Description</strong></p></th></tr></thead><tbody><tr><td><p><code>actor</code></p></td><td><p>The actor that owns the item.</p></td></tr><tr><td><p><code>token</code></p></td><td><p>The active token for the actor.</p></td></tr><tr><td><p><code>item</code></p></td><td><p>The item the activity belongs to.</p></td></tr><tr><td><p><code>activity</code></p></td><td><p>The macro activity instance.</p></td></tr><tr><td><p><code>targets</code></p></td><td><p>The targeted tokens at the time of use.</p></td></tr><tr><td><p><code>config</code></p></td><td><p>The activity usage configuration.</p></td></tr><tr><td><p><code>message</code></p></td><td><p>The chat message associated with the usage.</p></td></tr></tbody></table>"
+        "content": "<p>The Macro activity executes a macro when the activity is used.</p><h2 class=\"custom-dnd5e-h2\">Adding a Macro Activity</h2><p>After enabling the Macro activity:</p><ol><li><p>Click <span class=\"fa-solid fa-pen-to-square\">​</span> <strong>Edit</strong> on a feature, item or spell.</p></li><li><p>Navigate to the <strong>Activities</strong> tab.</p></li><li><p>Click the <span class=\"fa-solid fa-plus\">​</span> button.</p></li><li><p>Select <strong>Macro </strong>in the list.</p></li><li><p>Click <span class=\"fa-solid fa-check\">​</span> <strong>Create Activity.</strong></p></li></ol><h2 class=\"custom-dnd5e-h2\">Assigning a Macro</h2><ol><li><p>Navigate to the <span class=\"fa-solid fa-sun\">​</span> <strong>Effect</strong> tab.</p></li><li><p>Drag and drop a macro from the <span class=\"fa-solid fa-code\">​</span> <strong>Macros</strong> sidebar or a compendium onto the <em>Drag and drop a Macro</em> area.</p><article class=\"custom-dnd5e-note\"><header><p><span class=\"fa-solid fa-note-sticky\">​</span></p><p>Note</p></header><p>The macro's name will appear once assigned. To remove the macro, click the <span class=\"fa-solid fa-trash\">​</span> button.</p></article></li></ol><h2 class=\"custom-dnd5e-h2\">Auto Execute</h2><p>The <strong>Auto Execute</strong> checkbox on the <span class=\"fa-solid fa-sun\">​</span> <strong>Effect</strong> tab controls when the macro runs:</p><ul><li><p><strong>Checked (default):</strong> The macro executes automatically when the activity is used.</p></li><li><p><strong>Unchecked:</strong> A button appears on the chat card. The macro only runs when a user clicks the button.</p></li></ul><h2 class=\"custom-dnd5e-h2\">Macro Context</h2><p>The following variables are available as within the macro script:</p><table><thead><tr><th><p><strong>Variable</strong></p></th><th><p><strong>Description</strong></p></th></tr></thead><tbody><tr><td><p><code>actor</code></p></td><td><p>The actor that owns the item.</p></td></tr><tr><td><p><code>token</code></p></td><td><p>The active token for the actor.</p></td></tr><tr><td><p><code>item</code></p></td><td><p>The item the activity belongs to.</p></td></tr><tr><td><p><code>activity</code></p></td><td><p>The macro activity instance.</p></td></tr><tr><td><p><code>targets</code></p></td><td><p>The targeted tokens at the time of use.</p></td></tr><tr><td><p><code>config</code></p></td><td><p>The activity usage configuration.</p></td></tr><tr><td><p><code>message</code></p></td><td><p>The chat message associated with the usage.</p></td></tr></tbody></table>"
       },
       "video": {
         "controls": true,
@@ -77,6 +77,44 @@
       },
       "category": null,
       "_key": "!journal.pages!xK7mNpV3tZwQ4rY2.bS3oZvYxU5aEqL0d"
+    },
+    {
+      "sort": 300000,
+      "name": "Move Activity",
+      "type": "text",
+      "_id": "cT4pAvZyV6bFrM1e",
+      "system": {},
+      "title": {
+        "show": true,
+        "level": 1
+      },
+      "image": {},
+      "text": {
+        "format": 1,
+        "content": "<p>The Move activity enables forced movement of targeted tokens on the canvas. When activated, valid movement positions are highlighted and the user clicks to place the token.</p><h2 class=\"custom-dnd5e-h2\">Adding a Move Activity</h2><p>After enabling the Move activity:</p><ol><li><p>Click <span class=\"fa-solid fa-pen-to-square\">​</span> <strong>Edit</strong> on a feature, item or spell.</p></li><li><p>Navigate to the <strong>Activities</strong> tab.</p></li><li><p>Click the <span class=\"fa-solid fa-plus\">\u200b</span> button.</p></li><li><p>Select <strong>Move</strong> in the list.</p></li><li><p>Click <span class=\"fa-solid fa-check\">\u200b</span> <strong>Create Activity.</strong></p></li></ol><h2 class=\"custom-dnd5e-h2\">Configuration</h2><p>Navigate to the <span class=\"fa-solid fa-sun\">\u200b</span> <strong>Effect</strong> tab to configure the following options:</p><h3>Direction</h3><p>Controls the direction the target can be moved relative to the source token:</p><ul><li><p><strong>Push:</strong> The target is moved away from the source.</p></li><li><p><strong>Pull:</strong> The target is moved toward the source.</p></li><li><p><strong>Push or Pull:</strong> Two buttons appear on the chat card, allowing the user to choose push or pull.</p></li><li><p><strong>Any:</strong> The target can be moved in any direction.</p></li></ul><h3>Minimum Distance</h3><p>The minimum distance (in game units) that the target must be moved. Set to <strong>0</strong> by default.</p><h3>Maximum Distance</h3><p>The maximum distance (in game units) that the target can be moved. Set to <strong>5</strong> by default.</p><h3>Auto Execute</h3><p>The <strong>Auto Execute</strong> checkbox controls when movement selection starts:</p><ul><li><p><strong>Checked (default):</strong> Movement selection starts automatically when the activity is used.</p></li><li><p><strong>Unchecked:</strong> A button appears on the chat card. Movement selection only starts when a user clicks the button.</p></li></ul><h2 class=\"custom-dnd5e-h2\">Selecting a Position</h2><p>When movement selection is active:</p><ul><li><p>Open application windows are temporarily hidden to provide a clear view of the canvas.</p></li><li><p>Valid movement positions are highlighted in green.</p></li><li><p><strong>Left-click</strong> a highlighted position to move the target token there.</p></li><li><p><strong>Escape</strong> or <strong>right-click</strong> to cancel the movement.</p></li><li><p>Hidden application windows are restored when the movement completes or is cancelled.</p></li></ul><article class=\"custom-dnd5e-note\"><header><p><span class=\"fa-solid fa-note-sticky\">\u200b</span></p><p>Note</p></header><p>If multiple targets are selected, movement selection is repeated for each target in sequence.</p></article><h2 class=\"custom-dnd5e-h2\">Wall Collision</h2><p>Positions blocked by walls are excluded from valid movement options. The target cannot be pushed or pulled through walls.</p><h2 class=\"custom-dnd5e-h2\">Gridless Scenes</h2><p>On gridless scenes, the valid movement area is shown as a highlighted shape instead of individual grid cells. For directional modes (push/pull), this appears as a line; for any direction, an ring is drawn around the target.</p>"
+      },
+      "video": {
+        "controls": true,
+        "volume": 0.5
+      },
+      "src": null,
+      "ownership": {
+        "default": -1
+      },
+      "flags": {},
+      "_stats": {
+        "compendiumSource": null,
+        "duplicateSource": null,
+        "coreVersion": "13.351",
+        "systemId": "dnd5e",
+        "systemVersion": "5.2.5",
+        "createdTime": null,
+        "modifiedTime": null,
+        "lastModifiedBy": null,
+        "exportSource": null
+      },
+      "category": null,
+      "_key": "!journal.pages!xK7mNpV3tZwQ4rY2.cT4pAvZyV6bFrM1e"
     }
   ],
   "folder": null,

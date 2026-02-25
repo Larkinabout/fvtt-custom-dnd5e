@@ -1,0 +1,36 @@
+<section class="tab activity-{{ tab.id }} {{ tab.cssClass }}" data-tab="{{ tab.id }}" data-group="{{ tab.group }}">
+    {{#if appliedEffects}}{{> "systems/dnd5e/templates/activity/parts/activity-effects.hbs" }}{{/if}}
+    <fieldset>
+        <legend>{{ localize "CUSTOM_DND5E.activities.move.title" }}</legend>
+        <div class="form-group">
+            <label>{{ localize "CUSTOM_DND5E.activities.move.fields.direction.label" }}</label>
+            <div class="form-fields">
+                <select name="move.direction">
+                    {{selectOptions directionChoices selected=source.move.direction}}
+                </select>
+            </div>
+            <p class="hint">{{ localize "CUSTOM_DND5E.activities.move.fields.direction.hint" }}</p>
+        </div>
+        <div class="form-group">
+            <label>{{ localize "CUSTOM_DND5E.activities.move.fields.distanceMin.label" }}</label>
+            <div class="form-fields">
+                <input type="number" name="move.distanceMin" value="{{ source.move.distanceMin }}" min="0" step="5" />
+            </div>
+            <p class="hint">{{ localize "CUSTOM_DND5E.activities.move.fields.distanceMin.hint" }}</p>
+        </div>
+        <div class="form-group">
+            <label>{{ localize "CUSTOM_DND5E.activities.move.fields.distanceMax.label" }}</label>
+            <div class="form-fields">
+                <input type="number" name="move.distanceMax" value="{{ source.move.distanceMax }}" min="0" step="5" />
+            </div>
+            <p class="hint">{{ localize "CUSTOM_DND5E.activities.move.fields.distanceMax.hint" }}</p>
+        </div>
+        <div class="form-group">
+            <label>{{ localize "CUSTOM_DND5E.activities.move.fields.autoExecute.label" }}</label>
+            <div class="form-fields">
+                <dnd5e-checkbox name="move.autoExecute"{{#if source.move.autoExecute}} checked{{/if}}></dnd5e-checkbox>
+            </div>
+            <p class="hint">{{ localize "CUSTOM_DND5E.activities.move.fields.autoExecute.hint" }}</p>
+        </div>
+    </fieldset>
+</section>

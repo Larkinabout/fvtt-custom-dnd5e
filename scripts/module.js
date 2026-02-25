@@ -4,6 +4,7 @@ import { register as registerGameplay, registerNegativeHp } from "./gameplay/gam
 import { register as registerAbilities, setConfig as setAbilities } from "./configurations/abilities.js";
 import { register as registerActivationCosts, setConfig as setActivationCosts } from "./configurations/activation-costs.js";
 import { register as registerActivities } from "./activities/activities.js";
+import { registerSockets } from "./sockets.js";
 import { register as registerActorSheet } from "./actor-sheet.js";
 import { register as registerActorSheetTidy5e } from "./actor-sheet-tidy5e.js";
 import { register as registerActorSizes, setConfig as setActorSizes } from "./configurations/actor-sizes.js";
@@ -127,12 +128,7 @@ Hooks.on("init", async () => {
     }
   };
 
-  game.socket.on(`module.${MODULE.ID}`, (data) => {
-    if ( data.action === "animation" ) {
-      const handler = animations[data.type];
-      if ( handler ) handler(data.options);
-    }
-  });
+  registerSockets();
 
   registerSetting(
     CONSTANTS.DEBUG.SETTING.KEY,
