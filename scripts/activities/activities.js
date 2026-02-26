@@ -28,7 +28,7 @@ function _getTargetingRequirements(activity) {
   }
 
   // Standard activities with individual target data
-  if ( !type || type === "self" ) return null;
+  if ( !type || type === "self" || type === "space" ) return null;
   if ( !CONFIG.DND5E.individualTargetTypes[type] ) return null;
   if ( activity.target?.template?.type ) return null;
   const count = activity.target?.affects?.count;
