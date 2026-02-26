@@ -46,17 +46,25 @@ function _onMoveToken(data) {
  * @param {string} data.options.targetTokenId The target token id
  * @param {number} data.options.targetX The target destination x coordinate
  * @param {number} data.options.targetY The target destination y coordinate
- * @param {boolean} data.options.animate Whether to animate the movement
+ * @param {number} data.options.sourceElevation The source destination elevation
+ * @param {number} data.options.targetElevation The target destination elevation
+ * @param {boolean} data.options.teleport Whether to use displace action to bypass wall collision
  */
 function _onSwapTokens(data) {
   if ( !game.user.isGM ) return;
-  const { sceneId, sourceTokenId, sourceX, sourceY, targetTokenId, targetX, targetY, animate } = data.options;
+  const {
+    sceneId, sourceTokenId, sourceX, sourceY, sourceElevation,
+    targetTokenId, targetX, targetY, targetElevation, teleport
+  } = data.options;
   const scene = game.scenes.get(sceneId);
   if ( !scene ) return;
-  scene.updateEmbeddedDocuments("Token", [
-    { _id: sourceTokenId, x: sourceX, y: sourceY },
-    { _id: targetTokenId, x: targetX, y: targetY }
-  ], { animate });
+  const sourceDoc = scene.tokens.get(sourceTokenId);
+  const targetDoc = scene.tokens.get(targetTokenId);
+  if ( !sourceDoc || !targetDoc ) return;
+  const action = teleport ? "displace" : undefined;
+  const animate = !teleport;
+  sourceDoc.move({ x: sourceX, y: sourceY, elevation: sourceElevation, action }, { animate });
+  targetDoc.move({ x: targetX, y: targetY, elevation: targetElevation, action }, { animate });
 }
 
 /* -------------------------------------------- */

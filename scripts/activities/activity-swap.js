@@ -332,19 +332,26 @@ export class SwapActivity extends dnd5e.documents.activity.ActivityMixin(BaseSwa
 
     const sourceDoc = sourceToken.document;
     const targetDoc = targetToken.document;
-
-    // Teleport disables animation
-    const animate = !this.swap.isTeleport;
+    const sourceElevation = sourceDoc.elevation;
+    const targetElevation = targetDoc.elevation;
 
     // Check if user can modify both tokens
     const canModifyBoth = sourceDoc.canUserModify(game.user, "update")
       && targetDoc.canUserModify(game.user, "update");
 
+    // Teleport uses displace action to bypass wall collision
+    const action = this.swap.isTeleport ? "displace" : undefined;
+    const animate = !this.swap.isTeleport;
+
     if ( canModifyBoth ) {
-      await canvas.scene.updateEmbeddedDocuments("Token", [
-        { _id: sourceDoc.id, x: newSourcePos.x, y: newSourcePos.y },
-        { _id: targetDoc.id, x: newTargetPos.x, y: newTargetPos.y }
-      ], { animate });
+      await sourceDoc.move(
+        { x: newSourcePos.x, y: newSourcePos.y, elevation: targetElevation, action },
+        { animate }
+      );
+      await targetDoc.move(
+        { x: newTargetPos.x, y: newTargetPos.y, elevation: sourceElevation, action },
+        { animate }
+      );
     } else {
       game.socket.emit(`module.${MODULE.ID}`, {
         action: "swapTokens",
@@ -353,10 +360,12 @@ export class SwapActivity extends dnd5e.documents.activity.ActivityMixin(BaseSwa
           sourceTokenId: sourceDoc.id,
           sourceX: newSourcePos.x,
           sourceY: newSourcePos.y,
+          sourceElevation: targetElevation,
           targetTokenId: targetDoc.id,
           targetX: newTargetPos.x,
           targetY: newTargetPos.y,
-          animate
+          targetElevation: sourceElevation,
+          teleport: this.swap.isTeleport
         }
       });
     }
