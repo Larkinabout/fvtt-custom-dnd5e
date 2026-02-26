@@ -323,6 +323,13 @@ function registerHooks() {
     awardInspiration("rollAttack", item, roll);
     // applyHighLowGround(item, roll, ability);
   });
+  Hooks.on("dnd5e.preRollSavingThrow", (config, dialog, message) => {
+    const messageId = config.event?.target.closest("[data-message-id]")?.dataset.messageId;
+    if ( messageId && config.rolls?.length ) {
+      config.rolls[0].options ??= {};
+      config.rolls[0].options.originatingMessage = messageId;
+    }
+  });
   Hooks.on("dnd5e.rollSavingThrow", (rolls, data) => {
     awardInspiration("rollSavingThrow", rolls, data);
     handleMassiveDamageSaveResult(rolls, data);
