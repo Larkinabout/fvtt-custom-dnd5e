@@ -164,11 +164,23 @@
 
 <h2 id="activities">Activities</h2>
 
-<p>Add more activities for features, items and spells.</p>
+<p>Add custom activity types for features, items and spells, and a targeting prompt that ensures targets are selected before activities proceed.</p>
 
 <h3>Macro Activity</h3>
 
-<p>The Macro activity executes a macro when the activity is used.</p>
+<p>The Macro activity executes a macro when the activity is used. Macros can be configured to run automatically or via a chat card button, and receive context including the actor, token, item, targets and usage configuration.</p>
+
+<h3>Move Activity</h3>
+
+<p>The Move activity enables forced movement of targeted tokens on the map. Valid movement positions are highlighted based on direction (push, pull, or any) and distance constraints. Supports gridded and gridless scenes, respects wall collision, and handles multiple targets in sequence.</p>
+
+<h3>Swap Activity</h3>
+
+<p>The Swap activity swaps the caster's token position with a target token. Supports range validation, target type restrictions (ally, enemy, willing), size limits, and an optional designated actor. Can be configured as a teleport (instant) or animated movement.</p>
+
+<h3>Targeting Prompt</h3>
+
+<p>When enabled, the Targeting Prompt intercepts activity usage and prompts the user to select targets on the map before the activity proceeds. A cursor indicator shows the current and required target count. The prompt activates for standard activities with individual target data, as well as Move and Swap activities.</p>
 
 <p align="right">(<a href="#custom-dd-5e">back to top</a>)</p>
 
