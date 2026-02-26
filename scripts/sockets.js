@@ -35,11 +35,39 @@ function _onMoveToken(data) {
 /* -------------------------------------------- */
 
 /**
+ * Handle an incoming swapTokens socket event.
+ * Only processed by the GM client.
+ * @param {object} data The socket data
+ * @param {object} data.options The swap options
+ * @param {string} data.options.sceneId The scene id
+ * @param {string} data.options.sourceTokenId The source token id
+ * @param {number} data.options.sourceX The source destination x coordinate
+ * @param {number} data.options.sourceY The source destination y coordinate
+ * @param {string} data.options.targetTokenId The target token id
+ * @param {number} data.options.targetX The target destination x coordinate
+ * @param {number} data.options.targetY The target destination y coordinate
+ * @param {boolean} data.options.animate Whether to animate the movement
+ */
+function _onSwapTokens(data) {
+  if ( !game.user.isGM ) return;
+  const { sceneId, sourceTokenId, sourceX, sourceY, targetTokenId, targetX, targetY, animate } = data.options;
+  const scene = game.scenes.get(sceneId);
+  if ( !scene ) return;
+  scene.updateEmbeddedDocuments("Token", [
+    { _id: sourceTokenId, x: sourceX, y: sourceY },
+    { _id: targetTokenId, x: targetX, y: targetY }
+  ], { animate });
+}
+
+/* -------------------------------------------- */
+
+/**
  * Socket action handlers keyed by action name.
  */
 const HANDLERS = {
   animation: _onAnimation,
-  moveToken: _onMoveToken
+  moveToken: _onMoveToken,
+  swapTokens: _onSwapTokens
 };
 
 /* -------------------------------------------- */

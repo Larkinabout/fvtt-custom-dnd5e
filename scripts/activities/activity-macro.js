@@ -1,5 +1,5 @@
 import { CONSTANTS } from "../constants.js";
-import { Logger } from "../utils.js";
+import { addHelpButton, Logger } from "../utils.js";
 
 const constants = CONSTANTS.ACTIVITIES;
 
@@ -70,6 +70,7 @@ class MacroActivitySheet extends dnd5e.applications.activity.ActivitySheet {
   /** @inheritDoc */
   _onRender(context, options) {
     super._onRender(context, options);
+    addHelpButton(this.element, constants.PAGE_UUID.MACRO);
     const macroDrop = this.element.querySelector(".custom-dnd5e-macro-drop");
     if ( macroDrop ) {
       macroDrop.addEventListener("drop", event => this.#onDropMacro(event));

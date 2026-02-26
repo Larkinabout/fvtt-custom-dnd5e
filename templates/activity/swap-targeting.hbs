@@ -1,0 +1,78 @@
+<section class="tab activity-{{ tab.id }} {{ tab.cssClass }}" data-tab="{{ tab.id }}" data-group="{{ tab.group }}">
+    <fieldset {{ disabled disabled.range }}>
+        <legend>
+            <label class="checkbox">
+                {{ localize "DND5E.RANGE.FIELDS.range.label" }}
+                {{#if (or activity.range.canOverride activity.isRider)}}
+                {{ formInput fields.range.fields.override value=source.range.override input=inputs.createCheckboxInput
+                    dataset=(dnd5e-object tooltip="DND5E.RANGE.FIELDS.range.override.hint")
+                    ariaLabel=(localize "DND5E.RANGE.FIELDS.range.override.hint")}}
+                {{/if}}
+            </label>
+        </legend>
+        {{> "dnd5e.field-range" range=activity.range fields=fields.range.fields data=data.range rangeTypes=rangeUnits
+            inputs=inputs }}
+    </fieldset>
+
+    {{#if (or activity.target.canOverride @root.activity.isRider)}}
+    {{ formField fields.target.fields.override value=source.target.override input=inputs.createCheckboxInput rootId=partId }}
+    {{/if}}
+
+    <fieldset {{ disabled disabled.target }}>
+        <legend>{{ localize "DND5E.TargetPl" }}</legend>
+
+        {{!-- Target Type --}}
+        <div class="form-group split-group">
+            <label>{{ localize "DND5E.Type" }}</label>
+            <div class="form-fields">
+
+                {{!-- Amount --}}
+                {{#if activity.target.affects.scalar}}
+                {{ formField fields.target.fields.affects.fields.count value=data.target.affects.count label="DND5E.Amount" localize=true
+                    hint=false classes="label-top" placeholder=affectsPlaceholder rootId=partId }}
+                {{/if}}
+
+                {{!-- Type --}}
+                {{ formField fields.target.fields.affects.fields.type value=data.target.affects.type label="DND5E.Type" localize=true hint=false
+                    choices=CONFIG.individualTargetTypes labelAttr="label" classes="label-top" rootId=partId }}
+            </div>
+
+            {{!-- Special --}}
+            {{#if data.target.affects.type}}
+            {{ formInput fields.target.fields.affects.fields.special value=data.target.affects.special
+                placeholder=(localize "DND5E.TARGET.FIELDS.target.affects.special.label")
+                input=inputs.createTextInput classes="full-width" rootId=partId }}
+            {{/if}}
+        </div>
+    </fieldset>
+
+    <fieldset>
+        <legend>{{ localize "CUSTOM_DND5E.activities.swap.title" }}</legend>
+        <div class="form-group">
+            <label>{{ localize "CUSTOM_DND5E.activities.swap.fields.maxSize.label" }}</label>
+            <div class="form-fields">
+                <select name="swap.maxSize">
+                    {{selectOptions sizeChoices selected=source.swap.maxSize}}
+                </select>
+            </div>
+            <p class="hint">{{ localize "CUSTOM_DND5E.activities.swap.fields.maxSize.hint" }}</p>
+        </div>
+        <div class="form-group">
+            <label>{{ localize "CUSTOM_DND5E.activities.swap.fields.actorUuid.label" }}</label>
+            <div class="form-fields custom-dnd5e-actor-drop">
+                <div class="custom-dnd5e-drop-area custom-dnd5e-actor-field flex1{{#unless actorName}} hidden{{/unless}}">
+                    <span class="custom-dnd5e-actor-name">{{actorName}}</span>
+                    <button type="button" data-action="clearActor" class="unbutton control-button"
+                            data-tooltip="{{ localize 'CUSTOM_DND5E.activities.swap.clearActor' }}"
+                            aria-label="{{ localize 'CUSTOM_DND5E.activities.swap.clearActor' }}">
+                        <i class="fa-solid fa-trash" inert></i>
+                    </button>
+                </div>
+                <div class="custom-dnd5e-drop-area drop-area flex1{{#if actorName}} hidden{{/if}}">
+                    {{ localize "CUSTOM_DND5E.activities.swap.dropHint" }}
+                </div>
+            </div>
+            <p class="hint">{{ localize "CUSTOM_DND5E.activities.swap.fields.actorUuid.hint" }}</p>
+        </div>
+    </fieldset>
+</section>

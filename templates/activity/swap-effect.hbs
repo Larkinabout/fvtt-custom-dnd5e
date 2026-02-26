@@ -1,0 +1,20 @@
+<section class="tab activity-{{ tab.id }} {{ tab.cssClass }}" data-tab="{{ tab.id }}" data-group="{{ tab.group }}">
+    {{#if appliedEffects}}{{> "systems/dnd5e/templates/activity/parts/activity-effects.hbs" }}{{/if}}
+    <fieldset>
+        <legend>{{ localize "CUSTOM_DND5E.activities.swap.title" }}</legend>
+        <div class="form-group">
+            <label>{{ localize "CUSTOM_DND5E.activities.swap.fields.isTeleport.label" }}</label>
+            <div class="form-fields">
+                <dnd5e-checkbox name="swap.isTeleport"{{#if source.swap.isTeleport}} checked{{/if}}></dnd5e-checkbox>
+            </div>
+            <p class="hint">{{ localize "CUSTOM_DND5E.activities.swap.fields.isTeleport.hint" }}</p>
+        </div>
+        <div class="form-group">
+            <label>{{ localize "CUSTOM_DND5E.activities.swap.fields.autoExecute.label" }}</label>
+            <div class="form-fields">
+                <dnd5e-checkbox name="swap.autoExecute"{{#if source.swap.autoExecute}} checked{{/if}}></dnd5e-checkbox>
+            </div>
+            <p class="hint">{{ localize "CUSTOM_DND5E.activities.swap.fields.autoExecute.hint" }}</p>
+        </div>
+    </fieldset>
+</section>

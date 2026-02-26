@@ -16,6 +16,13 @@
                 </div>
                 <p class="hint">{{ localize "CUSTOM_DND5E.activities.move.enable.hint" }}</p>
             </div>
+            <div class="form-group">
+                <label>{{ localize "CUSTOM_DND5E.activities.swap.enable.label" }}</label>
+                <div class="form-fields">
+                    <dnd5e-checkbox name="swap"{{#if swap}} checked{{/if}}></dnd5e-checkbox>
+                </div>
+                <p class="hint">{{ localize "CUSTOM_DND5E.activities.swap.enable.hint" }}</p>
+            </div>
         </fieldset>
     </div>
     {{> "modules/custom-dnd5e/templates/footer.hbs"}}

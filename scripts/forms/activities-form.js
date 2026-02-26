@@ -64,7 +64,8 @@ export class ActivitiesForm extends CustomDnd5eForm {
     const setting = getSetting(constants.SETTING.CONFIG.KEY);
     return {
       macro: setting?.macro ?? false,
-      move: setting?.move ?? false
+      move: setting?.move ?? false,
+      swap: setting?.swap ?? false
     };
   }
 
@@ -109,7 +110,8 @@ export class ActivitiesForm extends CustomDnd5eForm {
   static async submit(event, form, formData) {
     await setSetting(constants.SETTING.CONFIG.KEY, {
       macro: formData.object.macro ?? false,
-      move: formData.object.move ?? false
+      move: formData.object.move ?? false,
+      swap: formData.object.swap ?? false
     });
 
     foundry.applications.settings.SettingsConfig.reloadConfirm();

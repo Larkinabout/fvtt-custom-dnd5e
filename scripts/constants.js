@@ -28,9 +28,17 @@ export const CONSTANTS = {
     TEMPLATE: {
       FORM: "modules/custom-dnd5e/templates/activities-form.hbs",
       MACRO_EFFECT: "modules/custom-dnd5e/templates/activity/macro-effect.hbs",
-      MOVE_EFFECT: "modules/custom-dnd5e/templates/activity/move-effect.hbs"
+      MOVE_EFFECT: "modules/custom-dnd5e/templates/activity/move-effect.hbs",
+      SWAP_ACTIVATION: "modules/custom-dnd5e/templates/activity/swap-activation.hbs",
+      SWAP_TARGETING: "modules/custom-dnd5e/templates/activity/swap-targeting.hbs",
+      SWAP_EFFECT: "modules/custom-dnd5e/templates/activity/swap-effect.hbs"
     },
-    UUID: "Compendium.custom-dnd5e.custom-dnd5e-journals.JournalEntry.xK7mNpV3tZwQ4rY2"
+    UUID: "Compendium.custom-dnd5e.custom-dnd5e-journals.JournalEntry.xK7mNpV3tZwQ4rY2",
+    PAGE_UUID: {
+      MACRO: "Compendium.custom-dnd5e.custom-dnd5e-journals.JournalEntry.xK7mNpV3tZwQ4rY2.JournalEntryPage.bS3oZvYxU5aEqL0d",
+      MOVE: "Compendium.custom-dnd5e.custom-dnd5e-journals.JournalEntry.xK7mNpV3tZwQ4rY2.JournalEntryPage.cT4pAvZyV6bFrM1e",
+      SWAP: "Compendium.custom-dnd5e.custom-dnd5e-journals.JournalEntry.xK7mNpV3tZwQ4rY2.JournalEntryPage.dU5qBwAzW7cGsN2f"
+    }
   },
   ABILITIES: {
     ID: "abilities",

@@ -136,6 +136,32 @@ export async function openDocument(uuid) {
 /* -------------------------------------------- */
 
 /**
+ * Add a help button to a window header that opens a journal page.
+ * @param {HTMLElement} element The application element
+ * @param {string} uuid The journal page UUID
+ */
+export async function addHelpButton(element, uuid) {
+  const windowHeader = element.querySelector(".window-header");
+  if ( !windowHeader || windowHeader.querySelector('[data-action="help"]') ) return;
+  const doc = await fromUuid(uuid);
+  const journal = doc instanceof JournalEntryPage ? doc.parent : doc;
+  if ( !journal?.testUserPermission(game.user, "OBSERVER") ) return;
+  const pack = journal.pack ? game.packs.get(journal.pack) : null;
+  if ( pack && !pack.testUserPermission(game.user, "OBSERVER") ) return;
+  const closeButton = windowHeader.querySelector('[data-action="close"]');
+  const button = document.createElement("button");
+  button.setAttribute("type", "button");
+  button.setAttribute("class", "header-control icon fa-solid fa-regular fa-circle-info");
+  button.setAttribute("data-tooltip", "CUSTOM_DND5E.openGuide");
+  button.setAttribute("aria-label", "CUSTOM_DND5E.openGuide");
+  button.setAttribute("data-action", "help");
+  button.addEventListener("click", () => openDocument(uuid));
+  windowHeader.insertBefore(button, closeButton);
+}
+
+/* -------------------------------------------- */
+
+/**
  * Get default dnd5e config.
  * @param {string} property The property
  * @param {string|null} key The key

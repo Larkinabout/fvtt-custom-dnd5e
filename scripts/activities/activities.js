@@ -3,6 +3,7 @@ import { c5eLoadTemplates, getSetting, registerMenu, registerSetting } from "../
 import { ActivitiesForm } from "../forms/activities-form.js";
 import { MacroActivity } from "./activity-macro.js";
 import { MoveActivity } from "./activity-move.js";
+import { SwapActivity } from "./activity-swap.js";
 
 const constants = CONSTANTS.ACTIVITIES;
 
@@ -16,7 +17,7 @@ export function register() {
       scope: "world",
       config: false,
       type: Object,
-      default: { macro: false, move: false }
+      default: { macro: false, move: false, swap: false }
     }
   );
 
@@ -47,6 +48,12 @@ export function register() {
     };
   }
 
-  const templates = [constants.TEMPLATE.FORM, constants.TEMPLATE.MACRO_EFFECT, constants.TEMPLATE.MOVE_EFFECT];
+  if ( setting?.swap ) {
+    CONFIG.DND5E.activityTypes["custom-dnd5e-swap"] = {
+      documentClass: SwapActivity
+    };
+  }
+
+  const templates = [constants.TEMPLATE.FORM, constants.TEMPLATE.MACRO_EFFECT, constants.TEMPLATE.MOVE_EFFECT, constants.TEMPLATE.SWAP_ACTIVATION, constants.TEMPLATE.SWAP_TARGETING, constants.TEMPLATE.SWAP_EFFECT];
   c5eLoadTemplates(templates);
 }

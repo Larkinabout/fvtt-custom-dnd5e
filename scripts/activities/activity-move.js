@@ -1,5 +1,5 @@
 import { CONSTANTS } from "../constants.js";
-import { hideApplications, Logger } from "../utils.js";
+import { addHelpButton, hideApplications, Logger } from "../utils.js";
 import { MoveCanvasMode } from "./move-canvas-mode.js";
 
 const constants = CONSTANTS.ACTIVITIES;
@@ -53,6 +53,14 @@ class MoveActivitySheet extends dnd5e.applications.activity.ActivitySheet {
 
   /* -------------------------------------------- */
   /*  Rendering                                   */
+  /* -------------------------------------------- */
+
+  /** @inheritDoc */
+  _onRender(context, options) {
+    super._onRender(context, options);
+    addHelpButton(this.element, constants.PAGE_UUID.MOVE);
+  }
+
   /* -------------------------------------------- */
 
   /** @inheritDoc */
