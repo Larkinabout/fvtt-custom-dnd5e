@@ -65,7 +65,8 @@ export class ActivitiesForm extends CustomDnd5eForm {
     return {
       macro: setting?.macro ?? false,
       move: setting?.move ?? false,
-      swap: setting?.swap ?? false
+      swap: setting?.swap ?? false,
+      targeting: setting?.targeting ?? false
     };
   }
 
@@ -111,7 +112,8 @@ export class ActivitiesForm extends CustomDnd5eForm {
     await setSetting(constants.SETTING.CONFIG.KEY, {
       macro: formData.object.macro ?? false,
       move: formData.object.move ?? false,
-      swap: formData.object.swap ?? false
+      swap: formData.object.swap ?? false,
+      targeting: formData.object.targeting ?? false
     });
 
     foundry.applications.settings.SettingsConfig.reloadConfirm();

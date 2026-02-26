@@ -15,7 +15,7 @@
       "image": {},
       "text": {
         "format": 1,
-        "content": "<p>Located in <strong>Game Settings &gt; Configure Settings &gt; Custom D&amp;D 5e &gt; Configure Activities</strong></p><p>Adds more activites for features, items and spells. All custom activities are disabled by default and a reload is required after enabling.</p>"
+        "content": "<p>Located in <strong>Game Settings &gt; Configure Settings &gt; Custom D&amp;D 5e &gt; Configure Activities</strong></p><p>Adds custom activity types for features, items and spells, and a targeting prompt that intercepts activity usage to ensure targets are selected before proceeding.</p><p>All options are disabled by default. Custom activities require a reload after enabling.</p>"
       },
       "video": {
         "controls": true,
@@ -153,6 +153,44 @@
       },
       "category": null,
       "_key": "!journal.pages!xK7mNpV3tZwQ4rY2.dU5qBwAzW7cGsN2f"
+    },
+    {
+      "sort": 500000,
+      "name": "Targeting Prompt",
+      "type": "text",
+      "_id": "eV6rCxBaX8dHtO3g",
+      "system": {},
+      "title": {
+        "show": true,
+        "level": 1
+      },
+      "image": {},
+      "text": {
+        "format": 1,
+        "content": "<p>The Targeting Prompt intercepts activity usage and prompts the user to select targets on the map before the activity proceeds. This ensures that activities requiring individual targets (e.g. attacks, spells targeting a creature) do not execute without valid targets selected.</p><h2 class=\"custom-dnd5e-h2\">How It Works</h2><p>When an activity is used that requires individual targets and not enough targets are currently selected:</p><ol><li><p>The activity is paused before any dialog, resource consumption, or chat message.</p></li><li><p>Open application windows are temporarily hidden to provide a clear view of the map.</p></li><li><p>The active tool switches to the <span class=\"fa-solid fa-bullseye\">\u200b</span> <strong>Target</strong> tool.</p></li><li><p>A cursor indicator displays the current and required target count (e.g. <em>0/1 Creature</em>).</p></li><li><p>Click tokens on the map to target or untarget them.</p></li><li><p>Once the required number of targets is reached, the activity automatically resumes.</p></li></ol><h2 class=\"custom-dnd5e-h2\">Controls</h2><ul><li><p><strong>Left-click</strong> a token to target or untarget it.</p></li><li><p><strong>Enter</strong> to confirm with the current targets (even if fewer than the maximum).</p></li><li><p><strong>Escape</strong> or <strong>right-click</strong> to cancel. The activity will not execute.</p></li></ul><h2 class=\"custom-dnd5e-h2\">Supported Activities</h2><p>The targeting prompt activates for:</p><ul><li><p><strong>Standard activities</strong> with an individual target type (e.g. Creature, Ally, Enemy) and a positive target count configured on the <span class=\"fa-solid fa-bolt\">\u200b</span> <strong>Activation</strong> tab. Activities with area-of-effect templates are excluded.</p></li><li><p><strong>Move activities</strong> which always require at least one target.</p></li><li><p><strong>Swap activities</strong> which require a target when no designated actor is configured.</p></li></ul><article class=\"custom-dnd5e-note\"><header><p><span class=\"fa-solid fa-note-sticky\">\u200b</span></p><p>Note</p></header><p>If enough targets are already selected when the activity is used, the targeting prompt is skipped and the activity proceeds normally.</p></article>"
+      },
+      "video": {
+        "controls": true,
+        "volume": 0.5
+      },
+      "src": null,
+      "ownership": {
+        "default": -1
+      },
+      "flags": {},
+      "_stats": {
+        "compendiumSource": null,
+        "duplicateSource": null,
+        "coreVersion": "13.351",
+        "systemId": "dnd5e",
+        "systemVersion": "5.2.5",
+        "createdTime": null,
+        "modifiedTime": null,
+        "lastModifiedBy": null,
+        "exportSource": null
+      },
+      "category": null,
+      "_key": "!journal.pages!xK7mNpV3tZwQ4rY2.eV6rCxBaX8dHtO3g"
     }
   ],
   "folder": null,

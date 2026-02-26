@@ -1,7 +1,7 @@
 <div id="custom-dnd5e-form" class="standard-form">
     <div class="standard-form scrollable">
         <fieldset>
-            <legend>{{ localize "CUSTOM_DND5E.form.activities.title" }}</legend>
+            <legend>{{ localize "CUSTOM_DND5E.form.activities.customActivities" }}</legend>
             <div class="form-group">
                 <label>{{ localize "CUSTOM_DND5E.activities.macro.enable.label" }}</label>
                 <div class="form-fields">
@@ -22,6 +22,16 @@
                     <dnd5e-checkbox name="swap"{{#if swap}} checked{{/if}}></dnd5e-checkbox>
                 </div>
                 <p class="hint">{{ localize "CUSTOM_DND5E.activities.swap.enable.hint" }}</p>
+            </div>
+        </fieldset>
+        <fieldset>
+            <legend>{{ localize "CUSTOM_DND5E.form.activities.targetingPrompt" }}</legend>
+            <div class="form-group">
+                <label>{{ localize "CUSTOM_DND5E.activities.targeting.enable.label" }}</label>
+                <div class="form-fields">
+                    <dnd5e-checkbox name="targeting"{{#if targeting}} checked{{/if}}></dnd5e-checkbox>
+                </div>
+                <p class="hint">{{ localize "CUSTOM_DND5E.activities.targeting.enable.hint" }}</p>
             </div>
         </fieldset>
     </div>

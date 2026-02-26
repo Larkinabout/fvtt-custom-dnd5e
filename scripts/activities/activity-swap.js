@@ -1,5 +1,5 @@
 import { CONSTANTS, MODULE } from "../constants.js";
-import { addHelpButton } from "../utils.js";
+import { addHelpButton, Logger } from "../utils.js";
 
 const constants = CONSTANTS.ACTIVITIES;
 
@@ -166,94 +166,8 @@ export class SwapActivity extends dnd5e.documents.activity.ActivityMixin(BaseSwa
     const sourceToken = actor?.isToken ? actor.token?.object : actor?.getActiveTokens()[0];
 
     if ( !sourceToken ) {
-      ui.notifications.error(game.i18n.localize("CUSTOM_DND5E.activities.swap.noSourceToken"));
+      Logger.error(game.i18n.localize("CUSTOM_DND5E.activities.swap.noSourceToken"), true, { prefix: false });
       return;
-    }
-
-    // Resolve target token
-    let targetToken;
-    if ( this.swap.actorUuid ) {
-      const targetActor = await fromUuid(this.swap.actorUuid);
-      if ( !targetActor ) {
-        ui.notifications.error(game.i18n.localize("CUSTOM_DND5E.activities.swap.actorNotFound"));
-        return;
-      }
-      const tokens = targetActor.getActiveTokens();
-      if ( !tokens.length ) {
-        ui.notifications.error(game.i18n.format("CUSTOM_DND5E.activities.swap.actorNotOnCanvas", {
-          name: targetActor.name
-        }));
-        return;
-      }
-      if ( tokens.length === 1 ) {
-        targetToken = tokens[0];
-      } else {
-        // Multiple tokens — check user targets for one matching the actor
-        targetToken = Array.from(game.user.targets).find(t => t.actor?.uuid === targetActor.uuid);
-        if ( !targetToken ) {
-          ui.notifications.error(game.i18n.format("CUSTOM_DND5E.activities.swap.multipleTokens", {
-            name: targetActor.name
-          }));
-          return;
-        }
-      }
-    } else {
-      if ( !game.user.targets.size ) {
-        ui.notifications.error(game.i18n.localize("CUSTOM_DND5E.activities.swap.noTarget"));
-        return;
-      }
-      targetToken = Array.from(game.user.targets)[0];
-    }
-
-    const targetName = targetToken.document.name;
-
-    // Validate range
-    const rangeValue = this.range?.value;
-    const rangeUnits = this.range?.units;
-    if ( rangeValue && rangeUnits && (rangeUnits in CONFIG.DND5E.movementUnits) ) {
-      const distance = canvas.grid.measurePath([sourceToken.center, targetToken.center]).distance;
-      if ( distance > rangeValue ) {
-        ui.notifications.error(game.i18n.format("CUSTOM_DND5E.activities.swap.outOfRange", {
-          name: targetName, range: rangeValue
-        }));
-        return;
-      }
-    }
-
-    // Validate target type
-    const affectsType = this.target?.affects?.type;
-    if ( affectsType && !["self", "any", "creature", "creatureOrObject"].includes(affectsType) ) {
-      const sourceDisposition = sourceToken.document.disposition;
-      const targetDisposition = targetToken.document.disposition;
-      const isSameDisposition = sourceDisposition === targetDisposition;
-      let mismatch = false;
-      if ( affectsType === "ally" && !isSameDisposition ) mismatch = true;
-      else if ( affectsType === "willing" && !isSameDisposition ) mismatch = true;
-      else if ( affectsType === "enemy" && isSameDisposition ) mismatch = true;
-      if ( mismatch ) {
-        const typeLabel = game.i18n.localize(
-          CONFIG.DND5E.individualTargetTypes[affectsType]?.label ?? affectsType
-        ).toLowerCase();
-        const article = /^[aeiou]/i.test(typeLabel) ? "an" : "a";
-        ui.notifications.error(game.i18n.format("CUSTOM_DND5E.activities.swap.targetTypeMismatch", {
-          name: targetName, type: `${article} ${typeLabel}`
-        }));
-        return;
-      }
-    }
-
-    // Validate size
-    if ( this.swap.maxSize ) {
-      const targetSize = targetToken.actor?.system?.traits?.size;
-      const sizeKeys = Object.keys(CONFIG.DND5E.actorSizes);
-      const maxIndex = CONFIG.DND5E.actorSizes[this.swap.maxSize]?.numerical ?? sizeKeys.indexOf(this.swap.maxSize);
-      const targetIndex = CONFIG.DND5E.actorSizes[targetSize]?.numerical ?? sizeKeys.indexOf(targetSize);
-      if ( targetIndex > maxIndex ) {
-        ui.notifications.error(game.i18n.format("CUSTOM_DND5E.activities.swap.sizeTooLarge", {
-          name: targetName
-        }));
-        return;
-      }
     }
 
     return super.use(usage, dialog, message);
@@ -298,7 +212,7 @@ export class SwapActivity extends dnd5e.documents.activity.ActivityMixin(BaseSwa
     const sourceToken = actor?.isToken ? actor.token?.object : actor?.getActiveTokens()[0];
 
     if ( !sourceToken ) {
-      ui.notifications.error(game.i18n.localize("CUSTOM_DND5E.activities.swap.noSourceToken"));
+      Logger.error(game.i18n.localize("CUSTOM_DND5E.activities.swap.noSourceToken"), true, { prefix: false });
       return;
     }
 
@@ -318,12 +232,26 @@ export class SwapActivity extends dnd5e.documents.activity.ActivityMixin(BaseSwa
     // Fall back to designated actor
     if ( !targetToken && this.swap.actorUuid ) {
       const targetActor = await fromUuid(this.swap.actorUuid);
-      if ( targetActor ) {
-        const tokens = targetActor.getActiveTokens();
-        if ( tokens.length === 1 ) {
-          targetToken = tokens[0];
-        } else if ( tokens.length > 1 ) {
-          targetToken = Array.from(game.user.targets).find(t => t.actor?.uuid === targetActor.uuid);
+      if ( !targetActor ) {
+        Logger.error(game.i18n.localize("CUSTOM_DND5E.activities.swap.actorNotFound"), true, { prefix: false });
+        return;
+      }
+      const tokens = targetActor.getActiveTokens();
+      if ( !tokens.length ) {
+        Logger.error(game.i18n.format("CUSTOM_DND5E.activities.swap.actorNotOnCanvas", {
+          name: targetActor.name
+        }), true, { prefix: false });
+        return;
+      }
+      if ( tokens.length === 1 ) {
+        targetToken = tokens[0];
+      } else {
+        targetToken = Array.from(game.user.targets).find(t => t.actor?.uuid === targetActor.uuid);
+        if ( !targetToken ) {
+          Logger.error(game.i18n.format("CUSTOM_DND5E.activities.swap.multipleTokens", {
+            name: targetActor.name
+          }), true, { prefix: false });
+          return;
         }
       }
     }
@@ -334,8 +262,61 @@ export class SwapActivity extends dnd5e.documents.activity.ActivityMixin(BaseSwa
     }
 
     if ( !targetToken ) {
-      ui.notifications.error(game.i18n.localize("CUSTOM_DND5E.activities.swap.noTarget"));
+      Logger.error(game.i18n.localize("CUSTOM_DND5E.activities.swap.noTarget"), true, { prefix: false });
       return;
+    }
+
+    const targetName = targetToken.document.name;
+
+    // Validate range
+    const rangeValue = this.range?.value;
+    const rangeUnits = this.range?.units;
+    if ( rangeValue && rangeUnits && (rangeUnits in CONFIG.DND5E.movementUnits) ) {
+      const distance = canvas.grid.measurePath([sourceToken.center, targetToken.center]).distance;
+      if ( distance > rangeValue ) {
+        Logger.error(game.i18n.format("CUSTOM_DND5E.activities.swap.outOfRange", {
+          name: targetName, range: rangeValue
+        }), true, { prefix: false });
+        return;
+      }
+    }
+
+    // Validate target type
+    const affectsType = this.target?.affects?.type;
+    if ( affectsType && !["self", "any", "creature", "creatureOrObject"].includes(affectsType) ) {
+      const sourceDisposition = sourceToken.document.disposition;
+      const targetDisposition = targetToken.document.disposition;
+      const isSameDisposition = sourceDisposition === targetDisposition;
+      let mismatch = false;
+      if ( affectsType === "ally" && !isSameDisposition ) mismatch = true;
+      else if ( affectsType === "willing" && !isSameDisposition ) mismatch = true;
+      else if ( affectsType === "enemy" && isSameDisposition ) mismatch = true;
+      if ( mismatch ) {
+        const typeLabel = game.i18n.localize(
+          CONFIG.DND5E.individualTargetTypes[affectsType]?.label ?? affectsType
+        ).toLowerCase();
+        const article = /^[aeiou]/i.test(typeLabel) ? "an" : "a";
+        Logger.error(game.i18n.format("CUSTOM_DND5E.activities.swap.targetTypeMismatch", {
+          name: targetName, type: `${article} ${typeLabel}`
+        }), true, { prefix: false });
+        return;
+      }
+    }
+
+    // Validate size
+    if ( this.swap.maxSize ) {
+      const targetSize = targetToken.actor?.system?.traits?.size;
+      const sizeKeys = Object.keys(CONFIG.DND5E.actorSizes);
+      const maxIndex = CONFIG.DND5E.actorSizes[this.swap.maxSize]?.numerical
+        ?? sizeKeys.indexOf(this.swap.maxSize);
+      const targetIndex = CONFIG.DND5E.actorSizes[targetSize]?.numerical
+        ?? sizeKeys.indexOf(targetSize);
+      if ( targetIndex > maxIndex ) {
+        Logger.error(game.i18n.format("CUSTOM_DND5E.activities.swap.sizeTooLarge", {
+          name: targetName
+        }), true, { prefix: false });
+        return;
+      }
     }
 
     // Calculate swapped positions
@@ -343,10 +324,10 @@ export class SwapActivity extends dnd5e.documents.activity.ActivityMixin(BaseSwa
     const targetCenter = targetToken.center;
 
     const newSourcePos = canvas.grid.getSnappedPoint(
-      { x: targetCenter.x - sourceToken.w / 2, y: targetCenter.y - sourceToken.h / 2 }
+      { x: targetCenter.x - (sourceToken.w / 2), y: targetCenter.y - (sourceToken.h / 2) }
     );
     const newTargetPos = canvas.grid.getSnappedPoint(
-      { x: sourceCenter.x - targetToken.w / 2, y: sourceCenter.y - targetToken.h / 2 }
+      { x: sourceCenter.x - (targetToken.w / 2), y: sourceCenter.y - (targetToken.h / 2) }
     );
 
     const sourceDoc = sourceToken.document;

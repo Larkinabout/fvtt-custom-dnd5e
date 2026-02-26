@@ -37,7 +37,8 @@ export const CONSTANTS = {
     PAGE_UUID: {
       MACRO: "Compendium.custom-dnd5e.custom-dnd5e-journals.JournalEntry.xK7mNpV3tZwQ4rY2.JournalEntryPage.bS3oZvYxU5aEqL0d",
       MOVE: "Compendium.custom-dnd5e.custom-dnd5e-journals.JournalEntry.xK7mNpV3tZwQ4rY2.JournalEntryPage.cT4pAvZyV6bFrM1e",
-      SWAP: "Compendium.custom-dnd5e.custom-dnd5e-journals.JournalEntry.xK7mNpV3tZwQ4rY2.JournalEntryPage.dU5qBwAzW7cGsN2f"
+      SWAP: "Compendium.custom-dnd5e.custom-dnd5e-journals.JournalEntry.xK7mNpV3tZwQ4rY2.JournalEntryPage.dU5qBwAzW7cGsN2f",
+      TARGETING: "Compendium.custom-dnd5e.custom-dnd5e-journals.JournalEntry.xK7mNpV3tZwQ4rY2.JournalEntryPage.eV6rCxBaX8dHtO3g"
     }
   },
   ABILITIES: {

@@ -12,12 +12,11 @@ import { WAVE_FS } from "./shaders/wave.js";
  */
 export async function hideApplications({ duration = 200 } = {}) {
   const hidden = [];
-  const uiElements = new Set(Object.values(ui));
 
   for ( const app of foundry.applications.instances.values() ) {
     if ( !app.rendered || !app.element ) continue;
     if ( app.element.ownerDocument.defaultView !== window ) continue;
-    if ( uiElements.has(app) ) continue;
+    if ( !app.options.window?.frame ) continue;
     hidden.push(app);
   }
 
@@ -52,21 +51,27 @@ export class Logger {
   /**
    * Log an info message.
    * @param {string} message The message
-   * @param {boolean} notify Whether to notify the user
+   * @param {boolean} [notify=false] Whether to notify the user
+   * @param {object} [options]
+   * @param {boolean} [options.prefix=true] Whether to include the module name prefix
    */
-  static info(message, notify = false) {
-    if ( notify ) ui.notifications.info(`${MODULE.NAME} | ${message}`);
-    else console.log(`${MODULE.NAME} Info | ${message}`);
+  static info(message, notify = false, { prefix = true } = {}) {
+    const label = prefix ? `${MODULE.NAME} | ${message}` : message;
+    if ( notify ) ui.notifications.info(label);
+    else console.log(prefix ? `${MODULE.NAME} Info | ${message}` : message);
   }
 
   /**
    * Log an error message.
    * @param {string} message The message
-   * @param {boolean} notify Whether to notify the user
+   * @param {boolean} [notify=false] Whether to notify the user
+   * @param {object} [options]
+   * @param {boolean} [options.prefix=true] Whether to include the module name prefix
    */
-  static error(message, notify = false) {
-    if ( notify ) ui.notifications.error(`${MODULE.NAME} | ${message}`);
-    else console.error(`${MODULE.NAME} Error | ${message}`);
+  static error(message, notify = false, { prefix = true } = {}) {
+    const label = prefix ? `${MODULE.NAME} | ${message}` : message;
+    if ( notify ) ui.notifications.error(label);
+    else console.error(prefix ? `${MODULE.NAME} Error | ${message}` : message);
   }
 
   /**

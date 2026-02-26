@@ -121,12 +121,7 @@ export class MoveActivity extends dnd5e.documents.activity.ActivityMixin(BaseMov
     const sourceToken = actor?.isToken ? actor.token?.object : actor?.getActiveTokens()[0];
 
     if ( !sourceToken ) {
-      Logger.error(game.i18n.localize("CUSTOM_DND5E.activities.move.noSourceToken"), true);
-      return;
-    }
-
-    if ( !game.user.targets.size ) {
-      Logger.error(game.i18n.localize("CUSTOM_DND5E.activities.move.noTarget"), true);
+      Logger.error(game.i18n.localize("CUSTOM_DND5E.activities.move.noSourceToken"), true, { prefix: false });
       return;
     }
 
@@ -189,7 +184,7 @@ export class MoveActivity extends dnd5e.documents.activity.ActivityMixin(BaseMov
     const sourceToken = actor?.isToken ? actor.token?.object : actor?.getActiveTokens()[0];
 
     if ( !sourceToken ) {
-      Logger.error(game.i18n.localize("CUSTOM_DND5E.activities.move.noSourceToken"), true);
+      Logger.error(game.i18n.localize("CUSTOM_DND5E.activities.move.noSourceToken"), true, { prefix: false });
       return;
     }
 
@@ -210,7 +205,7 @@ export class MoveActivity extends dnd5e.documents.activity.ActivityMixin(BaseMov
     }
 
     if ( !targetTokens.length ) {
-      Logger.error(game.i18n.localize("CUSTOM_DND5E.activities.move.noTarget"), true);
+      Logger.error(game.i18n.localize("CUSTOM_DND5E.activities.move.noTarget"), true, { prefix: false });
       return;
     }
 
