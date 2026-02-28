@@ -44,6 +44,7 @@ export function migrate() {
   isSuccess = (!migrationVersion || foundry.utils.isNewerVersion("2.2.4", migrationVersion)) ? migrateConditions() : true;
   isSuccess = (!migrationVersion || foundry.utils.isNewerVersion("2.3.0", migrationVersion)) ? migrateAwardInspirationRollType() : true;
   isSuccess = (!migrationVersion || foundry.utils.isNewerVersion("3.0.0", migrationVersion)) ? migrateRerollInitiative() : true;
+  isSuccess = (!migrationVersion || foundry.utils.isNewerVersion("3.2.2", migrationVersion)) ? migrateRerollInitiative() : true;
 
   if ( isSuccess ) {
     setSetting(constants.VERSION.SETTING.KEY, moduleVersion);
@@ -120,9 +121,9 @@ export async function migrateAwardInspirationRollType() {
 export async function migrateRerollInitiative() {
   try {
     const value = getSetting(CONSTANTS.INITIATIVE.SETTING.REROLL_INITIATIVE_EACH_ROUND.KEY);
-    if ( value === true ) {
+    if ( value === true || value === "true" ) {
       await setSetting(CONSTANTS.INITIATIVE.SETTING.REROLL_INITIATIVE_EACH_ROUND.KEY, "rerollAll");
-    } else if ( value === false || !value ) {
+    } else if ( value === false || value === "false" || !value ) {
       await setSetting(CONSTANTS.INITIATIVE.SETTING.REROLL_INITIATIVE_EACH_ROUND.KEY, "off");
     }
     return true;

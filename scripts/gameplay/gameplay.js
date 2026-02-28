@@ -443,6 +443,7 @@ export function registerNegativeHp() {
 export async function rerollInitiative(combat, data, options) {
   let mode = getSetting(CONSTANTS.INITIATIVE.SETTING.REROLL_INITIATIVE_EACH_ROUND.KEY);
   if ( mode === true ) mode = "rerollAll";
+  if ( mode === false || mode === "false" ) mode = "off";
   if ( !mode || mode === "off" || data.turn !== 0 ) return;
 
   await combat.resetAll();
