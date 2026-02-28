@@ -4,6 +4,26 @@ import { getSetting, registerSetting } from "./utils.js";
 const constants = CONSTANTS.RADIAL_STATUS_EFFECTS;
 
 /**
+ * Whether drop shadow filters should be applied to effect backgrounds.
+ * @type {boolean|null}
+ */
+let useDropShadow = null;
+
+/**
+ * Determine whether drop shadow filters should be used.
+ * Disabled when Prime Performance is active (as bitmap caching breaks PIXI filters)
+ * or when core performance mode is Medium or lower.
+ * @returns {boolean}
+ */
+function shouldUseDropShadow() {
+  if ( !PIXI.filters?.DropShadowFilter ) return false;
+  if ( game.modules.get("fvtt-perf-optim")?.active ) return false;
+  const perfMode = game.settings.get("core", "performanceMode") ?? CONST.CANVAS_PERFORMANCE_MODES.MAX;
+  if ( perfMode <= CONST.CANVAS_PERFORMANCE_MODES.MED ) return false;
+  return true;
+}
+
+/**
  * Register settings and patches.
  */
 export function register() {
@@ -64,7 +84,8 @@ function refreshEffectsPatch(wrapped, ...args) {
   const halfGridSize = gridSize * tokenTileFactor / 2;
   const bg = this.effects.bg.clear();
 
-  if ( !bg.filters?.length && PIXI.filters?.DropShadowFilter ) {
+  if ( useDropShadow === null ) useDropShadow = shouldUseDropShadow();
+  if ( useDropShadow && !bg.filters?.length ) {
     bg.filters = [new PIXI.filters.DropShadowFilter({
       blur: 2,
       quality: 2,
