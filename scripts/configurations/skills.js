@@ -110,7 +110,11 @@ export function setConfig(settingData = null) {
   Hooks.callAll("customDnd5e.setSkillsConfig", configData);
 
   if ( configData ) {
-    CONFIG.DND5E[configKey] = configData;
+    const currentConfig = CONFIG.DND5E[configKey];
+    for ( const key of Object.keys(currentConfig) ) {
+      if ( !(key in configData) ) delete currentConfig[key];
+    }
+    Object.assign(currentConfig, configData);
   }
 }
 

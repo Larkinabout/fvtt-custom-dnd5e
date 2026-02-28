@@ -74,6 +74,7 @@ import { patchPrepareEncumbrance } from "./patches/prepare-encumbrance.js";
 import { patchPrepareMovement } from "./patches/prepare-movement.js";
 import { patchPrepareMovementAttribution } from "./patches/prepare-movement-attribution.js";
 import { patchPrepareSenses } from "./patches/prepare-senses.js";
+import { patchPrepareSkillsTools } from "./patches/prepare-skills-tools.js";
 import { registerCharacterSheet } from "./sheets/character-sheet.js";
 
 /**
@@ -146,6 +147,7 @@ Hooks.on("init", async () => {
   patchPrepareMovement();
   patchPrepareMovementAttribution();
   patchPrepareSenses();
+  patchPrepareSkillsTools();
 
   registerMigration();
   registerCharacterSheet();
