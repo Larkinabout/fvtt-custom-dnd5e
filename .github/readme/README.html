@@ -15,6 +15,7 @@
     <li><a href="#gameplay">Gameplay</a></li>
     <li><a href="#activities">Activities</a></li>
     <li><a href="#counters">Counters</a></li>
+    <li><a href="#workflows">Workflows</a></li>
     <li><a href="#configurations">Configurations</a></li>
     <li><a href="#configure-encumbrance">Configure Encumbrance</a></li>
     <li><a href="#configure-rolls">Configure Rolls</a></li>
@@ -166,6 +167,8 @@
 
 <p>Add custom activity types for features, items and spells, and a targeting prompt that ensures targets are selected before activities proceed.</p>
 
+<p><img src="https://github.com/Larkinabout/fvtt-custom-dnd5e/blob/main/.github/readme/custom-dnd5e-move-activity.gif?raw=true" alt="Custom D&amp;D 5e Move Activity"></p>
+
 <h3>Macro Activity</h3>
 
 <p>The Macro activity executes a macro when the activity is used. Macros can be configured to run automatically or via a chat card button, and receive context including the actor, token, item, targets and usage configuration.</p>
@@ -188,11 +191,39 @@
 
 <h2 id="counters">Counters</h2>
 
-<p>Add counters to character sheets with five types: checkbox, fraction, number, pips and success/failure. Set triggers to automatically change counter values based on HP thresholds, combat events, or item attack rolls. Triggers can execute macros with custom operators. Counter actions include increasing or decreasing values, destroying items, and reducing item quantities. Counters can also be added to items and group actor sheets, and are compatible with Tidy5e character sheets.</p>
+<p>Add counters to character sheets with five types: checkbox, fraction, number, pips and success/failure.</p>
 
 <p><img src="https://github.com/Larkinabout/fvtt-custom-dnd5e/blob/main/.github/readme/custom-dnd5e-counters.gif?raw=true" alt="Custom D&amp;D 5e Counters"></p>
 
+<p>Set triggers to automatically change counter values based on HP thresholds, combat events, or item attack rolls. Triggers can execute macros with custom operators. Counter actions include increasing or decreasing values, destroying items, and reducing item quantities. Counters can also be added to items and group actor sheets, and are compatible with Tidy5e character sheets.</p>
+
 <p><img src="https://github.com/Larkinabout/fvtt-custom-dnd5e/blob/main/.github/readme/custom-dnd5e-counter-triggers.gif?raw=true" alt="Custom D&amp;D 5e Counter Triggers"></p>
+
+<p align="right">(<a href="#custom-dd-5e">back to top</a>)</p>
+
+<hr>
+
+<h2 id="workflows">Workflows</h2>
+
+<p>Create event-driven workflows that execute actions in response to triggers. Workflows can be configured at the world level or per actor.</p>
+
+<p><img src="https://github.com/Larkinabout/fvtt-custom-dnd5e/blob/main/.github/readme/custom-dnd5e-workflows.png?raw=true" alt="Custom D&amp;D 5e Workflows"></p>
+
+<h3>Triggers</h3>
+
+<p>Triggers define when a workflow fires. Multiple triggers can be added to a single workflow using OR logic. Roll-based triggers support optional value conditions with operators (equal, less than, greater than, not equal).</p>
+
+<p>Available triggers: Attack Roll, Ability Check, Saving Throw, Skill Check, Tool Check, Initiative Roll, Concentration Save, Death Save, Damage Roll, Reaches 0 HP, Drops to Half HP or Lower, Loses HP, Gains HP, Start of Combat, End of Combat, Start of Turn, End of Turn, Short Rest, Long Rest.</p>
+
+<h3>Actions</h3>
+
+<p>Actions define what happens when a workflow is triggered. Multiple actions can be added to a single workflow.</p>
+
+<p>Available actions: Macro, Play Sound, Apply Condition, Remove Condition, Toggle Condition, Roll Table, Distribute Award, Request Roll, Update Actor, Update Token.</p>
+
+<h3>Per-Actor Workflows</h3>
+
+<p>Workflows can also be configured on individual actors via the Configure Workflows button on the Effects tab of the actor sheet. Per-actor workflows follow the same trigger and action system as world workflows.</p>
 
 <p align="right">(<a href="#custom-dd-5e">back to top</a>)</p>
 

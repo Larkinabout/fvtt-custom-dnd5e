@@ -1125,6 +1125,33 @@ export const CONSTANTS = {
     },
     UUID: "Compendium.custom-dnd5e.custom-dnd5e-journals.JournalEntry.B48iqFBddUikMMer.JournalEntryPage.Ls4Rn45UNhTBagHD"
   },
+  WORKFLOWS: {
+    ID: "workflows",
+    MENU: {
+      KEY: "workflows-menu",
+      HINT: "CUSTOM_DND5E.menu.workflows.hint",
+      ICON: "fas fa-bolt-lightning",
+      LABEL: "CUSTOM_DND5E.menu.workflows.label",
+      NAME: "CUSTOM_DND5E.menu.workflows.name"
+    },
+    SETTING: {
+      ENABLE: {
+        KEY: "workflows-enable"
+      },
+      WORKFLOWS: {
+        KEY: "workflows"
+      }
+    },
+    TEMPLATE: {
+      FORM: "modules/custom-dnd5e/templates/workflows-form.hbs",
+      LIST: "modules/custom-dnd5e/templates/workflows-list.hbs",
+      EDIT: "modules/custom-dnd5e/templates/workflows-edit.hbs",
+      FORM_ACTOR: "modules/custom-dnd5e/templates/workflows-form-actor.hbs",
+      TRIGGER_ROW: "modules/custom-dnd5e/templates/workflows-trigger-row.hbs",
+      ACTION_ROW: "modules/custom-dnd5e/templates/workflows-action-row.hbs"
+    },
+    UUID: "Compendium.custom-dnd5e.custom-dnd5e-journals.JournalEntry.fR3kYmNpV4tZwQ5r"
+  },
   UNCONSCIOUS: {
     SETTING: {
       APPLY_UNCONSCIOUS: {

@@ -11,6 +11,7 @@ A Foundry VTT module to customise the D&D 5e system.
 - [Gameplay](#gameplay)
 - [Activities](#activities)
 - [Counters](#counters)
+- [Workflows](#workflows)
 - [Configurations](#configurations)
 - [Configure Encumbrance](#configure-encumbrance)
 - [Configure Rolls](#configure-rolls)
@@ -228,6 +229,8 @@ When taking a Long Rest, optionally requires spending Camp Supplies.
 
 Add custom activity types for features, items and spells, and a targeting prompt that ensures targets are selected before activities proceed.
 
+![Custom D&D 5e Move Activity](./.github/readme/custom-dnd5e-move-activity.gif)
+
 ### Macro Activity
 
 The Macro activity executes a macro when the activity is used. Macros can be configured to run automatically or via a chat card button, and receive context including the actor, token, item, targets and usage configuration.
@@ -250,14 +253,11 @@ When enabled, the Targeting Prompt intercepts activity usage and prompts the use
 
 ## Counters
 
-Add counters to character sheets with four types: checkbox, fraction, number and success/failure. Set triggers to automatically change counter values based on HP thresholds, combat events, or item attack rolls. Triggers can execute macros with custom operators. Counter actions include increasing or decreasing values, destroying items, and reducing item quantities. Counters can also be added to items and group actor sheets, and are compatible with Tidy5e character sheets.
-
-<details>
-    <summary>See Video</summary>
+Add counters to character sheets with four types: checkbox, fraction, number and success/failure. 
 
 ![Custom D&D 5e Counters](./.github/readme/custom-dnd5e-counters.gif)
 
-</details>
+Set triggers to automatically change counter values based on HP thresholds, combat events, or item attack rolls. Triggers can execute macros with custom operators. Counter actions include increasing or decreasing values, destroying items, and reducing item quantities. Counters can also be added to items and group actor sheets, and are compatible with Tidy5e character sheets.
 
 <details>
     <summary>See Video</summary>
@@ -265,6 +265,32 @@ Add counters to character sheets with four types: checkbox, fraction, number and
 ![Custom D&D 5e Counter Triggers](./.github/readme/custom-dnd5e-counter-triggers.gif)
 
 </details>
+
+<p align="right">(<a href="#custom-dd-5e">back to top</a>)</p>
+
+---
+
+## Workflows
+
+Create event-driven workflows that execute actions in response to triggers. Workflows can be configured at the world level or per actor.
+
+![Custom D&D 5e Workflows](./.github/readme/custom-dnd5e-workflows.png)
+
+### Triggers
+
+Triggers define when a workflow fires. Multiple triggers can be added to a single workflow using OR logic. Roll-based triggers support optional value conditions with operators (equal, less than, greater than, not equal).
+
+Available triggers: Attack Roll, Ability Check, Saving Throw, Skill Check, Tool Check, Initiative Roll, Concentration Save, Death Save, Damage Roll, Reaches 0 HP, Drops to Half HP or Lower, Loses HP, Gains HP, Start of Combat, End of Combat, Start of Turn, End of Turn, Short Rest, Long Rest.
+
+### Actions
+
+Actions define what happens when a workflow is triggered. Multiple actions can be added to a single workflow.
+
+Available actions: Macro, Play Sound, Apply Condition, Remove Condition, Toggle Condition, Roll Table, Distribute Award, Request Roll, Update Actor, Update Token.
+
+### Per-Actor Workflows
+
+Workflows can also be configured on individual actors via the Configure Workflows button on the Effects tab of the actor sheet. Per-actor workflows follow the same trigger and action system as world workflows.
 
 <p align="right">(<a href="#custom-dd-5e">back to top</a>)</p>
 

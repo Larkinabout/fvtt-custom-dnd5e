@@ -1,0 +1,66 @@
+<li class="item custom-dnd5e-item custom-dnd5e-action-row" data-key="{{actionId}}">
+    <div class="item-row">
+        <i class="custom-dnd5e-drag fa-solid fa-grip-lines" draggable="true"></i>
+        <select name="actions.{{actionId}}.type" class="custom-dnd5e-action-type">
+            {{selectOptions actionChoices selected=type localize=true}}
+        </select>
+        <div class="custom-dnd5e-action-fields">
+            <div class="custom-dnd5e-macro-group{{#unless (customDnd5eEq type 'macro')}} hidden{{/unless}}">
+                <div class="form-fields custom-dnd5e-macro-drop">
+                    <div class="custom-dnd5e-drop-area custom-dnd5e-macro-field flex1{{#unless macroName}} hidden{{/unless}}">
+                        <span class="custom-dnd5e-macro-name">{{macroName}}</span>
+                        <button type="button" data-action="clearMacro" class="unbutton control-button always-interactive" data-tooltip="{{localize 'CUSTOM_DND5E.form.workflows.macro.clear'}}" aria-label="{{localize 'CUSTOM_DND5E.form.workflows.macro.clear'}}">
+                            <i class="fa-solid fa-trash" inert></i>
+                        </button>
+                    </div>
+                    <div class="custom-dnd5e-drop-area drop-area flex1{{#if macroName}} hidden{{/if}}">{{localize "CUSTOM_DND5E.dropHint.macro"}}</div>
+                    <input type="hidden" name="actions.{{actionId}}.macroUuid" value="{{macroUuid}}">
+                </div>
+            </div>
+            <div class="custom-dnd5e-sound-group{{#unless (customDnd5eEq type 'playSound')}} hidden{{/unless}}">
+                <div class="form-fields custom-dnd5e-sound-drop">
+                    <file-picker name="actions.{{actionId}}.soundPath" type="audio" value="{{soundPath}}"></file-picker>
+                    <input name="actions.{{actionId}}.soundVolume" type="number" min="0" max="1" step="0.1" value="{{soundVolume}}" style="max-width: 60px;">
+                </div>
+            </div>
+            <div class="custom-dnd5e-condition-group{{#unless showCondition}} hidden{{/unless}}">
+                <div class="form-fields">
+                    <select name="actions.{{actionId}}.conditionId" class="custom-dnd5e-condition-select">
+                        {{selectOptions conditionChoices selected=conditionId localize=true}}
+                    </select>
+                </div>
+            </div>
+            <div class="custom-dnd5e-roll-type-group{{#unless showRollType}} hidden{{/unless}}">
+                <div class="form-fields">
+                    <select name="actions.{{actionId}}.rollType" class="custom-dnd5e-roll-type-select">
+                        {{selectOptions rollTypeChoices selected=rollType}}
+                    </select>
+                    <input name="actions.{{actionId}}.rollDc" type="number" min="1" value="{{rollDc}}" placeholder="DC" style="max-width: 60px;">
+                </div>
+            </div>
+            <div class="custom-dnd5e-table-group{{#unless (customDnd5eEq type 'rollTable')}} hidden{{/unless}}">
+                <div class="form-fields custom-dnd5e-table-drop">
+                    <div class="custom-dnd5e-drop-area custom-dnd5e-table-field flex1{{#unless tableName}} hidden{{/unless}}">
+                        <span class="custom-dnd5e-table-name">{{tableName}}</span>
+                        <button type="button" data-action="clearTable" class="unbutton control-button always-interactive" data-tooltip="{{localize 'CUSTOM_DND5E.form.workflows.rollTable.clear'}}" aria-label="{{localize 'CUSTOM_DND5E.form.workflows.rollTable.clear'}}">
+                            <i class="fa-solid fa-trash" inert></i>
+                        </button>
+                    </div>
+                    <div class="custom-dnd5e-drop-area drop-area flex1{{#if tableName}} hidden{{/if}}">{{localize "CUSTOM_DND5E.dropHint.rollableTable"}}</div>
+                    <input type="hidden" name="actions.{{actionId}}.tableUuid" value="{{tableUuid}}">
+                </div>
+            </div>
+            <div class="custom-dnd5e-update-group{{#unless showUpdate}} hidden{{/unless}}">
+                <div class="form-fields">
+                    <input name="actions.{{actionId}}.updatePath" type="text" value="{{updatePath}}" placeholder="{{localize 'CUSTOM_DND5E.form.workflows.updatePath.label'}}">
+                    <input name="actions.{{actionId}}.updateValue" type="text" value="{{updateValue}}" placeholder="{{localize 'CUSTOM_DND5E.form.workflows.updateValue.label'}}">
+                </div>
+            </div>
+        </div>
+        <div class="item-controls always-visible">
+            <button type="button" data-action="deleteRow" class="unbutton control-button item-control always-interactive" data-tooltip="{{localize 'CUSTOM_DND5E.form.button.delete.tooltip'}}" aria-label="{{localize 'CUSTOM_DND5E.form.button.delete.tooltip'}}">
+                <i class="fas fa-trash" inert></i>
+            </button>
+        </div>
+    </div>
+</li>

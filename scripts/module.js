@@ -60,6 +60,7 @@ import { register as registerSpellSchools, setConfig as setSpellSchools } from "
 import { register as registerRadialStatusEffects } from "./radial-status-effects.js";
 import { register as registerRulerTravelTime } from "./ruler-travel-time.js";
 import { register as registerTidy5eCounters } from "./counters/counters-tidy5e.js";
+import { register as registerWorkflows } from "./workflows/workflows.js";
 import { register as registerTokenBorder } from "./token-border.js";
 import { register as registerTokenEffects } from "./token-effects.js";
 import { register as registerTokenHudImprovements } from "./token-hud-improvements.js";
@@ -153,6 +154,7 @@ Hooks.on("init", async () => {
   registerCharacterSheet();
 
   registerGameplay();
+  registerWorkflows();
   registerAbilities();
   registerActivationCosts();
   registerActivities();

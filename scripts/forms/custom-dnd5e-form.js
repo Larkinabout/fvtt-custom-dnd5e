@@ -354,7 +354,7 @@ export class CustomDnd5eForm extends HandlebarsApplicationMixin(ApplicationV2) {
         this.targetItem.after(this.sourceItem);
         break;
       case "middle":
-        let list = this.targetItem.querySelector("ul");
+        let list = this.targetItem.querySelector(":is(ul, ol)");
         if ( !list ) {
           list = document.createElement("ul");
           list.classList.add("custom-dnd5e-list", "flexcol");
@@ -375,7 +375,7 @@ export class CustomDnd5eForm extends HandlebarsApplicationMixin(ApplicationV2) {
    * Update the keys of the source item and its children.
    */
   #updateSourceItemKeys() {
-    const items = this.sourceItem?.closest("ul").querySelectorAll("li");
+    const items = this.sourceItem?.closest(":is(ul, ol)")?.querySelectorAll("li");
 
     items.forEach(item => {
       const key = item.dataset?.key;
@@ -383,7 +383,7 @@ export class CustomDnd5eForm extends HandlebarsApplicationMixin(ApplicationV2) {
       const lastKey = keyParts.pop();
       if ( !lastKey ) return;
 
-      const parentKey = item.closest("ul")?.closest("li")?.dataset?.key;
+      const parentKey = item.closest(":is(ul, ol)")?.closest("li")?.dataset?.key;
 
       let newKey;
       if ( parentKey ) {

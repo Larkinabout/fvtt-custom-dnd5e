@@ -1,0 +1,21 @@
+<li class="item custom-dnd5e-item" data-key="{{triggerId}}">
+    <div class="item-row">
+        <i class="custom-dnd5e-drag fa-solid fa-grip-lines" draggable="true"></i>
+        <select name="triggers.{{triggerId}}.event" class="custom-dnd5e-trigger-event">
+            {{selectOptions triggerChoices selected=event localize=true}}
+        </select>
+        <div class="custom-dnd5e-trigger-fields{{#unless showValue}} hidden{{/unless}}">
+            <div class="form-fields">
+                <select name="triggers.{{triggerId}}.operator" class="custom-dnd5e-trigger-operator">
+                    {{selectOptions operatorChoices selected=operator localize=true}}
+                </select>
+                <input name="triggers.{{triggerId}}.value" type="text" value="{{value}}" placeholder="{{localize 'CUSTOM_DND5E.form.workflows.triggerValue.label'}}">
+            </div>
+        </div>
+        <div class="item-controls always-visible">
+            <button type="button" data-action="deleteRow" class="unbutton control-button item-control always-interactive" data-tooltip="{{localize 'CUSTOM_DND5E.form.button.delete.tooltip'}}" aria-label="{{localize 'CUSTOM_DND5E.form.button.delete.tooltip'}}">
+                <i class="fas fa-trash" inert></i>
+            </button>
+        </div>
+    </div>
+</li>

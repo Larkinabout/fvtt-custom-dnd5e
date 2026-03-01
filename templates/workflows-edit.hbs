@@ -1,0 +1,64 @@
+<div class="standard-form">
+    <div class="standard-form scrollable">
+        <div class="form-group">
+            <label>{{localize "CUSTOM_DND5E.name"}}</label>
+            <div class="form-fields">
+                <input name="label" type="text" value="{{label}}">
+            </div>
+        </div>
+
+        {{#unless isActor}}
+        <div class="form-group">
+            <label>{{localize "CUSTOM_DND5E.form.workflows.actorTypes.label"}}</label>
+            <div class="form-fields">
+                <label class="checkbox">
+                    <dnd5e-checkbox name="actorTypes.character" {{checked actorTypes.character}}></dnd5e-checkbox>
+                    <span>{{localize "CUSTOM_DND5E.characters"}}</span>
+                </label>
+                <label class="checkbox">
+                    <dnd5e-checkbox name="actorTypes.npc" {{checked actorTypes.npc}}></dnd5e-checkbox>
+                    <span>{{localize "CUSTOM_DND5E.npcs"}}</span>
+                </label>
+            </div>
+            <p class="hint">{{localize "CUSTOM_DND5E.form.workflows.actorTypes.hint"}}</p>
+        </div>
+
+        <hr>
+        {{/unless}}
+
+        <div class="custom-dnd5e-items-sections">
+            <div class="items-section card">
+                <div class="items-header header">
+                    <h3 class="item-name">{{localize "CUSTOM_DND5E.form.workflows.triggers.title"}}</h3>
+                </div>
+                <ul class="item-list unlist custom-dnd5e-list custom-dnd5e-trigger-list">
+                    {{#each triggers}}
+                    {{> "modules/custom-dnd5e/templates/workflows-trigger-row.hbs" this}}
+                    {{/each}}
+                </ul>
+            </div>
+            <button type="button" data-action="addTrigger" class="gold-button always-interactive" aria-label="{{localize 'CUSTOM_DND5E.form.workflows.addTrigger'}}">
+                <i class="fas fa-plus" inert></i>
+            </button>
+
+            <div class="items-section card">
+                <div class="items-header header">
+                    <h3 class="item-name">{{localize "CUSTOM_DND5E.form.workflows.actions.title"}}</h3>
+                </div>
+                <ul class="item-list unlist custom-dnd5e-list custom-dnd5e-action-list">
+                    {{#each actions}}
+                    {{> "modules/custom-dnd5e/templates/workflows-action-row.hbs" this}}
+                    {{/each}}
+                </ul>
+            </div>
+            <button type="button" data-action="addAction" class="gold-button always-interactive" aria-label="{{localize 'CUSTOM_DND5E.form.workflows.addAction'}}">
+                <i class="fas fa-plus" inert></i>
+            </button>
+        </div>
+    </div>
+    <footer class="form-footer" data-application-part="footer">
+        <button type="submit" data-tooltip="{{localize "CUSTOM_DND5E.form.button.save.tooltip"}}" class="save-button">
+            <i class="fas fa-solid fa-floppy-disk"></i>{{localize "CUSTOM_DND5E.form.button.save.label"}}
+        </button>
+    </footer>
+</div>

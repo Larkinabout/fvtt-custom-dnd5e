@@ -28,6 +28,19 @@
 }
 
 /*
+ * WORKFLOWS BUTTON
+ */
+.custom-dnd5e-workflows-button {
+    align-items: center;
+    display: flex;
+    gap: 0.5rem;
+    justify-content: center;
+    margin-bottom: 0.5rem;
+    width: 100%;
+}
+
+
+/*
  * CURSOR LABEL
  */
 #custom-dnd5e-cursor-label {

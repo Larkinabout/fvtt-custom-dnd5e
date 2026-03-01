@@ -1,0 +1,19 @@
+{{#each triggers as |item key|}}
+<li class="item custom-dnd5e-item" data-key="{{key}}">
+    <div class="item-row">
+        <i class="custom-dnd5e-drag fa-solid fa-grip-lines" draggable="true"></i>
+        <div class="item-name">
+            <span class="title">{{localize label}}</span>
+        </div>
+        <div class="item-controls always-visible">
+            <button type="button" data-action="edit" class="unbutton control-button item-control always-interactive" data-tooltip="{{localize 'CUSTOM_DND5E.edit'}}" data-tooltip-direction="UP" aria-label="{{localize 'CUSTOM_DND5E.edit'}}">
+                <i class="fa-solid fa-pen-to-square" inert></i>
+            </button>
+            <button type="button" data-action="delete" class="unbutton control-button item-control always-interactive" data-tooltip="{{localize 'CUSTOM_DND5E.form.button.delete.tooltip'}}" aria-label="{{localize 'CUSTOM_DND5E.form.button.delete.tooltip'}}">
+                <i class="fas fa-trash" inert></i>
+            </button>
+            <input id="custom-dnd5e-delete" name="{{key}}.delete" type="hidden" value="false">
+        </div>
+    </div>
+</li>
+{{/each}}

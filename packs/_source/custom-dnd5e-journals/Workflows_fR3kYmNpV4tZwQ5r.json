@@ -1,0 +1,215 @@
+{
+  "name": "Workflows",
+  "_id": "fR3kYmNpV4tZwQ5r",
+  "pages": [
+    {
+      "sort": 100000,
+      "name": "Overview",
+      "type": "text",
+      "_id": "gS4lZnOqW5uAxR6s",
+      "system": {},
+      "title": {
+        "show": true,
+        "level": 1
+      },
+      "image": {},
+      "text": {
+        "format": 1,
+        "content": "<p>Located in <strong>Game Settings &gt; Configure Settings &gt; Custom D&amp;D 5e &gt; Configure Workflows</strong></p><p>Create event-driven workflows that execute actions in response to triggers. Workflows can be configured at the world level or per actor.</p><p>Each workflow consists of one or more <strong>triggers</strong> (the events that fire the workflow) and one or more <strong>actions</strong> (what happens when a trigger fires). Multiple triggers use OR logic: any matching trigger will execute all of the workflow's actions.</p><p>Workflows are disabled by default. Enable them in the module settings.</p>"
+      },
+      "video": {
+        "controls": true,
+        "volume": 0.5
+      },
+      "src": null,
+      "ownership": {
+        "default": -1
+      },
+      "flags": {},
+      "_stats": {
+        "compendiumSource": null,
+        "duplicateSource": null,
+        "coreVersion": "13.351",
+        "systemId": "dnd5e",
+        "systemVersion": "5.2.5",
+        "createdTime": null,
+        "modifiedTime": null,
+        "lastModifiedBy": null,
+        "exportSource": null
+      },
+      "category": null,
+      "_key": "!journal.pages!fR3kYmNpV4tZwQ5r.gS4lZnOqW5uAxR6s"
+    },
+    {
+      "sort": 200000,
+      "name": "Triggers",
+      "type": "text",
+      "_id": "hT5mAoprX6vByS7t",
+      "system": {},
+      "title": {
+        "show": true,
+        "level": 1
+      },
+      "image": {},
+      "text": {
+        "format": 1,
+        "content": "<p>Triggers define when a workflow fires. Click <strong>Add Trigger</strong> to add a trigger to a workflow.</p><h2 class=\"custom-dnd5e-h2\">Available Triggers</h2><table><thead><tr><th><p><strong>Trigger</strong></p></th><th><p><strong>Description</strong></p></th></tr></thead><tbody><tr><td><p>Attack Roll</p></td><td><p>Fires when the actor makes an attack roll.</p></td></tr><tr><td><p>Ability Check</p></td><td><p>Fires when the actor makes an ability check.</p></td></tr><tr><td><p>Saving Throw</p></td><td><p>Fires when the actor makes a saving throw.</p></td></tr><tr><td><p>Skill Check</p></td><td><p>Fires when the actor makes a skill check.</p></td></tr><tr><td><p>Tool Check</p></td><td><p>Fires when the actor makes a tool check.</p></td></tr><tr><td><p>Initiative Roll</p></td><td><p>Fires when the actor rolls initiative.</p></td></tr><tr><td><p>Concentration Save</p></td><td><p>Fires when the actor makes a concentration saving throw.</p></td></tr><tr><td><p>Death Save</p></td><td><p>Fires when the actor makes a death saving throw.</p></td></tr><tr><td><p>Damage Roll</p></td><td><p>Fires when the actor rolls damage.</p></td></tr><tr><td><p>Reaches 0 HP</p></td><td><p>Fires when the actor's HP drops to zero.</p></td></tr><tr><td><p>Drops to Half HP or Lower</p></td><td><p>Fires when the actor's HP drops to half or lower.</p></td></tr><tr><td><p>Loses HP</p></td><td><p>Fires when the actor loses any amount of HP.</p></td></tr><tr><td><p>Gains HP</p></td><td><p>Fires when the actor gains any amount of HP.</p></td></tr><tr><td><p>Start of Combat</p></td><td><p>Fires when combat begins.</p></td></tr><tr><td><p>End of Combat</p></td><td><p>Fires when combat ends.</p></td></tr><tr><td><p>Start of Turn</p></td><td><p>Fires at the start of the actor's turn.</p></td></tr><tr><td><p>End of Turn</p></td><td><p>Fires at the end of the actor's turn.</p></td></tr><tr><td><p>Short Rest</p></td><td><p>Fires when the actor takes a short rest.</p></td></tr><tr><td><p>Long Rest</p></td><td><p>Fires when the actor takes a long rest.</p></td></tr></tbody></table><h2 class=\"custom-dnd5e-h2\">Value Conditions</h2><p>Roll-based triggers (Attack Roll, Ability Check, Saving Throw, Skill Check, Tool Check, Concentration Save, Death Save and Damage Roll) support optional value conditions. When a value is set, the trigger only fires if the die result matches the condition.</p><p>Available operators:</p><ul><li><p><strong>Equal (=):</strong> The die result must equal the value.</p></li><li><p><strong>Less Than (&lt;):</strong> The die result must be less than the value.</p></li><li><p><strong>Greater Than (&gt;):</strong> The die result must be greater than the value.</p></li><li><p><strong>Not Equal (≠):</strong> The die result must not equal the value.</p></li></ul><p>If no value is set, the trigger fires on any result.</p>"
+      },
+      "video": {
+        "controls": true,
+        "volume": 0.5
+      },
+      "src": null,
+      "ownership": {
+        "default": -1
+      },
+      "flags": {},
+      "_stats": {
+        "compendiumSource": null,
+        "duplicateSource": null,
+        "coreVersion": "13.351",
+        "systemId": "dnd5e",
+        "systemVersion": "5.2.5",
+        "createdTime": null,
+        "modifiedTime": null,
+        "lastModifiedBy": null,
+        "exportSource": null
+      },
+      "category": null,
+      "_key": "!journal.pages!fR3kYmNpV4tZwQ5r.hT5mAoprX6vByS7t"
+    },
+    {
+      "sort": 300000,
+      "name": "Actions",
+      "type": "text",
+      "_id": "iU6nBpqsY7wCzT8u",
+      "system": {},
+      "title": {
+        "show": true,
+        "level": 1
+      },
+      "image": {},
+      "text": {
+        "format": 1,
+        "content": "<p>Actions define what happens when a workflow is triggered. Click <strong>Add Action</strong> to add an action to a workflow. Multiple actions can be added and will all execute when the workflow fires.</p><h2 class=\"custom-dnd5e-h2\">Available Actions</h2><table><thead><tr><th><p><strong>Action</strong></p></th><th><p><strong>Description</strong></p></th></tr></thead><tbody><tr><td><p>Macro</p></td><td><p>Execute a macro. Drag and drop a macro from the Macros sidebar or a compendium onto the drop area. The macro receives context including the actor, token, event, die total, rolls and additional data.</p></td></tr><tr><td><p>Play Sound</p></td><td><p>Play a sound file. Use the file picker to select an audio file, or drag and drop a playlist sound. Adjust the volume with the number input (0 to 1).</p></td></tr><tr><td><p>Apply Condition</p></td><td><p>Apply a condition or status effect to the actor.</p></td></tr><tr><td><p>Remove Condition</p></td><td><p>Remove a condition or status effect from the actor.</p></td></tr><tr><td><p>Toggle Condition</p></td><td><p>Toggle a condition or status effect on the actor. If the condition is active it is removed; if inactive it is applied.</p></td></tr><tr><td><p>Roll Table</p></td><td><p>Draw from a rollable table. Drag and drop a rollable table from the Tables sidebar or a compendium onto the drop area.</p></td></tr><tr><td><p>Distribute Award</p></td><td><p>Open the D&amp;D 5e Distribute Award form for distributing currency and XP.</p></td></tr><tr><td><p>Request Roll</p></td><td><p>Request a roll from the actor. Select the roll type (saving throw, ability check, or skill check) from the dropdown. Optionally set a DC value; if set, the roll result will show as a success or failure.</p></td></tr><tr><td><p>Update Actor</p></td><td><p>Update an actor property. Enter the property path (e.g. <code>system.attributes.hp.value</code>) and the new value.</p></td></tr><tr><td><p>Update Token</p></td><td><p>Update a token property. Enter the property path (e.g. <code>elevation</code>) and the new value.</p></td></tr></tbody></table>"
+      },
+      "video": {
+        "controls": true,
+        "volume": 0.5
+      },
+      "src": null,
+      "ownership": {
+        "default": -1
+      },
+      "flags": {},
+      "_stats": {
+        "compendiumSource": null,
+        "duplicateSource": null,
+        "coreVersion": "13.351",
+        "systemId": "dnd5e",
+        "systemVersion": "5.2.5",
+        "createdTime": null,
+        "modifiedTime": null,
+        "lastModifiedBy": null,
+        "exportSource": null
+      },
+      "category": null,
+      "_key": "!journal.pages!fR3kYmNpV4tZwQ5r.iU6nBpqsY7wCzT8u"
+    },
+    {
+      "sort": 400000,
+      "name": "Per-Actor Workflows",
+      "type": "text",
+      "_id": "jV7oCqrtZ8xDaU9v",
+      "system": {},
+      "title": {
+        "show": true,
+        "level": 1
+      },
+      "image": {},
+      "text": {
+        "format": 1,
+        "content": "<p>In addition to world-level workflows, workflows can be configured on individual actors.</p><h2 class=\"custom-dnd5e-h2\">Accessing Per-Actor Workflows</h2><ol><li><p>Open an actor sheet.</p></li><li><p>Navigate to the <strong>Effects</strong> tab.</p></li><li><p>Click the <span class=\"fas fa-bolt-lightning\">​</span> <strong>Configure Workflows</strong> button at the top of the tab.</p></li></ol><p>Per-actor workflows use the same trigger and action system as world workflows. They are stored on the actor and only fire for that specific actor.</p>"
+      },
+      "video": {
+        "controls": true,
+        "volume": 0.5
+      },
+      "src": null,
+      "ownership": {
+        "default": -1
+      },
+      "flags": {},
+      "_stats": {
+        "compendiumSource": null,
+        "duplicateSource": null,
+        "coreVersion": "13.351",
+        "systemId": "dnd5e",
+        "systemVersion": "5.2.5",
+        "createdTime": null,
+        "modifiedTime": null,
+        "lastModifiedBy": null,
+        "exportSource": null
+      },
+      "category": null,
+      "_key": "!journal.pages!fR3kYmNpV4tZwQ5r.jV7oCqrtZ8xDaU9v"
+    },
+    {
+      "sort": 500000,
+      "name": "Examples",
+      "type": "text",
+      "_id": "kW8pDrstA9yEbV0w",
+      "system": {},
+      "title": {
+        "show": true,
+        "level": 1
+      },
+      "image": {},
+      "text": {
+        "format": 1,
+        "content": "<p>Below are some example workflows to demonstrate common use cases.</p><h2 class=\"custom-dnd5e-h2\">Play a Sound on a Natural 20</h2><p>Play a fanfare sound whenever any actor rolls a natural 20 on an attack.</p><ul><li><p><strong>Trigger:</strong> Attack Roll, Equal, 20</p></li><li><p><strong>Action:</strong> Play Sound (select your audio file)</p></li></ul><h2 class=\"custom-dnd5e-h2\">Apply Frightened When Reduced to Half HP</h2><p>Automatically apply the Frightened condition when an NPC drops to half HP or lower.</p><ul><li><p><strong>Actor Types:</strong> NPC only</p></li><li><p><strong>Trigger:</strong> Drops to Half HP or Lower</p></li><li><p><strong>Action:</strong> Apply Condition &gt; Frightened</p></li></ul><h2 class=\"custom-dnd5e-h2\">Request a Saving Throw at the Start of Each Turn</h2><p>Request a DC 15 Wisdom Saving Throw at the start of each affected actor's turn, such as for a lingering area effect.</p><ul><li><p><strong>Trigger:</strong> Start of Turn</p></li><li><p><strong>Action:</strong> Request Roll &gt; Wisdom Saving Throw, DC 15</p></li></ul><h2 class=\"custom-dnd5e-h2\">Roll a Table on Death</h2><p>Draw from a rollable table when an actor is reduced to 0 HP, such as a dramatic death effects table.</p><ul><li><p><strong>Trigger:</strong> Reaches 0 HP</p></li><li><p><strong>Action:</strong> Roll Table (drag and drop your table)</p></li></ul><h2 class=\"custom-dnd5e-h2\">Play a Sound at the Start of Combat</h2><p>Play a battle music sting when combat begins.</p><ul><li><p><strong>Trigger:</strong> Start of Combat</p></li><li><p><strong>Action:</strong> Play Sound (select your audio file)</p></li></ul><h2 class=\"custom-dnd5e-h2\">Award Inspiration on a Natural 1</h2><p>When a player rolls a natural 1 on an attack roll, ability check, or saving throw, award them Inspiration and play a light rays animation.</p><ul><li><p><strong>Actor Types:</strong> Character only</p></li><li><p><strong>Triggers:</strong> Attack Roll, Equal, 1 / Ability Check, Equal, 1 / Saving Throw, Equal, 1</p></li><li><p><strong>Action 1:</strong> Update Actor &gt; Path: <code>system.attributes.inspiration</code>, Value: <code>true</code></p></li><li><p><strong>Action 2:</strong> Macro containing: <code>game.modules.get('custom-dnd5e').api.animations.lightRaysScreen()</code></p></li></ul><h2 class=\"custom-dnd5e-h2\">NPC Morale Check</h2><p>When an NPC drops to half HP or lower, request a DC 10 Wisdom Saving Throw as a morale check.</p><ul><li><p><strong>Actor Types:</strong> NPC only</p></li><li><p><strong>Trigger:</strong> Drops to Half HP or Lower</p></li><li><p><strong>Action:</strong> Request Roll &gt; Wisdom Saving Throw, DC 10</p></li></ul><h2 class=\"custom-dnd5e-h2\">Remove a Condition on Long Rest</h2><p>Automatically remove the Poisoned condition when an actor takes a long rest.</p><ul><li><p><strong>Trigger:</strong> Long Rest</p></li><li><p><strong>Action:</strong> Remove Condition &gt; Poisoned</p></li></ul>"
+      },
+      "video": {
+        "controls": true,
+        "volume": 0.5
+      },
+      "src": null,
+      "ownership": {
+        "default": -1
+      },
+      "flags": {},
+      "_stats": {
+        "compendiumSource": null,
+        "duplicateSource": null,
+        "coreVersion": "13.351",
+        "systemId": "dnd5e",
+        "systemVersion": "5.2.5",
+        "createdTime": null,
+        "modifiedTime": null,
+        "lastModifiedBy": null,
+        "exportSource": null
+      },
+      "category": null,
+      "_key": "!journal.pages!fR3kYmNpV4tZwQ5r.kW8pDrstA9yEbV0w"
+    }
+  ],
+  "folder": null,
+  "sort": 0,
+  "ownership": {
+    "default": 0
+  },
+  "flags": {},
+  "_stats": {
+    "compendiumSource": null,
+    "duplicateSource": null,
+    "coreVersion": "13.351",
+    "systemId": "dnd5e",
+    "systemVersion": "5.2.5",
+    "createdTime": null,
+    "modifiedTime": null,
+    "lastModifiedBy": null,
+    "exportSource": null
+  },
+  "categories": [],
+  "_key": "!journal!fR3kYmNpV4tZwQ5r"
+}

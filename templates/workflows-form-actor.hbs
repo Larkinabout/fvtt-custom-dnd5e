@@ -1,0 +1,24 @@
+<div class="standard-form">
+    <div class="standard-form scrollable">
+        <section>
+            <div class="custom-dnd5e-items-sections">
+                <div class="items-section card">
+                    <div class="items-header header">
+                        <h3 class="item-name">{{localize "CUSTOM_DND5E.form.workflows.listTitle"}}</h3>
+                    </div>
+                    <ol class="item-list unlist custom-dnd5e-list">
+                        {{> "modules/custom-dnd5e/templates/workflows-list.hbs" triggers=triggers}}
+                    </ol>
+                </div>
+                <button type="button" data-action="new" class="gold-button always-interactive" aria-label="{{localize 'CUSTOM_DND5E.form.button.new.label'}}">
+                    <i class="fas fa-plus" inert></i>
+                </button>
+            </div>
+        </section>
+    </div>
+    <footer class="form-footer" data-application-part="footer">
+        <button type="submit" class="save-button">
+            <i class="fas fa-solid fa-floppy-disk"></i>{{localize "CUSTOM_DND5E.form.button.save.label"}}
+        </button>
+    </footer>
+</div>
