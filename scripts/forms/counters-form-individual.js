@@ -28,7 +28,8 @@ export class CountersFormIndividual extends CountersForm {
    */
   static DEFAULT_OPTIONS = {
     actions: {
-      "edit": CountersFormIndividual.edit
+      new: CountersFormIndividual.createItem,
+      edit: CountersFormIndividual.edit
     },
     form: {
       handler: CountersFormIndividual.submit
@@ -55,27 +56,6 @@ export class CountersFormIndividual extends CountersForm {
   /* -------------------------------------------- */
 
   /**
-   * Get the select options for the form.
-   *
-   * @returns {object} The select options.
-   */
-  #getSelects() {
-    return {
-      type: {
-        choices: {
-          checkbox: "CUSTOM_DND5E.checkbox",
-          fraction: "CUSTOM_DND5E.fraction",
-          number: "CUSTOM_DND5E.number",
-          pips: "CUSTOM_DND5E.pips",
-          successFailure: "CUSTOM_DND5E.successFailure"
-        }
-      }
-    };
-  }
-
-  /* -------------------------------------------- */
-
-  /**
    * Prepare the context for rendering the form.
    *
    * @returns {Promise<object>} The context data.
@@ -83,9 +63,27 @@ export class CountersFormIndividual extends CountersForm {
   async _prepareContext() {
     this.counters = getFlag(this.entity, "counters") || {};
     return {
-      counters: this.counters,
-      selects: this.#getSelects()
+      counters: this.counters
     };
+  }
+
+  /* -------------------------------------------- */
+
+  /**
+   * Create a new counter item.
+   *
+   * @returns {Promise<void>}
+   */
+  static async createItem() {
+    const key = foundry.utils.randomID();
+    const actorType = this.entity.type;
+    const setting = this.counters;
+    const args = {
+      countersForm: this,
+      data: { key, actorType, entity: this.entity, label: "", type: "number" },
+      setting
+    };
+    await CountersEditForm.open(args);
   }
 
   /* -------------------------------------------- */
@@ -103,8 +101,8 @@ export class CountersFormIndividual extends CountersForm {
     const key = item.dataset.key;
     if ( !key ) return;
 
-    const label = item.querySelector("#custom-dnd5e-label").value;
-    const type = item.querySelector("#custom-dnd5e-type").value;
+    const label = this.counters[key]?.label || "";
+    const type = this.counters[key]?.type || "number";
     const actorType = this.entity.type;
     const entity = this.entity;
     const setting = this.counters;

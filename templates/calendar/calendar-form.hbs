@@ -7,13 +7,25 @@
     </div>
     <hr>
     <div class="standard-form scrollable">
-        <ul class="custom-dnd5e-list flexcol">
-            {{> "modules/custom-dnd5e/templates/calendar/calendar-list.hbs" items=items}}
-        </ul>
+        <section>
+            <div class="custom-dnd5e-items-sections">
+                <div class="items-section card">
+                    <div class="items-header header">
+                        <h3 class="item-name">{{localize "CUSTOM_DND5E.form.calendars.listTitle"}}</h3>
+                    </div>
+                    <ol class="item-list unlist custom-dnd5e-list">
+                        {{> "modules/custom-dnd5e/templates/calendar/calendar-list.hbs" items=items}}
+                    </ol>
+                </div>
+                <button type="button" data-action="new" class="gold-button always-interactive" aria-label="{{localize 'CUSTOM_DND5E.form.button.new.label'}}">
+                    <i class="fas fa-plus" inert></i>
+                </button>
+            </div>
+        </section>
     </div>
     <footer class="form-footer" data-application-part="footer">
-        <button type="button" data-action="new" class="new-button bright">
-            <i class="fas fa-plus"></i>{{localize "CUSTOM_DND5E.form.button.new.label"}}
+        <button type="button" data-action="reset" class="reset-button bright">
+            <i class="fas fa-arrow-rotate-left"></i>{{localize "CUSTOM_DND5E.form.button.reset.label"}}
         </button>
         <button type="button" data-action="export">
             <i class="fas fa-file-export"></i>{{localize "CUSTOM_DND5E.exportData"}}

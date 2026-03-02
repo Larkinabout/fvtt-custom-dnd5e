@@ -36,7 +36,8 @@ export class CustomDnd5eForm extends HandlebarsApplicationMixin(ApplicationV2) {
       delete: CustomDnd5eForm.deleteItem,
       new: CustomDnd5eForm.createItem,
       reset: CustomDnd5eForm.reset,
-      help: CustomDnd5eForm.openHelp
+      help: CustomDnd5eForm.openHelp,
+      toggleExpand: CustomDnd5eForm.toggleExpand
     },
     classes: [`${MODULE.ID}-app`, "dnd5e2", "sheet"],
     tag: "form",
@@ -140,6 +141,23 @@ export class CustomDnd5eForm extends HandlebarsApplicationMixin(ApplicationV2) {
   /* -------------------------------------------- */
 
   /**
+   * Toggle expand/collapse of a collapsible item.
+   *
+   * @param {Event} event The event that triggered the action.
+   * @param {HTMLElement} target The target element.
+   */
+  static toggleExpand(event, target) {
+    const item = target.closest(".collapsible");
+    if ( !item ) return;
+    item.classList.toggle("collapsed");
+    const icon = target.querySelector("i");
+    icon?.classList.toggle("fa-compress");
+    icon?.classList.toggle("fa-expand");
+  }
+
+  /* -------------------------------------------- */
+
+  /**
    * Handle the rendering of the form.
    *
    * @param {object} context The context for rendering.
@@ -172,6 +190,8 @@ export class CustomDnd5eForm extends HandlebarsApplicationMixin(ApplicationV2) {
       checkbox?.addEventListener("change", this._onChangeInput.bind(this));
       if ( checkbox?.checked ) this._onToggleList(checkbox);
     });
+
+    this.#setNestDepths();
   }
 
   /* -------------------------------------------- */
@@ -211,7 +231,7 @@ export class CustomDnd5eForm extends HandlebarsApplicationMixin(ApplicationV2) {
    */
   _onToggleList(checkbox) {
     const checkParent = checkbox => {
-      const parent = checkbox.closest("ul").closest("li");
+      const parent = checkbox.closest(".custom-dnd5e-list")?.closest("li");
 
       if ( !parent ) return;
 
@@ -226,7 +246,7 @@ export class CustomDnd5eForm extends HandlebarsApplicationMixin(ApplicationV2) {
     }
 
     if ( !checkbox.checked ) {
-      const children = checkbox.closest("li")?.querySelector("ul");
+      const children = checkbox.closest("li")?.querySelector(".custom-dnd5e-list");
 
       if ( !children ) return;
 
@@ -315,9 +335,14 @@ export class CustomDnd5eForm extends HandlebarsApplicationMixin(ApplicationV2) {
 
     if ( !this.targetItem ) return;
 
+    // Save old parent for cleanup after move
+    const oldParentItem = this.sourceItem.parentElement?.closest(".collapsible");
+
     if ( !this.#insertSourceItem() ) return;
 
     this.#updateSourceItemKeys();
+    this.#cleanupEmptyCollapsible(oldParentItem);
+    this.#setNestDepths();
 
     this.sourceItem = null;
     this.targetItem = null;
@@ -331,6 +356,44 @@ export class CustomDnd5eForm extends HandlebarsApplicationMixin(ApplicationV2) {
   #cleanupDragStyles() {
     this.sourceItem?.style.removeProperty("opacity");
     this.targetItem?.classList.remove(`drag-${this.mousePos}`);
+  }
+
+  /* -------------------------------------------- */
+
+  /**
+   * Clean up empty collapsible containers after a drag-out.
+   *
+   * @param {HTMLElement|null} parentItem The parent collapsible item to check.
+   */
+  #cleanupEmptyCollapsible(parentItem) {
+    if ( !parentItem ) return;
+    const nestedList = parentItem.querySelector(".item-description .custom-dnd5e-list");
+    if ( !nestedList ) return;
+    const remaining = nestedList.querySelectorAll(":scope > li");
+    if ( remaining.length === 0 ) {
+      const collapsibleContent = parentItem.querySelector(".item-description.collapsible-content");
+      collapsibleContent?.remove();
+      parentItem.classList.remove("collapsible", "collapsed");
+      const toggleBtn = parentItem.querySelector('[data-action="toggleExpand"]');
+      toggleBtn?.remove();
+    }
+  }
+
+  /* -------------------------------------------- */
+
+  /**
+   * Set the --nest-depth CSS variable on nested item rows for indent styling.
+   */
+  #setNestDepths() {
+    this.element.querySelectorAll(".collapsible-content .collapsible-content .item-row").forEach(row => {
+      let depth = 0;
+      let el = row.closest(".collapsible-content");
+      while ( el ) {
+        depth++;
+        el = el.parentElement?.closest(".collapsible-content");
+      }
+      row.style.setProperty("--nest-depth", depth - 1);
+    });
   }
 
   /* -------------------------------------------- */
@@ -353,15 +416,35 @@ export class CustomDnd5eForm extends HandlebarsApplicationMixin(ApplicationV2) {
       case "bottom":
         this.targetItem.after(this.sourceItem);
         break;
-      case "middle":
-        let list = this.targetItem.querySelector(":is(ul, ol)");
+      case "middle": {
+        let list = this.targetItem.querySelector(":scope > .item-description .custom-dnd5e-list");
         if ( !list ) {
-          list = document.createElement("ul");
-          list.classList.add("custom-dnd5e-list", "flexcol");
-          this.targetItem.appendChild(list);
+          const description = document.createElement("div");
+          description.classList.add("item-description", "collapsible-content");
+          const wrapper = document.createElement("div");
+          wrapper.classList.add("wrapper");
+          list = document.createElement("ol");
+          list.classList.add("custom-dnd5e-list", "unlist");
+          wrapper.appendChild(list);
+          description.appendChild(wrapper);
+          this.targetItem.appendChild(description);
+
+          this.targetItem.classList.add("collapsible");
+          this.targetItem.classList.remove("collapsed");
+
+          const controls = this.targetItem.querySelector(".item-controls");
+          if ( controls && !controls.querySelector('[data-action="toggleExpand"]') ) {
+            const toggleBtn = document.createElement("button");
+            toggleBtn.type = "button";
+            toggleBtn.setAttribute("data-action", "toggleExpand");
+            toggleBtn.classList.add("unbutton", "control-button", "item-control", "always-interactive");
+            toggleBtn.innerHTML = '<i class="fa-solid fa-compress" inert></i>';
+            controls.prepend(toggleBtn);
+          }
         }
         list.appendChild(this.sourceItem);
         break;
+      }
       default:
         return false;
     }
@@ -404,7 +487,7 @@ export class CustomDnd5eForm extends HandlebarsApplicationMixin(ApplicationV2) {
       const inputs = item.querySelectorAll("input, dnd5e-checkbox");
 
       inputs.forEach(input => {
-        if ( input.id === "parentKey" ) {
+        if ( input.id === "custom-dnd5e-parentKey" ) {
           input.value = parentKey;
         }
 

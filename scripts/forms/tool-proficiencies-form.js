@@ -21,6 +21,7 @@ export class ToolProficienciesForm extends ConfigForm {
     this.settingDefault = getSettingDefault();
     this.setting = getSetting(this.settingKey) || this.settingDefault;
     this.setConfig = setConfig;
+    this.listTitle = "CUSTOM_DND5E.form.toolProficiencies.listTitle";
     this.headerButton = JOURNAL_HELP_BUTTON;
     this.headerButton.uuid = CONSTANTS.TOOL_PROFICIENCIES.UUID;
   }
@@ -66,7 +67,7 @@ export class ToolProficienciesForm extends ConfigForm {
 
     labelise(this.setting);
 
-    return { editInList: this.editInList, label: this.label, items: this.setting };
+    return { editInList: this.editInList, label: this.label, listTitle: this.listTitle, items: this.setting };
   }
 
   /* -------------------------------------------- */

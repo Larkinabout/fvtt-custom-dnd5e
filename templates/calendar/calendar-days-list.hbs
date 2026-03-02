@@ -1,12 +1,20 @@
 {{#each days}}
-<li class="custom-dnd5e-item flexrow" data-index="{{this.index}}">
-    <div class="custom-dnd5e-col-group flexrow" style="gap: 0.25rem; align-items: center;">
-        <input type="text" name="days.{{this.index}}.name" value="{{this.name}}" placeholder="{{localize "CUSTOM_DND5E.form.calendars.dayName"}}" style="flex: 2;">
-        <input type="text" name="days.{{this.index}}.abbreviation" value="{{this.abbreviation}}" placeholder="{{localize "CUSTOM_DND5E.form.calendars.abbreviation"}}" style="flex: 1;">
-        <input type="number" name="days.{{this.index}}.ordinal" value="{{this.ordinal}}" placeholder="#" style="flex: 0 0 3rem;" min="1">
-        <button type="button" data-action="removeRow" data-section="days" data-index="{{this.index}}" class="flex0 custom-dnd5e-list-button" data-tooltip="{{localize "CUSTOM_DND5E.form.button.delete.tooltip"}}">
-            <i class="fas fa-trash"></i>
-        </button>
+<li class="item custom-dnd5e-item" data-index="{{this.index}}">
+    <div class="item-row">
+        <div class="item-name">
+            <input type="text" name="days.{{this.index}}.name" value="{{this.name}}" placeholder="{{localize "CUSTOM_DND5E.form.calendars.dayName"}}">
+        </div>
+        <div class="item-abbreviation">
+            <input type="text" name="days.{{this.index}}.abbreviation" value="{{this.abbreviation}}" placeholder="{{localize "CUSTOM_DND5E.form.calendars.abbreviation"}}">
+        </div>
+        <div class="item-ordinal">
+            <input type="number" name="days.{{this.index}}.ordinal" value="{{this.ordinal}}" placeholder="#" min="1">
+        </div>
+        <div class="item-controls always-visible">
+            <button type="button" data-action="removeRow" data-section="days" data-index="{{this.index}}" class="unbutton control-button item-control always-interactive" data-tooltip="{{localize 'CUSTOM_DND5E.form.button.delete.tooltip'}}" aria-label="{{localize 'CUSTOM_DND5E.form.button.delete.tooltip'}}">
+                <i class="fas fa-trash" inert></i>
+            </button>
+        </div>
     </div>
 </li>
 {{/each}}

@@ -113,83 +113,99 @@
 
         {{!-- Months Tab --}}
         <section class="tab{{#if (eq activeTab 'months')}} active{{/if}}" data-group="primary" data-tab="months">
-            <div class="custom-dnd5e-list-header flexrow" style="gap: 0.25rem; font-weight: bold; font-size: 0.75rem;">
-                <span style="flex: 2;">{{localize "CUSTOM_DND5E.form.calendars.monthName"}}</span>
-                <span style="flex: 1;">{{localize "CUSTOM_DND5E.form.calendars.abbreviation"}}</span>
-                <span style="flex: 0 0 3rem; text-align: center;">#</span>
-                <span style="flex: 0 0 3rem;">{{localize "CUSTOM_DND5E.form.calendars.daysInMonth"}}</span>
-                <span style="flex: 0 0 3rem;">{{localize "CUSTOM_DND5E.form.calendars.leapDays"}}</span>
-                <button type="button" class="flex0 custom-dnd5e-list-button" disabled style="visibility: hidden;"><i class="fas fa-trash"></i></button>
-            </div>
             <div class="scrollable">
-                <ul class="custom-dnd5e-list flexcol" data-section="months">
-                    {{> "modules/custom-dnd5e/templates/calendar/calendar-months-list.hbs" months=months}}
-                </ul>
-            </div>
-            <div class="form-footer">
-                <button type="button" data-action="addRow" data-section="months" class="new-button bright">
-                    <i class="fas fa-plus"></i>{{localize "CUSTOM_DND5E.form.button.new.label"}}
-                </button>
+                <div class="custom-dnd5e-items-sections">
+                    <div class="items-section card">
+                        <div class="items-header header">
+                            <h3 class="item-name">{{localize "CUSTOM_DND5E.form.calendars.monthName"}}</h3>
+                            <div class="item-header item-abbreviation">{{localize "CUSTOM_DND5E.form.calendars.abbreviation"}}</div>
+                            <div class="item-header item-ordinal">#</div>
+                            <div class="item-header item-days">{{localize "CUSTOM_DND5E.form.calendars.daysInMonth"}}</div>
+                            <div class="item-header item-leap-days">{{localize "CUSTOM_DND5E.form.calendars.leapDays"}}</div>
+                            <div class="item-controls">
+                                <button type="button" class="unbutton control-button item-control" disabled style="visibility: hidden;"><i class="fas fa-trash" inert></i></button>
+                            </div>
+                        </div>
+                        <ol class="item-list unlist custom-dnd5e-list" data-section="months">
+                            {{> "modules/custom-dnd5e/templates/calendar/calendar-months-list.hbs" months=months}}
+                        </ol>
+                    </div>
+                    <button type="button" data-action="addRow" data-section="months" class="gold-button always-interactive" aria-label="{{localize 'CUSTOM_DND5E.form.button.new.label'}}">
+                        <i class="fas fa-plus" inert></i>
+                    </button>
+                </div>
             </div>
         </section>
 
         {{!-- Days Tab --}}
         <section class="tab{{#if (eq activeTab 'days')}} active{{/if}}" data-group="primary" data-tab="days">
-            <div class="custom-dnd5e-list-header flexrow" style="gap: 0.25rem; font-weight: bold; font-size: 0.75rem;">
-                <span style="flex: 2;">{{localize "CUSTOM_DND5E.form.calendars.dayName"}}</span>
-                <span style="flex: 1;">{{localize "CUSTOM_DND5E.form.calendars.abbreviation"}}</span>
-                <span style="flex: 0 0 3rem; text-align: center;">#</span>
-                <button type="button" class="flex0 custom-dnd5e-list-button" disabled style="visibility: hidden;"><i class="fas fa-trash"></i></button>
-            </div>
             <div class="scrollable">
-                <ul class="custom-dnd5e-list flexcol" data-section="days">
-                    {{> "modules/custom-dnd5e/templates/calendar/calendar-days-list.hbs" days=days.values}}
-                </ul>
-            </div>
-            <div class="form-footer">
-                <button type="button" data-action="addRow" data-section="days" class="new-button bright">
-                    <i class="fas fa-plus"></i>{{localize "CUSTOM_DND5E.form.button.new.label"}}
-                </button>
+                <div class="custom-dnd5e-items-sections">
+                    <div class="items-section card">
+                        <div class="items-header header">
+                            <h3 class="item-name">{{localize "CUSTOM_DND5E.form.calendars.dayName"}}</h3>
+                            <div class="item-header item-abbreviation">{{localize "CUSTOM_DND5E.form.calendars.abbreviation"}}</div>
+                            <div class="item-header item-ordinal">#</div>
+                            <div class="item-controls">
+                                <button type="button" class="unbutton control-button item-control" disabled style="visibility: hidden;"><i class="fas fa-trash" inert></i></button>
+                            </div>
+                        </div>
+                        <ol class="item-list unlist custom-dnd5e-list" data-section="days">
+                            {{> "modules/custom-dnd5e/templates/calendar/calendar-days-list.hbs" days=days.values}}
+                        </ol>
+                    </div>
+                    <button type="button" data-action="addRow" data-section="days" class="gold-button always-interactive" aria-label="{{localize 'CUSTOM_DND5E.form.button.new.label'}}">
+                        <i class="fas fa-plus" inert></i>
+                    </button>
+                </div>
             </div>
         </section>
 
         {{!-- Seasons Tab --}}
         <section class="tab{{#if (eq activeTab 'seasons')}} active{{/if}}" data-group="primary" data-tab="seasons">
-            <div class="custom-dnd5e-list-header flexrow" style="gap: 0.25rem; font-weight: bold; font-size: 0.75rem;">
-                <span style="flex: 2;">{{localize "CUSTOM_DND5E.form.calendars.seasonName"}}</span>
-                <span style="flex: 1; text-align: center;">{{localize "CUSTOM_DND5E.form.calendars.dayStart"}}</span>
-                <span style="flex: 1; text-align: center;">{{localize "CUSTOM_DND5E.form.calendars.dayEnd"}}</span>
-                <button type="button" class="flex0 custom-dnd5e-list-button" disabled style="visibility: hidden;"><i class="fas fa-trash"></i></button>
-            </div>
             <div class="scrollable">
-                <ul class="custom-dnd5e-list flexcol" data-section="seasons">
-                    {{> "modules/custom-dnd5e/templates/calendar/calendar-seasons-list.hbs" seasons=seasons}}
-                </ul>
-            </div>
-            <div class="form-footer">
-                <button type="button" data-action="addRow" data-section="seasons" class="new-button bright">
-                    <i class="fas fa-plus"></i>{{localize "CUSTOM_DND5E.form.button.new.label"}}
-                </button>
+                <div class="custom-dnd5e-items-sections">
+                    <div class="items-section card">
+                        <div class="items-header header">
+                            <h3 class="item-name">{{localize "CUSTOM_DND5E.form.calendars.seasonName"}}</h3>
+                            <div class="item-header item-day-start">{{localize "CUSTOM_DND5E.form.calendars.dayStart"}}</div>
+                            <div class="item-header item-day-end">{{localize "CUSTOM_DND5E.form.calendars.dayEnd"}}</div>
+                            <div class="item-controls">
+                                <button type="button" class="unbutton control-button item-control" disabled style="visibility: hidden;"><i class="fas fa-trash" inert></i></button>
+                            </div>
+                        </div>
+                        <ol class="item-list unlist custom-dnd5e-list" data-section="seasons">
+                            {{> "modules/custom-dnd5e/templates/calendar/calendar-seasons-list.hbs" seasons=seasons}}
+                        </ol>
+                    </div>
+                    <button type="button" data-action="addRow" data-section="seasons" class="gold-button always-interactive" aria-label="{{localize 'CUSTOM_DND5E.form.button.new.label'}}">
+                        <i class="fas fa-plus" inert></i>
+                    </button>
+                </div>
             </div>
         </section>
 
         {{!-- Festivals Tab --}}
         <section class="tab{{#if (eq activeTab 'festivals')}} active{{/if}}" data-group="primary" data-tab="festivals">
-            <div class="custom-dnd5e-list-header flexrow" style="gap: 0.25rem; font-weight: bold; font-size: 0.75rem;">
-                <span style="flex: 2;">{{localize "CUSTOM_DND5E.form.calendars.festivalName"}}</span>
-                <span style="flex: 1; text-align: center;">{{localize "CUSTOM_DND5E.form.calendars.month"}}</span>
-                <span style="flex: 1; text-align: center;">{{localize "CUSTOM_DND5E.form.calendars.day"}}</span>
-                <button type="button" class="flex0 custom-dnd5e-list-button" disabled style="visibility: hidden;"><i class="fas fa-trash"></i></button>
-            </div>
             <div class="scrollable">
-                <ul class="custom-dnd5e-list flexcol" data-section="festivals">
-                    {{> "modules/custom-dnd5e/templates/calendar/calendar-festivals-list.hbs" festivals=festivals}}
-                </ul>
-            </div>
-            <div class="form-footer">
-                <button type="button" data-action="addRow" data-section="festivals" class="new-button bright">
-                    <i class="fas fa-plus"></i>{{localize "CUSTOM_DND5E.form.button.new.label"}}
-                </button>
+                <div class="custom-dnd5e-items-sections">
+                    <div class="items-section card">
+                        <div class="items-header header">
+                            <h3 class="item-name">{{localize "CUSTOM_DND5E.form.calendars.festivalName"}}</h3>
+                            <div class="item-header item-month">{{localize "CUSTOM_DND5E.form.calendars.month"}}</div>
+                            <div class="item-header item-day">{{localize "CUSTOM_DND5E.form.calendars.day"}}</div>
+                            <div class="item-controls">
+                                <button type="button" class="unbutton control-button item-control" disabled style="visibility: hidden;"><i class="fas fa-trash" inert></i></button>
+                            </div>
+                        </div>
+                        <ol class="item-list unlist custom-dnd5e-list" data-section="festivals">
+                            {{> "modules/custom-dnd5e/templates/calendar/calendar-festivals-list.hbs" festivals=festivals}}
+                        </ol>
+                    </div>
+                    <button type="button" data-action="addRow" data-section="festivals" class="gold-button always-interactive" aria-label="{{localize 'CUSTOM_DND5E.form.button.new.label'}}">
+                        <i class="fas fa-plus" inert></i>
+                    </button>
+                </div>
             </div>
         </section>
     </div>

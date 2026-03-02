@@ -61,6 +61,7 @@ export class ConfigForm extends CustomDnd5eForm {
     this.editForm = ConfigEditForm;
     this.enableConfig = false;
     this.label = "CUSTOM_DND5E.label";
+    this.listTitle = "CUSTOM_DND5E.label";
   }
 
   /* -------------------------------------------- */
@@ -127,7 +128,7 @@ export class ConfigForm extends CustomDnd5eForm {
 
     labelise(data);
 
-    const context = { label: this.label, items: data };
+    const context = { label: this.label, listTitle: this.listTitle, items: data };
     const selects = this._getSelects();
     if ( selects ) context.selects = selects;
     if ( this.disableCreate ) context.disableCreate = this.disableCreate;
@@ -324,6 +325,7 @@ export class AbilitiesForm extends ConfigForm {
   constructor() {
     super();
     this.editForm = AbilitiesEditForm;
+    this.listTitle = "CUSTOM_DND5E.form.abilities.listTitle";
     this.requiresReload = true;
     this.enableConfigKey = CONSTANTS.ABILITIES.SETTING.ENABLE.KEY;
     this.settingKey = CONSTANTS.ABILITIES.SETTING.CONFIG.KEY;
@@ -363,6 +365,7 @@ export class ActivationCostsForm extends ConfigForm {
   constructor() {
     super();
     this.editForm = ActivationCostsEditForm;
+    this.listTitle = "CUSTOM_DND5E.form.activityActivationTypes.listTitle";
     this.requiresReload = false;
     this.enableConfigKey = CONSTANTS.ACTIVATION_COSTS.SETTING.ENABLE.KEY;
     this.settingKey = CONSTANTS.ACTIVATION_COSTS.SETTING.CONFIG.KEY;
@@ -402,6 +405,7 @@ export class ActorSizesForm extends ConfigForm {
   constructor() {
     super();
     this.editForm = ActorSizesEditForm;
+    this.listTitle = "CUSTOM_DND5E.form.actorSizes.listTitle";
     this.requiresReload = false;
     this.enableConfigKey = CONSTANTS.ACTOR_SIZES.SETTING.ENABLE.KEY;
     this.settingKey = CONSTANTS.ACTOR_SIZES.SETTING.CONFIG.KEY;
@@ -441,6 +445,7 @@ export class ArmorCalculationsForm extends ConfigForm {
   constructor() {
     super();
     this.editForm = ArmorCalculationsEditForm;
+    this.listTitle = "CUSTOM_DND5E.form.armorClasses.listTitle";
     this.requiresReload = false;
     this.enableConfigKey = CONSTANTS.ARMOR_CALCULATIONS.SETTING.ENABLE.KEY;
     this.settingKey = CONSTANTS.ARMOR_CALCULATIONS.SETTING.CONFIG.KEY;
@@ -480,6 +485,7 @@ export class ArmorIdsForm extends IdForm {
   constructor() {
     super();
     this.editInList = true;
+    this.listTitle = "CUSTOM_DND5E.form.armorIds.listTitle";
     this.requiresReload = true;
     this.enableConfigKey = CONSTANTS.ARMOR_IDS.SETTING.ENABLE.KEY;
     this.settingKey = CONSTANTS.ARMOR_IDS.SETTING.CONFIG.KEY;
@@ -545,6 +551,7 @@ export class ConsumableTypesForm extends ConfigForm {
   constructor() {
     super();
     this.editInList = true;
+    this.listTitle = "CUSTOM_DND5E.form.consumableTypes.listTitle";
     this.nestable = true;
     this.nestType = "subtypes";
     this.requiresReload = false;
@@ -587,6 +594,7 @@ export class ConditionsForm extends ConfigForm {
     super();
     this.editForm = ConditionsEditForm;
     this.label = "CUSTOM_DND5E.name";
+    this.listTitle = "CUSTOM_DND5E.form.conditions.listTitle";
     this.includeConfig = false;
     this.requiresReload = false;
     this.enableConfigKey = CONSTANTS.CONDITIONS.SETTING.ENABLE.KEY;
@@ -635,6 +643,7 @@ export class CreatureTypesForm extends ConfigForm {
   constructor() {
     super();
     this.editForm = CreatureTypesEditForm;
+    this.listTitle = "CUSTOM_DND5E.form.creatureTypes.listTitle";
     this.requiresReload = false;
     this.enableConfigKey = CONSTANTS.CREATURE_TYPES.SETTING.ENABLE.KEY;
     this.settingKey = CONSTANTS.CREATURE_TYPES.SETTING.CONFIG.KEY;
@@ -675,6 +684,7 @@ export class CurrencyForm extends ConfigForm {
   constructor() {
     super();
     this.editForm = CurrencyEditForm;
+    this.listTitle = "CUSTOM_DND5E.form.currencies.listTitle";
     this.requiresReload = true;
     this.enableConfigKey = CONSTANTS.CURRENCY.SETTING.ENABLE.KEY;
     this.settingKey = CONSTANTS.CURRENCY.SETTING.CONFIG.KEY;
@@ -714,6 +724,7 @@ export class DamageTypesForm extends ConfigForm {
   constructor() {
     super();
     this.editForm = DamageTypesEditForm;
+    this.listTitle = "CUSTOM_DND5E.form.damageTypes.listTitle";
     this.requiresReload = false;
     this.enableConfigKey = CONSTANTS.DAMAGE_TYPES.SETTING.ENABLE.KEY;
     this.settingKey = CONSTANTS.DAMAGE_TYPES.SETTING.CONFIG.KEY;
@@ -753,6 +764,7 @@ export class MiscEquipmentTypesForm extends ConfigForm {
   constructor() {
     super();
     this.editInList = true;
+    this.listTitle = "CUSTOM_DND5E.form.miscEquipmentTypes.listTitle";
     this.requiresReload = false;
     this.enableConfigKey = CONSTANTS.MISC_EQUIPMENT_TYPES.SETTING.ENABLE.KEY;
     this.settingKey = CONSTANTS.MISC_EQUIPMENT_TYPES.SETTING.CONFIG.KEY;
@@ -792,6 +804,7 @@ export class FeatureTypesForm extends ConfigForm {
   constructor() {
     super();
     this.editInList = true;
+    this.listTitle = "CUSTOM_DND5E.form.featureTypes.listTitle";
     this.nestable = true;
     this.nestType = "subtypes";
     this.requiresReload = false;
@@ -833,6 +846,7 @@ export class ItemActionTypesForm extends ConfigForm {
    */
   constructor() {
     super();
+    this.listTitle = "CUSTOM_DND5E.form.itemActionTypes.listTitle";
     this.requiresReload = false;
     this.enableConfigKey = CONSTANTS.ITEM_ACTION_TYPES.SETTING.ENABLE.KEY;
     this.settingKey = CONSTANTS.ITEM_ACTION_TYPES.SETTING.CONFIG.KEY;
@@ -871,6 +885,7 @@ export class ItemActivationCostTypesForm extends ConfigForm {
    */
   constructor() {
     super();
+    this.listTitle = "CUSTOM_DND5E.form.itemActivationCostTypes.listTitle";
     this.requiresReload = false;
     this.enableConfigKey = CONSTANTS.ITEM_ACTIVATION_COST_TYPES.SETTING.ENABLE.KEY;
     this.settingKey = CONSTANTS.ITEM_ACTIVATION_COST_TYPES.SETTING.CONFIG.KEY;
@@ -910,6 +925,7 @@ export class ItemPropertiesForm extends ConfigForm {
   constructor() {
     super();
     this.editForm = ItemPropertiesEditForm;
+    this.listTitle = "CUSTOM_DND5E.form.itemProperties.listTitle";
     this.requiresReload = false;
     this.enableConfigKey = CONSTANTS.ITEM_PROPERTIES.SETTING.ENABLE.KEY;
     this.settingKey = CONSTANTS.ITEM_PROPERTIES.SETTING.CONFIG.KEY;
@@ -949,6 +965,7 @@ export class ItemRarityForm extends ConfigForm {
   constructor() {
     super();
     this.editInList = true;
+    this.listTitle = "CUSTOM_DND5E.form.itemRarity.listTitle";
     this.requiresReload = false;
     this.enableConfigKey = CONSTANTS.ITEM_RARITY.SETTING.ENABLE.KEY;
     this.settingKey = CONSTANTS.ITEM_RARITY.SETTING.CONFIG.KEY;
@@ -987,6 +1004,7 @@ export class LanguagesForm extends ConfigForm {
   constructor() {
     super();
     this.editInList = true;
+    this.listTitle = "CUSTOM_DND5E.form.languages.listTitle";
     this.nestable = true;
     this.requiresReload = false;
     this.enableConfigKey = CONSTANTS.LANGUAGES.SETTING.ENABLE.KEY;
@@ -1026,6 +1044,7 @@ export class LootTypesForm extends ConfigForm {
   constructor() {
     super();
     this.editInList = true;
+    this.listTitle = "CUSTOM_DND5E.form.lootTypes.listTitle";
     this.requiresReload = false;
     this.enableConfigKey = CONSTANTS.LOOT_TYPES.SETTING.ENABLE.KEY;
     this.settingKey = CONSTANTS.LOOT_TYPES.SETTING.CONFIG.KEY;
@@ -1064,6 +1083,7 @@ export class SensesForm extends ConfigForm {
   constructor() {
     super();
     this.editInList = true;
+    this.listTitle = "CUSTOM_DND5E.form.senses.listTitle";
     this.requiresReload = false;
     this.enableConfigKey = CONSTANTS.SENSES.SETTING.ENABLE.KEY;
     this.settingKey = CONSTANTS.SENSES.SETTING.CONFIG.KEY;
@@ -1104,6 +1124,7 @@ export class SkillsForm extends ConfigForm {
   constructor() {
     super();
     this.editForm = SkillsEditForm;
+    this.listTitle = "CUSTOM_DND5E.form.skills.listTitle";
     this.requiresReload = true;
     this.enableConfigKey = CONSTANTS.SKILLS.SETTING.ENABLE.KEY;
     this.settingKey = CONSTANTS.SKILLS.SETTING.CONFIG.KEY;
@@ -1142,6 +1163,7 @@ export class SpellSchoolsForm extends ConfigForm {
   constructor() {
     super();
     this.editForm = SpellSchoolsEditForm;
+    this.listTitle = "CUSTOM_DND5E.form.spellSchools.listTitle";
     this.requiresReload = false;
     this.enableConfigKey = CONSTANTS.SPELL_SCHOOLS.SETTING.ENABLE.KEY;
     this.settingKey = CONSTANTS.SPELL_SCHOOLS.SETTING.CONFIG.KEY;
@@ -1181,6 +1203,7 @@ export class WeaponMasteriesForm extends ConfigForm {
   constructor() {
     super();
     this.editForm = WeaponMasteriesEditForm;
+    this.listTitle = "CUSTOM_DND5E.form.weaponMasteries.listTitle";
     this.requiresReload = false;
     this.enableConfigKey = CONSTANTS.WEAPON_MASTERIES.SETTING.ENABLE.KEY;
     this.settingKey = CONSTANTS.WEAPON_MASTERIES.SETTING.CONFIG.KEY;
@@ -1221,6 +1244,7 @@ export class ToolsForm extends IdForm {
     super();
     this.editForm = ToolsEditForm;
     this.editInList = false;
+    this.listTitle = "CUSTOM_DND5E.form.tools.listTitle";
     this.requiresReload = true;
     this.enableConfigKey = CONSTANTS.TOOLS.SETTING.ENABLE.KEY;
     this.settingKey = CONSTANTS.TOOLS.SETTING.CONFIG.KEY;
@@ -1260,6 +1284,7 @@ export class WeaponIdsForm extends IdForm {
   constructor() {
     super();
     this.editInList = true;
+    this.listTitle = "CUSTOM_DND5E.form.weaponIds.listTitle";
     this.requiresReload = true;
     this.enableConfigKey = CONSTANTS.WEAPON_IDS.SETTING.ENABLE.KEY;
     this.settingKey = CONSTANTS.WEAPON_IDS.SETTING.CONFIG.KEY;

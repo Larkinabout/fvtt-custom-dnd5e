@@ -1,29 +1,29 @@
 {{#each items as |item key|}}
-<li class="custom-dnd5e-item flexrow" data-key="{{key}}">
-    <i class="custom-dnd5e-drag flex0 fas fa-grip-lines" draggable="true"></i>
-    <dnd5e-checkbox id="custom-dnd5e-visible" class="flex0" name="{{key}}.visible" data-tooltip="{{localize "CUSTOM_DND5E.form.checkbox.visible.tooltip"}}"{{#unless (customDnd5eBoolFalse visible)}} checked{{/unless}}></dnd5e-checkbox>
-    <div class="custom-dnd5e-col-group flexcol">
+<li class="item custom-dnd5e-item" data-key="{{key}}">
+    <div class="item-row">
+        <i class="custom-dnd5e-drag fa-solid fa-grip-lines" draggable="true"></i>
+        <dnd5e-checkbox id="custom-dnd5e-visible" name="{{key}}.visible" data-tooltip="{{localize "CUSTOM_DND5E.form.checkbox.visible.tooltip"}}"{{#unless (customDnd5eBoolFalse visible)}} checked{{/unless}}></dnd5e-checkbox>
         <input id="custom-dnd5e-system" name="{{key}}.system" type="hidden" value="{{#if (customDnd5eBoolFalse system)}}false{{else}}true{{/if}}">
-        <div class="form-group">
+        <div class="item-name">
             {{#if label}}
-            <label class="flex1">{{localize label}}</label>
+            <span class="title">{{localize label}}</span>
             {{else}}
                 {{#if name}}
-            <label class="flex1">{{localize name}}</label>
+            <span class="title">{{localize name}}</span>
                 {{else}}
-            <label class="flex1">{{localize key}}</label>
+            <span class="title">{{localize key}}</span>
                 {{/if}}
             {{/if}}
         </div>
-    </div>
-    <div class="custom-dnd5e-list-buttons">
-        <button type="button" data-action="edit" data-tooltip="{{localize "CUSTOM_DND5E.edit"}}" data-tooltip-direction="UP" class="flex0 custom-dnd5e-list-button">
-            <i class="fa-solid fa-pen-to-square"></i>
-        </button>
-        <button{{#unless (customDnd5eBoolFalse system)}} class="hidden"{{/unless}} type="button" data-action="delete" data-tooltip="{{localize "CUSTOM_DND5E.form.button.delete.tooltip"}}"  class="flex0 custom-dnd5e-list-button">
-            <i class="fas fa-trash"></i>
-        </button>
-        <input id="custom-dnd5e-delete" name="{{key}}.delete" type="hidden" value="false">
+        <div class="item-controls always-visible">
+            <button type="button" data-action="edit" class="unbutton control-button item-control always-interactive" data-tooltip="{{localize 'CUSTOM_DND5E.edit'}}" data-tooltip-direction="UP" aria-label="{{localize 'CUSTOM_DND5E.edit'}}">
+                <i class="fa-solid fa-pen-to-square" inert></i>
+            </button>
+            <button type="button" data-action="delete" class="unbutton control-button item-control always-interactive{{#unless (customDnd5eBoolFalse system)}} hidden{{/unless}}" data-tooltip="{{localize 'CUSTOM_DND5E.form.button.delete.tooltip'}}" aria-label="{{localize 'CUSTOM_DND5E.form.button.delete.tooltip'}}">
+                <i class="fas fa-trash" inert></i>
+            </button>
+            <input id="custom-dnd5e-delete" name="{{key}}.delete" type="hidden" value="false">
+        </div>
     </div>
 </li>
 {{/each}}

@@ -5,29 +5,6 @@ import { CountersEditForm } from "./counters-edit.js";
 
 const id = CONSTANTS.COUNTERS.ID;
 const form = `${id}-form`;
-const listClass = `${MODULE.ID}-list`;
-const listClassSelector = `.${listClass}`;
-
-/**
- * Get the select options for the counters form.
- *
- * @returns {object} An object containing the select options.
- */
-function getSelects() {
-  return {
-    type: {
-      choices: {
-        checkbox: "CUSTOM_DND5E.checkbox",
-        fraction: "CUSTOM_DND5E.fraction",
-        number: "CUSTOM_DND5E.number",
-        pips: "CUSTOM_DND5E.pips",
-        successFailure: "CUSTOM_DND5E.successFailure"
-      }
-    }
-  };
-}
-
-/* -------------------------------------------- */
 
 /**
  * Class representing the Counters Form.
@@ -96,9 +73,9 @@ export class CountersForm extends CustomDnd5eForm {
       npc: getSetting(CONSTANTS.COUNTERS.SETTING.NPC_COUNTERS.KEY) || {}
     };
     return {
+      activeTab: this.tabGroups.primary ?? "characters",
       counters: getSetting(CONSTANTS.COUNTERS.SETTING.COUNTERS.KEY) || false,
-      settings: this.settings,
-      selects: getSelects()
+      settings: this.settings
     };
   }
 
@@ -111,31 +88,11 @@ export class CountersForm extends CustomDnd5eForm {
    */
   static async createItem() {
     const activeTab = this.element.querySelector(".tab.active");
-    const actorType = (activeTab) ? activeTab.dataset.actorType : null;
-    const list = (activeTab)
-      ? activeTab.querySelector(listClassSelector)
-      : this.element.querySelector(listClassSelector);
-    const scrollable = list.closest(".scrollable");
-
+    const actorType = activeTab?.dataset?.actorType;
     const key = foundry.utils.randomID();
-    const data = {
-      actorType,
-      counters: { [key]: {} },
-      selects: getSelects()
-    };
-
-    const template = await foundry.applications.handlebars.renderTemplate(CONSTANTS.COUNTERS.TEMPLATE.LIST, data);
-
-    list.insertAdjacentHTML("beforeend", template);
-
-    const item = list.querySelector(`[data-key="${key}"]`);
-
-    if ( this.items[0] ) { item.addEventListener("dragstart", this.items[0].ondragstart); } // Fix this for empty list
-    item.addEventListener("dragleave", this._onDragLeave);
-
-    if ( scrollable ) {
-      scrollable.scrollTop = scrollable.scrollHeight;
-    }
+    const setting = this.settings[actorType];
+    const args = { countersForm: this, data: { key, actorType, label: "", type: "number" }, setting };
+    await CountersEditForm.open(args);
   }
 
   /* -------------------------------------------- */
@@ -154,7 +111,9 @@ export class CountersForm extends CustomDnd5eForm {
     const key = item.dataset.key;
     if ( !key ) return;
 
-    const type = item.querySelector("#custom-dnd5e-type").value;
+    const activeTab = this.element.querySelector(".tab.active");
+    const actorType = activeTab?.dataset?.actorType;
+    const type = this.settings[actorType]?.[key]?.type;
 
     const property = `@flags.${MODULE.ID}.${key}${(type === "successFailure") ? ".success" : (type === "fraction") ? ".value" : ""}`;
     game.clipboard.copyPlainText(property);
@@ -177,11 +136,11 @@ export class CountersForm extends CustomDnd5eForm {
     const key = item.dataset.key;
     if ( !key ) return;
 
-    const label = item.querySelector("#custom-dnd5e-label").value;
-    const type = item.querySelector("#custom-dnd5e-type").value;
     const activeTab = this.element.querySelector(".tab.active");
     const actorType = activeTab?.dataset?.actorType;
     const setting = this.settings[actorType];
+    const label = setting[key]?.label || "";
+    const type = setting[key]?.type || "number";
     const args = { countersForm: this, data: { key, actorType, label, type }, setting };
     await CountersEditForm.open(args);
   }

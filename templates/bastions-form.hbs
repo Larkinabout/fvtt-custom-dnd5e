@@ -38,54 +38,69 @@
         <section class="tab{{#if (eq activeTab 'sizes')}} active{{/if}}" data-group="primary" data-tab="sizes">
             <p class="hint">{{localize "CUSTOM_DND5E.bastions.sizesHint"}}</p>
             <div class="scrollable">
-                <ul class="custom-dnd5e-list flexcol">
-                    {{> "modules/custom-dnd5e/templates/bastions-sizes-list.hbs" sizes=sizes}}
-                </ul>
+                <div class="custom-dnd5e-items-sections">
+                    <div class="items-section card">
+                        <div class="items-header header">
+                            <h3 class="item-name">{{localize "CUSTOM_DND5E.bastions.sizes"}}</h3>
+                        </div>
+                        <ol class="item-list unlist custom-dnd5e-list">
+                            {{> "modules/custom-dnd5e/templates/bastions-sizes-list.hbs" sizes=sizes}}
+                        </ol>
+                    </div>
+                    <button type="button" data-action="new" class="gold-button always-interactive" aria-label="{{localize 'CUSTOM_DND5E.form.button.new.label'}}">
+                        <i class="fas fa-plus" inert></i>
+                    </button>
+                </div>
             </div>
-            <div class="form-footer">
-                <button type="button" data-action="reset" class="reset-button bright">
-                    <i class="fas fa-arrow-rotate-left"></i>{{localize "CUSTOM_DND5E.form.button.reset.label"}}
-                </button>
-                <button type="button" data-action="new" class="new-button bright">
-                    <i class="fas fa-plus"></i>{{localize "CUSTOM_DND5E.form.button.new.label"}}
-                </button>
-            </div>
+            <button type="button" data-action="reset" class="reset-button bright">
+                <i class="fas fa-arrow-rotate-left"></i>{{localize "CUSTOM_DND5E.form.button.reset.label"}}
+            </button>
         </section>
 
         {{!-- Types Tab --}}
         <section class="tab{{#if (eq activeTab 'types')}} active{{/if}}" data-group="primary" data-tab="types">
             <p class="hint">{{localize "CUSTOM_DND5E.bastions.typesHint"}}</p>
             <div class="scrollable">
-                <ul class="custom-dnd5e-list flexcol">
-                    {{> "modules/custom-dnd5e/templates/bastions-types-list.hbs" types=types}}
-                </ul>
+                <div class="custom-dnd5e-items-sections">
+                    <div class="items-section card">
+                        <div class="items-header header">
+                            <h3 class="item-name">{{localize "CUSTOM_DND5E.bastions.types"}}</h3>
+                        </div>
+                        <ol class="item-list unlist custom-dnd5e-list">
+                            {{> "modules/custom-dnd5e/templates/bastions-types-list.hbs" types=types}}
+                        </ol>
+                    </div>
+                    <button type="button" data-action="new" class="gold-button always-interactive" aria-label="{{localize 'CUSTOM_DND5E.form.button.new.label'}}">
+                        <i class="fas fa-plus" inert></i>
+                    </button>
+                </div>
             </div>
-            <div class="form-footer">
-                <button type="button" data-action="reset" class="reset-button bright">
-                    <i class="fas fa-arrow-rotate-left"></i>{{localize "CUSTOM_DND5E.form.button.reset.label"}}
-                </button>
-                <button type="button" data-action="new" class="new-button bright">
-                    <i class="fas fa-plus"></i>{{localize "CUSTOM_DND5E.form.button.new.label"}}
-                </button>
-            </div>
+            <button type="button" data-action="reset" class="reset-button bright">
+                <i class="fas fa-arrow-rotate-left"></i>{{localize "CUSTOM_DND5E.form.button.reset.label"}}
+            </button>
         </section>
 
         {{!-- Orders Tab --}}
         <section class="tab{{#if (eq activeTab 'orders')}} active{{/if}}" data-group="primary" data-tab="orders">
             <p class="hint">{{localize "CUSTOM_DND5E.bastions.ordersHint"}}</p>
             <div class="scrollable">
-                <ul class="custom-dnd5e-list flexcol">
-                    {{> "modules/custom-dnd5e/templates/bastions-orders-list.hbs" orders=orders}}
-                </ul>
+                <div class="custom-dnd5e-items-sections">
+                    <div class="items-section card">
+                        <div class="items-header header">
+                            <h3 class="item-name">{{localize "CUSTOM_DND5E.bastions.orders"}}</h3>
+                        </div>
+                        <ol class="item-list unlist custom-dnd5e-list">
+                            {{> "modules/custom-dnd5e/templates/bastions-orders-list.hbs" orders=orders}}
+                        </ol>
+                    </div>
+                    <button type="button" data-action="new" class="gold-button always-interactive" aria-label="{{localize 'CUSTOM_DND5E.form.button.new.label'}}">
+                        <i class="fas fa-plus" inert></i>
+                    </button>
+                </div>
             </div>
-            <div class="form-footer">
-                <button type="button" data-action="reset" class="reset-button bright">
-                    <i class="fas fa-arrow-rotate-left"></i>{{localize "CUSTOM_DND5E.form.button.reset.label"}}
-                </button>
-                <button type="button" data-action="new" class="new-button bright">
-                    <i class="fas fa-plus"></i>{{localize "CUSTOM_DND5E.form.button.new.label"}}
-                </button>
-            </div>
+            <button type="button" data-action="reset" class="reset-button bright">
+                <i class="fas fa-arrow-rotate-left"></i>{{localize "CUSTOM_DND5E.form.button.reset.label"}}
+            </button>
         </section>
 
         {{!-- Advancement Tab --}}

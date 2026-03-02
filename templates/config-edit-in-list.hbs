@@ -1,37 +1,50 @@
 {{#each items as |item key|}}
-<li class="custom-dnd5e-item flexrow" data-key="{{customDnd5eDotNotateChild ../childType ../parentKey key}}">
-    <i class="custom-dnd5e-drag flex0 fas fa-grip-lines" draggable="true"></i>
-    <dnd5e-checkbox id="custom-dnd5e-visible" class="flex0" name="{{customDnd5eDotNotateChild ../childType ../parentKey key}}.visible" data-tooltip="{{localize "CUSTOM_DND5E.form.checkbox.visible.tooltip"}}"{{#unless (customDnd5eBoolFalse visible)}} checked{{/unless}}></dnd5e-checkbox>
-    <div class="fields flexrow">
+<li class="item custom-dnd5e-item{{#if (or item.children item.subtypes)}} collapsible collapsed{{/if}}" data-key="{{customDnd5eDotNotateChild ../childType ../parentKey key}}">
+    <div class="item-row">
+        <i class="custom-dnd5e-drag fa-solid fa-grip-lines" draggable="true"></i>
+        <dnd5e-checkbox id="custom-dnd5e-visible" name="{{customDnd5eDotNotateChild ../childType ../parentKey key}}.visible" data-tooltip="{{localize "CUSTOM_DND5E.form.checkbox.visible.tooltip"}}"{{#unless (customDnd5eBoolFalse visible)}} checked{{/unless}}></dnd5e-checkbox>
         <input id="custom-dnd5e-parentKey" name="{{customDnd5eDotNotateChild ../childType ../parentKey key}}.parentKey" type="hidden" value="{{../parentKey}}">
-        <div class="form-group">
-            <label class="flex0">{{localize "CUSTOM_DND5E.key"}}</label>
-            <div class="form-fields">
-                <input{{#unless (customDnd5eBoolFalse system)}} disabled{{/unless}} id="key" {{#if (customDnd5eBoolFalse system)}}name="{{customDnd5eDotNotateChild ../childType ../parentKey key}}.key"{{/if}} type="text" value="{{key}}">
-                {{#unless (customDnd5eBoolFalse system)}}<input id="custom-dnd5e-key" name="{{customDnd5eDotNotateChild ../childType ../parentKey key}}.key" type="hidden" value="{{key}}">{{/unless}}
-            </div>
-        </div>
-        <div class="form-group">
-            <label class="flex0">{{localize ../label}}</label>
-            <div class="form-fields">
-                <input id="custom-dnd5e-label" name="{{customDnd5eDotNotateChild ../childType ../parentKey key}}.label" type="text" value="{{localize label}}">
-            </div>
-        </div>
         <input id="custom-dnd5e-system" name="{{customDnd5eDotNotateChild ../childType ../parentKey key}}.system" type="hidden" value="{{#if (customDnd5eBoolFalse system)}}false{{else}}true{{/if}}">
+        <div class="item-name">
+            <div class="form-group">
+                <label class="flex0">{{localize "CUSTOM_DND5E.key"}}</label>
+                <div class="form-fields">
+                    <input{{#unless (customDnd5eBoolFalse system)}} disabled{{/unless}} id="key" {{#if (customDnd5eBoolFalse system)}}name="{{customDnd5eDotNotateChild ../childType ../parentKey key}}.key"{{/if}} type="text" value="{{key}}">
+                    {{#unless (customDnd5eBoolFalse system)}}<input id="custom-dnd5e-key" name="{{customDnd5eDotNotateChild ../childType ../parentKey key}}.key" type="hidden" value="{{key}}">{{/unless}}
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="flex0">{{localize ../label}}</label>
+                <div class="form-fields">
+                    <input id="custom-dnd5e-label" name="{{customDnd5eDotNotateChild ../childType ../parentKey key}}.label" type="text" value="{{localize label}}">
+                </div>
+            </div>
+        </div>
+        <div class="item-controls always-visible">
+            {{#if (or item.children item.subtypes)}}
+            <button type="button" data-action="toggleExpand" class="unbutton control-button item-control always-interactive" aria-label="Toggle">
+                <i class="fa-solid fa-expand" inert></i>
+            </button>
+            {{/if}}
+            <button type="button" data-action="delete" class="unbutton control-button item-control always-interactive{{#unless (customDnd5eBoolFalse system)}} hidden{{/unless}}" data-tooltip="{{localize 'CUSTOM_DND5E.form.button.delete.tooltip'}}" aria-label="{{localize 'CUSTOM_DND5E.form.button.delete.tooltip'}}">
+                <i class="fas fa-trash" inert></i>
+            </button>
+            <input id="custom-dnd5e-delete" name="{{customDnd5eDotNotateChild ../childType ../parentKey key}}.delete" type="hidden" value="false">
+        </div>
     </div>
-    <button{{#unless (customDnd5eBoolFalse system)}} disabled{{/unless}} type="button" {{#if (customDnd5eBoolFalse system)}}data-action="delete" data-tooltip="{{localize "CUSTOM_DND5E.form.button.delete.tooltip"}}" {{/if}} class="flex0 custom-dnd5e-list-button">
-        <i class="fas fa-trash"></i>
-    </button>
-    <input id="custom-dnd5e-delete" name="{{customDnd5eDotNotateChild ../childType ../parentKey key}}.delete" type="hidden" value="false">
-    {{#if item.children}}
-    <ul class="custom-dnd5e-list flexcol">
-        {{> "modules/custom-dnd5e/templates/config-edit-in-list.hbs" prefix=../prefix childType="children" parentKey=(customDnd5eDotNotateChild "children" ../parentKey key) items=item.children label=../label}}
-    </ul>
-    {{/if}}
-    {{#if item.subtypes}}
-    <ul class="custom-dnd5e-list flexcol">
-        {{> "modules/custom-dnd5e/templates/config-edit-in-list.hbs" prefix=../prefix childType="subtypes" parentKey=(customDnd5eDotNotateChild "subtypes" ../parentKey key) items=item.subtypes label=../label}}
-    </ul>
+    {{#if (or item.children item.subtypes)}}
+    <div class="item-description collapsible-content">
+        <div class="wrapper">
+            <ol class="custom-dnd5e-list unlist">
+                {{#if item.children}}
+                {{> "modules/custom-dnd5e/templates/config-edit-in-list.hbs" prefix=../prefix childType="children" parentKey=(customDnd5eDotNotateChild "children" ../parentKey key) items=item.children label=../label}}
+                {{/if}}
+                {{#if item.subtypes}}
+                {{> "modules/custom-dnd5e/templates/config-edit-in-list.hbs" prefix=../prefix childType="subtypes" parentKey=(customDnd5eDotNotateChild "subtypes" ../parentKey key) items=item.subtypes label=../label}}
+                {{/if}}
+            </ol>
+        </div>
+    </div>
     {{/if}}
 </li>
 {{/each}}

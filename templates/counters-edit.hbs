@@ -1,12 +1,12 @@
 <div class="standard-form">
     <nav class="sheet-tabs tabs" style="flex: none;">
-        <a class="item active" data-action="tab" data-group="primary" data-tab="options">
+        <a class="item{{#if (eq activeTab 'options')}} active{{/if}}" data-action="tab" data-group="primary" data-tab="options">
             <span>
                 <i class="fa-solid fa-gear"></i>
-                {{localize "CUSTOM_DND5E.options"}}
+                {{localize "CUSTOM_DND5E.general"}}
             </span>
         </a>
-        <a class="item" data-action="tab" data-group="primary" data-tab="triggers">
+        <a class="item{{#if (eq activeTab 'triggers')}} active{{/if}}" data-action="tab" data-group="primary" data-tab="triggers">
             <span>
                 <i class="fa-solid fa-bolt-lightning"></i>
                 {{localize "CUSTOM_DND5E.triggers"}}
@@ -15,13 +15,27 @@
     </nav>
     <hr>
     <div class="standard-form scrollable">
-        <section class="tab active" data-group="primary" data-tab="options">
+        <section class="tab{{#if (eq activeTab 'options')}} active{{/if}}" data-group="primary" data-tab="options">
             <div class="form-group">
                 <label>{{localize "CUSTOM_DND5E.key"}}</label>
                 <div class="form-fields">
-                    <input id="custom-dnd5e-key" name="{{key}}.key" type="text" value="{{key}}"> 
+                    <input id="custom-dnd5e-key" name="{{key}}.key" type="text" value="{{key}}">
                 </div>
                 <p class="custom-dnd5e-advice notes">{{localize "CUSTOM_DND5E.form.counters.key.note.1"}}</p>
+            </div>
+            <div class="form-group">
+                <label>{{localize "CUSTOM_DND5E.label"}}</label>
+                <div class="form-fields">
+                    <input id="custom-dnd5e-label" name="{{key}}.label" type="text" value="{{localize label}}">
+                </div>
+            </div>
+            <div class="form-group">
+                <label>{{localize "CUSTOM_DND5E.type"}}</label>
+                <div class="form-fields">
+                    <select id="custom-dnd5e-type" name="{{key}}.type">
+                        {{selectOptions selects.type.choices selected=type localize=true}}
+                    </select>
+                </div>
             </div>
             <div class="form-group flex0">
                 <label>{{localize "CUSTOM_DND5E.form.counters.viewRole.label"}}</label>
@@ -41,23 +55,30 @@
                 </div>
                 <p class="hint">{{localize "CUSTOM_DND5E.form.counters.editRole.note.1"}}</p>
             </div>
-            {{#unless (customDnd5eEq type "checkbox")}}
-            <div class="form-group">
+            <div class="form-group{{#if (customDnd5eEq type "checkbox")}} hidden{{/if}}">
                 <label>{{localize "CUSTOM_DND5E.form.counters.max.label"}}</label>
                 <div class="form-fields">
                     <input id="custom-dnd5e-max" name="{{key}}.max" type="text" value="{{max}}">
                 </div>
                 <p class="hint">{{localize "CUSTOM_DND5E.form.counters.max.note.1"}}</p>
             </div>
-            {{/unless}}
         </section>
-        <section class="tab" data-group="primary" data-tab="triggers" style="height: 100%;">
-            <ul class="custom-dnd5e-list scrollable" style="height: 100%;">
-                {{> "modules/custom-dnd5e/templates/counters-triggers-list.hbs" prefix=triggers key=key type=type selects=selects}}
-            </ul>
-            <button type="button" data-action="new" class="new-button bright">
-                <i class="fas fa-plus"></i>{{localize "CUSTOM_DND5E.form.button.new.label"}}
-            </button>
+        <section class="tab{{#if (eq activeTab 'triggers')}} active{{/if}}" data-group="primary" data-tab="triggers" style="height: 100%;">
+            <div class="scrollable" style="height: 100%;">
+                <div class="custom-dnd5e-items-sections">
+                    <div class="items-section card">
+                        <div class="items-header header">
+                            <h3 class="item-name">{{localize "CUSTOM_DND5E.triggers"}}</h3>
+                        </div>
+                        <ol class="item-list unlist custom-dnd5e-list">
+                            {{> "modules/custom-dnd5e/templates/counters-triggers-list.hbs" prefix=triggers key=key type=type selects=selects}}
+                        </ol>
+                    </div>
+                    <button type="button" data-action="new" class="gold-button always-interactive" aria-label="{{localize 'CUSTOM_DND5E.form.button.new.label'}}">
+                        <i class="fas fa-plus" inert></i>
+                    </button>
+                </div>
+            </div>
         </section>
     </div>
     <footer class="form-footer" data-application-part="footer">

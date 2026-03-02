@@ -119,6 +119,15 @@ export class CountersEditForm extends CustomDnd5eForm {
     actionChoices.macro = "CUSTOM_DND5E.macro";
 
     return {
+      type: {
+        choices: {
+          checkbox: "CUSTOM_DND5E.checkbox",
+          fraction: "CUSTOM_DND5E.fraction",
+          number: "CUSTOM_DND5E.number",
+          pips: "CUSTOM_DND5E.pips",
+          successFailure: "CUSTOM_DND5E.successFailure"
+        }
+      },
       role: {
         choices: {
           1: "USER.RolePlayer",
@@ -155,7 +164,9 @@ export class CountersEditForm extends CustomDnd5eForm {
     const type = this.setting[this.key]?.type || this.type;
 
     return {
+      activeTab: this.tabGroups.primary ?? "options",
       key: this.key,
+      label: this.setting[this.key]?.label || this.label,
       viewRole: this.setting[this.key]?.viewRole || 1,
       editRole: this.setting[this.key]?.editRole || 1,
       max: this.setting[this.key]?.max,
@@ -195,6 +206,14 @@ export class CountersEditForm extends CustomDnd5eForm {
     this.items.forEach(item => {
       this.#setupTriggerItem(item);
     });
+
+    const typeSelect = this.element.querySelector("#custom-dnd5e-type");
+    const maxGroup = this.element.querySelector("#custom-dnd5e-max")?.closest(".form-group");
+    if ( typeSelect && maxGroup ) {
+      typeSelect.addEventListener("change", () => {
+        maxGroup.classList.toggle("hidden", typeSelect.value === "checkbox");
+      });
+    }
   }
 
   /* -------------------------------------------- */
@@ -496,9 +515,6 @@ export class CountersEditForm extends CustomDnd5eForm {
 
       this.setting[this.key].triggers = triggers;
     }
-
-    this.setting[this.key].label = this.label;
-    this.setting[this.key].type = this.type;
 
     if ( this.entity ) {
       await unsetFlag(this.entity, "counters");

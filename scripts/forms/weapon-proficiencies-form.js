@@ -21,6 +21,7 @@ export class WeaponProficienciesForm extends ConfigForm {
     this.settingDefault = getSettingDefault();
     this.setting = getSetting(this.settingKey) || this.settingDefault;
     this.setConfig = setConfig;
+    this.listTitle = "CUSTOM_DND5E.form.weaponProficiencies.listTitle";
     this.headerButton = JOURNAL_HELP_BUTTON;
     this.headerButton.uuid = CONSTANTS.WEAPON_PROFICIENCIES.UUID;
   }
@@ -66,7 +67,7 @@ export class WeaponProficienciesForm extends ConfigForm {
 
     labelise(this.setting);
 
-    return { editInList: this.editInList, label: this.label, items: this.setting };
+    return { editInList: this.editInList, label: this.label, listTitle: this.listTitle, items: this.setting };
   }
 
   /* -------------------------------------------- */

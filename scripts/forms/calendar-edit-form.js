@@ -149,7 +149,7 @@ export class CalendarEditForm extends HandlebarsApplicationMixin(ApplicationV2) 
     const section = target.dataset.section;
     if ( !section ) return;
 
-    const list = this.element.querySelector(`ul[data-section="${section}"]`);
+    const list = this.element.querySelector(`ol[data-section="${section}"]`);
     if ( !list ) return;
 
     const existingItems = list.querySelectorAll("li");

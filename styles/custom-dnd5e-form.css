@@ -32,11 +32,6 @@
     gap: 0.5rem;
 }
 
-.custom-dnd5e-app.application li > .fields {
-    border-left: 1px dotted var(--custom-dnd5e-field-border);
-    padding-left: 0.5rem
-}
-
 .custom-dnd5e-app nav.sheet-tabs {
     margin: 0;
 }
@@ -87,6 +82,7 @@
 
 .custom-dnd5e-col-group {
     border-left: 1px dotted var(--custom-dnd5e-field-border);
+    flex: 1;
     gap: 0.5rem;
     padding: 0 0 0 0.5rem;
 }
@@ -200,13 +196,13 @@
     display: none;
 }
 
-.custom-dnd5e-app ul ul {
-    flex: 100%;
-    list-style-type: none;
-    padding-left: 25px;
+.custom-dnd5e-app ol > li:last-child {
+    border-bottom: none;
 }
 
 .custom-dnd5e-app ul ul {
+    flex: 100%;
+    list-style-type: none;
     border-top: 1px dotted var(--custom-dnd5e-field-border);
 }
 
@@ -218,53 +214,55 @@
     margin-top: 0;
 }
 
-.custom-dnd5e-app.application ul ul {
-    flex: 100%;
+/*************************************
+    COLLAPSIBLE
+**************************************/
+
+.custom-dnd5e-app .collapsible .collapsible-content {
+    display: grid;
+    grid-template-rows: 1fr;
+    transition: grid-template-rows 250ms ease;
 }
 
-.custom-dnd5e-app ul ul::before {
+.custom-dnd5e-app .collapsible.collapsed .collapsible-content {
+    grid-template-rows: 0fr;
+}
+
+.custom-dnd5e-app .collapsible .collapsible-content > .wrapper {
+    overflow: hidden;
+}
+
+.custom-dnd5e-app .collapsible-content .custom-dnd5e-list {
+    list-style-type: none;
+}
+
+.custom-dnd5e-app .collapsible-content .custom-dnd5e-list > li > .item-row::before {
+    content: "\2517";
+    font-size: var(--font-size-12);
+    font-weight: bold;
     color: var(--custom-dnd5e-subtle-color);
-    content: "\2BA1";
-    position: absolute;
-    left: 0px;
-    transform: translateY(45%);
-    font-size: 18px;
-    -webkit-font-smoothing: antialiased;
+}
+
+.custom-dnd5e-app .items-section .collapsible-content .collapsible-content .item-row {
+    padding-left: calc(0.25rem + var(--nest-depth, 1) * 1.25rem);
 }
 
 /*************************************
     LIST ITEM / LI
 **************************************/
 
-.custom-dnd5e-app li {
-    border: 1px solid transparent;
-}
-
-.custom-dnd5e-app li {
-    border-top: 1px dotted var(--custom-dnd5e-field-border);
-}
-
 .custom-dnd5e-app li:not(li li) {
     margin: 0;
-    padding: 0.4rem 0 0.4rem 0;
     position: relative;
     list-style: none;
-    margin-top: -2px;
 }
 
-.custom-dnd5e-app li li {
-    align-items: center;
-    border: 1px solid transparent;
-    border-top: 1px solid var(--color-border);
-    display: flex;
-    gap: 0.25rem;
-    padding: 0.4rem 0 0.4rem 0;
-    position: relative;
+.custom-dnd5e-app li li:first-child {
+    border-top: var(--dnd5e-border-dotted);
 }
 
 .custom-dnd5e-app li li:last-child {
     padding-bottom: 0;
-    
 }
 
 .custom-dnd5e-app li > i {
@@ -358,6 +356,7 @@
     display: flex;
     flex-direction: column;
     gap: 0.5rem;
+    margin-bottom: 0.25rem;
 }
 
 .custom-dnd5e-app .items-section .item select,
@@ -377,7 +376,13 @@
 .custom-dnd5e-app .items-section .item .item-row {
     align-items: center;
     gap: 0.5rem;
-    padding: 0 0.25rem;
+    padding: 0.5rem 0.25rem;
+}
+
+.custom-dnd5e-app .items-section .item-name input:disabled {
+    background: var(--input-disabled-background-color);
+    cursor: not-allowed;
+    opacity: 0.7;
 }
 
 .custom-dnd5e-app .items-section .item .item-name .title {
@@ -408,6 +413,15 @@
     width: 28px;
     line-height: 24px;
     align-self: flex-end;
+}
+
+.custom-dnd5e-app .custom-dnd5e-items-sections > .gold-button.always-interactive {
+    position: sticky;
+    bottom: 0;
+}
+
+#custom-dnd5e-workflows-edit .custom-dnd5e-items-sections > .gold-button.always-interactive {
+    position: relative;
 }
 
 /*************************************
@@ -495,27 +509,53 @@
     CALENDAR EDIT FORM
 **************************************/
 
-#custom-dnd5e-calendar-edit-form .custom-dnd5e-list-header {
-    flex: none;
-    margin-right: calc(-1 * var(--scroll-margin, 0.75rem));
-    padding-right: var(--scroll-margin, 0.75rem);
-    overflow: hidden;
-    scrollbar-gutter: stable;
-}
-
-#custom-dnd5e-calendar-edit-form .custom-dnd5e-list-header > span:not(:last-child) {
-    box-sizing: border-box;
-    padding: 0 6px;
-    border: 1px solid transparent;
-}
-
-#custom-dnd5e-calendar-edit-form .custom-dnd5e-col-group {
-    border-left: none;
-    padding-left: 0;
-}
-
 #custom-dnd5e-calendar-edit-form .scrollable {
     padding-top: 5px;
+}
+
+#custom-dnd5e-calendar-edit-form .items-header.header {
+    gap: 0.5rem;
+    padding: 0 0.25rem;
+}
+
+#custom-dnd5e-calendar-edit-form .item-name {
+    flex: 2;
+}
+
+#custom-dnd5e-calendar-edit-form .item-abbreviation {
+    flex: 1;
+}
+
+#custom-dnd5e-calendar-edit-form .item-ordinal,
+#custom-dnd5e-calendar-edit-form .item-days {
+    flex: 0 0 3rem;
+    text-align: center;
+}
+
+#custom-dnd5e-calendar-edit-form .item-leap-days {
+    flex: 0 0 4.5rem;
+    text-align: center;
+}
+
+#custom-dnd5e-calendar-edit-form .item-day-start,
+#custom-dnd5e-calendar-edit-form .item-day-end,
+#custom-dnd5e-calendar-edit-form .item-month,
+#custom-dnd5e-calendar-edit-form .item-day {
+    flex: 1;
+    text-align: center;
+}
+
+#custom-dnd5e-calendar-edit-form .item-row {
+    gap: 0.5rem;
+}
+
+#custom-dnd5e-calendar-edit-form .item-row > div:not(.item-controls) {
+    display: flex;
+    min-width: 0;
+}
+
+#custom-dnd5e-calendar-edit-form .item-row input[type="number"] {
+    text-align: center;
 }
 
 .custom-dnd5e-drop-area {
