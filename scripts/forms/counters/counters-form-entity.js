@@ -1,16 +1,16 @@
-import { CONSTANTS, MODULE } from "../constants.js";
-import { deleteProperty, getFlag, setFlag, unsetFlag } from "../utils.js";
+import { CONSTANTS, MODULE } from "../../constants.js";
+import { deleteProperty, getFlag, setFlag, unsetFlag } from "../../utils.js";
 import { CountersForm } from "./counters-form.js";
 import { CountersEditForm } from "./counters-edit.js";
 
-const form = "counters-form-individual";
+const form = "counters-form-entity";
 
 /**
- * Class representing the Individual Counters Form.
+ * Class representing the Entity Counters Form.
  */
-export class CountersFormIndividual extends CountersForm {
+export class CountersFormEntity extends CountersForm {
   /**
-   * Constructor for CountersFormIndividual.
+   * Constructor for CountersFormEntity.
    *
    * @param {object} entity The entity to which the counters belong.
    */
@@ -28,11 +28,11 @@ export class CountersFormIndividual extends CountersForm {
    */
   static DEFAULT_OPTIONS = {
     actions: {
-      new: CountersFormIndividual.createItem,
-      edit: CountersFormIndividual.edit
+      new: CountersFormEntity.createItem,
+      edit: CountersFormEntity.edit
     },
     form: {
-      handler: CountersFormIndividual.submit
+      handler: CountersFormEntity.submit
     },
     id: `${MODULE.ID}-${form}`,
     window: {
@@ -49,7 +49,7 @@ export class CountersFormIndividual extends CountersForm {
    */
   static PARTS = {
     form: {
-      template: `modules/${MODULE.ID}/templates/${form}.hbs`
+      template: `modules/${MODULE.ID}/templates/counters/${form}.hbs`
     }
   };
 
@@ -62,8 +62,14 @@ export class CountersFormIndividual extends CountersForm {
    */
   async _prepareContext() {
     this.counters = getFlag(this.entity, "counters") || {};
+    // Filter to only entity counter definitions (have a type property) for display;
+    // world counter value entries (which only have value/success/failure) are preserved
+    // in this.counters but not shown in the form.
+    const displayCounters = Object.fromEntries(
+      Object.entries(this.counters).filter(([_, c]) => c.type !== undefined)
+    );
     return {
-      counters: this.counters
+      counters: displayCounters
     };
   }
 
@@ -76,7 +82,7 @@ export class CountersFormIndividual extends CountersForm {
    */
   static async createItem() {
     const key = foundry.utils.randomID();
-    const actorType = this.entity.type;
+    const actorType = this.entity.documentName === "Item" ? "item" : "actor";
     const setting = this.counters;
     const args = {
       countersForm: this,
@@ -103,7 +109,7 @@ export class CountersFormIndividual extends CountersForm {
 
     const label = this.counters[key]?.label || "";
     const type = this.counters[key]?.type || "number";
-    const actorType = this.entity.type;
+    const actorType = this.entity.documentName === "Item" ? "item" : "actor";
     const entity = this.entity;
     const setting = this.counters;
     const args = { countersForm: this, data: { key, actorType, entity, label, type }, setting };

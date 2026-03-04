@@ -1,23 +1,13 @@
-import { CONSTANTS, JOURNAL_HELP_BUTTON, MODULE } from "../constants.js";
-import { deleteProperty, getSetting, setSetting } from "../utils.js";
-import { CustomDnd5eForm } from "./custom-dnd5e-form.js";
+import { CONSTANTS, JOURNAL_HELP_BUTTON, MODULE } from "../../constants.js";
+import { deleteProperty, getSetting, setSetting } from "../../utils.js";
+import { CustomDnd5eForm } from "../custom-dnd5e-form.js";
 import { WorkflowsEditForm } from "./workflows-edit.js";
-import { rebuild } from "../workflows/workflows.js";
+import { rebuild } from "../../workflows/workflows.js";
 
 const id = CONSTANTS.WORKFLOWS.ID;
 const form = `${id}-form`;
 
-/**
- * Class representing the Workflows Form.
- *
- * @extends {CustomDnd5eForm}
- */
 export class WorkflowsForm extends CustomDnd5eForm {
-  /**
-   * Constructor for WorkflowsForm.
-   *
-   * @param {...any} args Arguments to pass to the parent constructor.
-   */
   constructor(...args) {
     super(args);
     this.headerButton = JOURNAL_HELP_BUTTON;
@@ -26,11 +16,6 @@ export class WorkflowsForm extends CustomDnd5eForm {
 
   /* -------------------------------------------- */
 
-  /**
-   * Default options for the form.
-   *
-   * @type {object}
-   */
   static DEFAULT_OPTIONS = {
     actions: {
       new: WorkflowsForm.createItem,
@@ -48,40 +33,38 @@ export class WorkflowsForm extends CustomDnd5eForm {
 
   /* -------------------------------------------- */
 
-  /**
-   * Parts of the form.
-   *
-   * @type {object}
-   */
   static PARTS = {
     form: {
-      template: `modules/${MODULE.ID}/templates/${form}.hbs`
+      template: `modules/${MODULE.ID}/templates/workflows/${form}.hbs`
     }
   };
 
   /* -------------------------------------------- */
 
   /**
-   * Prepare the context for the form.
-   *
-   * @returns {Promise<object>} The context object.
+   * Whether the active tab is the items tab.
+   * @returns {boolean} True if the active tab is the items tab.
    */
+  get isItem() {
+    return (this.tabGroups.primary ?? "actors") === "items";
+  }
+
+  /* -------------------------------------------- */
+
+  /** @override */
   async _prepareContext() {
-    this.setting = getSetting(CONSTANTS.WORKFLOWS.SETTING.WORKFLOWS.KEY) || {};
+    this.actorSetting = getSetting(CONSTANTS.WORKFLOWS.SETTING.ACTOR_WORKFLOWS.KEY) || {};
+    this.itemSetting = getSetting(CONSTANTS.WORKFLOWS.SETTING.ITEM_WORKFLOWS.KEY) || {};
     return {
+      activeTab: this.tabGroups.primary ?? "actors",
       enabled: getSetting(CONSTANTS.WORKFLOWS.SETTING.ENABLE.KEY) || false,
-      triggers: this.setting
+      actorTriggers: this.actorSetting,
+      itemTriggers: this.itemSetting
     };
   }
 
   /* -------------------------------------------- */
 
-  /**
-   * Delete a workflow item.
-   *
-   * @param {Event} event The event that triggered the action.
-   * @param {HTMLElement} target The target element.
-   */
   static async deleteItem(event, target) {
     const item = target.closest(".item");
     if ( !item ) return;
@@ -112,26 +95,16 @@ export class WorkflowsForm extends CustomDnd5eForm {
 
   /* -------------------------------------------- */
 
-  /**
-   * Create a new trigger item.
-   *
-   * @returns {Promise<void>}
-   */
   static async createItem() {
     const key = foundry.utils.randomID();
-    const args = { workflowsForm: this, data: { key, label: "" }, setting: this.setting };
+    const entityType = this.isItem ? "item" : "actor";
+    const setting = this.isItem ? this.itemSetting : this.actorSetting;
+    const args = { workflowsForm: this, data: { key, name: "", entityType }, setting };
     await WorkflowsEditForm.open(args);
   }
 
   /* -------------------------------------------- */
 
-  /**
-   * Open the edit form for a trigger.
-   *
-   * @param {Event} event The event that triggered the edit.
-   * @param {HTMLElement} target The target element.
-   * @returns {Promise<void>}
-   */
   static async edit(event, target) {
     const item = target.closest(".item");
     if ( !item ) return;
@@ -139,36 +112,53 @@ export class WorkflowsForm extends CustomDnd5eForm {
     const key = item.dataset.key;
     if ( !key ) return;
 
-    const label = this.setting[key]?.label || "";
-    const args = { workflowsForm: this, data: { key, label }, setting: this.setting };
+    const entityType = this.isItem ? "item" : "actor";
+    const setting = this.isItem ? this.itemSetting : this.actorSetting;
+    const name = setting[key]?.name || "";
+    const args = { workflowsForm: this, data: { key, name, entityType }, setting };
     await WorkflowsEditForm.open(args);
   }
 
   /* -------------------------------------------- */
 
-  /**
-   * Submit the form data.
-   *
-   * @param {Event} event The event that triggered the submit.
-   * @param {HTMLFormElement} form The form element.
-   * @param {object} formData The form data.
-   * @returns {Promise<void>}
-   */
   static async submit(event, form, formData) {
     // Get list of properties to delete
     const deleteKeys = Object.entries(formData.object)
       .filter(([key, value]) => key.split(".").pop() === "delete" && value === "true")
       .map(([key, _]) => key.split(".").slice(0, -1).join("."));
 
-    // Delete properties from this.setting
+    // Delete properties from both settings (key uniqueness ensures correct removal)
     deleteKeys.forEach(deleteKey => {
       const key = deleteKey.split(".").pop();
-      deleteProperty(this.setting, key);
+      deleteProperty(this.actorSetting, key);
+      deleteProperty(this.itemSetting, key);
     });
+
+    // Process enabled checkbox values
+    for ( const [formKey, value] of Object.entries(formData.object) ) {
+      const match = formKey.match(/^([^.]+)\.enabled$/);
+      if ( !match ) continue;
+      const workflowKey = match[1];
+      if ( this.actorSetting[workflowKey] ) this.actorSetting[workflowKey].enabled = value;
+      if ( this.itemSetting[workflowKey] ) this.itemSetting[workflowKey].enabled = value;
+    }
+
+    // Rebuild settings in DOM order to preserve drag-and-drop reordering
+    const reorder = (setting, tabSelector) => {
+      const keys = Array.from(this.element.querySelectorAll(`${tabSelector} .custom-dnd5e-list > .item`))
+        .map(li => li.dataset.key)
+        .filter(key => key in setting);
+      const reordered = {};
+      for ( const key of keys ) reordered[key] = setting[key];
+      return reordered;
+    };
+    this.actorSetting = reorder(this.actorSetting, '[data-tab="actors"]');
+    this.itemSetting = reorder(this.itemSetting, '[data-tab="items"]');
 
     await Promise.all([
       setSetting(CONSTANTS.WORKFLOWS.SETTING.ENABLE.KEY, formData.object.enabled ?? false),
-      setSetting(CONSTANTS.WORKFLOWS.SETTING.WORKFLOWS.KEY, this.setting)
+      setSetting(CONSTANTS.WORKFLOWS.SETTING.ACTOR_WORKFLOWS.KEY, this.actorSetting),
+      setSetting(CONSTANTS.WORKFLOWS.SETTING.ITEM_WORKFLOWS.KEY, this.itemSetting)
     ]);
 
     rebuild();

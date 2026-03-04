@@ -1,5 +1,5 @@
 import { CONSTANTS } from "../constants.js";
-import { addHelpButton, Logger } from "../utils.js";
+import { addHelpButton, executeMacro } from "../utils.js";
 
 const constants = CONSTANTS.ACTIVITIES;
 
@@ -159,7 +159,7 @@ export class MacroActivity extends dnd5e.documents.activity.ActivityMixin(BaseMa
 
   /** @override */
   async _triggerSubsequentActions(config, results) {
-    if ( this.macro.autoExecute ) await this.executeMacro({ config, results });
+    if ( this.macro.autoExecute ) await this.executeActivityMacro({ config, results });
   }
 
   /* -------------------------------------------- */
@@ -167,25 +167,18 @@ export class MacroActivity extends dnd5e.documents.activity.ActivityMixin(BaseMa
   /* -------------------------------------------- */
 
   /**
-   * Execute the macro attached to this activity.
+   * Execute the activity's macro.
    * @param {object} [options={}]
    * @param {object} [options.config] The activity usage config
    * @param {object} [options.results] The activity usage results
    * @param {ChatMessage5e} [options.message] The message
    * @returns {Promise<void>}
    */
-  async executeMacro({ config, results, message } = {}) {
-    if ( !this.macro.uuid ) return;
-    const macro = await fromUuid(this.macro.uuid);
-    if ( !macro ) {
-      Logger.error(game.i18n.localize("CUSTOM_DND5E.macroNotFound"), true);
-      return;
-    }
+  async executeActivityMacro({ config, results, message } = {}) {
     const actor = this.item?.parent;
-    const token = actor?.isToken ? actor.token : actor?.getActiveTokens()[0];
     const chatMessage = message ?? results?.message;
     const targets = chatMessage?.getFlag?.("dnd5e", "targets") ?? Array.from(game.user?.targets ?? []);
-    macro.execute({ actor, token, item: this.item, activity: this, targets, config, message: chatMessage });
+    executeMacro(this.macro.uuid, { actor, item: this.item, activity: this, targets, config, message: chatMessage });
   }
 
   /* -------------------------------------------- */
@@ -200,6 +193,6 @@ export class MacroActivity extends dnd5e.documents.activity.ActivityMixin(BaseMa
    * @param {ChatMessage5e} message The message
    */
   static #executeMacro(event, target, message) {
-    this.executeMacro({ message });
+    this.executeActivityMacro({ message });
   }
 }

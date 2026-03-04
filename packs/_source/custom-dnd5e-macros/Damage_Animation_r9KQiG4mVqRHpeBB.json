@@ -1,0 +1,28 @@
+{
+  "name": "Damage Animation",
+  "type": "script",
+  "author": "zOtcGexgRGNVhsT1",
+  "img": "icons/svg/dice-target.svg",
+  "scope": "global",
+  "command": "const owners = game.users.filter(u => !u.isGM && actor.testUserPermission(u, \"OWNER\"));\nconst userIds = owners.length ? owners.map(u => u.id) : [game.user.id];\nconst anim = game.modules.get(\"custom-dnd5e\").api.animations;\n\nanim.shakeScreen({ intensity: 8, duration: 750, userIds });\nanim.flashScreen({ duration: 750, userIds });\nanim.splatterScreen({ duration: 3500, userIds });",
+  "folder": "ABREqiorYTQ0DNX9",
+  "flags": {},
+  "_stats": {
+    "compendiumSource": null,
+    "duplicateSource": null,
+    "exportSource": null,
+    "coreVersion": "13.351",
+    "systemId": "dnd5e",
+    "systemVersion": "5.2.5",
+    "createdTime": 1772649660412,
+    "modifiedTime": 1772649660412,
+    "lastModifiedBy": "zOtcGexgRGNVhsT1"
+  },
+  "ownership": {
+    "default": 0,
+    "zOtcGexgRGNVhsT1": 3
+  },
+  "_id": "r9KQiG4mVqRHpeBB",
+  "sort": 0,
+  "_key": "!macros!r9KQiG4mVqRHpeBB"
+}

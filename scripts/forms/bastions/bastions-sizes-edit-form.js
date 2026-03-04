@@ -1,26 +1,26 @@
-import { CONSTANTS, JOURNAL_HELP_BUTTON, MODULE } from "../constants.js";
-import { ConfigEditForm } from "./config-edit-form.js";
-import { getSettingDefault, setConfig } from "../configurations/bastions.js";
+import { CONSTANTS, JOURNAL_HELP_BUTTON, MODULE } from "../../constants.js";
+import { ConfigEditForm } from "../config-edit-form.js";
+import { getSettingDefault, setConfig } from "../../configurations/bastions.js";
 
 const constants = CONSTANTS.BASTIONS;
 
 /**
- * Class representing a form to edit bastion orders.
+ * Class representing a form to edit bastion sizes.
  * Extends the ConfigEditForm class.
  *
  * @class
  * @extends ConfigEditForm
  */
-export class BastionsOrdersEditForm extends ConfigEditForm {
+export class BastionsSizesEditForm extends ConfigEditForm {
   /**
-   * Constructor for BastionsOrdersEditForm.
+   * Constructor for BastionsSizesEditForm.
    *
    * @param {object} args The arguments to initialize the form.
    */
   constructor(args) {
     super(args);
     this.settingKey = constants.SETTING.CONFIG.KEY;
-    this.settingProperty = "orders";
+    this.settingProperty = "sizes";
     this.getSettingDefault = getSettingDefault;
     this.setConfig = setConfig;
     this.headerButton = JOURNAL_HELP_BUTTON;
@@ -36,9 +36,9 @@ export class BastionsOrdersEditForm extends ConfigEditForm {
    * @type {object}
    */
   static DEFAULT_OPTIONS = {
-    id: `${MODULE.ID}-bastions-orders-edit-form`,
+    id: `${MODULE.ID}-bastions-sizes-edit-form`,
     window: {
-      title: "CUSTOM_DND5E.form.bastions.orders.edit.title"
+      title: "CUSTOM_DND5E.form.bastions.sizes.edit.title"
     }
   };
 
@@ -51,7 +51,7 @@ export class BastionsOrdersEditForm extends ConfigEditForm {
    */
   static PARTS = {
     form: {
-      template: constants.TEMPLATE.ORDERS_EDIT
+      template: constants.TEMPLATE.SIZES_EDIT
     }
   };
 

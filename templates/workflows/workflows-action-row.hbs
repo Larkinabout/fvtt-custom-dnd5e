@@ -5,6 +5,25 @@
             {{selectOptions actionChoices selected=type localize=true}}
         </select>
         <div class="custom-dnd5e-action-fields">
+            <div class="custom-dnd5e-counter-action-group{{#unless showCounterAction}} hidden{{/unless}}">
+                <div class="form-fields">
+                    <select name="actions.{{actionId}}.counterKey" class="custom-dnd5e-counter-select">
+                        {{selectOptions counterChoices selected=counterKey}}
+                    </select>
+                </div>
+            </div>
+            <div class="custom-dnd5e-action-value-group{{#unless showActionValue}} hidden{{/unless}}">
+                <div class="form-fields">
+                    <input name="actions.{{actionId}}.actionValue" type="number" value="{{actionValue}}" class="custom-dnd5e-action-value">
+                </div>
+            </div>
+            <div class="custom-dnd5e-workflow-group{{#unless showWorkflowSelect}} hidden{{/unless}}">
+                <div class="form-fields">
+                    <select name="actions.{{actionId}}.workflowKey" class="custom-dnd5e-workflow-select">
+                        {{selectOptions workflowChoices selected=workflowKey}}
+                    </select>
+                </div>
+            </div>
             <div class="custom-dnd5e-macro-group{{#unless (customDnd5eEq type 'macro')}} hidden{{/unless}}">
                 <div class="form-fields custom-dnd5e-macro-drop">
                     <div class="custom-dnd5e-drop-area custom-dnd5e-macro-field flex1{{#unless macroName}} hidden{{/unless}}">
@@ -19,8 +38,8 @@
             </div>
             <div class="custom-dnd5e-sound-group{{#unless (customDnd5eEq type 'playSound')}} hidden{{/unless}}">
                 <div class="form-fields custom-dnd5e-sound-drop">
-                    <file-picker name="actions.{{actionId}}.soundPath" type="audio" value="{{soundPath}}"></file-picker>
-                    <input name="actions.{{actionId}}.soundVolume" type="number" min="0" max="1" step="0.1" value="{{soundVolume}}" style="max-width: 60px;">
+                    <file-picker name="actions.{{actionId}}.sound.path" type="audio" value="{{sound.path}}"></file-picker>
+                    <input name="actions.{{actionId}}.sound.volume" type="number" min="0" max="1" step="0.1" value="{{sound.volume}}" style="max-width: 60px;">
                 </div>
             </div>
             <div class="custom-dnd5e-condition-group{{#unless showCondition}} hidden{{/unless}}">
@@ -32,11 +51,14 @@
             </div>
             <div class="custom-dnd5e-roll-type-group{{#unless showRollType}} hidden{{/unless}}">
                 <div class="form-fields">
-                    <select name="actions.{{actionId}}.rollType" class="custom-dnd5e-roll-type-select">
-                        {{selectOptions rollTypeChoices selected=rollType}}
+                    <select name="actions.{{actionId}}.roll.type" class="custom-dnd5e-roll-type-select">
+                        {{selectOptions rollTypeChoices selected=roll.type}}
                     </select>
-                    <input name="actions.{{actionId}}.rollDc" type="number" min="1" value="{{rollDc}}" placeholder="DC" style="max-width: 60px;">
+                    <input name="actions.{{actionId}}.roll.dc" type="number" min="1" value="{{roll.dc}}" placeholder="DC" style="max-width: 60px;">
                 </div>
+                <button type="button" data-action="editResult" class="unbutton control-button always-interactive" data-tooltip="{{localize 'CUSTOM_DND5E.form.workflows.resultActions.tooltip'}}" aria-label="{{localize 'CUSTOM_DND5E.form.workflows.resultActions.tooltip'}}">
+                    <i class="fas fa-pen-to-square{{#if hasResultActions}} active{{/if}}" inert></i>
+                </button>
             </div>
             <div class="custom-dnd5e-table-group{{#unless (customDnd5eEq type 'rollTable')}} hidden{{/unless}}">
                 <div class="form-fields custom-dnd5e-table-drop">

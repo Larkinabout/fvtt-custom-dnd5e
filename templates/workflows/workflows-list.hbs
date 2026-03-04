@@ -2,8 +2,9 @@
 <li class="item custom-dnd5e-item" data-key="{{key}}">
     <div class="item-row">
         <i class="custom-dnd5e-drag fa-solid fa-grip-lines" draggable="true"></i>
+        <dnd5e-checkbox id="custom-dnd5e-enabled" name="{{key}}.enabled" data-tooltip="{{localize 'CUSTOM_DND5E.form.checkbox.enabled.tooltip'}}"{{#unless (customDnd5eBoolFalse enabled)}} checked{{/unless}}></dnd5e-checkbox>
         <div class="item-name">
-            <span class="title">{{localize label}}</span>
+            <span class="title">{{name}}</span>
         </div>
         <div class="item-controls always-visible">
             <button type="button" data-action="edit" class="unbutton control-button item-control always-interactive" data-tooltip="{{localize 'CUSTOM_DND5E.edit'}}" data-tooltip-direction="UP" aria-label="{{localize 'CUSTOM_DND5E.edit'}}">

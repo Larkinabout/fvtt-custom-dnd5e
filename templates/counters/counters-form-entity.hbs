@@ -1,20 +1,13 @@
 <div class="standard-form">
-    <div class="form-group">
-        <label class="flex1" style="min-width:80px; max-width:200px;">{{localize "CUSTOM_DND5E.form.workflows.enable"}}</label>
-        <div class="form-fields">
-            <dnd5e-checkbox id="custom-dnd5e-enabled" name="enabled"{{#if enabled}} checked{{/if}}></dnd5e-checkbox>
-        </div>
-    </div>
-    <hr>
     <div class="standard-form scrollable">
         <section>
             <div class="custom-dnd5e-items-sections">
                 <div class="items-section card">
                     <div class="items-header header">
-                        <h3 class="item-name">{{localize "CUSTOM_DND5E.form.workflows.listTitle"}}</h3>
+                        <h3 class="item-name">{{localize "CUSTOM_DND5E.form.counters.listTitle"}}</h3>
                     </div>
                     <ol class="item-list unlist custom-dnd5e-list">
-                        {{> "modules/custom-dnd5e/templates/workflows-list.hbs" triggers=triggers}}
+                        {{> "modules/custom-dnd5e/templates/counters/counters-list.hbs" actorType=actorType counters=counters}}
                     </ol>
                 </div>
                 <button type="button" data-action="new" class="gold-button always-interactive" aria-label="{{localize 'CUSTOM_DND5E.form.button.new.label'}}">

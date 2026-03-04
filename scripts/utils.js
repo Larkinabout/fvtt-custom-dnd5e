@@ -4,6 +4,794 @@ import { LIGHT_RAYS_VS, LIGHT_RAYS_FS } from "./shaders/light-rays.js";
 import { COLOR_SPLIT_FS } from "./shaders/color-split.js";
 import { WAVE_FS } from "./shaders/wave.js";
 
+/* -------------------------------------------- */
+/*  Logging                                     */
+/* -------------------------------------------- */
+
+/** Console logger. */
+export class Logger {
+  /**
+   * Log an info message.
+   * @param {string} message
+   * @param {boolean} [notify=false] Whether to show a UI notification
+   * @param {object} [options]
+   * @param {boolean} [options.prefix=true]
+   */
+  static info(message, notify = false, { prefix = true } = {}) {
+    const label = prefix ? `${MODULE.NAME} | ${message}` : message;
+    if ( notify ) ui.notifications.info(label);
+    else console.log(prefix ? `${MODULE.NAME} Info | ${message}` : message);
+  }
+
+  /**
+   * Log an error message.
+   * @param {string} message
+   * @param {boolean} [notify=false] Whether to show a UI notification
+   * @param {object} [options]
+   * @param {boolean} [options.prefix=true]
+   */
+  static error(message, notify = false, { prefix = true } = {}) {
+    const label = prefix ? `${MODULE.NAME} | ${message}` : message;
+    if ( notify ) ui.notifications.error(label);
+    else console.error(prefix ? `${MODULE.NAME} Error | ${message}` : message);
+  }
+
+  /**
+   * Log a debug message.
+   * @param {string} message
+   * @param {*} [data]
+   */
+  static debug(message, data) {
+    try {
+      if ( !game.settings?.get(MODULE.ID, CONSTANTS.DEBUG.SETTING.KEY) ) return;
+    } catch {
+      return;
+    }
+    if ( !data ) {
+      console.log(`${MODULE.NAME} Debug | ${message}`);
+      return;
+    }
+    const dataClone = foundry.utils.deepClone(data);
+    console.log(`${MODULE.NAME} Debug | ${message}`, dataClone);
+  }
+}
+
+/* -------------------------------------------- */
+/*  General Utilities                           */
+/* -------------------------------------------- */
+
+/**
+ * Check whether the variable is empty.
+ * @param {object} data
+ * @returns {boolean}
+ */
+export function checkEmpty(data) {
+  return (data && typeof data === "object" && !Object.keys(data).length) || (data !== false && !data);
+}
+
+/* -------------------------------------------- */
+
+/**
+ * Delete a property from an object using a dot-notated key.
+ * @param {object} object
+ * @param {string} key
+ * @returns {boolean}
+ */
+export function deleteProperty(object, key) {
+  const keys = key.split(".");
+  for (let i = 0; i < keys.length - 1; i++) {
+    object = object[keys[i]];
+    if ( !object ) return false;
+  }
+  delete object[keys[keys.length - 1]];
+  return true;
+}
+
+/* -------------------------------------------- */
+
+/**
+ * Convert string "true"/"false" values to booleans.
+ * @param {string|boolean} value
+ * @returns {boolean|string}
+ */
+export function parseBoolean(value) {
+  if ( value === "false" ) return false;
+  if ( value === "true" ) return true;
+  return value;
+}
+
+/* -------------------------------------------- */
+
+/**
+ * Compare a value against a target using the given operator.
+ * @param {number} value
+ * @param {string} operator "eq", "lt", "gt", "neq"
+ * @param {number} target
+ * @returns {boolean}
+ */
+export function compareValues(value, operator, target) {
+  const a = Number(value);
+  const b = Number(target);
+  if ( isNaN(a) || isNaN(b) ) return false;
+  switch (operator) {
+    case "lt": return a < b;
+    case "gt": return a > b;
+    case "neq": return a !== b;
+    case "eq":
+    default: return a === b;
+  }
+}
+
+/* -------------------------------------------- */
+
+/**
+ * Get the operator choices for trigger value comparisons.
+ * @returns {object}
+ */
+export function getOperatorChoices() {
+  return {
+    eq: "CUSTOM_DND5E.form.counters.triggers.triggerOperator.choices.eq",
+    lt: "CUSTOM_DND5E.form.counters.triggers.triggerOperator.choices.lt",
+    gt: "CUSTOM_DND5E.form.counters.triggers.triggerOperator.choices.gt",
+    neq: "CUSTOM_DND5E.form.counters.triggers.triggerOperator.choices.neq"
+  };
+}
+
+/* -------------------------------------------- */
+/*  Settings                                    */
+/* -------------------------------------------- */
+
+/**
+ * Register a menu.
+ * @param {string} key
+ * @param {object} options
+ */
+export function registerMenu(key, options) {
+  game.settings.registerMenu(MODULE.ID, key, options);
+}
+
+/* -------------------------------------------- */
+
+/**
+ * Register a setting.
+ * @param {string} key
+ * @param {object} options
+ */
+export function registerSetting(key, options) {
+  game.settings.register(MODULE.ID, key, options);
+}
+
+/* -------------------------------------------- */
+
+/**
+ * Get a setting value.
+ * @param {string} key
+ * @param {*} [defaultValue=null]
+ * @returns {*}
+ */
+export function getSetting(key, defaultValue = null) {
+  let value = defaultValue ?? null;
+  try {
+    value = game.settings.get(MODULE.ID, key);
+  } catch {
+    Logger.debug(`Setting '${key}' not found. Searching world settings storage...`);
+    const worldStorage = game.settings.storage.get("world").find(value => value.key === `${MODULE.ID}.${key}`);
+
+    if ( worldStorage !== undefined ) return worldStorage.value;
+
+    Logger.debug(`Setting '${key}' not found. Searching client settings storage...`);
+
+    const clientStorage = game.settings.storage.get("client")[`${MODULE.ID}.${key}`];
+
+    if ( clientStorage !== undefined ) return clientStorage;
+
+    Logger.debug(`Setting '${key}' not found`);
+  }
+  return value;
+}
+
+/* -------------------------------------------- */
+
+/**
+ * Get the default setting value.
+ * @param {string} key
+ * @returns {*}
+ */
+export function getDefaultSetting(key) {
+  try {
+    return game.settings.settings.get(`${MODULE.ID}.${key}`)?.default;
+  } catch {
+    Logger.debug(`Default setting '${key}' not found`);
+  }
+}
+
+/* -------------------------------------------- */
+
+/**
+ * Set a setting value.
+ * @param {string} key
+ * @param {*} value
+ */
+export async function setSetting(key, value) {
+  if ( game.settings.settings.has(`${MODULE.ID}.${key}`) ) {
+    await game.settings.set(MODULE.ID, key, value);
+    Logger.debug(`Setting '${key}' set to '${value}'`);
+  } else {
+    Logger.debug(`Setting '${key}' not found`);
+  }
+}
+
+/* -------------------------------------------- */
+
+/**
+ * Reset a setting to its default value.
+ * @param {string} key
+ */
+export async function resetSetting(key) {
+  const setting = game.settings.settings.get(`${MODULE.ID}.${key}`);
+  if ( setting ) {
+    const value = setting.default;
+    if ( value !== undefined ) {
+      await game.settings.set(MODULE.ID, key, value);
+      Logger.debug(`Setting '${key}' reset to '${value}'`);
+    } else {
+      Logger.debug(`Setting '${key}' default not defined`);
+    }
+  } else {
+    Logger.debug(`Setting '${key}' not found`);
+  }
+}
+
+/* -------------------------------------------- */
+
+/**
+ * Get a dnd5e setting value.
+ * @param {string} key
+ * @param {*} [defaultValue=null]
+ * @returns {*}
+ */
+export function getDnd5eSetting(key, defaultValue = null) {
+  try {
+    return game.settings.get("dnd5e", key);
+  } catch {
+    Logger.debug(`Setting '${key}' not found`);
+    return defaultValue;
+  }
+}
+
+/* -------------------------------------------- */
+
+/**
+ * Set a dnd5e setting value.
+ * @param {string} key
+ * @param {*} value
+ */
+export async function setDnd5eSetting(key, value) {
+  if ( game.settings.settings.has(`dnd5e.${key}`) ) {
+    await game.settings.set("dnd5e", key, value);
+    Logger.debug(`Setting '${key}' set to '${value}'`);
+  } else {
+    Logger.debug(`Setting '${key}' not found`);
+  }
+}
+
+/* -------------------------------------------- */
+/*  Flags                                       */
+/* -------------------------------------------- */
+
+/**
+ * Get a flag from an entity.
+ * @param {object} entity
+ * @param {string} key
+ * @returns {*}
+ */
+export function getFlag(entity, key) {
+  const flag = entity.getFlag(MODULE.ID, key);
+  return (flag || flag === 0) ? flag : null;
+}
+
+/* -------------------------------------------- */
+
+/**
+ * Set a flag on an entity.
+ * @param {object} entity
+ * @param {string} key
+ * @param {*} value
+ */
+export async function setFlag(entity, key, value) {
+  Logger.debug("Setting flag...", { entity, key, value });
+  await entity.setFlag(MODULE.ID, key, value);
+  Logger.debug("Flag set", { entity, key, value });
+}
+
+/* -------------------------------------------- */
+
+/**
+ * Unset a flag on an entity.
+ * @param {object} entity
+ * @param {string} key
+ */
+export async function unsetFlag(entity, key) {
+  Logger.debug("Unsetting flag...", { entity, key });
+  await entity.unsetFlag(MODULE.ID, key);
+  Logger.debug("Flag unset", { entity, key });
+}
+
+/* -------------------------------------------- */
+/*  Config                                      */
+/* -------------------------------------------- */
+
+/**
+ * Get default dnd5e config.
+ * @param {string} property
+ * @param {string|null} [key=null]
+ * @returns {object}
+ */
+export function getDefaultDnd5eConfig(property, key = null) {
+  if ( key ) {
+    return foundry.utils.deepClone(CONFIG.CUSTOM_DND5E[property][key]);
+  } else {
+    return foundry.utils.deepClone(CONFIG.CUSTOM_DND5E[property]);
+  }
+}
+
+/* -------------------------------------------- */
+
+/**
+ * Reset the dnd5e config to its default.
+ * @param {string} property
+ * @returns {object}
+ */
+export function resetDnd5eConfig(property) {
+  CONFIG.DND5E[property] = foundry.utils.deepClone(CONFIG.CUSTOM_DND5E[property]);
+  Logger.debug(`Config 'CONFIG.DND5E.${property}' reset to default`);
+  return CONFIG.DND5E[property];
+}
+
+/* -------------------------------------------- */
+/*  Documents & Templates                       */
+/* -------------------------------------------- */
+
+/**
+ * Open a document.
+ * @param {string} uuid
+ */
+export async function openDocument(uuid) {
+  const document = await fromUuid(uuid);
+  if ( document instanceof JournalEntryPage ) {
+    document.parent.sheet.render(true, {pageId: document.id, anchor: undefined});
+  } else {
+    document.sheet.render(true);
+  }
+}
+
+/* -------------------------------------------- */
+
+/**
+ * Add a help button to a window header that opens a journal page.
+ * @param {HTMLElement} element
+ * @param {string} uuid
+ */
+export async function addHelpButton(element, uuid) {
+  const windowHeader = element.querySelector(".window-header");
+  if ( !windowHeader || windowHeader.querySelector('[data-action="help"]') ) return;
+  const doc = await fromUuid(uuid);
+  const journal = doc instanceof JournalEntryPage ? doc.parent : doc;
+  if ( !journal?.testUserPermission(game.user, "OBSERVER") ) return;
+  const pack = journal.pack ? game.packs.get(journal.pack) : null;
+  if ( pack && !pack.testUserPermission(game.user, "OBSERVER") ) return;
+  const closeButton = windowHeader.querySelector('[data-action="close"]');
+  const button = document.createElement("button");
+  button.setAttribute("type", "button");
+  button.setAttribute("class", "header-control icon fa-solid fa-regular fa-circle-info");
+  button.setAttribute("data-tooltip", "CUSTOM_DND5E.openGuide");
+  button.setAttribute("aria-label", "CUSTOM_DND5E.openGuide");
+  button.setAttribute("data-action", "help");
+  button.addEventListener("click", () => openDocument(uuid));
+  windowHeader.insertBefore(button, closeButton);
+}
+
+/* -------------------------------------------- */
+
+/**
+ * Load templates.
+ * @param {Array} templates
+ */
+export async function c5eLoadTemplates(templates) {
+  Logger.debug("Loading templates", templates);
+  try {
+    const result = await foundry.applications.handlebars.loadTemplates(templates);
+    Logger.debug("Templates loaded", { templates, result });
+  } catch (error) {
+    Logger.debug("Failed to load templates", { templates, error });
+  }
+}
+
+/* -------------------------------------------- */
+
+/**
+ * Show an import file dialog.
+ * @param {string} templatePath
+ * @param {object} templateContext
+ * @param {Function} processCallback Receives a File, returns boolean
+ * @returns {Promise<boolean>}
+ */
+export async function showImportDialog(templatePath, templateContext, processCallback) {
+  const content = await foundry.applications.handlebars.renderTemplate(templatePath, templateContext);
+  return foundry.applications.api.DialogV2.confirm({
+    window: {
+      title: game.i18n.localize("CUSTOM_DND5E.importData")
+    },
+    content,
+    modal: true,
+    position: { width: 400 },
+    yes: {
+      icon: "fas fa-file-import",
+      label: game.i18n.localize("CUSTOM_DND5E.importData"),
+      callback: async (event, button, dialog) => {
+        const form = dialog.element.querySelector("form");
+        if ( !form.data.files.length ) {
+          Logger.error(game.i18n.localize("CUSTOM_DND5E.dialog.importData.noFile"), true);
+          return false;
+        }
+        return processCallback(form.data.files[0]);
+      }
+    },
+    no: {
+      icon: "fas fa-times",
+      label: game.i18n.localize("CUSTOM_DND5E.cancel")
+    }
+  });
+}
+
+/* -------------------------------------------- */
+
+/**
+ * Resolve a macro from a UUID and execute with the given args.
+ * If `actor` is provided and `token` is not, the token is resolved automatically.
+ * @param {string} uuid
+ * @param {object} [args={}]
+ */
+export async function executeMacro(uuid, args = {}) {
+  if ( !uuid ) return;
+  const macro = await fromUuid(uuid);
+  if ( !macro ) {
+    Logger.error(`Macro not found: ${uuid}`, true);
+    return;
+  }
+  if ( args.actor && !args.token ) {
+    args.token = args.actor.isToken ? args.actor.token : args.actor.getActiveTokens()[0];
+  }
+  macro.execute(args);
+}
+
+/* -------------------------------------------- */
+/*  Dice & Rolls                                */
+/* -------------------------------------------- */
+
+/**
+ * Get parts of a die string.
+ * @param {string} input
+ * @returns {object|null}
+ */
+export function getDieParts(input) {
+  const match = input?.match(/\b(\d+)[dD](\d+)\b/);
+  return match ? { number: parseInt(match[1], 10), faces: parseInt(match[2], 10) } : null;
+}
+
+/* -------------------------------------------- */
+
+/**
+ * Get the advantage mode based on the keyboard event.
+ * @param {KeyboardEvent} event
+ * @returns {string} "normal", "advantage", or "disadvantage"
+ */
+export function getAdvantageMode(event) {
+  if ( !event ) return "normal";
+  const keysPressed = getDnd5eKeysPressed(event);
+  if ( keysPressed.advantage && keysPressed.disadvantage ) return "normal";
+  if ( keysPressed.advantage ) return "advantage";
+  if ( keysPressed.disadvantage ) return "disadvantage";
+  return "normal";
+}
+
+/* -------------------------------------------- */
+
+/**
+ * Get the D&D 5e-specific keys pressed during the event.
+ * @param {KeyboardEvent} event
+ * @returns {object}
+ */
+export function getDnd5eKeysPressed(event) {
+  return {
+    normal: areKeysPressed(event, "skipDialogNormal"),
+    advantage: areKeysPressed(event, "skipDialogAdvantage"),
+    disadvantage: areKeysPressed(event, "skipDialogDisadvantage")
+  };
+}
+
+/* -------------------------------------------- */
+
+/**
+ * Check if specific keys are pressed during the event.
+ * @param {KeyboardEvent} event
+ * @param {string} action
+ * @returns {boolean}
+ */
+function areKeysPressed(event, action) {
+  if ( !event ) return false;
+  const activeModifiers = {};
+  const addModifiers = (key, pressed) => {
+    activeModifiers[key] = pressed;
+    foundry.helpers.interaction.KeyboardManager.MODIFIER_CODES[key].forEach(n => activeModifiers[n] = pressed);
+  };
+  addModifiers(foundry.helpers.interaction.KeyboardManager.MODIFIER_KEYS.CONTROL, event.ctrlKey || event.metaKey);
+  addModifiers(foundry.helpers.interaction.KeyboardManager.MODIFIER_KEYS.SHIFT, event.shiftKey);
+  addModifiers(foundry.helpers.interaction.KeyboardManager.MODIFIER_KEYS.ALT, event.altKey);
+  const isPressed = game.keybindings.get("dnd5e", action).some(b => {
+    if ( !(event.type === "keyup" && b.key === event.code) && game.keyboard.downKeys.has(b.key) && b.modifiers.every(m => activeModifiers[m]) ) return true;
+    if ( b.modifiers.length ) return false;
+    return activeModifiers[b.key];
+  });
+  const downKeys = [...game.keyboard.downKeys];
+  Logger.debug(`Getting key pressed for ${action}`, { event, downKeys, isPressed });
+  return isPressed;
+}
+
+/* -------------------------------------------- */
+
+/**
+ * Calculate attack bonus for an activity.
+ * @param {*} activity
+ * @returns {number}
+ */
+export function calculateAttackBonus(activity) {
+  const item = activity.item;
+  const attackModeOptions = item.system.attackModes;
+  const attackMode = attackModeOptions?.[0]?.value;
+  const attackConfig = activity.getAttackData({ attackMode });
+  return parseInt(dnd5e.dice.simplifyRollFormula(
+    Roll.defaultImplementation.replaceFormulaData(attackConfig.parts.join(" + "), attackConfig.data)
+  )) ?? 0;
+}
+
+/* -------------------------------------------- */
+
+/**
+ * Calculate the probability of hitting.
+ * @param {string} advantageMode "normal", "advantage", or "disadvantage"
+ * @param {number} attackBonus
+ * @param {number} [targetNumber=20]
+ * @returns {number} Probability between 0 and 1
+ */
+export function calculateHitProbability(advantageMode, attackBonus, targetNumber = 20) {
+  const rollNeeded = Math.max(1, targetNumber - attackBonus);
+  switch (advantageMode) {
+    case "advantage":
+      const failChance = (rollNeeded - 1) / 20;
+      return 1 - (failChance * failChance);
+    case "disadvantage":
+      const successChance = (21 - rollNeeded) / 20;
+      return successChance * successChance;
+    default:
+      return (21 - rollNeeded) / 20;
+  }
+}
+
+/* -------------------------------------------- */
+/*  Actors & Tokens                             */
+/* -------------------------------------------- */
+
+/**
+ * Get the IDs of non-GM users who own the given actor.
+ * Falls back to the current user's ID if no non-GM owner is found.
+ * @param {object} actor
+ * @returns {string[]}
+ */
+export function getActorOwnerIds(actor) {
+  const owners = game.users.filter(u => !u.isGM && actor.testUserPermission(u, "OWNER"));
+  return owners.length ? owners.map(u => u.id) : [game.user.id];
+}
+
+/* -------------------------------------------- */
+
+/**
+ * Make the actor bloodied.
+ * @param {object} actor
+ */
+export async function makeBloodied(actor) {
+  if ( !actor.effects.get("dnd5ebloodied000") && !actor.system.traits.ci.value.has("bloodied") ) {
+    Logger.debug("Making Bloodied...", actor);
+    const cls = getDocumentClass("ActiveEffect");
+    const effect = await cls.fromStatusEffect("bloodied");
+    effect.updateSource({ id: "dnd5ebloodied000", _id: "dnd5ebloodied000", "flags.custom-dnd5e.ignore": true });
+    await cls.create(effect, { parent: actor, keepId: true });
+    Logger.debug("Bloodied made", actor);
+  }
+}
+
+/* -------------------------------------------- */
+
+/**
+ * Remove bloodied from the actor.
+ * @param {object} actor
+ */
+export async function unmakeBloodied(actor) {
+  Logger.debug("Unmaking Bloodied...", actor);
+  const effect = actor.effects.get("dnd5ebloodied000");
+  await effect?.delete();
+  Logger.debug("Bloodied unmade", actor);
+}
+
+/* -------------------------------------------- */
+
+/**
+ * Make the actor unconscious.
+ * @param {object} actor
+ */
+export async function makeUnconscious(actor) {
+  if ( !actor.effects.get("dnd5eunconscious") && !actor.system.traits.ci.value.has("unconscious") ) {
+    Logger.debug("Making Unconscious...", actor);
+    const cls = getDocumentClass("ActiveEffect");
+    const effect = await cls.fromStatusEffect("unconscious");
+    effect.updateSource({ id: "dnd5eunconscious", _id: "dnd5eunconscious", "flags.core.overlay": true, "flags.custom-dnd5e.ignore": true });
+    await cls.create(effect, { parent: actor, keepId: true });
+    Logger.debug("Unconscious made", actor);
+  }
+}
+
+/* -------------------------------------------- */
+
+/**
+ * Remove unconscious from the actor.
+ * @param {object} actor
+ */
+export async function unmakeUnconscious(actor) {
+  Logger.debug("Unmaking Unconscious...", actor);
+  const effect = actor.effects.get("dnd5eunconscious");
+  await effect?.delete();
+  Logger.debug("Unconscious unmade", actor);
+}
+
+/* -------------------------------------------- */
+
+/**
+ * Make the actor dead.
+ * Set HP to 0, Death Saves failures to 3, and apply 'Dead' status effect.
+ * @param {object} actor
+ * @param {object} [data=null]
+ */
+export async function makeDead(actor, data = null) {
+  Logger.debug("Making Dead...", actor);
+  const applyNegativeHp = getSetting(CONSTANTS.HIT_POINTS.SETTING.APPLY_NEGATIVE_HP.KEY);
+  if ( data ) {
+    if ( !applyNegativeHp ) {
+      if ( data["system.attributes.hp.value"] !== undefined ) {
+        data["system.attributes.hp.value"] = 0;
+      } else {
+        foundry.utils.setProperty(data, "system.attributes.hp.value", 0);
+      }
+    }
+    data["system.attributes.death.failure"] = 3;
+  } else {
+    actor.update({
+      ...(!applyNegativeHp && { "system.attributes.hp.value": 0 }),
+      ...(actor.type === "character" && { "system.attributes.death.failure": 3 })
+    });
+  }
+
+  if ( actor.effects.get("dnd5edead0000000") ) return;
+
+  const cls = getDocumentClass("ActiveEffect");
+  const effect = await cls.fromStatusEffect("dead");
+  effect.updateSource({ "flags.core.overlay": true, "flags.custom-dnd5e.ignore": true });
+  await cls.create(effect, { parent: actor, keepId: true });
+
+  Logger.debug("Dead made", actor);
+}
+
+/* -------------------------------------------- */
+
+/**
+ * Remove dead from the actor.
+ * @param {object} actor
+ */
+export async function unmakeDead(actor) {
+  Logger.debug("Unmaking Dead...", actor);
+  const effect = actor.effects.get("dnd5edead0000000");
+  await effect?.delete();
+  Logger.debug("Dead unmade", actor);
+}
+
+/* -------------------------------------------- */
+
+/**
+ * Rotate a token.
+ * @param {object} token
+ * @param {number} rotation
+ */
+export async function rotateToken(token, rotation) {
+  if ( token.document.rotation === rotation ) return;
+
+  Logger.debug("Rotating token", { token, rotation });
+
+  const flag = getFlag(token.document, "rotation");
+  if ( !flag && flag !== 0 ) {
+    await setFlag(token.document, "rotation", token.document.rotation);
+  }
+
+  token.document.update({ rotation });
+
+  Logger.debug("Token rotated", { token, rotation });
+}
+
+/* -------------------------------------------- */
+
+/**
+ * Unrotate a token.
+ * @param {object} token
+ */
+export async function unrotateToken(token) {
+  const rotation = getFlag(token.document, "rotation");
+
+  if ( token.document.rotation === rotation ) return;
+
+  Logger.debug("Unrotating token", { token, rotation });
+
+  if ( rotation || rotation === 0 ) {
+    token.document.update({ rotation });
+    await unsetFlag(token.document, "rotation");
+  }
+
+  Logger.debug("Token unrotated", { token, rotation });
+}
+
+/* -------------------------------------------- */
+
+/**
+ * Tint a token.
+ * @param {object} token
+ * @param {string} tint The hex color
+ */
+export async function tintToken(token, tint) {
+  if ( token?.document?.texture?.tint === tint ) return;
+
+  Logger.debug("Tinting token", { token, tint });
+
+  if ( !getFlag(token.document, "tint") ) {
+    await setFlag(token.document, "tint", token.document.texture.tint);
+  }
+
+  token.document.update({ texture: { tint } });
+
+  Logger.debug("Token tinted", { token, tint });
+}
+
+/* -------------------------------------------- */
+
+/**
+ * Untint a token.
+ * @param {object} token
+ */
+export async function untintToken(token) {
+  const tint = getFlag(token.document, "tint");
+
+  if ( token?.document?.texture?.tint === tint ) return;
+
+  Logger.debug("Untinting token", { token, tint });
+
+  if ( tint || tint === null ) {
+    token.document.update({ texture: { tint } });
+    await unsetFlag(token.document, "tint");
+  }
+
+  Logger.debug("Token untinted", { token, tint });
+}
+
+/* -------------------------------------------- */
+/*  UI                                          */
+/* -------------------------------------------- */
+
 /**
  * Hide all open application windows overlaying the canvas.
  * @param {object} [options]
@@ -38,716 +826,57 @@ export async function hideApplications({ duration = 200 } = {}) {
 }
 
 /* -------------------------------------------- */
+/*  Animations                                  */
+/* -------------------------------------------- */
 
 /**
- * Animation functions.
+ * Check whether a socket is needed to reach the given user IDs.
+ * @param {string[]} userIds
+ * @returns {boolean}
  */
+function requiresSocket(userIds) {
+  return userIds.some(id => id !== game.user.id);
+}
+
+/**
+ * Parse hex color string to RGB floats array.
+ * @param {string} hex
+ * @returns {number[]}
+ */
+function parseHexColor(hex) {
+  return [
+    parseInt(hex.slice(1, 3), 16) / 255,
+    parseInt(hex.slice(3, 5), 16) / 255,
+    parseInt(hex.slice(5, 7), 16) / 255
+  ];
+}
+
+/**
+ * Compile a WebGL shader from source.
+ * @param {WebGLRenderingContext} gl
+ * @param {number} type
+ * @param {string} source
+ * @returns {WebGLShader}
+ */
+function compileShader(gl, type, source) {
+  const shader = gl.createShader(type);
+  gl.shaderSource(shader, source);
+  gl.compileShader(shader);
+  return shader;
+}
+
+/* -------------------------------------------- */
+
+/** Animation functions. */
 export const animations = {};
-
-/**
- * Console logger
- */
-export class Logger {
-  /**
-   * Log an info message.
-   * @param {string} message The message
-   * @param {boolean} [notify=false] Whether to notify the user
-   * @param {object} [options]
-   * @param {boolean} [options.prefix=true] Whether to include the module name prefix
-   */
-  static info(message, notify = false, { prefix = true } = {}) {
-    const label = prefix ? `${MODULE.NAME} | ${message}` : message;
-    if ( notify ) ui.notifications.info(label);
-    else console.log(prefix ? `${MODULE.NAME} Info | ${message}` : message);
-  }
-
-  /**
-   * Log an error message.
-   * @param {string} message The message
-   * @param {boolean} [notify=false] Whether to notify the user
-   * @param {object} [options]
-   * @param {boolean} [options.prefix=true] Whether to include the module name prefix
-   */
-  static error(message, notify = false, { prefix = true } = {}) {
-    const label = prefix ? `${MODULE.NAME} | ${message}` : message;
-    if ( notify ) ui.notifications.error(label);
-    else console.error(prefix ? `${MODULE.NAME} Error | ${message}` : message);
-  }
-
-  /**
-   * Log a debug message.
-   * @param {string} message The message
-   * @param {*} data The data
-   */
-  static debug(message, data) {
-    try {
-      if ( !game.settings?.get(MODULE.ID, CONSTANTS.DEBUG.SETTING.KEY) ) return;
-    } catch {
-      return;
-    }
-    if ( !data ) {
-      console.log(`${MODULE.NAME} Debug | ${message}`);
-      return;
-    }
-    const dataClone = foundry.utils.deepClone(data);
-    console.log(`${MODULE.NAME} Debug | ${message}`, dataClone);
-  }
-}
-
-/* -------------------------------------------- */
-
-/**
- * Check whether the variable is empty.
- * @param {object} data The data
- * @returns {boolean} Whether the data is empty
- */
-export function checkEmpty(data) {
-  return (data && typeof data === "object" && !Object.keys(data).length) || (data !== false && !data);
-}
-
-/* -------------------------------------------- */
-
-/**
- * Delete a property from an object using a dot notated key.
- * @param {object} object The object to update
- * @param {string} key The string key
- * @returns {boolean} Whether the property was deleted
- */
-export function deleteProperty(object, key) {
-  const keys = key.split(".");
-  for (let i = 0; i < keys.length - 1; i++) {
-    object = object[keys[i]];
-    if ( !object ) return false;
-  }
-  delete object[keys[keys.length - 1]];
-  return true;
-}
-
-/* -------------------------------------------- */
-
-/**
- * Open a document.
- * @param {string} uuid The UUID
- */
-export async function openDocument(uuid) {
-  const document = await fromUuid(uuid);
-  if ( document instanceof JournalEntryPage ) {
-    document.parent.sheet.render(true, {pageId: document.id, anchor: undefined});
-  } else {
-    document.sheet.render(true);
-  }
-}
-
-/* -------------------------------------------- */
-
-/**
- * Add a help button to a window header that opens a journal page.
- * @param {HTMLElement} element The application element
- * @param {string} uuid The journal page UUID
- */
-export async function addHelpButton(element, uuid) {
-  const windowHeader = element.querySelector(".window-header");
-  if ( !windowHeader || windowHeader.querySelector('[data-action="help"]') ) return;
-  const doc = await fromUuid(uuid);
-  const journal = doc instanceof JournalEntryPage ? doc.parent : doc;
-  if ( !journal?.testUserPermission(game.user, "OBSERVER") ) return;
-  const pack = journal.pack ? game.packs.get(journal.pack) : null;
-  if ( pack && !pack.testUserPermission(game.user, "OBSERVER") ) return;
-  const closeButton = windowHeader.querySelector('[data-action="close"]');
-  const button = document.createElement("button");
-  button.setAttribute("type", "button");
-  button.setAttribute("class", "header-control icon fa-solid fa-regular fa-circle-info");
-  button.setAttribute("data-tooltip", "CUSTOM_DND5E.openGuide");
-  button.setAttribute("aria-label", "CUSTOM_DND5E.openGuide");
-  button.setAttribute("data-action", "help");
-  button.addEventListener("click", () => openDocument(uuid));
-  windowHeader.insertBefore(button, closeButton);
-}
-
-/* -------------------------------------------- */
-
-/**
- * Get default dnd5e config.
- * @param {string} property The property
- * @param {string|null} key The key
- * @returns {object} The config
- */
-export function getDefaultDnd5eConfig(property, key = null) {
-  if ( key ) {
-    return foundry.utils.deepClone(CONFIG.CUSTOM_DND5E[property][key]);
-  } else {
-    return foundry.utils.deepClone(CONFIG.CUSTOM_DND5E[property]);
-  }
-}
-
-/* -------------------------------------------- */
-
-/**
- * Reset the dnd5e config to its default.
- * @param {string} property The property
- * @returns {object} The reset config
- */
-export function resetDnd5eConfig(property) {
-  CONFIG.DND5E[property] = foundry.utils.deepClone(CONFIG.CUSTOM_DND5E[property]);
-  Logger.debug(`Config 'CONFIG.DND5E.${property}' reset to default`);
-  return CONFIG.DND5E[property];
-}
-
-/* -------------------------------------------- */
-
-/**
- * Register a menu.
- * @param {string} key The setting key
- * @param {object} options The setting options
- */
-export function registerMenu(key, options) {
-  game.settings.registerMenu(MODULE.ID, key, options);
-}
-
-/* -------------------------------------------- */
-
-/**
- * Register a setting.
- * @param {string} key The setting key
- * @param {object} options The setting options
- */
-export function registerSetting(key, options) {
-  game.settings.register(MODULE.ID, key, options);
-}
-
-/* -------------------------------------------- */
-
-/**
- * Get parts of a die.
- * @param {string} input The die input
- * @returns {object|null} The die parts
- */
-export function getDieParts(input) {
-  const match = input?.match(/\b(\d+)[dD](\d+)\b/);
-  return match ? { number: parseInt(match[1], 10), faces: parseInt(match[2], 10) } : null;
-}
-
-/* -------------------------------------------- */
-
-/**
- * Convert string "true"/"false" values to booleans.
- * @param {string|boolean} value The input value.
- * @returns {boolean|string} The converted value.
- */
-export function parseBoolean(value) {
-  if ( value === "false" ) return false;
-  if ( value === "true" ) return true;
-  return value;
-}
-
-/* -------------------------------------------- */
-
-/**
- * Get a flag from an entity.
- * @param {object} entity The entity
- * @param {string} key The flag key
- * @returns {*} The flag value
- */
-export function getFlag(entity, key) {
-  const flag = entity.getFlag(MODULE.ID, key);
-  return (flag || flag === 0) ? flag : null;
-}
-
-/* -------------------------------------------- */
-
-/**
- * Set a flag on an entity.
- * @param {object} entity The entity
- * @param {string} key The flag key
- * @param {*} value The flag value
- */
-export async function setFlag(entity, key, value) {
-  Logger.debug("Setting flag...", { entity, key, value });
-  await entity.setFlag(MODULE.ID, key, value);
-  Logger.debug("Flag set", { entity, key, value });
-}
-
-/* -------------------------------------------- */
-
-/**
- * Unset a flag on an entity.
- * @param {object} entity The entity
- * @param {string} key The flag key
- */
-export async function unsetFlag(entity, key) {
-  Logger.debug("Unsetting flag...", { entity, key });
-  await entity.unsetFlag(MODULE.ID, key);
-  Logger.debug("Flag unset", { entity, key });
-}
-
-/* -------------------------------------------- */
-
-/**
- * Get a setting value.
- * @param {string} key The setting key
- * @param {*} [defaultValue=null] The default value
- * @returns {*} The setting value
- */
-export function getSetting(key, defaultValue = null) {
-  let value = defaultValue ?? null;
-  try {
-    value = game.settings.get(MODULE.ID, key);
-  } catch {
-    Logger.debug(`Setting '${key}' not found. Searching world settings storage...`);
-    const worldStorage = game.settings.storage.get("world").find(value => value.key === `${MODULE.ID}.${key}`);
-
-    if ( worldStorage !== undefined ) return worldStorage.value;
-
-    Logger.debug(`Setting '${key}' not found. Searching client settings storage...`);
-
-    const clientStorage = game.settings.storage.get("client")[`${MODULE.ID}.${key}`];
-
-    if ( clientStorage !== undefined ) return clientStorage;
-
-    Logger.debug(`Setting '${key}' not found`);
-  }
-  return value;
-}
-
-/* -------------------------------------------- */
-
-/**
- * Get the default setting value.
- * @param {string} key The setting key
- * @returns {*} The default setting value
- */
-export function getDefaultSetting(key) {
-  try {
-    return game.settings.settings.get(`${MODULE.ID}.${key}`)?.default;
-  } catch {
-    Logger.debug(`Default setting '${key}' not found`);
-  }
-}
-
-/* -------------------------------------------- */
-
-/**
- * Get a dnd5e setting value.
- * @param {string} key The setting key
- * @param {*} [defaultValue=null] The default value
- * @returns {*} The setting value
- */
-export function getDnd5eSetting(key, defaultValue = null) {
-  try {
-    return game.settings.get("dnd5e", key);
-  } catch {
-    Logger.debug(`Setting '${key}' not found`);
-    return defaultValue;
-  }
-}
-
-/* -------------------------------------------- */
-
-/**
- * Set a setting value.
- * @param {string} key The setting key
- * @param {*} value The setting value
- */
-export async function setSetting(key, value) {
-  if ( game.settings.settings.has(`${MODULE.ID}.${key}`) ) {
-    await game.settings.set(MODULE.ID, key, value);
-    Logger.debug(`Setting '${key}' set to '${value}'`);
-  } else {
-    Logger.debug(`Setting '${key}' not found`);
-  }
-}
-
-/* -------------------------------------------- */
-
-/**
- * Reset a setting to its default value.
- * @param {string} key The setting key
- */
-export async function resetSetting(key) {
-  const setting = game.settings.settings.get(`${MODULE.ID}.${key}`);
-  if ( setting ) {
-    const value = setting.default;
-    if ( value !== undefined ) {
-      await game.settings.set(MODULE.ID, key, value);
-      Logger.debug(`Setting '${key}' reset to '${value}'`);
-    } else {
-      Logger.debug(`Setting '${key}' default not defined`);
-    }
-  } else {
-    Logger.debug(`Setting '${key}' not found`);
-  }
-}
-
-/* -------------------------------------------- */
-
-/**
- * Set a dnd5e setting value.
- * @param {string} key The setting key
- * @param {*} value The setting value
- */
-export async function setDnd5eSetting(key, value) {
-  if ( game.settings.settings.has(`dnd5e.${key}`) ) {
-    await game.settings.set("dnd5e", key, value);
-    Logger.debug(`Setting '${key}' set to '${value}'`);
-  } else {
-    Logger.debug(`Setting '${key}' not found`);
-  }
-}
-
-/* -------------------------------------------- */
-
-/**
- * Make the actor bloodied.
- * @param {object} actor The actor
- */
-export async function makeBloodied(actor) {
-  if ( !actor.effects.get("dnd5ebloodied000") && !actor.system.traits.ci.value.has("bloodied") ) {
-    Logger.debug("Making Bloodied...", actor);
-    const cls = getDocumentClass("ActiveEffect");
-    const effect = await cls.fromStatusEffect("bloodied");
-    effect.updateSource({ id: "dnd5ebloodied000", _id: "dnd5ebloodied000", "flags.custom-dnd5e.ignore": true });
-    await cls.create(effect, { parent: actor, keepId: true });
-    Logger.debug("Bloodied made", actor);
-  }
-}
-
-/* -------------------------------------------- */
-
-/**
- * Unmake the actor bloodied.
- * @param {object} actor The actor
- */
-export async function unmakeBloodied(actor) {
-  Logger.debug("Unmaking Bloodied...", actor);
-  const effect = actor.effects.get("dnd5ebloodied000");
-  await effect?.delete();
-  Logger.debug("Bloodied unmade", actor);
-}
-
-/* -------------------------------------------- */
-
-/**
- * Make the actor unconscious.
- * @param {object} actor The actor
- */
-export async function makeUnconscious(actor) {
-  if ( !actor.effects.get("dnd5eunconscious") && !actor.system.traits.ci.value.has("unconscious") ) {
-    Logger.debug("Making Unconscious...", actor);
-    const cls = getDocumentClass("ActiveEffect");
-    const effect = await cls.fromStatusEffect("unconscious");
-    effect.updateSource({ id: "dnd5eunconscious", _id: "dnd5eunconscious", "flags.core.overlay": true, "flags.custom-dnd5e.ignore": true });
-    await cls.create(effect, { parent: actor, keepId: true });
-    Logger.debug("Unconscious made", actor);
-  }
-}
-
-/* -------------------------------------------- */
-
-/**
- * Unmake the actor unconscious.
- * @param {object} actor The actor
- */
-export async function unmakeUnconscious(actor) {
-  Logger.debug("Unmaking Unconscious...", actor);
-  const effect = actor.effects.get("dnd5eunconscious");
-  await effect?.delete();
-  Logger.debug("Unconscious unmade", actor);
-}
-
-/* -------------------------------------------- */
-
-/**
- * Rotate a token.
- * @param {object} token The token
- * @param {number} rotation The angle of rotation
- */
-export async function rotateToken(token, rotation) {
-  if ( token.document.rotation === rotation ) return;
-
-  Logger.debug("Rotating token", { token, rotation });
-
-  const flag = getFlag(token.document, "rotation");
-  if ( !flag && flag !== 0 ) {
-    await setFlag(token.document, "rotation", token.document.rotation);
-  }
-
-  token.document.update({ rotation });
-
-  Logger.debug("Token rotated", { token, rotation });
-}
-
-/* -------------------------------------------- */
-
-/**
- * Unrotate a token.
- * @param {object} token The token
- */
-export async function unrotateToken(token) {
-  const rotation = getFlag(token.document, "rotation");
-
-  if ( token.document.rotation === rotation ) return;
-
-  Logger.debug("Unrotating token", { token, rotation });
-
-  if ( rotation || rotation === 0 ) {
-    token.document.update({ rotation });
-    await unsetFlag(token.document, "rotation");
-  }
-
-  Logger.debug("Token unrotated", { token, rotation });
-}
-
-/* -------------------------------------------- */
-
-/**
- * Tint a token.
- * @param {object} token The token
- * @param {string} tint The hex color
- */
-export async function tintToken(token, tint) {
-  if ( token?.document?.texture?.tint === tint ) return;
-
-  Logger.debug("Tinting token", { token, tint });
-
-  if ( !getFlag(token.document, "tint") ) {
-    await setFlag(token.document, "tint", token.document.texture.tint);
-  }
-
-  token.document.update({ texture: { tint } });
-
-  Logger.debug("Token tinted", { token, tint });
-}
-
-/* -------------------------------------------- */
-
-/**
- * Untint a token.
- * @param {object} token The token
- */
-export async function untintToken(token) {
-  const tint = getFlag(token.document, "tint");
-
-  if ( token?.document?.texture?.tint === tint ) return;
-
-  Logger.debug("Untinting token", { token, tint });
-
-  if ( tint || tint === null ) {
-    token.document.update({ texture: { tint } });
-    await unsetFlag(token.document, "tint");
-  }
-
-  Logger.debug("Token untinted", { token, tint });
-}
-
-/* -------------------------------------------- */
-
-/**
- * Make the actor dead.
- * Set HP to 0, set Death Saves failures to 3, and apply 'Dead' status effect.
- * @param {object} actor The actor
- * @param {object} [data=null] The data
- */
-export async function makeDead(actor, data = null) {
-  Logger.debug("Making Dead...", actor);
-  const applyNegativeHp = getSetting(CONSTANTS.HIT_POINTS.SETTING.APPLY_NEGATIVE_HP.KEY);
-  if ( data ) {
-    if ( !applyNegativeHp ) {
-      if ( data["system.attributes.hp.value"] !== undefined ) {
-        data["system.attributes.hp.value"] = 0;
-      } else {
-        foundry.utils.setProperty(data, "system.attributes.hp.value", 0);
-      }
-    }
-    data["system.attributes.death.failure"] = 3;
-  } else {
-    actor.update({
-      ...(!applyNegativeHp && { "system.attributes.hp.value": 0 }),
-      ...(actor.type === "character" && { "system.attributes.death.failure": 3 })
-    });
-  }
-
-  if ( actor.effects.get("dnd5edead0000000") ) return;
-
-  const cls = getDocumentClass("ActiveEffect");
-  const effect = await cls.fromStatusEffect("dead");
-  effect.updateSource({ "flags.core.overlay": true, "flags.custom-dnd5e.ignore": true });
-  await cls.create(effect, { parent: actor, keepId: true });
-
-  Logger.debug("Dead made", actor);
-}
-
-/* -------------------------------------------- */
-
-/**
- * Unmake the actor dead.
- * @param {object} actor The actor
- */
-export async function unmakeDead(actor) {
-  Logger.debug("Unmaking Dead...", actor);
-  const effect = actor.effects.get("dnd5edead0000000");
-  await effect?.delete();
-  Logger.debug("Dead unmade", actor);
-}
-
-/* -------------------------------------------- */
-
-/**
- * Load templates.
- * @param {Array} templates The templates
- */
-export async function c5eLoadTemplates(templates) {
-  Logger.debug("Loading templates", templates);
-  try {
-    const result = await foundry.applications.handlebars.loadTemplates(templates);
-    Logger.debug("Templates loaded", { templates, result });
-  } catch (error) {
-    Logger.debug("Failed to load templates", { templates, error });
-  }
-}
-
-/* -------------------------------------------- */
-
-/**
- * Show an import file dialog.
- * @param {string} templatePath The path to the Handlebars template for the dialog content
- * @param {object} templateContext The context to pass to the template
- * @param {Function} processCallback The callback to process the selected file, receives a File and returns a boolean
- * @returns {Promise<boolean>} Whether the import was successful
- */
-export async function showImportDialog(templatePath, templateContext, processCallback) {
-  const content = await foundry.applications.handlebars.renderTemplate(templatePath, templateContext);
-  return foundry.applications.api.DialogV2.confirm({
-    window: {
-      title: game.i18n.localize("CUSTOM_DND5E.importData")
-    },
-    content,
-    modal: true,
-    position: { width: 400 },
-    yes: {
-      icon: "fas fa-file-import",
-      label: game.i18n.localize("CUSTOM_DND5E.importData"),
-      callback: async (event, button, dialog) => {
-        const form = dialog.element.querySelector("form");
-        if ( !form.data.files.length ) {
-          Logger.error(game.i18n.localize("CUSTOM_DND5E.dialog.importData.noFile"), true);
-          return false;
-        }
-        return processCallback(form.data.files[0]);
-      }
-    },
-    no: {
-      icon: "fas fa-times",
-      label: game.i18n.localize("CUSTOM_DND5E.cancel")
-    }
-  });
-}
-
-/* -------------------------------------------- */
-
-/**
- * Get the advantage mode based on the keyboard event.
- * @param {KeyboardEvent} event The keyboard event.
- * @returns {string} The advantage mode ("normal", "advantage", or "disadvantage").
- */
-export function getAdvantageMode(event) {
-  if ( !event ) return "normal";
-  const keysPressed = getDnd5eKeysPressed(event);
-  if ( keysPressed.advantage && keysPressed.disadvantage ) return "normal";
-  if ( keysPressed.advantage ) return "advantage";
-  if ( keysPressed.disadvantage ) return "disadvantage";
-  return "normal";
-}
-
-/* -------------------------------------------- */
-
-/**
- * Get the keys pressed during the event related to D&D 5e-specific actions.
- * @param {KeyboardEvent} event The keyboard event.
- * @returns {object} Keys pressed during the event.
- */
-export function getDnd5eKeysPressed(event) {
-  return {
-    normal: areKeysPressed(event, "skipDialogNormal"),
-    advantage: areKeysPressed(event, "skipDialogAdvantage"),
-    disadvantage: areKeysPressed(event, "skipDialogDisadvantage")
-  };
-}
-
-/* -------------------------------------------- */
-
-/**
- * Check if specific keys are pressed during the event.
- * @param {KeyboardEvent} event The keyboard event.
- * @param {string} action The action to check.
- * @returns {boolean} Whether the keys are pressed.
- */
-function areKeysPressed(event, action) {
-  if ( !event ) return false;
-  const activeModifiers = {};
-  const addModifiers = (key, pressed) => {
-    activeModifiers[key] = pressed;
-    foundry.helpers.interaction.KeyboardManager.MODIFIER_CODES[key].forEach(n => activeModifiers[n] = pressed);
-  };
-  addModifiers(foundry.helpers.interaction.KeyboardManager.MODIFIER_KEYS.CONTROL, event.ctrlKey || event.metaKey);
-  addModifiers(foundry.helpers.interaction.KeyboardManager.MODIFIER_KEYS.SHIFT, event.shiftKey);
-  addModifiers(foundry.helpers.interaction.KeyboardManager.MODIFIER_KEYS.ALT, event.altKey);
-  const isPressed = game.keybindings.get("dnd5e", action).some(b => {
-    if ( !(event.type === "keyup" && b.key === event.code) && game.keyboard.downKeys.has(b.key) && b.modifiers.every(m => activeModifiers[m]) ) return true;
-    if ( b.modifiers.length ) return false;
-    return activeModifiers[b.key];
-  });
-  const downKeys = [...game.keyboard.downKeys];
-  Logger.debug(`Getting key pressed for ${action}`, { event, downKeys, isPressed });
-  return isPressed;
-}
-
-/* -------------------------------------------- */
-
-/**
- * Calculate attack bonus
- * @param {*} activity The activity being used.
- * @returns {number} The attack bonus.
- */
-export function calculateAttackBonus(activity) {
-  const item = activity.item;
-  const attackModeOptions = item.system.attackModes;
-  const attackMode = attackModeOptions?.[0]?.value;
-  const attackConfig = activity.getAttackData({ attackMode });
-  return parseInt(dnd5e.dice.simplifyRollFormula(
-    Roll.defaultImplementation.replaceFormulaData(attackConfig.parts.join(" + "), attackConfig.data)
-  )) ?? 0;
-}
-
-/* -------------------------------------------- */
-
-/**
- * Calculates the probability of hitting.
- * @param {string} advantageMode The advantage mode ("normal", "advantage", or "disadvantage").
- * @param {number} attackBonus The bonus to the attack roll.
- * @param {number} targetNumber The target number to hit.
- * @returns {number} The probability of hitting (between 0 and 1).
- */
-export function calculateHitProbability(advantageMode, attackBonus, targetNumber = 20) {
-  const rollNeeded = Math.max(1, targetNumber - attackBonus);
-  switch (advantageMode) {
-    case "advantage":
-      const failChance = (rollNeeded - 1) / 20;
-      return 1 - (failChance * failChance);
-    case "disadvantage":
-      const successChance = (21 - rollNeeded) / 20;
-      return successChance * successChance;
-    default:
-      return (21 - rollNeeded) / 20;
-  }
-}
 
 /* -------------------------------------------- */
 
 /**
  * Shake the canvas with decaying intensity.
- * @param {object} [options] The options.
- * @param {number} [options.intensity=25] The shake intensity in screen pixels.
- * @param {number} [options.duration=500] The shake duration in milliseconds.
+ * @param {object} [options]
+ * @param {number} [options.intensity=25]
+ * @param {number} [options.duration=500]
  */
 animations.shakeCanvas = async function({ intensity = 25, duration = 500 } = {}) {
   if ( !canvas?.stage ) return;
@@ -774,10 +903,10 @@ animations.shakeCanvas = async function({ intensity = 25, duration = 500 } = {})
 /**
  * Flash the canvas with a color overlay.
  * Skipped when photosensitive mode is enabled.
- * @param {object} [options] The options.
- * @param {number} [options.color=0xFF0000] The flash color as a hex number.
- * @param {number} [options.opacity=0.4] The peak opacity (0-1).
- * @param {number} [options.duration=500] The total flash duration in milliseconds.
+ * @param {object} [options]
+ * @param {number} [options.color=0xFF0000]
+ * @param {number} [options.opacity=0.4]
+ * @param {number} [options.duration=500]
  */
 animations.flashCanvas = async function({ color = 0xFF0000, opacity = 0.4, duration = 500 } = {}) {
   if ( !canvas?.interface ) return;
@@ -814,36 +943,11 @@ animations.flashCanvas = async function({ color = 0xFF0000, opacity = 0.4, durat
 /* -------------------------------------------- */
 
 /**
- * Get the IDs of non-GM users who own the given actor.
- * Falls back to the current user's ID if no non-GM owner is found.
- * @param {object} actor The actor
- * @returns {string[]} The user IDs
- */
-export function getActorOwnerIds(actor) {
-  const owners = game.users.filter(u => !u.isGM && actor.testUserPermission(u, "OWNER"));
-  return owners.length ? owners.map(u => u.id) : [game.user.id];
-}
-
-/* -------------------------------------------- */
-
-/**
- * Check whether a socket is needed to reach the given user IDs.
- * Returns true if any of the user IDs belong to a different client.
- * @param {string[]} userIds The target user IDs
- * @returns {boolean} Whether a socket emission is needed
- */
-function requiresSocket(userIds) {
-  return userIds.some(id => id !== game.user.id);
-}
-
-/* -------------------------------------------- */
-
-/**
  * Shake the entire screen with decaying intensity.
- * @param {object} [options] The options.
- * @param {number} [options.intensity=5] The shake intensity in pixels.
- * @param {number} [options.duration=500] The shake duration in milliseconds.
- * @param {string[]} [options.userIds] If provided, only play for these users.
+ * @param {object} [options]
+ * @param {number} [options.intensity=5]
+ * @param {number} [options.duration=500]
+ * @param {string[]} [options.userIds] Only play for these users
  */
 animations.shakeScreen = async function({ intensity = 5, duration = 500, userIds } = {}) {
   if ( userIds && requiresSocket(userIds) ) {
@@ -856,8 +960,8 @@ animations.shakeScreen = async function({ intensity = 5, duration = 500, userIds
 
   return new Promise(resolve => {
     /**
-     * Handle a single animation frame for the shake effect.
-     * @param {number} currentTime The current time in milliseconds supplied by requestAnimationFrame.
+     * Animation frame handler.
+     * @param {number} currentTime
      */
     function animate(currentTime) {
       const elapsed = currentTime - startTime;
@@ -886,11 +990,11 @@ animations.shakeScreen = async function({ intensity = 5, duration = 500, userIds
 /**
  * Flash the entire screen with a color overlay.
  * Skipped when photosensitive mode is enabled.
- * @param {object} [options] The options.
- * @param {string} [options.color="#ff0000"] The flash color as a CSS color string.
- * @param {number} [options.opacity=0.4] The peak opacity (0-1).
- * @param {number} [options.duration=500] The total flash duration in milliseconds.
- * @param {string[]} [options.userIds] If provided, only play for these users.
+ * @param {object} [options]
+ * @param {string} [options.color="#ff0000"]
+ * @param {number} [options.opacity=0.4]
+ * @param {number} [options.duration=500]
+ * @param {string[]} [options.userIds] Only play for these users
  */
 animations.flashScreen = async function({ color = "#ff0000", opacity = 0.4, duration = 500, userIds } = {}) {
   if ( userIds && requiresSocket(userIds) ) {
@@ -929,10 +1033,10 @@ animations.flashScreen = async function({ color = "#ff0000", opacity = 0.4, dura
 
 /**
  * Blur the entire screen.
- * @param {object} [options] The options.
- * @param {number} [options.intensity=5] The max blur in pixels.
- * @param {number} [options.duration=1500] The total duration in milliseconds.
- * @param {string[]} [options.userIds] If provided, only play for these users.
+ * @param {object} [options]
+ * @param {number} [options.intensity=5]
+ * @param {number} [options.duration=1500]
+ * @param {string[]} [options.userIds] Only play for these users
  */
 animations.blurScreen = async function({ intensity = 5, duration = 1500, userIds } = {}) {
   if ( userIds && requiresSocket(userIds) ) {
@@ -946,8 +1050,8 @@ animations.blurScreen = async function({ intensity = 5, duration = 1500, userIds
 
   return new Promise(resolve => {
     /**
-     * Animate a single frame of the blur effect.
-     * @param {number} currentTime The current time in milliseconds supplied by requestAnimationFrame.
+     * Animation frame handler.
+     * @param {number} currentTime
      */
     function animate(currentTime) {
       const elapsed = currentTime - startTime;
@@ -978,10 +1082,10 @@ animations.blurScreen = async function({ intensity = 5, duration = 1500, userIds
 
 /**
  * Blur the game canvas using a PIXI BlurFilter.
- * @param {object} [options] The options.
- * @param {number} [options.intensity=5] The max blur strength.
- * @param {number} [options.duration=1500] The total duration in milliseconds.
- * @param {string[]} [options.userIds] If provided, only play for these users.
+ * @param {object} [options]
+ * @param {number} [options.intensity=5]
+ * @param {number} [options.duration=1500]
+ * @param {string[]} [options.userIds] Only play for these users
  */
 animations.blurCanvas = async function({ intensity = 5, duration = 1500, userIds } = {}) {
   if ( userIds && requiresSocket(userIds) ) {
@@ -1005,8 +1109,8 @@ animations.blurCanvas = async function({ intensity = 5, duration = 1500, userIds
 
   return new Promise(resolve => {
     /**
-     * Animate a single frame of the canvas blur effect.
-     * @param {number} currentTime The current time in milliseconds supplied by requestAnimationFrame.
+     * Animation frame handler.
+     * @param {number} currentTime
      */
     function animate(currentTime) {
       const elapsed = currentTime - startTime;
@@ -1038,11 +1142,11 @@ animations.blurCanvas = async function({ intensity = 5, duration = 1500, userIds
 
 /**
  * Sway the entire screen.
- * @param {object} [options] The options.
- * @param {number} [options.intensity=2] The max rotation in degrees.
- * @param {number} [options.duration=2000] The total duration in milliseconds.
- * @param {number} [options.frequency=2] The oscillation frequency (cycles per second).
- * @param {string[]} [options.userIds] If provided, only play for these users.
+ * @param {object} [options]
+ * @param {number} [options.intensity=2] Max rotation in degrees
+ * @param {number} [options.duration=2000]
+ * @param {number} [options.frequency=2] Oscillation cycles per second
+ * @param {string[]} [options.userIds] Only play for these users
  */
 animations.swayScreen = async function({ intensity = 2, duration = 2000, frequency = 2, userIds } = {}) {
   if ( userIds && requiresSocket(userIds) ) {
@@ -1055,8 +1159,8 @@ animations.swayScreen = async function({ intensity = 2, duration = 2000, frequen
 
   return new Promise(resolve => {
     /**
-     * Animate a single frame of the sway effect.
-     * @param {number} currentTime The current time in milliseconds supplied by requestAnimationFrame.
+     * Animation frame handler.
+     * @param {number} currentTime
      */
     function animate(currentTime) {
       const elapsed = currentTime - startTime;
@@ -1084,11 +1188,11 @@ animations.swayScreen = async function({ intensity = 2, duration = 2000, frequen
 
 /**
  * Play a light rays screen effect.
- * @param {object} [options] The options.
- * @param {string} [options.color="#fff5d6"] The color of the rays.
- * @param {number} [options.rays=12] The number of light rays.
- * @param {number} [options.duration=2500] The total duration in milliseconds.
- * @param {string[]} [options.userIds] If provided, only play for these users.
+ * @param {object} [options]
+ * @param {string} [options.color="#fff5d6"]
+ * @param {number} [options.rays=12]
+ * @param {number} [options.duration=2500]
+ * @param {string[]} [options.userIds] Only play for these users
  */
 animations.lightRaysScreen = async function({ color = "#fff5d6", rays = 12, duration = 2500, userIds } = {}) {
   if ( userIds && requiresSocket(userIds) ) {
@@ -1116,21 +1220,8 @@ animations.lightRaysScreen = async function({ color = "#fff5d6", rays = 12, dura
     return;
   }
 
-  /**
-   * Compile a WebGL shader from source.
-   * @param {number} type The shader type (e.g. gl.VERTEX_SHADER or gl.FRAGMENT_SHADER).
-   * @param {string} source The GLSL source code for the shader.
-   * @returns {WebGLShader} The compiled shader object.
-   */
-  function compileShader(type, source) {
-    const shader = gl.createShader(type);
-    gl.shaderSource(shader, source);
-    gl.compileShader(shader);
-    return shader;
-  }
-
-  const vs = compileShader(gl.VERTEX_SHADER, LIGHT_RAYS_VS);
-  const fs = compileShader(gl.FRAGMENT_SHADER, LIGHT_RAYS_FS);
+  const vs = compileShader(gl, gl.VERTEX_SHADER, LIGHT_RAYS_VS);
+  const fs = compileShader(gl, gl.FRAGMENT_SHADER, LIGHT_RAYS_FS);
   const program = gl.createProgram();
   gl.attachShader(program, vs);
   gl.attachShader(program, fs);
@@ -1152,10 +1243,7 @@ animations.lightRaysScreen = async function({ color = "#fff5d6", rays = 12, dura
   const uRays = gl.getUniformLocation(program, "u_rays");
   const uSeed = gl.getUniformLocation(program, "u_seed");
 
-  // Parse hex color to RGB floats
-  const r = parseInt(color.slice(1, 3), 16) / 255;
-  const g = parseInt(color.slice(3, 5), 16) / 255;
-  const b = parseInt(color.slice(5, 7), 16) / 255;
+  const [r, g, b] = parseHexColor(color);
 
   gl.uniform2f(uResolution, canvas.width, canvas.height);
   gl.uniform3f(uColor, r, g, b);
@@ -1171,8 +1259,8 @@ animations.lightRaysScreen = async function({ color = "#fff5d6", rays = 12, dura
 
   return new Promise(resolve => {
     /**
-     * Animate a single frame for the light rays effect.
-     * @param {number} currentTime The current time in milliseconds supplied by requestAnimationFrame.
+     * Animation frame handler.
+     * @param {number} currentTime
      */
     function animate(currentTime) {
       const elapsed = currentTime - startTime;
@@ -1214,12 +1302,12 @@ animations.lightRaysScreen = async function({ color = "#fff5d6", rays = 12, dura
 
 /**
  * Play a liquid splatter screen effect.
- * @param {object} [options] The options.
- * @param {string} [options.color="#8b0000"] The splatter color.
- * @param {number} [options.density=10] Number of splat impacts (max 20).
- * @param {number} [options.duration=3500] The total duration in milliseconds.
- * @param {number} [options.fluidity=1.0] Drip fluidity from 0 (frozen) to 2 (watery).
- * @param {string[]} [options.userIds] If provided, only play for these users.
+ * @param {object} [options]
+ * @param {string} [options.color="#8b0000"]
+ * @param {number} [options.density=10] Number of splat impacts (max 20)
+ * @param {number} [options.duration=3500]
+ * @param {number} [options.fluidity=1.0] Drip fluidity 0 (frozen) to 2 (watery)
+ * @param {string[]} [options.userIds] Only play for these users
  */
 animations.splatterScreen = async function({ color = "#8b0000", density = 10, duration = 3500, fluidity = 1.0, userIds } = {}) {
   if ( userIds && requiresSocket(userIds) ) {
@@ -1247,21 +1335,8 @@ animations.splatterScreen = async function({ color = "#8b0000", density = 10, du
     return;
   }
 
-  /**
-   * Compile a WebGL shader from source.
-   * @param {number} type The shader type (e.g. gl.VERTEX_SHADER or gl.FRAGMENT_SHADER).
-   * @param {string} source The GLSL source code for the shader.
-   * @returns {WebGLShader} The compiled shader object.
-   */
-  function compileShader(type, source) {
-    const shader = gl.createShader(type);
-    gl.shaderSource(shader, source);
-    gl.compileShader(shader);
-    return shader;
-  }
-
-  const vs = compileShader(gl.VERTEX_SHADER, SPLATTER_VS);
-  const fs = compileShader(gl.FRAGMENT_SHADER, SPLATTER_FS);
+  const vs = compileShader(gl, gl.VERTEX_SHADER, SPLATTER_VS);
+  const fs = compileShader(gl, gl.FRAGMENT_SHADER, SPLATTER_FS);
   const program = gl.createProgram();
   gl.attachShader(program, vs);
   gl.attachShader(program, fs);
@@ -1284,10 +1359,7 @@ animations.splatterScreen = async function({ color = "#8b0000", density = 10, du
   const uDensity = gl.getUniformLocation(program, "u_density");
   const uFluidity = gl.getUniformLocation(program, "u_fluidity");
 
-  // Parse hex color to RGB floats
-  const r = parseInt(color.slice(1, 3), 16) / 255;
-  const g = parseInt(color.slice(3, 5), 16) / 255;
-  const b = parseInt(color.slice(5, 7), 16) / 255;
+  const [r, g, b] = parseHexColor(color);
 
   gl.uniform2f(uResolution, canvas.width, canvas.height);
   gl.uniform3f(uColor, r, g, b);
@@ -1303,8 +1375,8 @@ animations.splatterScreen = async function({ color = "#8b0000", density = 10, du
 
   return new Promise(resolve => {
     /**
-     * Handle a single animation frame for the splatter effect.
-     * @param {number} currentTime The current time in milliseconds supplied by requestAnimationFrame.
+     * Animation frame handler.
+     * @param {number} currentTime
      */
     function animate(currentTime) {
       const elapsed = currentTime - startTime;
@@ -1340,11 +1412,11 @@ animations.splatterScreen = async function({ color = "#8b0000", density = 10, du
 
 /**
  * Play a color-split screen effect.
- * @param {object} [options] The options.
- * @param {string[]} [options.colors=["#ff0000","#00ff00","#0000ff"]] Up to three hex colors for the split layers.
- * @param {number} [options.intensity=25] Maximum pixel offset for layer movement.
- * @param {number} [options.duration=4000] The total duration in milliseconds.
- * @param {string[]} [options.userIds] If provided, only play for these users.
+ * @param {object} [options]
+ * @param {string[]} [options.colors=["#ff0000","#00ff00","#0000ff"]] Up to three hex colors
+ * @param {number} [options.intensity=25] Maximum pixel offset
+ * @param {number} [options.duration=4000]
+ * @param {string[]} [options.userIds] Only play for these users
  */
 animations.colorSplitCanvas = async function({ colors = ["#ff0000", "#00ff00", "#0000ff"], intensity = 25, duration = 4000, userIds } = {}) {
   if ( userIds && requiresSocket(userIds) ) {
@@ -1354,12 +1426,7 @@ animations.colorSplitCanvas = async function({ colors = ["#ff0000", "#00ff00", "
   if ( game.settings.get("core", "photosensitiveMode") ) return;
   if ( typeof canvas === "undefined" || !canvas?.stage ) return;
 
-  // Parse hex colors to 0-1 RGB
-  const rgb = colors.slice(0, 3).map(hex => [
-    parseInt(hex.slice(1, 3), 16) / 255,
-    parseInt(hex.slice(3, 5), 16) / 255,
-    parseInt(hex.slice(5, 7), 16) / 255
-  ]);
+  const rgb = colors.slice(0, 3).map(parseHexColor);
   while ( rgb.length < 3 ) rgb.push(rgb.length === 1 ? [0, 1, 0] : [0, 0, 1]);
 
   const filter = new PIXI.Filter(undefined, COLOR_SPLIT_FS, {
@@ -1390,8 +1457,8 @@ animations.colorSplitCanvas = async function({ colors = ["#ff0000", "#00ff00", "
 
   return new Promise(resolve => {
     /**
-     * Handle a single animation frame for the split effect.
-     * @param {number} currentTime The current time in milliseconds supplied by requestAnimationFrame.
+     * Animation frame handler.
+     * @param {number} currentTime
      */
     function animate(currentTime) {
       const elapsed = currentTime - startTime;
@@ -1427,10 +1494,10 @@ animations.colorSplitCanvas = async function({ colors = ["#ff0000", "#00ff00", "
 
 /**
  * Play a vignette effect to darken edges of screen.
- * @param {object} [options] The options.
- * @param {number} [options.intensity=0.8] The max intensity.
- * @param {number} [options.duration=2000] The total duration in milliseconds.
- * @param {string[]} [options.userIds] If provided, only play for these users.
+ * @param {object} [options]
+ * @param {number} [options.intensity=0.8]
+ * @param {number} [options.duration=2000]
+ * @param {string[]} [options.userIds] Only play for these users
  */
 animations.vignetteScreen = async function({ intensity = 0.8, duration = 2000, userIds } = {}) {
   if ( userIds && requiresSocket(userIds) ) {
@@ -1453,10 +1520,8 @@ animations.vignetteScreen = async function({ intensity = 0.8, duration = 2000, u
 
   return new Promise(resolve => {
     /**
-     * Handle a single animation frame for the vignette effect.
-     *
-     * @param {number} currentTime The current time in milliseconds supplied by requestAnimationFrame.
-     * @returns {void}
+     * Animation frame handler.
+     * @param {number} currentTime
      */
     function animate(currentTime) {
       const elapsed = currentTime - startTime;
@@ -1490,11 +1555,11 @@ animations.vignetteScreen = async function({ intensity = 0.8, duration = 2000, u
 
 /**
  * Play a wave distortion screen effect.
- * @param {object} [options] The options.
- * @param {number} [options.intensity=30] Maximum displacement scale in pixels.
- * @param {number} [options.speed=1] Animation speed multiplier.
- * @param {number} [options.duration=4000] The total duration in milliseconds.
- * @param {string[]} [options.userIds] If provided, only play for these users.
+ * @param {object} [options]
+ * @param {number} [options.intensity=30] Maximum displacement in pixels
+ * @param {number} [options.speed=1] Animation speed multiplier
+ * @param {number} [options.duration=4000]
+ * @param {string[]} [options.userIds] Only play for these users
  */
 animations.waveCanvas = async function({ intensity = 30, speed = 1, duration = 4000, userIds } = {}) {
   if ( userIds && requiresSocket(userIds) ) {
@@ -1521,8 +1586,8 @@ animations.waveCanvas = async function({ intensity = 30, speed = 1, duration = 4
 
   return new Promise(resolve => {
     /**
-     * Handle a single animation frame for the wave effect.
-     * @param {number} currentTime The current time in milliseconds supplied by requestAnimationFrame.
+     * Animation frame handler.
+     * @param {number} currentTime
      */
     function animate(currentTime) {
       const elapsed = currentTime - startTime;

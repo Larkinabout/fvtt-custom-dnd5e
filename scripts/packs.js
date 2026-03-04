@@ -4,7 +4,8 @@ import { compilePack, extractPack } from "@foundryvtt/foundryvtt-cli";
 
 const packs = [
   "custom-dnd5e-items",
-  "custom-dnd5e-journals"
+  "custom-dnd5e-journals",
+  "custom-dnd5e-macros"
 ];
 
 // eslint-disable-next-line

@@ -405,6 +405,11 @@
 .custom-dnd5e-app .items-section .custom-dnd5e-action-fields > div:not(.hidden),
 .custom-dnd5e-app .items-section .custom-dnd5e-action-fields .form-fields {
     display: flex;
+    flex: 3;
+    gap: 0.5rem;
+}
+
+.custom-dnd5e-app .items-section .custom-dnd5e-trigger-fields .custom-dnd5e-trigger-condition-group {
     flex: 2;
 }
 
@@ -422,6 +427,11 @@
 
 #custom-dnd5e-workflows-edit .custom-dnd5e-items-sections > .gold-button.always-interactive {
     position: relative;
+}
+
+.custom-dnd5e-roll-type-group {
+    display: flex;
+    gap: 0.5rem;
 }
 
 /*************************************

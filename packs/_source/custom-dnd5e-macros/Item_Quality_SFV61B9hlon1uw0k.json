@@ -1,0 +1,28 @@
+{
+  "name": "Item Quality",
+  "type": "script",
+  "author": "zOtcGexgRGNVhsT1",
+  "img": "icons/svg/dice-target.svg",
+  "scope": "global",
+  "command": "let quality = null;\nswitch (counterValue) {\n  case 2: quality = \"slightly damaged\"; break;\n  case 1: quality = \"badly damaged\"; break;\n  case 0: quality = \"destroyed\"; break;\n}\n\nif (!quality) return;\n\nconst actorName = actor?.name ?? \"Unknown\";\nconst possessive = actorName.endsWith(\"s\") ? `${actorName}'` : `${actorName}'s`;\n\nconst content = `${possessive}'s ${item?.name} is ${quality}.`;\nChatMessage.create({content});",
+  "folder": "bT6QwWj0kF7fNYBZ",
+  "flags": {},
+  "_stats": {
+    "compendiumSource": null,
+    "duplicateSource": null,
+    "exportSource": null,
+    "coreVersion": "13.351",
+    "systemId": "dnd5e",
+    "systemVersion": "5.2.5",
+    "createdTime": 1772643118535,
+    "modifiedTime": 1772644232774,
+    "lastModifiedBy": "zOtcGexgRGNVhsT1"
+  },
+  "ownership": {
+    "default": 0,
+    "zOtcGexgRGNVhsT1": 3
+  },
+  "_id": "SFV61B9hlon1uw0k",
+  "sort": 100000,
+  "_key": "!macros!SFV61B9hlon1uw0k"
+}

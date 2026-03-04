@@ -6,7 +6,7 @@
     max-width: calc(var(--skills-col-width) + 100px);
     min-width: var(--skills-col-width);
 }
-s
+
 #custom-dnd5e-counters ul {
     display: flex;
     flex-direction: column;

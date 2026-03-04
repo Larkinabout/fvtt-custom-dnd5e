@@ -1,7 +1,7 @@
 import { CONSTANTS, MODULE, SETTING_BY_ENTITY_TYPE, SHEET_TYPE } from "../constants.js";
-import { c5eLoadTemplates, checkEmpty, getFlag, setFlag, unsetFlag, getSetting, registerMenu, registerSetting, makeDead, Logger } from "../utils.js";
-import { CountersForm } from "../forms/counters-form.js";
-import { CountersFormIndividual } from "../forms/counters-form-individual.js";
+import { c5eLoadTemplates, checkEmpty, getFlag, getSetting, registerMenu, registerSetting } from "../utils.js";
+import { CountersForm } from "../forms/counters/counters-form.js";
+import { CountersFormEntity } from "../forms/counters/counters-form-entity.js";
 
 const constants = CONSTANTS.COUNTERS;
 
@@ -23,9 +23,7 @@ export function register() {
  */
 function registerSettings() {
   const settings = [
-    constants.SETTING.CHARACTER_COUNTERS.KEY,
-    constants.SETTING.NPC_COUNTERS.KEY,
-    constants.SETTING.GROUP_COUNTERS.KEY,
+    constants.SETTING.ACTOR_COUNTERS.KEY,
     constants.SETTING.ITEM_COUNTERS.KEY
   ];
 
@@ -55,7 +53,6 @@ function registerSettings() {
       default: true
     }
   );
-  
 }
 
 /* -------------------------------------------- */
@@ -72,13 +69,6 @@ function registerHooks() {
   Hooks.on("dnd5e.prepareSheetContext", prepareCountersContext);
   Hooks.on("preUpdateActor", handlePreUpdateActor);
   Hooks.on("preUpdateItem", handlePreUpdateItem);
-  Hooks.on("updateActor", handleUpdateActor);
-  Hooks.on("updateItem", handleUpdateItem);
-  Hooks.on("deleteCombat", handleDeleteCombat);
-  Hooks.on("combatStart", handleCombatStart);
-  Hooks.on("updateCombat", handleUpdateCombat);
-  Hooks.on("dnd5e.preRestCompleted", handleRest);
-  Hooks.on("dnd5e.rollAttack", handleRollAttack);
 }
 
 /* -------------------------------------------- */
@@ -138,7 +128,7 @@ function prepareCountersContext(sheet, partId, context, options) {
   if ( docName === "Item" ) {
     context.counters = mergeCounters(sheet.document, CONSTANTS.COUNTERS.SETTING.ITEM_COUNTERS.KEY);
   } else if ( docName === "Actor" && sheet.document?.type === "group" ) {
-    context.counters = mergeCounters(sheet.document, CONSTANTS.COUNTERS.SETTING.GROUP_COUNTERS.KEY);
+    context.counters = mergeCounters(sheet.document, CONSTANTS.COUNTERS.SETTING.ACTOR_COUNTERS.KEY);
   }
 }
 
@@ -171,7 +161,7 @@ function addGroupCounters(app, html, data) {
   if ( !getSetting(constants.SETTING.COUNTERS.KEY) ) return;
   const container = html.querySelector("#custom-dnd5e-counters");
   if ( !container ) return;
-  const settingKey = CONSTANTS.COUNTERS.SETTING.GROUP_COUNTERS.KEY;
+  const settingKey = CONSTANTS.COUNTERS.SETTING.ACTOR_COUNTERS.KEY;
   const counters = mergeCounters(app.document, settingKey);
   setupCounterInteractions(app.document, counters, container, app.isEditable);
 }
@@ -189,14 +179,6 @@ function handlePreUpdateActor(actor, data, options, userId) {
   if ( !getSetting(constants.SETTING.COUNTERS.KEY) ) return;
   if ( !actor.isOwner ) return;
   captureOldCounterValues(actor, data, options);
-  if ( actor.type === "group" ) return;
-  const currentHp = foundry.utils.getProperty(data, "system.attributes.hp.value");
-  const previousHp = actor.system.attributes.hp.value;
-  const maxHp = actor?.system?.attributes?.hp?.effectiveMax ?? actor?.system?.attributes?.hp?.max ?? 0;
-  const halfHp = maxHp * 0.5;
-  if ( currentHp !== undefined && currentHp <= halfHp && previousHp > halfHp ) {
-    processTriggers({ actor, triggerType: "halfHp" });
-  }
 }
 
 /* -------------------------------------------- */
@@ -237,387 +219,13 @@ function captureOldCounterValues(entity, data, options) {
 /* -------------------------------------------- */
 
 /**
- * Handle actor update triggers.
- * @param {object} actor The actor
- * @param {object} data  The data
- * @param {object} options The options
- * @param {string} userId The user ID
- */
-function handleUpdateActor(actor, data, options, userId) {
-  if ( !getSetting(constants.SETTING.COUNTERS.KEY) ) return;
-  if ( !actor.isOwner ) return;
-  const hp = foundry.utils.getProperty(data, "system.attributes.hp.value");
-  if ( hp === 0 ) processTriggers({ actor, triggerType: "zeroHp", followUpFlag: "zeroHpCombatEnd" });
-  if ( hasDataChanged(data) ) {
-    processTriggers({ actor, data, triggerType: "counterValue" });
-    processTriggers({ actor, data, triggerType: "successValue" });
-    processTriggers({ actor, data, triggerType: "failureValue" });
-    processTriggers({ actor, data, triggerType: "checked" });
-    processTriggers({ actor, data, triggerType: "unchecked" });
-    const previousCounterValues = options.customDnd5ePreviousCounterValues;
-    if ( previousCounterValues ) {
-      processTriggers({ actor, data, triggerType: "counterValueIncrease", previousCounterValues });
-      processTriggers({ actor, data, triggerType: "counterValueDecrease", previousCounterValues });
-    }
-  }
-}
-
-/* -------------------------------------------- */
-
-/**
- * Handle item update triggers.
- * @param {object} item The item
- * @param {object} data The data
- * @param {object} options The options
- * @param {string} userId The user ID
- */
-function handleUpdateItem(item, data, options, userId) {
-  if ( !getSetting(constants.SETTING.COUNTERS.KEY) ) return;
-  if ( !item.isOwner ) return;
-  if ( hasDataChanged(data) ) {
-    processTriggers({ actor: item, data, triggerType: "counterValue" });
-    processTriggers({ actor: item, data, triggerType: "successValue" });
-    processTriggers({ actor: item, data, triggerType: "failureValue" });
-    processTriggers({ actor: item, data, triggerType: "checked" });
-    processTriggers({ actor: item, data, triggerType: "unchecked" });
-    const previousCounterValues = options.customDnd5ePreviousCounterValues;
-    if ( previousCounterValues ) {
-      processTriggers({ actor: item, data, triggerType: "counterValueIncrease", previousCounterValues });
-      processTriggers({ actor: item, data, triggerType: "counterValueDecrease", previousCounterValues });
-    }
-  }
-}
-
-/* -------------------------------------------- */
-
-/**
- * Handle combat start triggers.
- * @param {object} combat The combat
- * @param {object} data The data
- */
-function handleCombatStart(combat, data) {
-  if ( !getSetting(constants.SETTING.COUNTERS.KEY) ) return;
-  combat.combatants.forEach(combatant => {
-    const actor = combatant.actor;
-    processTriggers({ actor, triggerType: "startOfCombat" });
-  });
-}
-
-/* -------------------------------------------- */
-
-/**
- * Handle update combat triggers.
- * @param {object} combat The combat
- * @param {object} data The data
- * @param {object} options The options
- */
-function handleUpdateCombat(combat, data, options) {
-  if ( !getSetting(constants.SETTING.COUNTERS.KEY) ) return;
-
-  if ( combat?.previous?.combatantId ) {
-    const previousActor = combat.combatants.get(combat.previous.combatantId).actor;
-    processTriggers({ actor: previousActor, triggerType: "endOfTurn" });
-  }
-
-  const actor = combat.combatant.actor;
-  processTriggers({ actor, triggerType: "startOfTurn" });
-}
-
-/* -------------------------------------------- */
-
-/**
- * Handle end of combat triggers.
- * @param {object} combat The combat
- */
-function handleDeleteCombat(combat) {
-  if ( !getSetting(constants.SETTING.COUNTERS.KEY) ) return;
-  combat.combatants.forEach(combatant => {
-    const actor = combatant.actor;
-    processTriggers({ actor, triggerType: "endOfCombat" });
-    if ( getFlag(actor, "zeroHpCombatEnd") ) {
-      processTriggers({ actor, triggerType: "zeroHpCombatEnd" });
-      unsetFlag(actor, "zeroHpCombatEnd");
-    }
-  });
-}
-
-/* -------------------------------------------- */
-
-/**
- * Handle rest triggers.
- * @param {object} actor The actor
- * @param {object} data  The data
- */
-function handleRest(actor, data) {
-  if ( !getSetting(constants.SETTING.COUNTERS.KEY) ) return;
-  const restType = data.longRest ? "longRest" : "shortRest";
-  processTriggers({ actor, triggerType: restType });
-}
-
-/* -------------------------------------------- */
-
-/**
- * Handle attack roll triggers.
- * @param {object[]} rolls The rolls
- * @param {object} data The data
- */
-function handleRollAttack(rolls, data) {
-  if ( !getSetting(constants.SETTING.COUNTERS.KEY) ) return;
-  const actor = data.subject?.actor;
-  if ( !actor?.isOwner ) return;
-  const dieTotal = rolls[0]?.terms[0]?.total;
-  if ( dieTotal !== undefined ) {
-    processTriggers({ actor, triggerType: "rollAttack", dieTotal });
-    const item = data.subject?.item;
-    if ( item ) {
-      processTriggers({ actor: item, triggerType: "rollAttack", dieTotal });
-    }
-  }
-}
-
-/* -------------------------------------------- */
-
-/**
  * Whether the counter's value has changed.
  * @param {object} data The data
  * @returns {boolean} Whether the counter's value has changed
  */
-function hasDataChanged(data) {
+export function hasDataChanged(data) {
   return Object.hasOwn(data, "flags")
         && data.flags[MODULE.ID] && !Object.hasOwn(data.flags[MODULE.ID], "-=counters");
-}
-
-/* -------------------------------------------- */
-
-/**
- * Process the triggers for the given actor based on the trigger type.
- * @param {object} params The parameters
- * @param {Actor} params.actor The actor
- * @param {object} [params.data=null] The data
- * @param {string} params.triggerType The trigger type, e.g., 'zeroHp', 'halfHp', 'longRest'
- * @param {string} [params.followUpFlag=null] Optional flag for follow-up actions
- * @param {number} [params.dieTotal=null] The die total
- * @param {object} [params.previousCounterValues=null] Previous counter values
- */
-function processTriggers({
-  actor, data = null, triggerType, followUpFlag = null,
-  dieTotal = null, previousCounterValues = null
-}) {
-  const counters = getCounters(actor);
-  if ( !counters ) return;
-
-  // Iterate through each counter and check if it has an action that matches the triggerType
-  for (const [counterKey, counter] of Object.entries(counters)) {
-    if ( !counter.triggers ) continue;
-    for (const trigger of counter.triggers) {
-      if ( trigger.trigger === triggerType ) {
-        handleAction(counterKey, counter, trigger, { actor, data, dieTotal, previousCounterValues });
-      }
-    }
-  }
-
-  // Optionally set a follow-up flag for later processing (e.g., at the end of combat)
-  if ( followUpFlag ) {
-    setFlag(actor, followUpFlag, true);
-  }
-}
-
-/* -------------------------------------------- */
-
-/**
- * Handle trigger actions.
- * @param {string} counterKey The counter key
- * @param {object} counter The counter
- * @param {object} trigger The trigger
- * @param {object} params Miscellaneous parameters
- * @param {Actor} params.actor The actor
- * @param {object} [params.data=null] The data
- * @param {number} [params.dieTotal=null] The die total
- * @param {object} [params.previousCounterValues=null] Previous counter values
- */
-function handleAction(
-  counterKey, counter, trigger,
-  { actor, data, dieTotal = null, previousCounterValues = null }
-) {
-  // For rollAttack, compare die value using operator
-  if ( trigger.trigger === "rollAttack" ) {
-    if ( !compareValues(dieTotal, trigger.triggerOperator, Number(trigger.triggerValue)) ) return;
-  }
-
-  // For counterValue/successValue/failureValue, compare using operator
-  const valueTriggerMap = {
-    counterValue: () => getCounterValue(data, counterKey),
-    successValue: () => getSuccessFailureValue(data, counterKey, "success"),
-    failureValue: () => getSuccessFailureValue(data, counterKey, "failure")
-  };
-
-  if ( valueTriggerMap[trigger.trigger] ) {
-    const value = valueTriggerMap[trigger.trigger]();
-    if ( value === null || value === undefined ) return;
-    const target = resolveTriggerValue(actor, trigger.triggerValue);
-    if ( target === null || target === undefined ) return;
-    if ( !compareValues(value, trigger.triggerOperator, target) ) return;
-  }
-
-  // For checked/unchecked, only fire if counter value matches
-  if ( trigger.trigger === "checked" && getCounterValue(data, counterKey) !== true ) return;
-  if ( trigger.trigger === "unchecked" && getCounterValue(data, counterKey) !== false ) return;
-
-  // For counterValueIncrease/counterValueDecrease, compare old and new values
-  if ( trigger.trigger === "counterValueIncrease" || trigger.trigger === "counterValueDecrease" ) {
-    const newValue = getCounterValue(data, counterKey);
-    if ( newValue === null || newValue === undefined ) return;
-    const oldValue = previousCounterValues?.[counterKey] ?? 0;
-    if ( trigger.trigger === "counterValueIncrease" && newValue <= oldValue ) return;
-    if ( trigger.trigger === "counterValueDecrease" && newValue >= oldValue ) return;
-  }
-
-  switch (trigger.action) {
-    case "check":
-      checkCheckbox(actor, counterKey);
-      break;
-    case "uncheck":
-      uncheckCheckbox(actor, counterKey);
-      break;
-    case "increase":
-      increaseCounter(actor, counterKey, trigger, counter.type);
-      break;
-    case "decrease":
-      decreaseCounter(actor, counterKey, trigger, counter.type);
-      break;
-    case "set":
-      setCounter(actor, counterKey, trigger, counter.type);
-      break;
-    case "dead": {
-      const deadActor = (actor.documentName === "Item") ? actor.actor : actor;
-      if ( deadActor ) makeDead(deadActor);
-      break;
-    }
-    case "destroy":
-      destroyItem(actor);
-      break;
-    case "reduceQuantity":
-      reduceItemQuantity(actor);
-      break;
-    case "macro":
-      executeMacro(actor, counterKey, trigger, data);
-      break;
-  }
-}
-
-/* -------------------------------------------- */
-
-/**
- * Destroy an item.
- * @param {Item} item The item to destroy
- */
-async function destroyItem(item) {
-  if ( item.documentName !== "Item" ) return;
-  await item.delete();
-}
-
-/* -------------------------------------------- */
-
-/**
- * Reduce an item's quantity by 1.
- * @param {Item} item The item
- */
-async function reduceItemQuantity(item) {
-  if ( item.documentName !== "Item" ) return;
-  const quantity = item.system.quantity ?? 0;
-  await item.update({ "system.quantity": Math.max(quantity - 1, 0) });
-}
-
-/* -------------------------------------------- */
-
-/**
- * Execute a macro from a trigger.
- * @param {Actor|Item} entity The actor or item
- * @param {string} counterKey The counter key
- * @param {object} trigger The trigger
- * @param {object} data The update data
- */
-async function executeMacro(entity, counterKey, trigger, data) {
-  if ( !trigger.macroUuid ) return;
-  const macro = await fromUuid(trigger.macroUuid);
-  if ( !macro ) {
-    Logger.error(`Macro not found: ${trigger.macroUuid}`, true);
-    return;
-  }
-  const isItem = entity.documentName === "Item";
-  const actor = isItem ? entity.actor : entity;
-  const token = actor?.isToken ? actor.token : actor?.getActiveTokens()[0];
-  const counterValue = data ? getCounterValue(data, counterKey) : null;
-  macro.execute({
-    actor,
-    token,
-    item: isItem ? entity : null,
-    counter: counterKey,
-    counterValue,
-    trigger: trigger.trigger,
-    triggerValue: trigger.triggerValue
-  });
-}
-
-/* -------------------------------------------- */
-
-/**
- * Increase a counter by the trigger's action value.
- * @param {object} actor The actor
- * @param {string} key The counter key
- * @param {object} trigger The trigger
- * @param {string} type The counter type
- */
-function increaseCounter(actor, key, trigger, type) {
-  switch (type) {
-    case "fraction":
-      increaseFraction(actor, key, trigger.actionValue);
-      break;
-    case "number":
-    case "pips":
-      increaseNumber(actor, key, trigger.actionValue);
-      break;
-  }
-}
-
-/* -------------------------------------------- */
-
-/**
- * Decrease a counter by the trigger's action value.
- * @param {object} actor The actor
- * @param {string} key The counter key
- * @param {object} trigger The trigger
- * @param {string} type The counter type
- */
-function decreaseCounter(actor, key, trigger, type) {
-  switch (type) {
-    case "fraction":
-      decreaseFraction(actor, key, trigger.actionValue);
-      break;
-    case "number":
-    case "pips":
-      decreaseNumber(actor, key, trigger.actionValue);
-      break;
-  }
-}
-
-/**
- * Set a counter to the trigger's action value.
- * @param {object} actor The actor
- * @param {string} key The counter key
- * @param {object} trigger The trigger
- * @param {string} type The counter type
- */
-function setCounter(actor, key, trigger, type) {
-  switch (type) {
-    case "fraction":
-      setFraction(actor, key, trigger.actionValue);
-      break;
-    case "number":
-    case "pips":
-      setNumber(actor, key, trigger.actionValue);
-      break;
-  }
 }
 
 /* -------------------------------------------- */
@@ -628,9 +236,12 @@ function setCounter(actor, key, trigger, type) {
  * @param {string} counterKey The counter key
  * @returns {number|null} The counter value
  */
-function getCounterValue(data, counterKey) {
-  const key = counterKey.startsWith("counters.") ? counterKey.slice(9) : counterKey;
-  return data.flags[MODULE.ID][key]?.value ?? data.flags[MODULE.ID][key] ?? null;
+export function getCounterValue(data, counterKey) {
+  if ( counterKey.startsWith("counters.") ) {
+    const key = counterKey.slice(9);
+    return data.flags?.[MODULE.ID]?.counters?.[key]?.value ?? data.flags?.[MODULE.ID]?.counters?.[key] ?? null;
+  }
+  return data.flags?.[MODULE.ID]?.[counterKey]?.value ?? data.flags?.[MODULE.ID]?.[counterKey] ?? null;
 }
 
 /* -------------------------------------------- */
@@ -642,31 +253,12 @@ function getCounterValue(data, counterKey) {
  * @param {string} property The property: "success" or "failure"
  * @returns {number|null} The value
  */
-function getSuccessFailureValue(data, counterKey, property) {
-  const key = counterKey.startsWith("counters.") ? counterKey.slice(9) : counterKey;
-  return data.flags[MODULE.ID][key]?.[property] ?? null;
-}
-
-/* -------------------------------------------- */
-
-/**
- * Compare a value against a target using the given operator.
- * @param {number} value The current value
- * @param {string} operator The operator: "eq", "lt", "gt", "neq"
- * @param {number} target The target value
- * @returns {boolean} Whether the comparison is true
- */
-function compareValues(value, operator, target) {
-  const a = Number(value);
-  const b = Number(target);
-  if ( isNaN(a) || isNaN(b) ) return false;
-  switch (operator) {
-    case "lt": return a < b;
-    case "gt": return a > b;
-    case "neq": return a !== b;
-    case "eq":
-    default: return a === b;
+export function getSuccessFailureValue(data, counterKey, property) {
+  if ( counterKey.startsWith("counters.") ) {
+    const key = counterKey.slice(9);
+    return data.flags?.[MODULE.ID]?.counters?.[key]?.[property] ?? null;
   }
+  return data.flags?.[MODULE.ID]?.[counterKey]?.[property] ?? null;
 }
 
 /* -------------------------------------------- */
@@ -710,10 +302,11 @@ export function mergeCounters(entity, settingKey) {
   if ( entity.document ) entity = entity.document;
   const worldCounters = game.settings.get(MODULE.ID, settingKey) ?? {};
   const entityCounters = getFlag(entity, "counters") ?? {};
+  const actorType = entity.documentName === "Actor" ? entity.type : null;
 
   return {
-    ...processCounters("world", worldCounters, entity),
-    ...processCounters("entity", entityCounters, entity)
+    ...processCounters("world", worldCounters, entity, actorType),
+    ...processCounters("entity", entityCounters, entity, actorType)
   };
 }
 
@@ -724,19 +317,27 @@ export function mergeCounters(entity, settingKey) {
  * @param {string} type The type
  * @param {object} counters The counters
  * @param {object} entity The entity
+ * @param {string} actorType The actor type
  * @returns {object} The processed counters
  */
-function processCounters(type, counters, entity) {
+function processCounters(type, counters, entity, actorType) {
   return Object.entries(foundry.utils.deepClone(counters))
-    .filter(([_, counter]) => counter.visible && game.user.role >= (counter.viewRole ?? 1))
+    .filter(([_, counter]) => {
+      if ( !counter.visible || game.user.role < (counter.viewRole ?? 1) ) return false;
+      if ( type === "world" && actorType && counter.actorTypes?.length ) {
+        if ( !counter.actorTypes.includes(actorType) ) return false;
+      }
+      return true;
+    })
     .reduce((acc, [key, counter]) => {
-      counter.property = (type === "entity" && ["checkbox", "number", "pips"].includes(counter.type)) ? `${key}.value` : key;
+      const flagKey = `counters.${key}`;
+      counter.property = ["checkbox", "number", "pips"].includes(counter.type) ? `${flagKey}.value` : flagKey;
       counter.canEdit = (!counter.editRole || game.user.role >= counter.editRole);
       if ( ["checkbox", "number", "pips"].includes(counter.type) ) {
         counter.value = entity.getFlag(MODULE.ID, counter.property);
       }
       if ( counter.type === "pips" ) {
-        counter.max = resolveMax(entity, counter.max) ?? entity.getFlag(MODULE.ID, `${key}.max`) ?? 0;
+        counter.max = resolveMax(entity, counter.max) ?? entity.getFlag(MODULE.ID, `${flagKey}.max`) ?? 0;
         counter.pips = Array.fromRange(counter.max, 1).map(n => ({
           n,
           filled: (counter.value ?? 0) >= n,
@@ -744,15 +345,15 @@ function processCounters(type, counters, entity) {
         }));
       }
       if ( counter.type === "fraction" ) {
-        counter.value = entity.getFlag(MODULE.ID, `${key}.value`) ?? 0;
+        counter.value = entity.getFlag(MODULE.ID, `${flagKey}.value`) ?? 0;
         counter.canEditMax = (!counter.max && counter.canEdit);
-        counter.max = resolveMax(entity, counter.max) ?? entity.getFlag(MODULE.ID, `${key}.max`) ?? 0;
+        counter.max = resolveMax(entity, counter.max) ?? entity.getFlag(MODULE.ID, `${flagKey}.max`) ?? 0;
       }
       if ( counter.type === "successFailure" ) {
-        counter.success = entity.getFlag(MODULE.ID, `${key}.success`) ?? 0;
-        counter.failure = entity.getFlag(MODULE.ID, `${key}.failure`) ?? 0;
+        counter.success = entity.getFlag(MODULE.ID, `${flagKey}.success`) ?? 0;
+        counter.failure = entity.getFlag(MODULE.ID, `${flagKey}.failure`) ?? 0;
       }
-      acc[(type === "entity" ? `counters.${key}` : key)] = counter;
+      acc[flagKey] = counter;
       return acc;
     }, {});
 }
@@ -887,11 +488,11 @@ export function setupCounterInteractions(entity, counters, container, editable) 
 /* -------------------------------------------- */
 
 /**
- * Open the individual counters form.
+ * Open the entity counters form.
  * @param {object} entity The entity
  */
 export function openForm(entity) {
-  const form = new CountersFormIndividual(entity);
+  const form = new CountersFormEntity(entity);
   form.render(true);
 }
 
@@ -931,7 +532,8 @@ function checkValue(input, entity, key) {
  * @param {string} counterKey The counter key
  */
 export function checkCheckbox(entity, counterKey) {
-  counterKey = (counterKey.startsWith("counters.")) ? `${counterKey}.value` : counterKey;
+  if ( !counterKey.startsWith("counters.") ) counterKey = `counters.${counterKey}`;
+  if ( !counterKey.endsWith(".value") ) counterKey = `${counterKey}.value`;
   entity.setFlag(MODULE.ID, counterKey, true);
 }
 
@@ -943,7 +545,8 @@ export function checkCheckbox(entity, counterKey) {
  * @param {string} counterKey The counter key
  */
 export function uncheckCheckbox(entity, counterKey) {
-  counterKey = (counterKey.startsWith("counters.")) ? `${counterKey}.value` : counterKey;
+  if ( !counterKey.startsWith("counters.") ) counterKey = `counters.${counterKey}`;
+  if ( !counterKey.endsWith(".value") ) counterKey = `${counterKey}.value`;
   entity.setFlag(MODULE.ID, counterKey, false);
 }
 
@@ -955,7 +558,8 @@ export function uncheckCheckbox(entity, counterKey) {
  * @param {string} counterKey The counter key
  */
 export function toggleCheckbox(entity, counterKey) {
-  counterKey = (counterKey.startsWith("counters.")) ? `${counterKey}.value` : counterKey;
+  if ( !counterKey.startsWith("counters.") ) counterKey = `counters.${counterKey}`;
+  if ( !counterKey.endsWith(".value") ) counterKey = `${counterKey}.value`;
   const flag = entity.getFlag(MODULE.ID, counterKey);
   entity.setFlag(MODULE.ID, counterKey, !flag);
 }
@@ -969,8 +573,11 @@ export function toggleCheckbox(entity, counterKey) {
  * @param {number} n The pip number to toggle
  */
 export function togglePip(entity, counterKey, n) {
+  if ( !counterKey.startsWith("counters.") ) counterKey = `counters.${counterKey}`;
+  const baseKey = counterKey;
+  if ( !counterKey.endsWith(".value") ) counterKey = `${counterKey}.value`;
   const currentValue = entity.getFlag(MODULE.ID, counterKey) ?? 0;
-  const max = getMax(entity, counterKey);
+  const max = getMax(entity, baseKey);
   const newValue = (currentValue === n) ? n - 1 : n;
   if ( max && newValue > max ) return;
   entity.setFlag(MODULE.ID, counterKey, newValue);
@@ -985,6 +592,7 @@ export function togglePip(entity, counterKey, n) {
  * @param {number} actionValue The action value
  */
 export function decreaseFraction(entity, counterKey, actionValue = 1) {
+  if ( !counterKey.startsWith("counters.") ) counterKey = `counters.${counterKey}`;
   const oldValue = entity.getFlag(MODULE.ID, `${counterKey}.value`) ?? 0;
   const newValue = Math.max(oldValue - actionValue, 0);
   if ( oldValue > 0 ) {
@@ -1013,6 +621,7 @@ export function increaseFraction(entity, counterKey, actionValue = 1) {
  * @param {number} actionValue The action value
  */
 export function setFraction(entity, counterKey, actionValue = 0) {
+  if ( !counterKey.startsWith("counters.") ) counterKey = `counters.${counterKey}`;
   entity.setFlag(MODULE.ID, `${counterKey}.value`, actionValue);
 }
 
@@ -1025,6 +634,7 @@ export function setFraction(entity, counterKey, actionValue = 0) {
  * @param {number} actionValue The action value
  */
 export function modifyFraction(entity, counterKey, actionValue = 1) {
+  if ( !counterKey.startsWith("counters.") ) counterKey = `counters.${counterKey}`;
   const oldValue = entity.getFlag(MODULE.ID, `${counterKey}.value`) ?? 0;
   const maxValue = getMax(entity, counterKey) ?? entity.getFlag(MODULE.ID, `${counterKey}.max`);
   const newValue = oldValue + actionValue;
@@ -1048,6 +658,8 @@ export function modifyFraction(entity, counterKey, actionValue = 1) {
  * @param {number} actionValue The action value
  */
 export function decreaseNumber(entity, counterKey, actionValue = 1) {
+  if ( !counterKey.startsWith("counters.") ) counterKey = `counters.${counterKey}`;
+  if ( !counterKey.endsWith(".value") ) counterKey = `${counterKey}.value`;
   const oldValue = entity.getFlag(MODULE.ID, counterKey) ?? 0;
   const newValue = Math.max(oldValue - actionValue, 0);
   if ( oldValue > 0 ) {
@@ -1076,6 +688,8 @@ export function increaseNumber(entity, counterKey, actionValue = 1) {
  * @param {number} actionValue The action value
  */
 export function setNumber(entity, counterKey, actionValue = 0) {
+  if ( !counterKey.startsWith("counters.") ) counterKey = `counters.${counterKey}`;
+  if ( !counterKey.endsWith(".value") ) counterKey = `${counterKey}.value`;
   entity.setFlag(MODULE.ID, counterKey, actionValue);
 }
 
@@ -1088,10 +702,11 @@ export function setNumber(entity, counterKey, actionValue = 0) {
  * @param {number} actionValue The action value
  */
 export function modifyNumber(entity, counterKey, actionValue = 1) {
-  const originalKey = counterKey;
-  counterKey = (counterKey.startsWith("counters.")) ? `${counterKey}.value` : counterKey;
+  if ( !counterKey.startsWith("counters.") ) counterKey = `counters.${counterKey}`;
+  const baseKey = counterKey.endsWith(".value") ? counterKey.slice(0, -6) : counterKey;
+  if ( !counterKey.endsWith(".value") ) counterKey = `${counterKey}.value`;
   const oldValue = entity.getFlag(MODULE.ID, counterKey) ?? 0;
-  const maxValue = getMax(entity, counterKey) ?? entity.getFlag(MODULE.ID, `${originalKey}.max`);
+  const maxValue = getMax(entity, baseKey) ?? entity.getFlag(MODULE.ID, `${baseKey}.max`);
   const newValue = oldValue + actionValue;
 
   if ( newValue >= 0 && (!maxValue || newValue <= maxValue) ) {
@@ -1113,6 +728,7 @@ export function modifyNumber(entity, counterKey, actionValue = 1) {
  * @param {number} actionValue The action value
  */
 export function decreaseSuccess(entity, counterKey, actionValue = 1) {
+  if ( !counterKey.startsWith("counters.") ) counterKey = `counters.${counterKey}`;
   const oldValue = entity.getFlag(MODULE.ID, `${counterKey}.success`) ?? 0;
   const newValue = Math.max(oldValue - actionValue, 0);
   if ( oldValue > 0 ) {
@@ -1141,6 +757,7 @@ export function increaseSuccess(entity, counterKey, actionValue = 1) {
  * @param {number} actionValue The action value
  */
 export function modifySuccess(entity, counterKey, actionValue = 1) {
+  if ( !counterKey.startsWith("counters.") ) counterKey = `counters.${counterKey}`;
   const oldValue = entity.getFlag(MODULE.ID, `${counterKey}.success`) ?? 0;
   const maxValue = getMax(entity, counterKey) ?? entity.getFlag(MODULE.ID, `${counterKey}.max`);
   const newValue = (maxValue) ? Math.min(oldValue + actionValue, maxValue) : oldValue + actionValue;
@@ -1164,6 +781,7 @@ export function modifySuccess(entity, counterKey, actionValue = 1) {
  * @param {number} actionValue The action value
  */
 export function decreaseFailure(entity, counterKey, actionValue = 1) {
+  if ( !counterKey.startsWith("counters.") ) counterKey = `counters.${counterKey}`;
   const oldValue = entity.getFlag(MODULE.ID, `${counterKey}.failure`) ?? 0;
   const newValue = Math.max(oldValue - actionValue, 0);
   if ( oldValue > 0 ) {
@@ -1192,6 +810,7 @@ export function increaseFailure(entity, counterKey, actionValue = 1) {
  * @param {number} actionValue The action value
  */
 export function modifyFailure(entity, counterKey, actionValue = 1) {
+  if ( !counterKey.startsWith("counters.") ) counterKey = `counters.${counterKey}`;
   const oldValue = entity.getFlag(MODULE.ID, `${counterKey}.failure`) ?? 0;
   const maxValue = getMax(entity, counterKey) || entity.getFlag(MODULE.ID, `${counterKey}.max`);
   const newValue = (maxValue) ? Math.min(oldValue + actionValue, maxValue) : oldValue + actionValue;
@@ -1226,28 +845,23 @@ function getCounters(entity, key = null) {
     return mergeCounters(entity, settingKey);
   }
 
-  if ( key.startsWith("counters.") ) {
-    return getFlag(entity, key);
+  let rawKey = key.startsWith("counters.") ? key.slice(9) : key;
+  // Strip value/success/failure suffix to get the base counter key
+  for ( const suffix of [".value", ".success", ".failure"] ) {
+    if ( rawKey.endsWith(suffix) ) { rawKey = rawKey.slice(0, -suffix.length); break; }
   }
-
-  return getSetting(settingKey)[key];
+  return getSetting(settingKey)[rawKey] || getFlag(entity, `counters.${rawKey}`);
 }
 
 /* -------------------------------------------- */
 
-/**
- * Resolve a max value, handling attribute paths (e.g. @scale.monk.ki-points).
- * @param {object} entity The entity: actor or item
- * @param {number|string} max The max value or attribute path
- * @returns {number|null} The resolved max value
- */
 /**
  * Resolve a trigger value, handling attribute paths (e.g. @abilities.str.mod).
  * @param {object} entity The entity: actor or item
  * @param {number|string} value The trigger value or attribute path
  * @returns {number|null} The resolved trigger value
  */
-function resolveTriggerValue(entity, value) {
+export function resolveTriggerValue(entity, value) {
   if ( typeof value === "string" && value.startsWith("@") ) {
     return foundry.utils.getProperty(entity.system, value.substring(1)) ?? null;
   }
@@ -1281,3 +895,22 @@ function getMax(entity, key) {
   const setting = getCounters(entity, key);
   return resolveMax(entity, setting?.max);
 }
+
+/* -------------------------------------------- */
+
+export const counters = {
+  mergeCounters,
+  checkCheckbox,
+  uncheckCheckbox,
+  increaseFraction,
+  decreaseFraction,
+  setFraction,
+  increaseNumber,
+  decreaseNumber,
+  setNumber,
+  hasDataChanged,
+  getCounterValue,
+  getCounters,
+  getSuccessFailureValue,
+  resolveTriggerValue
+};

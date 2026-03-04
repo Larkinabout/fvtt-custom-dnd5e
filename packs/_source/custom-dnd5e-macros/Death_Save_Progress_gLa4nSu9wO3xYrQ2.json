@@ -1,0 +1,28 @@
+{
+  "name": "Death Save Progress",
+  "type": "script",
+  "author": "zOtcGexgRGNVhsT1",
+  "img": "icons/svg/dice-target.svg",
+  "scope": "global",
+  "command": "const death = actor?.system?.attributes?.death;\nif (!death) return;\n\nconst name = actor.name;\nconst successes = death.success;\nconst failures = death.failure;\n\nif (failures >= 3) {\n  ui.notifications.error(`${name} has failed 3 death saves!`);\n} else if (successes >= 3) {\n  ui.notifications.info(`${name} has stabilised!`);\n} else {\n  ui.notifications.warn(`${name}: ${successes}/3 successes, ${failures}/3 failures`);\n}",
+  "folder": "bT6QwWj0kF7fNYBZ",
+  "flags": {},
+  "_stats": {
+    "compendiumSource": null,
+    "duplicateSource": null,
+    "exportSource": null,
+    "coreVersion": "13.351",
+    "systemId": "dnd5e",
+    "systemVersion": "5.2.5",
+    "createdTime": 1772644400000,
+    "modifiedTime": 1772644400000,
+    "lastModifiedBy": "zOtcGexgRGNVhsT1"
+  },
+  "ownership": {
+    "default": 0,
+    "zOtcGexgRGNVhsT1": 3
+  },
+  "_id": "gLa4nSu9wO3xYrQ2",
+  "sort": 300000,
+  "_key": "!macros!gLa4nSu9wO3xYrQ2"
+}

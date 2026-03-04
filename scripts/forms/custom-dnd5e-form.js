@@ -33,6 +33,7 @@ export class CustomDnd5eForm extends HandlebarsApplicationMixin(ApplicationV2) {
    */
   static DEFAULT_OPTIONS = {
     actions: {
+      clearMacro: CustomDnd5eForm.clearMacro,
       delete: CustomDnd5eForm.deleteItem,
       new: CustomDnd5eForm.createItem,
       reset: CustomDnd5eForm.reset,
@@ -136,6 +137,54 @@ export class CustomDnd5eForm extends HandlebarsApplicationMixin(ApplicationV2) {
   static async openHelp(event, target) {
     const uuid = target.dataset.uuid;
     openDocument(uuid);
+  }
+
+  /* -------------------------------------------- */
+
+  /**
+   * Handle dropping a Macro onto a row element.
+   *
+   * @param {DragEvent} event The drop event.
+   * @param {HTMLElement} row The row element containing the macro drop zone.
+   */
+  async _onDropMacro(event, row) {
+    event.preventDefault();
+    event.stopPropagation();
+    const data = foundry.applications.ux.TextEditor.implementation.getDragEventData(event);
+    if ( data?.type !== "Macro" ) return;
+    const macro = await Macro.implementation.fromDropData(data);
+    if ( !macro ) return;
+
+    const input = row.querySelector('input[name$="macroUuid"], input[name="macroUuid"]');
+    if ( input ) input.value = macro.uuid;
+
+    const macroField = row.querySelector(".custom-dnd5e-macro-field");
+    const dropArea = row.querySelector(".custom-dnd5e-macro-drop .drop-area");
+    const nameElement = row.querySelector(".custom-dnd5e-macro-name");
+    if ( nameElement ) nameElement.textContent = macro.name;
+    if ( macroField ) macroField.classList.remove("hidden");
+    if ( dropArea ) dropArea.classList.add("hidden");
+  }
+
+  /* -------------------------------------------- */
+
+  /**
+   * Clear the macro selection for a row element.
+   *
+   * @param {Event} event The event that triggered the action.
+   * @param {HTMLElement} target The target element.
+   */
+  static clearMacro(event, target) {
+    const row = target.closest(".custom-dnd5e-action-row, .custom-dnd5e-item");
+    if ( !row ) return;
+
+    const input = row.querySelector('input[name$=".macroUuid"], input[name="macroUuid"]');
+    if ( input ) input.value = "";
+
+    const macroField = row.querySelector(".custom-dnd5e-macro-field");
+    const dropArea = row.querySelector(".custom-dnd5e-macro-drop .drop-area");
+    if ( macroField ) macroField.classList.add("hidden");
+    if ( dropArea ) dropArea.classList.remove("hidden");
   }
 
   /* -------------------------------------------- */

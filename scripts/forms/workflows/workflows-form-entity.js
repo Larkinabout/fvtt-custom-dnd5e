@@ -1,20 +1,12 @@
-import { MODULE } from "../constants.js";
-import { deleteProperty, getFlag, setFlag, unsetFlag } from "../utils.js";
+import { MODULE } from "../../constants.js";
+import { deleteProperty, getFlag, setFlag, unsetFlag } from "../../utils.js";
 import { WorkflowsForm } from "./workflows-form.js";
 import { WorkflowsEditForm } from "./workflows-edit.js";
-import { rebuild } from "../workflows/workflows.js";
+import { rebuild } from "../../workflows/workflows.js";
 
-const form = "workflows-form-actor";
+const form = "workflows-form-entity";
 
-/**
- * Class representing the Actor Workflows Form.
- */
-export class WorkflowsFormActor extends WorkflowsForm {
-  /**
-   * Constructor for WorkflowsFormActor.
-   *
-   * @param {object} entity The entity to which the workflows belong.
-   */
+export class WorkflowsFormEntity extends WorkflowsForm {
   constructor(entity) {
     super(entity);
     this.entity = entity;
@@ -22,18 +14,13 @@ export class WorkflowsFormActor extends WorkflowsForm {
 
   /* -------------------------------------------- */
 
-  /**
-   * Default options for the form.
-   *
-   * @type {object}
-   */
   static DEFAULT_OPTIONS = {
     actions: {
-      new: WorkflowsFormActor.createItem,
-      edit: WorkflowsFormActor.edit
+      new: WorkflowsFormEntity.createItem,
+      edit: WorkflowsFormEntity.edit
     },
     form: {
-      handler: WorkflowsFormActor.submit
+      handler: WorkflowsFormEntity.submit
     },
     id: `${MODULE.ID}-${form}`,
     window: {
@@ -43,24 +30,15 @@ export class WorkflowsFormActor extends WorkflowsForm {
 
   /* -------------------------------------------- */
 
-  /**
-   * Parts of the form.
-   *
-   * @type {object}
-   */
   static PARTS = {
     form: {
-      template: `modules/${MODULE.ID}/templates/${form}.hbs`
+      template: `modules/${MODULE.ID}/templates/workflows/${form}.hbs`
     }
   };
 
   /* -------------------------------------------- */
 
-  /**
-   * Prepare the context for rendering the form.
-   *
-   * @returns {Promise<object>} The context data.
-   */
+  /** @override */
   async _prepareContext() {
     this.triggers = getFlag(this.entity, "triggers") || {};
     return {
@@ -70,27 +48,27 @@ export class WorkflowsFormActor extends WorkflowsForm {
 
   /* -------------------------------------------- */
 
-  /**
-   * Create a new trigger item.
-   *
-   * @returns {Promise<void>}
+  /** Whether the entity is an item or actor.
+   * @returns {string} "item" if the entity is an Item document, otherwise "actor".
    */
+  get entityType() {
+    return this.entity?.documentName === "Item" ? "item" : "actor";
+  }
+
+  /* -------------------------------------------- */
+
   static async createItem() {
     const key = foundry.utils.randomID();
-    const entity = this.entity;
-    const setting = this.triggers;
-    const args = { workflowsForm: this, data: { key, label: "", entity }, setting };
+    const args = {
+      workflowsForm: this,
+      data: { key, name: "", entity: this.entity, entityType: this.entityType },
+      setting: this.triggers
+    };
     await WorkflowsEditForm.open(args);
   }
 
   /* -------------------------------------------- */
 
-  /**
-   * Open the edit form.
-   *
-   * @param {Event} event The event that triggered the action.
-   * @param {HTMLElement} target The target element.
-   */
   static async edit(event, target) {
     const item = target.closest(".item");
     if ( !item ) return;
@@ -98,47 +76,46 @@ export class WorkflowsFormActor extends WorkflowsForm {
     const key = item.dataset.key;
     if ( !key ) return;
 
-    const label = this.triggers[key]?.label || "";
-    const entity = this.entity;
-    const setting = this.triggers;
-    const args = { workflowsForm: this, data: { key, label, entity }, setting };
+    const name = this.triggers[key]?.name || "";
+    const args = {
+      workflowsForm: this,
+      data: { key, name, entity: this.entity, entityType: this.entityType },
+      setting: this.triggers
+    };
     await WorkflowsEditForm.open(args);
   }
 
   /* -------------------------------------------- */
 
-  /**
-   * Submit the form data.
-   *
-   * @param {Event} event The event that triggered the action.
-   * @param {HTMLFormElement} form The form element.
-   * @param {object} formData The form data.
-   */
   static async submit(event, form, formData) {
     const ignore = ["delete", "key"];
 
-    // Get list of properties to delete
     const deleteKeys = Object.entries(formData.object)
       .filter(([key, value]) => key.split(".").pop() === "delete" && value === "true")
       .map(([key, _]) => key.split(".").slice(0, -1).join("."));
 
-    // Delete properties from this.triggers
     deleteKeys.forEach(key => {
       deleteProperty(this.triggers, key);
     });
 
-    // Delete properties from formData
     Object.keys(formData.object).forEach(key => {
       if ( deleteKeys.includes(key.split(".").slice(0, -1)[0]) ) {
         delete formData.object[key];
       }
     });
 
-    // Set properties in this.triggers
     Object.entries(formData.object).forEach(([key, value]) => {
       if ( ignore.includes(key.split(".").pop()) ) { return; }
       foundry.utils.setProperty(this.triggers, key, value);
     });
+
+    // Rebuild in DOM order to preserve drag-and-drop reordering
+    const keys = Array.from(this.element.querySelectorAll(".custom-dnd5e-list > .item"))
+      .map(li => li.dataset.key)
+      .filter(key => key in this.triggers);
+    const reordered = {};
+    for ( const key of keys ) reordered[key] = this.triggers[key];
+    this.triggers = reordered;
 
     await unsetFlag(this.entity, "triggers");
     await setFlag(this.entity, "triggers", this.triggers);

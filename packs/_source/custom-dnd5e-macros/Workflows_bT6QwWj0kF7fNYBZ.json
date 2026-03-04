@@ -1,0 +1,23 @@
+{
+  "type": "Macro",
+  "folder": null,
+  "name": "Workflows",
+  "color": null,
+  "sorting": "a",
+  "_id": "bT6QwWj0kF7fNYBZ",
+  "description": "",
+  "sort": 0,
+  "flags": {},
+  "_stats": {
+    "compendiumSource": null,
+    "duplicateSource": null,
+    "exportSource": null,
+    "coreVersion": "13.351",
+    "systemId": "dnd5e",
+    "systemVersion": "5.2.5",
+    "createdTime": 1772643548430,
+    "modifiedTime": 1772643548430,
+    "lastModifiedBy": "zOtcGexgRGNVhsT1"
+  },
+  "_key": "!folders!bT6QwWj0kF7fNYBZ"
+}

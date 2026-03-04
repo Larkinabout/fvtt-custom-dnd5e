@@ -6,7 +6,7 @@ import {
   registerMenu,
   registerSetting,
   resetDnd5eConfig } from "../utils.js";
-import { BastionsForm } from "../forms/bastions-form.js";
+import { BastionsForm } from "../forms/bastions/bastions-form.js";
 
 const constants = CONSTANTS.BASTIONS;
 const configKey = "facilities";

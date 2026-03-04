@@ -272,25 +272,54 @@ Set triggers to automatically change counter values based on HP thresholds, comb
 
 ## Workflows
 
-Create event-driven workflows that execute actions in response to triggers. Workflows can be configured at the world level or per actor.
+Create event-driven workflows that execute actions in response to triggers. Workflows can be configured at the world level for actors and items, or per individual actor/item.
 
-![Custom D&D 5e Workflows](./.github/readme/custom-dnd5e-workflows.png)
+![Custom D&D 5e Actor Workflows](./.github/readme/custom-dnd5e-actor-workflows.png)
+![Custom D&D 5e Item Workflows](./.github/readme/custom-dnd5e-item-workflows.png)
 
 ### Triggers
 
-Triggers define when a workflow fires. Multiple triggers can be added to a single workflow using OR logic. Roll-based triggers support optional value conditions with operators (equal, less than, greater than, not equal).
+Triggers define when a workflow fires. Multiple triggers can be added to a single workflow using OR logic. Roll-based triggers support optional value conditions with operators (equal, less than, greater than, not equal) and result conditions (success, failure, success/failure within margin, success/failure by amount).
 
-Available triggers: Attack Roll, Ability Check, Saving Throw, Skill Check, Tool Check, Initiative Roll, Concentration Save, Death Save, Damage Roll, Reaches 0 HP, Drops to Half HP or Lower, Loses HP, Gains HP, Start of Combat, End of Combat, Start of Turn, End of Turn, Short Rest, Long Rest.
+**Roll Triggers:** Attack Roll, Ability Check, Saving Throw, Skill Check, Tool Check, Initiative Roll, Concentration Check, Death Save, Damage Roll.
+
+**Hit Point Triggers:** Drops to Zero HP, Reaches Half HP, Loses HP, Gains HP.
+
+**Combat Triggers:** Start of Combat, End of Combat, Start of Turn, End of Turn, Zero HP at Combat End.
+
+**Rest Triggers:** Short Rest, Long Rest.
+
+**Condition Triggers:** Condition Applied, Condition Removed.
+
+**Effect Triggers:** Effect Enabled, Effect Disabled.
+
+**Equipment Triggers:** Item Equipped, Item Unequipped.
+
+**Counter Triggers:** Counter Value Changed, Counter Value Increased, Counter Value Decreased, Counter Checked, Counter Unchecked, Success Value, Failure Value.
 
 ### Actions
 
 Actions define what happens when a workflow is triggered. Multiple actions can be added to a single workflow.
 
-Available actions: Macro, Play Sound, Apply Condition, Remove Condition, Toggle Condition, Roll Table, Distribute Award, Request Roll, Update Actor, Update Token.
+**Counter Actions:** Increase Counter, Decrease Counter, Set Counter, Check Counter, Uncheck Counter, Toggle Counter.
 
-### Per-Actor Workflows
+**Condition Actions:** Apply Condition, Remove Condition (supports "All" to remove every condition), Toggle Condition.
 
-Workflows can also be configured on individual actors via the Configure Workflows button on the Effects tab of the actor sheet. Per-actor workflows follow the same trigger and action system as world workflows.
+**General Actions:** Macro, Update Actor, Distribute Award, Play Sound, Request Roll, Roll Table, Update Token.
+
+**Workflow Actions:** Enable Workflow, Disable Workflow, Toggle Workflow.
+
+The **Request Roll** action prompts a roll with a configurable DC and supports **On Success** and **On Failure** sub-actions, allowing different actions to execute based on the roll result.
+
+The **Macro** action receives context including the actor, item, event data, roll results, and counter information (counterKey, counterName, counterValue) when triggered by counter events.
+
+### Item Workflows
+
+Item workflows use a subset of triggers (Attack Roll, Item Equipped, Item Unequipped, and Counter triggers) and include additional item-specific actions: Destroy Item, Equip Item, Unequip Item, Update Item and Reduce Quantity.
+
+### Per-Actor and Per-Item Workflows
+
+Workflows can also be configured on individual actors via the Configure Workflows button on the Effects tab of the actor sheet, or on individual items. Per-actor and per-item workflows follow the same trigger and action system as world workflows.
 
 <p align="right">(<a href="#custom-dd-5e">back to top</a>)</p>
 

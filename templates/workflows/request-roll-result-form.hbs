@@ -1,0 +1,38 @@
+<div class="standard-form">
+    <div class="standard-form scrollable">
+        <div class="custom-dnd5e-items-sections">
+            <div class="items-section card">
+                <div class="items-header header">
+                    <h3 class="item-name">{{localize "CUSTOM_DND5E.form.workflows.onSuccess.title"}}</h3>
+                </div>
+                <ul class="item-list unlist custom-dnd5e-list custom-dnd5e-action-list custom-dnd5e-on-success-list">
+                    {{#each onSuccessActions}}
+                    {{> "modules/custom-dnd5e/templates/workflows/workflows-action-row.hbs" this}}
+                    {{/each}}
+                </ul>
+            </div>
+            <button type="button" data-action="addAction" data-result-type="onSuccess" class="gold-button always-interactive" aria-label="{{localize 'CUSTOM_DND5E.form.workflows.addAction'}}">
+                <i class="fas fa-plus" inert></i>
+            </button>
+
+            <div class="items-section card">
+                <div class="items-header header">
+                    <h3 class="item-name">{{localize "CUSTOM_DND5E.form.workflows.onFailure.title"}}</h3>
+                </div>
+                <ul class="item-list unlist custom-dnd5e-list custom-dnd5e-action-list custom-dnd5e-on-failure-list">
+                    {{#each onFailureActions}}
+                    {{> "modules/custom-dnd5e/templates/workflows/workflows-action-row.hbs" this}}
+                    {{/each}}
+                </ul>
+            </div>
+            <button type="button" data-action="addAction" data-result-type="onFailure" class="gold-button always-interactive" aria-label="{{localize 'CUSTOM_DND5E.form.workflows.addAction'}}">
+                <i class="fas fa-plus" inert></i>
+            </button>
+        </div>
+    </div>
+    <footer class="form-footer" data-application-part="footer">
+        <button type="submit" data-tooltip="{{localize "CUSTOM_DND5E.form.button.save.tooltip"}}" class="save-button">
+            <i class="fas fa-solid fa-floppy-disk"></i>{{localize "CUSTOM_DND5E.form.button.save.label"}}
+        </button>
+    </footer>
+</div>

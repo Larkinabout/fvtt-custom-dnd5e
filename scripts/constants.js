@@ -234,12 +234,12 @@ export const CONSTANTS = {
       }
     },
     TEMPLATE: {
-      FORM: "modules/custom-dnd5e/templates/bastions-form.hbs",
-      SIZES_LIST: "modules/custom-dnd5e/templates/bastions-sizes-list.hbs",
-      SIZES_EDIT: "modules/custom-dnd5e/templates/bastions-sizes-edit.hbs",
-      TYPES_LIST: "modules/custom-dnd5e/templates/bastions-types-list.hbs",
-      ORDERS_LIST: "modules/custom-dnd5e/templates/bastions-orders-list.hbs",
-      ORDERS_EDIT: "modules/custom-dnd5e/templates/bastions-orders-edit.hbs"
+      FORM: "modules/custom-dnd5e/templates/bastions/bastions-form.hbs",
+      SIZES_LIST: "modules/custom-dnd5e/templates/bastions/bastions-sizes-list.hbs",
+      SIZES_EDIT: "modules/custom-dnd5e/templates/bastions/bastions-sizes-edit.hbs",
+      TYPES_LIST: "modules/custom-dnd5e/templates/bastions/bastions-types-list.hbs",
+      ORDERS_LIST: "modules/custom-dnd5e/templates/bastions/bastions-orders-list.hbs",
+      ORDERS_EDIT: "modules/custom-dnd5e/templates/bastions/bastions-orders-edit.hbs"
     },
     UUID: "Compendium.custom-dnd5e.custom-dnd5e-journals.JournalEntry.B48iqFBddUikMMer.JournalEntryPage.qR7xKmNpL2vYbW4c"
   },
@@ -373,17 +373,11 @@ export const CONSTANTS = {
         HINT: "CUSTOM_DND5E.setting.counters.hint",
         NAME: "CUSTOM_DND5E.setting.counters.name"
       },
-      CHARACTER_COUNTERS: {
-        KEY: "character-counters"
-      },
-      GROUP_COUNTERS: {
-        KEY: "group-counters"
+      ACTOR_COUNTERS: {
+        KEY: "actor-counters"
       },
       ITEM_COUNTERS: {
         KEY: "item-counters"
-      },
-      NPC_COUNTERS: {
-        KEY: "npc-counters"
       }
     },
     SYSTEM_PROPERTY: {
@@ -395,11 +389,11 @@ export const CONSTANTS = {
       lair: "@resources.lair.value"
     },
     TEMPLATE: {
-      FORM: "modules/custom-dnd5e/templates/counters-form.hbs",
-      FORM_INDIVIDUAL: "modules/custom-dnd5e/templates/counters-form-individual.hbs",
-      LIST: "modules/custom-dnd5e/templates/counters-list.hbs",
-      EDIT: "modules/custom-dnd5e/templates/counters-edit.hbs",
-      TRIGGERS_LIST: "modules/custom-dnd5e/templates/counters-triggers-list.hbs",
+      FORM: "modules/custom-dnd5e/templates/counters/counters-form.hbs",
+      FORM_ENTITY: "modules/custom-dnd5e/templates/counters/counters-form-entity.hbs",
+      LIST: "modules/custom-dnd5e/templates/counters/counters-list.hbs",
+      EDIT: "modules/custom-dnd5e/templates/counters/counters-edit.hbs",
+      WORKFLOWS_LIST: "modules/custom-dnd5e/templates/counters/counters-workflows-list.hbs",
       DND5E_ACTOR: "modules/custom-dnd5e/templates/counters/dnd5e/counters-actor.hbs",
       DND5E_ITEM_GROUP: "modules/custom-dnd5e/templates/counters/dnd5e/counters-item-group.hbs",
       DND5E_ITEM_GROUP_LEGACY: "modules/custom-dnd5e/templates/counters/dnd5e/counters-item-group-legacy.hbs"
@@ -1138,17 +1132,21 @@ export const CONSTANTS = {
       ENABLE: {
         KEY: "workflows-enable"
       },
-      WORKFLOWS: {
-        KEY: "workflows"
+      ACTOR_WORKFLOWS: {
+        KEY: "actor-workflows"
+      },
+      ITEM_WORKFLOWS: {
+        KEY: "item-workflows"
       }
     },
     TEMPLATE: {
-      FORM: "modules/custom-dnd5e/templates/workflows-form.hbs",
-      LIST: "modules/custom-dnd5e/templates/workflows-list.hbs",
-      EDIT: "modules/custom-dnd5e/templates/workflows-edit.hbs",
-      FORM_ACTOR: "modules/custom-dnd5e/templates/workflows-form-actor.hbs",
-      TRIGGER_ROW: "modules/custom-dnd5e/templates/workflows-trigger-row.hbs",
-      ACTION_ROW: "modules/custom-dnd5e/templates/workflows-action-row.hbs"
+      FORM: "modules/custom-dnd5e/templates/workflows/workflows-form.hbs",
+      LIST: "modules/custom-dnd5e/templates/workflows/workflows-list.hbs",
+      EDIT: "modules/custom-dnd5e/templates/workflows/workflows-edit.hbs",
+      FORM_ENTITY: "modules/custom-dnd5e/templates/workflows/workflows-form-entity.hbs",
+      TRIGGER_ROW: "modules/custom-dnd5e/templates/workflows/workflows-trigger-row.hbs",
+      ACTION_ROW: "modules/custom-dnd5e/templates/workflows/workflows-action-row.hbs",
+      REQUEST_ROLL_RESULT: "modules/custom-dnd5e/templates/workflows/request-roll-result-form.hbs"
     },
     UUID: "Compendium.custom-dnd5e.custom-dnd5e-journals.JournalEntry.fR3kYmNpV4tZwQ5r"
   },
@@ -1244,16 +1242,17 @@ export const JOURNAL_HELP_BUTTON = {
 
 export const SETTING_BY_ENTITY_TYPE = {
   COUNTERS: {
-    character: CONSTANTS.COUNTERS.SETTING.CHARACTER_COUNTERS.KEY,
-    group: CONSTANTS.COUNTERS.SETTING.GROUP_COUNTERS.KEY,
+    actor: CONSTANTS.COUNTERS.SETTING.ACTOR_COUNTERS.KEY,
+    character: CONSTANTS.COUNTERS.SETTING.ACTOR_COUNTERS.KEY,
+    group: CONSTANTS.COUNTERS.SETTING.ACTOR_COUNTERS.KEY,
     item: CONSTANTS.COUNTERS.SETTING.ITEM_COUNTERS.KEY,
-    npc: CONSTANTS.COUNTERS.SETTING.NPC_COUNTERS.KEY
+    npc: CONSTANTS.COUNTERS.SETTING.ACTOR_COUNTERS.KEY
   }
 };
 
 export const SHEET_TYPE = {
   ActorSheet5eCharacter2: {
-    countersSetting: CONSTANTS.COUNTERS.SETTING.CHARACTER_COUNTERS.KEY,
+    countersSetting: CONSTANTS.COUNTERS.SETTING.ACTOR_COUNTERS.KEY,
     character: true,
     custom: false,
     group: false,
@@ -1267,7 +1266,7 @@ export const SHEET_TYPE = {
     }
   },
   CharacterActorSheet: {
-    countersSetting: CONSTANTS.COUNTERS.SETTING.CHARACTER_COUNTERS.KEY,
+    countersSetting: CONSTANTS.COUNTERS.SETTING.ACTOR_COUNTERS.KEY,
     character: true,
     custom: false,
     group: false,
@@ -1281,7 +1280,7 @@ export const SHEET_TYPE = {
     }
   },
   NPCActorSheet: {
-    countersSetting: CONSTANTS.COUNTERS.SETTING.NPC_COUNTERS.KEY,
+    countersSetting: CONSTANTS.COUNTERS.SETTING.ACTOR_COUNTERS.KEY,
     character: false,
     custom: false,
     group: false,
@@ -1295,7 +1294,7 @@ export const SHEET_TYPE = {
     }
   },
   CustomDnd5eCharacterActorSheet: {
-    countersSetting: CONSTANTS.COUNTERS.SETTING.CHARACTER_COUNTERS.KEY,
+    countersSetting: CONSTANTS.COUNTERS.SETTING.ACTOR_COUNTERS.KEY,
     character: true,
     custom: true,
     group: false,
@@ -1309,7 +1308,7 @@ export const SHEET_TYPE = {
     }
   },
   ActorSheet5eNPC2: {
-    countersSetting: CONSTANTS.COUNTERS.SETTING.NPC_COUNTERS.KEY,
+    countersSetting: CONSTANTS.COUNTERS.SETTING.ACTOR_COUNTERS.KEY,
     character: false,
     custom: false,
     group: false,

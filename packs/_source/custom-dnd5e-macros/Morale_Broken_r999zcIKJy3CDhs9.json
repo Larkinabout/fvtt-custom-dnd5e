@@ -1,0 +1,28 @@
+{
+  "name": "Morale Broken",
+  "type": "script",
+  "author": "zOtcGexgRGNVhsT1",
+  "img": "icons/svg/dice-target.svg",
+  "scope": "global",
+  "command": "const name = actor?.name ?? \"Unknown\";\nconst possessive = name.endsWith(\"s\") ? `${name}'` : `${name}'s`;\nconst content = `${possessive} morale is broken!`;\nChatMessage.create({content});",
+  "folder": "bT6QwWj0kF7fNYBZ",
+  "flags": {},
+  "_stats": {
+    "compendiumSource": null,
+    "duplicateSource": null,
+    "exportSource": null,
+    "coreVersion": "13.351",
+    "systemId": "dnd5e",
+    "systemVersion": "5.2.5",
+    "createdTime": 1772644137042,
+    "modifiedTime": 1772644273188,
+    "lastModifiedBy": "zOtcGexgRGNVhsT1"
+  },
+  "ownership": {
+    "default": 0,
+    "zOtcGexgRGNVhsT1": 3
+  },
+  "_id": "r999zcIKJy3CDhs9",
+  "sort": 0,
+  "_key": "!macros!r999zcIKJy3CDhs9"
+}

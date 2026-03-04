@@ -3,11 +3,11 @@
         <div class="form-group">
             <label>{{localize "CUSTOM_DND5E.name"}}</label>
             <div class="form-fields">
-                <input name="label" type="text" value="{{label}}">
+                <input name="name" type="text" value="{{name}}">
             </div>
         </div>
 
-        {{#unless isActor}}
+        {{#unless isActor}}{{#unless isItem}}
         <div class="form-group">
             <label>{{localize "CUSTOM_DND5E.form.workflows.actorTypes.label"}}</label>
             <div class="form-fields">
@@ -19,12 +19,50 @@
                     <dnd5e-checkbox name="actorTypes.npc" {{checked actorTypes.npc}}></dnd5e-checkbox>
                     <span>{{localize "CUSTOM_DND5E.npcs"}}</span>
                 </label>
+                <label class="checkbox">
+                    <dnd5e-checkbox name="actorTypes.group" {{checked actorTypes.group}}></dnd5e-checkbox>
+                    <span>{{localize "CUSTOM_DND5E.groups"}}</span>
+                </label>
             </div>
             <p class="hint">{{localize "CUSTOM_DND5E.form.workflows.actorTypes.hint"}}</p>
         </div>
 
+        <div class="form-group custom-dnd5e-target-group {{#unless actorTypes.group}}hidden{{/unless}}">
+            <label>{{localize "CUSTOM_DND5E.form.workflows.target.groupLabel"}}</label>
+            <div class="form-fields">
+                <select name="target">
+                    <option value="group" {{#if (eq target "group")}}selected{{/if}}>
+                        {{localize "CUSTOM_DND5E.form.workflows.target.choices.group"}}
+                    </option>
+                    <option value="members" {{#if (eq target "members")}}selected{{/if}}>
+                        {{localize "CUSTOM_DND5E.form.workflows.target.choices.members"}}
+                    </option>
+                </select>
+            </div>
+            <p class="hint">{{localize "CUSTOM_DND5E.form.workflows.target.hint"}}</p>
+        </div>
+
         <hr>
-        {{/unless}}
+        {{/unless}}{{/unless}}
+
+        {{#if isGroup}}
+        <div class="form-group">
+            <label>{{localize "CUSTOM_DND5E.form.workflows.target.label"}}</label>
+            <div class="form-fields">
+                <select name="target">
+                    <option value="group" {{#if (eq target "group")}}selected{{/if}}>
+                        {{localize "CUSTOM_DND5E.form.workflows.target.choices.group"}}
+                    </option>
+                    <option value="members" {{#if (eq target "members")}}selected{{/if}}>
+                        {{localize "CUSTOM_DND5E.form.workflows.target.choices.members"}}
+                    </option>
+                </select>
+            </div>
+            <p class="hint">{{localize "CUSTOM_DND5E.form.workflows.target.hint"}}</p>
+        </div>
+
+        <hr>
+        {{/if}}
 
         <div class="custom-dnd5e-items-sections">
             <div class="items-section card">
@@ -33,7 +71,7 @@
                 </div>
                 <ul class="item-list unlist custom-dnd5e-list custom-dnd5e-trigger-list">
                     {{#each triggers}}
-                    {{> "modules/custom-dnd5e/templates/workflows-trigger-row.hbs" this}}
+                    {{> "modules/custom-dnd5e/templates/workflows/workflows-trigger-row.hbs" this}}
                     {{/each}}
                 </ul>
             </div>
@@ -47,7 +85,7 @@
                 </div>
                 <ul class="item-list unlist custom-dnd5e-list custom-dnd5e-action-list">
                     {{#each actions}}
-                    {{> "modules/custom-dnd5e/templates/workflows-action-row.hbs" this}}
+                    {{> "modules/custom-dnd5e/templates/workflows/workflows-action-row.hbs" this}}
                     {{/each}}
                 </ul>
             </div>

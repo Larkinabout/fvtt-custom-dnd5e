@@ -10,11 +10,11 @@ export function register() {
 
   Hooks.on("tidy5e-sheet.ready", api => {
     registerTab(api, "registerCharacterTab",
-      CONSTANTS.COUNTERS.SETTING.CHARACTER_COUNTERS.KEY);
+      CONSTANTS.COUNTERS.SETTING.ACTOR_COUNTERS.KEY);
     registerTab(api, "registerNpcTab",
-      CONSTANTS.COUNTERS.SETTING.NPC_COUNTERS.KEY);
+      CONSTANTS.COUNTERS.SETTING.ACTOR_COUNTERS.KEY);
     registerTab(api, "registerGroupTab",
-      CONSTANTS.COUNTERS.SETTING.GROUP_COUNTERS.KEY, "group-tab-content group-description-content flexcol");
+      CONSTANTS.COUNTERS.SETTING.ACTOR_COUNTERS.KEY, "group-tab-content group-description-content flexcol");
     registerItemTab(api);
   });
 }

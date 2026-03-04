@@ -1,22 +1,12 @@
-import { CONSTANTS, JOURNAL_HELP_BUTTON, MODULE } from "../constants.js";
-import { deleteProperty, unsetFlag, getSetting, setSetting } from "../utils.js";
-import { CustomDnd5eForm } from "./custom-dnd5e-form.js";
+import { CONSTANTS, JOURNAL_HELP_BUTTON, MODULE } from "../../constants.js";
+import { deleteProperty, unsetFlag, getSetting, setSetting } from "../../utils.js";
+import { CustomDnd5eForm } from "../custom-dnd5e-form.js";
 import { CountersEditForm } from "./counters-edit.js";
 
 const id = CONSTANTS.COUNTERS.ID;
 const form = `${id}-form`;
 
-/**
- * Class representing the Counters Form.
- *
- * @extends {CustomDnd5eForm}
- */
 export class CountersForm extends CustomDnd5eForm {
-  /**
-   * Constructor for CountersForm.
-   *
-   * @param {...any} args Arguments to pass to the parent constructor.
-   */
   constructor(...args) {
     super(args);
     this.headerButton = JOURNAL_HELP_BUTTON;
@@ -25,11 +15,6 @@ export class CountersForm extends CustomDnd5eForm {
 
   /* -------------------------------------------- */
 
-  /**
-   * Default options for the form.
-   *
-   * @type {object}
-   */
   static DEFAULT_OPTIONS = {
     actions: {
       new: CountersForm.createItem,
@@ -47,33 +32,22 @@ export class CountersForm extends CustomDnd5eForm {
 
   /* -------------------------------------------- */
 
-  /**
-   * Parts of the form.
-   *
-   * @type {object}
-   */
   static PARTS = {
     form: {
-      template: `modules/${MODULE.ID}/templates/${form}.hbs`
+      template: `modules/${MODULE.ID}/templates/counters/${form}.hbs`
     }
   };
 
   /* -------------------------------------------- */
 
-  /**
-   * Prepare the context for the form.
-   *
-   * @returns {Promise<object>} The context object containing settings and selects.
-   */
+  /** @override */
   async _prepareContext() {
     this.settings = {
-      character: getSetting(CONSTANTS.COUNTERS.SETTING.CHARACTER_COUNTERS.KEY) || {},
-      group: getSetting(CONSTANTS.COUNTERS.SETTING.GROUP_COUNTERS.KEY) || {},
-      item: getSetting(CONSTANTS.COUNTERS.SETTING.ITEM_COUNTERS.KEY) || {},
-      npc: getSetting(CONSTANTS.COUNTERS.SETTING.NPC_COUNTERS.KEY) || {}
+      actor: getSetting(CONSTANTS.COUNTERS.SETTING.ACTOR_COUNTERS.KEY) || {},
+      item: getSetting(CONSTANTS.COUNTERS.SETTING.ITEM_COUNTERS.KEY) || {}
     };
     return {
-      activeTab: this.tabGroups.primary ?? "characters",
+      activeTab: this.tabGroups.primary ?? "actors",
       counters: getSetting(CONSTANTS.COUNTERS.SETTING.COUNTERS.KEY) || false,
       settings: this.settings
     };
@@ -81,11 +55,6 @@ export class CountersForm extends CustomDnd5eForm {
 
   /* -------------------------------------------- */
 
-  /**
-   * Create a new item in the counters form.
-   *
-   * @returns {Promise<void>}
-   */
   static async createItem() {
     const activeTab = this.element.querySelector(".tab.active");
     const actorType = activeTab?.dataset?.actorType;
@@ -98,11 +67,9 @@ export class CountersForm extends CustomDnd5eForm {
   /* -------------------------------------------- */
 
   /**
-   * Copy a property to the clipboard.
-   *
-   * @param {Event} event The event that triggered the copy.
-   * @param {HTMLElement} target The target element.
-   * @returns {Promise<void>}
+   * Copy a counter property path to the clipboard.
+   * @param {Event} event
+   * @param {HTMLElement} target
    */
   static async copyProperty(event, target) {
     const item = target.closest(".custom-dnd5e-item");
@@ -115,20 +82,13 @@ export class CountersForm extends CustomDnd5eForm {
     const actorType = activeTab?.dataset?.actorType;
     const type = this.settings[actorType]?.[key]?.type;
 
-    const property = `@flags.${MODULE.ID}.${key}${(type === "successFailure") ? ".success" : (type === "fraction") ? ".value" : ""}`;
+    const property = `@flags.${MODULE.ID}.counters.${key}${(type === "successFailure") ? ".success" : ".value"}`;
     game.clipboard.copyPlainText(property);
     ui.notifications.info(game.i18n.format("CUSTOM_DND5E.form.counters.copyProperty.message", { property }));
   }
 
   /* -------------------------------------------- */
 
-  /**
-   * Open the edit form for a counter.
-   *
-   * @param {Event} event The event that triggered the edit.
-   * @param {HTMLElement} target The target element.
-   * @returns {Promise<void>}
-   */
   static async edit(event, target) {
     const item = target.closest(".custom-dnd5e-item");
     if ( !item ) return;
@@ -147,23 +107,13 @@ export class CountersForm extends CustomDnd5eForm {
 
   /* -------------------------------------------- */
 
-  /**
-   * Submit the form data.
-   *
-   * @param {Event} event The event that triggered the submit.
-   * @param {HTMLFormElement} form The form element.
-   * @param {object} formData The form data.
-   * @returns {Promise<void>}
-   */
   static async submit(event, form, formData) {
     const ignore = ["actorType", "counters", "delete", "key"];
 
-    // Get list of properties to delete
     const deleteKeys = Object.entries(formData.object)
       .filter(([key, value]) => key.split(".").pop() === "delete" && value === "true")
       .map(([key, _]) => key.split(".").slice(0, -1).join("."));
 
-    // Delete properties from this.setting
     deleteKeys.forEach(deleteKey => {
       const parts = deleteKey.split(".");
       const actorType = parts.slice(0, 1).join(".");
@@ -171,18 +121,16 @@ export class CountersForm extends CustomDnd5eForm {
       const setting = this.settings[actorType];
       deleteProperty(setting, key);
       for (const actor of game.actors) {
-        unsetFlag(actor, key);
+        unsetFlag(actor, `counters.${key}`);
       }
     });
 
-    // Delete properties from formData
     Object.keys(formData.object).forEach(key => {
       if ( deleteKeys.includes(key.split(".").slice(0, -1).join(".")) ) {
         delete formData.object[key];
       }
     });
 
-    // Set properties in this.setting
     Object.entries(formData.object).forEach(([key, value]) => {
       if ( ignore.includes(key.split(".").pop()) ) { return; }
       const arr = key.split(".");
@@ -194,10 +142,8 @@ export class CountersForm extends CustomDnd5eForm {
 
     await Promise.all([
       setSetting(CONSTANTS.COUNTERS.SETTING.COUNTERS.KEY, formData.object.counters),
-      setSetting(CONSTANTS.COUNTERS.SETTING.CHARACTER_COUNTERS.KEY, this.settings.character),
-      setSetting(CONSTANTS.COUNTERS.SETTING.GROUP_COUNTERS.KEY, this.settings.group),
-      setSetting(CONSTANTS.COUNTERS.SETTING.ITEM_COUNTERS.KEY, this.settings.item),
-      setSetting(CONSTANTS.COUNTERS.SETTING.NPC_COUNTERS.KEY, this.settings.npc)
+      setSetting(CONSTANTS.COUNTERS.SETTING.ACTOR_COUNTERS.KEY, this.settings.actor),
+      setSetting(CONSTANTS.COUNTERS.SETTING.ITEM_COUNTERS.KEY, this.settings.item)
     ]);
   }
 }

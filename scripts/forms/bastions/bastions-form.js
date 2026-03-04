@@ -1,9 +1,9 @@
-import { CONSTANTS, JOURNAL_HELP_BUTTON, MODULE } from "../constants.js";
-import { getSetting, setSetting } from "../utils.js";
-import { CustomDnd5eForm } from "./custom-dnd5e-form.js";
+import { CONSTANTS, JOURNAL_HELP_BUTTON, MODULE } from "../../constants.js";
+import { getSetting, setSetting } from "../../utils.js";
+import { CustomDnd5eForm } from "../custom-dnd5e-form.js";
 import { BastionsOrdersEditForm } from "./bastions-orders-edit-form.js";
 import { BastionsSizesEditForm } from "./bastions-sizes-edit-form.js";
-import { resetConfigSetting, setConfig, getSettingDefault } from "../configurations/bastions.js";
+import { resetConfigSetting, setConfig, getSettingDefault } from "../../configurations/bastions.js";
 
 const constants = CONSTANTS.BASTIONS;
 const listClass = `${MODULE.ID}-list`;

@@ -1,6 +1,7 @@
 import { MODULE } from "./constants.js";
 import { animations } from "./utils.js";
 import { MoveCanvasMode } from "./activities/move-canvas-mode.js";
+import { executeRequestedRoll } from "./workflows/workflows.js";
 
 /**
  * Handle an incoming animation socket event.
@@ -70,11 +71,30 @@ function _onSwapTokens(data) {
 /* -------------------------------------------- */
 
 /**
+ * Handle an incoming requestRoll socket event.
+ * Only processed by non-GM clients that own the actor.
+ * @param {object} data The socket data
+ * @param {object} data.options The roll options
+ * @param {string} data.options.actorUuid The actor UUID
+ * @param {object} data.options.rollConfig The roll configuration
+ */
+async function _onRequestRoll(data) {
+  if ( game.user.isGM ) return;
+  const { actorUuid, rollConfig } = data.options;
+  const actor = await fromUuid(actorUuid);
+  if ( !actor?.isOwner ) return;
+  executeRequestedRoll(actor, rollConfig);
+}
+
+/* -------------------------------------------- */
+
+/**
  * Socket action handlers keyed by action name.
  */
 const HANDLERS = {
   animation: _onAnimation,
   moveToken: _onMoveToken,
+  requestRoll: _onRequestRoll,
   swapTokens: _onSwapTokens
 };
 

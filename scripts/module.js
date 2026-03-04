@@ -51,7 +51,7 @@ import { register as registerItemRarity, setConfig as setItemRarity } from "./co
 import { register as registerItemSheet } from "./item-sheet.js";
 import { register as registerLanguages, setConfig as setLanguages } from "./configurations/languages.js";
 import { register as registerLootTypes, setConfig as setLootTypes } from "./configurations/loot-types.js";
-import { register as registerMigration, migrate } from "./migration.js";
+import { register as registerMigration, migrate, migrations } from "./migration.js";
 import { register as registerMisc, setMaxLevel } from "./misc.js";
 import { register as registerRolls } from "./rolls.js";
 import { register as registerSenses, setConfig as setSenses } from "./configurations/senses.js";
@@ -60,7 +60,7 @@ import { register as registerSpellSchools, setConfig as setSpellSchools } from "
 import { register as registerRadialStatusEffects } from "./radial-status-effects.js";
 import { register as registerRulerTravelTime } from "./ruler-travel-time.js";
 import { register as registerTidy5eCounters } from "./counters/counters-tidy5e.js";
-import { register as registerWorkflows } from "./workflows/workflows.js";
+import { register as registerWorkflows, workflows } from "./workflows/workflows.js";
 import { register as registerTokenBorder } from "./token-border.js";
 import { register as registerTokenEffects } from "./token-effects.js";
 import { register as registerTokenHudImprovements } from "./token-hud-improvements.js";
@@ -127,7 +127,9 @@ Hooks.on("init", async () => {
       decreaseFailure,
       modifyFailure,
       togglePip
-    }
+    },
+    migrations,
+    workflows
   };
 
   registerSockets();
@@ -154,10 +156,13 @@ Hooks.on("init", async () => {
   registerCharacterSheet();
 
   registerGameplay();
+  registerActivities();
+  registerCounters();
+  registerTidy5eCounters();
   registerWorkflows();
+
   registerAbilities();
   registerActivationCosts();
-  registerActivities();
   registerActorSheet();
   registerActorSheetTidy5e();
   registerActorSizes();
@@ -170,8 +175,6 @@ Hooks.on("init", async () => {
   registerCampSupplies();
   registerConditionsMenu();
   registerConsumableTypes();
-  registerCounters();
-  registerTidy5eCounters();
   registerCreatureTypes();
   registerCurrency();
   registerDamageTypes();
@@ -247,7 +250,7 @@ Hooks.on("ready", async () => {
       return `${child}`;
     },
     customDnd5eShowActionValue: function(value) {
-      const allowed = ["increase", "decrease"];
+      const allowed = ["increase", "decrease", "set"];
       return allowed.includes(value);
     },
     customDnd5eShowTriggerValue: function(value) {

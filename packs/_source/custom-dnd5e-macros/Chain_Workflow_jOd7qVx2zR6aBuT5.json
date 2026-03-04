@@ -1,0 +1,28 @@
+{
+  "name": "Chain Workflow",
+  "type": "script",
+  "author": "zOtcGexgRGNVhsT1",
+  "img": "icons/svg/dice-target.svg",
+  "scope": "global",
+  "command": "// Replace \"My Other Workflow\" with the name of the workflow to trigger.\nconst workflowName = \"My Other Workflow\";\n\nif (!actor) return;\n\nconst api = game.modules.get(\"custom-dnd5e\").api;\nconst success = api.workflows.executeWorkflow(workflowName, actor);\n\nif (!success) {\n  ui.notifications.warn(`Workflow \"${workflowName}\" not found.`);\n}",
+  "folder": "bT6QwWj0kF7fNYBZ",
+  "flags": {},
+  "_stats": {
+    "compendiumSource": null,
+    "duplicateSource": null,
+    "exportSource": null,
+    "coreVersion": "13.351",
+    "systemId": "dnd5e",
+    "systemVersion": "5.2.5",
+    "createdTime": 1772644700000,
+    "modifiedTime": 1772644700000,
+    "lastModifiedBy": "zOtcGexgRGNVhsT1"
+  },
+  "ownership": {
+    "default": 0,
+    "zOtcGexgRGNVhsT1": 3
+  },
+  "_id": "jOd7qVx2zR6aBuT5",
+  "sort": 600000,
+  "_key": "!macros!jOd7qVx2zR6aBuT5"
+}

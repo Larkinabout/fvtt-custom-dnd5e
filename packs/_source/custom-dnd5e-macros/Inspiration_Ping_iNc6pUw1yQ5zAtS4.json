@@ -1,0 +1,28 @@
+{
+  "name": "Inspiration Ping",
+  "type": "script",
+  "author": "zOtcGexgRGNVhsT1",
+  "img": "icons/svg/dice-target.svg",
+  "scope": "global",
+  "command": "if (!actor) return;\n\nconst api = game.modules.get(\"custom-dnd5e\").api;\napi.counters.checkCheckbox(actor, \"inspiration\");\n\nconst t = token?.object ?? token;\nif (!t) return;\n\ncanvas.interface.createScrollingText(t.center, \"Inspired!\", {\n  anchor: CONST.TEXT_ANCHOR_POINTS.TOP,\n  direction: CONST.TEXT_ANCHOR_POINTS.TOP,\n  duration: 2500,\n  fontFamily: \"Modesto Condensed\",\n  fontSize: 36,\n  fill: \"#ffe066\",\n  stroke: \"#000000\",\n  strokeThickness: 4\n});",
+  "folder": "bT6QwWj0kF7fNYBZ",
+  "flags": {},
+  "_stats": {
+    "compendiumSource": null,
+    "duplicateSource": null,
+    "exportSource": null,
+    "coreVersion": "13.351",
+    "systemId": "dnd5e",
+    "systemVersion": "5.2.5",
+    "createdTime": 1772644600000,
+    "modifiedTime": 1772644600000,
+    "lastModifiedBy": "zOtcGexgRGNVhsT1"
+  },
+  "ownership": {
+    "default": 0,
+    "zOtcGexgRGNVhsT1": 3
+  },
+  "_id": "iNc6pUw1yQ5zAtS4",
+  "sort": 500000,
+  "_key": "!macros!iNc6pUw1yQ5zAtS4"
+}

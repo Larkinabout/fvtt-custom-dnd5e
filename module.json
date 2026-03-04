@@ -67,6 +67,29 @@
       },
       "system": "dnd5e",
       "flags": {}
+    },
+    {
+      "name": "custom-dnd5e-macros",
+      "label": "Custom D&D 5e Macros",
+      "path": "packs/custom-dnd5e-macros",
+      "type": "Macro",
+      "ownership": {
+        "PLAYER": "NONE",
+        "ASSISTANT": "OWNER"
+      },
+      "system": "dnd5e",
+      "flags": {}
+    }
+  ],
+  "packFolders": [
+    {
+      "name": "Custom D&D 5e",
+      "color": "#6e00b4",
+      "packs": [
+        "custom-dnd5e-journals",
+        "custom-dnd5e-items",
+        "custom-dnd5e-macros"
+      ]
     }
   ],
   "relationships": {

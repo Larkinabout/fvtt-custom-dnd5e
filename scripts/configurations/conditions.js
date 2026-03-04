@@ -3,6 +3,7 @@ import {
   Logger,
   c5eLoadTemplates,
   checkEmpty,
+  executeMacro,
   registerMenu as c5eRegisterMenu,
   getSetting,
   registerSetting,
@@ -65,18 +66,9 @@ async function executeConditionMacro(effect, options, userId) {
   const conditionConfig = conditionsData?.[statusId];
   if ( !conditionConfig?.macroUuid ) return;
 
-  const macro = await fromUuid(conditionConfig.macroUuid);
-  if ( !macro ) {
-    Logger.error(`Condition macro not found: ${conditionConfig.macroUuid}`, true);
-    return;
-  }
-
   const actor = effect.parent;
-  const token = actor?.isToken ? actor.token : actor?.getActiveTokens()[0];
-
-  macro.execute({
+  executeMacro(conditionConfig.macroUuid, {
     actor,
-    token,
     condition: statusId,
     conditionName: game.i18n.localize(conditionConfig.name),
     effect
@@ -102,23 +94,9 @@ async function executeConditionDisabledMacro(effect, options, userId) {
   const conditionConfig = conditionsData?.[statusId];
   if ( !conditionConfig?.macroDisabledUuid ) return;
 
-  const macro = await fromUuid(conditionConfig.macroDisabledUuid);
-  if ( !macro ) {
-    Logger.error(
-      `Condition disabled macro not found: ${conditionConfig.macroDisabledUuid}`,
-      true
-    );
-    return;
-  }
-
   const actor = effect.parent;
-  const token = actor?.isToken
-    ? actor.token
-    : actor?.getActiveTokens()[0];
-
-  macro.execute({
+  executeMacro(conditionConfig.macroDisabledUuid, {
     actor,
-    token,
     condition: statusId,
     conditionName: game.i18n.localize(conditionConfig.name),
     effect

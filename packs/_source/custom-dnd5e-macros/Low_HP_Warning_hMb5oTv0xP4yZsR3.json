@@ -1,0 +1,28 @@
+{
+  "name": "Low HP Warning",
+  "type": "script",
+  "author": "zOtcGexgRGNVhsT1",
+  "img": "icons/svg/dice-target.svg",
+  "scope": "global",
+  "command": "const hp = actor?.system?.attributes?.hp;\nif (!hp) return;\n\nconst name = actor.name;\nconst pct = hp.pct;\nlet text, fill;\nif (pct <= 25) {\n  text = `${name} is gravely wounded!`;\n  fill = \"#ff2020\";\n} else if (pct <= 50) {\n  text = `${name} is looking hurt`;\n  fill = \"#ff8800\";\n} else {\n  return;\n}\n\nconst t = token?.object ?? token;\nif (!t) return;\n\ncanvas.interface.createScrollingText(t.center, text, {\n  anchor: CONST.TEXT_ANCHOR_POINTS.TOP,\n  direction: CONST.TEXT_ANCHOR_POINTS.TOP,\n  duration: 2500,\n  fontFamily: \"Modesto Condensed\",\n  fontSize: 36,\n  fill,\n  stroke: \"#000000\",\n  strokeThickness: 4\n});",
+  "folder": "bT6QwWj0kF7fNYBZ",
+  "flags": {},
+  "_stats": {
+    "compendiumSource": null,
+    "duplicateSource": null,
+    "exportSource": null,
+    "coreVersion": "13.351",
+    "systemId": "dnd5e",
+    "systemVersion": "5.2.5",
+    "createdTime": 1772644500000,
+    "modifiedTime": 1772644500000,
+    "lastModifiedBy": "zOtcGexgRGNVhsT1"
+  },
+  "ownership": {
+    "default": 0,
+    "zOtcGexgRGNVhsT1": 3
+  },
+  "_id": "hMb5oTv0xP4yZsR3",
+  "sort": 400000,
+  "_key": "!macros!hMb5oTv0xP4yZsR3"
+}
