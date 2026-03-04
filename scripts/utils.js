@@ -103,6 +103,30 @@ export function parseBoolean(value) {
 /* -------------------------------------------- */
 
 /**
+ * Resolve a formula string containing @attribute paths against an entity's roll data.
+ * Supports plain numbers, attribute paths (e.g. @scale.monk.ki-points) and
+ * calculations (e.g. @abilities.str.value / 2).
+ * @param {object} entity The entity.
+ * @param {string|number} formula The formula.
+ * @returns {number|null} The resolved numeric value, or null if resolution fails
+ */
+export function resolveFormula(entity, formula) {
+  if ( typeof formula === "number" ) return formula;
+  if ( typeof formula === "string" && formula.includes("@") ) {
+    const rollData = entity.getRollData?.() ?? entity.system;
+    const replaced = Roll.replaceFormulaData(formula, rollData, { missing: "0" });
+    try {
+      return Math.floor(Roll.safeEval(replaced));
+    } catch {
+      return null;
+    }
+  }
+  return Number(formula) || null;
+}
+
+/* -------------------------------------------- */
+
+/**
  * Compare a value against a target using the given operator.
  * @param {number} value
  * @param {string} operator "eq", "lt", "gt", "neq"

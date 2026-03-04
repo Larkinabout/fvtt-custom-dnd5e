@@ -1,5 +1,5 @@
 import { CONSTANTS, MODULE, SETTING_BY_ENTITY_TYPE, SHEET_TYPE } from "../constants.js";
-import { c5eLoadTemplates, checkEmpty, getFlag, getSetting, registerMenu, registerSetting } from "../utils.js";
+import { c5eLoadTemplates, checkEmpty, getFlag, getSetting, registerMenu, registerSetting, resolveFormula } from "../utils.js";
 import { CountersForm } from "../forms/counters/counters-form.js";
 import { CountersFormEntity } from "../forms/counters/counters-form-entity.js";
 
@@ -871,16 +871,14 @@ export function resolveTriggerValue(entity, value) {
 /* -------------------------------------------- */
 
 /**
- * Resolve a max value, handling attribute paths (e.g. @scale.monk.ki-points).
+ * Resolve a max value, handling attribute paths (e.g. @scale.monk.ki-points)
+ * and calculations (e.g. @abilities.str.value / 2).
  * @param {object} entity The entity: actor or item
  * @param {number|string} max The max value or attribute path
  * @returns {number|null} The resolved max value
  */
 function resolveMax(entity, max) {
-  if ( typeof max === "string" && max.startsWith("@") ) {
-    return foundry.utils.getProperty(entity.system, max.substring(1)) ?? null;
-  }
-  return max || null;
+  return resolveFormula(entity, max);
 }
 
 /* -------------------------------------------- */

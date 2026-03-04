@@ -288,7 +288,7 @@
     "CUSTOM_DND5E.form.counters.key.note.1": "A chave deve ser única em todos os contadores do mesmo tipo de ator: personagem ou PNJ",
     "CUSTOM_DND5E.form.counters.listTitle": "Counters",
     "CUSTOM_DND5E.form.counters.max.label": "Valor Máximo",
-    "CUSTOM_DND5E.form.counters.max.note.1": "Defina um valor máximo (número) ou um caminho de atributo (ex: @scale.monk.ki-points)",
+    "CUSTOM_DND5E.form.counters.max.note.1": "Defina um valor máximo (número), caminho de atributo (ex: @scale.monk.ki-points) ou cálculo (ex: @abilities.str.value / 2)",
     "CUSTOM_DND5E.form.counters.title": "Configurar Contadores",
     "CUSTOM_DND5E.form.counters.triggers.macro.clear": "Remover Macro",
     "CUSTOM_DND5E.form.counters.triggers.tooltip": "Opções Avançadas",

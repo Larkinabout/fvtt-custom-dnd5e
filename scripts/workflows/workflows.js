@@ -1,5 +1,5 @@
 import { CONSTANTS, MODULE, SETTING_BY_ENTITY_TYPE, SHEET_TYPE } from "../constants.js";
-import { c5eLoadTemplates, compareValues, executeMacro, getFlag, setFlag, unsetFlag, getSetting, setSetting, Logger, registerMenu, registerSetting } from "../utils.js";
+import { c5eLoadTemplates, compareValues, executeMacro, getFlag, setFlag, unsetFlag, getSetting, setSetting, Logger, registerMenu, registerSetting, resolveFormula } from "../utils.js";
 import { WorkflowsForm } from "../forms/workflows/workflows-form.js";
 import { WorkflowsFormEntity } from "../forms/workflows/workflows-form-entity.js";
 import { counters } from "../counters/counters.js";
@@ -197,6 +197,22 @@ function coerceValue(value) {
 /* -------------------------------------------- */
 
 /**
+ * Resolve an update value, supporting @attribute paths and calculations.
+ * Falls back to coerceValue for plain values.
+ * @param {object} entity The entity providing roll data
+ * @param {string} value The update value
+ * @returns {string|boolean|number} The resolved value
+ */
+function resolveUpdateValue(entity, value) {
+  if ( typeof value === "string" && value.includes("@") ) {
+    return resolveFormula(entity, value) ?? coerceValue(value);
+  }
+  return coerceValue(value);
+}
+
+/* -------------------------------------------- */
+
+/**
  * Execute all actions in a workflow.
  * @param {object} actions The actions.
  * @param {object} options The options.
@@ -217,15 +233,18 @@ function executeWorkflowActions(actions, { entity, event, dieTotal = null, rolls
   for ( const action of Object.values(actions) ) {
     if ( action.type === "actorUpdate" ) {
       if ( action.updatePath && action.updateValue !== undefined ) {
-        foundry.utils.setProperty(actorUpdates, action.updatePath, coerceValue(action.updateValue));
+        const value = resolveUpdateValue(actor, action.updateValue);
+        foundry.utils.setProperty(actorUpdates, action.updatePath, value);
       }
     } else if ( action.type === "tokenUpdate" ) {
       if ( action.updatePath && action.updateValue !== undefined ) {
-        foundry.utils.setProperty(tokenUpdates, action.updatePath, coerceValue(action.updateValue));
+        const value = resolveUpdateValue(actor, action.updateValue);
+        foundry.utils.setProperty(tokenUpdates, action.updatePath, value);
       }
     } else if ( action.type === "itemUpdate" ) {
       if ( entity.documentName === "Item" && action.updatePath && action.updateValue !== undefined ) {
-        foundry.utils.setProperty(itemUpdates, action.updatePath, coerceValue(action.updateValue));
+        const value = resolveUpdateValue(entity, action.updateValue);
+        foundry.utils.setProperty(itemUpdates, action.updatePath, value);
       }
     } else {
       handleAction(action, { entity, event, dieTotal, rolls, data, counterKey, counterValue });
@@ -594,7 +613,7 @@ function distributeAward() {
  */
 function actorUpdate(actor, action) {
   if ( !action.updatePath || action.updateValue === undefined ) return;
-  actor.update({ [action.updatePath]: coerceValue(action.updateValue) });
+  actor.update({ [action.updatePath]: resolveUpdateValue(actor, action.updateValue) });
 }
 
 /* -------------------------------------------- */
@@ -608,7 +627,7 @@ function tokenUpdate(actor, action) {
   if ( !action.updatePath || action.updateValue === undefined ) return;
   const token = actor?.isToken ? actor.token : actor?.getActiveTokens()[0];
   if ( !token ) return;
-  token.document.update({ [action.updatePath]: coerceValue(action.updateValue) });
+  token.document.update({ [action.updatePath]: resolveUpdateValue(actor, action.updateValue) });
 }
 
 /* -------------------------------------------- */
@@ -621,7 +640,7 @@ function tokenUpdate(actor, action) {
 function itemUpdate(item, action) {
   if ( item.documentName !== "Item" ) return;
   if ( !action.updatePath || action.updateValue === undefined ) return;
-  item.update({ [action.updatePath]: coerceValue(action.updateValue) });
+  item.update({ [action.updatePath]: resolveUpdateValue(item, action.updateValue) });
 }
 
 /* -------------------------------------------- */

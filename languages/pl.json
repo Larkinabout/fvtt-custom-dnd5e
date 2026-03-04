@@ -288,7 +288,7 @@
     "CUSTOM_DND5E.form.counters.key.note.1": "Klucz musi być unikalny dla wszystkich liczników tego samego typu aktora: postaci lub BN",
     "CUSTOM_DND5E.form.counters.listTitle": "Counters",
     "CUSTOM_DND5E.form.counters.max.label": "Maksymalna wartość",
-    "CUSTOM_DND5E.form.counters.max.note.1": "Ustawienie maksymalnej wartości licznika",
+    "CUSTOM_DND5E.form.counters.max.note.1": "Ustaw wartość maksymalną (liczba), ścieżkę atrybutu (np. @scale.monk.ki-points) lub obliczenie (np. @abilities.str.value / 2)",
     "CUSTOM_DND5E.form.counters.title": "Konfiguracja liczników",
     "CUSTOM_DND5E.form.counters.triggers.macro.clear": "Remove Macro",
     "CUSTOM_DND5E.form.counters.triggers.tooltip": "Zaawansowane opcje",

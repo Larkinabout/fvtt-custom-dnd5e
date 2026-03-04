@@ -288,7 +288,7 @@
     "CUSTOM_DND5E.form.counters.key.note.1": "The key must be unique across all counters of the same actor type: character or NPC",
     "CUSTOM_DND5E.form.counters.listTitle": "Counters",
     "CUSTOM_DND5E.form.counters.max.label": "Maximum Value",
-    "CUSTOM_DND5E.form.counters.max.note.1": "Set a maximum value (number) or an attribute path (e.g. @scale.monk.ki-points)",
+    "CUSTOM_DND5E.form.counters.max.note.1": "Set a maximum value (number), attribute path (e.g. @scale.monk.ki-points) or calculation (e.g. @abilities.str.value / 2)",
     "CUSTOM_DND5E.form.counters.title": "Configure Counters",
     "CUSTOM_DND5E.form.counters.triggers.macro.clear": "Remove Macro",
     "CUSTOM_DND5E.form.counters.triggers.tooltip": "Advanced Options",
