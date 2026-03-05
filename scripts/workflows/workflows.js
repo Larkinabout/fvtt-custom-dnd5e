@@ -1163,81 +1163,206 @@ const HOOK_HANDLERS = {
  * @param {string|null} [options.effectName] The effect name.
  * @returns {boolean} Whether any trigger matched.
  */
+/**
+ * Test whether a single trigger matches a specific event with its conditions.
+ * @param {object} trigger The trigger object.
+ * @param {string} event The event name.
+ * @param {object} [options] The options.
+ * @param {number|null} [options.dieTotal] The die total.
+ * @param {Roll[]|null} [options.rolls] The rolls.
+ * @param {string|null} [options.counterKey] The counter key.
+ * @param {number|null} [options.counterValue] The counter value.
+ * @param {string|null} [options.conditionId] The condition ID.
+ * @param {Actor|null} [options.actor] The actor.
+ * @param {string|null} [options.rollSubtype] The roll subtype key.
+ * @param {string|null} [options.effectName] The effect name.
+ * @returns {boolean} Whether the trigger matched.
+ */
+function matchTriggerAgainstEvent(trigger, event, {
+  dieTotal = null, rolls = null, counterKey = null, counterValue = null,
+  conditionId = null, actor = null, rollSubtype = null, effectName = null
+} = {}) {
+  if ( trigger.event !== event ) return false;
+
+  // Roll subtype triggers must match the specific ability/skill/tool
+  if ( trigger.rollSubtype && trigger.rollSubtype !== rollSubtype ) return false;
+
+  // Condition triggers must match the conditionId
+  if ( trigger.conditionId && trigger.conditionId !== conditionId ) return false;
+
+  // Effect triggers must match the effectName (case-insensitive)
+  if ( trigger.effectName && (!effectName || trigger.effectName.toLowerCase() !== effectName.toLowerCase()) ) {
+    return false;
+  }
+
+  // Counter triggers must match the counterKey (normalize both to raw key for comparison)
+  if ( trigger.counterKey ) {
+    const rawTrigger = trigger.counterKey.startsWith("counters.") ? trigger.counterKey.slice(9) : trigger.counterKey;
+    const rawCounter = counterKey?.startsWith("counters.") ? counterKey.slice(9) : counterKey;
+    if ( rawTrigger !== rawCounter ) {
+      Logger.debug(`${LOG_PREFIX} matchTriggerAgainstEvent: counterKey mismatch`, { expected: trigger.counterKey, actual: counterKey });
+      return false;
+    }
+  }
+
+  // Check success/failure result filter
+  if ( trigger.result === "success" || trigger.result === "failure" ) {
+    const rollTotal = rolls?.[0]?.total;
+    const dc = rolls?.[0]?.options?.target;
+    if ( rollTotal == null || dc == null ) return false;
+    const isSuccess = rollTotal >= dc;
+    if ( trigger.result === "success" && !isSuccess ) return false;
+    if ( trigger.result === "failure" && isSuccess ) return false;
+  }
+
+  // Check margin-based result filters (within N / by N or more)
+  if ( ["successWithin", "failureWithin", "successBy", "failureBy"].includes(trigger.result) ) {
+    const rollTotal = rolls?.[0]?.total;
+    const dc = rolls?.[0]?.options?.target;
+    if ( rollTotal == null || dc == null ) return false;
+    const isSuccess = rollTotal >= dc;
+    const isSuccessResult = trigger.result === "successWithin" || trigger.result === "successBy";
+    if ( isSuccessResult && !isSuccess ) return false;
+    if ( !isSuccessResult && isSuccess ) return false;
+    const margin = Math.abs(rollTotal - dc);
+    const threshold = Number(trigger.value);
+    if ( isNaN(threshold) ) return false;
+    const isWithin = trigger.result === "successWithin" || trigger.result === "failureWithin";
+    if ( isWithin && margin > threshold ) return false;
+    if ( !isWithin && margin < threshold ) return false;
+    Logger.debug(`${LOG_PREFIX} matchTriggerAgainstEvent: matched (margin)`, { event, rollTotal, dc, margin, threshold, result: trigger.result });
+    return true;
+  }
+
+  // If no value condition, the trigger matches on event alone
+  if ( trigger.value === undefined || trigger.value === "" || trigger.value === null ) {
+    Logger.debug(`${LOG_PREFIX} matchTriggerAgainstEvent: matched (no value condition)`, { event, triggerEvent: trigger.event });
+    return true;
+  }
+
+  // Determine actual value for comparison
+  const isCounterValueTrigger = ["counterValue", "successValue", "failureValue"].includes(trigger.event);
+  const actualValue = isCounterValueTrigger ? counterValue : dieTotal;
+  const targetValue = (typeof trigger.value === "string" && trigger.value.startsWith("@"))
+    ? counters.resolveTriggerValue(actor, trigger.value) : Number(trigger.value);
+
+  const result = compareValues(actualValue, trigger.operator, targetValue);
+  Logger.debug(`${LOG_PREFIX} matchTriggerAgainstEvent: value comparison`, { event, actualValue, operator: trigger.operator, targetValue, result });
+  return result;
+}
+
+/* -------------------------------------------- */
+
+/**
+ * Check whether a trigger's condition is currently satisfied as actor state.
+ * Used for per-trigger conditions that must be true when the trigger fires.
+ * @param {object} trigger The trigger object.
+ * @param {Actor|Item} entity The actor or item to check state on.
+ * @returns {boolean} Whether the trigger's condition is satisfied.
+ */
+function checkTriggerState(trigger, entity) {
+  if ( !entity ) return true;
+
+  // Resolve to the owning actor for item-level workflows
+  const actor = entity.documentName === "Item" ? entity.parent : entity;
+
+  switch ( trigger.event ) {
+    case "zeroHp": {
+      const hp = actor?.system?.attributes?.hp;
+      return hp ? hp.value === 0 : true;
+    }
+    case "halfHp": {
+      const pct = actor?.system?.attributes?.hp?.pct;
+      return pct != null ? pct <= 50 : true;
+    }
+    case "conditionApplied": {
+      if ( !trigger.conditionId ) return true;
+      return actor?.statuses?.has(trigger.conditionId) ?? true;
+    }
+    case "conditionRemoved": {
+      if ( !trigger.conditionId ) return true;
+      return !(actor?.statuses?.has(trigger.conditionId) ?? false);
+    }
+    case "effectEnabled": {
+      if ( !trigger.effectName ) return true;
+      const name = trigger.effectName.toLowerCase();
+      return actor?.effects?.some(e => !e.disabled && e.name?.toLowerCase() === name) ?? true;
+    }
+    case "effectDisabled": {
+      if ( !trigger.effectName ) return true;
+      const name = trigger.effectName.toLowerCase();
+      return !(actor?.effects?.some(e => !e.disabled && e.name?.toLowerCase() === name) ?? false);
+    }
+    case "startOfTurn":
+    case "endOfTurn": {
+      return game.combat?.combatant?.actor === actor;
+    }
+    case "startOfCombat":
+    case "endOfCombat": {
+      return !!game.combat?.active;
+    }
+    case "counterValue":
+    case "successValue":
+    case "failureValue": {
+      if ( !trigger.counterKey || trigger.value === undefined || trigger.value === "" || trigger.value === null ) return true;
+      const rawKey = trigger.counterKey.startsWith("counters.") ? trigger.counterKey : `counters.${trigger.counterKey}`;
+      let actualValue;
+      if ( trigger.event === "successValue" ) {
+        actualValue = counters.getSuccessFailureValue(entity, rawKey, "success");
+      } else if ( trigger.event === "failureValue" ) {
+        actualValue = counters.getSuccessFailureValue(entity, rawKey, "failure");
+      } else {
+        actualValue = counters.getCounterValue(entity, rawKey);
+      }
+      const targetValue = (typeof trigger.value === "string" && trigger.value.startsWith("@"))
+        ? counters.resolveTriggerValue(entity, trigger.value) : Number(trigger.value);
+      return compareValues(actualValue, trigger.operator, targetValue);
+    }
+    // Event-only triggers that cannot be state-checked — treat as satisfied
+    default:
+      return true;
+  }
+}
+
+/* -------------------------------------------- */
+
+/**
+ * Check if a workflow matches the current event (OR logic across triggers).
+ * Each trigger can have optional conditions that must also be satisfied.
+ * @param {object} workflow The workflow group.
+ * @param {string} event The event name.
+ * @param {object} [options] The options.
+ * @param {number|null} [options.dieTotal] The die total.
+ * @param {Roll[]|null} [options.rolls] The rolls.
+ * @param {string|null} [options.counterKey] The counter key.
+ * @param {number|null} [options.counterValue] The counter value.
+ * @param {string|null} [options.conditionId] The condition ID.
+ * @param {Actor|null} [options.actor] The actor.
+ * @param {string|null} [options.rollSubtype] The roll subtype key.
+ * @param {string|null} [options.effectName] The effect name.
+ * @returns {boolean} Whether any trigger matched.
+ */
 function workflowMatchesEvent(workflow, event, {
   dieTotal = null, rolls = null, counterKey = null, counterValue = null,
   conditionId = null, actor = null, rollSubtype = null, effectName = null
 } = {}) {
   const triggers = workflow.triggers || {};
-  for ( const trigger of Object.values(triggers) ) {
-    if ( trigger.event !== event ) continue;
+  const triggerList = Object.values(triggers);
+  const opts = { dieTotal, rolls, counterKey, counterValue, conditionId, actor, rollSubtype, effectName };
 
-    // Roll subtype triggers must match the specific ability/skill/tool
-    if ( trigger.rollSubtype && trigger.rollSubtype !== rollSubtype ) continue;
+  // OR logic: any matching trigger (with its conditions met) fires the workflow
+  for ( const trigger of triggerList ) {
+    if ( !matchTriggerAgainstEvent(trigger, event, opts) ) continue;
 
-    // Condition triggers must match the conditionId
-    if ( trigger.conditionId && trigger.conditionId !== conditionId ) continue;
-
-    // Effect triggers must match the effectName (case-insensitive)
-    if ( trigger.effectName && (!effectName || trigger.effectName.toLowerCase() !== effectName.toLowerCase()) ) {
-      continue;
+    // Check per-trigger conditions (all must be satisfied)
+    if ( trigger.conditions ) {
+      const conditionsMet = Object.values(trigger.conditions).every(
+        cond => checkTriggerState(cond, actor)
+      );
+      if ( !conditionsMet ) continue;
     }
 
-    // Counter triggers must match the counterKey (normalize both to raw key for comparison)
-    if ( trigger.counterKey ) {
-      const rawTrigger = trigger.counterKey.startsWith("counters.") ? trigger.counterKey.slice(9) : trigger.counterKey;
-      const rawCounter = counterKey?.startsWith("counters.") ? counterKey.slice(9) : counterKey;
-      if ( rawTrigger !== rawCounter ) {
-        Logger.debug(`${LOG_PREFIX} workflowMatchesEvent: counterKey mismatch`, { expected: trigger.counterKey, actual: counterKey });
-        continue;
-      }
-    }
-
-    // Check success/failure result filter
-    if ( trigger.result === "success" || trigger.result === "failure" ) {
-      const rollTotal = rolls?.[0]?.total;
-      const dc = rolls?.[0]?.options?.target;
-      if ( rollTotal == null || dc == null ) continue;
-      const isSuccess = rollTotal >= dc;
-      if ( trigger.result === "success" && !isSuccess ) continue;
-      if ( trigger.result === "failure" && isSuccess ) continue;
-    }
-
-    // Check margin-based result filters (within N / by N or more)
-    if ( ["successWithin", "failureWithin", "successBy", "failureBy"].includes(trigger.result) ) {
-      const rollTotal = rolls?.[0]?.total;
-      const dc = rolls?.[0]?.options?.target;
-      if ( rollTotal == null || dc == null ) continue;
-      const isSuccess = rollTotal >= dc;
-      const isSuccessResult = trigger.result === "successWithin" || trigger.result === "successBy";
-      if ( isSuccessResult && !isSuccess ) continue;
-      if ( !isSuccessResult && isSuccess ) continue;
-      const margin = Math.abs(rollTotal - dc);
-      const threshold = Number(trigger.value);
-      if ( isNaN(threshold) ) continue;
-      const isWithin = trigger.result === "successWithin" || trigger.result === "failureWithin";
-      if ( isWithin && margin > threshold ) continue;
-      if ( !isWithin && margin < threshold ) continue;
-      Logger.debug(`${LOG_PREFIX} workflowMatchesEvent: matched (margin)`, { event, rollTotal, dc, margin, threshold, result: trigger.result });
-      return true;
-    }
-
-    // If no value condition, the trigger matches on event alone
-    if ( trigger.value === undefined || trigger.value === "" || trigger.value === null ) {
-      Logger.debug(`${LOG_PREFIX} workflowMatchesEvent: matched (no value condition)`, { event, triggerEvent: trigger.event });
-      return true;
-    }
-
-    // Determine actual value for comparison
-    const isCounterValueTrigger = ["counterValue", "successValue", "failureValue"].includes(trigger.event);
-    const actualValue = isCounterValueTrigger ? counterValue : dieTotal;
-    const targetValue = (typeof trigger.value === "string" && trigger.value.startsWith("@"))
-      ? counters.resolveTriggerValue(actor, trigger.value) : Number(trigger.value);
-
-    const result = compareValues(actualValue, trigger.operator, targetValue);
-    Logger.debug(`${LOG_PREFIX} workflowMatchesEvent: value comparison`, { event, actualValue, operator: trigger.operator, targetValue, result });
-    if ( result ) {
-      return true;
-    }
+    return true;
   }
   return false;
 }
@@ -1464,6 +1589,24 @@ export function rebuild() {
     }
   }
 
+  // Scan game.actors for per-item trigger events on owned items
+  if ( game.actors ) {
+    for ( const actor of game.actors ) {
+      for ( const item of actor.items ) {
+        const itemWorkflows = getFlag(item, "triggers");
+        if ( !itemWorkflows ) continue;
+        for ( const workflow of Object.values(itemWorkflows) ) {
+          if ( !workflow.visible && workflow.visible !== undefined ) continue;
+          if ( workflow.enabled === false ) continue;
+          const triggers = workflow.triggers || {};
+          for ( const trigger of Object.values(triggers) ) {
+            if ( trigger.event ) activeItemEvents.add(trigger.event);
+          }
+        }
+      }
+    }
+  }
+
   // Ensure roll hooks are registered for requestRoll actions with onSuccess/onFailure
   // so handleRequestRollResult can fire after the requested roll completes.
   for ( const event of collectRequestRollEvents(worldWorkflows) ) {
@@ -1541,10 +1684,13 @@ function syncHooks(activeEvents, activeItemEvents = new Set()) {
 /**
  * Ensure hooks are registered for all events in the given workflows.
  * @param {object} workflows The workflows.
+ * @param {string} [entityType="actor"] Whether these are "actor" or "item" workflows.
  */
-export function ensureEventHooks(workflows) {
+export function ensureEventHooks(workflows, entityType = "actor") {
   if ( !getSetting(constants.SETTING.ENABLE.KEY) ) return;
   if ( !workflows ) return;
+
+  const isItem = entityType === "item";
 
   for ( const workflow of Object.values(workflows) ) {
     if ( !workflow.visible && workflow.visible !== undefined ) continue;
@@ -1554,7 +1700,9 @@ export function ensureEventHooks(workflows) {
     for ( const trigger of Object.values(triggers) ) {
       if ( !trigger.event ) continue;
 
-      const hookName = EVENT_TO_HOOK[trigger.event];
+      const hookName = isItem
+        ? (ITEM_EVENT_TO_HOOK[trigger.event] || EVENT_TO_HOOK[trigger.event])
+        : (EVENT_TO_HOOK[trigger.event] || ITEM_EVENT_TO_HOOK[trigger.event]);
       if ( !hookName ) continue;
 
       if ( !hookIds.has(hookName) ) {

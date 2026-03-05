@@ -3,6 +3,7 @@ import { Logger, getFlag, getOperatorChoices, getSetting, setSetting, setFlag, u
 import { CustomDnd5eForm } from "../custom-dnd5e-form.js";
 import { rebuild, ensureEventHooks } from "../../workflows/workflows.js";
 import { RequestRollResultForm } from "./request-roll-result-form.js";
+import { TriggerConditionsForm } from "./trigger-conditions-form.js";
 
 const id = CONSTANTS.WORKFLOWS.ID;
 const form = `${id}-edit`;
@@ -187,6 +188,46 @@ function getTriggerChoices(entityType = "actor") {
       { value: "unequip", label: "CUSTOM_DND5E.form.workflows.trigger.choices.unequip", group: equipmentGroup }
     );
   }
+
+  return choices;
+}
+
+/* -------------------------------------------- */
+
+/**
+ * Build trigger choices limited to state-checkable events (for per-trigger conditions).
+ * @param {string} [entityType="actor"] The entity type.
+ * @returns {object[]} Condition trigger choice objects with value, label, and group.
+ */
+export function getConditionTriggerChoices(entityType = "actor") {
+  const choices = [];
+
+  if ( entityType === "actor" ) {
+    const hpGroup = game.i18n.localize("CUSTOM_DND5E.form.workflows.trigger.group.hitPoints");
+    const combatGroup = game.i18n.localize("CUSTOM_DND5E.form.workflows.trigger.group.combat");
+    const conditionsGroup = game.i18n.localize("CUSTOM_DND5E.form.workflows.trigger.group.conditions");
+    const effectsGroup = game.i18n.localize("CUSTOM_DND5E.form.workflows.trigger.group.effects");
+
+    choices.push(
+      { value: "zeroHp", label: "CUSTOM_DND5E.form.workflows.trigger.choices.zeroHp", group: hpGroup },
+      { value: "halfHp", label: "CUSTOM_DND5E.form.workflows.trigger.choices.halfHp", group: hpGroup },
+      { value: "startOfCombat", label: "CUSTOM_DND5E.startOfCombat", group: combatGroup },
+      { value: "endOfCombat", label: "CUSTOM_DND5E.endOfCombat", group: combatGroup },
+      { value: "startOfTurn", label: "CUSTOM_DND5E.startOfTurn", group: combatGroup },
+      { value: "endOfTurn", label: "CUSTOM_DND5E.endOfTurn", group: combatGroup },
+      { value: "conditionApplied", label: "CUSTOM_DND5E.form.workflows.trigger.choices.conditionApplied", group: conditionsGroup },
+      { value: "conditionRemoved", label: "CUSTOM_DND5E.form.workflows.trigger.choices.conditionRemoved", group: conditionsGroup },
+      { value: "effectEnabled", label: "CUSTOM_DND5E.form.workflows.trigger.choices.effectEnabled", group: effectsGroup },
+      { value: "effectDisabled", label: "CUSTOM_DND5E.form.workflows.trigger.choices.effectDisabled", group: effectsGroup }
+    );
+  }
+
+  const countersGroup = game.i18n.localize("CUSTOM_DND5E.form.workflows.trigger.group.counters");
+  choices.push(
+    { value: "counterValue", label: "CUSTOM_DND5E.form.counters.triggers.trigger.choices.counterValue", group: countersGroup },
+    { value: "successValue", label: "CUSTOM_DND5E.form.counters.triggers.trigger.choices.successValue", group: countersGroup },
+    { value: "failureValue", label: "CUSTOM_DND5E.form.counters.triggers.trigger.choices.failureValue", group: countersGroup }
+  );
 
   return choices;
 }
@@ -482,6 +523,7 @@ export class WorkflowsEditForm extends CustomDnd5eForm {
     this.entity = args.data.entity;
     this.entityType = args.data.entityType || "actor";
     this._requestRollResults = {};
+    this._triggerConditions = {};
 
     this.headerButton = {
       icon: "fa-passport",
@@ -500,6 +542,7 @@ export class WorkflowsEditForm extends CustomDnd5eForm {
       copyId: WorkflowsEditForm.copyId,
       deleteRow: WorkflowsEditForm.deleteRow,
       clearTable: WorkflowsEditForm.clearTable,
+      editConditions: WorkflowsEditForm.editConditions,
       editResult: WorkflowsEditForm.editResult
     },
     form: {
@@ -548,6 +591,13 @@ export class WorkflowsEditForm extends CustomDnd5eForm {
           ? (t.operator || "eq")
           : "";
 
+      // Populate _triggerConditions from saved data on initial load
+      if ( t.conditions && !this._triggerConditions[triggerId] ) {
+        this._triggerConditions[triggerId] = t.conditions;
+      }
+
+      const conditionsData = this._triggerConditions[triggerId] || t.conditions || {};
+
       triggers.push({
         triggerId,
         event: triggerEvent,
@@ -567,7 +617,8 @@ export class WorkflowsEditForm extends CustomDnd5eForm {
         conditionChoicesForTrigger: isResultEvent ? resultOperatorChoices : operatorChoices,
         triggerChoices,
         conditionChoices,
-        counterChoices: getFilteredTriggerCounterChoiceLabels(this.counterChoices, triggerEvent)
+        counterChoices: getFilteredTriggerCounterChoiceLabels(this.counterChoices, triggerEvent),
+        hasConditions: Object.keys(conditionsData).length > 0
       });
     }
 
@@ -874,7 +925,8 @@ export class WorkflowsEditForm extends CustomDnd5eForm {
       conditionChoicesForTrigger: getResultOperatorChoices(),
       triggerChoices: getTriggerChoices(this.entityType),
       conditionChoices: getConditionChoices(),
-      counterChoices: getCounterChoiceLabels(getCounterChoices(this.entityType, this.entity))
+      counterChoices: getCounterChoiceLabels(getCounterChoices(this.entityType, this.entity)),
+      hasConditions: false
     };
 
     const html = await foundry.applications.handlebars.renderTemplate(
@@ -948,6 +1000,27 @@ export class WorkflowsEditForm extends CustomDnd5eForm {
   static deleteRow(event, target) {
     const row = target.closest(".item");
     if ( row ) row.remove();
+  }
+
+  /* -------------------------------------------- */
+
+  /**
+   * Open the conditions editor for a trigger.
+   * @param {Event} event The triggering event.
+   * @param {HTMLElement} target The clicked element.
+   */
+  static editConditions(event, target) {
+    const row = target.closest(".item");
+    const triggerId = row.dataset.key;
+    const existing = this._triggerConditions[triggerId] || {};
+
+    TriggerConditionsForm.open({
+      parentForm: this,
+      triggerId,
+      conditions: foundry.utils.deepClone(existing),
+      entityType: this.entityType,
+      entity: this.entity
+    });
   }
 
   /* -------------------------------------------- */
@@ -1111,12 +1184,20 @@ export class WorkflowsEditForm extends CustomDnd5eForm {
       }
     }
 
+    // Merge per-trigger conditions
+    for ( const [triggerId, conditions] of Object.entries(this._triggerConditions) ) {
+      if ( !group.triggers[triggerId] ) continue;
+      if ( Object.keys(conditions).length ) {
+        group.triggers[triggerId].conditions = conditions;
+      }
+    }
+
     this.setting[this.key] = group;
 
     if ( this.entity ) {
       await unsetFlag(this.entity, "triggers");
       await setFlag(this.entity, "triggers", this.setting);
-      ensureEventHooks(this.setting);
+      ensureEventHooks(this.setting, this.entityType);
     } else {
       const settingKey = this.entityType === "item"
         ? CONSTANTS.WORKFLOWS.SETTING.ITEM_WORKFLOWS.KEY

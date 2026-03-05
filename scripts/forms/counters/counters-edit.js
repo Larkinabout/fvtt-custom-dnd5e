@@ -230,7 +230,7 @@ export class CountersEditForm extends CustomDnd5eForm {
             delete setting[workflowKey];
             await unsetFlag(this.entity, "triggers");
             await setFlag(this.entity, "triggers", setting);
-            ensureEventHooks(setting);
+            ensureEventHooks(setting, this.actorType);
           } else {
             const setting = getSetting(workflowsSettingKey(this.actorType)) || {};
             delete setting[workflowKey];
