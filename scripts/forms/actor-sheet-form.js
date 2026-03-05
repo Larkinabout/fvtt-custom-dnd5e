@@ -1,4 +1,4 @@
-import { CONSTANTS, JOURNAL_HELP_BUTTON, MODULE } from "../constants.js";
+import { CONSTANTS, JOURNAL_HELP_BUTTON, MODULE, SHEET_TYPE } from "../constants.js";
 import { getFlag, setFlag, getSetting, setSetting } from "../utils.js";
 import { CustomDnd5eForm } from "./custom-dnd5e-form.js";
 
@@ -137,6 +137,10 @@ export class ActorSheetForm extends CustomDnd5eForm {
         setSetting(CONSTANTS.ACTOR_SHEET.SETTING.SHOW_TOKEN_DISPOSITION.KEY, formData.object.showTokenDisposition),
         setSetting(CONSTANTS.ACTOR_SHEET.SETTING.SHOW_USE_LAIR_ACTION.KEY, formData.object.showUseLairAction)
       ]);
+    }
+
+    for ( const app of foundry.applications.instances.values() ) {
+      if ( SHEET_TYPE[app.constructor.name]?.character ) app.render();
     }
   }
 }
