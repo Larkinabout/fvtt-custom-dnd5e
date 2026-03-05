@@ -303,20 +303,29 @@ function setBannerImage(sheetType, html) {
   if ( !sheetType.character ) return;
 
   const bannerImage = getSetting(constants.SETTING.BANNER_IMAGE.KEY);
+  const styleId = "custom-dnd5e-banner-image";
+  let style = document.getElementById(styleId);
 
-  if ( !bannerImage ) return;
+  if ( !bannerImage ) {
+    style?.remove();
+    return;
+  }
 
-  const style = document.createElement("style");
+  if ( !style ) {
+    style = document.createElement("style");
+    style.id = styleId;
+    document.head.append(style);
+  }
 
   style.innerHTML = `
-    .dnd5e2.sheet.actor.character.theme-dark .window-content::before {
-        background: url("${bannerImage}") no-repeat top center / cover;
+    body.theme-light .dnd5e2.sheet.actor.character {
+        --dnd5e-character-header-image: url("/${bannerImage}");
     }
-    .dnd5e2.sheet.actor.character.theme-light .sheet-header {
-        background: url("${bannerImage}") no-repeat center / cover;
-    
+    body.theme-dark .dnd5e2.sheet.actor.character {
+        --dnd5e-character-background-content: "";
+        --dnd5e-character-background-image: url("/${bannerImage}");
+    }
     `;
-  document.head.append(style);
 }
 
 /* -------------------------------------------- */

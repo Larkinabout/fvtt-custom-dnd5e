@@ -1146,7 +1146,8 @@ export const CONSTANTS = {
       FORM_ENTITY: "modules/custom-dnd5e/templates/workflows/workflows-form-entity.hbs",
       TRIGGER_ROW: "modules/custom-dnd5e/templates/workflows/workflows-trigger-row.hbs",
       ACTION_ROW: "modules/custom-dnd5e/templates/workflows/workflows-action-row.hbs",
-      REQUEST_ROLL_RESULT: "modules/custom-dnd5e/templates/workflows/request-roll-result-form.hbs"
+      REQUEST_ROLL_RESULT: "modules/custom-dnd5e/templates/workflows/request-roll-result-form.hbs",
+      TRIGGER_CONDITIONS: "modules/custom-dnd5e/templates/workflows/trigger-conditions-form.hbs"
     },
     UUID: "Compendium.custom-dnd5e.custom-dnd5e-journals.JournalEntry.fR3kYmNpV4tZwQ5r"
   },

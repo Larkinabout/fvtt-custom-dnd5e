@@ -279,7 +279,7 @@ Create event-driven workflows that execute actions in response to triggers. Work
 
 ### Triggers
 
-Triggers define when a workflow fires. Multiple triggers can be added to a single workflow using OR logic. Roll-based triggers support optional value conditions with operators (equal, less than, greater than, not equal) and result conditions (success, failure, success/failure within margin, success/failure by amount).
+Triggers define when a workflow fires. Multiple triggers can be added to a single workflow using OR logic. Roll-based triggers support optional value conditions with operators (equal, less than, greater than, not equal) and result conditions (success, failure, success/failure within margin, success/failure by amount). Each trigger can also have per-trigger **conditions** — additional state checks (e.g. Half HP, a specific condition applied, a counter value) that must all be satisfied on the actor for the trigger to fire.
 
 **Roll Triggers:** Attack Roll, Ability Check, Saving Throw, Skill Check, Tool Check, Initiative Roll, Concentration Check, Death Save, Damage Roll.
 
