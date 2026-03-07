@@ -1,0 +1,28 @@
+{
+  "name": "Burning Animation",
+  "type": "script",
+  "author": "zOtcGexgRGNVhsT1",
+  "img": "icons/svg/dice-target.svg",
+  "scope": "global",
+  "command": "const owners = game.users.filter(u => !u.isGM && actor.testUserPermission(u, \"OWNER\"));\nconst userIds = owners.length ? owners.map(u => u.id) : [game.user.id];\nconst anim = game.modules.get(\"custom-dnd5e\").api.animations;\n\nanim.flashScreen({ color: \"#ff0000\", opacity: 0.5, duration: 1000, userIds });\nanim.shakeScreen({ duration: 1000, userIds });\nanim.fireScreen({ intensity: 10, duration: 1500, userIds });",
+  "folder": "ABREqiorYTQ0DNX9",
+  "flags": {},
+  "_stats": {
+    "compendiumSource": null,
+    "duplicateSource": null,
+    "exportSource": null,
+    "coreVersion": "13.351",
+    "systemId": "dnd5e",
+    "systemVersion": "5.2.5",
+    "createdTime": 1772649660412,
+    "modifiedTime": 1772649660412,
+    "lastModifiedBy": "zOtcGexgRGNVhsT1"
+  },
+  "ownership": {
+    "default": 0,
+    "zOtcGexgRGNVhsT1": 3
+  },
+  "_id": "co9CJ63efhwoWSNC",
+  "sort": 0,
+  "_key": "!macros!co9CJ63efhwoWSNC"
+}

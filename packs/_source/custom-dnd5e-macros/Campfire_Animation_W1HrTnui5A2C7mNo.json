@@ -1,0 +1,28 @@
+{
+  "name": "Campfire Animation",
+  "type": "script",
+  "author": "zOtcGexgRGNVhsT1",
+  "img": "icons/svg/dice-target.svg",
+  "scope": "global",
+  "command": "const owners = game.users.filter(u => !u.isGM && actor.testUserPermission(u, \"OWNER\"));\nconst userIds = owners.length ? owners.map(u => u.id) : [game.user.id];\nconst anim = game.modules.get(\"custom-dnd5e\").api.animations;\n\nanim.flashScreen({ color: \"#000000\", opacity: 0.8, fadeIn: 2000, duration: 1000, fadeOut: 2000, userIds });\nsetTimeout(() => anim.fireScreen({ fadeIn: 1000, duration: 4000, fadeOut: 1000, userIds }), 300);",
+  "folder": "ABREqiorYTQ0DNX9",
+  "flags": {},
+  "_stats": {
+    "compendiumSource": null,
+    "duplicateSource": null,
+    "exportSource": null,
+    "coreVersion": "13.351",
+    "systemId": "dnd5e",
+    "systemVersion": "5.2.5",
+    "createdTime": 1772649660412,
+    "modifiedTime": 1772649660412,
+    "lastModifiedBy": "zOtcGexgRGNVhsT1"
+  },
+  "ownership": {
+    "default": 0,
+    "zOtcGexgRGNVhsT1": 3
+  },
+  "_id": "W1HrTnui5A2C7mNo",
+  "sort": 0,
+  "_key": "!macros!W1HrTnui5A2C7mNo"
+}

@@ -1,7 +1,8 @@
 import { CONSTANTS, MODULE } from "./constants.js";
-import { SPLATTER_VS, SPLATTER_FS } from "./shaders/splatter.js";
-import { LIGHT_RAYS_VS, LIGHT_RAYS_FS } from "./shaders/light-rays.js";
 import { COLOR_SPLIT_FS } from "./shaders/color-split.js";
+import { FIRE_VS, FIRE_FS } from "./shaders/fire.js";
+import { LIGHT_RAYS_VS, LIGHT_RAYS_FS } from "./shaders/light-rays.js";
+import { SPLATTER_VS, SPLATTER_FS } from "./shaders/splatter.js";
 import { WAVE_FS } from "./shaders/wave.js";
 
 /* -------------------------------------------- */
@@ -1017,12 +1018,17 @@ animations.shakeScreen = async function({ intensity = 5, duration = 500, userIds
  * @param {object} [options]
  * @param {string} [options.color="#ff0000"]
  * @param {number} [options.opacity=0.4]
- * @param {number} [options.duration=500]
- * @param {string[]} [options.userIds] Only play for these users
+ * @param {number} [options.fadeIn] Fade-in ms.
+ * @param {number} [options.duration=500] Hold ms (or total when fadeIn/fadeOut omitted).
+ * @param {number} [options.fadeOut] Fade-out ms.
+ * @param {number} [options.zIndex=10000] CSS z-index for the overlay element.
+ * @param {string[]} [options.userIds] Only play for these users.
  */
-animations.flashScreen = async function({ color = "#ff0000", opacity = 0.4, duration = 500, userIds } = {}) {
+animations.flashScreen = async function({ color = "#ff0000", opacity = 0.4, fadeIn, duration = 500, fadeOut, zIndex = 10000, userIds } = {}) {
   if ( userIds && requiresSocket(userIds) ) {
-    game.socket.emit(`module.${MODULE.ID}`, { action: "animation", type: "flashScreen", options: { color, opacity, duration, userIds } });
+    game.socket.emit(`module.${MODULE.ID}`, {
+      action: "animation", type: "flashScreen", options: { color, opacity, fadeIn, duration, fadeOut, zIndex, userIds }
+    });
   }
   if ( userIds && !userIds.includes(game.user.id) ) return;
   if ( game.settings.get("core", "photosensitiveMode") ) return;
@@ -1034,20 +1040,28 @@ animations.flashScreen = async function({ color = "#ff0000", opacity = 0.4, dura
     background: ${color};
     opacity: 0;
     pointer-events: none;
-    z-index: 10000;
+    z-index: ${zIndex};
   `;
   document.body.appendChild(flash);
 
-  const fadeIn = Math.min(duration * 0.2, 200);
-  const fadeOut = Math.min(duration * 0.8, 800);
+  const explicitTiming = fadeIn !== undefined || fadeOut !== undefined;
+  const fadeInMs = fadeIn ?? Math.min(duration * 0.2, 200);
+  const fadeOutMs = fadeOut ?? Math.min(duration * 0.8, 800);
+  const holdMs = explicitTiming ? duration : 0;
 
   await flash.animate(
     [{ opacity: 0 }, { opacity }],
-    { duration: fadeIn, fill: "forwards" }
+    { duration: fadeInMs, fill: "forwards" }
   ).finished;
+  if ( holdMs > 0 ) {
+    await flash.animate(
+      [{ opacity }, { opacity }],
+      { duration: holdMs, fill: "forwards" }
+    ).finished;
+  }
   await flash.animate(
     [{ opacity }, { opacity: 0 }],
-    { duration: fadeOut, fill: "forwards" }
+    { duration: fadeOutMs, fill: "forwards" }
   ).finished;
 
   flash.remove();
@@ -1059,17 +1073,26 @@ animations.flashScreen = async function({ color = "#ff0000", opacity = 0.4, dura
  * Blur the entire screen.
  * @param {object} [options]
  * @param {number} [options.intensity=5]
- * @param {number} [options.duration=1500]
- * @param {string[]} [options.userIds] Only play for these users
+ * @param {number} [options.fadeIn] Fade-in ms.
+ * @param {number} [options.duration=1500] Hold ms (or total when fadeIn/fadeOut omitted).
+ * @param {number} [options.fadeOut] Fade-out ms. Default: min(duration × 0.5, 1000).
+ * @param {string[]} [options.userIds] Only play for these users.
  */
-animations.blurScreen = async function({ intensity = 5, duration = 1500, userIds } = {}) {
+animations.blurScreen = async function({ intensity = 5, fadeIn, duration = 1500, fadeOut, userIds } = {}) {
   if ( userIds && requiresSocket(userIds) ) {
-    game.socket.emit(`module.${MODULE.ID}`, { action: "animation", type: "blurScreen", options: { intensity, duration, userIds } });
+    game.socket.emit(`module.${MODULE.ID}`, {
+      action: "animation", type: "blurScreen", options: { intensity, fadeIn, duration, fadeOut, userIds }
+    });
   }
   if ( userIds && !userIds.includes(game.user.id) ) return;
   const element = document.body;
-  const fadeIn = Math.min(duration * 0.5, 500);
-  const fadeOut = Math.min(duration * 0.5, 1000);
+
+  const explicitTiming = fadeIn !== undefined || fadeOut !== undefined;
+  const fadeInMs = fadeIn ?? Math.min(duration * 0.5, 500);
+  const fadeOutMs = fadeOut ?? Math.min(duration * 0.5, 1000);
+  const holdMs = explicitTiming ? duration : 0;
+  const totalMs = explicitTiming ? fadeInMs + holdMs + fadeOutMs : duration;
+
   const startTime = performance.now();
 
   return new Promise(resolve => {
@@ -1079,17 +1102,16 @@ animations.blurScreen = async function({ intensity = 5, duration = 1500, userIds
      */
     function animate(currentTime) {
       const elapsed = currentTime - startTime;
-      const progress = elapsed / duration;
 
-      if ( progress >= 1 ) {
+      if ( elapsed >= totalMs ) {
         element.style.filter = "";
         resolve();
         return;
       }
 
       let env;
-      if ( elapsed < fadeIn ) env = elapsed / fadeIn;
-      else if ( elapsed > duration - fadeOut ) env = (duration - elapsed) / fadeOut;
+      if ( elapsed < fadeInMs ) env = elapsed / fadeInMs;
+      else if ( elapsed > totalMs - fadeOutMs ) env = (totalMs - elapsed) / fadeOutMs;
       else env = 1.0;
       env = Math.max(0, Math.min(1, env));
 
@@ -1113,7 +1135,9 @@ animations.blurScreen = async function({ intensity = 5, duration = 1500, userIds
  */
 animations.blurCanvas = async function({ intensity = 5, duration = 1500, userIds } = {}) {
   if ( userIds && requiresSocket(userIds) ) {
-    game.socket.emit(`module.${MODULE.ID}`, { action: "animation", type: "blurCanvas", options: { intensity, duration, userIds } });
+    game.socket.emit(`module.${MODULE.ID}`, {
+      action: "animation", type: "blurCanvas", options: { intensity, duration, userIds }
+    });
   }
   if ( userIds && !userIds.includes(game.user.id) ) return;
   if ( typeof canvas === "undefined" || !canvas?.stage ) return;
@@ -1174,7 +1198,9 @@ animations.blurCanvas = async function({ intensity = 5, duration = 1500, userIds
  */
 animations.swayScreen = async function({ intensity = 2, duration = 2000, frequency = 2, userIds } = {}) {
   if ( userIds && requiresSocket(userIds) ) {
-    game.socket.emit(`module.${MODULE.ID}`, { action: "animation", type: "swayScreen", options: { intensity, duration, frequency, userIds } });
+    game.socket.emit(`module.${MODULE.ID}`, {
+      action: "animation", type: "swayScreen", options: { intensity, duration, frequency, userIds }
+    });
   }
   if ( userIds && !userIds.includes(game.user.id) ) return;
   const element = document.body;
@@ -1216,11 +1242,14 @@ animations.swayScreen = async function({ intensity = 2, duration = 2000, frequen
  * @param {string} [options.color="#fff5d6"]
  * @param {number} [options.rays=12]
  * @param {number} [options.duration=2500]
- * @param {string[]} [options.userIds] Only play for these users
+ * @param {number} [options.zIndex=10000] CSS z-index for the overlay element.
+ * @param {string[]} [options.userIds] Only play for these users.
  */
-animations.lightRaysScreen = async function({ color = "#fff5d6", rays = 12, duration = 2500, userIds } = {}) {
+animations.lightRaysScreen = async function({ color = "#fff5d6", rays = 12, duration = 2500, zIndex = 10000, userIds } = {}) {
   if ( userIds && requiresSocket(userIds) ) {
-    game.socket.emit(`module.${MODULE.ID}`, { action: "animation", type: "lightRaysScreen", options: { color, rays, duration, userIds } });
+    game.socket.emit(`module.${MODULE.ID}`, {
+      action: "animation", type: "lightRaysScreen", options: { color, rays, duration, zIndex, userIds }
+    });
   }
   if ( userIds && !userIds.includes(game.user.id) ) return;
   if ( game.settings.get("core", "photosensitiveMode") ) return;
@@ -1232,7 +1261,7 @@ animations.lightRaysScreen = async function({ color = "#fff5d6", rays = 12, dura
     width: 100%;
     height: 100%;
     pointer-events: none;
-    z-index: 10000;
+    z-index: ${zIndex};
   `;
   document.body.appendChild(canvas);
   canvas.width = canvas.clientWidth;
@@ -1331,11 +1360,14 @@ animations.lightRaysScreen = async function({ color = "#fff5d6", rays = 12, dura
  * @param {number} [options.density=10] Number of splat impacts (max 20)
  * @param {number} [options.duration=3500]
  * @param {number} [options.fluidity=1.0] Drip fluidity 0 (frozen) to 2 (watery)
+ * @param {number} [options.zIndex=10000] CSS z-index for the overlay element
  * @param {string[]} [options.userIds] Only play for these users
  */
-animations.splatterScreen = async function({ color = "#8b0000", density = 10, duration = 3500, fluidity = 1.0, userIds } = {}) {
+animations.splatterScreen = async function({ color = "#8b0000", density = 10, duration = 3500, fluidity = 1.0, zIndex = 10000, userIds } = {}) {
   if ( userIds && requiresSocket(userIds) ) {
-    game.socket.emit(`module.${MODULE.ID}`, { action: "animation", type: "splatterScreen", options: { color, density, duration, fluidity, userIds } });
+    game.socket.emit(`module.${MODULE.ID}`, {
+      action: "animation", type: "splatterScreen", options: { color, density, duration, fluidity, zIndex, userIds }
+    });
   }
   if ( userIds && !userIds.includes(game.user.id) ) return;
   if ( game.settings.get("core", "photosensitiveMode") ) return;
@@ -1347,7 +1379,7 @@ animations.splatterScreen = async function({ color = "#8b0000", density = 10, du
     width: 100%;
     height: 100%;
     pointer-events: none;
-    z-index: 10000;
+    z-index: ${zIndex};
   `;
   document.body.appendChild(canvas);
   canvas.width = canvas.clientWidth;
@@ -1444,7 +1476,9 @@ animations.splatterScreen = async function({ color = "#8b0000", density = 10, du
  */
 animations.colorSplitCanvas = async function({ colors = ["#ff0000", "#00ff00", "#0000ff"], intensity = 25, duration = 4000, userIds } = {}) {
   if ( userIds && requiresSocket(userIds) ) {
-    game.socket.emit(`module.${MODULE.ID}`, { action: "animation", type: "colorSplitCanvas", options: { colors, intensity, duration, userIds } });
+    game.socket.emit(`module.${MODULE.ID}`, {
+      action: "animation", type: "colorSplitCanvas", options: { colors, intensity, duration, userIds }
+    });
   }
   if ( userIds && !userIds.includes(game.user.id) ) return;
   if ( game.settings.get("core", "photosensitiveMode") ) return;
@@ -1521,11 +1555,14 @@ animations.colorSplitCanvas = async function({ colors = ["#ff0000", "#00ff00", "
  * @param {object} [options]
  * @param {number} [options.intensity=0.8]
  * @param {number} [options.duration=2000]
- * @param {string[]} [options.userIds] Only play for these users
+ * @param {number} [options.zIndex=10000] CSS z-index for the overlay element.
+ * @param {string[]} [options.userIds] Only play for these users.
  */
-animations.vignetteScreen = async function({ intensity = 0.8, duration = 2000, userIds } = {}) {
+animations.vignetteScreen = async function({ intensity = 0.8, duration = 2000, zIndex = 10000, userIds } = {}) {
   if ( userIds && requiresSocket(userIds) ) {
-    game.socket.emit(`module.${MODULE.ID}`, { action: "animation", type: "vignetteScreen", options: { intensity, duration, userIds } });
+    game.socket.emit(`module.${MODULE.ID}`, {
+      action: "animation", type: "vignetteScreen", options: { intensity, duration, zIndex, userIds }
+    });
   }
   if ( userIds && !userIds.includes(game.user.id) ) return;
 
@@ -1534,7 +1571,7 @@ animations.vignetteScreen = async function({ intensity = 0.8, duration = 2000, u
     position: fixed;
     inset: 0;
     pointer-events: none;
-    z-index: 10000;
+    z-index: ${zIndex};
   `;
   document.body.appendChild(overlay);
 
@@ -1578,12 +1615,138 @@ animations.vignetteScreen = async function({ intensity = 0.8, duration = 2000, u
 /* -------------------------------------------- */
 
 /**
+ * Play a fire screen effect with flames, floating embers, sparks, and smoke.
+ * @param {object} [options]
+ * @param {string} [options.color="#ff6600"] Base colour as a CSS hex string.
+ * @param {number} [options.intensity=4] Overall intensity (1–10).
+ * @param {number} [options.sparkFrequency=2] Base spark frequency (1–10).
+ * @param {number} [options.smokeOpacity=0.4] Smoke layer opacity (0–1).
+ * @param {number} [options.duration=5000] Total duration in milliseconds.
+ * @param {number} [options.fadeIn] Fade-in duration in ms.
+ * @param {number} [options.fadeOut] Fade-out duration in ms.
+ * @param {number} [options.zIndex=10000] CSS z-index for the overlay element.
+ * @param {string[]} [options.userIds] Only play for these users.
+ */
+animations.fireScreen = async function({
+  color = "#ff6600", intensity = 4, sparkFrequency = 2,
+  smokeOpacity = 0.4, duration = 5000, fadeIn, fadeOut, zIndex = 10000, userIds
+} = {}) {
+  if ( userIds && requiresSocket(userIds) ) {
+    game.socket.emit(`module.${MODULE.ID}`, { action: "animation", type: "fireScreen", options: { color, intensity, sparkFrequency, smokeOpacity, duration, fadeIn, fadeOut, zIndex, userIds } });
+  }
+  if ( userIds && !userIds.includes(game.user.id) ) return;
+  if ( game.settings.get("core", "photosensitiveMode") ) return;
+
+  const canvas = document.createElement("canvas");
+  canvas.style.cssText = `
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: ${zIndex};
+  `;
+  document.body.appendChild(canvas);
+  canvas.width = canvas.clientWidth;
+  canvas.height = canvas.clientHeight;
+
+  const gl = canvas.getContext("webgl");
+  if ( !gl ) {
+    canvas.remove();
+    return;
+  }
+
+  const vs = compileShader(gl, gl.VERTEX_SHADER, FIRE_VS);
+  const fs = compileShader(gl, gl.FRAGMENT_SHADER, FIRE_FS);
+  const program = gl.createProgram();
+  gl.attachShader(program, vs);
+  gl.attachShader(program, fs);
+  gl.linkProgram(program);
+  gl.useProgram(program);
+
+  const buffer = gl.createBuffer();
+  gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
+  gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, 1, -1, -1, 1, 1, 1]), gl.STATIC_DRAW);
+
+  const aPos = gl.getAttribLocation(program, "a_position");
+  gl.enableVertexAttribArray(aPos);
+  gl.vertexAttribPointer(aPos, 2, gl.FLOAT, false, 0, 0);
+
+  const uTime = gl.getUniformLocation(program, "u_time");
+  const uFade = gl.getUniformLocation(program, "u_fade");
+  const uResolution = gl.getUniformLocation(program, "u_resolution");
+  const uColor = gl.getUniformLocation(program, "u_color");
+  const uSeed = gl.getUniformLocation(program, "u_seed");
+  const uIntensity = gl.getUniformLocation(program, "u_intensity");
+  const uSparkFrequency = gl.getUniformLocation(program, "u_sparkFrequency");
+  const uSmokeOpacity = gl.getUniformLocation(program, "u_smokeOpacity");
+
+  const [r, g, b] = parseHexColor(color);
+
+  gl.uniform2f(uResolution, canvas.width, canvas.height);
+  gl.uniform3f(uColor, r, g, b);
+  gl.uniform1f(uSeed, Math.random() * 100.0);
+  gl.uniform1f(uIntensity, (Math.max(1, Math.min(10, intensity)) - 1) / 3);
+  gl.uniform1f(uSparkFrequency, Math.max(1, Math.min(10, sparkFrequency)) / 10);
+  gl.uniform1f(uSmokeOpacity, Math.max(0, Math.min(1, smokeOpacity)));
+  gl.enable(gl.BLEND);
+  gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
+
+  fadeIn = fadeIn ?? Math.min(duration * 0.15, 500);
+  fadeOut = fadeOut ?? Math.min(duration * 0.4, 2000);
+
+  const startTime = performance.now();
+
+  return new Promise(resolve => {
+    /**
+     * Animation frame handler.
+     * @param {number} currentTime
+     */
+    function animate(currentTime) {
+      const elapsed = currentTime - startTime;
+      const progress = Math.min(elapsed / duration, 1.0);
+
+      if ( progress >= 1.0 ) {
+        gl.deleteProgram(program);
+        gl.deleteShader(vs);
+        gl.deleteShader(fs);
+        gl.deleteBuffer(buffer);
+        canvas.remove();
+        resolve();
+        return;
+      }
+
+      let fade;
+      if ( elapsed < fadeIn ) {
+        fade = elapsed / fadeIn;
+      } else if ( elapsed > duration - fadeOut ) {
+        fade = (duration - elapsed) / fadeOut;
+      } else {
+        fade = 1.0;
+      }
+      fade = Math.max(0, Math.min(1, fade));
+
+      gl.uniform1f(uTime, elapsed / 1000);
+      gl.uniform1f(uFade, fade);
+      gl.clearColor(0, 0, 0, 0);
+      gl.clear(gl.COLOR_BUFFER_BIT);
+      gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+      requestAnimationFrame(animate);
+    }
+
+    requestAnimationFrame(animate);
+  });
+};
+
+/* -------------------------------------------- */
+
+/**
  * Play a wave distortion screen effect.
  * @param {object} [options]
- * @param {number} [options.intensity=30] Maximum displacement in pixels
- * @param {number} [options.speed=1] Animation speed multiplier
+ * @param {number} [options.intensity=30] Maximum displacement in pixels.
+ * @param {number} [options.speed=1] Animation speed multiplier.
  * @param {number} [options.duration=4000]
- * @param {string[]} [options.userIds] Only play for these users
+ * @param {string[]} [options.userIds] Only play for these users.
  */
 animations.waveCanvas = async function({ intensity = 30, speed = 1, duration = 4000, userIds } = {}) {
   if ( userIds && requiresSocket(userIds) ) {
