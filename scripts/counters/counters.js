@@ -323,7 +323,7 @@ export function mergeCounters(entity, settingKey) {
 function processCounters(type, counters, entity, actorType) {
   return Object.entries(foundry.utils.deepClone(counters))
     .filter(([_, counter]) => {
-      if ( !counter.visible || game.user.role < (counter.viewRole ?? 1) ) return false;
+      if ( !counter?.type || !counter.visible || game.user.role < (counter.viewRole ?? 1) ) return false;
       if ( type === "world" && actorType && counter.actorTypes?.length ) {
         if ( !counter.actorTypes.includes(actorType) ) return false;
       }
