@@ -502,7 +502,7 @@ When the ruler is started from a hovered token, the travel time is based on the 
 
 ## Animations
 
-Screen animations can be triggered via the module API or socket events. Available animations include Splatter, Light Rays, Color Split and Wave. Animations can also be triggered automatically for events such as Massive Damage and Inspiration.
+Screen animations can be triggered via the module API or socket events. Available animations include Color Split, Fire, Light Rays, Splatter, and Wave. Animations can also be triggered automatically for events such as Massive Damage and Inspiration.
 
 <details>
     <summary>See Video</summary>
