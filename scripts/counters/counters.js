@@ -334,7 +334,10 @@ function processCounters(type, counters, entity, actorType) {
       counter.property = ["checkbox", "number", "pips"].includes(counter.type) ? `${flagKey}.value` : flagKey;
       counter.canEdit = (!counter.editRole || game.user.role >= counter.editRole);
       if ( ["checkbox", "number", "pips"].includes(counter.type) ) {
-        counter.value = entity.getFlag(MODULE.ID, counter.property);
+        counter.value = entity.getFlag(MODULE.ID, counter.property) ?? 0;
+      }
+      if ( counter.type === "number" ) {
+        counter.max = resolveMax(entity, counter.max) ?? null;
       }
       if ( counter.type === "pips" ) {
         counter.max = resolveMax(entity, counter.max) ?? entity.getFlag(MODULE.ID, `${flagKey}.max`) ?? 0;
@@ -352,6 +355,7 @@ function processCounters(type, counters, entity, actorType) {
       if ( counter.type === "successFailure" ) {
         counter.success = entity.getFlag(MODULE.ID, `${flagKey}.success`) ?? 0;
         counter.failure = entity.getFlag(MODULE.ID, `${flagKey}.failure`) ?? 0;
+        counter.max = resolveMax(entity, counter.max) ?? null;
       }
       acc[flagKey] = counter;
       return acc;

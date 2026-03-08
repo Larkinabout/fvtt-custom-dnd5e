@@ -36,7 +36,8 @@
             </h4>
             <div class="custom-dnd5e-counters-counter-value">
                 <input type="number" data-input="value" name="flags.custom-dnd5e.{{counter.property}}"
-                    value="{{counter.value}}" placeholder="0" data-dtype="Number"{{#unless counter.canEdit}} disabled{{/unless}}>
+                    value="{{counter.value}}" placeholder="0" data-dtype="Number"{{#unless counter.canEdit}} disabled{{/unless}}
+                    {{#if counter.max}}data-tooltip="{{counter.value}}/{{counter.max}}"{{/if}}>
             </div>
         </li>
         {{/if}}
@@ -84,14 +85,16 @@
                 <i class="fas fa-check"></i>
                 {{/if}}
                 <input type="number" data-input="success" name="flags.custom-dnd5e.{{counter.property}}.success"
-                    value="{{counter.success}}" placeholder="0" data-dtype="Number"{{#unless counter.canEdit}} disabled{{/unless}}>
+                    value="{{counter.success}}" placeholder="0" data-dtype="Number"{{#unless counter.canEdit}} disabled{{/unless}}
+                    {{#if counter.max}}data-tooltip="{{counter.success}}/{{counter.max}}"{{/if}}>
                 {{#if canEdit}}
                 <a class="custom-dnd5e-counters-link" data-input="failure"><i class="fas fa-times"></i></a>
                 {{else}}
                 <i class="fas fa-times"></i>
                 {{/if}}
                 <input type="number" data-input="failure" name="flags.custom-dnd5e.{{counter.property}}.failure"
-                    value="{{counter.failure}}"  placeholder="0" data-dtype="Number"{{#unless counter.canEdit}} disabled{{/unless}}>
+                    value="{{counter.failure}}"  placeholder="0" data-dtype="Number"{{#unless counter.canEdit}} disabled{{/unless}}
+                    {{#if counter.max}}data-tooltip="{{counter.failure}}/{{counter.max}}"{{/if}}>
             </div>
         </li>
         {{/if}}
