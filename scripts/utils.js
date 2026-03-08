@@ -895,6 +895,122 @@ function compileShader(gl, type, source) {
 /** Animation functions. */
 export const animations = {};
 
+/** Set of active animation handles. */
+const _activeAnimations = new Set();
+
+/** Maximum number of concurrent animations before auto-stopping. */
+const MAX_CONCURRENT_ANIMATIONS = 10;
+
+/** Timer ID for the stop-button delay. */
+let _stopButtonTimer = null;
+
+/** DOM reference to the stop button element. */
+let _stopButtonElement = null;
+
+/* -------------------------------------------- */
+
+/**
+ * Create a tracking handle, add it to the active set,
+ * and start the 5-second stop-button timer if this is the first animation.
+ * @returns {{ cancelled: boolean }}
+ */
+function _trackAnimation() {
+  if ( _activeAnimations.size >= MAX_CONCURRENT_ANIMATIONS ) {
+    Logger.error("Too many concurrent animations. Stopping all animations.");
+    animations.stopAll();
+  }
+  const handle = { cancelled: false };
+  _activeAnimations.add(handle);
+  if ( _activeAnimations.size === 1 ) {
+    _stopButtonTimer = setTimeout(_showStopButton, 5000);
+  }
+  return handle;
+}
+
+/* -------------------------------------------- */
+
+/**
+ * Remove a tracking handle from the active set.
+ * Hide the stop button and clear the timer when no animations remain.
+ * @param {{ cancelled: boolean }} handle
+ */
+function _untrackAnimation(handle) {
+  _activeAnimations.delete(handle);
+  if ( _activeAnimations.size === 0 ) _hideStopButton();
+}
+
+/* -------------------------------------------- */
+
+/**
+ * Create and display the stop animationsbutton.
+ */
+function _showStopButton() {
+  if ( _stopButtonElement ) return;
+  const btn = document.createElement("button");
+  btn.setAttribute("data-custom-dnd5e", "stop-animations");
+  btn.setAttribute("data-tooltip", game.i18n.localize("CUSTOM_DND5E.animation.stopAll"));
+  btn.innerHTML = '<i class="fas fa-stop"></i>';
+  btn.addEventListener("click", () => animations.stopAll());
+  document.body.appendChild(btn);
+  _stopButtonElement = btn;
+}
+
+/* -------------------------------------------- */
+
+/**
+ * Remove the stop animations button from the DOM and clear the timer.
+ */
+function _hideStopButton() {
+  if ( _stopButtonTimer ) {
+    clearTimeout(_stopButtonTimer);
+    _stopButtonTimer = null;
+  }
+  if ( _stopButtonElement ) {
+    const btn = _stopButtonElement;
+    _stopButtonElement = null;
+    btn.classList.add("fade-out");
+    btn.addEventListener("animationend", () => btn.remove(), { once: true });
+  }
+}
+
+/* -------------------------------------------- */
+
+/**
+ * Whether any animations are currently active.
+ * @returns {boolean}
+ */
+animations.hasActive = function() {
+  return _activeAnimations.size > 0;
+};
+
+/* -------------------------------------------- */
+
+/**
+ * Stop all running animations immediately.
+ * @param {object} [options]
+ * @param {boolean} [options.emit=false] Whether to emit a socket event to stop animations on other clients.
+ */
+animations.stopAll = function({ emit = false } = {}) {
+  for ( const handle of _activeAnimations ) handle.cancelled = true;
+  _activeAnimations.clear();
+
+  // Terminate CanvasAnimation-based animations
+  CanvasAnimation.terminateAnimation("custom-dnd5e.shakeCanvas");
+  CanvasAnimation.terminateAnimation("custom-dnd5e.flashCanvas.in");
+  CanvasAnimation.terminateAnimation("custom-dnd5e.flashCanvas.out");
+
+  // Cancel CSS web animations on marked elements
+  for ( const el of document.querySelectorAll("[data-custom-dnd5e-animation]") ) {
+    for ( const anim of el.getAnimations() ) anim.cancel();
+  }
+
+  _hideStopButton();
+
+  if ( emit ) {
+    game.socket.emit(`module.${MODULE.ID}`, { action: "stopAnimations" });
+  }
+};
+
 /* -------------------------------------------- */
 
 /**
@@ -907,6 +1023,7 @@ animations.shakeCanvas = async function({ intensity = 25, duration = 500 } = {})
   if ( !canvas?.stage ) return;
   const origin = { x: canvas.stage.pivot.x, y: canvas.stage.pivot.y };
   const scale = canvas.stage.scale.x || 1;
+  const handle = _trackAnimation();
 
   await CanvasAnimation.animate([], {
     name: "custom-dnd5e.shakeCanvas",
@@ -921,6 +1038,7 @@ animations.shakeCanvas = async function({ intensity = 25, duration = 500 } = {})
   });
 
   canvas.stage.pivot.set(origin.x, origin.y);
+  _untrackAnimation(handle);
 };
 
 /* -------------------------------------------- */
@@ -951,18 +1069,22 @@ animations.flashCanvas = async function({ color = 0xFF0000, opacity = 0.4, durat
 
   const fadeIn = duration * 0.2;
   const fadeOut = duration * 0.8;
+  const handle = _trackAnimation();
 
   await CanvasAnimation.animate(
     [{ parent: flash, attribute: "alpha", to: opacity }],
     { duration: fadeIn, name: "custom-dnd5e.flashCanvas.in" }
   );
-  await CanvasAnimation.animate(
-    [{ parent: flash, attribute: "alpha", to: 0 }],
-    { duration: fadeOut, name: "custom-dnd5e.flashCanvas.out" }
-  );
+  if ( !handle.cancelled ) {
+    await CanvasAnimation.animate(
+      [{ parent: flash, attribute: "alpha", to: 0 }],
+      { duration: fadeOut, name: "custom-dnd5e.flashCanvas.out" }
+    );
+  }
 
   canvas.interface.removeChild(flash);
   flash.destroy();
+  _untrackAnimation(handle);
 };
 
 /* -------------------------------------------- */
@@ -982,6 +1104,7 @@ animations.shakeScreen = async function({ intensity = 5, duration = 500, userIds
   const element = document.body;
   const decayDuration = Math.min(duration, 1000);
   const startTime = performance.now();
+  const handle = _trackAnimation();
 
   return new Promise(resolve => {
     /**
@@ -992,8 +1115,9 @@ animations.shakeScreen = async function({ intensity = 5, duration = 500, userIds
       const elapsed = currentTime - startTime;
       const progress = elapsed / duration;
 
-      if ( progress >= 1 ) {
+      if ( progress >= 1 || handle.cancelled ) {
         element.style.transform = "";
+        _untrackAnimation(handle);
         resolve();
         return;
       }
@@ -1034,6 +1158,7 @@ animations.flashScreen = async function({ color = "#ff0000", opacity = 0.4, fade
   if ( game.settings.get("core", "photosensitiveMode") ) return;
 
   const flash = document.createElement("div");
+  flash.setAttribute("data-custom-dnd5e-animation", "");
   flash.style.cssText = `
     position: fixed;
     inset: 0;
@@ -1048,23 +1173,31 @@ animations.flashScreen = async function({ color = "#ff0000", opacity = 0.4, fade
   const fadeInMs = fadeIn ?? Math.min(duration * 0.2, 200);
   const fadeOutMs = fadeOut ?? Math.min(duration * 0.8, 800);
   const holdMs = explicitTiming ? duration : 0;
+  const handle = _trackAnimation();
 
-  await flash.animate(
-    [{ opacity: 0 }, { opacity }],
-    { duration: fadeInMs, fill: "forwards" }
-  ).finished;
-  if ( holdMs > 0 ) {
+  try {
     await flash.animate(
-      [{ opacity }, { opacity }],
-      { duration: holdMs, fill: "forwards" }
+      [{ opacity: 0 }, { opacity }],
+      { duration: fadeInMs, fill: "forwards" }
     ).finished;
+    if ( !handle.cancelled && holdMs > 0 ) {
+      await flash.animate(
+        [{ opacity }, { opacity }],
+        { duration: holdMs, fill: "forwards" }
+      ).finished;
+    }
+    if ( !handle.cancelled ) {
+      await flash.animate(
+        [{ opacity }, { opacity: 0 }],
+        { duration: fadeOutMs, fill: "forwards" }
+      ).finished;
+    }
+  } catch {
+    // Animation was cancelled via stopAll
+  } finally {
+    flash.remove();
+    _untrackAnimation(handle);
   }
-  await flash.animate(
-    [{ opacity }, { opacity: 0 }],
-    { duration: fadeOutMs, fill: "forwards" }
-  ).finished;
-
-  flash.remove();
 };
 
 /* -------------------------------------------- */
@@ -1094,6 +1227,7 @@ animations.blurScreen = async function({ intensity = 5, fadeIn, duration = 1500,
   const totalMs = explicitTiming ? fadeInMs + holdMs + fadeOutMs : duration;
 
   const startTime = performance.now();
+  const handle = _trackAnimation();
 
   return new Promise(resolve => {
     /**
@@ -1103,8 +1237,9 @@ animations.blurScreen = async function({ intensity = 5, fadeIn, duration = 1500,
     function animate(currentTime) {
       const elapsed = currentTime - startTime;
 
-      if ( elapsed >= totalMs ) {
+      if ( elapsed >= totalMs || handle.cancelled ) {
         element.style.filter = "";
+        _untrackAnimation(handle);
         resolve();
         return;
       }
@@ -1154,6 +1289,7 @@ animations.blurCanvas = async function({ intensity = 5, duration = 1500, userIds
   const fadeIn = Math.min(duration * 0.5, 500);
   const fadeOut = Math.min(duration * 0.5, 1000);
   const startTime = performance.now();
+  const handle = _trackAnimation();
 
   return new Promise(resolve => {
     /**
@@ -1164,9 +1300,10 @@ animations.blurCanvas = async function({ intensity = 5, duration = 1500, userIds
       const elapsed = currentTime - startTime;
       const progress = Math.min(elapsed / duration, 1.0);
 
-      if ( progress >= 1.0 ) {
+      if ( progress >= 1.0 || handle.cancelled ) {
         canvas.stage.filters = (canvas.stage.filters || []).filter(f => f !== filter);
         filter.destroy();
+        _untrackAnimation(handle);
         resolve();
         return;
       }
@@ -1206,6 +1343,7 @@ animations.swayScreen = async function({ intensity = 2, duration = 2000, frequen
   const element = document.body;
   const decayDuration = Math.min(duration, 2000);
   const startTime = performance.now();
+  const handle = _trackAnimation();
 
   return new Promise(resolve => {
     /**
@@ -1216,8 +1354,9 @@ animations.swayScreen = async function({ intensity = 2, duration = 2000, frequen
       const elapsed = currentTime - startTime;
       const progress = elapsed / duration;
 
-      if ( progress >= 1 ) {
+      if ( progress >= 1 || handle.cancelled ) {
         element.style.transform = "";
+        _untrackAnimation(handle);
         resolve();
         return;
       }
@@ -1309,6 +1448,7 @@ animations.lightRaysScreen = async function({ color = "#fff5d6", rays = 12, dura
   const fadeOut = Math.min(duration * 0.7, 1500);
 
   const startTime = performance.now();
+  const handle = _trackAnimation();
 
   return new Promise(resolve => {
     /**
@@ -1319,12 +1459,13 @@ animations.lightRaysScreen = async function({ color = "#fff5d6", rays = 12, dura
       const elapsed = currentTime - startTime;
       const progress = Math.min(elapsed / duration, 1.0);
 
-      if ( progress >= 1.0 ) {
+      if ( progress >= 1.0 || handle.cancelled ) {
         gl.deleteProgram(program);
         gl.deleteShader(vs);
         gl.deleteShader(fs);
         gl.deleteBuffer(buffer);
         canvas.remove();
+        _untrackAnimation(handle);
         resolve();
         return;
       }
@@ -1428,6 +1569,7 @@ animations.splatterScreen = async function({ color = "#8b0000", density = 10, du
   const fadeOut = Math.min(duration * 0.6, 2000);
 
   const startTime = performance.now();
+  const handle = _trackAnimation();
 
   return new Promise(resolve => {
     /**
@@ -1438,12 +1580,13 @@ animations.splatterScreen = async function({ color = "#8b0000", density = 10, du
       const elapsed = currentTime - startTime;
       const progress = Math.min(elapsed / duration, 1.0);
 
-      if ( progress >= 1.0 ) {
+      if ( progress >= 1.0 || handle.cancelled ) {
         gl.deleteProgram(program);
         gl.deleteShader(vs);
         gl.deleteShader(fs);
         gl.deleteBuffer(buffer);
         canvas.remove();
+        _untrackAnimation(handle);
         resolve();
         return;
       }
@@ -1512,6 +1655,7 @@ animations.colorSplitCanvas = async function({ colors = ["#ff0000", "#00ff00", "
   ];
 
   const startTime = performance.now();
+  const handle = _trackAnimation();
 
   return new Promise(resolve => {
     /**
@@ -1522,9 +1666,10 @@ animations.colorSplitCanvas = async function({ colors = ["#ff0000", "#00ff00", "
       const elapsed = currentTime - startTime;
       const progress = Math.min(elapsed / duration, 1.0);
 
-      if ( progress >= 1.0 ) {
+      if ( progress >= 1.0 || handle.cancelled ) {
         canvas.stage.filters = (canvas.stage.filters || []).filter(f => f !== filter);
         filter.destroy();
+        _untrackAnimation(handle);
         resolve();
         return;
       }
@@ -1578,6 +1723,7 @@ animations.vignetteScreen = async function({ intensity = 0.8, duration = 2000, z
   const fadeIn = Math.min(duration * 0.5, 500);
   const fadeOut = Math.min(duration * 0.5, 1000);
   const startTime = performance.now();
+  const handle = _trackAnimation();
 
   return new Promise(resolve => {
     /**
@@ -1588,8 +1734,9 @@ animations.vignetteScreen = async function({ intensity = 0.8, duration = 2000, z
       const elapsed = currentTime - startTime;
       const progress = elapsed / duration;
 
-      if ( progress >= 1 ) {
+      if ( progress >= 1 || handle.cancelled ) {
         overlay.remove();
+        _untrackAnimation(handle);
         resolve();
         return;
       }
@@ -1696,6 +1843,7 @@ animations.fireScreen = async function({
   fadeOut = fadeOut ?? Math.min(duration * 0.4, 2000);
 
   const startTime = performance.now();
+  const handle = _trackAnimation();
 
   return new Promise(resolve => {
     /**
@@ -1706,12 +1854,13 @@ animations.fireScreen = async function({
       const elapsed = currentTime - startTime;
       const progress = Math.min(elapsed / duration, 1.0);
 
-      if ( progress >= 1.0 ) {
+      if ( progress >= 1.0 || handle.cancelled ) {
         gl.deleteProgram(program);
         gl.deleteShader(vs);
         gl.deleteShader(fs);
         gl.deleteBuffer(buffer);
         canvas.remove();
+        _untrackAnimation(handle);
         resolve();
         return;
       }
@@ -1770,6 +1919,7 @@ animations.waveCanvas = async function({ intensity = 30, speed = 1, duration = 4
   canvas.stage.filters = [...existing, filter];
 
   const startTime = performance.now();
+  const handle = _trackAnimation();
 
   return new Promise(resolve => {
     /**
@@ -1780,9 +1930,10 @@ animations.waveCanvas = async function({ intensity = 30, speed = 1, duration = 4
       const elapsed = currentTime - startTime;
       const progress = Math.min(elapsed / duration, 1.0);
 
-      if ( progress >= 1.0 ) {
+      if ( progress >= 1.0 || handle.cancelled ) {
         canvas.stage.filters = (canvas.stage.filters || []).filter(f => f !== filter);
         filter.destroy();
+        _untrackAnimation(handle);
         resolve();
         return;
       }

@@ -107,6 +107,19 @@ function cloneDnd5eConfig() {
 Hooks.on("init", async () => {
   cloneDnd5eConfig();
 
+  game.keybindings.register(MODULE.ID, "stopAnimations", {
+    name: "CUSTOM_DND5E.keybinding.stopAnimations",
+    editable: [{ key: "Escape" }],
+    onDown: () => {
+      if ( animations.hasActive() ) {
+        animations.stopAll();
+        return true;
+      }
+      return false;
+    },
+    precedence: CONST.KEYBINDING_PRECEDENCE.NORMAL
+  });
+
   const module = game.modules.get(MODULE.ID);
   module.api = {
     animations,

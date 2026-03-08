@@ -89,12 +89,23 @@ async function _onRequestRoll(data) {
 /* -------------------------------------------- */
 
 /**
+ * Handle an incoming stopAnimations socket event.
+ * @param {object} data The socket data
+ */
+function _onStopAnimations(data) {
+  animations.stopAll();
+}
+
+/* -------------------------------------------- */
+
+/**
  * Socket action handlers keyed by action name.
  */
 const HANDLERS = {
   animation: _onAnimation,
   moveToken: _onMoveToken,
   requestRoll: _onRequestRoll,
+  stopAnimations: _onStopAnimations,
   swapTokens: _onSwapTokens
 };
 

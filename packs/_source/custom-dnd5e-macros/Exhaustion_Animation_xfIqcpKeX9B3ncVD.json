@@ -4,7 +4,7 @@
   "author": "zOtcGexgRGNVhsT1",
   "img": "icons/svg/dice-target.svg",
   "scope": "global",
-  "command": "const owners = game.users.filter(u => !u.isGM && actor.testUserPermission(u, \"OWNER\"));\nconst userIds = owners.length ? owners.map(u => u.id) : [game.user.id];\nconst anim = game.modules.get(\"custom-dnd5e\").api.animations;\n\nanim.vignetteScreen({ intensity: 0.8, duration: 2500, userIds });\nsetTimeout(() => anim.blurScreen({ intensity: 5, duration: 1500, userIds }), 400);\nsetTimeout(() => anim.swayScreen({ intensity: 1, duration: 2000, userIds }), 300);",
+  "command": "const owners = game.users.filter(u => !u.isGM && actor?.testUserPermission(u, \"OWNER\"));\nconst userIds = owners.length ? owners.map(u => u.id) : [game.user.id];\nconst anim = game.modules.get(\"custom-dnd5e\").api.animations;\n\nanim.vignetteScreen({ intensity: 0.8, duration: 2500, userIds });\nsetTimeout(() => anim.blurScreen({ intensity: 5, duration: 1500, userIds }), 400);\nsetTimeout(() => anim.swayScreen({ intensity: 1, duration: 2000, userIds }), 300);",
   "folder": "ABREqiorYTQ0DNX9",
   "flags": {},
   "_stats": {
