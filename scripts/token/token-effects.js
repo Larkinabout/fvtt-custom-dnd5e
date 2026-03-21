@@ -1,12 +1,12 @@
-import { CONSTANTS } from "./constants.js";
-import { updateBloodied } from "./configurations/bloodied.js";
+import { CONSTANTS } from "../constants.js";
+import { updateBloodied } from "../configurations/bloodied.js";
 import {
   Logger,
   getSetting,
   rotateToken,
   unrotateToken,
   tintToken,
-  untintToken } from "./utils.js";
+  untintToken } from "../utils.js";
 
 /**
  * Register hooks.

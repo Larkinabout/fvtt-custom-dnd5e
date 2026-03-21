@@ -2,7 +2,7 @@
   "folder": null,
   "name": "Camp Supplies",
   "type": "consumable",
-  "img": "modules/custom-dnd5e/media/icons/camp-supplies.webp",
+  "img": "icons/magic/fire/flame-burning-campfire-rocks.webp",
   "system": {
     "activities": {
       "Gf6S0sTq4zSrulMn": {

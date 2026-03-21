@@ -15,9 +15,9 @@ export class MoveCanvasMode {
   /**
    * Create a MoveCanvasMode instance which highlights valid forced-movement positions
    * and handles user input to select a destination for forced movement.
-   * @param {object} options
-   * @param {Token} options.sourceToken The token performing the move
-   * @param {Token} options.targetToken The token being moved
+   * @param {object} options Options
+   * @param {Token} options.sourceToken Source token performing the move
+   * @param {Token} options.targetToken Target token being moved
    * @param {string} options.direction "push" | "pull" | "any"
    * @param {number} options.distanceMin Minimum movement distance in game units
    * @param {number} options.distanceMax Maximum movement distance in game units
@@ -42,9 +42,9 @@ export class MoveCanvasMode {
 
   /**
    * Activate the move canvas mode.
-   * @param {object} options
-   * @param {Token} options.sourceToken The source token
-   * @param {Token} options.targetToken The target token
+   * @param {object} options Options
+   * @param {Token} options.sourceToken Source token
+   * @param {Token} options.targetToken Target token
    * @param {string} options.direction Movement direction
    * @param {number} options.distanceMin Minimum distance
    * @param {number} options.distanceMax Maximum distance
@@ -60,9 +60,9 @@ export class MoveCanvasMode {
   /**
    * Move a token document to a new position.
    * Called directly or via socket by the GM.
-   * @param {TokenDocument} tokenDoc The token document to move
-   * @param {number} x The x coordinate (top-left)
-   * @param {number} y The y coordinate (top-left)
+   * @param {TokenDocument} tokenDoc Token document to move
+   * @param {number} x x coordinate (top-left)
+   * @param {number} y y coordinate (top-left)
    * @returns {Promise<void>}
    */
   static async _moveTokenDocument(tokenDoc, x, y) {
@@ -132,8 +132,8 @@ export class MoveCanvasMode {
 
   /**
    * Complete the movement and resolve as successful.
-   * @param {number} x The x coordinate (top-left)
-   * @param {number} y The y coordinate (top-left)
+   * @param {number} x x coordinate (top-left)
+   * @param {number} y y coordinate (top-left)
    */
   _completeMovement(x, y) {
     this._cleanup();
@@ -145,8 +145,8 @@ export class MoveCanvasMode {
 
   /**
    * Convert a center point to the target token's top-left position.
-   * @param {{ x: number, y: number }} center The center point
-   * @returns {{ x: number, y: number }} The top-left point
+   * @param {{ x: number, y: number }} center Center point
+   * @returns {{ x: number, y: number }} Top-left point
    */
   _centerToTopLeft(center) {
     return {
@@ -199,7 +199,7 @@ export class MoveCanvasMode {
   /**
    * Get candidate grid offsets within a step radius of the target.
    * Uses cube coordinates for hex grids to ensure correct neighbor enumeration.
-   * @param {{ x: number, y: number }} targetCenter The target token center
+   * @param {{ x: number, y: number }} targetCenter Target token center
    * @param {number} maxSteps Maximum grid steps from the target
    * @returns {object[]} Array of { i, j } offset objects
    */
@@ -236,7 +236,7 @@ export class MoveCanvasMode {
 
   /**
    * Get the center point of a token snapped to its grid cell.
-   * @param {Token} token The token
+   * @param {Token} token Token
    * @returns {{ x: number, y: number }}
    */
   _getSnappedCenter(token) {
@@ -398,8 +398,8 @@ export class MoveCanvasMode {
 
   /**
    * Draw a full annulus (ring) on a container.
-   * @param {PIXI.Container} container The container
-   * @param {{ x: number, y: number }} center The center point
+   * @param {PIXI.Container} container PIXI container
+   * @param {{ x: number, y: number }} center Center point
    * @param {number} outerRadius Outer radius in pixels
    * @param {number} innerRadius Inner radius in pixels
    */
@@ -427,18 +427,18 @@ export class MoveCanvasMode {
   /**
    * Draw a directional line highlight for push or pull movement.
    * On gridless, forced movement follows a straight line from/toward the source.
-   * @param {PIXI.Container} container The container to draw into
+   * @param {PIXI.Container} container PIXI container
    * @param {{ x: number, y: number }} targetCenter Target token center
    * @param {{ x: number, y: number }} sourceCenter Source token center
    * @param {number} outerDist Outer distance in pixels (includes tolerance)
    * @param {number} innerDist Inner distance in pixels (includes tolerance)
    * @param {number} halfWidth Half-width of the line in pixels (for click area visibility)
-   * @param {"push"|"pull"} type The direction type
+   * @param {"push"|"pull"} type Direction type
    */
   _drawDirectionalLine(container, targetCenter, sourceCenter, outerDist, innerDist, halfWidth, type) {
     const dx = sourceCenter.x - targetCenter.x;
     const dy = sourceCenter.y - targetCenter.y;
-    const dist = Math.sqrt(dx * dx + dy * dy);
+    const dist = Math.sqrt((dx * dx) + (dy * dy));
     if ( dist <= 0 ) return;
 
     // Unit direction: push = away from source, pull = toward source
@@ -450,28 +450,28 @@ export class MoveCanvasMode {
     const py = ux;
 
     // Line endpoints along the direction
-    const startX = targetCenter.x + ux * innerDist;
-    const startY = targetCenter.y + uy * innerDist;
-    const endX = targetCenter.x + ux * outerDist;
-    const endY = targetCenter.y + uy * outerDist;
+    const startX = targetCenter.x + (ux * innerDist);
+    const startY = targetCenter.y + (uy * innerDist);
+    const endX = targetCenter.x + (ux * outerDist);
+    const endY = targetCenter.y + (uy * outerDist);
 
     const gfx = new PIXI.Graphics();
 
     // Fill
     gfx.beginFill(HIGHLIGHT_FILL, HIGHLIGHT_FILL_ALPHA);
-    gfx.moveTo(startX + px * halfWidth, startY + py * halfWidth);
-    gfx.lineTo(endX + px * halfWidth, endY + py * halfWidth);
-    gfx.lineTo(endX - px * halfWidth, endY - py * halfWidth);
-    gfx.lineTo(startX - px * halfWidth, startY - py * halfWidth);
+    gfx.moveTo(startX + (px * halfWidth), startY + (py * halfWidth));
+    gfx.lineTo(endX + (px * halfWidth), endY + (py * halfWidth));
+    gfx.lineTo(endX - (px * halfWidth), endY - (py * halfWidth));
+    gfx.lineTo(startX - (px * halfWidth), startY - (py * halfWidth));
     gfx.closePath();
     gfx.endFill();
 
     // Border
     gfx.lineStyle(2, HIGHLIGHT_BORDER, HIGHLIGHT_BORDER_ALPHA);
-    gfx.moveTo(startX + px * halfWidth, startY + py * halfWidth);
-    gfx.lineTo(endX + px * halfWidth, endY + py * halfWidth);
-    gfx.lineTo(endX - px * halfWidth, endY - py * halfWidth);
-    gfx.lineTo(startX - px * halfWidth, startY - py * halfWidth);
+    gfx.moveTo(startX + (px * halfWidth), startY + (py * halfWidth));
+    gfx.lineTo(endX + (px * halfWidth), endY + (py * halfWidth));
+    gfx.lineTo(endX - (px * halfWidth), endY - (py * halfWidth));
+    gfx.lineTo(startX - (px * halfWidth), startY - (py * halfWidth));
     gfx.closePath();
 
     container.addChild(gfx);
@@ -604,13 +604,13 @@ export class MoveCanvasMode {
       const clampDist = Math.max(this.distanceMin, Math.min(this.distanceMax, distance));
       const dx = pos.x - targetCenter.x;
       const dy = pos.y - targetCenter.y;
-      const pixelDist = Math.sqrt(dx * dx + dy * dy);
+      const pixelDist = Math.sqrt((dx * dx) + (dy * dy));
       if ( pixelDist > 0 ) {
         const clampedPixelDist = clampDist * pixelsPerUnit;
         const scale = clampedPixelDist / pixelDist;
         clampedPos = {
-          x: targetCenter.x + dx * scale,
-          y: targetCenter.y + dy * scale
+          x: targetCenter.x + (dx * scale),
+          y: targetCenter.y + (dy * scale)
         };
       }
     }
@@ -637,7 +637,7 @@ export class MoveCanvasMode {
 
     const dx = sourceCenter.x - targetCenter.x;
     const dy = sourceCenter.y - targetCenter.y;
-    const sourceDist = Math.sqrt(dx * dx + dy * dy);
+    const sourceDist = Math.sqrt((dx * dx) + (dy * dy));
     if ( sourceDist <= 0 ) return;
 
     // Build direction(s) to test
@@ -654,8 +654,8 @@ export class MoveCanvasMode {
 
     for ( const dir of directions ) {
       // Project click onto the direction line
-      const projDist = clickDx * dir.ux + clickDy * dir.uy;
-      const perpDist = Math.abs(clickDx * (-dir.uy) + clickDy * dir.ux);
+      const projDist = (clickDx * dir.ux) + (clickDy * dir.uy);
+      const perpDist = Math.abs((clickDx * (-dir.uy)) + (clickDy * dir.ux));
 
       // Reject if too far from the line or on the wrong side
       if ( perpDist > tolerancePx ) continue;
@@ -668,8 +668,8 @@ export class MoveCanvasMode {
       const clampedDist = Math.max(this.distanceMin, Math.min(this.distanceMax, projDistUnits));
       const clampedPx = clampedDist * pixelsPerUnit;
       const clampedPos = {
-        x: targetCenter.x + dir.ux * clampedPx,
-        y: targetCenter.y + dir.uy * clampedPx
+        x: targetCenter.x + (dir.ux * clampedPx),
+        y: targetCenter.y + (dir.uy * clampedPx)
       };
 
       if ( this._checkWallCollision(targetCenter, clampedPos) ) continue;

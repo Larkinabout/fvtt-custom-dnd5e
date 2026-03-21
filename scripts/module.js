@@ -15,6 +15,7 @@ import { register as registerBastions, setConfig as setBastions } from "./config
 import { register as registerBloodied, setConfig as setBloodied, addBloodiedCondition } from "./configurations/bloodied.js";
 import { register as registerCalendar } from "./configurations/calendar.js";
 import { register as registerCampSupplies } from "./gameplay/camp-supplies.js";
+import { register as registerConditionLevels } from "./token/condition-levels.js";
 import { register as registerConditions, registerMenu as registerConditionsMenu, setConfig as setConditions } from "./configurations/conditions.js";
 import { register as registerConsumableTypes, setConfig as setConsumableTypes } from "./configurations/consumable-types.js";
 import {
@@ -57,13 +58,13 @@ import { register as registerRolls } from "./rolls.js";
 import { register as registerSenses, setConfig as setSenses } from "./configurations/senses.js";
 import { register as registerSkills, setConfig as setSkills } from "./configurations/skills.js";
 import { register as registerSpellSchools, setConfig as setSpellSchools } from "./configurations/spell-schools.js";
-import { register as registerRadialStatusEffects } from "./radial-status-effects.js";
+import { register as registerRadialStatusEffects } from "./token/radial-status-effects.js";
 import { register as registerRulerTravelTime } from "./ruler-travel-time.js";
 import { register as registerTidy5eCounters } from "./counters/counters-tidy5e.js";
 import { register as registerWorkflows, workflows } from "./workflows/workflows.js";
-import { register as registerTokenBorder } from "./token-border.js";
-import { register as registerTokenEffects } from "./token-effects.js";
-import { register as registerTokenHudImprovements } from "./token-hud-improvements.js";
+import { register as registerTokenBorder } from "./token/token-border.js";
+import { register as registerTokenEffects } from "./token/token-effects.js";
+import { register as registerTokenHudImprovements } from "./token/token-hud-improvements.js";
 import { register as registerTools, setConfig as setTools } from "./configurations/tools.js";
 import { register as registerToolProficiencies, setConfig as setToolProficiencies } from "./configurations/tool-proficiencies.js";
 import { register as registerWeaponIds, setConfig as setWeaponIds } from "./configurations/weapon-ids.js";
@@ -187,6 +188,7 @@ Hooks.on("init", async () => {
   registerCalendar();
   registerCampSupplies();
   registerConditionsMenu();
+  registerConditionLevels();
   registerConsumableTypes();
   registerCreatureTypes();
   registerCurrency();

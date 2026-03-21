@@ -180,8 +180,8 @@ export class TargetingMode {
 
   /**
    * Handle the targetToken hook.
-   * @param {User} user The user who targeted/untargeted
-   * @param {Token} token The token being targeted/untargeted
+   * @param {User} user User who targeted/untargeted
+   * @param {Token} token Token being targeted/untargeted
    * @param {boolean} targeted Whether the token is now targeted
    */
   _onTargetToken(user, token, targeted) {
@@ -194,7 +194,7 @@ export class TargetingMode {
 
   /**
    * Handle keydown events.
-   * @param {KeyboardEvent} event The keyboard event
+   * @param {KeyboardEvent} event Keyboard event
    */
   _onKeyDown(event) {
     if ( event.key === "Enter" ) this._complete();
@@ -205,7 +205,7 @@ export class TargetingMode {
 
   /**
    * Handle right-click to cancel.
-   * @param {MouseEvent} event The context menu event
+   * @param {MouseEvent} event Context menu event
    */
   _onContextMenu(event) {
     event.preventDefault();
@@ -216,7 +216,7 @@ export class TargetingMode {
 
   /**
    * Handle pointer move to reposition the indicator.
-   * @param {PointerEvent} event The pointer event
+   * @param {PointerEvent} event Pointer event
    */
   _onPointerMove(event) {
     if ( this._indicator ) {

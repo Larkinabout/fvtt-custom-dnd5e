@@ -85,9 +85,9 @@ function registerSettings() {
 
 /**
  * Add a workflows button to actor sheet effects tab.
- * @param {object} app The actor sheet app.
- * @param {HTMLElement} html The rendered HTML.
- * @param {object} data The data.
+ * @param {object} app Actor sheet app
+ * @param {HTMLElement} html HTML element
+ * @param {object} data Data
  */
 function addActorWorkflowsButton(app, html, data) {
   if ( !getSetting(constants.SETTING.ENABLE.KEY) ) return;
@@ -120,9 +120,9 @@ function addActorWorkflowsButton(app, html, data) {
 
 /**
  * Add a workflows button to group actor sheet members tab.
- * @param {object} app The group sheet app.
- * @param {HTMLElement} html The rendered HTML.
- * @param {object} data The data.
+ * @param {object} app Group sheet app
+ * @param {HTMLElement} html HTML element
+ * @param {object} data Data.
  */
 function addGroupWorkflowsButton(app, html, data) {
   if ( !getSetting(constants.SETTING.ENABLE.KEY) ) return;
@@ -151,9 +151,9 @@ function addGroupWorkflowsButton(app, html, data) {
 
 /**
  * Add a workflows button to item sheet effects tab.
- * @param {object} app The item sheet app.
- * @param {HTMLElement} html The rendered HTML.
- * @param {object} data The data.
+ * @param {object} app Item sheet app
+ * @param {HTMLElement} html HTML element
+ * @param {object} data Data.
  */
 function addItemWorkflowsButton(app, html, data) {
   if ( !getSetting(constants.SETTING.ENABLE.KEY) ) return;
@@ -199,9 +199,9 @@ function coerceValue(value) {
 /**
  * Resolve an update value, supporting @attribute paths and calculations.
  * Falls back to coerceValue for plain values.
- * @param {object} entity The entity providing roll data
- * @param {string} value The update value
- * @returns {string|boolean|number} The resolved value
+ * @param {object} entity Entity providing roll data
+ * @param {string} value Update value
+ * @returns {string|boolean|number} Resolved value
  */
 function resolveUpdateValue(entity, value) {
   if ( typeof value === "string" && value.includes("@") ) {
@@ -214,17 +214,18 @@ function resolveUpdateValue(entity, value) {
 
 /**
  * Execute all actions in a workflow.
- * @param {object} actions The actions.
- * @param {object} options The options.
- * @param {Actor|Item} options.entity The entity.
- * @param {string} options.event The event name.
- * @param {number|null} [options.dieTotal] The die total.
- * @param {Roll[]|null} [options.rolls] The rolls.
- * @param {object|null} [options.data] Additional data.
- * @param {string|null} [options.counterKey] The counter key.
- * @param {number|null} [options.counterValue] The counter value.
+ * @param {object} actions Actions
+ * @param {object} options Options
+ * @param {Actor|Item} options.entity Entity (actor or item)
+ * @param {string} options.event Event name
+ * @param {number|null} [options.dieTotal] Die total
+ * @param {Roll[]|null} [options.rolls] Rolls
+ * @param {object|null} [options.data] Additional data
+ * @param {string|null} [options.counterKey] Counter key
+ * @param {number|null} [options.counterValue] Counter value
  */
-function executeWorkflowActions(actions, { entity, event, dieTotal = null, rolls = null, data = null, counterKey = null, counterValue = null }) {
+function executeWorkflowActions(actions,
+  {entity, event, dieTotal = null, rolls = null, data = null, counterKey = null, counterValue = null}) {
   const actor = entity.documentName === "Item" ? entity.parent : entity;
   const actorUpdates = {};
   const tokenUpdates = {};
@@ -265,17 +266,18 @@ function executeWorkflowActions(actions, { entity, event, dieTotal = null, rolls
 
 /**
  * Handle a single workflow action by dispatching it to the appropriate handler.
- * @param {object} action The action.
- * @param {object} options The options.
- * @param {Actor|Item} options.entity The entity.
- * @param {string} options.event The event.
- * @param {number|null} [options.dieTotal] The die total.
- * @param {Roll[]|null} [options.rolls] The rolls.
- * @param {object|null} [options.data] Additional hook data.
- * @param {string|null} [options.counterKey] The counter key.
- * @param {number|null} [options.counterValue] The counter value.
+ * @param {object} action Action
+ * @param {object} options Options
+ * @param {Actor|Item} options.entity Entity (actor or item)
+ * @param {string} options.event Event name
+ * @param {number|null} [options.dieTotal] Die total
+ * @param {Roll[]|null} [options.rolls] Rolls
+ * @param {object|null} [options.data] Additional hook data
+ * @param {string|null} [options.counterKey] Counter key
+ * @param {number|null} [options.counterValue] Counter value
  */
-function handleAction(action, { entity, event, dieTotal = null, rolls = null, data = null, counterKey = null, counterValue = null }) {
+function handleAction(action,
+  { entity, event, dieTotal = null, rolls = null, data = null, counterKey = null, counterValue = null }) {
   Logger.debug(`${LOG_PREFIX} Executing action`, { entity: entity.name, event, actionType: action.type });
 
   // Resolve the parent actor for item-level workflows
@@ -356,8 +358,8 @@ function handleAction(action, { entity, event, dieTotal = null, rolls = null, da
 
 /**
  * Enable, disable, or toggle a workflow's enabled state.
- * @param {Actor|Item} entity The entity.
- * @param {object} action The action.
+ * @param {Actor|Item} entity Entity (actor or item)
+ * @param {object} action Action
  */
 async function setWorkflowEnabled(entity, action) {
   const targetKey = action.workflowKey;
@@ -403,8 +405,8 @@ async function setWorkflowEnabled(entity, action) {
 
 /**
  * Execute a counter modification action on an entity.
- * @param {Actor|Item} entity The entity.
- * @param {object} action The action.
+ * @param {Actor|Item} entity Entity (actor or item)
+ * @param {object} action Action
  */
 function executeCounterAction(entity, action) {
   const key = action.counterKey;
@@ -448,7 +450,7 @@ function executeCounterAction(entity, action) {
 
 /**
  * Delete an item document.
- * @param {Item} item The item.
+ * @param {Item} item Item
  */
 async function destroyItem(item) {
   if ( item.documentName !== "Item" ) return;
@@ -459,7 +461,7 @@ async function destroyItem(item) {
 
 /**
  * Reduce an item's quantity by one.
- * @param {Item} item The item
+ * @param {Item} item Item
  */
 async function reduceItemQuantity(item) {
   if ( item.documentName !== "Item" ) return;
@@ -471,8 +473,8 @@ async function reduceItemQuantity(item) {
 
 /**
  * Set an item's equipped state.
- * @param {Item} item The item.
- * @param {boolean} equipped Whether to equip or unequip.
+ * @param {Item} item Item
+ * @param {boolean} equipped Whether to equip or unequip
  */
 async function setItemEquipped(item, equipped) {
   if ( item.documentName !== "Item" ) return;
@@ -484,7 +486,7 @@ async function setItemEquipped(item, equipped) {
 
 /**
  * Play a sound effect from an action.
- * @param {object} action The action with sound.path and sound.volume.
+ * @param {object} action Action with sound.path and sound.volume
  */
 function playSound(action) {
   if ( !action.sound?.path ) return;
@@ -497,11 +499,11 @@ function playSound(action) {
 
 /**
  * Apply, remove, or toggle a status effect on an actor.
- * @param {Actor} actor The actor
- * @param {object} action The action.
- * @param {boolean} [active] Force active state, or toggle if omitted.
+ * @param {Actor} actor Actor
+ * @param {object} action Action
+ * @param {boolean} [active] Force active state, or toggle if omitted
  */
-function conditionAction(actor, action, active) {
+async function conditionAction(actor, action, active) {
   if ( !action.conditionId ) return;
   if ( action.conditionId === "all" ) {
     if ( active !== false ) return;
@@ -510,6 +512,47 @@ function conditionAction(actor, action, active) {
     }
     return;
   }
+
+  // Check if this is a leveled condition
+  const conditionConfig = CONFIG.DND5E.conditionTypes[action.conditionId];
+  if ( conditionConfig?.levels > 0 && action.conditionId !== "exhaustion" ) {
+    const staticId = dnd5e.utils.staticID(`dnd5e${action.conditionId}`);
+    const effect = actor.effects.get(staticId) ?? actor.effects.find(e => e.statuses.has(action.conditionId));
+    const currentLevel = effect?.getFlag(MODULE.ID, "conditionLevel") ?? 0;
+    const maxLevel = conditionConfig.levels;
+
+    if ( active === true ) {
+      // Apply: create at level 1, or increment if already active
+      if ( currentLevel === 0 ) {
+        await actor.toggleStatusEffect(action.conditionId, { active: true });
+        const newEffect = actor.effects.get(staticId) ?? actor.effects.find(e => e.statuses.has(action.conditionId));
+        if ( newEffect ) await newEffect.setFlag(MODULE.ID, "conditionLevel", 1);
+      } else if ( currentLevel < maxLevel ) {
+        await effect.setFlag(MODULE.ID, "conditionLevel", currentLevel + 1);
+      }
+    } else if ( active === false ) {
+      // Remove: decrement if level > 1, or remove entirely
+      if ( currentLevel > 1 ) {
+        await effect.setFlag(MODULE.ID, "conditionLevel", currentLevel - 1);
+      } else if ( effect ) {
+        await actor.toggleStatusEffect(action.conditionId, { active: false });
+      }
+    } else if ( currentLevel > 0 ) {
+      // Toggle off: decrement if level > 1, or remove entirely
+      if ( currentLevel > 1 ) {
+        await effect.setFlag(MODULE.ID, "conditionLevel", currentLevel - 1);
+      } else {
+        await actor.toggleStatusEffect(action.conditionId, { active: false });
+      }
+    } else {
+      // Toggle on: create at level 1
+      await actor.toggleStatusEffect(action.conditionId, { active: true });
+      const newEffect = actor.effects.get(staticId) ?? actor.effects.find(e => e.statuses.has(action.conditionId));
+      if ( newEffect ) await newEffect.setFlag(MODULE.ID, "conditionLevel", 1);
+    }
+    return;
+  }
+
   actor.toggleStatusEffect(action.conditionId, { active });
 }
 
@@ -517,8 +560,8 @@ function conditionAction(actor, action, active) {
 
 /**
  * Request a roll from an actor's player or execute locally.
- * @param {Actor} actor The actor.
- * @param {object} action The action.
+ * @param {Actor} actor Actor
+ * @param {object} action Action
  */
 function requestRoll(actor, action) {
   if ( !action.roll?.type ) return;
@@ -551,8 +594,8 @@ function requestRoll(actor, action) {
 
 /**
  * Execute a requested roll on an actor.
- * @param {Actor} actor The actor.
- * @param {object} rollConfig The roll config.
+ * @param {Actor} actor Actor
+ * @param {object} rollConfig Roll config
  */
 export function executeRequestedRoll(actor, rollConfig) {
   const { category, key, target, onSuccess, onFailure } = rollConfig;
@@ -583,7 +626,7 @@ export function executeRequestedRoll(actor, rollConfig) {
 
 /**
  * Roll on a RollTable from an action.
- * @param {object} action The action.
+ * @param {object} action Action
  */
 async function rollTable(action) {
   if ( !action.tableUuid ) return;
@@ -608,8 +651,8 @@ function distributeAward() {
 
 /**
  * Update an actor document with a key/value pair.
- * @param {Actor} actor The actor.
- * @param {object} action The action.
+ * @param {Actor} actor Actor
+ * @param {object} action Action
  */
 function actorUpdate(actor, action) {
   if ( !action.updatePath || action.updateValue === undefined ) return;
@@ -620,8 +663,8 @@ function actorUpdate(actor, action) {
 
 /**
  * Update an actor's token document with a key/value pair.
- * @param {Actor} actor The actor.
- * @param {object} action The action.
+ * @param {Actor} actor Actor
+ * @param {object} action Action
  */
 function tokenUpdate(actor, action) {
   if ( !action.updatePath || action.updateValue === undefined ) return;
@@ -634,8 +677,8 @@ function tokenUpdate(actor, action) {
 
 /**
  * Update an item document with a key/value pair.
- * @param {Item} item The item.
- * @param {object} action The action.
+ * @param {Item} item Item
+ * @param {object} action Action
  */
 function itemUpdate(item, action) {
   if ( item.documentName !== "Item" ) return;
@@ -649,8 +692,8 @@ function itemUpdate(item, action) {
 
 /**
  * Process success/failure actions after a requested roll resolves.
- * @param {D20Roll[]} rolls The rolls.
- * @param {Actor} actor The actor.
+ * @param {D20Roll[]} rolls Rolls
+ * @param {Actor} actor Actor
  */
 function handleRequestRollResult(rolls, actor) {
   const options = rolls[0]?.options;
@@ -677,8 +720,8 @@ function handleRequestRollResult(rolls, actor) {
 
 /**
  * Create a handler for D20 roll hooks (actor from data.subject, dieTotal from terms[0]).
- * @param {string} eventName The event name.
- * @returns {Function} The hook handler function.
+ * @param {string} eventName Event name
+ * @returns {Function} Hook handler function
  */
 function makeD20RollHandler(eventName) {
   return function(rolls, data) {
@@ -701,8 +744,8 @@ const handleRollDeathSave = makeD20RollHandler("rollDeathSave");
 
 /**
  * Handle attack roll triggers (actor from data.subject.actor).
- * @param {Roll[]} rolls The rolls.
- * @param {object} data The hook data.
+ * @param {Roll[]} rolls Rolls
+ * @param {object} data Hook data
  */
 function handleRollAttack(rolls, data) {
   const actor = data?.subject?.actor;
@@ -721,8 +764,8 @@ function handleRollAttack(rolls, data) {
 
 /**
  * Handle initiative roll triggers.
- * @param {Actor} actor The actor.
- * @param {Collection} combatants The combatants.
+ * @param {Actor} actor Actor
+ * @param {Collection} combatants Combatants
  */
 function handleRollInitiative(actor, combatants) {
   if ( !actor?.isOwner ) return;
@@ -733,8 +776,8 @@ function handleRollInitiative(actor, combatants) {
 
 /**
  * Handle damage roll triggers (dieTotal from rolls[0].total).
- * @param {Roll[]} rolls The rolls.
- * @param {object} data The hook data.
+ * @param {Roll[]} rolls Rolls
+ * @param {object} data Hook data
  */
 function handleRollDamage(rolls, data) {
   const actor = data?.subject?.actor;
@@ -747,10 +790,10 @@ function handleRollDamage(rolls, data) {
 
 /**
  * Capture previous HP and counter values before an actor update.
- * @param {Actor} actor The actor.
- * @param {object} data The update data.
- * @param {object} options The update options.
- * @param {string} userId The triggering user ID.
+ * @param {Actor} actor Actor
+ * @param {object} data Update data
+ * @param {object} options Update options
+ * @param {string} userId Triggering user ID
  */
 function handlePreUpdateActor(actor, data, options, userId) {
   if ( !actor.isOwner ) return;
@@ -774,8 +817,8 @@ function handlePreUpdateActor(actor, data, options, userId) {
 
 /**
  * Fire startOfCombat event for all combatants.
- * @param {Combat} combat The combat.
- * @param {object} data The hook data.
+ * @param {Combat} combat Combat
+ * @param {object} data Hook data
  */
 function handleCombatStart(combat, data) {
   Logger.debug(`${LOG_PREFIX} handleCombatStart`, { combatantCount: combat.combatants.size });
@@ -791,7 +834,7 @@ function handleCombatStart(combat, data) {
 
 /**
  * Fire endOfCombat and zeroHpCombatEnd events on combat deletion.
- * @param {Combat} combat The combat.
+ * @param {Combat} combat Combat
  */
 function handleDeleteCombat(combat) {
   Logger.debug(`${LOG_PREFIX} handleDeleteCombat`, { combatantCount: combat.combatants.size });
@@ -813,9 +856,9 @@ function handleDeleteCombat(combat) {
 
 /**
  * Fire startOfTurn and endOfTurn events on combat round advancement.
- * @param {Combat} combat The combat.
- * @param {object} data The update data.
- * @param {object} options The update options.
+ * @param {Combat} combat Combat
+ * @param {object} data Update data
+ * @param {object} options Update options
  */
 function handleUpdateCombat(combat, data, options) {
   Logger.debug(`${LOG_PREFIX} handleUpdateCombat`, { previousCombatantId: combat?.previous?.combatantId, currentCombatant: combat.combatant?.actor?.name });
@@ -836,8 +879,8 @@ function handleUpdateCombat(combat, data, options) {
 
 /**
  * Handle rest completion events for an actor.
- * @param {Actor} actor The actor.
- * @param {object} result The result data.
+ * @param {Actor} actor Actor
+ * @param {object} result Result data
  */
 function handleRest(actor, result) {
   const restType = result.type === "long" ? "longRest" : "shortRest";
@@ -849,8 +892,8 @@ function handleRest(actor, result) {
 
 /**
  * Handle rest completion events for a group actor.
- * @param {Actor} actor The actor.
- * @param {object} config The rest config.
+ * @param {Actor} actor Actor
+ * @param {object} config Rest config
  */
 function handleGroupRest(actor, config) {
   if ( actor.type !== "group" ) return;
@@ -863,10 +906,10 @@ function handleGroupRest(actor, config) {
 
 /**
  * Fire HP and counter events after an actor update.
- * @param {Actor} actor The actor.
- * @param {object} data The update data.
- * @param {object} options The update options.
- * @param {string} userId The triggering user ID.
+ * @param {Actor} actor Actor
+ * @param {object} data Update data
+ * @param {object} options Update options
+ * @param {string} userId Triggering user ID
  */
 function handleUpdateActor(actor, data, options, userId) {
   if ( !actor.isOwner ) return;
@@ -935,10 +978,10 @@ function handleUpdateActor(actor, data, options, userId) {
 
 /**
  * Fire equip/counter events after an item update.
- * @param {Item} item The item.
- * @param {object} data The update data.
- * @param {object} options The update options.
- * @param {string} userId The triggering user ID.
+ * @param {Item} item Item
+ * @param {object} data Update data
+ * @param {object} options Update options
+ * @param {string} userId Triggering user ID
  */
 function handleUpdateItem(item, data, options, userId) {
   if ( !item.isOwner ) return;
@@ -994,8 +1037,8 @@ function handleUpdateItem(item, data, options, userId) {
  * Resolve the Actor targeted by an ActiveEffect.
  * Uses the built-in target getter which handles effects on Actors directly
  * and transfer effects on Items owned by Actors.
- * @param {ActiveEffect} effect The active effect.
- * @returns {Actor|null} The target actor, or null.
+ * @param {ActiveEffect} effect Active effect
+ * @returns {Actor|null} Target actor, or null
  */
 function getEffectActor(effect) {
   const target = effect.target;
@@ -1004,9 +1047,9 @@ function getEffectActor(effect) {
 
 /**
  * Handle active effect creation — fire condition and effect events.
- * @param {ActiveEffect} effect The created effect.
- * @param {object} options Hook options.
- * @param {string} userId The triggering user ID.
+ * @param {ActiveEffect} effect Created effect
+ * @param {object} options Hook options
+ * @param {string} userId Triggering user ID
  */
 function handleCreateActiveEffect(effect, options, userId) {
   const actor = getEffectActor(effect);
@@ -1023,9 +1066,9 @@ function handleCreateActiveEffect(effect, options, userId) {
 
 /**
  * Handle active effect deletion — fire condition and effect events.
- * @param {ActiveEffect} effect The deleted effect.
- * @param {object} options Hook options.
- * @param {string} userId The triggering user ID.
+ * @param {ActiveEffect} effect Deleted effect
+ * @param {object} options Hook options
+ * @param {string} userId Triggering user ID
  */
 function handleDeleteActiveEffect(effect, options, userId) {
   const actor = getEffectActor(effect);
@@ -1042,10 +1085,10 @@ function handleDeleteActiveEffect(effect, options, userId) {
 
 /**
  * Handle active effect update — fire effect enabled/disabled on toggle.
- * @param {ActiveEffect} effect The effect.
- * @param {object} changes The changes.
- * @param {object} options Hook options.
- * @param {string} userId The triggering user ID.
+ * @param {ActiveEffect} effect Active effect
+ * @param {object} changes Changes
+ * @param {object} options Hook options
+ * @param {string} userId Triggering user ID
  */
 function handleUpdateActiveEffect(effect, changes, options, userId) {
   if ( !("disabled" in (changes ?? {})) ) return;
@@ -1090,6 +1133,7 @@ const EVENT_TO_HOOK = {
   failureValue: "updateActor",
   conditionApplied: "createActiveEffect",
   conditionRemoved: "deleteActiveEffect",
+  conditionLevelChanged: "updateActiveEffect",
   effectEnabled: "createActiveEffect",
   effectDisabled: "deleteActiveEffect",
   equip: "updateItem",
@@ -1150,33 +1194,33 @@ const HOOK_HANDLERS = {
 
 /**
  * Test whether a workflow's triggers match a given event.
- * @param {object} workflow The workflow.
- * @param {string} event The event name.
- * @param {object} [options] The options.
- * @param {number|null} [options.dieTotal] The die total.
- * @param {Roll[]|null} [options.rolls] The rolls.
- * @param {string|null} [options.counterKey] The counter key.
- * @param {number|null} [options.counterValue] The counter value.
- * @param {string|null} [options.conditionId] The condition ID.
- * @param {Actor|null} [options.actor] The actor.6a6
- * @param {string|null} [options.rollSubtype] The roll subtype key.
- * @param {string|null} [options.effectName] The effect name.
- * @returns {boolean} Whether any trigger matched.
+ * @param {object} workflow Workflow
+ * @param {string} event Event name
+ * @param {object} [options] Options
+ * @param {number|null} [options.dieTotal] Die total
+ * @param {Roll[]|null} [options.rolls] Rolls
+ * @param {string|null} [options.counterKey] Counter key
+ * @param {number|null} [options.counterValue] Counter value
+ * @param {string|null} [options.conditionId] Condition ID
+ * @param {Actor|null} [options.actor] Actor
+ * @param {string|null} [options.rollSubtype] Roll subtype key
+ * @param {string|null} [options.effectName] Effect name
+ * @returns {boolean} Whether any trigger matched
  */
 /**
  * Test whether a single trigger matches a specific event with its conditions.
- * @param {object} trigger The trigger object.
- * @param {string} event The event name.
- * @param {object} [options] The options.
- * @param {number|null} [options.dieTotal] The die total.
- * @param {Roll[]|null} [options.rolls] The rolls.
- * @param {string|null} [options.counterKey] The counter key.
- * @param {number|null} [options.counterValue] The counter value.
- * @param {string|null} [options.conditionId] The condition ID.
- * @param {Actor|null} [options.actor] The actor.
- * @param {string|null} [options.rollSubtype] The roll subtype key.
- * @param {string|null} [options.effectName] The effect name.
- * @returns {boolean} Whether the trigger matched.
+ * @param {object} trigger Trigger
+ * @param {string} event Event name
+ * @param {object} [options] Options
+ * @param {number|null} [options.dieTotal] Die total
+ * @param {Roll[]|null} [options.rolls] Rolls
+ * @param {string|null} [options.counterKey] Counter key
+ * @param {number|null} [options.counterValue] Counter value
+ * @param {string|null} [options.conditionId] Condition ID
+ * @param {Actor|null} [options.actor] Actor
+ * @param {string|null} [options.rollSubtype] Roll subtype key
+ * @param {string|null} [options.effectName] Effect name
+ * @returns {boolean} Whether the trigger matched
  */
 function matchTriggerAgainstEvent(trigger, event, {
   dieTotal = null, rolls = null, counterKey = null, counterValue = null,
@@ -1241,7 +1285,7 @@ function matchTriggerAgainstEvent(trigger, event, {
   }
 
   // Determine actual value for comparison
-  const isCounterValueTrigger = ["counterValue", "successValue", "failureValue"].includes(trigger.event);
+  const isCounterValueTrigger = ["counterValue", "successValue", "failureValue", "conditionLevelChanged"].includes(trigger.event);
   const actualValue = isCounterValueTrigger ? counterValue : dieTotal;
   const targetValue = (typeof trigger.value === "string" && trigger.value.startsWith("@"))
     ? counters.resolveTriggerValue(actor, trigger.value) : Number(trigger.value);
@@ -1256,9 +1300,9 @@ function matchTriggerAgainstEvent(trigger, event, {
 /**
  * Check whether a trigger's condition is currently satisfied as actor state.
  * Used for per-trigger conditions that must be true when the trigger fires.
- * @param {object} trigger The trigger object.
- * @param {Actor|Item} entity The actor or item to check state on.
- * @returns {boolean} Whether the trigger's condition is satisfied.
+ * @param {object} trigger Trigger
+ * @param {Actor|Item} entity Entity (actor or item)
+ * @returns {boolean} Whether the trigger's condition is satisfied
  */
 function checkTriggerState(trigger, entity) {
   if ( !entity ) return true;
@@ -1282,6 +1326,13 @@ function checkTriggerState(trigger, entity) {
     case "conditionRemoved": {
       if ( !trigger.conditionId ) return true;
       return !(actor?.statuses?.has(trigger.conditionId) ?? false);
+    }
+    case "conditionLevelChanged": {
+      if ( !trigger.conditionId || trigger.value === undefined || trigger.value === "" || trigger.value === null ) return true;
+      const effect = actor?.effects?.find(e => e.statuses.has(trigger.conditionId));
+      const level = effect?.getFlag("custom-dnd5e", "conditionLevel") ?? 0;
+      const targetValue = Number(trigger.value);
+      return compareValues(level, trigger.operator, targetValue);
     }
     case "effectEnabled": {
       if ( !trigger.effectName ) return true;
@@ -1329,18 +1380,18 @@ function checkTriggerState(trigger, entity) {
 /**
  * Check if a workflow matches the current event (OR logic across triggers).
  * Each trigger can have optional conditions that must also be satisfied.
- * @param {object} workflow The workflow group.
- * @param {string} event The event name.
- * @param {object} [options] The options.
- * @param {number|null} [options.dieTotal] The die total.
- * @param {Roll[]|null} [options.rolls] The rolls.
- * @param {string|null} [options.counterKey] The counter key.
- * @param {number|null} [options.counterValue] The counter value.
- * @param {string|null} [options.conditionId] The condition ID.
- * @param {Actor|null} [options.actor] The actor.
- * @param {string|null} [options.rollSubtype] The roll subtype key.
- * @param {string|null} [options.effectName] The effect name.
- * @returns {boolean} Whether any trigger matched.
+ * @param {object} workflow Workflow
+ * @param {string} event Event name
+ * @param {object} [options] Options
+ * @param {number|null} [options.dieTotal] Die total
+ * @param {Roll[]|null} [options.rolls] Rolls
+ * @param {string|null} [options.counterKey] Counter key
+ * @param {number|null} [options.counterValue] Counter value
+ * @param {string|null} [options.conditionId] Condition ID
+ * @param {Actor|null} [options.actor] Actor
+ * @param {string|null} [options.rollSubtype] Roll subtype key
+ * @param {string|null} [options.effectName] Effect name
+ * @returns {boolean} Whether any trigger matched
  */
 function workflowMatchesEvent(workflow, event, {
   dieTotal = null, rolls = null, counterKey = null, counterValue = null,
@@ -1371,16 +1422,16 @@ function workflowMatchesEvent(workflow, event, {
 
 /**
  * Process a workflow event against world and actor-level workflows.
- * @param {string} event The event name.
- * @param {object} options The options.
- * @param {Actor} options.actor The actor.
- * @param {number|null} [options.dieTotal] The die total.
- * @param {Roll[]|null} [options.rolls] The rolls.
- * @param {object|null} [options.data] Additional hook data.
- * @param {string|null} [options.counterKey] The counter key.
- * @param {number|null} [options.counterValue] The counter value.
- * @param {string|null} [options.conditionId] The condition ID.
- * @param {string|null} [options.effectName] The effect name.
+ * @param {string} event Event name
+ * @param {object} options Options
+ * @param {Actor} options.actor Actor
+ * @param {number|null} [options.dieTotal] Die total
+ * @param {Roll[]|null} [options.rolls] Rolls
+ * @param {object|null} [options.data] Additional hook data
+ * @param {string|null} [options.counterKey] Counter key
+ * @param {number|null} [options.counterValue] Counter value
+ * @param {string|null} [options.conditionId] Condition ID
+ * @param {string|null} [options.effectName] Effect name
  */
 function processEvent(event, {
   actor,
@@ -1433,7 +1484,9 @@ function processEvent(event, {
     if ( workflow.target === "members" && actor.type === "group" && actor.system?.members ) {
       for ( const { actor: memberActor } of actor.system.members ) {
         if ( !memberActor ) continue;
-        executeWorkflowActions(actions, { entity: memberActor, event, dieTotal, rolls, data, counterKey, counterValue });
+        executeWorkflowActions(actions,
+          { entity: memberActor, event, dieTotal, rolls, data, counterKey, counterValue }
+        );
       }
     } else {
       executeWorkflowActions(actions, { entity: actor, event, dieTotal, rolls, data, counterKey, counterValue });
@@ -1447,15 +1500,15 @@ function processEvent(event, {
 
 /**
  * Process a workflow event against world and item-level workflows.
- * @param {string} event The event name.
- * @param {object} options The options.
- * @param {Item} options.item The item.
- * @param {object|null} [options.data] Additional hook data.
- * @param {string|null} [options.counterKey] The counter key.
- * @param {number|null} [options.counterValue] The counter value.
- * @param {number|null} [options.dieTotal] The die total.
- * @param {Roll[]|null} [options.rolls] The rolls.
- * @param {string|null} [options.rollSubtype] The roll subtype.
+ * @param {string} event Event name
+ * @param {object} options Options
+ * @param {Item} options.item Item
+ * @param {object|null} [options.data] Additional hook data
+ * @param {string|null} [options.counterKey] Counter key
+ * @param {number|null} [options.counterValue] Counter value
+ * @param {number|null} [options.dieTotal] Die total
+ * @param {Roll[]|null} [options.rolls] The rolls
+ * @param {string|null} [options.rollSubtype] The roll subtype
  */
 function processItemEvent(event, { item, data = null, counterKey = null, counterValue = null,
   dieTotal = null, rolls = null, rollSubtype = null }) {
@@ -1501,8 +1554,8 @@ function processItemEvent(event, { item, data = null, counterKey = null, counter
 
 /**
  * Collect hook events needed for requestRoll result handling.
- * @param {object} workflows The workflows.
- * @returns {Set<string>} Event names that need hooks.
+ * @param {object} workflows Workflows
+ * @returns {Set<string>} Event names that need hooks
  */
 function collectRequestRollEvents(workflows) {
   const events = new Set();
@@ -1526,8 +1579,8 @@ function collectRequestRollEvents(workflows) {
 
 /**
  * Index visible workflows into a Map keyed by trigger event type.
- * @param {object} workflows The workflows.
- * @param {Map} index The target event index map.
+ * @param {object} workflows Workflows
+ * @param {Map} index Target event index map
  */
 function indexWorkflows(workflows, index) {
   for ( const workflow of Object.values(workflows) ) {
@@ -1630,8 +1683,8 @@ export function rebuild() {
 
 /**
  * Synchronize registered hooks to match the active event set.
- * @param {Set<string>} activeEvents The actor active events.
- * @param {Set<string>} [activeItemEvents] The active item events.
+ * @param {Set<string>} activeEvents Active actor events
+ * @param {Set<string>} [activeItemEvents] Active item events
  */
 function syncHooks(activeEvents, activeItemEvents = new Set()) {
   const neededHooks = new Set();
@@ -1683,8 +1736,8 @@ function syncHooks(activeEvents, activeItemEvents = new Set()) {
 
 /**
  * Ensure hooks are registered for all events in the given workflows.
- * @param {object} workflows The workflows.
- * @param {string} [entityType="actor"] Whether these are "actor" or "item" workflows.
+ * @param {object} workflows Workflows
+ * @param {string} [entityType="actor"] Whether these are "actor" or "item" workflows
  */
 export function ensureEventHooks(workflows, entityType = "actor") {
   if ( !getSetting(constants.SETTING.ENABLE.KEY) ) return;
@@ -1761,10 +1814,10 @@ export function ensureEventHooks(workflows, entityType = "actor") {
 
 /**
  * Find a workflow by key or name.
- * @param {string} identifier The workflow key or name.
- * @param {object} [options] Search options.
- * @param {Actor|Item|null} [options.entity] The entity.
- * @returns {object|null} The matching workflow or null.
+ * @param {string} identifier Workflow key or name
+ * @param {object} [options] Search options
+ * @param {Actor|Item|null} [options.entity] Entity (actor, item or null)
+ * @returns {object|null} Matching workflow, or null
  */
 function findWorkflow(identifier, { entity = null } = {}) {
   // Search world actor workflows
@@ -1797,11 +1850,11 @@ function findWorkflow(identifier, { entity = null } = {}) {
 
 /**
  * Execute a workflow's actions on an entity.
- * @param {string} identifier The workflow key or name.
- * @param {Actor|Item} entity The entity.
- * @param {object} [options] The options.
- * @param {string} [options.event] The event name.
- * @returns {boolean} Whether the workflow was found and executed.
+ * @param {string} identifier Workflow key or name
+ * @param {Actor|Item} entity Entity (actor or item)
+ * @param {object} [options] Options
+ * @param {string} [options.event] Event name
+ * @returns {boolean} Whether the workflow was found and executed
  */
 function executeWorkflow(identifier, entity, { event = "macro" } = {}) {
   const workflow = findWorkflow(identifier, { entity });
@@ -1827,9 +1880,9 @@ function executeWorkflow(identifier, entity, { event = "macro" } = {}) {
 
 /**
  * Get all workflow names from world and entity-level workflows.
- * @param {object} [options] The options.
- * @param {Actor|Item|null} [options.entity] The entity.
- * @returns {string[]} Array of workflow names.
+ * @param {object} [options] Options
+ * @param {Actor|Item|null} [options.entity] Entity (actor, item or null)
+ * @returns {string[]} Array of workflow names
  */
 function getWorkflowNames({ entity = null } = {}) {
   const names = [];
@@ -1859,5 +1912,6 @@ function getWorkflowNames({ entity = null } = {}) {
 /** Public API. */
 export const workflows = {
   executeWorkflow,
-  getWorkflowNames
+  getWorkflowNames,
+  processEvent
 };

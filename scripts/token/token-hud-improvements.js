@@ -1,5 +1,5 @@
-import { CONSTANTS } from "./constants.js";
-import { getSetting, registerSetting } from "./utils.js";
+import { CONSTANTS } from "../constants.js";
+import { getSetting, registerSetting } from "../utils.js";
 
 const constants = CONSTANTS.TOKEN;
 
@@ -56,8 +56,8 @@ function registerHooks() {
 
 /**
  * Handle Token HUD render to attach palette hover listeners and apply scaling.
- * @param {TokenHUD} hud The Token HUD application.
- * @param {HTMLElement} html The rendered HTML element.
+ * @param {TokenHUD} hud Token HUD app
+ * @param {HTMLElement} html HTML element
  */
 function onRenderTokenHUD(hud, html) {
   // Add class for CSS styling
@@ -83,8 +83,6 @@ function onRenderTokenHUD(hud, html) {
     palette.addEventListener("mouseleave", () => schedulePaletteClose(hud));
   }
 
-  // Scale HUD to stay a consistent size regardless of zoom
-  // Defer to ensure it runs after Foundry's _updatePosition overwrites the transform
   requestAnimationFrame(() => applyHudScale(hud));
 }
 
@@ -104,7 +102,7 @@ function onCanvasPan() {
 /**
  * Apply inverse zoom scaling to the Token HUD so controls stay a fixed screen size.
  * Width/height match the token when zoomed in, with a minimum (default-zoom size) when zoomed out.
- * @param {TokenHUD} hud The Token HUD application.
+ * @param {TokenHUD} hud Token HUD app
  */
 function applyHudScale(hud) {
   const token = hud.object;
@@ -133,7 +131,7 @@ function applyHudScale(hud) {
 
 /**
  * Schedule closing all active palettes after a delay.
- * @param {TokenHUD} hud The Token HUD application.
+ * @param {TokenHUD} hud Token HUD app
  */
 function schedulePaletteClose(hud) {
   cancelPaletteClose();

@@ -99,7 +99,7 @@ class SwapActivitySheet extends dnd5e.applications.activity.ActivitySheet {
 
   /**
    * Handle dropping an Actor onto the sheet.
-   * @param {DragEvent} event The event
+   * @param {DragEvent} event Drag event
    */
   async #onDropActor(event) {
     event.preventDefault();
@@ -115,8 +115,8 @@ class SwapActivitySheet extends dnd5e.applications.activity.ActivitySheet {
 
   /**
    * Clear the actor selection.
-   * @param {Event} event The event
-   * @param {HTMLElement} target The target element
+   * @param {Event} event Event
+   * @param {HTMLElement} target Target HTML element
    */
   static clearActor(event, target) {
     this.activity.update({ "swap.actorUuid": "" });
@@ -201,10 +201,10 @@ export class SwapActivity extends dnd5e.documents.activity.ActivityMixin(BaseSwa
 
   /**
    * Execute the token position swap.
-   * @param {object} [options={}]
-   * @param {object} [options.config] The activity usage config
-   * @param {object} [options.results] The activity usage results
-   * @param {ChatMessage5e} [options.message] The message
+   * @param {object} [options={}] Options
+   * @param {object} [options.config] Activity usage config
+   * @param {object} [options.results] Activity usage results
+   * @param {ChatMessage5e} [options.message] Chat message
    * @returns {Promise<void>}
    */
   async executeSwap({ config, results, message } = {}) {
@@ -378,9 +378,9 @@ export class SwapActivity extends dnd5e.documents.activity.ActivityMixin(BaseSwa
   /**
    * Handle swapping tokens from a chat card button.
    * @this {SwapActivity}
-   * @param {PointerEvent} event The event
-   * @param {HTMLElement} target The target element
-   * @param {ChatMessage5e} message The message
+   * @param {PointerEvent} event Pointer event
+   * @param {HTMLElement} target TTarget HTML element
+   * @param {ChatMessage5e} message Chat message
    */
   static #swapToken(event, target, message) {
     this.executeSwap({ message });

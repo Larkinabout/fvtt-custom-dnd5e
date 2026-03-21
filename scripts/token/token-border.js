@@ -1,5 +1,5 @@
-import { MODULE, CONSTANTS } from "./constants.js";
-import { getSetting, registerSetting } from "./utils.js";
+import { MODULE, CONSTANTS } from "../constants.js";
+import { getSetting, registerSetting } from "../utils.js";
 
 /**
  * Register settings and patches.
@@ -48,7 +48,7 @@ function registerPatches() {
 
 /**
  * Patch for refreshing token border.
- * @param {Function} wrapped The original function
+ * @param {Function} wrapped Original function
  */
 function tokenRefreshBorderPatch(wrapped) {
   wrapped();

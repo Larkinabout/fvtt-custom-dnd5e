@@ -218,6 +218,23 @@ button[data-custom-dnd5e="stop-animations"].fade-out {
  * TOKEN HUD
  */
 
+/*
+ * CONDITION LEVEL
+ */
+.custom-dnd5e-condition-level {
+    color: #ff0000;
+    font-family: "Signika", sans-serif;
+    font-size: 18px;
+    font-weight: bold;
+    line-height: 1;
+    pointer-events: none;
+    -webkit-text-stroke: 2px #000;
+    paint-order: stroke fill;
+    position: absolute;
+    transform: translate(-50%, -50%);
+    z-index: 1;
+}
+
 #token-hud.custom-dnd5e-hud .col.left {
     align-items: center;
     margin-left: 0.5rem;

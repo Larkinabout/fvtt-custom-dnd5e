@@ -171,11 +171,11 @@ export class MoveActivity extends dnd5e.documents.activity.ActivityMixin(BaseMov
 
   /**
    * Start the canvas move mode for this activity.
-   * @param {object} [options={}]
-   * @param {string} [options.direction] The movement direction override
-   * @param {object} [options.config] The activity usage config
-   * @param {object} [options.results] The activity usage results
-   * @param {ChatMessage5e} [options.message] The message
+   * @param {object} [options={}] Options
+   * @param {string} [options.direction] Movement direction override
+   * @param {object} [options.config] Activity usage config
+   * @param {object} [options.results] Activity usage results
+   * @param {ChatMessage5e} [options.message] Chat message
    * @returns {Promise<void>}
    */
   async startMoveMode({ direction, config, results, message } = {}) {
@@ -231,9 +231,9 @@ export class MoveActivity extends dnd5e.documents.activity.ActivityMixin(BaseMov
   /**
    * Handle pushing the target token from a chat card button.
    * @this {MoveActivity}
-   * @param {PointerEvent} event The event
-   * @param {HTMLElement} target The target element
-   * @param {ChatMessage5e} message The message
+   * @param {PointerEvent} event Pointer event
+   * @param {HTMLElement} target Target HTML element
+   * @param {ChatMessage5e} message Chat message
    */
   static #pushToken(event, target, message) {
     this.startMoveMode({ direction: "push", message });
@@ -242,9 +242,9 @@ export class MoveActivity extends dnd5e.documents.activity.ActivityMixin(BaseMov
   /**
    * Handle pulling the target token from a chat card button.
    * @this {MoveActivity}
-   * @param {PointerEvent} event The event
-   * @param {HTMLElement} target The target element
-   * @param {ChatMessage5e} message The message
+   * @param {PointerEvent} event Event
+   * @param {HTMLElement} target Target HTML element
+   * @param {ChatMessage5e} message Chat message
    */
   static #pullToken(event, target, message) {
     this.startMoveMode({ direction: "pull", message });
@@ -253,9 +253,9 @@ export class MoveActivity extends dnd5e.documents.activity.ActivityMixin(BaseMov
   /**
    * Handle moving the target token from a chat card button.
    * @this {MoveActivity}
-   * @param {PointerEvent} event The event
-   * @param {HTMLElement} target The target element
-   * @param {ChatMessage5e} message The message
+   * @param {PointerEvent} event Pointer event
+   * @param {HTMLElement} target Target HTML element
+   * @param {ChatMessage5e} message Chat message
    */
   static #moveToken(event, target, message) {
     this.startMoveMode({ direction: this.move.direction, message });

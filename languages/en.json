@@ -498,6 +498,7 @@
     "CUSTOM_DND5E.form.workflows.triggerConditions.title": "Trigger Conditions",
     "CUSTOM_DND5E.form.workflows.triggerConditions.tooltip": "Edit Conditions",
     "CUSTOM_DND5E.form.workflows.trigger.choices.conditionApplied": "Condition Applied",
+    "CUSTOM_DND5E.form.workflows.trigger.choices.conditionLevelChanged": "Condition Level Changed",
     "CUSTOM_DND5E.form.workflows.trigger.choices.conditionRemoved": "Condition Removed",
     "CUSTOM_DND5E.form.workflows.trigger.choices.effectDisabled": "Effect Disabled",
     "CUSTOM_DND5E.form.workflows.trigger.choices.effectEnabled": "Effect Enabled",

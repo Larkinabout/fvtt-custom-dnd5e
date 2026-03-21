@@ -1,5 +1,5 @@
-import { MODULE, CONSTANTS } from "./constants.js";
-import { getSetting, registerSetting } from "./utils.js";
+import { MODULE, CONSTANTS } from "../constants.js";
+import { getSetting, registerSetting } from "../utils.js";
 
 const constants = CONSTANTS.RADIAL_STATUS_EFFECTS;
 
@@ -24,11 +24,10 @@ function shouldUseDropShadow() {
 }
 
 /**
- * Register settings and patches.
+ * Register settings.
  */
 export function register() {
   registerSettings();
-  registerPatches();
 }
 
 /* -------------------------------------------- */
@@ -54,35 +53,24 @@ function registerSettings() {
 /* -------------------------------------------- */
 
 /**
- * Register patches.
+ * Apply radial status effect positioning to a token's effects container.
+ * Called from the shared _refreshEffects wrapper in condition-levels.js.
+ * @param {Token} token Token
  */
-function registerPatches() {
+export function applyRadialEffects(token) {
   if ( !getSetting(constants.SETTING.KEY) ) return;
 
-  libWrapper.register(MODULE.ID, "foundry.canvas.placeables.Token.prototype._refreshEffects", refreshEffectsPatch, "WRAPPER");
-}
-
-/* -------------------------------------------- */
-
-/**
- * Patch for _refreshEffects.
- * @param {Function} wrapped The original function
- * @param {...any} args The arguments
- */
-function refreshEffectsPatch(wrapped, ...args) {
-  wrapped(...args);
-
   let i = 0;
-  const gridSize = this.scene?.grid?.size ?? 100;
+  const gridSize = token.scene?.grid?.size ?? 100;
   const gridScale = gridSize / 100;
-  const tokenSize = Math.min(this.document?.height, this.document?.width) ?? 1;
-  const tokenTileFactor = this.document?.width ?? 1;
+  const tokenSize = Math.min(token.document?.height, token.document?.width) ?? 1;
+  const tokenTileFactor = token.document?.width ?? 1;
   const scaledSize = 12 * getIconScale(tokenSize) * gridScale;
-  const max = getMaxIcons(this);
+  const max = getMaxIcons(token);
   const radius = getSizeOffset(tokenSize) * tokenTileFactor * gridSize;
-  const initialRotation = (0.5 + (1 / max) * Math.PI) * Math.PI;
+  const initialRotation = (0.5 + ((1 / max) * Math.PI)) * Math.PI;
   const halfGridSize = gridSize * tokenTileFactor / 2;
-  const bg = this.effects.bg.clear();
+  const bg = token.effects.bg.clear();
 
   if ( useDropShadow === null ) useDropShadow = shouldUseDropShadow();
   if ( useDropShadow && !bg.filters?.length ) {
@@ -94,8 +82,8 @@ function refreshEffectsPatch(wrapped, ...args) {
     })];
   }
 
-  for ( const effect of this.effects.children ) {
-    if ( effect === bg || effect === this.effects.overlay ) continue;
+  for ( const effect of token.effects.children ) {
+    if ( effect === bg || effect === token.effects.overlay ) continue;
 
     effect.anchor.set(0.5);
     effect.texture.baseTexture.scaleMode = PIXI.SCALE_MODES.LINEAR;
@@ -113,7 +101,7 @@ function refreshEffectsPatch(wrapped, ...args) {
       effect.mask = mask;
     }
 
-    const angle = (i / max) * 2 * Math.PI + initialRotation;
+    const angle = ((i / max) * 2 * Math.PI) + initialRotation;
     effect.position.x = ((radius * Math.cos(angle)) / 2) + halfGridSize;
     effect.position.y = (((-radius * Math.sin(angle)) / 2) + halfGridSize);
 
@@ -124,8 +112,8 @@ function refreshEffectsPatch(wrapped, ...args) {
 
 /**
  * Get icon scale factor based on token size.
- * @param {number} size The token size in grid units
- * @returns {number} The scale factor
+ * @param {number} size Token size in grid units
+ * @returns {number} Scale factor
  */
 function getIconScale(size) {
   if ( size >= 2.5 ) return size / 2;
@@ -137,8 +125,8 @@ function getIconScale(size) {
 
 /**
  * Get the maximum number of icon slots in the ring.
- * @param {Token} token The token
- * @returns {number} The maximum number of icons
+ * @param {Token} token Token
+ * @returns {number} Maximum number of icons
  */
 function getMaxIcons(token) {
   if ( token?.document.width < 1 ) return 9;
@@ -151,8 +139,8 @@ function getMaxIcons(token) {
 
 /**
  * Get the radial offset multiplier based on token size.
- * @param {number} size The token size in grid units
- * @returns {number} The offset multiplier
+ * @param {number} size Token size in grid units
+ * @returns {number} Offset multiplier
  */
 function getSizeOffset(size) {
   if ( size < 1 ) return 1.4;
@@ -165,9 +153,9 @@ function getSizeOffset(size) {
 
 /**
  * Draw a circular background behind an icon.
- * @param {PIXI.Sprite} icon The icon sprite
- * @param {PIXI.Graphics} bg The background graphics
- * @param {number} gridScale The grid scale factor
+ * @param {PIXI.Sprite} icon Icon sprite
+ * @param {PIXI.Graphics} bg Background graphics
+ * @param {number} gridScale Grid scale factor
  */
 function drawBackground(icon, bg, gridScale) {
   const radius = (icon.width / 2) + (icon.width * 0.1);

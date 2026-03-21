@@ -81,7 +81,7 @@ class MacroActivitySheet extends dnd5e.applications.activity.ActivitySheet {
 
   /**
    * Handle dropping a Macro onto the sheet.
-   * @param {DragEvent} event The event
+   * @param {DragEvent} event Drag event
    */
   async #onDropMacro(event) {
     event.preventDefault();
@@ -97,8 +97,8 @@ class MacroActivitySheet extends dnd5e.applications.activity.ActivitySheet {
 
   /**
    * Clear the macro selection.
-   * @param {Event} event The event
-   * @param {HTMLElement} target The target element
+   * @param {Event} event Event
+   * @param {HTMLElement} target Target HTML element
    */
   static clearMacro(event, target) {
     this.activity.update({ "macro.uuid": "" });
@@ -168,10 +168,10 @@ export class MacroActivity extends dnd5e.documents.activity.ActivityMixin(BaseMa
 
   /**
    * Execute the activity's macro.
-   * @param {object} [options={}]
-   * @param {object} [options.config] The activity usage config
-   * @param {object} [options.results] The activity usage results
-   * @param {ChatMessage5e} [options.message] The message
+   * @param {object} [options={}] Options
+   * @param {object} [options.config] Activity usage config
+   * @param {object} [options.results] Activity usage results
+   * @param {ChatMessage5e} [options.message] Chat message
    * @returns {Promise<void>}
    */
   async executeActivityMacro({ config, results, message } = {}) {
@@ -188,9 +188,9 @@ export class MacroActivity extends dnd5e.documents.activity.ActivityMixin(BaseMa
   /**
    * Handle executing the macro from a chat card button.
    * @this {MacroActivity}
-   * @param {PointerEvent} event The event
-   * @param {HTMLElement} target The target element
-   * @param {ChatMessage5e} message The message
+   * @param {PointerEvent} event Pointer event
+   * @param {HTMLElement} target Target HTML element
+   * @param {ChatMessage5e} message Chat message
    */
   static #executeMacro(event, target, message) {
     this.executeActivityMacro({ message });

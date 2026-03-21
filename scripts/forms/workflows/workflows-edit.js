@@ -9,7 +9,7 @@ const id = CONSTANTS.WORKFLOWS.ID;
 const form = `${id}-edit`;
 
 /* -------------------------------------------- */
-/*  Trigger Constants                      */
+/*  Trigger Constants                           */
 /* -------------------------------------------- */
 
 export const COUNTER_TRIGGERS = [
@@ -20,7 +20,8 @@ export const COUNTER_TRIGGERS = [
 const TRIGGERS_WITH_VALUE = [
   "rollAttack", "rollAbilityCheck", "rollSavingThrow", "rollSkill",
   "rollToolCheck", "rollConcentration", "rollDeathSave", "rollDamage",
-  "counterValue", "successValue", "failureValue"
+  "counterValue", "successValue", "failureValue",
+  "conditionLevelChanged"
 ];
 
 const TRIGGERS_WITH_RESULT = [
@@ -30,7 +31,7 @@ const TRIGGERS_WITH_RESULT = [
 
 const ROLL_SUBTYPE_TRIGGERS = ["rollAbilityCheck", "rollSavingThrow", "rollSkill", "rollToolCheck"];
 
-const CONDITION_TRIGGERS = ["conditionApplied", "conditionRemoved"];
+const CONDITION_TRIGGERS = ["conditionApplied", "conditionRemoved", "conditionLevelChanged"];
 
 const EFFECT_TRIGGERS = ["effectEnabled", "effectDisabled"];
 
@@ -71,10 +72,10 @@ const RESULTS_WITH_VALUE = ["successWithin", "failureWithin", "successBy", "fail
 /**
  * Rebuild a <select> element's options from choices.
  * Supports grouped array (with optgroups) and flat format.
- * @param {HTMLSelectElement} selectElement
- * @param {object[]|object} choices Grouped array or flat object.
- * @param {object} [options]
- * @param {boolean} [options.localize=false] Whether to localize labels.
+ * @param {HTMLSelectElement} selectElement Select element
+ * @param {object[]|object} choices Grouped array or flat object
+ * @param {object} [options] Options
+ * @param {boolean} [options.localize=false] Whether to localize labels
  */
 function rebuildSelectOptions(selectElement, choices, { localize = false } = {}) {
   if ( !selectElement ) return;
@@ -117,8 +118,8 @@ function rebuildSelectOptions(selectElement, choices, { localize = false } = {})
 
 /**
  * Build trigger event choices grouped by category.
- * @param {string} [entityType="actor"] The entity type.
- * @returns {object[]} Trigger choice objects with value, label, and group.
+ * @param {string} [entityType="actor"] Entity type ("actor" or "item")
+ * @returns {object[]} Trigger choice objects with value, label, and group
  */
 function getTriggerChoices(entityType = "actor") {
   const choices = [];
@@ -152,7 +153,8 @@ function getTriggerChoices(entityType = "actor") {
       { value: "shortRest", label: "CUSTOM_DND5E.shortRest", group: restGroup },
       { value: "longRest", label: "CUSTOM_DND5E.longRest", group: restGroup },
       { value: "conditionApplied", label: "CUSTOM_DND5E.form.workflows.trigger.choices.conditionApplied", group: conditionsGroup },
-      { value: "conditionRemoved", label: "CUSTOM_DND5E.form.workflows.trigger.choices.conditionRemoved", group: conditionsGroup }
+      { value: "conditionRemoved", label: "CUSTOM_DND5E.form.workflows.trigger.choices.conditionRemoved", group: conditionsGroup },
+      { value: "conditionLevelChanged", label: "CUSTOM_DND5E.form.workflows.trigger.choices.conditionLevelChanged", group: conditionsGroup }
     );
 
     const effectsGroup = game.i18n.localize("CUSTOM_DND5E.form.workflows.trigger.group.effects");
@@ -196,8 +198,8 @@ function getTriggerChoices(entityType = "actor") {
 
 /**
  * Build trigger choices limited to state-checkable events (for per-trigger conditions).
- * @param {string} [entityType="actor"] The entity type.
- * @returns {object[]} Condition trigger choice objects with value, label, and group.
+ * @param {string} [entityType="actor"] Entity type ("actor" or "item")
+ * @returns {object[]} Condition trigger choice objects with value, label, and group
  */
 export function getConditionTriggerChoices(entityType = "actor") {
   const choices = [];
@@ -217,6 +219,7 @@ export function getConditionTriggerChoices(entityType = "actor") {
       { value: "endOfTurn", label: "CUSTOM_DND5E.endOfTurn", group: combatGroup },
       { value: "conditionApplied", label: "CUSTOM_DND5E.form.workflows.trigger.choices.conditionApplied", group: conditionsGroup },
       { value: "conditionRemoved", label: "CUSTOM_DND5E.form.workflows.trigger.choices.conditionRemoved", group: conditionsGroup },
+      { value: "conditionLevelChanged", label: "CUSTOM_DND5E.form.workflows.trigger.choices.conditionLevelChanged", group: conditionsGroup },
       { value: "effectEnabled", label: "CUSTOM_DND5E.form.workflows.trigger.choices.effectEnabled", group: effectsGroup },
       { value: "effectDisabled", label: "CUSTOM_DND5E.form.workflows.trigger.choices.effectDisabled", group: effectsGroup }
     );
@@ -236,7 +239,7 @@ export function getConditionTriggerChoices(entityType = "actor") {
 
 /**
  * Build result/operator choices for roll triggers.
- * @returns {object[]} Choice objects with value, label, and group.
+ * @returns {object[]} Choice objects with value, label, and group
  */
 function getResultOperatorChoices() {
   const resultGroup = game.i18n.localize("CUSTOM_DND5E.form.workflows.triggerResult.group.result");
@@ -261,8 +264,8 @@ function getResultOperatorChoices() {
 
 /**
  * Build action type choices grouped by category.
- * @param {string} [entityType="actor"] The entity type.
- * @returns {object[]} Action choice objects with value, label, and group.
+ * @param {string} [entityType="actor"] Entity type ("actor" or "item")
+ * @returns {object[]} Action choice objects with value, label, and group
  */
 export function getActionChoices(entityType = "actor") {
   const choices = [];
@@ -320,8 +323,8 @@ export function getActionChoices(entityType = "actor") {
 
 /**
  * Build action choices excluding requestRoll.
- * @param {string} [entityType="actor"] The entity type.
- * @returns {object[]} Filtered action choice objects.
+ * @param {string} [entityType="actor"] Entity type ("actor" or "item").
+ * @returns {object[]} Filtered action choice objects
  */
 export function getSubActionChoices(entityType = "actor") {
   return getActionChoices(entityType).filter(c => c.value !== "requestRoll");
@@ -331,11 +334,11 @@ export function getSubActionChoices(entityType = "actor") {
 
 /**
  * Build condition choices from status effects.
- * @returns {object} Map of condition id to name.
+ * @returns {object} Map of condition IDs
  */
 export function getConditionChoices() {
   const choices = {
-    all: "CUSTOM_DND5E.form.workflows.action.condition.all"
+    all: game.i18n.localize("CUSTOM_DND5E.form.workflows.action.condition.all")
   };
   for ( const effect of CONFIG.statusEffects ) {
     if ( effect.id ) choices[effect.id] = effect.name;
@@ -346,9 +349,25 @@ export function getConditionChoices() {
 /* -------------------------------------------- */
 
 /**
+ * Build condition choices filtered to only conditions with levels > 0.
+ * @returns {object} Map of condition IDs to localized label
+ */
+function getLeveledConditionChoices() {
+  const choices = {};
+  for ( const effect of CONFIG.statusEffects ) {
+    if ( !effect.id ) continue;
+    const config = CONFIG.DND5E.conditionTypes[effect.id];
+    if ( config?.levels > 0 ) choices[effect.id] = effect.name;
+  }
+  return choices;
+}
+
+/* -------------------------------------------- */
+
+/**
  * Build subtype choices for a roll trigger event.
- * @param {string} triggerEvent The trigger event type.
- * @returns {object} Map of subtype key to label.
+ * @param {string} triggerEvent Trigger event type
+ * @returns {object} Map of subtype key to label
  */
 function getRollSubtypeChoices(triggerEvent) {
   const choices = { "": game.i18n.localize("CUSTOM_DND5E.any") };
@@ -377,7 +396,7 @@ function getRollSubtypeChoices(triggerEvent) {
 
 /**
  * Build roll type choices for saves, checks, and skills.
- * @returns {object} Map of roll type key to label.
+ * @returns {object} Map of roll type key to label
  */
 export function getRollTypeChoices() {
   const choices = {};
@@ -402,9 +421,9 @@ export function getRollTypeChoices() {
 
 /**
  * Build counter choices from world and entity-level counters.
- * @param {string} [entityType="actor"] The entity type.
- * @param {Actor|Item|null} [entity=null] Optional entity for entity-level counters.
- * @returns {object} Map of counter key to label and type.
+ * @param {string} [entityType="actor"] Entity type ("actor" or "item")
+ * @param {Actor|Item|null} [entity=null] Optional entity for entity-level counters
+ * @returns {object} Map of counter key to label and type
  */
 export function getCounterChoices(entityType = "actor", entity = null) {
   const choices = {};
@@ -439,8 +458,8 @@ export function getCounterChoices(entityType = "actor", entity = null) {
 
 /**
  * Extract labels from counter choices.
- * @param {object} counterChoices Counter choices map.
- * @returns {object} Map of counter key to label string.
+ * @param {object} counterChoices Counter choices map
+ * @returns {object} Map of counter key to label string
  */
 export function getCounterChoiceLabels(counterChoices) {
   const labels = {};
@@ -452,9 +471,9 @@ export function getCounterChoiceLabels(counterChoices) {
 
 /**
  * Filter counter choice labels by action type compatibility.
- * @param {object} counterChoices Counter choices map.
- * @param {string} actionType The action type.
- * @returns {object} Filtered map of counter key to label.
+ * @param {object} counterChoices Counter choices map
+ * @param {string} actionType Action type
+ * @returns {object} Filtered map of counter key to label
  */
 export function getFilteredCounterChoiceLabels(counterChoices, actionType) {
   const labels = {};
@@ -468,9 +487,9 @@ export function getFilteredCounterChoiceLabels(counterChoices, actionType) {
 
 /**
  * Filter counter choice labels by trigger event compatibility.
- * @param {object} counterChoices Counter choices map.
- * @param {string} triggerEvent The trigger event type.
- * @returns {object} Filtered map of counter key to label.
+ * @param {object} counterChoices Counter choices map
+ * @param {string} triggerEvent Trigger event type
+ * @returns {object} Filtered map of counter key to label
  */
 function getFilteredTriggerCounterChoiceLabels(counterChoices, triggerEvent) {
   const labels = {};
@@ -492,10 +511,10 @@ function getFilteredTriggerCounterChoiceLabels(counterChoices, triggerEvent) {
 
 /**
  * Build a dropdown of target workflows for enable/disable/toggle actions.
- * @param {string} entityType The entity type.
- * @param {Actor|Item|null} entity Optional entity for entity-level workflows.
- * @param {object|null} setting Optional world-level setting object.
- * @returns {object} Map of workflow key to name.
+ * @param {string} entityType Entity type ("actor" or "item")
+ * @param {Actor|Item|null} entity Optional entity for entity-level workflows
+ * @param {object|null} setting Optional world-level setting object
+ * @returns {object} Map of workflow key to name
  */
 export function getWorkflowChoices(entityType, entity, setting) {
   const choices = {};
@@ -616,7 +635,7 @@ export class WorkflowsEditForm extends CustomDnd5eForm {
         rollSubtypeChoices: getRollSubtypeChoices(triggerEvent),
         conditionChoicesForTrigger: isResultEvent ? resultOperatorChoices : operatorChoices,
         triggerChoices,
-        conditionChoices,
+        conditionChoices: triggerEvent === "conditionLevelChanged" ? getLeveledConditionChoices() : conditionChoices,
         counterChoices: getFilteredTriggerCounterChoiceLabels(this.counterChoices, triggerEvent),
         hasConditions: Object.keys(conditionsData).length > 0
       });
@@ -735,6 +754,13 @@ export class WorkflowsEditForm extends CustomDnd5eForm {
 
     if ( eventSelect ) {
       const counterSelect = row.querySelector(".custom-dnd5e-counter-select");
+      const conditionSelect = row.querySelector(".custom-dnd5e-condition-select");
+
+      const rebuildConditionSelectChoices = () => {
+        const choices = eventSelect.value === "conditionLevelChanged"
+          ? getLeveledConditionChoices() : getConditionChoices();
+        rebuildSelectOptions(conditionSelect, choices);
+      };
 
       const rebuildConditionChoices = () => {
         const isResultEvent = TRIGGERS_WITH_RESULT.includes(eventSelect.value);
@@ -775,6 +801,7 @@ export class WorkflowsEditForm extends CustomDnd5eForm {
 
       eventSelect.addEventListener("change", () => {
         rebuildConditionChoices();
+        rebuildConditionSelectChoices();
         rebuildRollSubtypeChoices();
         updateVisibility();
       });
@@ -787,7 +814,7 @@ export class WorkflowsEditForm extends CustomDnd5eForm {
 
   /**
    * Configure event listeners and visibility for an action row.
-   * @param {HTMLElement} row The action row element.
+   * @param {HTMLElement} row Action row HTML element
    */
   _setupActionRow(row) {
     const typeSelect = row.querySelector(".custom-dnd5e-action-type");
@@ -818,7 +845,16 @@ export class WorkflowsEditForm extends CustomDnd5eForm {
 
         // Hide the wrapper when no child group is visible
         actionFields?.classList.toggle("hidden",
-          ![macroGroup, soundGroup, conditionGroup, rollTypeGroup, tableGroup, updateGroup, counterActionGroup, workflowGroup]
+          ![
+            macroGroup,
+            soundGroup,
+            conditionGroup,
+            rollTypeGroup,
+            tableGroup,
+            updateGroup,
+            counterActionGroup,
+            workflowGroup
+          ]
             .some(g => g && !g.classList.contains("hidden"))
         );
 
@@ -852,8 +888,8 @@ export class WorkflowsEditForm extends CustomDnd5eForm {
 
   /**
    * Handle dropping a playlist sound onto a row.
-   * @param {DragEvent} event The drop event.
-   * @param {HTMLElement} row The action row element.
+   * @param {DragEvent} event Drop event
+   * @param {HTMLElement} row Action row HTML element
    */
   async _onDropSound(event, row) {
     event.preventDefault();
@@ -873,8 +909,8 @@ export class WorkflowsEditForm extends CustomDnd5eForm {
 
   /**
    * Handle dropping a roll table onto a row.
-   * @param {DragEvent} event The drop event.
-   * @param {HTMLElement} row The action row element.
+   * @param {DragEvent} event Drop event
+   * @param {HTMLElement} row Action row HTML element
    */
   async _onDropTable(event, row) {
     event.preventDefault();
@@ -901,8 +937,8 @@ export class WorkflowsEditForm extends CustomDnd5eForm {
 
   /**
    * Add a new trigger row to the form.
-   * @param {Event} event The triggering event.
-   * @param {HTMLElement} target The clicked element.
+   * @param {Event} event Triggering event
+   * @param {HTMLElement} target Clicked HTML element
    */
   static async addTrigger(event, target) {
     const triggerId = foundry.utils.randomID();
@@ -947,8 +983,8 @@ export class WorkflowsEditForm extends CustomDnd5eForm {
 
   /**
    * Add a new action row to the form.
-   * @param {Event} event The triggering event.
-   * @param {HTMLElement} target The clicked element.
+   * @param {Event} event Triggering event
+   * @param {HTMLElement} target Clicked HTML element
    */
   static async addAction(event, target) {
     const actionId = foundry.utils.randomID();
@@ -1006,8 +1042,8 @@ export class WorkflowsEditForm extends CustomDnd5eForm {
 
   /**
    * Open the conditions editor for a trigger.
-   * @param {Event} event The triggering event.
-   * @param {HTMLElement} target The clicked element.
+   * @param {Event} event Triggering event
+   * @param {HTMLElement} target Clicked HTML element
    */
   static editConditions(event, target) {
     const row = target.closest(".item");
@@ -1027,8 +1063,8 @@ export class WorkflowsEditForm extends CustomDnd5eForm {
 
   /**
    * Open the result editor for a requestRoll action.
-   * @param {Event} event The triggering event.
-   * @param {HTMLElement} target The clicked element.
+   * @param {Event} event TTriggering event
+   * @param {HTMLElement} target Clicked HTML element
    */
   static editResult(event, target) {
     const row = target.closest(".item");

@@ -10,7 +10,7 @@ const constants = CONSTANTS.ACTIVITIES;
 
 /**
  * Determine targeting requirements for an activity.
- * @param {Activity} activity The activity being used
+ * @param {Activity} activity Activity being used
  * @returns {{ count: number, typeLabel: string } | null} Requirements, or null if no targeting needed
  */
 function _getTargetingRequirements(activity) {
