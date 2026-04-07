@@ -9,7 +9,7 @@ A Foundry VTT module to customise the D&D 5e system.
 
 ## Licence & Usage
 
-This module references Font Awesome Pro icons under a personal licence. The code in this repository is not licensed for redistribution. This module is designed for use with Foundry VTT V12/V13 only.
+This module references Font Awesome Pro icons under a personal licence. The code in this repository is not licensed for redistribution. This module is designed for use with Foundry VTT V12/V13/V14 only.
 
 For full attribution and licensing details, see [ATTRIBUTION.md](ATTRIBUTION.md).
 
