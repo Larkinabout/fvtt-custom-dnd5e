@@ -21,11 +21,9 @@ function applyAdvantagePatch(advantageMode) {
   const customDieParts = getDieParts(this.options.customDie);
   const baseNumber = customDieParts?.number ?? 1;
   this.options.advantageMode = advantageMode;
-  this.modifiers.findSplice(m => ["kh", "kl"].includes(m));
-  if ( advantageMode === CONFIG.Dice.D20Roll.ADV_MODE.NORMAL ) this.number = baseNumber;
-  else {
-    const isAdvantage = advantageMode === CONFIG.Dice.D20Roll.ADV_MODE.ADVANTAGE;
-    this.number = (isAdvantage && this.options.elvenAccuracy) ? (baseNumber * 3) : baseNumber * 2;
-    this.modifiers.push(isAdvantage ? `kh${baseNumber}` : `kl${baseNumber}`);
-  }
+  this.modifiers.findSplice(m => m.startsWith("adv") || m.startsWith("dis") || (m === "kh") || (m === "kl"));
+  this.number = baseNumber;
+  if ( advantageMode === CONFIG.Dice.D20Roll.ADV_MODE.NORMAL ) return;
+  const isAdvantage = advantageMode === CONFIG.Dice.D20Roll.ADV_MODE.ADVANTAGE;
+  this.modifiers.push(`${isAdvantage ? "adv" : "dis"}${isAdvantage && this.options.elvenAccuracy ? "2" : ""}`);
 }
