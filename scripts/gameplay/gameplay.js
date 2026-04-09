@@ -396,10 +396,15 @@ export function modifyHitPointsFlowDialog(app, html, data) {
   }
 
   if ( !getSetting(CONSTANTS.LEVEL_UP.HIT_POINTS.SHOW_TAKE_AVERAGE.SETTING.KEY) ) {
-    const averageLabel = element.querySelector(".averageLabel") ?? element.querySelector(".average-label");
-
-    if ( averageLabel ) {
-      averageLabel.innerHTML = "";
+    const useAverage = element.querySelector('[name="useAverage"]');
+    const formGroup = useAverage?.closest(".form-group");
+    if ( formGroup ) {
+      const fieldset = formGroup.closest("fieldset");
+      formGroup.remove();
+      if ( fieldset && !fieldset.querySelector(".form-group") ) fieldset.remove();
+    } else {
+      const averageLabel = element.querySelector(".averageLabel") ?? element.querySelector(".average-label");
+      if ( averageLabel ) averageLabel.innerHTML = "";
     }
   }
 }
