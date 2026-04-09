@@ -1,0 +1,35 @@
+<section class="flexcol">
+    {{#if hint}}
+    <div class="note info">
+        {{ hint }}
+    </div>
+    {{/if}}
+
+    {{> "dnd5e.formlist" formSections }}
+
+    {{#if hitDice}}
+    {{#if hitDice.canRoll}}
+    <fieldset>
+        <legend>{{ localize "DND5E.HitDice" }}</legend>
+        <div class="form-fields">
+            <select name="denom">
+                {{ selectOptions hitDice.options selected=hitDice.denomination }}
+            </select>
+            <button type="button" class="dice-button" data-action="rollHitDie" data-tooltip
+                    aria-label="{{ localize 'DND5E.Roll' }}">
+                <i class="fa-solid fa-dice-d20" inert></i>
+            </button>
+        </div>
+        {{ formField autoRoll name="autoHD" value=config.autoHD input=inputs.createCheckboxInput rootId=partId }}
+    </fieldset>
+    {{else}}
+    <div class="note warn">
+        {{ localize "DND5E.REST.HitDice.None" }}
+    </div>
+    {{/if}}
+    {{/if}}
+
+    {{#if request}}
+    {{> "systems/dnd5e/templates/actors/rest/parts/rest-request.hbs" }}
+    {{/if}}
+</section>

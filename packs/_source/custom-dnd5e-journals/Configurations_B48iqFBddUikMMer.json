@@ -132,7 +132,7 @@
       "image": {},
       "text": {
         "format": 1,
-        "content": "<p>Located in <strong>Game Settings</strong> &gt; <strong>Configure Settings</strong> &gt; <strong>Custom D&amp;D 5e</strong> &gt; <strong>Configure Armor</strong></p><h2 class=\"custom-dnd5e-h2\">Create an Armor</h2><ol><li><p>Click <strong>Create New</strong>.</p></li><li><p>Enter a <strong>Key</strong>.</p></li><li><p>Create a base item for the armor.</p><article class=\"custom-dnd5e-note\"><header><span class=\"fa-solid fa-note-sticky\">&#8203;</span><p>Note</p></header><p>Base armor details, including its Equipment Type (e.g., Light Armor, Medium Armor, Heavy Armor), are contained within an item stored within a compendium. To create a new armor, you will need to create an Item compendium and create a base item within it.</p></article></li><li><p>Paste the item's <strong>UUID</strong>.</p><article class=\"custom-dnd5e-tip\"><header><span class=\"fa-solid fa-candle-holder\">&#8203;</span><p>Tip</p></header><p>You can copy an item's UUID by opening up the item and left-clicking the <span class=\"fa-solid fa-passport\">&#8203;</span> passport icon in the window's header.</p></article></li><li><p>Click <strong>Save and Close</strong>.</p></li></ol><table><caption>Example Armor</caption><thead><tr><th><p><strong>Property</strong></p></th><th><p><strong>Value</strong></p></th></tr></thead><tbody><tr><td><p>Key</p></td><td><p>greathelm</p></td></tr><tr><td><p>ID</p></td><td><p>Compendium.world.my-items.Item.hU51WZiTbOeYUbAf</p></td></tr></tbody></table>"
+        "content": "<p>Located in <strong>Game Settings</strong> &gt; <strong>Configure Settings</strong> &gt; <strong>Custom D&amp;D 5e</strong> &gt; <strong>Configure Armor</strong></p>\n<h2 class=\"custom-dnd5e-h2\">Create an Armor</h2>\n<ol>\n    <li>\n        <p>Click <strong>Create New</strong>.</p>\n    </li>\n    <li>\n        <p>Enter a <strong>Key</strong>.</p>\n    </li>\n    <li>\n        <p>Create a base item for the armor.</p>\n        <article class=\"custom-dnd5e-note\">\n            <header>\n                <p><span class=\"fa-solid fa-note-sticky\">​</span></p>\n                <p>Note</p>\n            </header>\n            <p>Base armor details, including its Equipment Type (e.g., Light Armor, Medium Armor, Heavy Armor), are contained within an item stored within a compendium. To create a new armor, you will need to create an Item compendium and create a base item within it.</p>\n        </article>\n    </li>\n    <li>\n        <p>Paste the item's <strong>UUID</strong>.</p>\n        <article class=\"custom-dnd5e-tip\">\n            <header>\n                <p><span class=\"fa-solid fa-candle-holder\">​</span></p>\n                <p>Tip</p>\n            </header>\n            <p>You can copy an item's UUID by opening up the item and left-clicking the <span class=\"fa-solid fa-passport\">​</span> passport icon in the window's header.</p>\n        </article>\n    </li>\n    <li>\n        <p>Click <strong>Save and Close</strong>.</p>\n    </li>\n</ol>\n<table>\n    <caption>\n        <p>Example Armor</p>\n    </caption>\n    <thead>\n        <tr>\n            <th>\n                <p><strong>Property</strong></p>\n            </th>\n            <th>\n                <p><strong>Value</strong></p>\n            </th>\n        </tr>\n    </thead>\n    <tbody>\n        <tr>\n            <td>\n                <p>Key</p>\n            </td>\n            <td>\n                <p>greathelm</p>\n            </td>\n        </tr>\n        <tr>\n            <td>\n                <p>ID</p>\n            </td>\n            <td>\n                <p>Compendium.world.my-items.Item.hU51WZiTbOeYUbAf</p>\n            </td>\n        </tr>\n    </tbody>\n</table>"
       },
       "video": {
         "controls": true,
@@ -147,12 +147,12 @@
       "_stats": {
         "compendiumSource": null,
         "duplicateSource": null,
-        "coreVersion": "13.342",
+        "coreVersion": "14.359",
         "systemId": "dnd5e",
         "systemVersion": "4.0.1",
         "createdTime": 1726655816622,
-        "modifiedTime": 1738618431837,
-        "lastModifiedBy": "JdWLPbQd9x1aeEfz",
+        "modifiedTime": 1775765946060,
+        "lastModifiedBy": "2Ab5BheRvt8es88G",
         "exportSource": null
       },
       "category": null,
@@ -483,7 +483,7 @@
       "image": {},
       "text": {
         "format": 1,
-        "content": "<p>Located in <strong>Game Settings</strong> &gt; <strong>Configure Settings</strong> &gt; <strong>Custom D&amp;D 5e</strong> &gt; <strong>Configure Item Properties</strong></p><h2 class=\"custom-dnd5e-h2\">Create an Item Property</h2><ol><li><p>Click <strong>Create New</strong>.</p></li><li><p>Enter a <strong>Key</strong>.</p></li><li><p>Enter a <strong>Label</strong>.</p><article class=\"custom-dnd5e-note\"><header><span class=\"fa-solid fa-note-sticky\">&#8203;</span><p>Note</p></header><p>You can ignore the Abbreviation, Icon and Tag properties as they currently have no function for new Item Properties.</p></article></li><li><p>(Optional) Check <strong>Physical</strong>.</p></li><li><p>(Optional) Paste a journal entry's UUID into <strong>Reference</strong>.</p><article class=\"custom-dnd5e-tip\"><header><span class=\"fa-solid fa-candle-holder\">&#8203;</span><p>Tip</p></header><p>You can copy a journal entry's UUID by opening up the entry and left-clicking the <span class=\"fa-solid fa-passport\">&#8203;</span> passport icon in the window's header.</p></article></li><li><p>Check required <strong>Item Types</strong>.</p></li><li><p>Click <strong>Save and Close</strong>.</p></li></ol><table><caption>Example Item Property</caption><thead><tr><th><p><strong>Property</strong></p></th><th><p><strong>Value</strong></p></th></tr></thead><tbody><tr><td><p>Key</p></td><td><p>aem</p></td></tr><tr><td><p>Label</p></td><td><p>Aetherium</p></td></tr><tr><td><p>Physical</p></td><td><img class=\"custom-dnd5e-img\" src=\"modules/custom-dnd5e/media/icons/checked.svg\" /></td></tr><tr><td><p>Reference</p></td><td><p>Compendium.world.my-rules.JournalEntry.r04xTaCjv1UK6GJn.JournalEntryPage.WIdCHQ6OBiFgt3OA</p></td></tr><tr><td><p>Item Types</p></td><td><p>Container, Equipment, Loot, Tool, Weapon</p></td></tr></tbody></table>"
+        "content": "<p>Located in <strong>Game Settings</strong> &gt; <strong>Configure Settings</strong> &gt; <strong>Custom D&amp;D 5e</strong> &gt; <strong>Configure Item Properties</strong></p><h2 class=\"custom-dnd5e-h2\">Create an Item Property</h2><ol><li><p>Click <strong>Create New</strong>.</p></li><li><p>Enter a <strong>Key</strong>.</p></li><li><p>Enter a <strong>Label</strong>.</p><article class=\"custom-dnd5e-note\"><header><p><span class=\"fa-solid fa-note-sticky\">​</span></p><p>Note</p></header><p>You can ignore the Abbreviation, Icon and Tag properties as they currently have no function for new Item Properties.</p></article></li><li><p>(Optional) Check <strong>Physical</strong>.</p></li><li><p>(Optional) Paste a journal entry's UUID into <strong>Reference</strong>.</p><article class=\"custom-dnd5e-tip\"><header><p><span class=\"fa-solid fa-candle-holder\">​</span></p><p>Tip</p></header><p>You can copy a journal entry's UUID by opening up the entry and left-clicking the <span class=\"fa-solid fa-passport\">​</span> passport icon in the window's header.</p></article></li><li><p>Check required <strong>Item Types</strong>.</p></li><li><p>Click <strong>Save and Close</strong>.</p></li></ol><table><caption><p>Example Item Property</p></caption><thead><tr><th><p><strong>Property</strong></p></th><th><p><strong>Value</strong></p></th></tr></thead><tbody><tr><td><p>Key</p></td><td><p>aem</p></td></tr><tr><td><p>Label</p></td><td><p>Aetherium</p></td></tr><tr><td><p>Physical</p></td><td><p><span class=\"fa-sharp fa-regular fa-square-check\">​</span></p></td></tr><tr><td><p>Reference</p></td><td><p>Compendium.world.my-rules.JournalEntry.r04xTaCjv1UK6GJn.JournalEntryPage.WIdCHQ6OBiFgt3OA</p></td></tr><tr><td><p>Item Types</p></td><td><p>Container, Equipment, Loot, Tool, Weapon</p></td></tr></tbody></table>"
       },
       "video": {
         "controls": true,
@@ -498,12 +498,12 @@
       "_stats": {
         "compendiumSource": null,
         "duplicateSource": null,
-        "coreVersion": "13.342",
+        "coreVersion": "14.359",
         "systemId": "dnd5e",
         "systemVersion": "4.0.1",
         "createdTime": 1726656054407,
-        "modifiedTime": 1730413722303,
-        "lastModifiedBy": "0wJRsV2r9Hv1a7q0",
+        "modifiedTime": 1775768762607,
+        "lastModifiedBy": "2Ab5BheRvt8es88G",
         "exportSource": null
       },
       "category": null,
@@ -1344,7 +1344,7 @@
       "image": {},
       "text": {
         "format": 1,
-        "content": "<p>Located in <strong>Game Settings</strong> &gt; <strong>Configure Settings</strong> &gt; <strong>Custom D&amp;D 5e</strong> &gt; <strong>Configure Equipment Types</strong></p><h2 class=\"custom-dnd5e-h2\">Create an Equipment Type</h2><ol><li><p>Click <strong>Create New</strong>.</p></li><li><p>Enter a <strong>Key</strong>.</p></li><li><p>Enter a <strong>Label</strong>.</p></li><li><p>Click <strong>Save and Close</strong>.</p></li></ol><table><caption>Example Equipment Type</caption><thead><tr><th><p><strong>Property</strong></p></th><th><p><strong>Value</strong></p></th></tr></thead><tbody><tr><td><p>Key</p></td><td><p>necklace</p></td></tr><tr><td><p>Label</p></td><td><p>Necklace</p></td></tr></tbody></table>"
+        "content": "<p>Located in <strong>Game Settings</strong> &gt; <strong>Configure Settings</strong> &gt; <strong>Custom D&amp;D 5e</strong> &gt; <strong>Configure Equipment Types</strong></p>\n<h2 class=\"custom-dnd5e-h2\">Create an Equipment Type</h2>\n<ol>\n    <li>\n        <p>Click <strong>Create New</strong>.</p>\n    </li>\n    <li>\n        <p>Enter a <strong>Key</strong>.</p>\n    </li>\n    <li>\n        <p>Enter a <strong>Label</strong>.</p>\n    </li>\n    <li>\n        <p>Click <strong>Save and Close</strong>.</p>\n    </li>\n</ol>\n<table>\n    <caption>\n        <p>Example Equipment Type</p>\n    </caption>\n    <thead>\n        <tr>\n            <th>\n                <p><strong>Property</strong></p>\n            </th>\n            <th>\n                <p><strong>Value</strong></p>\n            </th>\n        </tr>\n    </thead>\n    <tbody>\n        <tr>\n            <td>\n                <p>Key</p>\n            </td>\n            <td>\n                <p>necklace</p>\n            </td>\n        </tr>\n        <tr>\n            <td>\n                <p>Label</p>\n            </td>\n            <td>\n                <p>Necklace</p>\n            </td>\n        </tr>\n    </tbody>\n</table>"
       },
       "video": {
         "controls": true,
@@ -1361,12 +1361,12 @@
         "compendiumSource": null,
         "duplicateSource": "Compendium.custom-dnd5e.custom-dnd5e-journals.JournalEntry.B48iqFBddUikMMer.JournalEntryPage.OgMhctYM5NFh8neL",
         "exportSource": null,
-        "coreVersion": "13.348",
+        "coreVersion": "14.359",
         "systemId": "dnd5e",
         "systemVersion": "5.1.10",
         "createdTime": 1761821108121,
-        "modifiedTime": 1761821399351,
-        "lastModifiedBy": "5bwQyYIyVQxjjJ3v"
+        "modifiedTime": 1775768609231,
+        "lastModifiedBy": "2Ab5BheRvt8es88G"
       },
       "category": null,
       "_id": "koB9uAZtQ9f2n1f8",
@@ -1409,6 +1409,44 @@
       "category": null,
       "_id": "cR8kYmNpV3tZbW5d",
       "_key": "!journal.pages!B48iqFBddUikMMer.cR8kYmNpV3tZbW5d"
+    },
+    {
+      "sort": 1675000,
+      "name": "Rest Types",
+      "type": "text",
+      "system": {},
+      "title": {
+        "show": true,
+        "level": 1
+      },
+      "image": {},
+      "text": {
+        "format": 1,
+        "content": "<p>Located in <strong>Game Settings</strong> &gt; <strong>Configure Settings</strong> &gt; <strong>Custom D&amp;D 5e</strong> &gt; <strong>Configure Rest Types</strong></p><h2 class=\"custom-dnd5e-h2\">Create a Rest Type</h2><ol><li><p>Check <strong>Enable Configuration</strong>.</p></li><li><p>Click <strong>Create New</strong>.</p></li><li><p>Enter a <strong>Key</strong>.</p></li><li><p>Enter a <strong>Name</strong>.</p></li><li><p>Enter an <strong>Icon </strong>(a Font Awesome class, e.g. fa-solid fa-bench-tree).</p></li><li><p>(Optional) Enter a <strong>Description</strong>.</p></li><li><p>Set the <strong>Duration</strong> in minutes for each rest variant (Gritty, Normal, Epic).</p></li><li><p>(Optional) Set other options as desired (see below).</p></li><li><p>Click <strong>Save and Close</strong>.</p></li></ol><h2>Rest Options</h2><h4>Rest Behaviour</h4><ul><li><p><strong>New Day: </strong>Whether this rest starts a new day. Note, this does not hide the New Day check, but determines whether it is checked or unchecked by default.</p></li><li><p><strong>Advance Bastion Turn: </strong>Whether this rest advances the bastion turn.</p></li><li><p><strong>Exhaustion Change:</strong> Number of exhaustion levels to add or remove during this rest. For example, enter <code>-1</code> to reduce exhaustion by one level.</p></li></ul><h4>Spell Slots</h4><ul><li><p><strong>Spell Slot Types:</strong> Which spellcasting types recover spell slots during this rest.</p></li><li><p><strong>Spell Slot Fraction:</strong> Number of spell slots to recover based on the max spell slots for each level. For example, with a fraction of <code>0.5</code>, a Level 5 Wizard recovers a maximum of 2 x 1st Level, 1 x 2nd Level and 1 x 3rd Level spell slots.</p></li></ul><h4>Hit Points</h4><ul><li><p><strong>Recover Hit Points: </strong>Whether Hit Points are recovered during this rest.</p></li><li><p><strong>Hit Points Fraction: </strong>Hit Points to recover during this rest based on Max HP. For example, with a fraction of <code>0.5</code>, a character with a Max HP of 20 recovers 10 Hit Points.</p></li></ul><h4>Hit Dice</h4><ul><li><p><strong>Spend Hit Dice:</strong> Whether Hit Dice can be spent during this rest.</p></li><li><p><strong>Recover Hit Dice:</strong> Whether Hit Dice are recovered during this rest.</p></li><li><p><strong>Hit Dice Fraction:</strong> Hit Dice to recover during this rest based on Max Hit Dice. For example, with a fraction of 0.25, a character with a Max of 8 Hit Dice recovers 2 Hit Dice.</p></li></ul><h4>Temporary Hit Points</h4><ul><li><p><strong>Remove Temporary HP:</strong> Whether to remove any Temporary HP during this rest.</p></li><li><p><strong>Remove Temporary Max HP:</strong> Whether to remove any Temporary Max HP during this rest.</p></li></ul><h4>Periods</h4><ul><li><p><strong>Recovery Periods:</strong> Which item recovery periods are triggered during this rest.</p></li><li><p><strong>Activation Costs:</strong> Which item activation costs are triggered during this rest.</p></li></ul><table><caption><p>Example Rest Type</p></caption><thead><tr><th><p><strong>Property</strong></p></th><th><p><strong>Value</strong></p></th></tr></thead><tbody><tr><td><p>Key</p></td><td><p>quick</p></td></tr><tr><td><p>Label</p></td><td><p>Quick Rest</p></td></tr><tr><td><p>Icon</p></td><td><p><code>fa-solid fa-bench-tree</code></p></td></tr><tr><td><p>Duration (Gritty)</p></td><td><p>60</p></td></tr><tr><td><p>Duration (Normal)</p></td><td><p>15</p></td></tr><tr><td><p>Duration (Epic)</p></td><td><p>1</p></td></tr><tr><td><p>Exhaustion Change</p></td><td><p>0</p></td></tr><tr><td><p>Spell Slot Types</p></td><td><p>Pact Magic, Spellcasting</p></td></tr><tr><td><p>Spell Slot Fraction</p></td><td><p>0.25</p></td></tr><tr><td><p>Spend Hit Dice</p></td><td><p><span class=\"fa-sharp fa-regular fa-square-check\">​</span></p></td></tr></tbody></table>"
+      },
+      "video": {
+        "controls": true,
+        "volume": 0.5
+      },
+      "src": null,
+      "ownership": {
+        "default": -1
+      },
+      "flags": {},
+      "_stats": {
+        "compendiumSource": null,
+        "duplicateSource": null,
+        "coreVersion": "14.359",
+        "systemId": "dnd5e",
+        "systemVersion": "5.3.0",
+        "createdTime": 1775765963357,
+        "modifiedTime": 1775769179224,
+        "lastModifiedBy": "2Ab5BheRvt8es88G",
+        "exportSource": null
+      },
+      "category": null,
+      "_id": "rT4kYmNpV3tZbW9x",
+      "_key": "!journal.pages!B48iqFBddUikMMer.rT4kYmNpV3tZbW9x"
     }
   ],
   "folder": null,

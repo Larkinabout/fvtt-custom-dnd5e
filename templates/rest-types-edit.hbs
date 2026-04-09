@@ -1,0 +1,185 @@
+<div class="standard-form">
+    <div class="standard-form scrollable">
+        <fieldset>
+            <legend>{{localize "CUSTOM_DND5E.general"}}</legend>
+            <input id="custom-dnd5e-system" name="{{key}}.system" type="hidden" value="{{#if (customDnd5eBoolFalse system)}}false{{else}}true{{/if}}">
+            <div class="form-group">
+                <label class="flex1" style="min-width:80px; max-width:100px;">{{localize "CUSTOM_DND5E.key"}}</label>
+                <div class="form-fields">
+                    {{#if (customDnd5eBoolFalse system)}}
+                    <input id="custom-dnd5e-key" name="{{key}}.key" type="text" value="{{localize key}}">
+                    {{else}}
+                    <input id="custom-dnd5e-disabled-key" disabled name="{{key}}.disabledKey" type="text" value="{{localize key}}">
+                    <input id="custom-dnd5e-key" name="{{key}}.key" type="hidden" value="{{localize key}}">
+                    {{/if}}
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="flex1" style="min-width:80px; max-width:100px;">{{localize "CUSTOM_DND5E.label"}}</label>
+                <div class="form-fields">
+                    <input id="custom-dnd5e-label" name="{{key}}.label" type="text" value="{{localize label}}">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="flex1" style="min-width:80px; max-width:100px;">{{localize "CUSTOM_DND5E.icon"}}</label>
+                <div class="form-fields">
+                    <input id="custom-dnd5e-icon" name="{{key}}.icon" type="text" placeholder="fa-solid fa-bench-tree" value="{{icon}}">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="flex1" style="min-width:80px; max-width:100px;">{{localize "CUSTOM_DND5E.restHint.label"}}</label>
+                <div class="form-fields">
+                    <textarea id="custom-dnd5e-hint" name="{{key}}.hint">{{hint}}</textarea>
+                </div>
+                <p class="hint">{{localize "CUSTOM_DND5E.restHint.hint"}}</p>
+            </div>
+        </fieldset>
+
+        <fieldset>
+            <legend>{{localize "CUSTOM_DND5E.durationMinutes"}}</legend>
+            <div class="form-group">
+                <label class="flex1" style="min-width:80px; max-width:100px;">{{localize "CUSTOM_DND5E.gritty"}}</label>
+                <div class="form-fields">
+                    <input id="custom-dnd5e-duration-gritty" name="{{key}}.durationGritty" type="number" value="{{durationGritty}}" step="1" min="0">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="flex1" style="min-width:80px; max-width:100px;">{{localize "CUSTOM_DND5E.normal"}}</label>
+                <div class="form-fields">
+                    <input id="custom-dnd5e-duration-normal" name="{{key}}.durationNormal" type="number" value="{{durationNormal}}" step="1" min="0">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="flex1" style="min-width:80px; max-width:100px;">{{localize "CUSTOM_DND5E.epic"}}</label>
+                <div class="form-fields">
+                    <input id="custom-dnd5e-duration-epic" name="{{key}}.durationEpic" type="number" value="{{durationEpic}}" step="1" min="0">
+                </div>
+            </div>
+        </fieldset>
+
+        <fieldset>
+            <legend>{{localize "CUSTOM_DND5E.restBehaviour"}}</legend>
+            <div class="form-group">
+                <label class="flex1" style="min-width:80px; max-width:100px;">{{localize "CUSTOM_DND5E.newDay.label"}}</label>
+                <div class="form-fields">
+                    <dnd5e-checkbox id="custom-dnd5e-new-day" name="{{key}}.newDay"{{#if newDay}} checked{{/if}}></dnd5e-checkbox>
+                </div>
+                <p class="hint">{{localize "CUSTOM_DND5E.newDay.hint"}}</p>
+            </div>
+            <div class="form-group">
+                <label class="flex2" style="min-width:80px;">{{localize "CUSTOM_DND5E.advanceBastionTurn.label"}}</label>
+                <div class="form-fields">
+                    <dnd5e-checkbox id="custom-dnd5e-advance-bastion-turn" name="{{key}}.advanceBastionTurn"{{#if advanceBastionTurn}} checked{{/if}}></dnd5e-checkbox>
+                </div>
+                <p class="hint">{{localize "CUSTOM_DND5E.advanceBastionTurn.hint"}}</p>
+            </div>
+            <div class="form-group">
+                <label class="flex1" style="min-width:80px; max-width:100px;">{{localize "CUSTOM_DND5E.exhaustionDelta.label"}}</label>
+                <div class="form-fields">
+                    <input id="custom-dnd5e-exhaustion-delta" name="{{key}}.exhaustionDelta" type="number" value="{{exhaustionDelta}}" step="1">
+                </div>
+                <p class="hint">{{localize "CUSTOM_DND5E.exhaustionDelta.hint"}}</p>
+            </div>
+        </fieldset>
+
+        <fieldset>
+            <legend>{{localize "CUSTOM_DND5E.spellSlots"}}</legend>
+            <div class="form-group">
+                <label class="flex1" style="min-width:80px; max-width:100px;">{{localize "CUSTOM_DND5E.recoverSpellSlotTypes.label"}}</label>
+                <div class="form-fields">
+                    <multi-select name="{{key}}.recoverSpellSlotTypes">
+                        {{selectOptions selects.recoverSpellSlotTypes selected=recoverSpellSlotTypes}}
+                    </multi-select>
+                </div>
+                <p class="hint">{{localize "CUSTOM_DND5E.recoverSpellSlotTypes.hint"}}</p>
+            </div>
+            <div class="form-group">
+                <label class="flex2" style="min-width:80px;">{{localize "CUSTOM_DND5E.spellSlotFraction.label"}}</label>
+                <div class="form-fields">
+                    <input id="custom-dnd5e-spell-slot-fraction" name="{{key}}.spellSlotFraction" type="number" value="{{spellSlotFraction}}" step="0.05" min="0" max="1">
+                </div>
+                <p class="hint">{{localize "CUSTOM_DND5E.spellSlotFraction.hint"}}</p>
+            </div>
+        </fieldset>
+
+        <fieldset>
+            <legend>{{localize "DND5E.HitPoints"}}</legend>
+            <div class="form-group">
+                <label class="flex1" style="min-width:80px; max-width:100px;">{{localize "CUSTOM_DND5E.recoverHitPoints"}}</label>
+                <div class="form-fields">
+                    <dnd5e-checkbox id="custom-dnd5e-recover-hit-points" name="{{key}}.recoverHitPoints"{{#if recoverHitPoints}} checked{{/if}}></dnd5e-checkbox>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="flex2" style="min-width:80px;">{{localize "CUSTOM_DND5E.hitPointsFraction.label"}}</label>
+                <div class="form-fields">
+                    <input id="custom-dnd5e-hit-points-fraction" name="{{key}}.hitPointsFraction" type="number" value="{{hitPointsFraction}}" step="0.05" min="0" max="1">
+                </div>
+                <p class="hint">{{localize "CUSTOM_DND5E.hitPointsFraction.hint"}}</p>
+            </div>
+        </fieldset>
+
+        <fieldset>
+            <legend>{{localize "DND5E.HitDice"}}</legend>
+            <div class="form-group">
+                <label class="flex1" style="min-width:80px; max-width:100px;">{{localize "CUSTOM_DND5E.spendHitDice.label"}}</label>
+                <div class="form-fields">
+                    <dnd5e-checkbox id="custom-dnd5e-hit-dice" name="{{key}}.hitDice"{{#if hitDice}} checked{{/if}}></dnd5e-checkbox>
+                </div>
+                <p class="hint">{{localize "CUSTOM_DND5E.spendHitDice.hint"}}</p>
+            </div>
+            <div class="form-group">
+                <label class="flex1" style="min-width:80px; max-width:100px;">{{localize "CUSTOM_DND5E.recoverHitDice"}}</label>
+                <div class="form-fields">
+                    <dnd5e-checkbox id="custom-dnd5e-recover-hit-dice" name="{{key}}.recoverHitDice"{{#if recoverHitDice}} checked{{/if}}></dnd5e-checkbox>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="flex2" style="min-width:80px;">{{localize "CUSTOM_DND5E.hitDiceFraction.label"}}</label>
+                <div class="form-fields">
+                    <input id="custom-dnd5e-hit-dice-fraction" name="{{key}}.hitDiceFraction" type="number" value="{{hitDiceFraction}}" step="0.05" min="0" max="1">
+                </div>
+                <p class="hint">{{localize "CUSTOM_DND5E.hitDiceFraction.hint"}}</p>
+            </div>
+        </fieldset>
+
+        <fieldset>
+            <legend>{{localize "CUSTOM_DND5E.temporaryHitPoints"}}</legend>
+            <div class="form-group">
+                <label class="flex2" style="min-width:80px;">{{localize "CUSTOM_DND5E.removeTemp"}}</label>
+                <div class="form-fields">
+                    <dnd5e-checkbox id="custom-dnd5e-recover-temp" name="{{key}}.recoverTemp"{{#if recoverTemp}} checked{{/if}}></dnd5e-checkbox>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="flex2" style="min-width:80px;">{{localize "CUSTOM_DND5E.removeTempMax"}}</label>
+                <div class="form-fields">
+                    <dnd5e-checkbox id="custom-dnd5e-recover-temp-max" name="{{key}}.recoverTempMax"{{#if recoverTempMax}} checked{{/if}}></dnd5e-checkbox>
+                </div>
+            </div>
+        </fieldset>
+
+        <fieldset>
+            <legend>{{localize "CUSTOM_DND5E.periods"}}</legend>
+            <div class="form-group">
+                <label class="flex1" style="min-width:80px; max-width:100px;">{{localize "CUSTOM_DND5E.recoverPeriods.label"}}</label>
+                <div class="form-fields">
+                    <multi-select name="{{key}}.recoverPeriods">
+                        {{selectOptions selects.recoverPeriods selected=recoverPeriods}}
+                    </multi-select>
+                </div>
+                <p class="hint">{{localize "CUSTOM_DND5E.recoverPeriods.hint"}}</p>
+            </div>
+            <div class="form-group">
+                <label class="flex1" style="min-width:80px; max-width:100px;">{{localize "CUSTOM_DND5E.activationPeriods.label"}}</label>
+                <div class="form-fields">
+                    <multi-select name="{{key}}.activationPeriods">
+                        {{selectOptions selects.activationPeriods selected=activationPeriods}}
+                    </multi-select>
+                </div>
+                <p class="hint">{{localize "CUSTOM_DND5E.activationPeriods.hint"}}</p>
+            </div>
+        </fieldset>
+    </div>
+    {{> "modules/custom-dnd5e/templates/footer.hbs" system=system}}
+</div>

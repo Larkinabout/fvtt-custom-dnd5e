@@ -23,6 +23,7 @@ export function register() {
 function registerHooks() {
   if ( foundry.utils.isNewerVersion(game.system.version, "4.1.2") ) {
     Hooks.on("renderLongRestDialog", addCampSupplies);
+    Hooks.on("renderCustomRestDialog", addCampSupplies);
   } else {
     Hooks.on("renderLongRestDialog", addCampSuppliesListener);
   }
@@ -41,6 +42,8 @@ function registerHooks() {
  * @param {object} html Dialog HTML
  */
 async function addCampSupplies(dialog, html) {
+  if ( dialog.config?.type && dialog.config.type !== "long" ) return;
+
   const campSupplies = dialog.actor.items.filter(item =>
     item.system.identifier === "custom-dnd5e-camp-supplies" && item.system.quantity > 0);
 
