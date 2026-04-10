@@ -70,8 +70,8 @@ function registerSettings() {
 
 /**
  * Get default config.
- * @param {string|null} key The key
- * @returns {object} The config data
+ * @param {string|null} key
+ * @returns {object} Config data
  */
 export function getSettingDefault(key = null) {
   return getDefaultDnd5eConfig(configKey, key);
@@ -91,7 +91,7 @@ export async function resetConfigSetting() {
 
 /**
  * Set CONFIG.DND5E.damageTypes.
- * @param {object} [settingData=null] The setting data
+ * @param {object} [settingData=null]
  * @returns {void}
  */
 export function setConfig(settingData = null) {
@@ -128,14 +128,14 @@ function handleEmptyData() {
 
 /**
  * Build config.
- * @param {object} settingData The setting data
- * @returns {object} The config data
+ * @param {object} settingData
+ * @returns {object} Config data
  */
 function buildConfig(settingData) {
   return Object.fromEntries(
     Object.keys(settingData)
       .filter(key => settingData[key].visible || settingData[key].visible === undefined)
-      .map(key => [key, buildConfigEntry(settingData[key])])
+      .map(key => [key, buildConfigEntry(key, settingData[key])])
   );
 }
 
@@ -143,15 +143,20 @@ function buildConfig(settingData) {
 
 /**
  * Build config entry.
- * @param {object} data The data
- * @returns {object} The config entry
+ * @param {string} key
+ * @param {object} data
+ * @returns {object} Config entry
  */
-function buildConfigEntry(data) {
+function buildConfigEntry(key, data) {
+  let label = data.label;
+  if ( data.system !== false && (typeof label !== "string" || !game.i18n.has(label)) ) {
+    label = CONFIG.CUSTOM_DND5E[configKey]?.[key]?.label ?? label;
+  }
   return {
     color: Color.fromString(data.color || "#ffffff"),
     icon: data.icon,
     ...(data.isPhysical !== undefined && { isPhysical: data.isPhysical }),
-    label: game.i18n.localize(data.label),
+    label: game.i18n.localize(label),
     reference: data.reference
   };
 }

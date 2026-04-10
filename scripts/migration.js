@@ -51,6 +51,7 @@ export function migrate() {
   isSuccess = (!migrationVersion || foundry.utils.isNewerVersion("3.0.0", migrationVersion)) ? migrateRerollInitiative() : true;
   isSuccess = (!migrationVersion || foundry.utils.isNewerVersion("3.2.2", migrationVersion)) ? migrateRerollInitiative() : true;
   isSuccess = (!migrationVersion || foundry.utils.isNewerVersion("3.5.0", migrationVersion)) ? migrateActorCounters() : true;
+  isSuccess = (!migrationVersion || foundry.utils.isNewerVersion("4.2.0", migrationVersion)) ? migrateDamageTypeLabels() : true;
 
   if ( isSuccess ) {
     setSetting(constants.VERSION.SETTING.KEY, moduleVersion);
@@ -549,12 +550,53 @@ async function migrateEntityCounterValuesToNamespace(entity, worldCounters) {
 /* -------------------------------------------- */
 
 /**
+ * Migrate damage type labels from dnd5e 5.2.5 to 5.3.0.
+ * @returns {Promise<boolean>} Whether the migration was successful
+ */
+export async function migrateDamageTypeLabels() {
+  try {
+    Logger.debug("Migrating damage type labels...");
+
+    const damageTypes = getSetting(CONSTANTS.DAMAGE_TYPES.SETTING.CONFIG.KEY);
+    if ( !damageTypes || typeof damageTypes !== "object" ) return true;
+
+    const newDamageTypes = foundry.utils.deepClone(damageTypes);
+    let changed = false;
+
+    for ( const [key, entry] of Object.entries(newDamageTypes) ) {
+      if ( !entry || typeof entry.label !== "string" ) continue;
+      if ( entry.system === false ) continue;
+      if ( game.i18n.has(entry.label) ) continue;
+
+      const systemDefault = CONFIG.CUSTOM_DND5E?.damageTypes?.[key]?.label;
+      if ( systemDefault && game.i18n.has(systemDefault) ) {
+        entry.label = systemDefault;
+        changed = true;
+      }
+    }
+
+    if ( changed ) {
+      await setSetting(CONSTANTS.DAMAGE_TYPES.SETTING.CONFIG.KEY, newDamageTypes);
+      Logger.debug("Damage type labels migrated.");
+    }
+
+    return true;
+  } catch (err) {
+    Logger.error(`Failed to migrate damage type labels: ${err.message}`);
+    return false;
+  }
+}
+
+/* -------------------------------------------- */
+
+/**
  * All migration functions, exposed for testing via the module API.
  */
 export const migrations = {
   migrateActorCounters,
   migrateConditions,
   migrateAwardInspirationRollType,
+  migrateDamageTypeLabels,
   migrateRerollInitiative,
   migrateRollMode
 };
