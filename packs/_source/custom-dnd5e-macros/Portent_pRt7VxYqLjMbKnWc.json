@@ -1,0 +1,28 @@
+{
+  "name": "Portent",
+  "type": "script",
+  "author": "zOtcGexgRGNVhsT1",
+  "img": "icons/svg/d20.svg",
+  "scope": "global",
+  "command": "if ( !actor ) {\n  ui.notifications.error(\"Portent macro: Actor not found.\");\n  return;\n}\n\nconst roll = await new Roll(\"1d20\").evaluate();\n\nawait roll.toMessage({\n  speaker: ChatMessage.getSpeaker({ actor }),\n  flavor: \"Portent Roll\"\n});\n\ngame.modules.get(\"custom-dnd5e\").api.counters.setNumber(actor, \"portent\", roll.total);",
+  "folder": "bT6QwWj0kF7fNYBZ",
+  "flags": {},
+  "_stats": {
+    "compendiumSource": null,
+    "duplicateSource": null,
+    "exportSource": null,
+    "coreVersion": "14.359",
+    "systemId": "dnd5e",
+    "systemVersion": "5.3.0",
+    "createdTime": null,
+    "modifiedTime": null,
+    "lastModifiedBy": null
+  },
+  "ownership": {
+    "default": 0,
+    "zOtcGexgRGNVhsT1": 3
+  },
+  "_id": "pRt7VxYqLjMbKnWc",
+  "sort": 100000,
+  "_key": "!macros!pRt7VxYqLjMbKnWc"
+}

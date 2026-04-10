@@ -1103,7 +1103,7 @@ function handleUpdateActiveEffect(effect, changes, options, userId) {
 /*  Event-to-Hook Mapping                       */
 /* -------------------------------------------- */
 
-const EVENT_TO_HOOK = {
+export const EVENT_TO_HOOK = {
   rollAttack: "dnd5e.rollAttack",
   rollAbilityCheck: "dnd5e.rollAbilityCheck",
   rollSavingThrow: "dnd5e.rollSavingThrow",
@@ -1141,7 +1141,7 @@ const EVENT_TO_HOOK = {
 };
 
 /** Mapping from item counter events to the item hook. */
-const ITEM_EVENT_TO_HOOK = {
+export const ITEM_EVENT_TO_HOOK = {
   counterValue: "updateItem",
   counterValueIncrease: "updateItem",
   counterValueDecrease: "updateItem",

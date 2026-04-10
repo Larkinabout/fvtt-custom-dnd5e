@@ -1,5 +1,5 @@
 import { MODULE } from "../../constants.js";
-import { deleteProperty, getFlag, setFlag, unsetFlag } from "../../utils.js";
+import { deleteProperty, getFlag, Logger, setFlag, unsetFlag } from "../../utils.js";
 import { WorkflowsForm } from "./workflows-form.js";
 import { WorkflowsEditForm } from "./workflows-edit.js";
 import { rebuild } from "../../workflows/workflows.js";
@@ -83,6 +83,48 @@ export class WorkflowsFormEntity extends WorkflowsForm {
       setting: this.triggers
     };
     await WorkflowsEditForm.open(args);
+  }
+
+  /* -------------------------------------------- */
+
+  /** @override */
+  async _createFromImport(entries) {
+    return this._createWorkflowsFromImport(entries);
+  }
+
+  /* -------------------------------------------- */
+
+  /** @override */
+  async _createWorkflowsFromImport(workflows) {
+    const triggers = getFlag(this.entity, "triggers") || {};
+
+    // Respect pending deletions in the DOM
+    const hiddenItems = this.element.querySelectorAll(
+      '.custom-dnd5e-list > .item input[id="custom-dnd5e-delete"][value="true"]'
+    );
+    hiddenItems.forEach(input => {
+      const listItem = input.closest(".item");
+      if ( listItem?.dataset.key ) delete triggers[listItem.dataset.key];
+    });
+
+    const names = [];
+    for ( const workflow of workflows ) {
+      const key = foundry.utils.randomID();
+      const rest = { ...workflow };
+      delete rest.entityType;
+      triggers[key] = rest;
+      names.push(workflow.name);
+    }
+
+    await unsetFlag(this.entity, "triggers");
+    await setFlag(this.entity, "triggers", triggers);
+    this.triggers = triggers;
+    this.render(true);
+
+    Logger.info(
+      game.i18n.format("CUSTOM_DND5E.workflowImport.success", { name: names.join(", ") }),
+      true
+    );
   }
 
   /* -------------------------------------------- */

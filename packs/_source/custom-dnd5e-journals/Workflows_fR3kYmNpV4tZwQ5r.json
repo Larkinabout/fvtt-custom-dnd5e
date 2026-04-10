@@ -167,7 +167,7 @@
       "image": {},
       "text": {
         "format": 1,
-        "content": "<p>Below are practical workflow examples that a D&amp;D group can use to automate game mechanics, add atmosphere, and create dramatic moments.</p><h2 class=\"custom-dnd5e-h2\">Critical Hit Fanfare</h2><p>Play a fanfare sound whenever any actor rolls a natural 20 on an attack.</p><ul><li><p><strong>Trigger:</strong> Attack Roll, Value: Equal To 20</p></li><li><p><strong>Action:</strong> Play Sound &mdash; select your fanfare audio file</p></li></ul><h2 class=\"custom-dnd5e-h2\">Fumble Effects</h2><p>When any actor rolls a natural 1 on an attack, play a comedic sound and draw from a custom fumble table for entertaining mishaps.</p><ul><li><p><strong>Trigger:</strong> Attack Roll, Value: Equal To 1</p></li><li><p><strong>Action 1:</strong> Play Sound &mdash; select a comedic fail sound</p></li><li><p><strong>Action 2:</strong> Roll Table &mdash; drag and drop your fumble effects table</p></li></ul><h2 class=\"custom-dnd5e-h2\">Battle Music Sting</h2><p>Play a dramatic music sting when combat begins to set the mood.</p><ul><li><p><strong>Trigger:</strong> Start of Combat</p></li><li><p><strong>Action:</strong> Play Sound &mdash; select a battle music sting</p></li></ul><h2 class=\"custom-dnd5e-h2\">Victory Fanfare</h2><p>Play a triumphant theme when combat ends to celebrate the party's success.</p><ul><li><p><strong>Trigger:</strong> End of Combat</p></li><li><p><strong>Action:</strong> Play Sound &mdash; select a victory fanfare</p></li></ul><h2 class=\"custom-dnd5e-h2\">Close Call Alert</h2><p>Play a tense sound effect when an actor barely succeeds on a saving throw, succeeding by 2 or less. Great for building suspense.</p><ul><li><p><strong>Trigger:</strong> Saving Throw, Result: Success Within, Value: 2</p></li><li><p><strong>Action:</strong> Play Sound &mdash; select a dramatic close-call sound</p></li></ul><h2 class=\"custom-dnd5e-h2\">Death Knell</h2><p>When an actor is reduced to 0 HP, apply the Unconscious condition and play a dramatic sound effect.</p><ul><li><p><strong>Trigger:</strong> Reaches 0 HP</p></li><li><p><strong>Action 1:</strong> Apply Condition &gt; Unconscious</p></li><li><p><strong>Action 2:</strong> Play Sound &mdash; select a dramatic impact or collapse sound</p></li></ul><h2 class=\"custom-dnd5e-h2\">Dramatic NPC Death</h2><p>When an NPC is reduced to 0 HP, draw from a dramatic death effects table and play a sound. Perfect for memorable villain defeats.</p><ul><li><p><strong>Actor Types:</strong> NPC only</p></li><li><p><strong>Trigger:</strong> Reaches 0 HP</p></li><li><p><strong>Action 1:</strong> Roll Table &mdash; drag and drop a Death Effects rollable table</p></li><li><p><strong>Action 2:</strong> Play Sound &mdash; select a dramatic impact sound</p></li></ul><h2 class=\"custom-dnd5e-h2\">NPC Morale Check</h2><p>When an NPC drops to half HP or lower, request a DC 10 Wisdom saving throw as a morale check. On failure, the NPC becomes frightened and a chat message announces their morale is broken. On success, play a defiant battle cry.</p><ul><li><p><strong>Actor Types:</strong> NPC only</p></li><li><p><strong>Trigger:</strong> Drops to Half HP or Lower</p></li><li><p><strong>Action:</strong> Request Roll &gt; Wisdom Saving Throw, DC 10</p></li><li><p><strong>On Failure 1:</strong> Apply Condition &gt; Frightened</p></li><li><p><strong>On Failure 2:</strong> Macro &mdash; a macro containing the following script:</p></li></ul><pre><code>const name = actor?.name ?? \"Unknown\";\nconst possessive = name.endsWith(\"s\") ? `${name}'` : `${name}'s`;\nChatMessage.create({ content: `${possessive} morale is broken!` });</code></pre><ul><li><p><strong>On Success:</strong> Play Sound &mdash; select a defiant battle cry</p></li></ul><h2 class=\"custom-dnd5e-h2\">Lingering Poison Save</h2><p>At the start of each turn, a poisoned actor must succeed on a DC 15 Constitution saving throw or remain poisoned. On success, the poison is cured. Uses a per-trigger condition to ensure the workflow only fires while the actor has the Poisoned condition.</p><ul><li><p><strong>Trigger:</strong> Start of Turn</p></li><li><p><strong>Trigger Condition:</strong> Condition Applied &gt; Poisoned</p></li><li><p><strong>Action:</strong> Request Roll &gt; Constitution Saving Throw, DC 15</p></li><li><p><strong>On Success:</strong> Remove Condition &gt; Poisoned</p></li></ul><h2 class=\"custom-dnd5e-h2\">Exhaustion on Combat KO</h2><p>A gritty realism house rule: apply Exhaustion when a character that was reduced to 0 HP during combat survives to the end of combat.</p><ul><li><p><strong>Actor Types:</strong> Character only</p></li><li><p><strong>Trigger:</strong> Combat End and Reached 0 HP During Combat</p></li><li><p><strong>Action:</strong> Apply Condition &gt; Exhaustion</p></li></ul><h2 class=\"custom-dnd5e-h2\">Cure Poison on Long Rest</h2><p>Automatically remove the Poisoned condition when an actor takes a long rest.</p><ul><li><p><strong>Trigger:</strong> Long Rest</p></li><li><p><strong>Action:</strong> Remove Condition &gt; Poisoned</p></li></ul><h2 class=\"custom-dnd5e-h2\">Consolation Inspiration</h2><p>When a player character rolls a natural 1 on an attack roll, ability check, or saving throw, award them Inspiration as a consolation prize. A popular house rule to soften the sting of bad luck.</p><ul><li><p><strong>Actor Types:</strong> Character only</p></li><li><p><strong>Trigger 1:</strong> Attack Roll, Value: Equal To 1</p></li><li><p><strong>Trigger 2:</strong> Ability Check, Value: Equal To 1</p></li><li><p><strong>Trigger 3:</strong> Saving Throw, Value: Equal To 1</p></li><li><p><strong>Action:</strong> Update Actor &gt; Path: <code>system.attributes.inspiration</code>, Value: <code>true</code></p></li></ul><h2 class=\"custom-dnd5e-h2\">Rage Mode</h2><p>Use the Enable/Disable Effect triggers to activate a per-turn rage workflow whenever the Rage active effect is toggled. Set up three actor-level workflows on the barbarian actor:</p><p><strong>Workflow 1 &mdash; Rage Start:</strong></p><ul><li><p><strong>Trigger:</strong> Enable Effect &gt; Rage</p></li><li><p><strong>Action:</strong> Enable Workflow &gt; Rage Rounds</p></li></ul><p><strong>Workflow 2 &mdash; Rage End:</strong></p><ul><li><p><strong>Trigger:</strong> Disable Effect &gt; Rage</p></li><li><p><strong>Action:</strong> Disable Workflow &gt; Rage Rounds</p></li></ul><p><strong>Workflow 3 &mdash; Rage Rounds</strong> (disabled by default):</p><ul><li><p><strong>Trigger:</strong> Start of Turn</p></li><li><p><strong>Action:</strong> Play Sound &mdash; select a rage growl sound</p></li></ul><h2 class=\"custom-dnd5e-h2\">Low Ammunition Alert</h2><p>Get a warning sound when a custom ammunition counter runs low. First, create a number counter called \"Ammunition\" on the actor via Configure Counters, then set up this workflow.</p><ul><li><p><strong>Trigger:</strong> Counter Value, Less Than, 3, Counter: Ammunition</p></li><li><p><strong>Action:</strong> Play Sound &mdash; select a warning alert sound</p></li></ul><h2 class=\"custom-dnd5e-h2\">Fragile Weapon</h2><p>An item workflow for a weapon that degrades on a fumble. When the weapon rolls a natural 1 on an attack, reduce its quantity and play a cracking sound. Configure this workflow directly on the weapon item.</p><ul><li><p><strong>Type:</strong> Item Workflow (configured on the weapon item)</p></li><li><p><strong>Trigger:</strong> Attack Roll, Value: Equal To 1</p></li><li><p><strong>Action 1:</strong> Reduce Quantity</p></li><li><p><strong>Action 2:</strong> Play Sound &mdash; select a cracking or breaking sound</p></li></ul><h2 class=\"custom-dnd5e-h2\">Cursed Amulet</h2><p>An item workflow for a cursed amulet that inflicts Frightened when worn and removes the effect when removed. Configure these two workflows directly on the amulet item.</p><p><strong>Workflow 1 &mdash; Equip Curse:</strong></p><ul><li><p><strong>Trigger:</strong> Item Equipped</p></li><li><p><strong>Action:</strong> Apply Condition &gt; Frightened</p></li></ul><p><strong>Workflow 2 &mdash; Remove Curse:</strong></p><ul><li><p><strong>Trigger:</strong> Item Unequipped</p></li><li><p><strong>Action:</strong> Remove Condition &gt; Frightened</p></li></ul><h2 class=\"custom-dnd5e-h2\">Torch Light</h2><p>An item workflow for a torch that emits light when equipped and extinguishes it when unequipped. Configure these two workflows directly on the torch item.</p><p><strong>Workflow 1 &mdash; Light On:</strong></p><ul><li><p><strong>Trigger:</strong> Item Equipped</p></li><li><p><strong>Action 1:</strong> Update Token &gt; Path: <code>light.bright</code>, Value: <code>20</code></p></li><li><p><strong>Action 2:</strong> Update Token &gt; Path: <code>light.dim</code>, Value: <code>40</code></p></li><li><p><strong>Action 3:</strong> Update Token &gt; Path: <code>light.color</code>, Value: <code>#ff9329</code></p></li></ul><p><strong>Workflow 2 &mdash; Light Off:</strong></p><ul><li><p><strong>Trigger:</strong> Item Unequipped</p></li><li><p><strong>Action 1:</strong> Update Token &gt; Path: <code>light.bright</code>, Value: <code>0</code></p></li><li><p><strong>Action 2:</strong> Update Token &gt; Path: <code>light.dim</code>, Value: <code>0</code></p></li></ul><h2 class=\"custom-dnd5e-h2\">Long Rest Stipend</h2><p>Award gold pieces scaled by level whenever a character takes a long rest. Uses a formula value to add to the actor's existing gold rather than replacing it.</p><ul><li><p><strong>Actor Types:</strong> Character only</p></li><li><p><strong>Trigger:</strong> Long Rest</p></li><li><p><strong>Action:</strong> Update Actor &gt; Path: <code>system.currency.gp</code>, Value: <code>@currency.gp + @details.level * 10</code></p></li></ul><p>The <code>@currency.gp</code> reference resolves to the actor's current gold and <code>@details.level</code> resolves to their level, so a level 5 character receives 50 gold each long rest. You can use any actor data path with the <code>@</code> prefix and combine it with arithmetic.</p>"
+        "content": "<p>Below are practical workflow examples that a D&amp;D group can use to automate game mechanics, add atmosphere, and create dramatic moments.</p><article class=\"custom-dnd5e-note\"><header><span class=\"fa-solid fa-note-sticky\">&#8203;</span><p>Note</p></header><p>Additional examples are available as separate drag-and-drop pages in this journal. Look for pages prefixed with <strong>Example:</strong> and drag them directly onto the Configure Workflows form to import them automatically.</p></article><h2 class=\"custom-dnd5e-h2\">Critical Hit Fanfare</h2><p>Play a fanfare sound whenever any actor rolls a natural 20 on an attack.</p><ul><li><p><strong>Trigger:</strong> Attack Roll, Value: Equal To 20</p></li><li><p><strong>Action:</strong> Play Sound &mdash; select your fanfare audio file</p></li></ul><h2 class=\"custom-dnd5e-h2\">Fumble Effects</h2><p>When any actor rolls a natural 1 on an attack, play a comedic sound and draw from a custom fumble table for entertaining mishaps.</p><ul><li><p><strong>Trigger:</strong> Attack Roll, Value: Equal To 1</p></li><li><p><strong>Action 1:</strong> Play Sound &mdash; select a comedic fail sound</p></li><li><p><strong>Action 2:</strong> Roll Table &mdash; drag and drop your fumble effects table</p></li></ul><h2 class=\"custom-dnd5e-h2\">Battle Music Sting</h2><p>Play a dramatic music sting when combat begins to set the mood.</p><ul><li><p><strong>Trigger:</strong> Start of Combat</p></li><li><p><strong>Action:</strong> Play Sound &mdash; select a battle music sting</p></li></ul><h2 class=\"custom-dnd5e-h2\">Victory Fanfare</h2><p>Play a triumphant theme when combat ends to celebrate the party's success.</p><ul><li><p><strong>Trigger:</strong> End of Combat</p></li><li><p><strong>Action:</strong> Play Sound &mdash; select a victory fanfare</p></li></ul><h2 class=\"custom-dnd5e-h2\">Close Call Alert</h2><p>Play a tense sound effect when an actor barely succeeds on a saving throw, succeeding by 2 or less. Great for building suspense.</p><ul><li><p><strong>Trigger:</strong> Saving Throw, Result: Success Within, Value: 2</p></li><li><p><strong>Action:</strong> Play Sound &mdash; select a dramatic close-call sound</p></li></ul><h2 class=\"custom-dnd5e-h2\">Dramatic NPC Death</h2><p>When an NPC is reduced to 0 HP, draw from a dramatic death effects table and play a sound. Perfect for memorable villain defeats.</p><ul><li><p><strong>Actor Types:</strong> NPC only</p></li><li><p><strong>Trigger:</strong> Reaches 0 HP</p></li><li><p><strong>Action 1:</strong> Roll Table &mdash; drag and drop a Death Effects rollable table</p></li><li><p><strong>Action 2:</strong> Play Sound &mdash; select a dramatic impact sound</p></li></ul><h2 class=\"custom-dnd5e-h2\">Rage Mode</h2><p>Use the Enable/Disable Effect triggers to activate a per-turn rage workflow whenever the Rage active effect is toggled. Set up three actor-level workflows on the barbarian actor:</p><p><strong>Workflow 1 &mdash; Rage Start:</strong></p><ul><li><p><strong>Trigger:</strong> Enable Effect &gt; Rage</p></li><li><p><strong>Action:</strong> Enable Workflow &gt; Rage Rounds</p></li></ul><p><strong>Workflow 2 &mdash; Rage End:</strong></p><ul><li><p><strong>Trigger:</strong> Disable Effect &gt; Rage</p></li><li><p><strong>Action:</strong> Disable Workflow &gt; Rage Rounds</p></li></ul><p><strong>Workflow 3 &mdash; Rage Rounds</strong> (disabled by default):</p><ul><li><p><strong>Trigger:</strong> Start of Turn</p></li><li><p><strong>Action:</strong> Play Sound &mdash; select a rage growl sound</p></li></ul><h2 class=\"custom-dnd5e-h2\">Low Ammunition Alert</h2><p>Get a warning sound when a custom ammunition counter runs low. First, create a number counter called \"Ammunition\" on the actor via Configure Counters, then set up this workflow.</p><ul><li><p><strong>Trigger:</strong> Counter Value, Less Than, 3, Counter: Ammunition</p></li><li><p><strong>Action:</strong> Play Sound &mdash; select a warning alert sound</p></li></ul>"
       },
       "video": {
         "controls": true,
@@ -191,6 +191,424 @@
       },
       "category": null,
       "_key": "!journal.pages!fR3kYmNpV4tZwQ5r.kW8pDrstA9yEbV0w"
+    },
+    {
+      "sort": 900000,
+      "name": "Example: Death Knell",
+      "type": "text",
+      "_id": "lX9qErsuB0zFcW1y",
+      "system": {},
+      "title": {
+        "show": true,
+        "level": 1
+      },
+      "image": {},
+      "text": {
+        "format": 1,
+        "content": "<p>When an actor is reduced to 0 HP, apply the Unconscious condition.</p><p><strong>Drag this page onto the Configure Workflows form to import this workflow.</strong></p><pre><code class=\"language-json\">{\n  \"name\": \"Death Knell\",\n  \"entityType\": \"actor\",\n  \"actorTypes\": [\"character\", \"npc\"],\n  \"triggers\": {\n    \"t1\": { \"event\": \"zeroHp\" }\n  },\n  \"actions\": {\n    \"a1\": { \"type\": \"applyCondition\", \"conditionId\": \"unconscious\" }\n  }\n}</code></pre>"
+      },
+      "video": {
+        "controls": true,
+        "volume": 0.5
+      },
+      "src": null,
+      "ownership": {
+        "default": -1
+      },
+      "flags": {},
+      "_stats": {
+        "compendiumSource": null,
+        "duplicateSource": null,
+        "coreVersion": "14.359",
+        "systemId": "dnd5e",
+        "systemVersion": "5.3.0",
+        "createdTime": null,
+        "modifiedTime": null,
+        "lastModifiedBy": null,
+        "exportSource": null
+      },
+      "category": null,
+      "_key": "!journal.pages!fR3kYmNpV4tZwQ5r.lX9qErsuB0zFcW1y"
+    },
+    {
+      "sort": 700000,
+      "name": "Example: Cure Poison on Long Rest",
+      "type": "text",
+      "_id": "mY0rFstvC1aGdX2z",
+      "system": {},
+      "title": {
+        "show": true,
+        "level": 1
+      },
+      "image": {},
+      "text": {
+        "format": 1,
+        "content": "<p>Automatically remove the Poisoned condition when an actor takes a long rest.</p><p><strong>Drag this page onto the Configure Workflows form to import this workflow.</strong></p><pre><code class=\"language-json\">{\n  \"name\": \"Cure Poison on Long Rest\",\n  \"entityType\": \"actor\",\n  \"actorTypes\": [\"character\", \"npc\"],\n  \"triggers\": {\n    \"t1\": { \"event\": \"longRest\" }\n  },\n  \"actions\": {\n    \"a1\": { \"type\": \"removeCondition\", \"conditionId\": \"poisoned\" }\n  }\n}</code></pre>"
+      },
+      "video": {
+        "controls": true,
+        "volume": 0.5
+      },
+      "src": null,
+      "ownership": {
+        "default": -1
+      },
+      "flags": {},
+      "_stats": {
+        "compendiumSource": null,
+        "duplicateSource": null,
+        "coreVersion": "14.359",
+        "systemId": "dnd5e",
+        "systemVersion": "5.3.0",
+        "createdTime": null,
+        "modifiedTime": null,
+        "lastModifiedBy": null,
+        "exportSource": null
+      },
+      "category": null,
+      "_key": "!journal.pages!fR3kYmNpV4tZwQ5r.mY0rFstvC1aGdX2z"
+    },
+    {
+      "sort": 600000,
+      "name": "Example: Consolation Inspiration",
+      "type": "text",
+      "_id": "nZ1sGtuwD2bHeY3a",
+      "system": {},
+      "title": {
+        "show": true,
+        "level": 1
+      },
+      "image": {},
+      "text": {
+        "format": 1,
+        "content": "<p>When a player character rolls a natural 1 on an attack roll, ability check, or saving throw, award them Inspiration as a consolation prize.</p><p><strong>Drag this page onto the Configure Workflows form to import this workflow.</strong></p><pre><code class=\"language-json\">{\n  \"name\": \"Consolation Inspiration\",\n  \"entityType\": \"actor\",\n  \"actorTypes\": [\"character\"],\n  \"triggers\": {\n    \"t1\": { \"event\": \"rollAttack\", \"operator\": \"eq\", \"value\": \"1\" },\n    \"t2\": { \"event\": \"rollAbilityCheck\", \"operator\": \"eq\", \"value\": \"1\" },\n    \"t3\": { \"event\": \"rollSavingThrow\", \"operator\": \"eq\", \"value\": \"1\" }\n  },\n  \"actions\": {\n    \"a1\": { \"type\": \"actorUpdate\", \"updatePath\": \"system.attributes.inspiration\", \"updateValue\": \"true\" }\n  }\n}</code></pre>"
+      },
+      "video": {
+        "controls": true,
+        "volume": 0.5
+      },
+      "src": null,
+      "ownership": {
+        "default": -1
+      },
+      "flags": {},
+      "_stats": {
+        "compendiumSource": null,
+        "duplicateSource": null,
+        "coreVersion": "14.359",
+        "systemId": "dnd5e",
+        "systemVersion": "5.3.0",
+        "createdTime": null,
+        "modifiedTime": null,
+        "lastModifiedBy": null,
+        "exportSource": null
+      },
+      "category": null,
+      "_key": "!journal.pages!fR3kYmNpV4tZwQ5r.nZ1sGtuwD2bHeY3a"
+    },
+    {
+      "sort": 1300000,
+      "name": "Example: Long Rest Stipend",
+      "type": "text",
+      "_id": "oA2tHuvxE3cIfZ4b",
+      "system": {},
+      "title": {
+        "show": true,
+        "level": 1
+      },
+      "image": {},
+      "text": {
+        "format": 1,
+        "content": "<p>Award gold pieces scaled by level whenever a character takes a long rest. A level 5 character receives 50 gold each long rest.</p><p><strong>Drag this page onto the Configure Workflows form to import this workflow.</strong></p><pre><code class=\"language-json\">{\n  \"name\": \"Long Rest Stipend\",\n  \"entityType\": \"actor\",\n  \"actorTypes\": [\"character\"],\n  \"triggers\": {\n    \"t1\": { \"event\": \"longRest\" }\n  },\n  \"actions\": {\n    \"a1\": { \"type\": \"actorUpdate\", \"updatePath\": \"system.currency.gp\", \"updateValue\": \"@currency.gp + @details.level * 10\" }\n  }\n}</code></pre>"
+      },
+      "video": {
+        "controls": true,
+        "volume": 0.5
+      },
+      "src": null,
+      "ownership": {
+        "default": -1
+      },
+      "flags": {},
+      "_stats": {
+        "compendiumSource": null,
+        "duplicateSource": null,
+        "coreVersion": "14.359",
+        "systemId": "dnd5e",
+        "systemVersion": "5.3.0",
+        "createdTime": null,
+        "modifiedTime": null,
+        "lastModifiedBy": null,
+        "exportSource": null
+      },
+      "category": null,
+      "_key": "!journal.pages!fR3kYmNpV4tZwQ5r.oA2tHuvxE3cIfZ4b"
+    },
+    {
+      "sort": 800000,
+      "name": "Example: Cursed Amulet",
+      "type": "text",
+      "_id": "pB3uIvwyF4dJgA5c",
+      "system": {},
+      "title": {
+        "show": true,
+        "level": 1
+      },
+      "image": {},
+      "text": {
+        "format": 1,
+        "content": "<p>An item workflow for a cursed amulet that inflicts Frightened when worn and removes the effect when removed.</p><p><strong>Drag this page onto the Configure Workflows form to import both workflows.</strong></p><pre><code class=\"language-json\">{\n  \"name\": \"Cursed Amulet - Equip\",\n  \"entityType\": \"item\",\n  \"triggers\": {\n    \"t1\": { \"event\": \"equip\" }\n  },\n  \"actions\": {\n    \"a1\": { \"type\": \"applyCondition\", \"conditionId\": \"frightened\" }\n  }\n}</code></pre><pre><code class=\"language-json\">{\n  \"name\": \"Cursed Amulet - Unequip\",\n  \"entityType\": \"item\",\n  \"triggers\": {\n    \"t1\": { \"event\": \"unequip\" }\n  },\n  \"actions\": {\n    \"a1\": { \"type\": \"removeCondition\", \"conditionId\": \"frightened\" }\n  }\n}</code></pre>"
+      },
+      "video": {
+        "controls": true,
+        "volume": 0.5
+      },
+      "src": null,
+      "ownership": {
+        "default": -1
+      },
+      "flags": {},
+      "_stats": {
+        "compendiumSource": null,
+        "duplicateSource": null,
+        "coreVersion": "14.359",
+        "systemId": "dnd5e",
+        "systemVersion": "5.3.0",
+        "createdTime": null,
+        "modifiedTime": null,
+        "lastModifiedBy": null,
+        "exportSource": null
+      },
+      "category": null,
+      "_key": "!journal.pages!fR3kYmNpV4tZwQ5r.pB3uIvwyF4dJgA5c"
+    },
+    {
+      "sort": 1600000,
+      "name": "Example: Torch Light",
+      "type": "text",
+      "_id": "qC4vJwxzG5eKhB6d",
+      "system": {},
+      "title": {
+        "show": true,
+        "level": 1
+      },
+      "image": {},
+      "text": {
+        "format": 1,
+        "content": "<p>An item workflow for a torch that emits light when equipped and extinguishes it when unequipped.</p><p><strong>Drag this page onto the Configure Workflows form to import both workflows.</strong></p><pre><code class=\"language-json\">{\n  \"name\": \"Torch - Equip\",\n  \"entityType\": \"item\",\n  \"triggers\": {\n    \"t1\": { \"event\": \"equip\" }\n  },\n  \"actions\": {\n    \"a1\": { \"type\": \"tokenUpdate\", \"updatePath\": \"light.bright\", \"updateValue\": \"20\" },\n    \"a2\": { \"type\": \"tokenUpdate\", \"updatePath\": \"light.dim\", \"updateValue\": \"40\" },\n    \"a3\": { \"type\": \"tokenUpdate\", \"updatePath\": \"light.color\", \"updateValue\": \"#ff9329\" }\n  }\n}</code></pre><pre><code class=\"language-json\">{\n  \"name\": \"Torch - Unequip\",\n  \"entityType\": \"item\",\n  \"triggers\": {\n    \"t1\": { \"event\": \"unequip\" }\n  },\n  \"actions\": {\n    \"a1\": { \"type\": \"tokenUpdate\", \"updatePath\": \"light.bright\", \"updateValue\": \"0\" },\n    \"a2\": { \"type\": \"tokenUpdate\", \"updatePath\": \"light.dim\", \"updateValue\": \"0\" }\n  }\n}</code></pre>"
+      },
+      "video": {
+        "controls": true,
+        "volume": 0.5
+      },
+      "src": null,
+      "ownership": {
+        "default": -1
+      },
+      "flags": {},
+      "_stats": {
+        "compendiumSource": null,
+        "duplicateSource": null,
+        "coreVersion": "14.359",
+        "systemId": "dnd5e",
+        "systemVersion": "5.3.0",
+        "createdTime": null,
+        "modifiedTime": null,
+        "lastModifiedBy": null,
+        "exportSource": null
+      },
+      "category": null,
+      "_key": "!journal.pages!fR3kYmNpV4tZwQ5r.qC4vJwxzG5eKhB6d"
+    },
+    {
+      "sort": 1400000,
+      "name": "Example: NPC Morale Check",
+      "type": "text",
+      "_id": "rD5wKxyaH6fLiC7e",
+      "system": {},
+      "title": {
+        "show": true,
+        "level": 1
+      },
+      "image": {},
+      "text": {
+        "format": 1,
+        "content": "<p>When an NPC drops to half HP or lower, request a DC 10 Wisdom saving throw as a morale check. On failure, the NPC becomes Frightened and a macro posts a chat message announcing their morale is broken.</p><p><strong>Drag this page onto the Configure Workflows form to import this workflow.</strong></p><pre><code class=\"language-json\">{\n  \"name\": \"NPC Morale Check\",\n  \"entityType\": \"actor\",\n  \"actorTypes\": [\"npc\"],\n  \"triggers\": {\n    \"t1\": { \"event\": \"halfHp\" }\n  },\n  \"actions\": {\n    \"a1\": {\n      \"type\": \"requestRoll\",\n      \"roll\": { \"type\": \"save:wis\", \"dc\": \"10\" },\n      \"onFailure\": {\n        \"f1\": { \"type\": \"applyCondition\", \"conditionId\": \"frightened\" },\n        \"f2\": { \"type\": \"macro\", \"macroUuid\": \"Compendium.custom-dnd5e.custom-dnd5e-macros.Macro.r999zcIKJy3CDhs9\" }\n      }\n    }\n  }\n}</code></pre>"
+      },
+      "video": {
+        "controls": true,
+        "volume": 0.5
+      },
+      "src": null,
+      "ownership": {
+        "default": -1
+      },
+      "flags": {},
+      "_stats": {
+        "compendiumSource": null,
+        "duplicateSource": null,
+        "coreVersion": "14.359",
+        "systemId": "dnd5e",
+        "systemVersion": "5.3.0",
+        "createdTime": null,
+        "modifiedTime": null,
+        "lastModifiedBy": null,
+        "exportSource": null
+      },
+      "category": null,
+      "_key": "!journal.pages!fR3kYmNpV4tZwQ5r.rD5wKxyaH6fLiC7e"
+    },
+    {
+      "sort": 1200000,
+      "name": "Example: Lingering Poison Save",
+      "type": "text",
+      "_id": "sE6xLyzbI7gMjD8f",
+      "system": {},
+      "title": {
+        "show": true,
+        "level": 1
+      },
+      "image": {},
+      "text": {
+        "format": 1,
+        "content": "<p>At the start of each turn, a poisoned actor must succeed on a DC 15 Constitution saving throw or remain poisoned. On success, the poison is cured. Uses a per-trigger condition to ensure the workflow only fires while the actor has the Poisoned condition.</p><p><strong>Drag this page onto the Configure Workflows form to import this workflow.</strong></p><pre><code class=\"language-json\">{\n  \"name\": \"Lingering Poison Save\",\n  \"entityType\": \"actor\",\n  \"actorTypes\": [\"character\", \"npc\"],\n  \"triggers\": {\n    \"t1\": {\n      \"event\": \"startOfTurn\",\n      \"conditions\": {\n        \"c1\": { \"event\": \"conditionApplied\", \"conditionId\": \"poisoned\" }\n      }\n    }\n  },\n  \"actions\": {\n    \"a1\": {\n      \"type\": \"requestRoll\",\n      \"roll\": { \"type\": \"save:con\", \"dc\": \"15\" },\n      \"onSuccess\": {\n        \"s1\": { \"type\": \"removeCondition\", \"conditionId\": \"poisoned\" }\n      }\n    }\n  }\n}</code></pre>"
+      },
+      "video": {
+        "controls": true,
+        "volume": 0.5
+      },
+      "src": null,
+      "ownership": {
+        "default": -1
+      },
+      "flags": {},
+      "_stats": {
+        "compendiumSource": null,
+        "duplicateSource": null,
+        "coreVersion": "14.359",
+        "systemId": "dnd5e",
+        "systemVersion": "5.3.0",
+        "createdTime": null,
+        "modifiedTime": null,
+        "lastModifiedBy": null,
+        "exportSource": null
+      },
+      "category": null,
+      "_key": "!journal.pages!fR3kYmNpV4tZwQ5r.sE6xLyzbI7gMjD8f"
+    },
+    {
+      "sort": 1100000,
+      "name": "Example: Fragile Weapon",
+      "type": "text",
+      "_id": "tF7yMzcaJ8hNkE9g",
+      "system": {},
+      "title": {
+        "show": true,
+        "level": 1
+      },
+      "image": {},
+      "text": {
+        "format": 1,
+        "content": "<p>An item workflow for a weapon that degrades on a fumble. When the weapon rolls a natural 1 on an attack, reduce its quantity and run the Item Quality macro to track wear.</p><p><strong>Configure this workflow directly on a weapon item via the item sheet's Configure Workflows button. Drag this page onto the item's workflow window to import.</strong></p><pre><code class=\"language-json\">{\n  \"name\": \"Fragile Weapon\",\n  \"entityType\": \"item\",\n  \"triggers\": {\n    \"t1\": { \"event\": \"rollAttack\", \"operator\": \"eq\", \"value\": \"1\" }\n  },\n  \"actions\": {\n    \"a1\": { \"type\": \"reduceQuantity\" },\n    \"a2\": { \"type\": \"macro\", \"macroUuid\": \"Compendium.custom-dnd5e.custom-dnd5e-macros.Macro.SFV61B9hlon1uw0k\" }\n  }\n}</code></pre>"
+      },
+      "video": {
+        "controls": true,
+        "volume": 0.5
+      },
+      "src": null,
+      "ownership": {
+        "default": -1
+      },
+      "flags": {},
+      "_stats": {
+        "compendiumSource": null,
+        "duplicateSource": null,
+        "coreVersion": "14.359",
+        "systemId": "dnd5e",
+        "systemVersion": "5.3.0",
+        "createdTime": null,
+        "modifiedTime": null,
+        "lastModifiedBy": null,
+        "exportSource": null
+      },
+      "category": null,
+      "_key": "!journal.pages!fR3kYmNpV4tZwQ5r.tF7yMzcaJ8hNkE9g"
+    },
+    {
+      "sort": 1000000,
+      "name": "Example: Exhaustion on Combat KO",
+      "type": "text",
+      "_id": "uG8zNadbK9iOlF0h",
+      "system": {},
+      "title": {
+        "show": true,
+        "level": 1
+      },
+      "image": {},
+      "text": {
+        "format": 1,
+        "content": "<p>A gritty realism house rule: apply Exhaustion when a character that was reduced to 0 HP during combat survives to the end of combat.</p><p><strong>Drag this page onto the Configure Workflows form to import this workflow.</strong></p><pre><code class=\"language-json\">{\n  \"name\": \"Exhaustion on Combat KO\",\n  \"entityType\": \"actor\",\n  \"actorTypes\": [\"character\"],\n  \"triggers\": {\n    \"t1\": { \"event\": \"zeroHpCombatEnd\" }\n  },\n  \"actions\": {\n    \"a1\": { \"type\": \"applyCondition\", \"conditionId\": \"exhaustion\" }\n  }\n}</code></pre>"
+      },
+      "video": {
+        "controls": true,
+        "volume": 0.5
+      },
+      "src": null,
+      "ownership": {
+        "default": -1
+      },
+      "flags": {},
+      "_stats": {
+        "compendiumSource": null,
+        "duplicateSource": null,
+        "coreVersion": "14.359",
+        "systemId": "dnd5e",
+        "systemVersion": "5.3.0",
+        "createdTime": null,
+        "modifiedTime": null,
+        "lastModifiedBy": null,
+        "exportSource": null
+      },
+      "category": null,
+      "_key": "!journal.pages!fR3kYmNpV4tZwQ5r.uG8zNadbK9iOlF0h"
+    },
+    {
+      "sort": 1500000,
+      "name": "Example: Portent Roll",
+      "type": "text",
+      "_id": "vH9aObecL0jPmG1i",
+      "system": {},
+      "title": {
+        "show": true,
+        "level": 1
+      },
+      "image": {},
+      "text": {
+        "format": 1,
+        "content": "<p>After a long rest, rolls a d20 and stores the result in a Portent counter on the actor for later reference.</p><article class=\"custom-dnd5e-note\"><header><span class=\"fa-solid fa-note-sticky\">&#8203;</span><p>Note</p></header><p>This workflow requires a <strong>number</strong> counter with the key <code>portent</code> (lowercase) and a max value of <strong>20</strong> on the actor. Create it via Configure Counters before importing this workflow. The counter key must match exactly or the macro will not update the correct counter.</p></article><p><strong>Drag this page onto the Configure Workflows form to import this workflow.</strong></p><pre><code class=\"language-json\">{\n  \"name\": \"Portent Roll\",\n  \"entityType\": \"actor\",\n  \"actorTypes\": [\"character\"],\n  \"triggers\": {\n    \"t1\": { \"event\": \"longRest\" }\n  },\n  \"actions\": {\n    \"a1\": { \"type\": \"macro\", \"macroUuid\": \"Compendium.custom-dnd5e.custom-dnd5e-macros.Macro.pRt7VxYqLjMbKnWc\" }\n  }\n}</code></pre>"
+      },
+      "video": {
+        "controls": true,
+        "volume": 0.5
+      },
+      "src": null,
+      "ownership": {
+        "default": -1
+      },
+      "flags": {},
+      "_stats": {
+        "compendiumSource": null,
+        "duplicateSource": null,
+        "coreVersion": "14.359",
+        "systemId": "dnd5e",
+        "systemVersion": "5.3.0",
+        "createdTime": null,
+        "modifiedTime": null,
+        "lastModifiedBy": null,
+        "exportSource": null
+      },
+      "category": null,
+      "_key": "!journal.pages!fR3kYmNpV4tZwQ5r.vH9aObecL0jPmG1i"
     }
   ],
   "folder": null,
