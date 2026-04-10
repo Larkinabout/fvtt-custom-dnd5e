@@ -90,6 +90,18 @@ button[data-custom-dnd5e="stop-animations"].fade-out {
     width: auto;
 }
 
+.tidy5e-sheet.application:where(.quadrone) :is(button,.button):where(:not(.header-control):not(.controls-dropdown .control)).custom-dnd5e-workflows-button {
+    margin-top: var(--padding-vertical);
+    margin-right: var(--padding-horizontal);
+    background: var(--button-background);
+    border: 1px solid var(--button-border);
+    border-radius: 0.0625rem;
+}
+
+.tidy5e-sheet.application:where(.quadrone) :is(button,.button):where(:not(.header-control):not(.controls-dropdown .control)).custom-dnd5e-workflows-button:hover {
+    background: var(--button-background-hover);
+    border: 1px solid var(--button-border-hover);
+}
 
 /*
  * CURSOR LABEL

@@ -65,6 +65,7 @@ import { register as registerRadialStatusEffects } from "./token/radial-status-e
 import { register as registerRulerTravelTime } from "./ruler-travel-time.js";
 import { register as registerTidy5eCounters } from "./counters/counters-tidy5e.js";
 import { register as registerWorkflows, workflows } from "./workflows/workflows.js";
+import { register as registerWorkflowsTidy5e } from "./workflows/workflows-tidy5e.js";
 import { register as registerTokenBorder } from "./token/token-border.js";
 import { register as registerTokenEffects } from "./token/token-effects.js";
 import { register as registerTokenHudImprovements } from "./token/token-hud-improvements.js";
@@ -179,6 +180,7 @@ Hooks.on("init", async () => {
   registerCounters();
   registerTidy5eCounters();
   registerWorkflows();
+  registerWorkflowsTidy5e();
 
   registerAbilities();
   registerActivationCosts();
