@@ -2,6 +2,12 @@
     padding-right: 0.5rem;
 }
 
+.tidy5e-sheet.application:where(.quadrone) .main-content>.tidy-tab.custom-dnd5e-counters {
+    padding-top: var(--padding-vertical);
+    padding-right: var(--padding-horizontal);
+    padding-bottom: var(--padding-vertical);
+}
+
 #custom-dnd5e-counters h3 {
     max-width: calc(var(--skills-col-width) + 100px);
     min-width: var(--skills-col-width);
