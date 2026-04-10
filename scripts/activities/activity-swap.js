@@ -319,21 +319,42 @@ export class SwapActivity extends dnd5e.documents.activity.ActivityMixin(BaseSwa
       }
     }
 
-    // Calculate swapped positions
-    const sourceCenter = sourceToken.center;
-    const targetCenter = targetToken.center;
-
-    const newSourcePos = canvas.grid.getSnappedPoint(
-      { x: targetCenter.x - (sourceToken.w / 2), y: targetCenter.y - (sourceToken.h / 2) }
-    );
-    const newTargetPos = canvas.grid.getSnappedPoint(
-      { x: sourceCenter.x - (targetToken.w / 2), y: sourceCenter.y - (targetToken.h / 2) }
-    );
-
     const sourceDoc = sourceToken.document;
     const targetDoc = targetToken.document;
     const sourceElevation = sourceDoc.elevation;
     const targetElevation = targetDoc.elevation;
+
+    let newSourcePos;
+    let newTargetPos;
+
+    if ( canvas.grid.type === CONST.GRID_TYPES.SQUARE ) {
+      // Square grid: align each token's "center square" to the other.
+      // For odd-sized tokens (1x1, 3x3, 5x5), the center square is the middle square.
+      // For even-sized tokens (2x2, 4x4), the center square is the top-left of the central area.
+      const gridSize = canvas.grid.size;
+      const sourceOffsetX = Math.floor((sourceDoc.width - 1) / 2) * gridSize;
+      const sourceOffsetY = Math.floor((sourceDoc.height - 1) / 2) * gridSize;
+      const targetOffsetX = Math.floor((targetDoc.width - 1) / 2) * gridSize;
+      const targetOffsetY = Math.floor((targetDoc.height - 1) / 2) * gridSize;
+
+      const sourceCenterSquare = { x: sourceDoc.x + sourceOffsetX, y: sourceDoc.y + sourceOffsetY };
+      const targetCenterSquare = { x: targetDoc.x + targetOffsetX, y: targetDoc.y + targetOffsetY };
+
+      newSourcePos = { x: targetCenterSquare.x - sourceOffsetX, y: targetCenterSquare.y - sourceOffsetY };
+      newTargetPos = { x: sourceCenterSquare.x - targetOffsetX, y: sourceCenterSquare.y - targetOffsetY };
+    } else {
+      // TODO: Hex snapping causes drifting on round trips
+      const sourceCenter = sourceToken.center;
+      const targetCenter = targetToken.center;
+      newSourcePos = sourceDoc.getSnappedPosition({
+        x: targetCenter.x - (sourceToken.w / 2),
+        y: targetCenter.y - (sourceToken.h / 2)
+      });
+      newTargetPos = targetDoc.getSnappedPosition({
+        x: sourceCenter.x - (targetToken.w / 2),
+        y: sourceCenter.y - (targetToken.h / 2)
+      });
+    }
 
     // Check if user can modify both tokens
     const canModifyBoth = sourceDoc.canUserModify(game.user, "update")
