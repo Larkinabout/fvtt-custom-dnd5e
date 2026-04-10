@@ -745,7 +745,7 @@ export async function rotateToken(token, rotation) {
     await setFlag(token.document, "rotation", token.document.rotation);
   }
 
-  token.document.update({ rotation });
+  token.document.update({ rotation }, { customDnd5eRotation: true });
 
   Logger.debug("Token rotated", { token, rotation });
 }
@@ -764,7 +764,7 @@ export async function unrotateToken(token) {
   Logger.debug("Unrotating token", { token, rotation });
 
   if ( rotation || rotation === 0 ) {
-    token.document.update({ rotation });
+    token.document.update({ rotation }, { customDnd5eRotation: true });
     await unsetFlag(token.document, "rotation");
   }
 

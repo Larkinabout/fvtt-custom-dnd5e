@@ -2,11 +2,13 @@ import { CONSTANTS } from "../constants.js";
 import { updateBloodied } from "../configurations/bloodied.js";
 import {
   Logger,
+  getFlag,
   getSetting,
   rotateToken,
   unrotateToken,
   tintToken,
-  untintToken } from "../utils.js";
+  untintToken,
+  unsetFlag } from "../utils.js";
 
 /**
  * Register hooks.
@@ -23,6 +25,7 @@ export function register() {
 function registerHooks() {
   Hooks.on("createActiveEffect", (activeEffect, options, userId) => { updateTokenEffects(true, activeEffect, userId); });
   Hooks.on("deleteActiveEffect", (activeEffect, options, userId) => { updateTokenEffects(false, activeEffect, userId); });
+  Hooks.on("updateToken", clearRotationFlag);
 }
 
 /* -------------------------------------------- */
@@ -37,19 +40,22 @@ function registerHooks() {
 function updateTokenEffects(active, activeEffect, userId) {
   if ( !game.user.isGM && (game.user.id !== userId || !game.user.hasPermission("TOKEN_CONFIGURE")) ) return;
 
-  let prone = [...activeEffect.statuses].includes("prone");
-  let bloodied = [...activeEffect.statuses].includes("bloodied");
-  let dead = [...activeEffect.statuses].includes("dead");
+  const isProne = [...activeEffect.statuses].includes("prone");
+  const isBloodied = [...activeEffect.statuses].includes("bloodied");
+  const isDead = [...activeEffect.statuses].includes("dead");
 
-  if ( !prone && !bloodied && !dead ) return;
+  if ( !isProne && !isBloodied && !isDead ) return;
 
   let tint = null;
   let rotation = null;
 
   const actor = activeEffect.parent;
-  prone = (active && prone) || actor.effects.has("dnd5eprone000000");
-  bloodied = (active && bloodied) || actor.effects.has("dnd5ebloodied000");
-  dead = (active && dead) || actor.effects.has("dnd5edead0000000");
+  const prone = active ? (isProne || actor.effects.has("dnd5eprone000000"))
+    : (!isProne && actor.effects.has("dnd5eprone000000"));
+  const bloodied = active ? (isBloodied || actor.effects.has("dnd5ebloodied000"))
+    : (!isBloodied && actor.effects.has("dnd5ebloodied000"));
+  const dead = active ? (isDead || actor.effects.has("dnd5edead0000000"))
+    : (!isDead && actor.effects.has("dnd5edead0000000"));
 
   Logger.debug("Updating token effects...", { bloodied, dead, prone });
 
@@ -78,4 +84,22 @@ function updateTokenEffects(active, activeEffect, userId) {
   }
 
   Logger.debug("Token effects updated");
+}
+
+/* -------------------------------------------- */
+
+/**
+ * Clear the saved rotation flag when a token is manually rotated.
+ * @param {object} tokenDocument
+ * @param {object} changes
+ * @param {object} options
+ */
+function clearRotationFlag(tokenDocument, changes, options) {
+  if ( !("rotation" in changes) ) return;
+  if ( options.customDnd5eRotation ) return;
+  const flag = getFlag(tokenDocument, "rotation");
+  if ( flag !== null ) {
+    Logger.debug("Clearing rotation flag due to manual rotation", { token: tokenDocument.name });
+    unsetFlag(tokenDocument, "rotation");
+  }
 }
