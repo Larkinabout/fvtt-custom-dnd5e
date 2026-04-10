@@ -275,7 +275,7 @@ Hooks.on("ready", async () => {
       return allowed.includes(value);
     },
     customDnd5eShowTriggerValue: function(value) {
-      const allowed = ["counterValue", "successValue", "failureValue", "rollAttack"];
+      const allowed = ["counterValue", "successValue", "failureValue", "attackRolled"];
       return allowed.includes(value);
     }
   });

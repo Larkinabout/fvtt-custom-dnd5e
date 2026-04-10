@@ -733,12 +733,12 @@ function makeD20RollHandler(eventName) {
   };
 }
 
-const handleRollAbilityCheck = makeD20RollHandler("rollAbilityCheck");
-const handleRollSavingThrow = makeD20RollHandler("rollSavingThrow");
-const handleRollSkill = makeD20RollHandler("rollSkill");
-const handleRollToolCheck = makeD20RollHandler("rollToolCheck");
-const handleRollConcentration = makeD20RollHandler("rollConcentration");
-const handleRollDeathSave = makeD20RollHandler("rollDeathSave");
+const handleRollAbilityCheck = makeD20RollHandler("abilityCheckRolled");
+const handleRollSavingThrow = makeD20RollHandler("savingThrowRolled");
+const handleRollSkill = makeD20RollHandler("skillCheckRolled");
+const handleRollToolCheck = makeD20RollHandler("toolCheckRolled");
+const handleRollConcentration = makeD20RollHandler("concentrationSaveRolled");
+const handleRollDeathSave = makeD20RollHandler("deathSaveRolled");
 
 /* -------------------------------------------- */
 
@@ -751,13 +751,42 @@ function handleRollAttack(rolls, data) {
   const actor = data?.subject?.actor;
   if ( !actor?.isOwner ) return;
   const dieTotal = rolls[0]?.terms[0]?.total;
-  processEvent("rollAttack", { actor, dieTotal, rolls, data });
+  processEvent("attackRolled", { actor, dieTotal, rolls, data });
 
   // Process item-level workflows
   const item = data?.subject?.item;
   if ( item ) {
-    processItemEvent("rollAttack", { item, dieTotal, rolls, data });
+    processItemEvent("attackRolled", { item, dieTotal, rolls, data });
   }
+}
+
+/* -------------------------------------------- */
+
+/**
+ * Handle attackRoll triggers.
+ * @param {object} processConfig Process config
+ * @param {object} rollConfig Roll config
+ * @param {number} index Roll index
+ */
+function handleAttackRoll(processConfig, rollConfig, index) {
+  if ( index !== 0 ) return;
+
+  const sourceActor = processConfig?.subject?.actor;
+  if ( !sourceActor?.isOwner ) return;
+
+  const sourceToken = sourceActor.isToken
+    ? sourceActor.token
+    : (sourceActor.getActiveTokens()[0]?.document ?? null);
+
+  const targets = Array.from(game.user?.targets ?? []);
+  const firstTarget = targets[0] ?? null;
+  const targetToken = firstTarget?.document ?? null;
+  const targetActor = firstTarget?.actor ?? null;
+
+  const item = processConfig?.subject?.item ?? null;
+  const context = { sourceActor, sourceToken, targetActor, targetToken, item, config: processConfig };
+
+  processPreRollEvent("attackRoll", { actor: sourceActor, item, context, rollConfig });
 }
 
 /* -------------------------------------------- */
@@ -769,7 +798,7 @@ function handleRollAttack(rolls, data) {
  */
 function handleRollInitiative(actor, combatants) {
   if ( !actor?.isOwner ) return;
-  processEvent("rollInitiative", { actor, data: { combatants } });
+  processEvent("initiativeRolled", { actor, data: { combatants } });
 }
 
 /* -------------------------------------------- */
@@ -783,7 +812,7 @@ function handleRollDamage(rolls, data) {
   const actor = data?.subject?.actor;
   if ( !actor?.isOwner ) return;
   const dieTotal = rolls[0]?.total;
-  processEvent("rollDamage", { actor, dieTotal, rolls, data });
+  processEvent("damageRolled", { actor, dieTotal, rolls, data });
 }
 
 /* -------------------------------------------- */
@@ -1104,15 +1133,16 @@ function handleUpdateActiveEffect(effect, changes, options, userId) {
 /* -------------------------------------------- */
 
 export const EVENT_TO_HOOK = {
-  rollAttack: "dnd5e.rollAttack",
-  rollAbilityCheck: "dnd5e.rollAbilityCheck",
-  rollSavingThrow: "dnd5e.rollSavingThrow",
-  rollSkill: "dnd5e.rollSkill",
-  rollToolCheck: "dnd5e.rollToolCheck",
-  rollInitiative: "dnd5e.rollInitiative",
-  rollConcentration: "dnd5e.rollConcentration",
-  rollDeathSave: "dnd5e.postRollDeathSave",
-  rollDamage: "dnd5e.rollDamage",
+  attackRoll: "dnd5e.postBuildAttackRollConfig",
+  attackRolled: "dnd5e.rollAttack",
+  abilityCheckRolled: "dnd5e.rollAbilityCheck",
+  savingThrowRolled: "dnd5e.rollSavingThrow",
+  skillCheckRolled: "dnd5e.rollSkill",
+  toolCheckRolled: "dnd5e.rollToolCheck",
+  initiativeRolled: "dnd5e.rollInitiative",
+  concentrationSaveRolled: "dnd5e.rollConcentration",
+  deathSaveRolled: "dnd5e.postRollDeathSave",
+  damageRolled: "dnd5e.rollDamage",
   zeroHp: "updateActor",
   halfHp: "updateActor",
   loseHp: "updateActor",
@@ -1142,6 +1172,7 @@ export const EVENT_TO_HOOK = {
 
 /** Mapping from item counter events to the item hook. */
 export const ITEM_EVENT_TO_HOOK = {
+  attackRoll: "dnd5e.postBuildAttackRollConfig",
   counterValue: "updateItem",
   counterValueIncrease: "updateItem",
   counterValueDecrease: "updateItem",
@@ -1149,22 +1180,23 @@ export const ITEM_EVENT_TO_HOOK = {
   unchecked: "updateItem",
   successValue: "updateItem",
   failureValue: "updateItem",
-  rollAttack: "dnd5e.rollAttack",
+  attackRolled: "dnd5e.rollAttack",
   equip: "updateItem",
   unequip: "updateItem"
 };
 
 /** Mapping from requestRoll category to the event key used for hook registration. */
 const ROLL_CATEGORY_TO_EVENT = {
-  save: "rollSavingThrow",
-  check: "rollAbilityCheck",
-  skill: "rollSkill"
+  save: "savingThrowRolled",
+  check: "abilityCheckRolled",
+  skill: "skillCheckRolled"
 };
 
 const HP_EVENTS = ["zeroHp", "halfHp", "loseHp", "gainHp", "zeroHpCombatEnd"];
 const REST_EVENTS = ["shortRest", "longRest"];
 
 const HOOK_HANDLERS = {
+  "dnd5e.postBuildAttackRollConfig": handleAttackRoll,
   "dnd5e.rollAttack": handleRollAttack,
   "dnd5e.rollAbilityCheck": handleRollAbilityCheck,
   "dnd5e.rollSavingThrow": handleRollSavingThrow,
@@ -1499,6 +1531,170 @@ function processEvent(event, {
 /* -------------------------------------------- */
 
 /**
+ * Evaluate a cusotm formula
+ * @param {string} formula JavaScript expression
+ * @param {object} context Roll context
+ * @returns {boolean} Whether the formula evaluated truthy
+ */
+function evaluateCustomFormula(formula, context) {
+  if ( !formula || typeof formula !== "string" ) return true;
+  try {
+    // eslint-disable-next-line no-new-func
+    const fn = new Function(
+      "sourceActor", "sourceToken", "targetActor", "targetToken", "item", "config",
+      `"use strict"; return (${formula});`
+    );
+    return !!fn(
+      context.sourceActor, context.sourceToken,
+      context.targetActor, context.targetToken,
+      context.item, context.config
+    );
+  } catch ( err ) {
+    Logger.error(`${LOG_PREFIX} Custom formula failed: ${err.message}`, true);
+    return false;
+  }
+}
+
+/* -------------------------------------------- */
+
+/**
+ * Check whether a per-trigger condition is satisfied during pre-roll evaluation.
+ * @param {object} condition Condition data
+ * @param {object} context Pre-roll context
+ * @returns {boolean} Whether the condition is satisfied
+ */
+function checkPreRollCondition(condition, context) {
+  if ( condition?.event === "customFormula" ) {
+    return evaluateCustomFormula(condition.formula, context);
+  }
+  return checkTriggerState(condition, context.sourceActor);
+}
+
+/* -------------------------------------------- */
+
+/**
+ * Determine whether a workflow's triggers match an event with pre-roll context.
+ * @param {object} workflow Workflow
+ * @param {string} event Event name
+ * @param {object} context Pre-roll context
+ * @returns {boolean} Whether any trigger matched
+ */
+function workflowMatchesPreRollEvent(workflow, event, context) {
+  const triggers = workflow.triggers || {};
+  for ( const trigger of Object.values(triggers) ) {
+    if ( trigger.event !== event ) continue;
+
+    if ( trigger.conditions ) {
+      const conditionsMet = Object.values(trigger.conditions).every(
+        cond => checkPreRollCondition(cond, context)
+      );
+      if ( !conditionsMet ) continue;
+    }
+
+    return true;
+  }
+  return false;
+}
+
+/* -------------------------------------------- */
+
+/**
+ * Execute the actions in a pre-roll workflow.
+ * @param {object} actions Actions
+ * @param {object} options Options
+ * @param {Actor|Item} options.entity Entity (actor or item)
+ * @param {object} options.context Pre-roll context
+ * @param {object} options.rollConfig Roll config
+ */
+function executePreRollActions(actions, { entity, context, rollConfig }) {
+  for ( const action of Object.values(actions) ) {
+    if ( action.type === "addRollBonus" ) {
+      if ( !rollConfig ) continue;
+      const formula = typeof action.formula === "string" ? action.formula.trim() : "";
+      if ( !formula ) continue;
+      rollConfig.parts ??= [];
+      rollConfig.parts.push(formula);
+      Logger.debug(`${LOG_PREFIX} addRollBonus: ${formula}`);
+      continue;
+    }
+
+    if ( action.type === "macro" ) {
+      const macroArgs = {
+        actor: context.sourceActor,
+        item: context.item,
+        sourceActor: context.sourceActor,
+        sourceToken: context.sourceToken,
+        targetActor: context.targetActor,
+        targetToken: context.targetToken,
+        rollConfig,
+        config: context.config,
+        event: "attackRoll"
+      };
+      executeMacro(action.macroUuid, macroArgs);
+      continue;
+    }
+
+    handleAction(action, { entity, event: "attackRoll" });
+  }
+}
+
+/* -------------------------------------------- */
+
+/**
+ * Process a pre-roll event against world and entity-level workflows.
+ * @param {string} event Event name
+ * @param {object} options Options
+ * @param {Actor} options.actor Source actor
+ * @param {Item|null} [options.item] Source item (for item-level workflows)
+ * @param {object} options.context Pre-roll context
+ * @param {object} options.rollConfig Roll config
+ */
+function processPreRollEvent(event, { actor, item = null, context, rollConfig }) {
+  if ( !actor ) return;
+
+  Logger.debug(`${LOG_PREFIX} processPreRollEvent`, { actor: actor.name, event });
+
+  // World actor workflows
+  const worldWorkflows = eventIndex.get(event) || [];
+
+  // Per-actor workflows
+  const actorWorkflowsObj = getFlag(actor, "triggers") || {};
+  const actorWorkflows = Object.values(actorWorkflowsObj).filter(g => {
+    if ( !g.visible && g.visible !== undefined ) return false;
+    if ( g.enabled === false ) return false;
+    const triggers = g.triggers || {};
+    return Object.values(triggers).some(t => t.event === event);
+  });
+
+  for ( const workflow of [...worldWorkflows, ...actorWorkflows] ) {
+    if ( workflow.actorTypes?.length && !workflow.actorTypes.includes(actor.type) ) continue;
+    if ( !workflowMatchesPreRollEvent(workflow, event, context) ) continue;
+    executePreRollActions(workflow.actions || {}, { entity: actor, context, rollConfig });
+  }
+
+  // World item workflows + per-item workflows
+  if ( item ) {
+    const worldItemWorkflows = itemEventIndex.get(event) || [];
+    const itemWorkflowsObj = getFlag(item, "triggers") || {};
+    const itemWorkflows = Object.values(itemWorkflowsObj).filter(g => {
+      if ( !g.visible && g.visible !== undefined ) return false;
+      if ( g.enabled === false ) return false;
+      const triggers = g.triggers || {};
+      return Object.values(triggers).some(t => t.event === event);
+    });
+
+    for ( const workflow of [...worldItemWorkflows, ...itemWorkflows] ) {
+      if ( !workflowMatchesPreRollEvent(workflow, event, context) ) continue;
+      executePreRollActions(workflow.actions || {}, { entity: item, context, rollConfig });
+    }
+  }
+
+  Logger.debug(`${LOG_PREFIX} processPreRollEvent complete`);
+}
+
+/* -------------------------------------------- */
+
+/**
  * Process a workflow event against world and item-level workflows.
  * @param {string} event Event name
  * @param {object} options Options
@@ -1507,8 +1703,8 @@ function processEvent(event, {
  * @param {string|null} [options.counterKey] Counter key
  * @param {number|null} [options.counterValue] Counter value
  * @param {number|null} [options.dieTotal] Die total
- * @param {Roll[]|null} [options.rolls] The rolls
- * @param {string|null} [options.rollSubtype] The roll subtype
+ * @param {Roll[]|null} [options.rolls] Rolls
+ * @param {string|null} [options.rollSubtype] Roll subtype
  */
 function processItemEvent(event, { item, data = null, counterKey = null, counterValue = null,
   dieTotal = null, rolls = null, rollSubtype = null }) {

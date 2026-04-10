@@ -173,6 +173,7 @@ export class TriggerConditionsForm extends CustomDnd5eForm {
     for ( const [conditionId, c] of Object.entries(this.conditions) ) {
       const triggerEvent = c.event || "halfHp";
       const isValueEvent = TRIGGERS_WITH_VALUE.includes(triggerEvent);
+      const isFormulaEvent = triggerEvent === "customFormula";
 
       conditions.push({
         triggerId: conditionId,
@@ -187,6 +188,8 @@ export class TriggerConditionsForm extends CustomDnd5eForm {
         conditionId: c.conditionId || "",
         showEffectNameInput: EFFECT_TRIGGERS.includes(triggerEvent),
         effectName: c.effectName || "",
+        showFormulaInput: isFormulaEvent,
+        formula: c.formula || "",
         showRollSubtype: false,
         rollSubtype: "",
         rollSubtypeChoices: {},
@@ -230,6 +233,7 @@ export class TriggerConditionsForm extends CustomDnd5eForm {
     const conditionTriggerGroup = row.querySelector(".custom-dnd5e-condition-trigger-group");
     const rollSubtypeGroup = row.querySelector(".custom-dnd5e-roll-subtype-group");
     const effectTriggerGroup = row.querySelector(".custom-dnd5e-effect-trigger-group");
+    const formulaGroup = row.querySelector(".custom-dnd5e-formula-trigger-group");
     const resultSelect = row.querySelector(".custom-dnd5e-trigger-result");
     const valueInput = row.querySelector(".custom-dnd5e-trigger-value");
 
@@ -242,16 +246,18 @@ export class TriggerConditionsForm extends CustomDnd5eForm {
         const isCounterEvent = COUNTER_TRIGGERS.includes(eventSelect.value);
         const isConditionEvent = CONDITION_TRIGGERS.includes(eventSelect.value);
         const isEffectEvent = EFFECT_TRIGGERS.includes(eventSelect.value);
+        const isFormulaEvent = eventSelect.value === "customFormula";
 
         counterGroup?.classList.toggle("hidden", !isCounterEvent);
         conditionGroup?.classList.toggle("hidden", !isValueEvent);
         conditionTriggerGroup?.classList.toggle("hidden", !isConditionEvent);
         effectTriggerGroup?.classList.toggle("hidden", !isEffectEvent);
+        formulaGroup?.classList.toggle("hidden", !isFormulaEvent);
         rollSubtypeGroup?.classList.toggle("hidden", true);
         valueInput?.classList.toggle("hidden", !OPERATOR_VALUES.includes(resultSelect?.value));
 
         triggerFields?.classList.toggle("hidden",
-          ![counterGroup, conditionGroup, conditionTriggerGroup, effectTriggerGroup]
+          ![counterGroup, conditionGroup, conditionTriggerGroup, effectTriggerGroup, formulaGroup]
             .some(g => g && !g.classList.contains("hidden"))
         );
 
@@ -295,6 +301,8 @@ export class TriggerConditionsForm extends CustomDnd5eForm {
       conditionId: "",
       showEffectNameInput: false,
       effectName: "",
+      showFormulaInput: false,
+      formula: "",
       showRollSubtype: false,
       rollSubtype: "",
       rollSubtypeChoices: {},
@@ -360,6 +368,7 @@ export class TriggerConditionsForm extends CustomDnd5eForm {
       if ( !COUNTER_TRIGGERS.includes(condition.event) ) delete condition.counterKey;
       if ( !CONDITION_TRIGGERS.includes(condition.event) ) delete condition.conditionId;
       if ( !EFFECT_TRIGGERS.includes(condition.event) ) delete condition.effectName;
+      if ( condition.event !== "customFormula" ) delete condition.formula;
       delete condition.rollSubtype;
       if ( !TRIGGERS_WITH_VALUE.includes(condition.event) ) {
         delete condition.result;

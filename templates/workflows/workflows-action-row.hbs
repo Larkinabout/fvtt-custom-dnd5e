@@ -78,6 +78,11 @@
                     <input name="actions.{{actionId}}.updateValue" type="text" value="{{updateValue}}" placeholder="{{localize 'CUSTOM_DND5E.form.workflows.updateValue.label'}}">
                 </div>
             </div>
+            <div class="custom-dnd5e-formula-group{{#unless showFormula}} hidden{{/unless}}">
+                <div class="form-fields">
+                    <input name="actions.{{actionId}}.formula" type="text" value="{{formula}}" class="custom-dnd5e-action-formula" placeholder="{{localize 'CUSTOM_DND5E.form.workflows.action.formula.placeholder'}}">
+                </div>
+            </div>
         </div>
         <div class="item-controls always-visible">
             <button type="button" data-action="deleteRow" class="unbutton control-button item-control always-interactive" data-tooltip="{{localize 'CUSTOM_DND5E.form.button.delete.tooltip'}}" aria-label="{{localize 'CUSTOM_DND5E.form.button.delete.tooltip'}}">

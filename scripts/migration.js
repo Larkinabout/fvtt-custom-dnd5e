@@ -52,6 +52,7 @@ export function migrate() {
   isSuccess = (!migrationVersion || foundry.utils.isNewerVersion("3.2.2", migrationVersion)) ? migrateRerollInitiative() : true;
   isSuccess = (!migrationVersion || foundry.utils.isNewerVersion("3.5.0", migrationVersion)) ? migrateActorCounters() : true;
   isSuccess = (!migrationVersion || foundry.utils.isNewerVersion("4.2.0", migrationVersion)) ? migrateDamageTypeLabels() : true;
+  isSuccess = (!migrationVersion || foundry.utils.isNewerVersion("4.2.0", migrationVersion)) ? migrateWorkflowTriggerEvents() : true;
 
   if ( isSuccess ) {
     setSetting(constants.VERSION.SETTING.KEY, moduleVersion);
@@ -590,6 +591,109 @@ export async function migrateDamageTypeLabels() {
 /* -------------------------------------------- */
 
 /**
+ * Mapping of legacy workflow trigger event keys to their new past-tense equivalents.
+ * @type {Record<string, string>}
+ */
+const WORKFLOW_TRIGGER_RENAMES = {
+  preRollAttack: "attackRoll",
+  rollAttack: "attackRolled",
+  rollAbilityCheck: "abilityCheckRolled",
+  rollSavingThrow: "savingThrowRolled",
+  rollSkill: "skillCheckRolled",
+  rollToolCheck: "toolCheckRolled",
+  rollConcentration: "concentrationSaveRolled",
+  rollDeathSave: "deathSaveRolled",
+  rollInitiative: "initiativeRolled",
+  rollDamage: "damageRolled"
+};
+
+/* -------------------------------------------- */
+
+/**
+ * Apply trigger event renames to a workflows object in place.
+ * @param {object} workflows Workflows
+ * @returns {boolean} Whether any change was made
+ */
+function renameWorkflowTriggerEvents(workflows) {
+  if ( !workflows || typeof workflows !== "object" ) return false;
+  let changed = false;
+  for ( const workflow of Object.values(workflows) ) {
+    const triggers = workflow?.triggers;
+    if ( !triggers || typeof triggers !== "object" ) continue;
+    for ( const trigger of Object.values(triggers) ) {
+      const next = WORKFLOW_TRIGGER_RENAMES[trigger?.event];
+      if ( next ) {
+        trigger.event = next;
+        changed = true;
+      }
+    }
+  }
+  return changed;
+}
+
+/* -------------------------------------------- */
+
+/**
+ * Migrate workflow trigger event keys to their new past-tense names.
+ * @returns {Promise<boolean>} Whether the migration was successful
+ */
+export async function migrateWorkflowTriggerEvents() {
+  try {
+    Logger.debug("Migrating workflow trigger event keys...");
+
+    // World-level actor workflows
+    const actorWorkflows = getSetting(CONSTANTS.WORKFLOWS.SETTING.ACTOR_WORKFLOWS.KEY);
+    if ( actorWorkflows && typeof actorWorkflows === "object" ) {
+      const cloned = foundry.utils.deepClone(actorWorkflows);
+      if ( renameWorkflowTriggerEvents(cloned) ) {
+        await setSetting(CONSTANTS.WORKFLOWS.SETTING.ACTOR_WORKFLOWS.KEY, cloned);
+      }
+    }
+
+    // World-level item workflows
+    const itemWorkflows = getSetting(CONSTANTS.WORKFLOWS.SETTING.ITEM_WORKFLOWS.KEY);
+    if ( itemWorkflows && typeof itemWorkflows === "object" ) {
+      const cloned = foundry.utils.deepClone(itemWorkflows);
+      if ( renameWorkflowTriggerEvents(cloned) ) {
+        await setSetting(CONSTANTS.WORKFLOWS.SETTING.ITEM_WORKFLOWS.KEY, cloned);
+      }
+    }
+
+    // Per-actor and per-item flags
+    if ( game.actors ) {
+      for ( const actor of game.actors ) {
+        const actorTriggers = getFlag(actor, "triggers");
+        if ( actorTriggers && typeof actorTriggers === "object" ) {
+          const cloned = foundry.utils.deepClone(actorTriggers);
+          if ( renameWorkflowTriggerEvents(cloned) ) {
+            await unsetFlag(actor, "triggers");
+            await setFlag(actor, "triggers", cloned);
+          }
+        }
+        for ( const item of actor.items ) {
+          const itemTriggers = getFlag(item, "triggers");
+          if ( !itemTriggers || typeof itemTriggers !== "object" ) continue;
+          const cloned = foundry.utils.deepClone(itemTriggers);
+          if ( renameWorkflowTriggerEvents(cloned) ) {
+            await unsetFlag(item, "triggers");
+            await setFlag(item, "triggers", cloned);
+          }
+        }
+      }
+    }
+
+    rebuild();
+    Logger.debug("Workflow trigger event keys migrated.");
+    return true;
+  } catch (err) {
+    Logger.error(`Failed to migrate workflow trigger events: ${err.message}`);
+    return false;
+  }
+}
+
+/* -------------------------------------------- */
+
+/**
  * All migration functions, exposed for testing via the module API.
  */
 export const migrations = {
@@ -598,5 +702,6 @@ export const migrations = {
   migrateAwardInspirationRollType,
   migrateDamageTypeLabels,
   migrateRerollInitiative,
-  migrateRollMode
+  migrateRollMode,
+  migrateWorkflowTriggerEvents
 };
