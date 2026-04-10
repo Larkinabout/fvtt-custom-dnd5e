@@ -285,6 +285,8 @@ Hooks.on("ready", async () => {
   CONFIG.CUSTOM_DND5E.coreStatusEffects = foundry.utils.deepClone(CONFIG.statusEffects);
   registerConditions();
 
+  await migrate();
+
   setActorSizes(getSetting(CONSTANTS.ACTOR_SIZES.SETTING.CONFIG.KEY));
   setArmorCalculations(getSetting(CONSTANTS.ARMOR_CALCULATIONS.SETTING.CONFIG.KEY));
   setArmorIds(getSetting(CONSTANTS.ARMOR_IDS.SETTING.CONFIG.KEY));
@@ -313,6 +315,4 @@ Hooks.on("ready", async () => {
   setWeaponMasteries(getSetting(CONSTANTS.WEAPON_MASTERIES.SETTING.CONFIG.KEY));
   setWeaponProficiencies(getSetting(CONSTANTS.WEAPON_PROFICIENCIES.SETTING.CONFIG.KEY));
   setMaxLevel(getSetting(CONSTANTS.MAX_LEVEL.SETTING.KEY));
-
-  migrate();
 });

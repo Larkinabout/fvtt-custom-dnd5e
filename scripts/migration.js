@@ -36,7 +36,7 @@ function registerSettings() {
 /**
  * Run migrations between module versions.
  */
-export function migrate() {
+export async function migrate() {
   if ( !game.user.isGM ) return;
 
   const moduleVersion = game.modules.get(MODULE.ID).version;
@@ -44,18 +44,20 @@ export function migrate() {
 
   if ( moduleVersion === migrationVersion ) return;
 
+  const shouldRun = version => !migrationVersion || foundry.utils.isNewerVersion(version, migrationVersion);
+
   let isSuccess = true;
-  isSuccess = (!migrationVersion || foundry.utils.isNewerVersion("1.3.4", migrationVersion)) ? migrateRollMode() : true;
-  isSuccess = (!migrationVersion || foundry.utils.isNewerVersion("2.2.4", migrationVersion)) ? migrateConditions() : true;
-  isSuccess = (!migrationVersion || foundry.utils.isNewerVersion("2.3.0", migrationVersion)) ? migrateAwardInspirationRollType() : true;
-  isSuccess = (!migrationVersion || foundry.utils.isNewerVersion("3.0.0", migrationVersion)) ? migrateRerollInitiative() : true;
-  isSuccess = (!migrationVersion || foundry.utils.isNewerVersion("3.2.2", migrationVersion)) ? migrateRerollInitiative() : true;
-  isSuccess = (!migrationVersion || foundry.utils.isNewerVersion("3.5.0", migrationVersion)) ? migrateActorCounters() : true;
-  isSuccess = (!migrationVersion || foundry.utils.isNewerVersion("4.2.0", migrationVersion)) ? migrateDamageTypeLabels() : true;
-  isSuccess = (!migrationVersion || foundry.utils.isNewerVersion("4.2.0", migrationVersion)) ? migrateWorkflowTriggerEvents() : true;
+  if ( shouldRun("1.3.4") ) isSuccess &&= await migrateRollMode();
+  if ( shouldRun("2.2.4") ) isSuccess &&= await migrateConditions();
+  if ( shouldRun("2.3.0") ) isSuccess &&= await migrateAwardInspirationRollType();
+  if ( shouldRun("3.0.0") ) isSuccess &&= await migrateRerollInitiative();
+  if ( shouldRun("3.2.2") ) isSuccess &&= await migrateRerollInitiative();
+  if ( shouldRun("3.5.0") ) isSuccess &&= await migrateActorCounters();
+  if ( shouldRun("4.2.0") ) isSuccess &&= await migrateDamageTypeLabels();
+  if ( shouldRun("4.2.0") ) isSuccess &&= await migrateWorkflowTriggerEvents();
 
   if ( isSuccess ) {
-    setSetting(constants.VERSION.SETTING.KEY, moduleVersion);
+    await setSetting(constants.VERSION.SETTING.KEY, moduleVersion);
   }
 }
 

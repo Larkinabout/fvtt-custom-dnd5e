@@ -37,6 +37,7 @@ export function JournalDropMixin(Base) {
       const data = foundry.applications.ux.TextEditor.implementation.getDragEventData(event);
       if ( data?.type === "JournalEntry" || data?.type === "JournalEntryPage" ) {
         event.preventDefault();
+        event.stopPropagation();
         return this._importFromJournal(data);
       }
       return super._onDrop?.(event);

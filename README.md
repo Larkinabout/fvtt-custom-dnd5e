@@ -286,9 +286,9 @@ Create event-driven workflows that execute actions in response to triggers. Work
 
 ### Triggers
 
-Triggers define when a workflow fires. Multiple triggers can be added to a single workflow using OR logic. Roll-based triggers support optional value conditions with operators (equal, less than, greater than, not equal) and result conditions (success, failure, success/failure within margin, success/failure by amount). Each trigger can also have per-trigger **conditions** — additional state checks (e.g. Half HP, a specific condition applied, a counter value) that must all be satisfied on the actor for the trigger to fire.
+Triggers define when a workflow fires. Multiple triggers can be added to a single workflow using OR logic. Roll-based triggers support optional value conditions with operators (equal, less than, greater than, not equal) and result conditions (success, failure, success/failure within margin, success/failure by amount). Each trigger can also have per-trigger **conditions** — additional state checks (e.g. Custom JavaScript formula, Half HP, a specific condition applied, a counter value) that must all be satisfied on the actor for the trigger to fire.
 
-**Roll Triggers:** Attack Roll, Ability Check, Saving Throw, Skill Check, Tool Check, Initiative Roll, Concentration Check, Death Save, Damage Roll.
+**Roll Triggers:** Attack Roll, Attack Rolled, Ability Check Rolled, Saving Throw Rolled, Skill Check Rolled, Tool Check Rolled, Initiative Rolled, Concentration Check Rolled, Death Save Rolled, Damage Rolled.
 
 **Hit Point Triggers:** Drops to Zero HP, Reaches Half HP, Loses HP, Gains HP.
 
@@ -313,6 +313,8 @@ Actions define what happens when a workflow is triggered. Multiple actions can b
 **Condition Actions:** Apply Condition, Remove Condition (supports "All" to remove every condition), Toggle Condition.
 
 **General Actions:** Macro, Update Actor, Distribute Award, Play Sound, Request Roll, Roll Table, Update Token.
+
+**Roll Actions:** Add Roll Bonus.
 
 **Workflow Actions:** Enable Workflow, Disable Workflow, Toggle Workflow.
 
@@ -363,6 +365,7 @@ Customise D&D 5e system configurations. For help and advice on modifying a confi
 - **Item Rarity**: Common, Uncommon, Rare, etc.
 - **Languages**: Common, Dwarvish, Elvish, etc.
 - **Loot Types**: Art Object, Adventuring Gear, Gemstone, etc.
+- **Rest Types**: Short Rest, Long Rest, etc.
 - **Senses**: Blindsight, Darkvision, Tremorsense, etc.
 - **Skills**: Athletics, Acrobatics, Stealth, etc.
 - **Spell Schools**: Abjuration, Conjuration, Divination, etc.
