@@ -11,6 +11,7 @@ import { CreatureTypesEditForm } from "./creature-types-edit-form.js";
 import { CurrencyEditForm } from "./currency-edit-form.js";
 import { DamageTypesEditForm } from "./damage-types-edit-form.js";
 import { ItemPropertiesEditForm } from "./item-properties-edit-form.js";
+import { RestTypesEditForm } from "./rest-types-edit-form.js";
 import { SkillsEditForm } from "./skills-edit-form.js";
 import { SpellSchoolsEditForm } from "./spell-schools-edit-form.js";
 import { ToolsEditForm } from "./tools-edit-form.js";
@@ -33,6 +34,7 @@ import { resetConfigSetting as resetItemProperties, setConfig as setItemProperti
 import { resetConfigSetting as resetItemRarity, setConfig as setItemRarity } from "../configurations/item-rarity.js";
 import { resetConfigSetting as resetLanguages, setConfig as setLanguages } from "../configurations/languages.js";
 import { resetConfigSetting as resetLootTypes, setConfig as setLootTypes } from "../configurations/loot-types.js";
+import { resetConfigSetting as resetRestTypes, setConfig as setRestTypes } from "../configurations/rest-types.js";
 import { resetConfigSetting as resetSenses, setConfig as setSenses } from "../configurations/senses.js";
 import { resetConfigSetting as resetSkills, setConfig as setSkills } from "../configurations/skills.js";
 import { resetConfigSetting as resetSpellSchools, setConfig as setSpellSchools } from "../configurations/spell-schools.js";
@@ -1066,6 +1068,46 @@ export class LootTypesForm extends ConfigForm {
     id: `${MODULE.ID}-loot-types-form`,
     window: {
       title: "CUSTOM_DND5E.form.lootTypes.title"
+    }
+  };
+}
+
+/* -------------------------------------------- */
+
+/**
+ * Class representing the Rest Types Form.
+ *
+ * @extends ConfigForm
+ */
+export class RestTypesForm extends ConfigForm {
+  /**
+   * Constructor for RestTypesForm.
+   */
+  constructor() {
+    super();
+    this.editForm = RestTypesEditForm;
+    this.listTitle = "CUSTOM_DND5E.form.restTypes.listTitle";
+    this.requiresReload = true;
+    this.enableConfigKey = CONSTANTS.REST_TYPES.SETTING.ENABLE.KEY;
+    this.settingKey = CONSTANTS.REST_TYPES.SETTING.CONFIG.KEY;
+    this.resetConfigSetting = resetRestTypes;
+    this.setConfig = setRestTypes;
+    this.configKey = "restTypes";
+    this.headerButton = JOURNAL_HELP_BUTTON;
+    this.headerButton.uuid = CONSTANTS.REST_TYPES.UUID;
+  }
+
+  /* -------------------------------------------- */
+
+  /**
+   * Default options for the form.
+   *
+   * @type {object}
+   */
+  static DEFAULT_OPTIONS = {
+    id: `${MODULE.ID}-rest-types-form`,
+    window: {
+      title: "CUSTOM_DND5E.form.restTypes.title"
     }
   };
 }

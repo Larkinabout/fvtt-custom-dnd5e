@@ -72,10 +72,10 @@ export class AbilitiesEditForm extends ConfigEditForm {
       rollMode: {
         choices: {
           default: "CUSTOM_DND5E.default",
-          blindroll: "CHAT.RollBlind",
-          gmroll: "CHAT.RollPrivate",
-          publicroll: "CHAT.RollPublic",
-          selfroll: "CHAT.RollSelf"
+          blindroll: "CHAT.MODES.blind",
+          gmroll: "CHAT.MODES.gm",
+          publicroll: "CHAT.MODES.public",
+          selfroll: "CHAT.MODES.self"
         }
       },
       type: {

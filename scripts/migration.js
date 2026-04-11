@@ -36,7 +36,7 @@ function registerSettings() {
 /**
  * Run migrations between module versions.
  */
-export function migrate() {
+export async function migrate() {
   if ( !game.user.isGM ) return;
 
   const moduleVersion = game.modules.get(MODULE.ID).version;
@@ -44,16 +44,20 @@ export function migrate() {
 
   if ( moduleVersion === migrationVersion ) return;
 
+  const shouldRun = version => !migrationVersion || foundry.utils.isNewerVersion(version, migrationVersion);
+
   let isSuccess = true;
-  isSuccess = (!migrationVersion || foundry.utils.isNewerVersion("1.3.4", migrationVersion)) ? migrateRollMode() : true;
-  isSuccess = (!migrationVersion || foundry.utils.isNewerVersion("2.2.4", migrationVersion)) ? migrateConditions() : true;
-  isSuccess = (!migrationVersion || foundry.utils.isNewerVersion("2.3.0", migrationVersion)) ? migrateAwardInspirationRollType() : true;
-  isSuccess = (!migrationVersion || foundry.utils.isNewerVersion("3.0.0", migrationVersion)) ? migrateRerollInitiative() : true;
-  isSuccess = (!migrationVersion || foundry.utils.isNewerVersion("3.2.2", migrationVersion)) ? migrateRerollInitiative() : true;
-  isSuccess = (!migrationVersion || foundry.utils.isNewerVersion("3.5.0", migrationVersion)) ? migrateActorCounters() : true;
+  if ( shouldRun("1.3.4") ) isSuccess &&= await migrateRollMode();
+  if ( shouldRun("2.2.4") ) isSuccess &&= await migrateConditions();
+  if ( shouldRun("2.3.0") ) isSuccess &&= await migrateAwardInspirationRollType();
+  if ( shouldRun("3.0.0") ) isSuccess &&= await migrateRerollInitiative();
+  if ( shouldRun("3.2.2") ) isSuccess &&= await migrateRerollInitiative();
+  if ( shouldRun("3.5.0") ) isSuccess &&= await migrateActorCounters();
+  if ( shouldRun("4.2.0") ) isSuccess &&= await migrateDamageTypeLabels();
+  if ( shouldRun("4.2.0") ) isSuccess &&= await migrateWorkflowTriggerEvents();
 
   if ( isSuccess ) {
-    setSetting(constants.VERSION.SETTING.KEY, moduleVersion);
+    await setSetting(constants.VERSION.SETTING.KEY, moduleVersion);
   }
 }
 
@@ -549,12 +553,157 @@ async function migrateEntityCounterValuesToNamespace(entity, worldCounters) {
 /* -------------------------------------------- */
 
 /**
+ * Migrate damage type labels from dnd5e 5.2.5 to 5.3.0.
+ * @returns {Promise<boolean>} Whether the migration was successful
+ */
+export async function migrateDamageTypeLabels() {
+  try {
+    Logger.debug("Migrating damage type labels...");
+
+    const damageTypes = getSetting(CONSTANTS.DAMAGE_TYPES.SETTING.CONFIG.KEY);
+    if ( !damageTypes || typeof damageTypes !== "object" ) return true;
+
+    const newDamageTypes = foundry.utils.deepClone(damageTypes);
+    let changed = false;
+
+    for ( const [key, entry] of Object.entries(newDamageTypes) ) {
+      if ( !entry || typeof entry.label !== "string" ) continue;
+      if ( entry.system === false ) continue;
+      if ( game.i18n.has(entry.label) ) continue;
+
+      const systemDefault = CONFIG.CUSTOM_DND5E?.damageTypes?.[key]?.label;
+      if ( systemDefault && game.i18n.has(systemDefault) ) {
+        entry.label = systemDefault;
+        changed = true;
+      }
+    }
+
+    if ( changed ) {
+      await setSetting(CONSTANTS.DAMAGE_TYPES.SETTING.CONFIG.KEY, newDamageTypes);
+      Logger.debug("Damage type labels migrated.");
+    }
+
+    return true;
+  } catch (err) {
+    Logger.error(`Failed to migrate damage type labels: ${err.message}`);
+    return false;
+  }
+}
+
+/* -------------------------------------------- */
+
+/**
+ * Mapping of legacy workflow trigger event keys to their new past-tense equivalents.
+ * @type {Record<string, string>}
+ */
+const WORKFLOW_TRIGGER_RENAMES = {
+  preRollAttack: "attackRoll",
+  rollAttack: "attackRolled",
+  rollAbilityCheck: "abilityCheckRolled",
+  rollSavingThrow: "savingThrowRolled",
+  rollSkill: "skillCheckRolled",
+  rollToolCheck: "toolCheckRolled",
+  rollConcentration: "concentrationSaveRolled",
+  rollDeathSave: "deathSaveRolled",
+  rollInitiative: "initiativeRolled",
+  rollDamage: "damageRolled"
+};
+
+/* -------------------------------------------- */
+
+/**
+ * Apply trigger event renames to a workflows object in place.
+ * @param {object} workflows Workflows
+ * @returns {boolean} Whether any change was made
+ */
+function renameWorkflowTriggerEvents(workflows) {
+  if ( !workflows || typeof workflows !== "object" ) return false;
+  let changed = false;
+  for ( const workflow of Object.values(workflows) ) {
+    const triggers = workflow?.triggers;
+    if ( !triggers || typeof triggers !== "object" ) continue;
+    for ( const trigger of Object.values(triggers) ) {
+      const next = WORKFLOW_TRIGGER_RENAMES[trigger?.event];
+      if ( next ) {
+        trigger.event = next;
+        changed = true;
+      }
+    }
+  }
+  return changed;
+}
+
+/* -------------------------------------------- */
+
+/**
+ * Migrate workflow trigger event keys to their new past-tense names.
+ * @returns {Promise<boolean>} Whether the migration was successful
+ */
+export async function migrateWorkflowTriggerEvents() {
+  try {
+    Logger.debug("Migrating workflow trigger event keys...");
+
+    // World-level actor workflows
+    const actorWorkflows = getSetting(CONSTANTS.WORKFLOWS.SETTING.ACTOR_WORKFLOWS.KEY);
+    if ( actorWorkflows && typeof actorWorkflows === "object" ) {
+      const cloned = foundry.utils.deepClone(actorWorkflows);
+      if ( renameWorkflowTriggerEvents(cloned) ) {
+        await setSetting(CONSTANTS.WORKFLOWS.SETTING.ACTOR_WORKFLOWS.KEY, cloned);
+      }
+    }
+
+    // World-level item workflows
+    const itemWorkflows = getSetting(CONSTANTS.WORKFLOWS.SETTING.ITEM_WORKFLOWS.KEY);
+    if ( itemWorkflows && typeof itemWorkflows === "object" ) {
+      const cloned = foundry.utils.deepClone(itemWorkflows);
+      if ( renameWorkflowTriggerEvents(cloned) ) {
+        await setSetting(CONSTANTS.WORKFLOWS.SETTING.ITEM_WORKFLOWS.KEY, cloned);
+      }
+    }
+
+    // Per-actor and per-item flags
+    if ( game.actors ) {
+      for ( const actor of game.actors ) {
+        const actorTriggers = getFlag(actor, "triggers");
+        if ( actorTriggers && typeof actorTriggers === "object" ) {
+          const cloned = foundry.utils.deepClone(actorTriggers);
+          if ( renameWorkflowTriggerEvents(cloned) ) {
+            await unsetFlag(actor, "triggers");
+            await setFlag(actor, "triggers", cloned);
+          }
+        }
+        for ( const item of actor.items ) {
+          const itemTriggers = getFlag(item, "triggers");
+          if ( !itemTriggers || typeof itemTriggers !== "object" ) continue;
+          const cloned = foundry.utils.deepClone(itemTriggers);
+          if ( renameWorkflowTriggerEvents(cloned) ) {
+            await unsetFlag(item, "triggers");
+            await setFlag(item, "triggers", cloned);
+          }
+        }
+      }
+    }
+
+    rebuild();
+    Logger.debug("Workflow trigger event keys migrated.");
+    return true;
+  } catch (err) {
+    Logger.error(`Failed to migrate workflow trigger events: ${err.message}`);
+    return false;
+  }
+}
+
+/* -------------------------------------------- */
+
+/**
  * All migration functions, exposed for testing via the module API.
  */
 export const migrations = {
   migrateActorCounters,
   migrateConditions,
   migrateAwardInspirationRollType,
+  migrateDamageTypeLabels,
   migrateRerollInitiative,
-  migrateRollMode
+  migrateRollMode,
+  migrateWorkflowTriggerEvents
 };

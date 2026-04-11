@@ -318,10 +318,9 @@ function registerHooks() {
   });
   Hooks.on("dnd5e.preRestCompleted", (actor, data) => updateDeathSaves("rest", actor, data));
   Hooks.on("dnd5e.preRollDeathSave", setDeathSavesRollMode);
-  Hooks.on("dnd5e.rollAbilityCheck", (actor, roll, ability) => { awardInspiration("rollAbilityCheck", actor, roll); });
-  Hooks.on("dnd5e.rollAttack", (item, roll, ability) => {
-    awardInspiration("rollAttack", item, roll);
-    // applyHighLowGround(item, roll, ability);
+  Hooks.on("dnd5e.rollAbilityCheck", (rolls, data) => { awardInspiration("rollAbilityCheck", rolls, data); });
+  Hooks.on("dnd5e.rollAttack", (rolls, data) => {
+    awardInspiration("rollAttack", rolls, data);
   });
   Hooks.on("dnd5e.preRollSavingThrow", (config, dialog, message) => {
     const messageId = config.event?.target.closest("[data-message-id]")?.dataset.messageId;
@@ -334,8 +333,8 @@ function registerHooks() {
     awardInspiration("rollSavingThrow", rolls, data);
     handleMassiveDamageSaveResult(rolls, data);
   });
-  Hooks.on("dnd5e.rollSkill", (actor, roll, ability) => { awardInspiration("rollSkill", actor, roll); });
-  Hooks.on("dnd5e.rollToolCheck", (actor, roll, ability) => { awardInspiration("rollToolCheck", actor, roll); });
+  Hooks.on("dnd5e.rollSkill", (rolls, data) => { awardInspiration("rollSkill", rolls, data); });
+  Hooks.on("dnd5e.rollToolCheck", (rolls, data) => { awardInspiration("rollToolCheck", rolls, data); });
   Hooks.on("preUpdateActor", (actor, data, options, userId) => {
     capturePreviousData(actor, data, options, userId);
     healActor(actor, data, options);
@@ -396,10 +395,15 @@ export function modifyHitPointsFlowDialog(app, html, data) {
   }
 
   if ( !getSetting(CONSTANTS.LEVEL_UP.HIT_POINTS.SHOW_TAKE_AVERAGE.SETTING.KEY) ) {
-    const averageLabel = element.querySelector(".averageLabel") ?? element.querySelector(".average-label");
-
-    if ( averageLabel ) {
-      averageLabel.innerHTML = "";
+    const useAverage = element.querySelector('[name="useAverage"]');
+    const formGroup = useAverage?.closest(".form-group");
+    if ( formGroup ) {
+      const fieldset = formGroup.closest("fieldset");
+      formGroup.remove();
+      if ( fieldset && !fieldset.querySelector(".form-group") ) fieldset.remove();
+    } else {
+      const averageLabel = element.querySelector(".averageLabel") ?? element.querySelector(".average-label");
+      if ( averageLabel ) averageLabel.innerHTML = "";
     }
   }
 }

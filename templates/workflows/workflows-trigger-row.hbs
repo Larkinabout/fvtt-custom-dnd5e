@@ -33,6 +33,12 @@
                         placeholder="{{localize 'CUSTOM_DND5E.form.workflows.trigger.effectName.placeholder'}}">
                 </div>
             </div>
+            <div class="custom-dnd5e-formula-trigger-group flexrow{{#unless showFormulaInput}} hidden{{/unless}}">
+                <div class="form-fields">
+                    <textarea name="triggers.{{triggerId}}.formula" class="custom-dnd5e-trigger-formula" rows="2"
+                        placeholder="{{localize 'CUSTOM_DND5E.form.workflows.condition.formula.placeholder'}}">{{formula}}</textarea>
+                </div>
+            </div>
             <div class="custom-dnd5e-trigger-condition-group flexrow{{#unless showCondition}} hidden{{/unless}}">
                 <div class="form-fields">
                     <select name="triggers.{{triggerId}}.result" class="custom-dnd5e-trigger-result">

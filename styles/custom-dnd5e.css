@@ -90,6 +90,18 @@ button[data-custom-dnd5e="stop-animations"].fade-out {
     width: auto;
 }
 
+.tidy5e-sheet.application:where(.quadrone) :is(button,.button):where(:not(.header-control):not(.controls-dropdown .control)).custom-dnd5e-workflows-button {
+    margin-top: var(--padding-vertical);
+    margin-right: var(--padding-horizontal);
+    background: var(--button-background);
+    border: 1px solid var(--button-border);
+    border-radius: 0.0625rem;
+}
+
+.tidy5e-sheet.application:where(.quadrone) :is(button,.button):where(:not(.header-control):not(.controls-dropdown .control)).custom-dnd5e-workflows-button:hover {
+    background: var(--button-background-hover);
+    border: 1px solid var(--button-border-hover);
+}
 
 /*
  * CURSOR LABEL
@@ -312,4 +324,39 @@ button[data-custom-dnd5e="stop-animations"].fade-out {
 #token-hud.custom-dnd5e-hud.placeable-hud .control-icon[data-action="togglePalette"].active:not(:hover) img,
 #token-hud.custom-dnd5e-hud.placeable-hud .control-icon[data-action="togglePalette"].active:not(:hover) i {
     filter: drop-shadow(0 0 1px var(--control-active-border-color)) drop-shadow(0 0 1px var(--control-active-border-color));
+}
+
+/*
+ * NOTES
+ */
+.custom-dnd5e-note.info {
+    --note-color: var(--dnd5e-color-note-info);
+    position: relative;
+    margin-block-end: 0.5rem;
+    border-radius: 4px;
+    border: 1px solid var(--note-color);
+    padding-block: 8px;
+    padding-inline-start: 14px;
+    padding-inline-end: 10px;
+    background: color-mix(in oklab, var(--note-color), transparent 80%);
+    color: var(--color-text-primary);
+    font-size: var(--font-size-12);
+}
+
+.custom-dnd5e-note.info::before {
+    --marker-size: 14px;
+    content: "\f129";
+    position: absolute;
+    width: var(--marker-size);
+    height: var(--marker-size);
+    border-radius: 100%;
+    inset-block: calc(50% - var(--marker-size) / 2);
+    inset-inline-start: calc(-1 * var(--marker-size) / 2);
+    align-content: center;
+    background: var(--note-color);
+    color: var(--dnd5e-color-parchment);
+    font-family: var(--font-awesome);
+    font-size: calc(var(--marker-size) * 0.75);
+    font-weight: bold;
+    text-align: center;
 }

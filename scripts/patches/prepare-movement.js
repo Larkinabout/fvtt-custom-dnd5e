@@ -35,7 +35,7 @@ function prepareMovementPatch(rollData = this.parent.getRollData()) {
   const heavilyEncumbered = statuses.has("heavilyEncumbered");
   const exceedingCarryingCapacity = statuses.has("exceedingCarryingCapacity");
   const units = this.attributes.movement.units ??= defaultUnits("length");
-  let reduction = game.settings.get("dnd5e", "rulesVersion") === "modern"
+  let reduction = dnd5e.settings.rulesVersion === "modern" && !this.traits?.ci?.value?.has("exhaustion")
     ? (this.attributes.exhaustion ?? 0) * (CONFIG.DND5E.conditionTypes.exhaustion?.reduction?.speed ?? 0) : 0;
   reduction = convertLength(reduction, CONFIG.DND5E.defaultUnits.length.imperial, units);
   const bonus = simplifyBonus(this.attributes.movement.bonus, rollData);

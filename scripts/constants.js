@@ -911,6 +911,28 @@ export const CONSTANTS = {
       KEY: "radial-status-effects"
     }
   },
+  REST_TYPES: {
+    ID: "rest-types",
+    MENU: {
+      KEY: "rest-types-menu",
+      HINT: "CUSTOM_DND5E.menu.restTypes.hint",
+      ICON: "fas fa-bed",
+      LABEL: "CUSTOM_DND5E.menu.restTypes.label",
+      NAME: "CUSTOM_DND5E.menu.restTypes.name"
+    },
+    SETTING: {
+      ENABLE: {
+        KEY: "enable-rest-types"
+      },
+      CONFIG: {
+        KEY: "rest-types"
+      }
+    },
+    TEMPLATE: {
+      EDIT: "modules/custom-dnd5e/templates/rest-types-edit.hbs"
+    },
+    UUID: "Compendium.custom-dnd5e.custom-dnd5e-journals.JournalEntry.B48iqFBddUikMMer.JournalEntryPage.rT4kYmNpV3tZbW9x"
+  },
   RESTING: {
     SETTING: {
       USE_CAMP_SUPPLIES: {

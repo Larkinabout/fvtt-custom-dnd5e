@@ -26,9 +26,11 @@ import {
   increaseFraction,
   decreaseFraction,
   modifyFraction,
+  setFraction,
   increaseNumber,
   decreaseNumber,
   modifyNumber,
+  setNumber,
   increaseSuccess,
   decreaseSuccess,
   modifySuccess,
@@ -54,6 +56,7 @@ import { register as registerLanguages, setConfig as setLanguages } from "./conf
 import { register as registerLootTypes, setConfig as setLootTypes } from "./configurations/loot-types.js";
 import { register as registerMigration, migrate, migrations } from "./migration.js";
 import { register as registerMisc, setMaxLevel } from "./misc.js";
+import { register as registerRestTypes, setConfig as setRestTypes } from "./configurations/rest-types.js";
 import { register as registerRolls } from "./rolls.js";
 import { register as registerSenses, setConfig as setSenses } from "./configurations/senses.js";
 import { register as registerSkills, setConfig as setSkills } from "./configurations/skills.js";
@@ -62,6 +65,7 @@ import { register as registerRadialStatusEffects } from "./token/radial-status-e
 import { register as registerRulerTravelTime } from "./ruler-travel-time.js";
 import { register as registerTidy5eCounters } from "./counters/counters-tidy5e.js";
 import { register as registerWorkflows, workflows } from "./workflows/workflows.js";
+import { register as registerWorkflowsTidy5e } from "./workflows/workflows-tidy5e.js";
 import { register as registerTokenBorder } from "./token/token-border.js";
 import { register as registerTokenEffects } from "./token/token-effects.js";
 import { register as registerTokenHudImprovements } from "./token/token-hud-improvements.js";
@@ -90,7 +94,7 @@ function cloneDnd5eConfig() {
     "bloodied", "conditionTypes", "consumableTypes", "creatureTypes", "currencies",
     "damageTypes", "encumbrance", "facilities", "featureTypes",
     "itemActionTypes", "itemProperties", "itemRarity", "languages", "lootTypes",
-    "maxAbilityScore", "maxLevel", "miscEquipmentTypes", "senses", "skills",
+    "maxAbilityScore", "maxLevel", "miscEquipmentTypes", "restTypes", "senses", "skills",
     "spellSchools", "toolProficiencies", "tools", "toolTypes",
     "validProperties", "weaponIds", "weaponMasteries", "weaponProficiencies",
     "weaponProficienciesMap", "weaponProperties", "weaponTypes"
@@ -131,9 +135,11 @@ Hooks.on("init", async () => {
       increaseFraction,
       decreaseFraction,
       modifyFraction,
+      setFraction,
       increaseNumber,
       decreaseNumber,
       modifyNumber,
+      setNumber,
       increaseSuccess,
       decreaseSuccess,
       modifySuccess,
@@ -174,6 +180,7 @@ Hooks.on("init", async () => {
   registerCounters();
   registerTidy5eCounters();
   registerWorkflows();
+  registerWorkflowsTidy5e();
 
   registerAbilities();
   registerActivationCosts();
@@ -204,6 +211,7 @@ Hooks.on("init", async () => {
   registerItemSheet();
   registerLanguages();
   registerLootTypes();
+  registerRestTypes();
   registerRolls();
   registerSenses();
   registerSkills();
@@ -269,13 +277,15 @@ Hooks.on("ready", async () => {
       return allowed.includes(value);
     },
     customDnd5eShowTriggerValue: function(value) {
-      const allowed = ["counterValue", "successValue", "failureValue", "rollAttack"];
+      const allowed = ["counterValue", "successValue", "failureValue", "attackRolled"];
       return allowed.includes(value);
     }
   });
 
   CONFIG.CUSTOM_DND5E.coreStatusEffects = foundry.utils.deepClone(CONFIG.statusEffects);
   registerConditions();
+
+  await migrate();
 
   setActorSizes(getSetting(CONSTANTS.ACTOR_SIZES.SETTING.CONFIG.KEY));
   setArmorCalculations(getSetting(CONSTANTS.ARMOR_CALCULATIONS.SETTING.CONFIG.KEY));
@@ -297,6 +307,7 @@ Hooks.on("ready", async () => {
   }
   setItemProperties(getSetting(CONSTANTS.ITEM_PROPERTIES.SETTING.CONFIG.KEY));
   setLootTypes(getSetting(CONSTANTS.LOOT_TYPES.SETTING.CONFIG.KEY));
+  setRestTypes(getSetting(CONSTANTS.REST_TYPES.SETTING.CONFIG.KEY));
   setSpellSchools(getSetting(CONSTANTS.SPELL_SCHOOLS.SETTING.CONFIG.KEY));
   setTools(getSetting(CONSTANTS.TOOLS.SETTING.CONFIG.KEY));
   setToolProficiencies(getSetting(CONSTANTS.TOOL_PROFICIENCIES.SETTING.CONFIG.KEY));
@@ -304,6 +315,4 @@ Hooks.on("ready", async () => {
   setWeaponMasteries(getSetting(CONSTANTS.WEAPON_MASTERIES.SETTING.CONFIG.KEY));
   setWeaponProficiencies(getSetting(CONSTANTS.WEAPON_PROFICIENCIES.SETTING.CONFIG.KEY));
   setMaxLevel(getSetting(CONSTANTS.MAX_LEVEL.SETTING.KEY));
-
-  migrate();
 });

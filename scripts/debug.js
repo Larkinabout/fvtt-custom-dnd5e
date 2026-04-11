@@ -82,6 +82,11 @@ export async function exportData() {
       maxAbilityScore: CONFIG.DND5E.maxAbilityScore,
       maxLevel: CONFIG.DND5E.maxLevel,
       miscEquipmentTypes: CONFIG.DND5E.miscEquipmentTypes,
+      restTypes: Object.fromEntries(Object.entries(CONFIG.DND5E.restTypes ?? {}).map(([key, value]) => [key, {
+        ...value,
+        ...(value.dialogClass && { dialogClass: value.dialogClass.name }),
+        ...(value.recoverSpellSlotTypes instanceof Set && { recoverSpellSlotTypes: [...value.recoverSpellSlotTypes] })
+      }])),
       senses: CONFIG.DND5E.senses,
       skills: CONFIG.DND5E.skills,
       spellSchools: CONFIG.DND5E.spellSchools,

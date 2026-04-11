@@ -41,8 +41,9 @@ export function registerHooks() {
   if ( !getSetting(CONSTANTS.CHAT_COMMANDS.SETTING.KEY) ) return;
 
   Hooks.on("chatMessage", (chatLog, message, options) => {
-    if ( message.match("^/(attack|a|concentration|con|check|c|damage|d|heal|h|healing|item|save|s|skill|k|tool|t)") ) {
-      handleChatCommand(message);
+    const command = message.replace(/^<p>|<\/p>$/gi, "").trim();
+    if ( command.match("^/(attack|a|concentration|con|check|c|damage|d|heal|h|healing|item|save|s|skill|k|tool|t)") ) {
+      handleChatCommand(command);
       return false;
     }
   });

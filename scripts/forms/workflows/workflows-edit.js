@@ -18,18 +18,18 @@ export const COUNTER_TRIGGERS = [
 ];
 
 const TRIGGERS_WITH_VALUE = [
-  "rollAttack", "rollAbilityCheck", "rollSavingThrow", "rollSkill",
-  "rollToolCheck", "rollConcentration", "rollDeathSave", "rollDamage",
+  "attackRolled", "abilityCheckRolled", "savingThrowRolled", "skillCheckRolled",
+  "toolCheckRolled", "concentrationSaveRolled", "deathSaveRolled", "damageRolled",
   "counterValue", "successValue", "failureValue",
   "conditionLevelChanged"
 ];
 
 const TRIGGERS_WITH_RESULT = [
-  "rollAttack", "rollAbilityCheck", "rollSavingThrow", "rollSkill",
-  "rollToolCheck", "rollConcentration", "rollDeathSave"
+  "attackRolled", "abilityCheckRolled", "savingThrowRolled", "skillCheckRolled",
+  "toolCheckRolled", "concentrationSaveRolled", "deathSaveRolled"
 ];
 
-const ROLL_SUBTYPE_TRIGGERS = ["rollAbilityCheck", "rollSavingThrow", "rollSkill", "rollToolCheck"];
+const ROLL_SUBTYPE_TRIGGERS = ["abilityCheckRolled", "savingThrowRolled", "skillCheckRolled", "toolCheckRolled"];
 
 const CONDITION_TRIGGERS = ["conditionApplied", "conditionRemoved", "conditionLevelChanged"];
 
@@ -50,6 +50,8 @@ export const COUNTER_ACTIONS = ["increase", "decrease", "set", "check", "uncheck
 export const ACTIONS_WITH_VALUE = ["increase", "decrease", "set"];
 
 export const WORKFLOW_ACTIONS = ["enableWorkflow", "disableWorkflow", "toggleWorkflow"];
+
+export const ROLL_BONUS_ACTIONS = ["addRollBonus"];
 
 const CHECKBOX_ACTIONS = ["check", "uncheck", "toggle"];
 
@@ -132,15 +134,16 @@ function getTriggerChoices(entityType = "actor") {
     const conditionsGroup = game.i18n.localize("CUSTOM_DND5E.form.workflows.trigger.group.conditions");
 
     choices.push(
-      { value: "rollAttack", label: "CUSTOM_DND5E.form.workflows.trigger.choices.rollAttack", group: rollsGroup },
-      { value: "rollAbilityCheck", label: "CUSTOM_DND5E.form.workflows.trigger.choices.rollAbilityCheck", group: rollsGroup },
-      { value: "rollSavingThrow", label: "CUSTOM_DND5E.form.workflows.trigger.choices.rollSavingThrow", group: rollsGroup },
-      { value: "rollSkill", label: "CUSTOM_DND5E.form.workflows.trigger.choices.rollSkill", group: rollsGroup },
-      { value: "rollToolCheck", label: "CUSTOM_DND5E.form.workflows.trigger.choices.rollToolCheck", group: rollsGroup },
-      { value: "rollInitiative", label: "CUSTOM_DND5E.form.workflows.trigger.choices.rollInitiative", group: rollsGroup },
-      { value: "rollConcentration", label: "CUSTOM_DND5E.form.workflows.trigger.choices.rollConcentration", group: rollsGroup },
-      { value: "rollDeathSave", label: "CUSTOM_DND5E.form.workflows.trigger.choices.rollDeathSave", group: rollsGroup },
-      { value: "rollDamage", label: "CUSTOM_DND5E.form.workflows.trigger.choices.rollDamage", group: rollsGroup },
+      { value: "attackRoll", label: "CUSTOM_DND5E.form.workflows.trigger.choices.attackRoll", group: rollsGroup },
+      { value: "attackRolled", label: "CUSTOM_DND5E.form.workflows.trigger.choices.attackRolled", group: rollsGroup },
+      { value: "abilityCheckRolled", label: "CUSTOM_DND5E.form.workflows.trigger.choices.abilityCheckRolled", group: rollsGroup },
+      { value: "savingThrowRolled", label: "CUSTOM_DND5E.form.workflows.trigger.choices.savingThrowRolled", group: rollsGroup },
+      { value: "skillCheckRolled", label: "CUSTOM_DND5E.form.workflows.trigger.choices.skillCheckRolled", group: rollsGroup },
+      { value: "toolCheckRolled", label: "CUSTOM_DND5E.form.workflows.trigger.choices.toolCheckRolled", group: rollsGroup },
+      { value: "initiativeRolled", label: "CUSTOM_DND5E.form.workflows.trigger.choices.initiativeRolled", group: rollsGroup },
+      { value: "concentrationSaveRolled", label: "CUSTOM_DND5E.form.workflows.trigger.choices.concentrationSaveRolled", group: rollsGroup },
+      { value: "deathSaveRolled", label: "CUSTOM_DND5E.form.workflows.trigger.choices.deathSaveRolled", group: rollsGroup },
+      { value: "damageRolled", label: "CUSTOM_DND5E.form.workflows.trigger.choices.damageRolled", group: rollsGroup },
       { value: "zeroHp", label: "CUSTOM_DND5E.form.workflows.trigger.choices.zeroHp", group: hpGroup },
       { value: "halfHp", label: "CUSTOM_DND5E.form.workflows.trigger.choices.halfHp", group: hpGroup },
       { value: "loseHp", label: "CUSTOM_DND5E.form.workflows.trigger.choices.loseHp", group: hpGroup },
@@ -185,7 +188,8 @@ function getTriggerChoices(entityType = "actor") {
     const rollsGroup = game.i18n.localize("CUSTOM_DND5E.form.workflows.trigger.group.rolls");
     const equipmentGroup = game.i18n.localize("CUSTOM_DND5E.form.workflows.trigger.group.equipment");
     choices.unshift(
-      { value: "rollAttack", label: "CUSTOM_DND5E.form.workflows.trigger.choices.rollAttack", group: rollsGroup },
+      { value: "attackRoll", label: "CUSTOM_DND5E.form.workflows.trigger.choices.attackRoll", group: rollsGroup },
+      { value: "attackRolled", label: "CUSTOM_DND5E.form.workflows.trigger.choices.attackRolled", group: rollsGroup },
       { value: "equip", label: "CUSTOM_DND5E.form.workflows.trigger.choices.equip", group: equipmentGroup },
       { value: "unequip", label: "CUSTOM_DND5E.form.workflows.trigger.choices.unequip", group: equipmentGroup }
     );
@@ -203,6 +207,11 @@ function getTriggerChoices(entityType = "actor") {
  */
 export function getConditionTriggerChoices(entityType = "actor") {
   const choices = [];
+
+  const customGroup = game.i18n.localize("CUSTOM_DND5E.form.workflows.trigger.group.custom");
+  choices.push(
+    { value: "customFormula", label: "CUSTOM_DND5E.form.workflows.trigger.choices.customFormula", group: customGroup }
+  );
 
   if ( entityType === "actor" ) {
     const hpGroup = game.i18n.localize("CUSTOM_DND5E.form.workflows.trigger.group.hitPoints");
@@ -305,6 +314,11 @@ export function getActionChoices(entityType = "actor") {
     { value: "toggleWorkflow", label: "CUSTOM_DND5E.toggleWorkflow", group: workflowsGroup }
   );
 
+  const rollsGroup = game.i18n.localize("CUSTOM_DND5E.form.workflows.action.group.rolls");
+  choices.push(
+    { value: "addRollBonus", label: "CUSTOM_DND5E.form.workflows.action.choices.addRollBonus", group: rollsGroup }
+  );
+
   if ( entityType === "item" ) {
     const itemsGroup = game.i18n.localize("CUSTOM_DND5E.form.workflows.action.group.items");
     choices.push(
@@ -373,14 +387,14 @@ function getRollSubtypeChoices(triggerEvent) {
   const choices = { "": game.i18n.localize("CUSTOM_DND5E.any") };
   let config;
   switch ( triggerEvent ) {
-    case "rollAbilityCheck":
-    case "rollSavingThrow":
+    case "abilityCheckRolled":
+    case "savingThrowRolled":
       config = CONFIG.DND5E.abilities;
       break;
-    case "rollSkill":
+    case "skillCheckRolled":
       config = CONFIG.DND5E.skills;
       break;
-    case "rollToolCheck":
+    case "toolCheckRolled":
       config = CONFIG.DND5E.tools;
       break;
     default:
@@ -599,7 +613,7 @@ export class WorkflowsEditForm extends CustomDnd5eForm {
     const triggersObj = group.triggers || {};
     const triggers = [];
     for ( const [triggerId, t] of Object.entries(triggersObj) ) {
-      const triggerEvent = t.event || "rollAttack";
+      const triggerEvent = t.event || "attackRolled";
       const isResultEvent = TRIGGERS_WITH_RESULT.includes(triggerEvent);
       const isValueEvent = TRIGGERS_WITH_VALUE.includes(triggerEvent);
 
@@ -685,6 +699,8 @@ export class WorkflowsEditForm extends CustomDnd5eForm {
         showWorkflowSelect: WORKFLOW_ACTIONS.includes(actionType),
         workflowKey: a.workflowKey || "",
         workflowChoices,
+        formula: a.formula || "",
+        showFormula: ROLL_BONUS_ACTIONS.includes(actionType),
         hasResultActions: Object.keys(onSuccessData).length > 0 || Object.keys(onFailureData).length > 0,
         actionChoices,
         conditionChoices,
@@ -828,6 +844,7 @@ export class WorkflowsEditForm extends CustomDnd5eForm {
     const counterActionGroup = row.querySelector(".custom-dnd5e-counter-action-group");
     const actionValueGroup = row.querySelector(".custom-dnd5e-action-value-group");
     const workflowGroup = row.querySelector(".custom-dnd5e-workflow-group");
+    const formulaGroup = row.querySelector(".custom-dnd5e-formula-group");
     const macroDrop = row.querySelector(".custom-dnd5e-macro-drop");
 
     if ( typeSelect ) {
@@ -842,6 +859,7 @@ export class WorkflowsEditForm extends CustomDnd5eForm {
         counterActionGroup?.classList.toggle("hidden", !COUNTER_ACTIONS.includes(typeSelect.value));
         actionValueGroup?.classList.toggle("hidden", !ACTIONS_WITH_VALUE.includes(typeSelect.value));
         workflowGroup?.classList.toggle("hidden", !WORKFLOW_ACTIONS.includes(typeSelect.value));
+        formulaGroup?.classList.toggle("hidden", !ROLL_BONUS_ACTIONS.includes(typeSelect.value));
 
         // Hide the wrapper when no child group is visible
         actionFields?.classList.toggle("hidden",
@@ -853,7 +871,8 @@ export class WorkflowsEditForm extends CustomDnd5eForm {
             tableGroup,
             updateGroup,
             counterActionGroup,
-            workflowGroup
+            workflowGroup,
+            formulaGroup
           ]
             .some(g => g && !g.classList.contains("hidden"))
         );
@@ -944,7 +963,7 @@ export class WorkflowsEditForm extends CustomDnd5eForm {
     const triggerId = foundry.utils.randomID();
     const context = {
       triggerId,
-      event: "rollAttack",
+      event: "attackRolled",
       value: "",
       showCounterSelect: false,
       counterKey: "",
@@ -955,9 +974,11 @@ export class WorkflowsEditForm extends CustomDnd5eForm {
       conditionId: "",
       showEffectNameInput: false,
       effectName: "",
+      showFormulaInput: false,
+      formula: "",
       showRollSubtype: false,
       rollSubtype: "",
-      rollSubtypeChoices: getRollSubtypeChoices("rollAttack"),
+      rollSubtypeChoices: getRollSubtypeChoices("attackRolled"),
       conditionChoicesForTrigger: getResultOperatorChoices(),
       triggerChoices: getTriggerChoices(this.entityType),
       conditionChoices: getConditionChoices(),
@@ -1010,6 +1031,8 @@ export class WorkflowsEditForm extends CustomDnd5eForm {
       showWorkflowSelect: false,
       workflowKey: "",
       workflowChoices: getWorkflowChoices(this.entityType, this.entity, this.setting),
+      formula: "",
+      showFormula: false,
       hasResultActions: false,
       actionChoices: getActionChoices(this.entityType),
       conditionChoices: getConditionChoices(),
@@ -1168,6 +1191,7 @@ export class WorkflowsEditForm extends CustomDnd5eForm {
       if ( !CONDITION_TRIGGERS.includes(trigger.event) ) delete trigger.conditionId;
       if ( !EFFECT_TRIGGERS.includes(trigger.event) ) delete trigger.effectName;
       if ( !ROLL_SUBTYPE_TRIGGERS.includes(trigger.event) || !trigger.rollSubtype ) delete trigger.rollSubtype;
+      delete trigger.formula;
       if ( !TRIGGERS_WITH_VALUE.includes(trigger.event) ) {
         // Non-value event → clear all condition fields
         delete trigger.result;
@@ -1201,6 +1225,7 @@ export class WorkflowsEditForm extends CustomDnd5eForm {
       if ( !UPDATE_ACTION_TYPES.includes(action.type) ) { delete action.updatePath; delete action.updateValue; }
       if ( !ACTIONS_WITH_VALUE.includes(action.type) ) delete action.actionValue;
       if ( !WORKFLOW_ACTIONS.includes(action.type) ) delete action.workflowKey;
+      if ( !ROLL_BONUS_ACTIONS.includes(action.type) ) delete action.formula;
     }
 
     // Coerce numeric fields

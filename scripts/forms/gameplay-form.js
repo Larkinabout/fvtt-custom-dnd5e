@@ -112,9 +112,9 @@ export class GameplayForm extends CustomDnd5eForm {
         },
         deathSavesRollMode: {
           choices: {
-            publicroll: "CHAT.RollPublic",
-            blindroll: "CHAT.RollBlind",
-            gmroll: "CHAT.RollPrivate"
+            publicroll: "CHAT.MODES.public",
+            blindroll: "CHAT.MODES.blind",
+            gmroll: "CHAT.MODES.gm"
           }
         },
         probabilisticDamage: {

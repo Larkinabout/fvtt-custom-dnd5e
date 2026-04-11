@@ -53,6 +53,7 @@ function registerSettings() {
  */
 function checkAverageDamageRoll(config, usageConfig, dialogConfig, messageConfig) {
   const activity = config.subject;
+  if ( !activity ) return true;
   const useAverageDamage = getSetting(constants.SETTING.USE.KEY);
   if ( activity.actor?.type !== useAverageDamage && useAverageDamage !== "both" ) return true;
   if ( canvas.tokens.controlled.length >= 4 && getSetting(CONSTANTS.MOB_DAMAGE.SETTING.ENABLE.KEY) ) return true;
