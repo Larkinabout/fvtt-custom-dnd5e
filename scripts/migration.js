@@ -55,6 +55,7 @@ export async function migrate() {
   if ( shouldRun("3.5.0") ) isSuccess &&= await migrateActorCounters();
   if ( shouldRun("4.2.0") ) isSuccess &&= await migrateDamageTypeLabels();
   if ( shouldRun("4.2.0") ) isSuccess &&= await migrateWorkflowTriggerEvents();
+  if ( shouldRun("5.1.0") ) isSuccess &&= await migrateRestTypesHitDiceFormula();
 
   if ( isSuccess ) {
     await setSetting(constants.VERSION.SETTING.KEY, moduleVersion);
@@ -696,6 +697,49 @@ export async function migrateWorkflowTriggerEvents() {
 /* -------------------------------------------- */
 
 /**
+ * Migrate `hitDiceFraction` values into the `hitDiceFormula` field.
+ * Existing fractions are translated to `@attributes.hd.max * <fraction>`.
+ * @returns {Promise<boolean>} Whether the migration was successful
+ */
+export async function migrateRestTypesHitDiceFormula() {
+  try {
+    Logger.debug("Migrating rest type Hit Dice fractions to formulas...");
+
+    const restTypes = getSetting(CONSTANTS.REST_TYPES.SETTING.CONFIG.KEY);
+    if ( !restTypes || typeof restTypes !== "object" ) return true;
+
+    const cloned = foundry.utils.deepClone(restTypes);
+    let changed = false;
+
+    for ( const entry of Object.values(cloned) ) {
+      if ( !entry || typeof entry !== "object" ) continue;
+      if ( "hitDiceFraction" in entry ) {
+        const fraction = entry.hitDiceFraction;
+        if ( entry.hitDiceFormula === undefined
+          && fraction !== null
+          && fraction !== ""
+          && Number(fraction) > 0 ) {
+          entry.hitDiceFormula = `@attributes.hd.max * ${fraction}`;
+        }
+        delete entry.hitDiceFraction;
+        changed = true;
+      }
+    }
+
+    if ( changed ) {
+      await setSetting(CONSTANTS.REST_TYPES.SETTING.CONFIG.KEY, cloned);
+      Logger.debug("Rest type Hit Dice fractions migrated.");
+    }
+    return true;
+  } catch (err) {
+    Logger.error(`Failed to migrate rest type Hit Dice fractions: ${err.message}`);
+    return false;
+  }
+}
+
+/* -------------------------------------------- */
+
+/**
  * All migration functions, exposed for testing via the module API.
  */
 export const migrations = {
@@ -704,6 +748,7 @@ export const migrations = {
   migrateAwardInspirationRollType,
   migrateDamageTypeLabels,
   migrateRerollInitiative,
+  migrateRestTypesHitDiceFormula,
   migrateRollMode,
   migrateWorkflowTriggerEvents
 };

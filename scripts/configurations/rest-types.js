@@ -211,7 +211,8 @@ function buildConfigEntry(key, data) {
     ...(data.spellSlotFraction !== undefined && { spellSlotFraction: Number(data.spellSlotFraction) }),
     ...(data.exhaustionDelta !== undefined && { exhaustionDelta: Number(data.exhaustionDelta) }),
     ...(data.recoverHitDice !== undefined && { recoverHitDice: data.recoverHitDice }),
-    ...(data.hitDiceFraction !== undefined && { hitDiceFraction: Number(data.hitDiceFraction) }),
+    ...(data.hitDiceFormula !== undefined && data.hitDiceFormula !== "" && { hitDiceFormula: String(data.hitDiceFormula) }),
+    ...(data.hitDiceRoundUp !== undefined && { hitDiceRoundUp: !!data.hitDiceRoundUp }),
     ...(data.recoverHitPoints !== undefined && { recoverHitPoints: data.recoverHitPoints }),
     ...(data.hitPointsFraction !== undefined && { hitPointsFraction: Number(data.hitPointsFraction) }),
     ...(data.recoverTemp !== undefined && { recoverTemp: data.recoverTemp }),
@@ -229,7 +230,7 @@ const hookIds = new Map();
  */
 function registerHooks(configData) {
   unregisterHooks();
-  registerHitDiceFractionHooks(configData);
+  registerHitDiceRecoveryHooks(configData);
   registerHitPointsFractionHook(configData);
   registerSpellSlotFractionHook(configData);
 }
@@ -249,17 +250,41 @@ function unregisterHooks() {
 /* -------------------------------------------- */
 
 /**
- * Register hooks to apply fractional recovery to Hit Dice.
+ * Register hooks to override Hit Dice recovery.
  * @param {object} configData Config data
  */
-function registerHitDiceFractionHooks(configData) {
+function registerHitDiceRecoveryHooks(configData) {
   for ( const [type, restType] of Object.entries(configData) ) {
-    if ( restType.hitDiceFraction === undefined || restType.hitDiceFraction >= 1 ) continue;
+    if ( !restType.hitDiceFormula ) continue;
     const hookName = `dnd5e.${type}Rest`;
     const id = Hooks.on(hookName, (actor, config) => {
-      config.fraction = restType.hitDiceFraction;
+      const recovered = evaluateHitDiceFormula(restType.hitDiceFormula, actor, restType.hitDiceRoundUp);
+      if ( recovered === null ) return;
+      const hd = actor?.system?.attributes?.hd;
+      const max = (hd?.spent ?? hd?.max ?? recovered);
+      config.maxHitDice = Math.max(0, Math.min(recovered, max));
     });
     hookIds.set(hookName, id);
+  }
+}
+
+/* -------------------------------------------- */
+
+/**
+ * Evaluate a Hit Dice recovery formula against an actor's roll data.
+ * @param {string} formula
+ * @param {Actor} actor
+ * @param {boolean} roundUp Whether to round the result up
+ * @returns {number|null} Number of HD to recover
+ */
+function evaluateHitDiceFormula(formula, actor, roundUp) {
+  try {
+    const rollData = actor?.getRollData() ?? {};
+    const result = new Roll(formula, rollData).evaluateSync({ strict: false }).total;
+    if ( !Number.isFinite(result) ) return null;
+    return roundUp ? Math.ceil(result) : Math.floor(result);
+  } catch {
+    return null;
   }
 }
 

@@ -135,11 +135,18 @@
                 </div>
             </div>
             <div class="form-group">
-                <label class="flex2" style="min-width:80px;">{{localize "CUSTOM_DND5E.hitDiceFraction.label"}}</label>
+                <label class="flex2" style="min-width:80px;">{{localize "CUSTOM_DND5E.hitDiceFormula.label"}}</label>
                 <div class="form-fields">
-                    <input id="custom-dnd5e-hit-dice-fraction" name="{{key}}.hitDiceFraction" type="number" value="{{hitDiceFraction}}" step="0.05" min="0" max="1">
+                    <input id="custom-dnd5e-hit-dice-formula" name="{{key}}.hitDiceFormula" type="text" value="{{hitDiceFormula}}" placeholder="@attributes.hd.max * 0.5">
                 </div>
-                <p class="hint">{{localize "CUSTOM_DND5E.hitDiceFraction.hint"}}</p>
+                <p class="hint">{{localize "CUSTOM_DND5E.hitDiceFormula.hint"}}</p>
+            </div>
+            <div class="form-group">
+                <label class="flex2" style="min-width:80px;">{{localize "CUSTOM_DND5E.hitDiceRoundUp.label"}}</label>
+                <div class="form-fields">
+                    <dnd5e-checkbox id="custom-dnd5e-hit-dice-round-up" name="{{key}}.hitDiceRoundUp"{{#if hitDiceRoundUp}} checked{{/if}}></dnd5e-checkbox>
+                </div>
+                <p class="hint">{{localize "CUSTOM_DND5E.hitDiceRoundUp.hint"}}</p>
             </div>
         </fieldset>
 
