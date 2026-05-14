@@ -66,7 +66,7 @@ export class CountersFormEntity extends CountersForm {
     // world counter value entries (which only have value/success/failure) are preserved
     // in this.counters but not shown in the form.
     const displayCounters = Object.fromEntries(
-      Object.entries(this.counters).filter(([_, c]) => c.type !== undefined)
+      Object.entries(this.counters).filter(([_, c]) => c && c.type !== undefined)
     );
     return {
       counters: displayCounters
@@ -151,6 +151,11 @@ export class CountersFormEntity extends CountersForm {
       if ( ignore.includes(key.split(".").pop()) ) { return; }
       foundry.utils.setProperty(this.counters, key, value);
     });
+
+    // Strip null/undefined entries
+    for ( const key of Object.keys(this.counters) ) {
+      if ( this.counters[key] == null ) delete this.counters[key];
+    }
 
     await unsetFlag(this.entity, "counters");
     await setFlag(this.entity, "counters", this.counters);

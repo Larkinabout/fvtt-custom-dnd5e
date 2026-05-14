@@ -1,9 +1,9 @@
 <section class="tab {{ tab.cssClass }}" data-tab="{{ tab.id }}" data-group="{{ tab.group }}">
     <div id="custom-dnd5e-counters" class="custom-dnd5e-counters">
         {{#if editable}}
-        <a id="custom-dnd5e-counters-edit-button" class="config-button" data-tooltip="{{localize "CUSTOM_DND5E.configureCounters"}}" aria-label="{{localize "CUSTOM_DND5E.configureCounters"}}">
+        <button type="button" id="custom-dnd5e-counters-edit-button" class="config-button unbutton" data-tooltip="{{localize "CUSTOM_DND5E.configureCounters"}}" aria-label="{{localize "CUSTOM_DND5E.configureCounters"}}">
             <i class="fas fa-cog"></i>
-        </a>
+        </button>
         {{/if}}
         <ul>
             {{#each counters as |counter key|}}
