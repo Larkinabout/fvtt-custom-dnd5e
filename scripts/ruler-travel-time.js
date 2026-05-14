@@ -29,7 +29,7 @@ function registerSettings() {
       name: game.i18n.localize(constants.SETTING.NAME),
       hint: game.i18n.localize(constants.SETTING.HINT),
       scope: "world",
-      config: true,
+      config: false,
       requiresReload: true,
       type: Boolean,
       default: false

@@ -21,7 +21,7 @@ function registerSettings() {
       name: game.i18n.localize("CUSTOM_DND5E.setting.tokenBorderShape.name"),
       hint: game.i18n.localize("CUSTOM_DND5E.setting.tokenBorderShape.hint"),
       scope: "world",
-      config: true,
+      config: false,
       requiresReload: true,
       type: String,
       default: "square",

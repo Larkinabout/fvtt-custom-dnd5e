@@ -680,6 +680,19 @@ export const CONSTANTS = {
       }
     }
   },
+  INTERFACE: {
+    MENU: {
+      KEY: "interface-menu",
+      HINT: "CUSTOM_DND5E.menu.interface.hint",
+      ICON: "fas fa-display",
+      LABEL: "CUSTOM_DND5E.menu.interface.label",
+      NAME: "CUSTOM_DND5E.menu.interface.name"
+    },
+    TEMPLATE: {
+      FORM: "modules/custom-dnd5e/templates/interface-form.hbs"
+    },
+    UUID: "Compendium.custom-dnd5e.custom-dnd5e-journals.JournalEntry.iFcVxKpMyZrNqW8t"
+  },
   INSPIRATION: {
     SETTING: {
       AWARD_INSPIRATION_DICE_VALUE: {
@@ -1093,6 +1106,20 @@ export const CONSTANTS = {
       },
       HUD_IMPROVEMENTS: {
         KEY: "token-hud-improvements"
+      }
+    }
+  },
+  TOKEN_DISTANCE: {
+    SETTING: {
+      ENABLE: {
+        KEY: "enable-token-distance",
+        HINT: "CUSTOM_DND5E.setting.enableTokenDistance.hint",
+        NAME: "CUSTOM_DND5E.setting.enableTokenDistance.name"
+      },
+      VIEW_ROLE: {
+        KEY: "token-distance-view-role",
+        HINT: "CUSTOM_DND5E.setting.tokenDistanceViewRole.hint",
+        NAME: "CUSTOM_DND5E.setting.tokenDistanceViewRole.name"
       }
     }
   },

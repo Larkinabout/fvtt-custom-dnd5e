@@ -1,0 +1,129 @@
+import { CONSTANTS, JOURNAL_HELP_BUTTON, MODULE } from "../constants.js";
+import { getSetting, setSetting, resetSetting } from "../utils.js";
+import { CustomDnd5eForm } from "./custom-dnd5e-form.js";
+
+const TOKEN = CONSTANTS.TOKEN.SETTING;
+const TD = CONSTANTS.TOKEN_DISTANCE.SETTING;
+const RAD = CONSTANTS.RADIAL_STATUS_EFFECTS.SETTING;
+const RULER = CONSTANTS.RULER_TRAVEL_TIME.SETTING;
+const CURSOR = CONSTANTS.SHOW_PRESSED_KEYS.SETTING;
+const CHAT = CONSTANTS.CHAT_COMMANDS.SETTING;
+
+/**
+ * Class representing the Configure Interface Form.
+ */
+export class InterfaceForm extends CustomDnd5eForm {
+  constructor(...args) {
+    super(args);
+    this.type = "interface";
+    this.headerButton = JOURNAL_HELP_BUTTON;
+    this.headerButton.uuid = CONSTANTS.INTERFACE.UUID;
+  }
+
+  /* -------------------------------------------- */
+
+  static DEFAULT_OPTIONS = {
+    actions: {
+      reset: InterfaceForm.reset
+    },
+    form: {
+      handler: InterfaceForm.submit
+    },
+    id: `${MODULE.ID}-interface-form`,
+    window: {
+      title: "CUSTOM_DND5E.form.interface.title"
+    }
+  };
+
+  /* -------------------------------------------- */
+
+  static PARTS = {
+    form: {
+      template: CONSTANTS.INTERFACE.TEMPLATE.FORM
+    }
+  };
+
+  /* -------------------------------------------- */
+
+  async _prepareContext() {
+    return {
+      tokenBorderShape: getSetting(TOKEN.BORDER_SHAPE.KEY),
+      radialStatusEffects: getSetting(RAD.KEY),
+      tokenHudImprovements: getSetting(TOKEN.HUD_IMPROVEMENTS.KEY),
+      enableTokenDistance: getSetting(TD.ENABLE.KEY),
+      tokenDistanceViewRole: getSetting(TD.VIEW_ROLE.KEY),
+      applyElevationToSelectedTokens: getSetting(TOKEN.APPLY_ELEVATION_TO_SELECTED_TOKENS.KEY),
+      toggleStatusEffectOnSelectedTokens: getSetting(TOKEN.TOGGLE_STATUS_EFFECT_ON_SELECTED_TOKENS.KEY),
+      rulerTravelTime: getSetting(RULER.KEY),
+      showPressedKeys: getSetting(CURSOR.KEY),
+      chatCommands: getSetting(CHAT.KEY),
+      selects: {
+        tokenBorderShape: {
+          choices: {
+            circle: "CUSTOM_DND5E.circle",
+            square: "CUSTOM_DND5E.square"
+          }
+        },
+        tokenDistanceViewRole: {
+          choices: {
+            1: "USER.RolePlayer",
+            2: "USER.RoleTrusted",
+            3: "USER.RoleAssistant",
+            4: "USER.RoleGamemaster"
+          }
+        }
+      }
+    };
+  }
+
+  /* -------------------------------------------- */
+
+  static async reset() {
+    const reset = async () => {
+      await Promise.all([
+        resetSetting(TOKEN.BORDER_SHAPE.KEY),
+        resetSetting(RAD.KEY),
+        resetSetting(TOKEN.HUD_IMPROVEMENTS.KEY),
+        resetSetting(TD.ENABLE.KEY),
+        resetSetting(TD.VIEW_ROLE.KEY),
+        resetSetting(TOKEN.APPLY_ELEVATION_TO_SELECTED_TOKENS.KEY),
+        resetSetting(TOKEN.TOGGLE_STATUS_EFFECT_ON_SELECTED_TOKENS.KEY),
+        resetSetting(RULER.KEY),
+        resetSetting(CURSOR.KEY),
+        resetSetting(CHAT.KEY)
+      ]);
+      this.render(true);
+    };
+
+    await foundry.applications.api.DialogV2.confirm({
+      window: { title: game.i18n.localize("CUSTOM_DND5E.dialog.reset.title") },
+      content: `<p>${game.i18n.localize("CUSTOM_DND5E.dialog.reset.content")}</p>`,
+      modal: true,
+      yes: {
+        label: game.i18n.localize("CUSTOM_DND5E.yes"),
+        callback: async () => reset()
+      },
+      no: { label: game.i18n.localize("CUSTOM_DND5E.no") }
+    });
+  }
+
+  /* -------------------------------------------- */
+
+  static async submit(event, form, formData) {
+    const data = formData.object;
+    await Promise.all([
+      setSetting(TOKEN.BORDER_SHAPE.KEY, data.tokenBorderShape),
+      setSetting(RAD.KEY, data.radialStatusEffects),
+      setSetting(TOKEN.HUD_IMPROVEMENTS.KEY, data.tokenHudImprovements),
+      setSetting(TD.ENABLE.KEY, data.enableTokenDistance),
+      setSetting(TD.VIEW_ROLE.KEY, Number(data.tokenDistanceViewRole)),
+      setSetting(TOKEN.APPLY_ELEVATION_TO_SELECTED_TOKENS.KEY, data.applyElevationToSelectedTokens),
+      setSetting(TOKEN.TOGGLE_STATUS_EFFECT_ON_SELECTED_TOKENS.KEY, data.toggleStatusEffectOnSelectedTokens),
+      setSetting(RULER.KEY, data.rulerTravelTime),
+      setSetting(CURSOR.KEY, data.showPressedKeys),
+      setSetting(CHAT.KEY, data.chatCommands)
+    ]);
+
+    foundry.applications.settings.SettingsConfig.reloadConfirm();
+  }
+}

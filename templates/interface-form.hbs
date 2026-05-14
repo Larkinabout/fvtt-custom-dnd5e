@@ -1,0 +1,110 @@
+<div id="custom-dnd5e-form" class="standard-form">
+    <div class="standard-form scrollable">
+        <fieldset>
+            <legend>
+                <span>{{localize "CUSTOM_DND5E.tokens"}}</span>
+                <button type="button" class="unbutton control-button" data-action="help" data-uuid="Compendium.custom-dnd5e.custom-dnd5e-journals.JournalEntry.iFcVxKpMyZrNqW8t.JournalEntryPage.tKpMxV2bRsNqWy8k" data-tooltip="{{localize "CUSTOM_DND5E.openGuide"}}" aria-label="{{localize "CUSTOM_DND5E.openGuide"}}">
+                    <i class="fas fa-circle-info" inert></i>
+                </button>
+            </legend>
+            <div class="form-group">
+                <label>{{localize "CUSTOM_DND5E.setting.tokenBorderShape.name"}}</label>
+                <div class="form-fields">
+                    <select id="custom-dnd5e-token-border-shape" name="tokenBorderShape">
+                        {{selectOptions selects.tokenBorderShape.choices selected=tokenBorderShape localize=true}}
+                    </select>
+                </div>
+                <p class="hint">{{localize "CUSTOM_DND5E.setting.tokenBorderShape.hint"}}</p>
+            </div>
+            <div class="form-group">
+                <label>{{localize "CUSTOM_DND5E.setting.radialStatusEffects.name"}}</label>
+                <div class="form-fields">
+                    <dnd5e-checkbox id="custom-dnd5e-radial-status-effects" name="radialStatusEffects"{{#if radialStatusEffects}} checked{{/if}}></dnd5e-checkbox>
+                </div>
+                <p class="hint">{{localize "CUSTOM_DND5E.setting.radialStatusEffects.hint"}}</p>
+            </div>
+            <div class="form-group">
+                <label>{{localize "CUSTOM_DND5E.setting.tokenHudImprovements.name"}}</label>
+                <div class="form-fields">
+                    <dnd5e-checkbox id="custom-dnd5e-token-hud-improvements" name="tokenHudImprovements"{{#if tokenHudImprovements}} checked{{/if}}></dnd5e-checkbox>
+                </div>
+                <p class="hint">{{localize "CUSTOM_DND5E.setting.tokenHudImprovements.hint"}}</p>
+            </div>
+            <div class="form-group">
+                <label>{{localize "CUSTOM_DND5E.setting.enableTokenDistance.name"}}</label>
+                <div class="form-fields">
+                    <dnd5e-checkbox id="custom-dnd5e-enable-token-distance" name="enableTokenDistance"{{#if enableTokenDistance}} checked{{/if}}></dnd5e-checkbox>
+                </div>
+                <p class="hint">{{localize "CUSTOM_DND5E.setting.enableTokenDistance.hint"}}</p>
+            </div>
+            <div class="form-group">
+                <label>{{localize "CUSTOM_DND5E.setting.tokenDistanceViewRole.name"}}</label>
+                <div class="form-fields">
+                    <select id="custom-dnd5e-token-distance-view-role" name="tokenDistanceViewRole">
+                        {{selectOptions selects.tokenDistanceViewRole.choices selected=tokenDistanceViewRole localize=true}}
+                    </select>
+                </div>
+                <p class="hint">{{localize "CUSTOM_DND5E.setting.tokenDistanceViewRole.hint"}}</p>
+            </div>
+            <div class="form-group">
+                <label>{{localize "CUSTOM_DND5E.setting.applyElevationToSelectedTokens.name"}}</label>
+                <div class="form-fields">
+                    <dnd5e-checkbox id="custom-dnd5e-apply-elevation-to-selected-tokens" name="applyElevationToSelectedTokens"{{#if applyElevationToSelectedTokens}} checked{{/if}}></dnd5e-checkbox>
+                </div>
+                <p class="hint">{{localize "CUSTOM_DND5E.setting.applyElevationToSelectedTokens.hint"}}</p>
+            </div>
+            <div class="form-group">
+                <label>{{localize "CUSTOM_DND5E.setting.toggleStatusEffectOnSelectedTokens.name"}}</label>
+                <div class="form-fields">
+                    <dnd5e-checkbox id="custom-dnd5e-toggle-status-effect-on-selected-tokens" name="toggleStatusEffectOnSelectedTokens"{{#if toggleStatusEffectOnSelectedTokens}} checked{{/if}}></dnd5e-checkbox>
+                </div>
+                <p class="hint">{{localize "CUSTOM_DND5E.setting.toggleStatusEffectOnSelectedTokens.hint"}}</p>
+            </div>
+        </fieldset>
+        <fieldset>
+            <legend>
+                <span>{{localize "CUSTOM_DND5E.canvas"}}</span>
+                <button type="button" class="unbutton control-button" data-action="help" data-uuid="Compendium.custom-dnd5e.custom-dnd5e-journals.JournalEntry.iFcVxKpMyZrNqW8t.JournalEntryPage.cNvBjMx5rZh9LnYt" data-tooltip="{{localize "CUSTOM_DND5E.openGuide"}}" aria-label="{{localize "CUSTOM_DND5E.openGuide"}}">
+                    <i class="fas fa-circle-info" inert></i>
+                </button>
+            </legend>
+            <div class="form-group">
+                <label>{{localize "CUSTOM_DND5E.setting.rulerTravelTime.name"}}</label>
+                <div class="form-fields">
+                    <dnd5e-checkbox id="custom-dnd5e-ruler-travel-time" name="rulerTravelTime"{{#if rulerTravelTime}} checked{{/if}}></dnd5e-checkbox>
+                </div>
+                <p class="hint">{{localize "CUSTOM_DND5E.setting.rulerTravelTime.hint"}}</p>
+            </div>
+            <div class="form-group">
+                <label>{{localize "CUSTOM_DND5E.setting.showPressedKeys.name"}}</label>
+                <div class="form-fields">
+                    <dnd5e-checkbox id="custom-dnd5e-show-pressed-keys" name="showPressedKeys"{{#if showPressedKeys}} checked{{/if}}></dnd5e-checkbox>
+                </div>
+                <p class="hint">{{localize "CUSTOM_DND5E.setting.showPressedKeys.hint"}}</p>
+            </div>
+        </fieldset>
+        <fieldset>
+            <legend>
+                <span>{{localize "CUSTOM_DND5E.chat"}}</span>
+                <button type="button" class="unbutton control-button" data-action="help" data-uuid="Compendium.custom-dnd5e.custom-dnd5e-journals.JournalEntry.iFcVxKpMyZrNqW8t.JournalEntryPage.cHbDxV2pKs5RmTbW" data-tooltip="{{localize "CUSTOM_DND5E.openGuide"}}" aria-label="{{localize "CUSTOM_DND5E.openGuide"}}">
+                    <i class="fas fa-circle-info" inert></i>
+                </button>
+            </legend>
+            <div class="form-group">
+                <label>{{localize "CUSTOM_DND5E.setting.chatCommands.name"}}</label>
+                <div class="form-fields">
+                    <dnd5e-checkbox id="custom-dnd5e-chat-commands" name="chatCommands"{{#if chatCommands}} checked{{/if}}></dnd5e-checkbox>
+                </div>
+                <p class="hint">{{localize "CUSTOM_DND5E.setting.chatCommands.hint"}}</p>
+            </div>
+        </fieldset>
+    </div>
+    <footer class="form-footer" data-application-part="footer">
+        <button type="button" data-action="reset" class="reset-button bright">
+            <i class="fas fa-arrow-rotate-left"></i>{{localize "CUSTOM_DND5E.form.button.reset.label"}}
+        </button>
+        <button type="submit" class="save-button">
+            <i class="fas fa-solid fa-floppy-disk"></i>{{localize "CUSTOM_DND5E.form.button.save.label"}}
+        </button>
+    </footer>
+</div>

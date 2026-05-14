@@ -42,7 +42,7 @@ function registerSettings() {
       name: game.i18n.localize("CUSTOM_DND5E.setting.radialStatusEffects.name"),
       hint: game.i18n.localize("CUSTOM_DND5E.setting.radialStatusEffects.hint"),
       scope: "world",
-      config: true,
+      config: false,
       requiresReload: true,
       type: Boolean,
       default: false

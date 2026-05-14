@@ -21,6 +21,7 @@ For full attribution and licensing details, see [ATTRIBUTION.md](ATTRIBUTION.md)
 - [Workflows](#workflows)
 - [Configurations](#configurations)
 - [Configure Encumbrance](#configure-encumbrance)
+- [Configure Interface](#configure-interface)
 - [Configure Rolls](#configure-rolls)
 - [Actor Sheet](#actor-sheet)
 - [Item Sheet](#item-sheet)
@@ -31,6 +32,7 @@ For full attribution and licensing details, see [ATTRIBUTION.md](ATTRIBUTION.md)
 - [Animations](#animations)
 - [Radial Status Effects](#radial-status-effects)
 - [Token Border Shape](#token-border-shape)
+- [Token Distance](#token-distance)
 - [Token HUD Improvements](#token-hud-improvements)
 - [Apply Elevation to Selected Tokens](#apply-elevation-to-selected-tokens)
 - [Toggle Status Effects on Selected Tokens](#toggle-status-effects-on-selected-tokens)
@@ -396,6 +398,16 @@ Customise encumbrance labels, icons, thresholds and weight modifiers. Includes a
 
 ---
 
+## Configure Interface
+
+Group of UI and canvas settings for tokens, canvas overlays, and chat. Includes Token Border Shape, Radial Status Effects, Token HUD Improvements, Token Distance, Apply Elevation to Selected Tokens, Toggle Status Effects on Selected Tokens, Ruler Travel Time, Show Pressed Keys, and Chat Commands.
+
+For help and advice on interface settings, either click the info buttons in the Configure Interface window or open the Interface journal within the Custom D&D 5e compendium.
+
+<p align="right">(<a href="#custom-dd-5e">back to top</a>)</p>
+
+---
+
 ## Configure Rolls
 
 Customize the base die and roll mode for Ability Checks, Attack Rolls, Concentration Saving Throws, Initiative Rolls, Saving Throws, Skills Checks and Tool Checks.
@@ -547,6 +559,25 @@ Choose the shape of the token's border when it is selected or hovered.
     <summary>See Image</summary>
 
 ![Custom D&D 5e Token Border Shape](./.github/readme/custom-dnd5e-token-border-shape.png)
+
+</details>
+
+<p align="right">(<a href="#custom-dd-5e">back to top</a>)</p>
+
+---
+
+## Token Distance
+
+Display the distance to a token when hovering over it. Hold the configurable keybinding (Alt by default) to show distances to all visible tokens at once.
+
+The source token is the user's currently controlled token, or the first token of their assigned character.
+
+A minimum user role can be configured to control which users see distance labels.
+
+<details>
+    <summary>See Video</summary>
+
+![Custom D&D 5e Token Distance](./.github/readme/custom-dnd5e-token-distance.gif)
 
 </details>
 

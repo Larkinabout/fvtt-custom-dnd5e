@@ -1,0 +1,143 @@
+{
+  "name": "Interface",
+  "_id": "iFcVxKpMyZrNqW8t",
+  "pages": [
+    {
+      "sort": 100000,
+      "name": "Tokens",
+      "type": "text",
+      "_id": "tKpMxV2bRsNqWy8k",
+      "system": {},
+      "title": {
+        "show": true,
+        "level": 1
+      },
+      "image": {},
+      "text": {
+        "format": 1,
+        "content": "<h2 class=\"custom-dnd5e-h2\">Token Border Shape</h2><p>Choose the shape of the token's border when it is selected or hovered. Options include circle and square. The default is square.</p><p>Requires a reload when changed.</p><h2 class=\"custom-dnd5e-h2\">Radial Status Effects</h2><p>When enabled, status effect icons are displayed in a circular layout around the token rather than the default grid layout. Icons are shown with a circular background.</p><p>Requires a reload when changed.</p><h2 class=\"custom-dnd5e-h2\">Token HUD Improvements</h2><p>When enabled, improves the Token HUD with the following features:</p><ul><li><p><strong>Hover-to-open palettes</strong>. Hovering over the Status Effects or Movement Actions buttons opens the palette automatically.</p></li><li><p><strong>Button styling</strong>. Enhanced feedback for status effect icons and control buttons.</p></li><li><p><strong>Fixed HUD size</strong>. The Token HUD maintains a consistent size on screen regardless of the canvas zoom level.</p></li></ul><p>Requires a reload when changed.</p><h2 class=\"custom-dnd5e-h2\">Token Distance</h2><p>When enabled, displays the distance to a token when hovering over it. Holding the configurable keybinding (Alt by default) shows distances to all visible tokens at once.</p><p>The source token is the user's currently controlled token, or the first token of their assigned character.</p><p>Requires a reload when changed.</p><h2 class=\"custom-dnd5e-h2\">Token Distance View Role</h2><p>The minimum role required to see token distance labels. For example, set this to <em>Assistant</em> to hide distances from players. The default is <em>Player</em>, so everyone with at least Player permissions sees distances.</p><h2 class=\"custom-dnd5e-h2\">Apply Elevation to Selected</h2><p>When applying elevation via a token's HUD, apply it to all selected tokens. This is useful for moving a group of tokens to the same elevation at once, such as when the party ascends a staircase or flies to a new height.</p><p>Requires a reload when changed.</p><h2 class=\"custom-dnd5e-h2\">Toggle Status Effects on Selected</h2><p>When toggling a status effect via a token's HUD, toggle it for all selected tokens. This is useful for applying or removing a condition from multiple tokens at once, such as applying the Frightened condition to a group of enemies.</p><p>Requires a reload when changed.</p>"
+      },
+      "video": {
+        "controls": true,
+        "volume": 0.5
+      },
+      "src": null,
+      "ownership": {
+        "default": -1,
+        "0wJRsV2r9Hv1a7q0": 3
+      },
+      "flags": {},
+      "_stats": {
+        "compendiumSource": null,
+        "duplicateSource": null,
+        "coreVersion": "14.361",
+        "systemId": "dnd5e",
+        "systemVersion": "5.2.5",
+        "createdTime": 1778500000000,
+        "modifiedTime": 1778789279675,
+        "lastModifiedBy": "2Ab5BheRvt8es88G",
+        "exportSource": null
+      },
+      "category": null,
+      "_key": "!journal.pages!iFcVxKpMyZrNqW8t.tKpMxV2bRsNqWy8k"
+    },
+    {
+      "sort": 200000,
+      "name": "Canvas",
+      "type": "text",
+      "_id": "cNvBjMx5rZh9LnYt",
+      "system": {},
+      "title": {
+        "show": true,
+        "level": 1
+      },
+      "image": {},
+      "text": {
+        "format": 1,
+        "content": "<h2 class=\"custom-dnd5e-h2\">Ruler Travel Time</h2><p>When enabled, the measuring tool displays estimated D&amp;D 5e travel time below the distance measurement. Three travel paces are shown:</p><ul><li><span class=\"fa-solid fa-person-running\" style=\"display:inline-block;width:1.25em;text-align:center\">&#8203;</span> <strong>Fast pace</strong> &mdash; 400 feet per minute, 4 miles per hour, 30 miles per day</li><li><span class=\"fa-solid fa-person-walking\" style=\"display:inline-block;width:1.25em;text-align:center\">&#8203;</span> <strong>Normal pace</strong> &mdash; 300 feet per minute, 3 miles per hour, 24 miles per day</li><li><span class=\"fa-solid fa-person-hiking\" style=\"display:inline-block;width:1.25em;text-align:center\">&#8203;</span> <strong>Slow pace</strong> &mdash; 200 feet per minute, 2 miles per hour, 18 miles per day</li></ul><p>When the ruler is started from a hovered token, the travel time is based on the token's current movement action (Walk, Fly, Swim, etc.) and speed. The movement type is displayed above the paces. When the ruler is started from empty space, the standard 30 feet per round speed is used.</p><p>Travel time uses 8-hour travel days as per the standard D&amp;D 5e rules. Travel time is not displayed during combat. This setting only applies when the grid units are set to feet or miles.</p><p>Requires a reload when changed.</p><h2 class=\"custom-dnd5e-h2\">Show Pressed Keys</h2><p>When enabled, an icon appears near the cursor when the Skip Dialog, Advantage, or Disadvantage keys are pressed while hovering over a rollable element such as an attack button or item use button. This provides a visual indicator of the active modifier before clicking.</p><p>Requires a reload when changed.</p>"
+      },
+      "video": {
+        "controls": true,
+        "volume": 0.5
+      },
+      "src": null,
+      "ownership": {
+        "default": -1,
+        "0wJRsV2r9Hv1a7q0": 3
+      },
+      "flags": {},
+      "_stats": {
+        "compendiumSource": null,
+        "duplicateSource": null,
+        "coreVersion": "13.351",
+        "systemId": "dnd5e",
+        "systemVersion": "5.2.5",
+        "createdTime": 1778500000000,
+        "modifiedTime": 1778500000000,
+        "lastModifiedBy": "0wJRsV2r9Hv1a7q0",
+        "exportSource": null
+      },
+      "category": null,
+      "_key": "!journal.pages!iFcVxKpMyZrNqW8t.cNvBjMx5rZh9LnYt"
+    },
+    {
+      "sort": 300000,
+      "name": "Chat",
+      "type": "text",
+      "_id": "cHbDxV2pKs5RmTbW",
+      "system": {},
+      "title": {
+        "show": true,
+        "level": 1
+      },
+      "image": {},
+      "text": {
+        "format": 1,
+        "content": "<h2 class=\"custom-dnd5e-h2\">Chat Commands</h2><p>When enabled, the following slash commands can be entered into the chat input:</p><ul><li><code>/attack</code> or <code>/a</code> &mdash; Roll an attack.</li><li><code>/damage</code> or <code>/d</code> &mdash; Roll damage.</li><li><code>/heal</code>, <code>/healing</code>, or <code>/h</code> &mdash; Roll healing.</li><li><code>/save</code> or <code>/s</code> &mdash; Request a saving throw.</li><li><code>/check</code> or <code>/c</code> &mdash; Request an ability check.</li><li><code>/skill</code> or <code>/k</code> &mdash; Request a skill check.</li><li><code>/tool</code> or <code>/t</code> &mdash; Request a tool check.</li><li><code>/concentration</code> or <code>/con</code> &mdash; Request a Concentration saving throw.</li><li><code>/item</code> &mdash; Use an item.</li></ul><p>Each command accepts a key=value configuration string after the command name. Multiple sub-configurations can be split with <code>&amp;</code>.</p><p>Requires a reload when changed.</p>"
+      },
+      "video": {
+        "controls": true,
+        "volume": 0.5
+      },
+      "src": null,
+      "ownership": {
+        "default": -1,
+        "0wJRsV2r9Hv1a7q0": 3
+      },
+      "flags": {},
+      "_stats": {
+        "compendiumSource": null,
+        "duplicateSource": null,
+        "coreVersion": "13.351",
+        "systemId": "dnd5e",
+        "systemVersion": "5.2.5",
+        "createdTime": 1778500000000,
+        "modifiedTime": 1778500000000,
+        "lastModifiedBy": "0wJRsV2r9Hv1a7q0",
+        "exportSource": null
+      },
+      "category": null,
+      "_key": "!journal.pages!iFcVxKpMyZrNqW8t.cHbDxV2pKs5RmTbW"
+    }
+  ],
+  "folder": null,
+  "sort": 0,
+  "ownership": {
+    "default": 0,
+    "0wJRsV2r9Hv1a7q0": 3
+  },
+  "flags": {},
+  "_stats": {
+    "compendiumSource": null,
+    "duplicateSource": null,
+    "coreVersion": "13.351",
+    "systemId": "dnd5e",
+    "systemVersion": "5.2.5",
+    "createdTime": 1778500000000,
+    "modifiedTime": 1778500000000,
+    "lastModifiedBy": "0wJRsV2r9Hv1a7q0",
+    "exportSource": null
+  },
+  "categories": [],
+  "_key": "!journal!iFcVxKpMyZrNqW8t"
+}

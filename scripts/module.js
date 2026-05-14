@@ -55,6 +55,7 @@ import { register as registerItemSheet } from "./item-sheet.js";
 import { register as registerLanguages, setConfig as setLanguages } from "./configurations/languages.js";
 import { register as registerLootTypes, setConfig as setLootTypes } from "./configurations/loot-types.js";
 import { register as registerMigration, migrate, migrations } from "./migration.js";
+import { register as registerInterface } from "./interface.js";
 import { register as registerMisc, setMaxLevel } from "./misc.js";
 import { register as registerRestTypes, setConfig as setRestTypes } from "./configurations/rest-types.js";
 import { register as registerRolls } from "./rolls.js";
@@ -67,6 +68,7 @@ import { register as registerTidy5eCounters } from "./counters/counters-tidy5e.j
 import { register as registerWorkflows, workflows } from "./workflows/workflows.js";
 import { register as registerWorkflowsTidy5e } from "./workflows/workflows-tidy5e.js";
 import { register as registerTokenBorder } from "./token/token-border.js";
+import { register as registerTokenDistance } from "./gameplay/token-distance.js";
 import { register as registerTokenEffects } from "./token/token-effects.js";
 import { register as registerTokenHudImprovements } from "./token/token-hud-improvements.js";
 import { register as registerTools, setConfig as setTools } from "./configurations/tools.js";
@@ -176,6 +178,7 @@ Hooks.on("init", async () => {
   registerCharacterSheet();
 
   registerGameplay();
+  registerInterface();
   registerActivities();
   registerCounters();
   registerTidy5eCounters();
@@ -225,6 +228,7 @@ Hooks.on("init", async () => {
   registerRadialStatusEffects();
   registerRulerTravelTime();
   registerTokenBorder();
+  registerTokenDistance();
   registerTokenEffects();
   registerTokenHudImprovements();
   registerDebug();

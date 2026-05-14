@@ -50,20 +50,7 @@ function registerSettings() {
       name: game.i18n.localize(CONSTANTS.TOKEN.SETTING.TOGGLE_STATUS_EFFECT_ON_SELECTED_TOKENS.NAME),
       hint: game.i18n.localize(CONSTANTS.TOKEN.SETTING.TOGGLE_STATUS_EFFECT_ON_SELECTED_TOKENS.HINT),
       scope: "world",
-      config: true,
-      type: Boolean,
-      default: false,
-      requiresReload: true
-    }
-  );
-
-  registerSetting(
-    CONSTANTS.TOKEN.SETTING.TOGGLE_STATUS_EFFECT_ON_SELECTED_TOKENS.KEY,
-    {
-      name: game.i18n.localize(CONSTANTS.TOKEN.SETTING.TOGGLE_STATUS_EFFECT_ON_SELECTED_TOKENS.NAME),
-      hint: game.i18n.localize(CONSTANTS.TOKEN.SETTING.TOGGLE_STATUS_EFFECT_ON_SELECTED_TOKENS.HINT),
-      scope: "world",
-      config: true,
+      config: false,
       type: Boolean,
       default: false,
       requiresReload: true
@@ -76,7 +63,7 @@ function registerSettings() {
       name: game.i18n.localize(CONSTANTS.TOKEN.SETTING.APPLY_ELEVATION_TO_SELECTED_TOKENS.NAME),
       hint: game.i18n.localize(CONSTANTS.TOKEN.SETTING.APPLY_ELEVATION_TO_SELECTED_TOKENS.HINT),
       scope: "world",
-      config: true,
+      config: false,
       type: Boolean,
       default: false,
       requiresReload: true
