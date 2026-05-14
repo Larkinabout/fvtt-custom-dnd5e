@@ -255,7 +255,8 @@ function executeWorkflowActions(actions,
   if ( Object.keys(actorUpdates).length ) actor?.update(actorUpdates);
   if ( Object.keys(tokenUpdates).length ) {
     const token = actor?.isToken ? actor.token : actor?.getActiveTokens()[0];
-    if ( token ) token.document.update(tokenUpdates);
+    const tokenDoc = token?.document ?? token;
+    if ( tokenDoc ) tokenDoc.update(tokenUpdates);
   }
   if ( Object.keys(itemUpdates).length && entity.documentName === "Item" ) {
     entity.update(itemUpdates);
@@ -669,8 +670,9 @@ function actorUpdate(actor, action) {
 function tokenUpdate(actor, action) {
   if ( !action.updatePath || action.updateValue === undefined ) return;
   const token = actor?.isToken ? actor.token : actor?.getActiveTokens()[0];
-  if ( !token ) return;
-  token.document.update({ [action.updatePath]: resolveUpdateValue(actor, action.updateValue) });
+  const tokenDoc = token?.document ?? token;
+  if ( !tokenDoc ) return;
+  tokenDoc.update({ [action.updatePath]: resolveUpdateValue(actor, action.updateValue) });
 }
 
 /* -------------------------------------------- */
