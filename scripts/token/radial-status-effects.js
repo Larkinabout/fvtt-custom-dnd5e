@@ -115,6 +115,7 @@ function onCanvasTearDown() {
 function onStagePointerDown(event) {
   if ( event.button !== undefined && event.button !== 0 ) return;
   if ( !getSetting(constants.SETTING.CLICK_TO_TOGGLE.KEY) ) return;
+  if ( !isPointerOverCanvas(event) ) return;
 
   const hit = hitTestRegistry(event.global);
   if ( !hit ) return;
@@ -125,6 +126,22 @@ function onStagePointerDown(event) {
   if ( isCondition || event.shiftKey ) hit.ae.delete();
   else hit.ae.update({ disabled: !hit.ae.disabled });
   clearHoverState();
+}
+
+/* -------------------------------------------- */
+
+/**
+ * Whether the cursor is on the canvas.
+ * @param {PIXI.FederatedPointerEvent} event
+ * @returns {boolean}
+ */
+function isPointerOverCanvas(event) {
+  const ne = event.nativeEvent;
+  if ( !ne || ne.clientX === undefined || ne.clientY === undefined ) return true;
+  const view = canvas?.app?.view;
+  if ( !view ) return true;
+  const top = document.elementFromPoint(ne.clientX, ne.clientY);
+  return top === view;
 }
 
 /* -------------------------------------------- */
@@ -160,6 +177,10 @@ function hitTestRegistry(globalPoint) {
  */
 function onStagePointerMove(event) {
   if ( !getSetting(constants.SETTING.CLICK_TO_TOGGLE.KEY) ) {
+    if ( hoveredEntry ) clearHoverState();
+    return;
+  }
+  if ( !isPointerOverCanvas(event) ) {
     if ( hoveredEntry ) clearHoverState();
     return;
   }
