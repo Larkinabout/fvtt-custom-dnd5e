@@ -47,7 +47,10 @@ export class InterfaceForm extends CustomDnd5eForm {
 
   async _prepareContext() {
     return {
+      tokenBorderEnable: getSetting(TOKEN.BORDER_ENABLE.KEY),
       tokenBorderShape: getSetting(TOKEN.BORDER_SHAPE.KEY),
+      tokenBorderThickness: getSetting(TOKEN.BORDER_THICKNESS.KEY),
+      tokenBorderScale: getSetting(TOKEN.BORDER_SCALE.KEY),
       radialStatusEffects: getSetting(RAD.KEY),
       radialStatusEffectsClickToToggle: getSetting(RAD.CLICK_TO_TOGGLE.KEY),
       tokenHudImprovements: getSetting(TOKEN.HUD_IMPROVEMENTS.KEY),
@@ -82,7 +85,10 @@ export class InterfaceForm extends CustomDnd5eForm {
   static async reset() {
     const reset = async () => {
       await Promise.all([
+        resetSetting(TOKEN.BORDER_ENABLE.KEY),
         resetSetting(TOKEN.BORDER_SHAPE.KEY),
+        resetSetting(TOKEN.BORDER_THICKNESS.KEY),
+        resetSetting(TOKEN.BORDER_SCALE.KEY),
         resetSetting(RAD.KEY),
         resetSetting(RAD.CLICK_TO_TOGGLE.KEY),
         resetSetting(TOKEN.HUD_IMPROVEMENTS.KEY),
@@ -114,7 +120,10 @@ export class InterfaceForm extends CustomDnd5eForm {
   static async submit(event, form, formData) {
     const data = formData.object;
     await Promise.all([
+      setSetting(TOKEN.BORDER_ENABLE.KEY, data.tokenBorderEnable),
       setSetting(TOKEN.BORDER_SHAPE.KEY, data.tokenBorderShape),
+      setSetting(TOKEN.BORDER_THICKNESS.KEY, Number(data.tokenBorderThickness) || 6),
+      setSetting(TOKEN.BORDER_SCALE.KEY, Number(data.tokenBorderScale) || 1),
       setSetting(RAD.KEY, data.radialStatusEffects),
       setSetting(RAD.CLICK_TO_TOGGLE.KEY, data.radialStatusEffectsClickToToggle),
       setSetting(TOKEN.HUD_IMPROVEMENTS.KEY, data.tokenHudImprovements),

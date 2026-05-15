@@ -8,15 +8,6 @@
                 </button>
             </legend>
             <div class="form-group">
-                <label>{{localize "CUSTOM_DND5E.setting.tokenBorderShape.name"}}</label>
-                <div class="form-fields">
-                    <select id="custom-dnd5e-token-border-shape" name="tokenBorderShape">
-                        {{selectOptions selects.tokenBorderShape.choices selected=tokenBorderShape localize=true}}
-                    </select>
-                </div>
-                <p class="hint">{{localize "CUSTOM_DND5E.setting.tokenBorderShape.hint"}}</p>
-            </div>
-            <div class="form-group">
                 <label>{{localize "CUSTOM_DND5E.setting.tokenHudImprovements.name"}}</label>
                 <div class="form-fields">
                     <dnd5e-checkbox id="custom-dnd5e-token-hud-improvements" name="tokenHudImprovements"{{#if tokenHudImprovements}} checked{{/if}}></dnd5e-checkbox>
@@ -36,6 +27,44 @@
                     <dnd5e-checkbox id="custom-dnd5e-toggle-status-effect-on-selected-tokens" name="toggleStatusEffectOnSelectedTokens"{{#if toggleStatusEffectOnSelectedTokens}} checked{{/if}}></dnd5e-checkbox>
                 </div>
                 <p class="hint">{{localize "CUSTOM_DND5E.setting.toggleStatusEffectOnSelectedTokens.hint"}}</p>
+            </div>
+        </fieldset>
+        <fieldset>
+            <legend>
+                <span>{{localize "CUSTOM_DND5E.tokenBorder"}}</span>
+                <button type="button" class="unbutton control-button" data-action="help" data-uuid="Compendium.custom-dnd5e.custom-dnd5e-journals.JournalEntry.iFcVxKpMyZrNqW8t.JournalEntryPage.tBdMxV2bRsNzWy8q" data-tooltip="{{localize "CUSTOM_DND5E.openGuide"}}" aria-label="{{localize "CUSTOM_DND5E.openGuide"}}">
+                    <i class="fas fa-circle-info" inert></i>
+                </button>
+            </legend>
+            <div class="form-group">
+                <label>{{localize "CUSTOM_DND5E.setting.tokenBorderEnable.name"}}</label>
+                <div class="form-fields">
+                    <dnd5e-checkbox id="custom-dnd5e-token-border-enable" name="tokenBorderEnable"{{#if tokenBorderEnable}} checked{{/if}}></dnd5e-checkbox>
+                </div>
+                <p class="hint">{{localize "CUSTOM_DND5E.setting.tokenBorderEnable.hint"}}</p>
+            </div>
+            <div class="form-group">
+                <label>{{localize "CUSTOM_DND5E.setting.tokenBorderShape.name"}}</label>
+                <div class="form-fields">
+                    <select id="custom-dnd5e-token-border-shape" name="tokenBorderShape">
+                        {{selectOptions selects.tokenBorderShape.choices selected=tokenBorderShape localize=true}}
+                    </select>
+                </div>
+                <p class="hint">{{localize "CUSTOM_DND5E.setting.tokenBorderShape.hint"}}</p>
+            </div>
+            <div class="form-group">
+                <label>{{localize "CUSTOM_DND5E.setting.tokenBorderThickness.name"}}</label>
+                <div class="form-fields">
+                    <range-picker id="custom-dnd5e-token-border-thickness" name="tokenBorderThickness" value="{{tokenBorderThickness}}" min="1" max="30" step="1"></range-picker>
+                </div>
+                <p class="hint">{{localize "CUSTOM_DND5E.setting.tokenBorderThickness.hint"}}</p>
+            </div>
+            <div class="form-group">
+                <label>{{localize "CUSTOM_DND5E.setting.tokenBorderScale.name"}}</label>
+                <div class="form-fields">
+                    <range-picker id="custom-dnd5e-token-border-scale" name="tokenBorderScale" value="{{tokenBorderScale}}" min="0.5" max="3" step="0.05"></range-picker>
+                </div>
+                <p class="hint">{{localize "CUSTOM_DND5E.setting.tokenBorderScale.hint"}}</p>
             </div>
         </fieldset>
         <fieldset>

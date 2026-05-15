@@ -1104,10 +1104,25 @@ export const CONSTANTS = {
         HINT: "CUSTOM_DND5E.setting.toggleStatusEffectOnSelectedTokens.hint",
         NAME: "CUSTOM_DND5E.setting.toggleStatusEffectOnSelectedTokens.name"
       },
+      BORDER_ENABLE: {
+        KEY: "token-border-enable",
+        HINT: "CUSTOM_DND5E.setting.tokenBorderEnable.hint",
+        NAME: "CUSTOM_DND5E.setting.tokenBorderEnable.name"
+      },
       BORDER_SHAPE: {
         KEY: "token-border-shape",
         HINT: "CUSTOM_DND5E.setting.tokenBorderShape.hint",
         NAME: "CUSTOM_DND5E.setting.tokenBorderShape.name"
+      },
+      BORDER_SCALE: {
+        KEY: "token-border-scale",
+        HINT: "CUSTOM_DND5E.setting.tokenBorderScale.hint",
+        NAME: "CUSTOM_DND5E.setting.tokenBorderScale.name"
+      },
+      BORDER_THICKNESS: {
+        KEY: "token-border-thickness",
+        HINT: "CUSTOM_DND5E.setting.tokenBorderThickness.hint",
+        NAME: "CUSTOM_DND5E.setting.tokenBorderThickness.name"
       },
       HUD_IMPROVEMENTS: {
         KEY: "token-hud-improvements"

@@ -56,6 +56,7 @@ export async function migrate() {
   if ( shouldRun("4.2.0") ) isSuccess &&= await migrateDamageTypeLabels();
   if ( shouldRun("4.2.0") ) isSuccess &&= await migrateWorkflowTriggerEvents();
   if ( shouldRun("5.1.0") ) isSuccess &&= await migrateRestTypesHitDiceFormula();
+  if ( shouldRun("5.1.0") ) isSuccess &&= await migrateTokenBorderEnable();
 
   if ( isSuccess ) {
     await setSetting(constants.VERSION.SETTING.KEY, moduleVersion);
@@ -740,6 +741,27 @@ export async function migrateRestTypesHitDiceFormula() {
 /* -------------------------------------------- */
 
 /**
+ * Set Enable to true for the Token Border feature when Shape is set to Circle.
+ * @returns {Promise<boolean>} Whether the migration was successful
+ */
+export async function migrateTokenBorderEnable() {
+  try {
+    const shape = getSetting(CONSTANTS.TOKEN.SETTING.BORDER_SHAPE.KEY);
+    if ( shape !== "circle" ) return true;
+    if ( getSetting(CONSTANTS.TOKEN.SETTING.BORDER_ENABLE.KEY) ) return true;
+    Logger.debug("Enabling Token Border (existing shape = circle)...");
+    await setSetting(CONSTANTS.TOKEN.SETTING.BORDER_ENABLE.KEY, true);
+    Logger.debug("Token Border enabled.");
+    return true;
+  } catch (err) {
+    Logger.error(`Failed to migrate Token Border enable: ${err.message}`);
+    return false;
+  }
+}
+
+/* -------------------------------------------- */
+
+/**
  * All migration functions, exposed for testing via the module API.
  */
 export const migrations = {
@@ -750,5 +772,6 @@ export const migrations = {
   migrateRerollInitiative,
   migrateRestTypesHitDiceFormula,
   migrateRollMode,
+  migrateTokenBorderEnable,
   migrateWorkflowTriggerEvents
 };
