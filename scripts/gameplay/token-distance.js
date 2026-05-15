@@ -200,6 +200,9 @@ function refreshLabels() {
 function addLabel(target, source) {
   const text = formatDistance(source, target);
   const resolution = Math.max(4, Math.ceil(window.devicePixelRatio || 1) * 4);
+  const gridSize = target.scene?.grid?.size ?? canvas.dimensions?.size ?? 100;
+  const fontScale = (game.settings.get("core", "uiConfig")?.fontScale ?? 5) / 5;
+  const labelScale = 0.7 * (gridSize / 100) * fontScale;
   let label = labels.get(target.id);
   if ( !label ) {
     label = new PIXI.Container();
@@ -210,13 +213,13 @@ function addLabel(target, source) {
     label.distance.resolution = resolution;
     label.distance.roundPixels = true;
     label.addChild(label.icon, label.distance);
-    label.scale.set(0.5);
     target.addChild(label);
     labels.set(target.id, label);
   } else {
     label.distance.text = text;
   }
-  const gap = 6;
+  label.scale.set(labelScale);
+  const gap = (label.distance.style.fontSize ?? 32) * 0.125;
   const totalHeight = Math.max(label.icon.height, label.distance.height);
   label.icon.position.set(0, (totalHeight - label.icon.height) / 2);
   label.distance.position.set(label.icon.width + gap, (totalHeight - label.distance.height) / 2);
