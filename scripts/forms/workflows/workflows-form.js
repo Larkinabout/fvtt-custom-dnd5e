@@ -21,7 +21,9 @@ export class WorkflowsForm extends JournalDropMixin(CustomDnd5eForm) {
     actions: {
       new: WorkflowsForm.createItem,
       edit: WorkflowsForm.edit,
-      delete: WorkflowsForm.deleteItem
+      delete: WorkflowsForm.deleteItem,
+      copy: WorkflowsForm.copyToClipboard,
+      paste: WorkflowsForm.pasteFromClipboard
     },
     form: {
       handler: WorkflowsForm.submit
@@ -102,6 +104,95 @@ export class WorkflowsForm extends JournalDropMixin(CustomDnd5eForm) {
     const setting = this.isItem ? this.itemSetting : this.actorSetting;
     const args = { workflowsForm: this, data: { key, name: "", entityType }, setting };
     await WorkflowsEditForm.open(args);
+  }
+
+  /* -------------------------------------------- */
+
+  /**
+   * Copy a single workflow's JSON to the clipboard.
+   * @param {Event} event Click event
+   * @param {HTMLElement} target Clicked element
+   */
+  static async copyToClipboard(event, target) {
+    const item = target.closest(".item");
+    if ( !item ) return;
+    const key = item.dataset.key;
+    if ( !key ) return;
+
+    const setting = this.isItem ? this.itemSetting : this.actorSetting;
+    const workflow = setting[key];
+    if ( !workflow ) return;
+
+    const entityType = this.isItem ? "item" : "actor";
+    const payload = foundry.utils.deepClone({ ...workflow, entityType });
+    const json = JSON.stringify(payload, null, 2);
+
+    try {
+      await navigator.clipboard.writeText(json);
+      Logger.info(
+        game.i18n.format("CUSTOM_DND5E.workflowExport.success", { name: workflow.name || key }),
+        true
+      );
+    } catch {
+      Logger.error(game.i18n.localize("CUSTOM_DND5E.workflowExport.error.clipboard"), true);
+    }
+  }
+
+  /* -------------------------------------------- */
+
+  /**
+   * Open a dialog to paste workflow JSON.
+   */
+  static async pasteFromClipboard() {
+    let initial = "";
+    try {
+      initial = await navigator.clipboard.readText();
+    } catch {
+      // Clipboard unavailable
+    }
+
+    const form = this;
+    const placeholder = game.i18n.localize("CUSTOM_DND5E.workflowImport.paste.placeholder");
+    await foundry.applications.api.DialogV2.prompt({
+      window: { title: game.i18n.localize("CUSTOM_DND5E.workflowImport.paste.title") },
+      content: `<textarea id="custom-dnd5e-workflow-paste" placeholder="${placeholder}" style="width:100%; min-height:18rem; font-family:monospace; resize:vertical;">${foundry.utils.escapeHTML(initial)}</textarea>`,
+      modal: true,
+      ok: {
+        label: game.i18n.localize("CUSTOM_DND5E.import"),
+        callback: async (event, button, dialog) => {
+          const text = dialog.element.querySelector("#custom-dnd5e-workflow-paste")?.value?.trim();
+          if ( !text ) return;
+          await form._handlePastedJson(text);
+        }
+      }
+    });
+  }
+
+  /* -------------------------------------------- */
+
+  /**
+   * Parse, validate, and import workflows from a pasted JSON string.
+   * @param {string} text Raw JSON text
+   */
+  async _handlePastedJson(text) {
+    let parsed;
+    try {
+      parsed = JSON.parse(text);
+    } catch (err) {
+      Logger.error(game.i18n.format("CUSTOM_DND5E.journalImport.error.parseFailed", { error: err.message }), true);
+      return;
+    }
+    const candidates = Array.isArray(parsed) ? parsed : [parsed];
+    const validated = [];
+    for ( const entry of candidates ) {
+      const result = this._validateWorkflowSchema(entry);
+      if ( !result.valid ) {
+        Logger.error(result.error, true);
+        return;
+      }
+      validated.push(entry);
+    }
+    await this._createWorkflowsFromImport(validated);
   }
 
   /* -------------------------------------------- */
