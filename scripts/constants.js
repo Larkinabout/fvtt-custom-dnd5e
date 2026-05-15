@@ -1119,6 +1119,11 @@ export const CONSTANTS = {
         HINT: "CUSTOM_DND5E.setting.tokenBorderScale.hint",
         NAME: "CUSTOM_DND5E.setting.tokenBorderScale.name"
       },
+      BORDER_SCALE_WITH_TOKEN: {
+        KEY: "token-border-scale-with-token",
+        HINT: "CUSTOM_DND5E.setting.tokenBorderScaleWithToken.hint",
+        NAME: "CUSTOM_DND5E.setting.tokenBorderScaleWithToken.name"
+      },
       BORDER_THICKNESS: {
         KEY: "token-border-thickness",
         HINT: "CUSTOM_DND5E.setting.tokenBorderThickness.hint",

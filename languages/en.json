@@ -827,6 +827,8 @@
     "CUSTOM_DND5E.setting.tokenBorderShape.name": "Shape",
     "CUSTOM_DND5E.setting.tokenBorderScale.hint": "Multiplier applied to the token border size relative to the token. 1 is flush with the token edge, 1.1 sits just outside, 0.9 sits just inside.",
     "CUSTOM_DND5E.setting.tokenBorderScale.name": "Scale",
+    "CUSTOM_DND5E.setting.tokenBorderScaleWithToken.hint": "Scale border with the token's image scale.",
+    "CUSTOM_DND5E.setting.tokenBorderScaleWithToken.name": "Scale With Token",
     "CUSTOM_DND5E.setting.tokenBorderThickness.hint": "Line thickness of the token border in pixels. Default is 6.",
     "CUSTOM_DND5E.setting.tokenBorderThickness.name": "Thickness",
     "CUSTOM_DND5E.setting.enableTokenDistance.hint": "Display the distance to a token when hovered. Hold the configurable keybinding to display distances to all tokens at once.",
