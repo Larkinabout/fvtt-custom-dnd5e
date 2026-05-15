@@ -87,12 +87,14 @@ export function applyRadialEffects(token) {
 
     effect.anchor.set(0.5);
     effect.texture.baseTexture.scaleMode = PIXI.SCALE_MODES.LINEAR;
-    effect.width = scaledSize;
-    effect.height = scaledSize;
+    const texW = (effect.texture?.orig?.width ?? effect.texture?.width) || scaledSize;
+    const texH = (effect.texture?.orig?.height ?? effect.texture?.height) || scaledSize;
+    const uniformScale = scaledSize / Math.max(texW, texH);
+    effect.scale.set(uniformScale, uniformScale);
 
     const src = effect.texture?.textureCacheIds?.[0] ?? effect.texture?.baseTexture?.resource?.src ?? "";
     if ( !effect.mask && !src.endsWith(".svg") ) {
-      const texRadius = Math.min(effect.texture.width, effect.texture.height) / 2;
+      const texRadius = Math.min(texW, texH) / 2;
       const mask = new PIXI.Graphics();
       mask.beginFill(0xffffff);
       mask.drawCircle(0, 0, texRadius);
@@ -105,7 +107,7 @@ export function applyRadialEffects(token) {
     effect.position.x = ((radius * Math.cos(angle)) / 2) + halfGridSize;
     effect.position.y = (((-radius * Math.sin(angle)) / 2) + halfGridSize);
 
-    drawBackground(effect, bg, gridScale);
+    drawBackground(effect, bg, gridScale, scaledSize);
     i++;
   }
 }
@@ -156,9 +158,10 @@ function getSizeOffset(size) {
  * @param {PIXI.Sprite} icon Icon sprite
  * @param {PIXI.Graphics} bg Background graphics
  * @param {number} gridScale Grid scale factor
+ * @param {number} slotSize Intended icon slot size
  */
-function drawBackground(icon, bg, gridScale) {
-  const radius = (icon.width / 2) + (icon.width * 0.1);
+function drawBackground(icon, bg, gridScale, slotSize) {
+  const radius = (slotSize / 2) + (slotSize * 0.1);
   bg.beginFill(0x242731);
   bg.drawCircle(icon.position.x, icon.position.y, radius);
   bg.endFill();
