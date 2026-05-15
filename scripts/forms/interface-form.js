@@ -49,6 +49,7 @@ export class InterfaceForm extends CustomDnd5eForm {
     return {
       tokenBorderShape: getSetting(TOKEN.BORDER_SHAPE.KEY),
       radialStatusEffects: getSetting(RAD.KEY),
+      radialStatusEffectsClickToToggle: getSetting(RAD.CLICK_TO_TOGGLE.KEY),
       tokenHudImprovements: getSetting(TOKEN.HUD_IMPROVEMENTS.KEY),
       enableTokenDistance: getSetting(TD.ENABLE.KEY),
       tokenDistanceViewRole: getSetting(TD.VIEW_ROLE.KEY),
@@ -83,6 +84,7 @@ export class InterfaceForm extends CustomDnd5eForm {
       await Promise.all([
         resetSetting(TOKEN.BORDER_SHAPE.KEY),
         resetSetting(RAD.KEY),
+        resetSetting(RAD.CLICK_TO_TOGGLE.KEY),
         resetSetting(TOKEN.HUD_IMPROVEMENTS.KEY),
         resetSetting(TD.ENABLE.KEY),
         resetSetting(TD.VIEW_ROLE.KEY),
@@ -114,6 +116,7 @@ export class InterfaceForm extends CustomDnd5eForm {
     await Promise.all([
       setSetting(TOKEN.BORDER_SHAPE.KEY, data.tokenBorderShape),
       setSetting(RAD.KEY, data.radialStatusEffects),
+      setSetting(RAD.CLICK_TO_TOGGLE.KEY, data.radialStatusEffectsClickToToggle),
       setSetting(TOKEN.HUD_IMPROVEMENTS.KEY, data.tokenHudImprovements),
       setSetting(TD.ENABLE.KEY, data.enableTokenDistance),
       setSetting(TD.VIEW_ROLE.KEY, Number(data.tokenDistanceViewRole)),

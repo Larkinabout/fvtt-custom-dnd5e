@@ -158,6 +158,16 @@ button[data-custom-dnd5e="stop-animations"].fade-out {
     font-size: 1.5em;
 }
 
+#custom-dnd5e-cursor-label-radial-disable {
+    color: var(--dnd5e-color-gold);
+    font-size: 1.5em;
+}
+
+#custom-dnd5e-cursor-label-radial-delete {
+    color: var(--dnd5e-color-red);
+    font-size: 1.5em;
+}
+
 /*
  * TARGETING INDICATOR
  */

@@ -60,36 +60,109 @@ function initializeCursorLabel() {
 /* -------------------------------------------- */
 
 /**
+ * Add cursor label.
+ * @returns {HTMLElement} Cursor label container
+ */
+export function addCursorLabel() {
+  let container = document.getElementById("custom-dnd5e-cursor-label");
+  if ( container ) return container;
+  container = document.createElement("div");
+  container.id = "custom-dnd5e-cursor-label";
+  document.body.appendChild(container);
+  if ( !window.customDnd5eCursorLabel ) window.customDnd5eCursorLabel = {};
+  window.customDnd5eCursorLabel.container = container;
+  return container;
+}
+
+/* -------------------------------------------- */
+
+/**
+ * Add an icon to the cursor label.
+ * @param {string} id
+ * @param {string} innerHTML
+ * @param {string} [className="custom-dnd5e-cursor-label-icon"] CSS class
+ * @returns {HTMLElement} Icon element
+ */
+export function addCursorLabelIcon(id, innerHTML, className = "custom-dnd5e-cursor-label-icon") {
+  const container = addCursorLabel();
+  let icon = document.getElementById(id);
+  if ( !icon ) {
+    icon = document.createElement("span");
+    icon.id = id;
+    if ( className ) icon.classList.add(...className.split(/\s+/));
+    container.appendChild(icon);
+  }
+  if ( innerHTML !== undefined ) icon.innerHTML = innerHTML;
+  icon.style.display = icon.style.display || "none";
+  return icon;
+}
+
+/* -------------------------------------------- */
+
+/**
+ * Toggle the visibility of a specific cursor label icon and refresh container visibility.
+ * @param {string} id
+ * @param {boolean} visible Whether the icon should be visible
+ */
+export function setCursorLabelIcon(id, visible) {
+  const icon = document.getElementById(id);
+  if ( icon ) icon.style.display = visible ? "inline-block" : "none";
+  refreshCursorLabelVisibility();
+}
+
+/* -------------------------------------------- */
+
+/**
+ * Update the cursor label container's screen position.
+ * @param {number} clientX
+ * @param {number} clientY
+ */
+export function setCursorLabelPosition(clientX, clientY) {
+  const container = addCursorLabel();
+  container.style.left = `${clientX - 5}px`;
+  container.style.top = `${clientY + 15}px`;
+}
+
+/* -------------------------------------------- */
+
+/**
+ * Show or hide the container based on whether any child icon is visible.
+ */
+function refreshCursorLabelVisibility() {
+  const container = document.getElementById("custom-dnd5e-cursor-label");
+  if ( !container ) return;
+  const anyVisible = Array.from(container.children).some(child => child.style.display && child.style.display !== "none");
+  container.style.visibility = anyVisible ? "visible" : "hidden";
+}
+
+/* -------------------------------------------- */
+
+/**
  * Create and append the cursor label element to the DOM.
  */
 function createCursorLabelElement() {
-  const container = document.createElement("div");
-  container.id = "custom-dnd5e-cursor-label";
+  addCursorLabel();
 
-  const skipDialogIcon = document.createElement("i");
-  skipDialogIcon.id = "custom-dnd5e-cursor-label-skip-dialog";
+  const skipDialogIcon = addCursorLabelIcon(
+    "custom-dnd5e-cursor-label-skip-dialog",
+    "",
+    ""
+  );
   skipDialogIcon.classList.add("fa-regular", "fa-forward");
-  container.appendChild(skipDialogIcon);
 
-  const advantageGroup = document.createElement("span");
-  advantageGroup.id = "custom-dnd5e-cursor-label-advantage";
-  advantageGroup.classList.add("custom-dnd5e-cursor-label-icon");
-  advantageGroup.innerHTML = '<i class="fa-sharp fa-regular fa-dice-d20"></i><i class="fa-solid fa-up-long"></i>';
-  container.appendChild(advantageGroup);
+  addCursorLabelIcon(
+    "custom-dnd5e-cursor-label-advantage",
+    '<i class="fa-sharp fa-regular fa-dice-d20"></i><i class="fa-solid fa-up-long"></i>'
+  );
 
-  const disadvantageGroup = document.createElement("span");
-  disadvantageGroup.id = "custom-dnd5e-cursor-label-disadvantage";
-  disadvantageGroup.classList.add("custom-dnd5e-cursor-label-icon");
-  disadvantageGroup.innerHTML = '<i class="fa-sharp fa-regular fa-dice-d20"></i><i class="fa-solid fa-down-long"></i>';
-  container.appendChild(disadvantageGroup);
+  addCursorLabelIcon(
+    "custom-dnd5e-cursor-label-disadvantage",
+    '<i class="fa-sharp fa-regular fa-dice-d20"></i><i class="fa-solid fa-down-long"></i>'
+  );
 
-  document.body.appendChild(container);
-  window.customDnd5eCursorLabel = {
-    container,
-    advantage: advantageGroup,
-    disadvantage: disadvantageGroup,
-    skipDialog: skipDialogIcon
-  };
+  window.customDnd5eCursorLabel.advantage = document.getElementById("custom-dnd5e-cursor-label-advantage");
+  window.customDnd5eCursorLabel.disadvantage = document.getElementById("custom-dnd5e-cursor-label-disadvantage");
+  window.customDnd5eCursorLabel.skipDialog = skipDialogIcon;
 }
 
 /* -------------------------------------------- */
@@ -112,9 +185,9 @@ function attachCursorLabelListeners() {
 
 /**
  * Attach listeners for pointer movement in actor sheets.
- * @param {Application} app The actor sheet application.
- * @param {HTMLElement} html The actor sheet HTML element.
- * @param {object} data Actor sheet data.
+ * @param {Application} app Actor sheet application
+ * @param {HTMLElement} html Actor sheet HTML element
+ * @param {object} data Actor sheet data
  */
 function attachAppListeners(app, html, data) {
   const element = ( html instanceof jQuery ) ? html[0] : html;
@@ -126,7 +199,7 @@ function attachAppListeners(app, html, data) {
 
 /**
  * Track the cursor event and store its position and target.
- * @param {PointerEvent} event The pointer move event.
+ * @param {PointerEvent} event
  */
 function handleCursorMove(event) {
   window.customDnd5eCursorLabel.cursor = {
@@ -140,8 +213,8 @@ function handleCursorMove(event) {
 
 /**
  * Find a valid button element for D&D 5e actions.
- * @param {HTMLElement} element The current target element.
- * @returns {HTMLElement|null} The valid button or null if none.
+ * @param {HTMLElement} element Current target element
+ * @returns {HTMLElement|null} Valid button or null if none
  */
 function getValidButton(element) {
   if ( element.dataset?.action === "rollAttack"
@@ -167,32 +240,29 @@ function getValidButton(element) {
 /* -------------------------------------------- */
 
 /**
- * Update the visibility of the cursor label based on the event.
- * @param {Event} event The event.
+ * Update the visibility of the cursor label.
+ * @param {Event} event
  */
 function updateCursorLabelVisibility(event) {
   const target = (event.type === "pointermove") ? event.target : window.customDnd5eCursorLabel?.cursor?.target;
   if ( !target ) return;
+  if ( !window.customDnd5eCursorLabel?.skipDialog ) return;
 
   const onButton = getValidButton(target);
   const keysPressed = getDnd5eKeysPressed(event);
-  const isVisible = onButton && (keysPressed.normal || keysPressed.advantage || keysPressed.disadvantage);
 
-  window.customDnd5eCursorLabel.container.style.visibility = isVisible ? "visible" : "hidden";
-  window.customDnd5eCursorLabel.skipDialog.style.display = (onButton && keysPressed.normal) ? "inline-block" : "none";
-  window.customDnd5eCursorLabel.advantage.style.display = (onButton && keysPressed.advantage) ? "inline-block" : "none";
-  window.customDnd5eCursorLabel.disadvantage.style.display = (onButton && keysPressed.disadvantage) ? "inline-block" : "none";
+  setCursorLabelIcon("custom-dnd5e-cursor-label-skip-dialog", !!(onButton && keysPressed.normal));
+  setCursorLabelIcon("custom-dnd5e-cursor-label-advantage", !!(onButton && keysPressed.advantage));
+  setCursorLabelIcon("custom-dnd5e-cursor-label-disadvantage", !!(onButton && keysPressed.disadvantage));
 }
 
 /* -------------------------------------------- */
 
 /**
- * Update the position and visibility of the cursor label based on the pointer event.
- * @param {PointerEvent} event The pointer move event.
+ * Update the position and visibility of the cursor label.
+ * @param {PointerEvent} event
  */
 function updateCursorLabelPosition(event) {
-  window.customDnd5eCursorLabel.container.style.left = `${event.clientX - 5}px`;
-  window.customDnd5eCursorLabel.container.style.top = `${event.clientY + 15}px`;
-
+  setCursorLabelPosition(event.clientX, event.clientY);
   updateCursorLabelVisibility(event);
 }

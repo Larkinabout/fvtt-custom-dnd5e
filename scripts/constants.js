@@ -921,7 +921,12 @@ export const CONSTANTS = {
   },
   RADIAL_STATUS_EFFECTS: {
     SETTING: {
-      KEY: "radial-status-effects"
+      KEY: "radial-status-effects",
+      CLICK_TO_TOGGLE: {
+        KEY: "radial-status-effects-click-to-toggle",
+        HINT: "CUSTOM_DND5E.setting.radialStatusEffectsClickToToggle.hint",
+        NAME: "CUSTOM_DND5E.setting.radialStatusEffectsClickToToggle.name"
+      }
     }
   },
   REST_TYPES: {

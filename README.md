@@ -540,10 +540,14 @@ Screen animations can be triggered via the module API or socket events. Availabl
 
 Display status effects in a circle around the token.
 
-<details>
-    <summary>See Image</summary>
+### Click to Toggle
 
-![Custom D&D 5e Radial Status Effects](./.github/readme/custom-dnd5e-radial-status-effects.png)
+When enabled, allows clicking a radial status effect icon to disable it on a left-click or delete on Shift-click. Conditions are always deleted.
+
+<details>
+    <summary>See Video</summary>
+
+![Custom D&D 5e Radial Status Effects](./.github/readme/custom-dnd5e-toggle-radial-status-effects.gif)
 
 </details>
 
@@ -572,7 +576,7 @@ Display the distance to a token when hovering over it. Hold the configurable key
 
 The source token is the user's currently controlled token, or the first token of their assigned character.
 
-A minimum user role can be configured to control which users see distance labels.
+A minimum role can be configured to control which users see distance labels.
 
 <details>
     <summary>See Video</summary>

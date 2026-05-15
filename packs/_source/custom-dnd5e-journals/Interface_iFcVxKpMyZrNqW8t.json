@@ -15,7 +15,7 @@
       "image": {},
       "text": {
         "format": 1,
-        "content": "<h2 class=\"custom-dnd5e-h2\">Token Border Shape</h2><p>Choose the shape of the token's border when it is selected or hovered. Options include circle and square. The default is square.</p><p>Requires a reload when changed.</p><h2 class=\"custom-dnd5e-h2\">Radial Status Effects</h2><p>When enabled, status effect icons are displayed in a circular layout around the token rather than the default grid layout. Icons are shown with a circular background.</p><p>Requires a reload when changed.</p><h2 class=\"custom-dnd5e-h2\">Token HUD Improvements</h2><p>When enabled, improves the Token HUD with the following features:</p><ul><li><p><strong>Hover-to-open palettes</strong>. Hovering over the Status Effects or Movement Actions buttons opens the palette automatically.</p></li><li><p><strong>Button styling</strong>. Enhanced feedback for status effect icons and control buttons.</p></li><li><p><strong>Fixed HUD size</strong>. The Token HUD maintains a consistent size on screen regardless of the canvas zoom level.</p></li></ul><p>Requires a reload when changed.</p><h2 class=\"custom-dnd5e-h2\">Token Distance</h2><p>When enabled, displays the distance to a token when hovering over it. Holding the configurable keybinding (Alt by default) shows distances to all visible tokens at once.</p><p>The source token is the user's currently controlled token, or the first token of their assigned character.</p><p>Requires a reload when changed.</p><h2 class=\"custom-dnd5e-h2\">Token Distance View Role</h2><p>The minimum role required to see token distance labels. For example, set this to <em>Assistant</em> to hide distances from players. The default is <em>Player</em>, so everyone with at least Player permissions sees distances.</p><h2 class=\"custom-dnd5e-h2\">Apply Elevation to Selected</h2><p>When applying elevation via a token's HUD, apply it to all selected tokens. This is useful for moving a group of tokens to the same elevation at once, such as when the party ascends a staircase or flies to a new height.</p><p>Requires a reload when changed.</p><h2 class=\"custom-dnd5e-h2\">Toggle Status Effects on Selected</h2><p>When toggling a status effect via a token's HUD, toggle it for all selected tokens. This is useful for applying or removing a condition from multiple tokens at once, such as applying the Frightened condition to a group of enemies.</p><p>Requires a reload when changed.</p>"
+        "content": "<h2 class=\"custom-dnd5e-h2\">Token Border Shape</h2><p>Choose the shape of the token's border when it is selected or hovered. Options include circle and square. The default is square.</p><p>Requires a reload when changed.</p><h2 class=\"custom-dnd5e-h2\">Token HUD Improvements</h2><p>When enabled, improves the Token HUD with the following features:</p><ul><li><p><strong>Hover-to-open palettes</strong>. Hovering over the Status Effects or Movement Actions buttons opens the palette automatically.</p></li><li><p><strong>Button styling</strong>. Enhanced feedback for status effect icons and control buttons.</p></li><li><p><strong>Fixed HUD size</strong>. The Token HUD maintains a consistent size on screen regardless of the canvas zoom level.</p></li></ul><p>Requires a reload when changed.</p><h2 class=\"custom-dnd5e-h2\">Apply Elevation to Selected</h2><p>When applying elevation via a token's HUD, apply it to all selected tokens. This is useful for moving a group of tokens to the same elevation at once, such as when the party ascends a staircase or flies to a new height.</p><p>Requires a reload when changed.</p><h2 class=\"custom-dnd5e-h2\">Toggle Status Effects on Selected</h2><p>When toggling a status effect via a token's HUD, toggle it for all selected tokens. This is useful for applying or removing a condition from multiple tokens at once, such as applying the Frightened condition to a group of enemies.</p><p>Requires a reload when changed.</p>"
       },
       "video": {
         "controls": true,
@@ -40,6 +40,84 @@
       },
       "category": null,
       "_key": "!journal.pages!iFcVxKpMyZrNqW8t.tKpMxV2bRsNqWy8k"
+    },
+    {
+      "sort": 150000,
+      "name": "Radial Status Effects",
+      "type": "text",
+      "_id": "rSeMxV2bRsNzWy8q",
+      "system": {},
+      "title": {
+        "show": true,
+        "level": 1
+      },
+      "image": {},
+      "text": {
+        "format": 1,
+        "content": "<h2 class=\"custom-dnd5e-h2\">Radial Status Effects</h2><p>When enabled, status effect icons are displayed in a circular layout around the token rather than the default grid layout. Icons are shown with a circular background.</p><p>Requires a reload when changed.</p><h2 class=\"custom-dnd5e-h2\">Click to Toggle</h2><p>When enabled, allows clicking a radial status effect icon to disable it on left-click or delete on Shift-click. Conditions are always deleted.</p>"
+      },
+      "video": {
+        "controls": true,
+        "volume": 0.5
+      },
+      "src": null,
+      "ownership": {
+        "default": -1,
+        "0wJRsV2r9Hv1a7q0": 3
+      },
+      "flags": {},
+      "_stats": {
+        "compendiumSource": null,
+        "duplicateSource": null,
+        "coreVersion": "14.361",
+        "systemId": "dnd5e",
+        "systemVersion": "5.2.5",
+        "createdTime": 1778500000000,
+        "modifiedTime": 1778842970883,
+        "lastModifiedBy": "2Ab5BheRvt8es88G",
+        "exportSource": null
+      },
+      "category": null,
+      "_key": "!journal.pages!iFcVxKpMyZrNqW8t.rSeMxV2bRsNzWy8q"
+    },
+    {
+      "sort": 175000,
+      "name": "Token Distance",
+      "type": "text",
+      "_id": "tDmVcXrZkHnYjLwP",
+      "system": {},
+      "title": {
+        "show": true,
+        "level": 1
+      },
+      "image": {},
+      "text": {
+        "format": 1,
+        "content": "<h2 class=\"custom-dnd5e-h2\">Token Distance</h2><p>When enabled, displays the distance to a token when hovering over it. Holding the configurable keybinding (Alt by default) shows distances to all visible tokens at once.</p><p>The source token is the user's currently controlled token, or the first token of their assigned character.</p><p>Requires a reload when changed.</p><h2 class=\"custom-dnd5e-h2\">View Role</h2><p>The minimum role required to see token distance labels. For example, set this to <em>Assistant</em> to hide distances from players. The default is <em>Player</em>, so everyone with at least Player permissions sees distances.</p>"
+      },
+      "video": {
+        "controls": true,
+        "volume": 0.5
+      },
+      "src": null,
+      "ownership": {
+        "default": -1,
+        "0wJRsV2r9Hv1a7q0": 3
+      },
+      "flags": {},
+      "_stats": {
+        "compendiumSource": null,
+        "duplicateSource": null,
+        "coreVersion": "14.361",
+        "systemId": "dnd5e",
+        "systemVersion": "5.2.5",
+        "createdTime": 1778500000000,
+        "modifiedTime": 1778500000000,
+        "lastModifiedBy": "0wJRsV2r9Hv1a7q0",
+        "exportSource": null
+      },
+      "category": null,
+      "_key": "!journal.pages!iFcVxKpMyZrNqW8t.tDmVcXrZkHnYjLwP"
     },
     {
       "sort": 200000,

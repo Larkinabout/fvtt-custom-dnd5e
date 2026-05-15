@@ -760,7 +760,7 @@
     "CUSTOM_DND5E.prone": "Powalony",
     "CUSTOM_DND5E.pseudo": "Pseudo",
     "CUSTOM_DND5E.reachedCounterLimit": "Osiągnąłeś limit dla tego licznika!",
-    "CUSTOM_DND5E.recoverHitDice": "Reocover Hit Dice",
+    "CUSTOM_DND5E.recoverHitDice": "Recover Hit Dice",
     "CUSTOM_DND5E.recoverHitPoints": "Recover Hit Points",
     "CUSTOM_DND5E.recoverPeriods.hint": "Recovery periods triggered by this rest",
     "CUSTOM_DND5E.recoverPeriods.label": "Recovery Periods",

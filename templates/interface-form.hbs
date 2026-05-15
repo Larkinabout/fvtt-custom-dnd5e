@@ -17,6 +17,35 @@
                 <p class="hint">{{localize "CUSTOM_DND5E.setting.tokenBorderShape.hint"}}</p>
             </div>
             <div class="form-group">
+                <label>{{localize "CUSTOM_DND5E.setting.tokenHudImprovements.name"}}</label>
+                <div class="form-fields">
+                    <dnd5e-checkbox id="custom-dnd5e-token-hud-improvements" name="tokenHudImprovements"{{#if tokenHudImprovements}} checked{{/if}}></dnd5e-checkbox>
+                </div>
+                <p class="hint">{{localize "CUSTOM_DND5E.setting.tokenHudImprovements.hint"}}</p>
+            </div>
+            <div class="form-group">
+                <label>{{localize "CUSTOM_DND5E.setting.applyElevationToSelectedTokens.name"}}</label>
+                <div class="form-fields">
+                    <dnd5e-checkbox id="custom-dnd5e-apply-elevation-to-selected-tokens" name="applyElevationToSelectedTokens"{{#if applyElevationToSelectedTokens}} checked{{/if}}></dnd5e-checkbox>
+                </div>
+                <p class="hint">{{localize "CUSTOM_DND5E.setting.applyElevationToSelectedTokens.hint"}}</p>
+            </div>
+            <div class="form-group">
+                <label>{{localize "CUSTOM_DND5E.setting.toggleStatusEffectOnSelectedTokens.name"}}</label>
+                <div class="form-fields">
+                    <dnd5e-checkbox id="custom-dnd5e-toggle-status-effect-on-selected-tokens" name="toggleStatusEffectOnSelectedTokens"{{#if toggleStatusEffectOnSelectedTokens}} checked{{/if}}></dnd5e-checkbox>
+                </div>
+                <p class="hint">{{localize "CUSTOM_DND5E.setting.toggleStatusEffectOnSelectedTokens.hint"}}</p>
+            </div>
+        </fieldset>
+        <fieldset>
+            <legend>
+                <span>{{localize "CUSTOM_DND5E.setting.radialStatusEffects.name"}}</span>
+                <button type="button" class="unbutton control-button" data-action="help" data-uuid="Compendium.custom-dnd5e.custom-dnd5e-journals.JournalEntry.iFcVxKpMyZrNqW8t.JournalEntryPage.rSeMxV2bRsNzWy8q" data-tooltip="{{localize "CUSTOM_DND5E.openGuide"}}" aria-label="{{localize "CUSTOM_DND5E.openGuide"}}">
+                    <i class="fas fa-circle-info" inert></i>
+                </button>
+            </legend>
+            <div class="form-group">
                 <label>{{localize "CUSTOM_DND5E.setting.radialStatusEffects.name"}}</label>
                 <div class="form-fields">
                     <dnd5e-checkbox id="custom-dnd5e-radial-status-effects" name="radialStatusEffects"{{#if radialStatusEffects}} checked{{/if}}></dnd5e-checkbox>
@@ -24,12 +53,20 @@
                 <p class="hint">{{localize "CUSTOM_DND5E.setting.radialStatusEffects.hint"}}</p>
             </div>
             <div class="form-group">
-                <label>{{localize "CUSTOM_DND5E.setting.tokenHudImprovements.name"}}</label>
+                <label>{{localize "CUSTOM_DND5E.setting.radialStatusEffectsClickToToggle.name"}}</label>
                 <div class="form-fields">
-                    <dnd5e-checkbox id="custom-dnd5e-token-hud-improvements" name="tokenHudImprovements"{{#if tokenHudImprovements}} checked{{/if}}></dnd5e-checkbox>
+                    <dnd5e-checkbox id="custom-dnd5e-radial-status-effects-click-to-toggle" name="radialStatusEffectsClickToToggle"{{#if radialStatusEffectsClickToToggle}} checked{{/if}}></dnd5e-checkbox>
                 </div>
-                <p class="hint">{{localize "CUSTOM_DND5E.setting.tokenHudImprovements.hint"}}</p>
+                <p class="hint">{{localize "CUSTOM_DND5E.setting.radialStatusEffectsClickToToggle.hint"}}</p>
             </div>
+        </fieldset>
+        <fieldset>
+            <legend>
+                <span>{{localize "CUSTOM_DND5E.setting.enableTokenDistance.name"}}</span>
+                <button type="button" class="unbutton control-button" data-action="help" data-uuid="Compendium.custom-dnd5e.custom-dnd5e-journals.JournalEntry.iFcVxKpMyZrNqW8t.JournalEntryPage.tDmVcXrZkHnYjLwP" data-tooltip="{{localize "CUSTOM_DND5E.openGuide"}}" aria-label="{{localize "CUSTOM_DND5E.openGuide"}}">
+                    <i class="fas fa-circle-info" inert></i>
+                </button>
+            </legend>
             <div class="form-group">
                 <label>{{localize "CUSTOM_DND5E.setting.enableTokenDistance.name"}}</label>
                 <div class="form-fields">
@@ -45,20 +82,6 @@
                     </select>
                 </div>
                 <p class="hint">{{localize "CUSTOM_DND5E.setting.tokenDistanceViewRole.hint"}}</p>
-            </div>
-            <div class="form-group">
-                <label>{{localize "CUSTOM_DND5E.setting.applyElevationToSelectedTokens.name"}}</label>
-                <div class="form-fields">
-                    <dnd5e-checkbox id="custom-dnd5e-apply-elevation-to-selected-tokens" name="applyElevationToSelectedTokens"{{#if applyElevationToSelectedTokens}} checked{{/if}}></dnd5e-checkbox>
-                </div>
-                <p class="hint">{{localize "CUSTOM_DND5E.setting.applyElevationToSelectedTokens.hint"}}</p>
-            </div>
-            <div class="form-group">
-                <label>{{localize "CUSTOM_DND5E.setting.toggleStatusEffectOnSelectedTokens.name"}}</label>
-                <div class="form-fields">
-                    <dnd5e-checkbox id="custom-dnd5e-toggle-status-effect-on-selected-tokens" name="toggleStatusEffectOnSelectedTokens"{{#if toggleStatusEffectOnSelectedTokens}} checked{{/if}}></dnd5e-checkbox>
-                </div>
-                <p class="hint">{{localize "CUSTOM_DND5E.setting.toggleStatusEffectOnSelectedTokens.hint"}}</p>
             </div>
         </fieldset>
         <fieldset>
