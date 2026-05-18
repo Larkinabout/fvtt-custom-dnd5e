@@ -1,0 +1,55 @@
+<div class="standard-form custom-dnd5e-give-item">
+        <fieldset>
+            <legend>{{localize "CUSTOM_DND5E.item"}}</legend>
+            <div class="custom-dnd5e-give-item-summary">
+                <img src="{{item.img}}" alt="{{item.name}}" width="48" height="48">
+                <div>
+                    <p class="custom-dnd5e-give-item-name">{{item.name}}</p>
+                    <p class="hint">{{localize "CUSTOM_DND5E.giveItem.form.available" n=item.quantity}}</p>
+                </div>
+            </div>
+        </fieldset>
+
+        <fieldset>
+            <legend>{{localize "CUSTOM_DND5E.recipient"}}</legend>
+            {{#if hasRecipients}}
+            <div class="custom-dnd5e-give-recipients">
+                {{#each recipients}}
+                <button type="button"
+                    class="custom-dnd5e-give-recipient unbutton{{#if selected}} selected{{/if}}{{#if locked}} locked{{/if}}"
+                    {{#unless locked}}data-action="selectRecipient"{{/unless}}
+                    data-token-id="{{tokenId}}"
+                    data-actor-id="{{actorId}}">
+                    <img src="{{img}}" alt="{{name}}" width="40" height="40"
+                        {{#if dispositionColor}}style="border-color: {{dispositionColor}};"{{/if}}>
+                    <span>{{name}}</span>
+                </button>
+                {{/each}}
+            </div>
+            <input type="hidden" name="recipientTokenId" value="{{selectedTokenId}}">
+            {{else}}
+            <p class="hint">{{localize "CUSTOM_DND5E.giveItem.form.noRecipients"}}</p>
+            {{/if}}
+        </fieldset>
+
+        {{#if showQuantity}}
+        <fieldset>
+            <legend>{{localize "CUSTOM_DND5E.quantity"}}</legend>
+            <div class="form-group">
+                <div class="form-fields">
+                    <range-picker id="custom-dnd5e-give-quantity" name="quantity"
+                        value="1" min="1" max="{{maxQuantity}}" step="1"></range-picker>
+                </div>
+            </div>
+        </fieldset>
+        {{else}}
+        <input type="hidden" name="quantity" value="1">
+        {{/if}}
+    {{#if hasRecipients}}
+    <footer class="form-footer" data-application-part="footer">
+        <button type="submit" class="save-button"{{#unless canSubmit}} disabled{{/unless}}>
+            <i class="fas fa-hand-holding custom-dnd5e-give-item-icon"></i>{{localize "CUSTOM_DND5E.give"}}
+        </button>
+    </footer>
+    {{/if}}
+</div>

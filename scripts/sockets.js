@@ -1,6 +1,7 @@
 import { MODULE } from "./constants.js";
 import { animations } from "./utils.js";
 import { MoveCanvasMode } from "./activities/move-canvas-mode.js";
+import { handleGiveItem, handleGiveItemRejected, handleGiveItemSource } from "./interface/give-item.js";
 import { executeRequestedRoll } from "./workflows/workflows.js";
 
 /**
@@ -103,6 +104,9 @@ function _onStopAnimations(data) {
  */
 const HANDLERS = {
   animation: _onAnimation,
+  giveItem: handleGiveItem,
+  giveItemRejected: handleGiveItemRejected,
+  giveItemSource: handleGiveItemSource,
   moveToken: _onMoveToken,
   requestRoll: _onRequestRoll,
   stopAnimations: _onStopAnimations,

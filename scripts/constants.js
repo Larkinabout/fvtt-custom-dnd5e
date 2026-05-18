@@ -660,6 +660,28 @@ export const CONSTANTS = {
       }
     }
   },
+  GIVE_ITEM: {
+    SETTING: {
+      ENABLE: {
+        KEY: "enable-give-item",
+        HINT: "CUSTOM_DND5E.setting.enableGiveItem.hint",
+        NAME: "CUSTOM_DND5E.setting.enableGiveItem.name"
+      },
+      RANGE: {
+        KEY: "give-item-range",
+        HINT: "CUSTOM_DND5E.setting.giveItemRange.hint",
+        NAME: "CUSTOM_DND5E.setting.giveItemRange.name"
+      },
+      REQUIRE_ACCEPTANCE: {
+        KEY: "give-item-require-acceptance",
+        HINT: "CUSTOM_DND5E.setting.giveItemRequireAcceptance.hint",
+        NAME: "CUSTOM_DND5E.setting.giveItemRequireAcceptance.name"
+      }
+    },
+    TEMPLATE: {
+      FORM: "modules/custom-dnd5e/templates/give-item-form.hbs"
+    }
+  },
   GAMEPLAY: {
     MENU: {
       KEY: "gameplay-menu",

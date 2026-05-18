@@ -1,6 +1,6 @@
 import { MODULE, CONSTANTS } from "../constants.js";
 import { getSetting, registerSetting } from "../utils.js";
-import { addCursorLabelIcon, setCursorLabelIcon, setCursorLabelPosition } from "../cursor-label.js";
+import { addCursorLabelIcon, setCursorLabelIcon, setCursorLabelPosition } from "../interface/cursor-label.js";
 
 const DISABLE_ICON_ID = "custom-dnd5e-cursor-label-radial-disable";
 const DELETE_ICON_ID = "custom-dnd5e-cursor-label-radial-delete";

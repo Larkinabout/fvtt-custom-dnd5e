@@ -833,7 +833,7 @@ export async function hideApplications({ duration = 200 } = {}) {
     hidden.push(app);
   }
 
-  await Promise.all(hidden.map(app =>
+  await Promise.allSettled(hidden.map(app =>
     app.element.animate([{ opacity: 1 }, { opacity: 0 }], { duration, fill: "forwards" }).finished
   ));
 
@@ -843,7 +843,7 @@ export async function hideApplications({ duration = 200 } = {}) {
   }
 
   return async () => {
-    await Promise.all(hidden.filter(app => app.element).map(app => {
+    await Promise.allSettled(hidden.filter(app => app.element).map(app => {
       app.element.style.display = "";
       return app.element.animate([{ opacity: 0 }, { opacity: 1 }], { duration }).finished;
     }));

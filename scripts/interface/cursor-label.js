@@ -1,5 +1,5 @@
-import { CONSTANTS } from "./constants.js";
-import { Logger, getDnd5eKeysPressed, getSetting, registerSetting } from "./utils.js";
+import { CONSTANTS } from "../constants.js";
+import { Logger, getDnd5eKeysPressed, getSetting, registerSetting } from "../utils.js";
 
 const constants = CONSTANTS.SHOW_PRESSED_KEYS;
 

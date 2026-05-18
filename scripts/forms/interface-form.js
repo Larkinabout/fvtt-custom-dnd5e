@@ -8,6 +8,7 @@ const RAD = CONSTANTS.RADIAL_STATUS_EFFECTS.SETTING;
 const RULER = CONSTANTS.RULER_TRAVEL_TIME.SETTING;
 const CURSOR = CONSTANTS.SHOW_PRESSED_KEYS.SETTING;
 const CHAT = CONSTANTS.CHAT_COMMANDS.SETTING;
+const GIVE = CONSTANTS.GIVE_ITEM.SETTING;
 
 /**
  * Class representing the Configure Interface Form.
@@ -62,6 +63,15 @@ export class InterfaceForm extends CustomDnd5eForm {
       rulerTravelTime: getSetting(RULER.KEY),
       showPressedKeys: getSetting(CURSOR.KEY),
       chatCommands: getSetting(CHAT.KEY),
+      giveItem: getSetting(GIVE.ENABLE.KEY),
+      giveItemRange: getSetting(GIVE.RANGE.KEY) || "",
+      giveItemRangeUnits: canvas?.scene?.grid?.units || "",
+      giveItemRequireAcceptanceFriendly: (getSetting(GIVE.REQUIRE_ACCEPTANCE.KEY) ?? []).map(Number).includes(CONST.TOKEN_DISPOSITIONS.FRIENDLY),
+      giveItemRequireAcceptanceNeutral: (getSetting(GIVE.REQUIRE_ACCEPTANCE.KEY) ?? []).map(Number).includes(CONST.TOKEN_DISPOSITIONS.NEUTRAL),
+      giveItemRequireAcceptanceHostile: (getSetting(GIVE.REQUIRE_ACCEPTANCE.KEY) ?? []).map(Number).includes(CONST.TOKEN_DISPOSITIONS.HOSTILE),
+      giveItemRequireAcceptancePcToPc: (getSetting(GIVE.REQUIRE_ACCEPTANCE.KEY) ?? []).includes("pcToPc"),
+      giveItemRequireAcceptancePcToNpc: (getSetting(GIVE.REQUIRE_ACCEPTANCE.KEY) ?? []).includes("pcToNpc"),
+      giveItemRequireAcceptanceNpcToPc: (getSetting(GIVE.REQUIRE_ACCEPTANCE.KEY) ?? []).includes("npcToPc"),
       selects: {
         tokenBorderShape: {
           choices: {
@@ -100,7 +110,10 @@ export class InterfaceForm extends CustomDnd5eForm {
         resetSetting(TOKEN.TOGGLE_STATUS_EFFECT_ON_SELECTED_TOKENS.KEY),
         resetSetting(RULER.KEY),
         resetSetting(CURSOR.KEY),
-        resetSetting(CHAT.KEY)
+        resetSetting(CHAT.KEY),
+        resetSetting(GIVE.ENABLE.KEY),
+        resetSetting(GIVE.RANGE.KEY),
+        resetSetting(GIVE.REQUIRE_ACCEPTANCE.KEY)
       ]);
       this.render(true);
     };
@@ -136,7 +149,17 @@ export class InterfaceForm extends CustomDnd5eForm {
       setSetting(TOKEN.TOGGLE_STATUS_EFFECT_ON_SELECTED_TOKENS.KEY, data.toggleStatusEffectOnSelectedTokens),
       setSetting(RULER.KEY, data.rulerTravelTime),
       setSetting(CURSOR.KEY, data.showPressedKeys),
-      setSetting(CHAT.KEY, data.chatCommands)
+      setSetting(CHAT.KEY, data.chatCommands),
+      setSetting(GIVE.ENABLE.KEY, data.giveItem),
+      setSetting(GIVE.RANGE.KEY, Math.max(0, Number(data.giveItemRange) || 0)),
+      setSetting(GIVE.REQUIRE_ACCEPTANCE.KEY, [
+        data.giveItemRequireAcceptanceFriendly ? CONST.TOKEN_DISPOSITIONS.FRIENDLY : null,
+        data.giveItemRequireAcceptanceNeutral ? CONST.TOKEN_DISPOSITIONS.NEUTRAL : null,
+        data.giveItemRequireAcceptanceHostile ? CONST.TOKEN_DISPOSITIONS.HOSTILE : null,
+        data.giveItemRequireAcceptancePcToPc ? "pcToPc" : null,
+        data.giveItemRequireAcceptancePcToNpc ? "pcToNpc" : null,
+        data.giveItemRequireAcceptanceNpcToPc ? "npcToPc" : null
+      ].filter(v => v !== null))
     ]);
 
     foundry.applications.settings.SettingsConfig.reloadConfirm();

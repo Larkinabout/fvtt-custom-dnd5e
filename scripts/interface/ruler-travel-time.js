@@ -1,5 +1,5 @@
-import { MODULE, CONSTANTS } from "./constants.js";
-import { c5eLoadTemplates, getSetting, registerSetting } from "./utils.js";
+import { MODULE, CONSTANTS } from "../constants.js";
+import { c5eLoadTemplates, getSetting, registerSetting } from "../utils.js";
 
 const constants = CONSTANTS.RULER_TRAVEL_TIME;
 const TEMPLATE = "modules/custom-dnd5e/templates/waypoint-label.hbs";

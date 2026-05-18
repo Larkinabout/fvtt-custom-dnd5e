@@ -1,6 +1,6 @@
 import { CONSTANTS } from "./constants.js";
 import { registerSettings as registerChatCommandsSetting, registerHooks as registerChatCommandsHooks } from "./chat-commands.js";
-import { registerSettings as registerCursorLabelSettings, registerHooks as registerCursorLabelHooks } from "./cursor-label.js";
+import { registerSettings as registerCursorLabelSettings, registerHooks as registerCursorLabelHooks } from "./interface/cursor-label.js";
 import { getSetting, registerSetting } from "./utils.js";
 
 /**
