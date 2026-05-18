@@ -3,6 +3,11 @@ import { getFlag, setFlag, unsetFlag, getSetting, setSetting, Logger } from "../
 import { CustomDnd5eForm } from "../custom-dnd5e-form.js";
 import { WorkflowsEditForm, COUNTER_TRIGGERS, COUNTER_ACTIONS } from "../workflows/workflows-edit.js";
 import { rebuild, ensureEventHooks } from "../../workflows/workflows.js";
+import {
+  copyWorkflowToClipboard,
+  parseAndValidateWorkflows,
+  promptForWorkflowJson
+} from "../workflows/workflow-clipboard.js";
 
 const id = CONSTANTS.COUNTERS.ID;
 const form = `${id}-edit`;
@@ -40,7 +45,9 @@ export class CountersEditForm extends CustomDnd5eForm {
     actions: {
       newWorkflow: CountersEditForm.newWorkflow,
       editWorkflow: CountersEditForm.editWorkflow,
-      deleteWorkflow: CountersEditForm.deleteWorkflow
+      deleteWorkflow: CountersEditForm.deleteWorkflow,
+      copyWorkflow: CountersEditForm.copyWorkflow,
+      pasteWorkflow: CountersEditForm.pasteWorkflow
     },
     form: {
       handler: CountersEditForm.submit,
@@ -243,6 +250,72 @@ export class CountersEditForm extends CustomDnd5eForm {
       no: {
         label: game.i18n.localize("CUSTOM_DND5E.no")
       }
+    });
+  }
+
+  /* -------------------------------------------- */
+
+  /**
+   * Copy a workflow's JSON to the clipboard.
+   * @param {Event} event Click event
+   * @param {HTMLElement} target Clicked element
+   */
+  static async copyWorkflow(event, target) {
+    const item = target.closest(".item");
+    if ( !item ) return;
+    const workflowKey = item.dataset.key;
+    if ( !workflowKey ) return;
+
+    const workflows = this.entity
+      ? (getFlag(this.entity, "triggers") || {})
+      : (getSetting(workflowsSettingKey(this.actorType)) || {});
+    const workflow = workflows[workflowKey];
+    if ( !workflow ) return;
+
+    await copyWorkflowToClipboard(workflow, this.actorType, workflowKey);
+  }
+
+  /* -------------------------------------------- */
+
+  /**
+   * Open a dialog to paste workflow JSON, then attach it to the current counter.
+   */
+  static async pasteWorkflow() {
+    const form = this;
+    await promptForWorkflowJson(async text => {
+      const entries = parseAndValidateWorkflows(text, form.actorType);
+      if ( !entries?.length ) return;
+      const workflow = foundry.utils.deepClone(entries[0]);
+      delete workflow.entityType;
+
+      for ( const trigger of Object.values(workflow.triggers || {}) ) {
+        if ( COUNTER_TRIGGERS.includes(trigger.event) ) trigger.counterKey = form.key;
+      }
+      for ( const action of Object.values(workflow.actions || {}) ) {
+        if ( COUNTER_ACTIONS.includes(action.type) ) action.counterKey = form.key;
+      }
+
+      const newKey = foundry.utils.randomID();
+      if ( form.entity ) {
+        const triggers = getFlag(form.entity, "triggers") || {};
+        triggers[newKey] = workflow;
+        await unsetFlag(form.entity, "triggers");
+        await setFlag(form.entity, "triggers", triggers);
+        ensureEventHooks(triggers, form.actorType);
+      } else {
+        const settingKey = workflowsSettingKey(form.actorType);
+        const setting = getSetting(settingKey) || {};
+        setting[newKey] = workflow;
+        await setSetting(settingKey, setting);
+        rebuild();
+      }
+
+      form.render(true);
+
+      Logger.info(
+        game.i18n.format("CUSTOM_DND5E.workflowImport.success", { name: workflow.name }),
+        true
+      );
     });
   }
 

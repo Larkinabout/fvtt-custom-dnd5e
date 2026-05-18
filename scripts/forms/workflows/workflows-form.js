@@ -2,8 +2,14 @@ import { CONSTANTS, JOURNAL_HELP_BUTTON, MODULE } from "../../constants.js";
 import { deleteProperty, getSetting, Logger, setSetting } from "../../utils.js";
 import { CustomDnd5eForm } from "../custom-dnd5e-form.js";
 import { JournalDropMixin } from "../journal-drop-mixin.js";
-import { WorkflowsEditForm, getActionChoices } from "./workflows-edit.js";
-import { EVENT_TO_HOOK, ITEM_EVENT_TO_HOOK, rebuild } from "../../workflows/workflows.js";
+import { WorkflowsEditForm } from "./workflows-edit.js";
+import { rebuild } from "../../workflows/workflows.js";
+import {
+  copyWorkflowToClipboard,
+  parseAndValidateWorkflows,
+  promptForWorkflowJson,
+  validateWorkflowSchema
+} from "./workflow-clipboard.js";
 
 const id = CONSTANTS.WORKFLOWS.ID;
 const form = `${id}-form`;
@@ -124,18 +130,7 @@ export class WorkflowsForm extends JournalDropMixin(CustomDnd5eForm) {
     if ( !workflow ) return;
 
     const entityType = this.isItem ? "item" : "actor";
-    const payload = foundry.utils.deepClone({ ...workflow, entityType });
-    const json = JSON.stringify(payload, null, 2);
-
-    try {
-      await navigator.clipboard.writeText(json);
-      Logger.info(
-        game.i18n.format("CUSTOM_DND5E.workflowExport.success", { name: workflow.name || key }),
-        true
-      );
-    } catch {
-      Logger.error(game.i18n.localize("CUSTOM_DND5E.workflowExport.error.clipboard"), true);
-    }
+    await copyWorkflowToClipboard(workflow, entityType, key);
   }
 
   /* -------------------------------------------- */
@@ -144,55 +139,12 @@ export class WorkflowsForm extends JournalDropMixin(CustomDnd5eForm) {
    * Open a dialog to paste workflow JSON.
    */
   static async pasteFromClipboard() {
-    let initial = "";
-    try {
-      initial = await navigator.clipboard.readText();
-    } catch {
-      // Clipboard unavailable
-    }
-
     const form = this;
-    const placeholder = game.i18n.localize("CUSTOM_DND5E.workflowImport.paste.placeholder");
-    await foundry.applications.api.DialogV2.prompt({
-      window: { title: game.i18n.localize("CUSTOM_DND5E.workflowImport.paste.title") },
-      content: `<textarea id="custom-dnd5e-workflow-paste" placeholder="${placeholder}" style="width:100%; min-height:18rem; font-family:monospace; resize:vertical;">${foundry.utils.escapeHTML(initial)}</textarea>`,
-      modal: true,
-      ok: {
-        label: game.i18n.localize("CUSTOM_DND5E.import"),
-        callback: async (event, button, dialog) => {
-          const text = dialog.element.querySelector("#custom-dnd5e-workflow-paste")?.value?.trim();
-          if ( !text ) return;
-          await form._handlePastedJson(text);
-        }
-      }
+    await promptForWorkflowJson(async text => {
+      const entries = parseAndValidateWorkflows(text, form.isItem ? "item" : "actor");
+      if ( !entries ) return;
+      await form._createWorkflowsFromImport(entries);
     });
-  }
-
-  /* -------------------------------------------- */
-
-  /**
-   * Parse, validate, and import workflows from a pasted JSON string.
-   * @param {string} text Raw JSON text
-   */
-  async _handlePastedJson(text) {
-    let parsed;
-    try {
-      parsed = JSON.parse(text);
-    } catch (err) {
-      Logger.error(game.i18n.format("CUSTOM_DND5E.journalImport.error.parseFailed", { error: err.message }), true);
-      return;
-    }
-    const candidates = Array.isArray(parsed) ? parsed : [parsed];
-    const validated = [];
-    for ( const entry of candidates ) {
-      const result = this._validateWorkflowSchema(entry);
-      if ( !result.valid ) {
-        Logger.error(result.error, true);
-        return;
-      }
-      validated.push(entry);
-    }
-    await this._createWorkflowsFromImport(validated);
   }
 
   /* -------------------------------------------- */
@@ -220,7 +172,7 @@ export class WorkflowsForm extends JournalDropMixin(CustomDnd5eForm) {
    * @returns {{valid: boolean, error: string|null}} Validation result
    */
   _validateImportSchema(data) {
-    return this._validateWorkflowSchema(data);
+    return validateWorkflowSchema(data, this.isItem ? "item" : "actor");
   }
 
   /* -------------------------------------------- */
@@ -232,74 +184,6 @@ export class WorkflowsForm extends JournalDropMixin(CustomDnd5eForm) {
    */
   async _createFromImport(entries) {
     return this._createWorkflowsFromImport(entries);
-  }
-
-  /* -------------------------------------------- */
-
-  /**
-   * Validate a parsed workflow object against the expected schema.
-   * @param {*} data Parsed object
-   * @returns {{valid: boolean, error: string|null}} Validation result
-   */
-  _validateWorkflowSchema(data) {
-    if ( !data || typeof data !== "object" || Array.isArray(data) ) {
-      return { valid: false, error: game.i18n.localize("CUSTOM_DND5E.workflowImport.error.notObject") };
-    }
-
-    if ( typeof data.name !== "string" || !data.name.trim() ) {
-      return { valid: false, error: game.i18n.localize("CUSTOM_DND5E.workflowImport.error.invalidName") };
-    }
-
-    if ( data.entityType !== undefined && data.entityType !== "actor" && data.entityType !== "item" ) {
-      return { valid: false, error: game.i18n.localize("CUSTOM_DND5E.workflowImport.error.invalidEntityType") };
-    }
-
-    const allowedKeys = new Set([
-      "name", "enabled", "entityType", "actorTypes", "target", "triggers", "actions"
-    ]);
-    for ( const key of Object.keys(data) ) {
-      if ( !allowedKeys.has(key) ) {
-        return {
-          valid: false,
-          error: game.i18n.format("CUSTOM_DND5E.workflowImport.error.unknownProperty", { property: key })
-        };
-      }
-    }
-
-    // Validate triggers
-    const isItem = data.entityType === "item";
-    const validEvents = new Set(Object.keys(isItem ? ITEM_EVENT_TO_HOOK : EVENT_TO_HOOK));
-    if ( data.triggers !== undefined ) {
-      if ( typeof data.triggers !== "object" || data.triggers === null ) {
-        return { valid: false, error: game.i18n.localize("CUSTOM_DND5E.workflowImport.error.invalidTrigger") };
-      }
-      for ( const trigger of Object.values(data.triggers) ) {
-        if ( !trigger || typeof trigger.event !== "string" || !validEvents.has(trigger.event) ) {
-          return {
-            valid: false,
-            error: game.i18n.format("CUSTOM_DND5E.workflowImport.error.invalidTrigger", { event: trigger?.event ?? "" })
-          };
-        }
-      }
-    }
-
-    // Validate actions
-    const validActionTypes = new Set(getActionChoices(data.entityType ?? "actor").map(c => c.value));
-    if ( data.actions !== undefined ) {
-      if ( typeof data.actions !== "object" || data.actions === null ) {
-        return { valid: false, error: game.i18n.localize("CUSTOM_DND5E.workflowImport.error.invalidAction") };
-      }
-      for ( const action of Object.values(data.actions) ) {
-        if ( !action || typeof action.type !== "string" || !validActionTypes.has(action.type) ) {
-          return {
-            valid: false,
-            error: game.i18n.format("CUSTOM_DND5E.workflowImport.error.invalidAction", { type: action?.type ?? "" })
-          };
-        }
-      }
-    }
-
-    return { valid: true, error: null };
   }
 
   /* -------------------------------------------- */

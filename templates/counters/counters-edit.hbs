@@ -100,6 +100,9 @@
                     <div class="items-section card">
                         <div class="items-header header">
                             <h3 class="item-name">{{localize "CUSTOM_DND5E.workflows"}}</h3>
+                            <button type="button" data-action="pasteWorkflow" class="unbutton control-button item-control always-interactive" style="margin-right: 0.5rem;" data-tooltip="{{localize 'CUSTOM_DND5E.pasteFromClipboard'}}" data-tooltip-direction="UP" aria-label="{{localize 'CUSTOM_DND5E.pasteFromClipboard'}}">
+                                <i class="fa-regular fa-paste" inert></i>
+                            </button>
                         </div>
                         <ol class="item-list unlist custom-dnd5e-list">
                             {{> "modules/custom-dnd5e/templates/counters/counters-workflows-list.hbs" workflows=workflows}}
