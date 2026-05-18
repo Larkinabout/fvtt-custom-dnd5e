@@ -169,7 +169,8 @@ function getTriggerChoices(entityType = "actor") {
     const equipmentGroup = game.i18n.localize("CUSTOM_DND5E.form.workflows.trigger.group.equipment");
     choices.push(
       { value: "equip", label: "CUSTOM_DND5E.form.workflows.trigger.choices.equip", group: equipmentGroup },
-      { value: "unequip", label: "CUSTOM_DND5E.form.workflows.trigger.choices.unequip", group: equipmentGroup }
+      { value: "unequip", label: "CUSTOM_DND5E.form.workflows.trigger.choices.unequip", group: equipmentGroup },
+      { value: "itemUsed", label: "CUSTOM_DND5E.form.workflows.trigger.choices.itemUsed", group: equipmentGroup }
     );
   }
 
@@ -191,7 +192,8 @@ function getTriggerChoices(entityType = "actor") {
       { value: "attackRoll", label: "CUSTOM_DND5E.form.workflows.trigger.choices.attackRoll", group: rollsGroup },
       { value: "attackRolled", label: "CUSTOM_DND5E.form.workflows.trigger.choices.attackRolled", group: rollsGroup },
       { value: "equip", label: "CUSTOM_DND5E.form.workflows.trigger.choices.equip", group: equipmentGroup },
-      { value: "unequip", label: "CUSTOM_DND5E.form.workflows.trigger.choices.unequip", group: equipmentGroup }
+      { value: "unequip", label: "CUSTOM_DND5E.form.workflows.trigger.choices.unequip", group: equipmentGroup },
+      { value: "itemUsed", label: "CUSTOM_DND5E.form.workflows.trigger.choices.itemUsed", group: equipmentGroup }
     );
   }
 

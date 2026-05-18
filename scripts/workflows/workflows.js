@@ -1065,6 +1065,23 @@ function handleUpdateItem(item, data, options, userId) {
 /* -------------------------------------------- */
 
 /**
+ * Fire itemUsed events after an activity is used.
+ * @param {Activity} activity Activity that was used
+ * @param {object} usageConfig Usage config
+ * @param {object} results Usage results
+ */
+function handleUseActivity(activity, usageConfig, results) {
+  const item = activity?.item;
+  if ( !item ) return;
+  const actor = activity?.actor;
+
+  if ( item.isOwner ) processItemEvent("itemUsed", { item });
+  if ( actor?.isOwner ) processEvent("itemUsed", { actor, item });
+}
+
+/* -------------------------------------------- */
+
+/**
  * Resolve the Actor targeted by an ActiveEffect.
  * Uses the built-in target getter which handles effects on Actors directly
  * and transfer effects on Items owned by Actors.
@@ -1169,7 +1186,8 @@ export const EVENT_TO_HOOK = {
   effectEnabled: "createActiveEffect",
   effectDisabled: "deleteActiveEffect",
   equip: "updateItem",
-  unequip: "updateItem"
+  unequip: "updateItem",
+  itemUsed: "dnd5e.postUseActivity"
 };
 
 /** Mapping from item counter events to the item hook. */
@@ -1184,7 +1202,8 @@ export const ITEM_EVENT_TO_HOOK = {
   failureValue: "updateItem",
   attackRolled: "dnd5e.rollAttack",
   equip: "updateItem",
-  unequip: "updateItem"
+  unequip: "updateItem",
+  itemUsed: "dnd5e.postUseActivity"
 };
 
 /** Mapping from requestRoll category to the event key used for hook registration. */
@@ -1219,7 +1238,8 @@ const HOOK_HANDLERS = {
   updateItem: handleUpdateItem,
   createActiveEffect: handleCreateActiveEffect,
   deleteActiveEffect: handleDeleteActiveEffect,
-  updateActiveEffect: handleUpdateActiveEffect
+  updateActiveEffect: handleUpdateActiveEffect,
+  "dnd5e.postUseActivity": handleUseActivity
 };
 
 /* -------------------------------------------- */

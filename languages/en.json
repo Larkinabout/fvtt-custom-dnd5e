@@ -530,6 +530,7 @@
     "CUSTOM_DND5E.form.workflows.trigger.choices.gainHp": "HP Gained",
     "CUSTOM_DND5E.form.workflows.trigger.choices.halfHp": "Half HP or Lower",
     "CUSTOM_DND5E.form.workflows.trigger.choices.initiativeRolled": "Initiative Rolled",
+    "CUSTOM_DND5E.form.workflows.trigger.choices.itemUsed": "Item Used",
     "CUSTOM_DND5E.form.workflows.trigger.choices.loseHp": "HP Lost",
     "CUSTOM_DND5E.form.workflows.trigger.choices.savingThrowRolled": "Saving Throw Rolled",
     "CUSTOM_DND5E.form.workflows.trigger.choices.skillCheckRolled": "Skill Check Rolled",
