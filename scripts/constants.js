@@ -1153,6 +1153,11 @@ export const CONSTANTS = {
       },
       HUD_IMPROVEMENTS: {
         KEY: "token-hud-improvements"
+      },
+      HUD_SCALE: {
+        KEY: "token-hud-scale",
+        HINT: "CUSTOM_DND5E.setting.tokenHudScale.hint",
+        NAME: "CUSTOM_DND5E.setting.tokenHudScale.name"
       }
     }
   },

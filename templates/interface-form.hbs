@@ -119,13 +119,6 @@
                 </button>
             </legend>
             <div class="form-group">
-                <label>{{localize "CUSTOM_DND5E.setting.tokenHudImprovements.name"}}</label>
-                <div class="form-fields">
-                    <dnd5e-checkbox id="custom-dnd5e-token-hud-improvements" name="tokenHudImprovements"{{#if tokenHudImprovements}} checked{{/if}}></dnd5e-checkbox>
-                </div>
-                <p class="hint">{{localize "CUSTOM_DND5E.setting.tokenHudImprovements.hint"}}</p>
-            </div>
-            <div class="form-group">
                 <label>{{localize "CUSTOM_DND5E.setting.applyElevationToSelectedTokens.name"}}</label>
                 <div class="form-fields">
                     <dnd5e-checkbox id="custom-dnd5e-apply-elevation-to-selected-tokens" name="applyElevationToSelectedTokens"{{#if applyElevationToSelectedTokens}} checked{{/if}}></dnd5e-checkbox>
@@ -207,6 +200,28 @@
                     </select>
                 </div>
                 <p class="hint">{{localize "CUSTOM_DND5E.setting.tokenDistanceViewRole.hint"}}</p>
+            </div>
+        </fieldset>
+        <fieldset>
+            <legend>
+                <span>{{localize "CUSTOM_DND5E.tokenHud"}}</span>
+                <button type="button" class="unbutton control-button" data-action="help" data-uuid="Compendium.custom-dnd5e.custom-dnd5e-journals.JournalEntry.iFcVxKpMyZrNqW8t.JournalEntryPage.XlGcFavikph0rgVV" data-tooltip="{{localize "CUSTOM_DND5E.openGuide"}}" aria-label="{{localize "CUSTOM_DND5E.openGuide"}}">
+                    <i class="fas fa-circle-info" inert></i>
+                </button>
+            </legend>
+            <div class="form-group">
+                <label>{{localize "CUSTOM_DND5E.setting.tokenHudImprovements.name"}}</label>
+                <div class="form-fields">
+                    <dnd5e-checkbox id="custom-dnd5e-token-hud-improvements" name="tokenHudImprovements"{{#if tokenHudImprovements}} checked{{/if}}></dnd5e-checkbox>
+                </div>
+                <p class="hint">{{localize "CUSTOM_DND5E.setting.tokenHudImprovements.hint"}}</p>
+            </div>
+            <div class="form-group">
+                <label>{{localize "CUSTOM_DND5E.setting.tokenHudScale.name"}}</label>
+                <div class="form-fields">
+                    <range-picker id="custom-dnd5e-token-hud-scale" name="tokenHudScale" value="{{tokenHudScale}}" min="0.5" max="2" step="0.05"></range-picker>
+                </div>
+                <p class="hint">{{localize "CUSTOM_DND5E.setting.tokenHudScale.hint"}}</p>
             </div>
         </fieldset>
     </div>

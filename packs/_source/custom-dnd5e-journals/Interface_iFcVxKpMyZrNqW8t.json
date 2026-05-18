@@ -15,7 +15,7 @@
       "image": {},
       "text": {
         "format": 1,
-        "content": "<h2 class=\"custom-dnd5e-h2\">Token HUD Improvements</h2><p>When enabled, improves the Token HUD with the following features:</p><ul><li><p><strong>Hover-to-open palettes</strong>. Hovering over the Status Effects or Movement Actions buttons opens the palette automatically.</p></li><li><p><strong>Button styling</strong>. Enhanced feedback for status effect icons and control buttons.</p></li><li><p><strong>Fixed HUD size</strong>. The Token HUD maintains a consistent size on screen regardless of the canvas zoom level.</p></li></ul><p>Requires a reload when changed.</p><h2 class=\"custom-dnd5e-h2\">Apply Elevation to Selected</h2><p>When applying elevation via a token's HUD, apply it to all selected tokens. This is useful for moving a group of tokens to the same elevation at once, such as when the party ascends a staircase or flies to a new height.</p><p>Requires a reload when changed.</p><h2 class=\"custom-dnd5e-h2\">Toggle Status Effects on Selected</h2><p>When toggling a status effect via a token's HUD, toggle it for all selected tokens. This is useful for applying or removing a condition from multiple tokens at once, such as applying the Frightened condition to a group of enemies.</p><p>Requires a reload when changed.</p>"
+        "content": "<h2 class=\"custom-dnd5e-h2\">Apply Elevation to Selected</h2><p>When applying elevation via a token's HUD, apply it to all selected tokens. This is useful for moving a group of tokens to the same elevation at once, such as when the party ascends a staircase or flies to a new height.</p><p>Requires a reload when changed.</p><h2 class=\"custom-dnd5e-h2\">Toggle Status Effects on Selected</h2><p>When toggling a status effect via a token's HUD, toggle it for all selected tokens. This is useful for applying or removing a condition from multiple tokens at once, such as applying the Frightened condition to a group of enemies.</p><p>Requires a reload when changed.</p>"
       },
       "video": {
         "controls": true,
@@ -34,7 +34,7 @@
         "systemId": "dnd5e",
         "systemVersion": "5.2.5",
         "createdTime": 1778500000000,
-        "modifiedTime": 1778789279675,
+        "modifiedTime": 1779116628352,
         "lastModifiedBy": "2Ab5BheRvt8es88G",
         "exportSource": null
       },
@@ -274,6 +274,45 @@
       },
       "category": null,
       "_key": "!journal.pages!iFcVxKpMyZrNqW8t.cHbDxV2pKs5RmTbW"
+    },
+    {
+      "sort": 275000,
+      "name": "Token HUD",
+      "type": "text",
+      "_id": "XlGcFavikph0rgVV",
+      "system": {},
+      "title": {
+        "show": true,
+        "level": 1
+      },
+      "image": {},
+      "text": {
+        "format": 1,
+        "content": "<h2 class=\"custom-dnd5e-h2\">Token HUD Improvements</h2><p>When enabled, improves the Token HUD with the following features:</p><ul><li><p><strong>Hover-to-open palettes</strong>. Hovering over the Status Effects or Movement Actions buttons opens the palette automatically.</p></li><li><p><strong>Button styling</strong>. Enhanced feedback for status effect icons and control buttons.</p></li><li><p><strong>Fixed HUD size</strong>. The Token HUD maintains a consistent size on screen regardless of the canvas zoom level.</p></li></ul><p>Requires a reload when changed.</p><h2 class=\"custom-dnd5e-h2\">Scale</h2><p>Overall scale of the Token HUD when Token HUD Improvements is enabled.</p><p>Requires a reload when changed.</p>"
+      },
+      "video": {
+        "controls": true,
+        "volume": 0.5
+      },
+      "src": null,
+      "category": null,
+      "ownership": {
+        "default": -1,
+        "2Ab5BheRvt8es88G": 3
+      },
+      "flags": {},
+      "_stats": {
+        "coreVersion": "14.361",
+        "systemId": "dnd5e",
+        "systemVersion": "5.3.3",
+        "createdTime": 1779116618530,
+        "modifiedTime": 1779116718662,
+        "lastModifiedBy": "2Ab5BheRvt8es88G",
+        "compendiumSource": null,
+        "duplicateSource": null,
+        "exportSource": null
+      },
+      "_key": "!journal.pages!iFcVxKpMyZrNqW8t.XlGcFavikph0rgVV"
     }
   ],
   "folder": null,

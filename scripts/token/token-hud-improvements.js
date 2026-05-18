@@ -8,7 +8,7 @@ const constants = CONSTANTS.TOKEN;
  */
 let paletteTimeout = null;
 const HOVER_DELAY = 200;
-const HUD_SCALE = 1.25;
+const DEFAULT_HUD_SCALE = 1;
 
 /* -------------------------------------------- */
 
@@ -36,6 +36,18 @@ function registerSettings() {
       requiresReload: true,
       type: Boolean,
       default: false
+    }
+  );
+
+  registerSetting(
+    constants.SETTING.HUD_SCALE.KEY,
+    {
+      name: game.i18n.localize("CUSTOM_DND5E.setting.tokenHudScale.name"),
+      hint: game.i18n.localize("CUSTOM_DND5E.setting.tokenHudScale.hint"),
+      scope: "world",
+      config: false,
+      type: Number,
+      default: DEFAULT_HUD_SCALE
     }
   );
 }
@@ -124,7 +136,8 @@ function applyHudScale(hud) {
   hud.element.style.left = `${left}px`;
   hud.element.style.top = `${top}px`;
   hud.element.style.transformOrigin = "center";
-  hud.element.style.transform = `scale(${HUD_SCALE / stageScale})`;
+  const hudScale = Number(getSetting(constants.SETTING.HUD_SCALE.KEY)) || DEFAULT_HUD_SCALE;
+  hud.element.style.transform = `scale(${hudScale / stageScale})`;
 }
 
 /* -------------------------------------------- */
