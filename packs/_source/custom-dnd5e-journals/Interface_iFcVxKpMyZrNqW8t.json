@@ -198,45 +198,6 @@
       "_key": "!journal.pages!iFcVxKpMyZrNqW8t.cNvBjMx5rZh9LnYt"
     },
     {
-      "sort": 50000,
-      "name": "Items",
-      "type": "text",
-      "_id": "iTmGvXrZkHnYjLwQ",
-      "system": {},
-      "title": {
-        "show": true,
-        "level": 1
-      },
-      "image": {},
-      "text": {
-        "format": 1,
-        "content": "<h2 class=\"custom-dnd5e-h2\">Give Item</h2><p>When enabled, allows items to be given to other characters.</p><p>There are two ways to initiate a give:</p><ul><li><p><strong>Drag-and-drop:</strong> Drag the item from the character sheet onto a token on the canvas.</p></li><li><p><strong>Context menu:</strong> Right-click the item on the character sheet and choose <em>Give…</em></p></li></ul><p>If the giver has a token placed on the active scene, only tokens visible to that token are shown. If the giver has no placed token, all character tokens on the scene are shown.</p><p>Items with a quantity greater than 1 prompt for an amount to give.</p><h2 class=\"custom-dnd5e-h2\">Range</h2><p>Optional maximum distance, in grid units, that items can be given. Only applies when the giver has a token placed on the scene. Leave blank for no limt.</p><h2 class=\"custom-dnd5e-h2\">Require Acceptance</h2><p>When the recipient matches one of the selected options, the recipient is prompted to accept the item. Disposition options apply only to NPC recipients.</p><ul><li><p><strong>Friendly. </strong>NPCs with a Friendly disposition.</p></li><li><p><strong>Neutral. </strong>NPCs with a Neutral disposition.</p></li><li><p><strong>Hostile. </strong>NPCs with a Hostile disposition.</p></li><li><p><strong>PC to PC. </strong>A player character giving an item to another player character.</p></li><li><p><strong>PC to NPC. </strong>A player chaaracter giving an item to a non-player character.</p></li><li><p><strong>NPC to PC. </strong>A non-player chaaracter giving an item to a player character.</p></li></ul>"
-      },
-      "video": {
-        "controls": true,
-        "volume": 0.5
-      },
-      "src": null,
-      "ownership": {
-        "default": -1,
-        "0wJRsV2r9Hv1a7q0": 3
-      },
-      "flags": {},
-      "_stats": {
-        "compendiumSource": null,
-        "duplicateSource": null,
-        "coreVersion": "14.361",
-        "systemId": "dnd5e",
-        "systemVersion": "5.2.5",
-        "createdTime": 1778500000000,
-        "modifiedTime": 1779090870156,
-        "lastModifiedBy": "2Ab5BheRvt8es88G",
-        "exportSource": null
-      },
-      "category": null,
-      "_key": "!journal.pages!iFcVxKpMyZrNqW8t.iTmGvXrZkHnYjLwQ"
-    },
-    {
       "sort": 0,
       "name": "Chat",
       "type": "text",

@@ -114,13 +114,25 @@ export function setCursorLabelIcon(id, visible) {
 
 /**
  * Update the cursor label container's screen position.
+ * Two positioning modes:
+ *  - **tooltip** (default): Icon sits below-left of the cursor.
+ *  - **cursor**: Icon is centered on the cursor point itself.
  * @param {number} clientX
  * @param {number} clientY
+ * @param {object} [options]
+ * @param {"tooltip"|"cursor"} [options.mode="tooltip"]
  */
-export function setCursorLabelPosition(clientX, clientY) {
+export function setCursorLabelPosition(clientX, clientY, { mode = "tooltip" } = {}) {
   const container = addCursorLabel();
-  container.style.left = `${clientX - 5}px`;
-  container.style.top = `${clientY + 15}px`;
+  if ( mode === "cursor" ) {
+    container.classList.add("custom-dnd5e-cursor-label-cursor-mode");
+    container.style.left = `${clientX}px`;
+    container.style.top = `${clientY}px`;
+  } else {
+    container.classList.remove("custom-dnd5e-cursor-label-cursor-mode");
+    container.style.left = `${clientX - 5}px`;
+    container.style.top = `${clientY + 15}px`;
+  }
 }
 
 /* -------------------------------------------- */

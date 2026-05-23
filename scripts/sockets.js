@@ -1,7 +1,13 @@
 import { MODULE } from "./constants.js";
 import { animations } from "./utils.js";
 import { MoveCanvasMode } from "./activities/move-canvas-mode.js";
-import { handleGiveItem, handleGiveItemRejected, handleGiveItemSource } from "./interface/give-item.js";
+import { handleGiveItem, handleGiveItemRejected, handleGiveItemSource } from "./item-interactions/give-items.js";
+import {
+  handleAddToContainer,
+  handleDropItem,
+  handleTakeItem,
+  handleConfirmTakeItem
+} from "./item-interactions/drop-items.js";
 import { executeRequestedRoll } from "./workflows/workflows.js";
 
 /**
@@ -107,6 +113,10 @@ const HANDLERS = {
   giveItem: handleGiveItem,
   giveItemRejected: handleGiveItemRejected,
   giveItemSource: handleGiveItemSource,
+  addToContainer: handleAddToContainer,
+  dropItem: handleDropItem,
+  takeItem: handleTakeItem,
+  confirmTakeItem: handleConfirmTakeItem,
   moveToken: _onMoveToken,
   requestRoll: _onRequestRoll,
   stopAnimations: _onStopAnimations,

@@ -1,22 +1,22 @@
 <div class="standard-form custom-dnd5e-give-item">
         <fieldset>
             <legend>{{localize "CUSTOM_DND5E.item"}}</legend>
-            <div class="custom-dnd5e-give-item-summary">
+            <div class="custom-dnd5e-give-items-summary">
                 <img src="{{item.img}}" alt="{{item.name}}" width="48" height="48">
                 <div>
-                    <p class="custom-dnd5e-give-item-name">{{item.name}}</p>
-                    <p class="hint">{{localize "CUSTOM_DND5E.giveItem.form.available" n=item.quantity}}</p>
+                    <p class="custom-dnd5e-give-items-name">{{item.name}}</p>
+                    <p class="hint">{{localize "CUSTOM_DND5E.giveItems.form.available" n=item.quantity}}</p>
                 </div>
             </div>
         </fieldset>
 
         <fieldset>
-            <legend>{{localize "CUSTOM_DND5E.recipient"}}</legend>
+            <legend>{{localize "CUSTOM_DND5E.giveTo"}}</legend>
             {{#if hasRecipients}}
-            <div class="custom-dnd5e-give-recipients">
+            <div class="custom-dnd5e-actors">
                 {{#each recipients}}
                 <button type="button"
-                    class="custom-dnd5e-give-recipient unbutton{{#if selected}} selected{{/if}}{{#if locked}} locked{{/if}}"
+                    class="custom-dnd5e-actor unbutton{{#if selected}} selected{{/if}}{{#if locked}} locked{{/if}}"
                     {{#unless locked}}data-action="selectRecipient"{{/unless}}
                     data-token-id="{{tokenId}}"
                     data-actor-id="{{actorId}}">
@@ -28,7 +28,7 @@
             </div>
             <input type="hidden" name="recipientTokenId" value="{{selectedTokenId}}">
             {{else}}
-            <p class="hint">{{localize "CUSTOM_DND5E.giveItem.form.noRecipients"}}</p>
+            <p class="hint">{{localize "CUSTOM_DND5E.giveItems.form.noRecipients"}}</p>
             {{/if}}
         </fieldset>
 
@@ -48,7 +48,7 @@
     {{#if hasRecipients}}
     <footer class="form-footer" data-application-part="footer">
         <button type="submit" class="save-button"{{#unless canSubmit}} disabled{{/unless}}>
-            <i class="fas fa-hand-holding custom-dnd5e-give-item-icon"></i>{{localize "CUSTOM_DND5E.give"}}
+            <i class="fas fa-hand-holding-hand custom-dnd5e-give-items-icon"></i>{{localize "CUSTOM_DND5E.give"}}
         </button>
     </footer>
     {{/if}}

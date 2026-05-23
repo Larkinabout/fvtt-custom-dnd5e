@@ -1,14 +1,14 @@
-import { CONSTANTS, MODULE } from "../constants.js";
-import { Logger } from "../utils.js";
-import { CustomDnd5eForm } from "./custom-dnd5e-form.js";
-import { executeGive, getEligibleRecipients, isGiveable } from "../interface/give-item.js";
+import { CONSTANTS, MODULE } from "../../constants.js";
+import { Logger } from "../../utils.js";
+import { CustomDnd5eForm } from "../custom-dnd5e-form.js";
+import { executeGive, getEligibleRecipients, isGiveable } from "../../item-interactions/give-items.js";
 
 /**
  * Class representing the Give Item form.
  */
 export class GiveItemForm extends CustomDnd5eForm {
   /**
-   * Constructor.
+   * Open the give form for a specific item, optionally pre-targeting a recipient.
    * @param {object} args
    * @param {Item} args.item
    * @param {Token|Actor|null} [args.recipient]
@@ -53,7 +53,7 @@ export class GiveItemForm extends CustomDnd5eForm {
     },
     window: {
       resizable: false,
-      title: "CUSTOM_DND5E.giveItem.form.title"
+      title: "CUSTOM_DND5E.giveItems.form.title"
     }
   };
 
@@ -61,7 +61,7 @@ export class GiveItemForm extends CustomDnd5eForm {
 
   static PARTS = {
     form: {
-      template: CONSTANTS.GIVE_ITEM.TEMPLATE.FORM
+      template: CONSTANTS.GIVE_ITEMS.TEMPLATE.FORM
     }
   };
 
@@ -160,7 +160,7 @@ export class GiveItemForm extends CustomDnd5eForm {
    */
   static selectRecipient(event, target) {
     if ( target.classList.contains("locked") ) return;
-    const cards = this.element.querySelectorAll(".custom-dnd5e-give-recipient");
+    const cards = this.element.querySelectorAll(".custom-dnd5e-actor");
     cards.forEach(c => c.classList.remove("selected"));
     target.classList.add("selected");
     this._selectedTokenId = target.dataset.tokenId ?? null;

@@ -1,11 +1,8 @@
 import { MODULE } from "../constants.js";
 import { Logger } from "../utils.js";
+import * as Highlight from "../canvas/highlight.js";
 
 const HIGHLIGHT_LAYER_NAME = "custom-dnd5e-move";
-const HIGHLIGHT_FILL = 0x00cc00;
-const HIGHLIGHT_FILL_ALPHA = 0.2;
-const HIGHLIGHT_BORDER = 0x008800;
-const HIGHLIGHT_BORDER_ALPHA = 0.8;
 
 /**
  * Canvas interaction mode for forced movement.
@@ -15,12 +12,12 @@ export class MoveCanvasMode {
   /**
    * Create a MoveCanvasMode instance which highlights valid forced-movement positions
    * and handles user input to select a destination for forced movement.
-   * @param {object} options Options
-   * @param {Token} options.sourceToken Source token performing the move
-   * @param {Token} options.targetToken Target token being moved
+   * @param {object} options
+   * @param {Token} options.sourceToken Source token performing the move.
+   * @param {Token} options.targetToken Target token being moved.
    * @param {string} options.direction "push" | "pull" | "any"
-   * @param {number} options.distanceMin Minimum movement distance in game units
-   * @param {number} options.distanceMax Maximum movement distance in game units
+   * @param {number} options.distanceMin Minimum movement distance in game units.
+   * @param {number} options.distanceMax Maximum movement distance in game units.
    */
   constructor({ sourceToken, targetToken, direction, distanceMin, distanceMax }) {
     this.sourceToken = sourceToken;
@@ -37,18 +34,19 @@ export class MoveCanvasMode {
   }
 
   /* -------------------------------------------- */
-  /*  Static API                                  */
+  /*  STATIC API                                  */
   /* -------------------------------------------- */
 
   /**
-   * Activate the move canvas mode.
-   * @param {object} options Options
-   * @param {Token} options.sourceToken Source token
-   * @param {Token} options.targetToken Target token
-   * @param {string} options.direction Movement direction
-   * @param {number} options.distanceMin Minimum distance
-   * @param {number} options.distanceMax Maximum distance
-   * @returns {Promise<boolean>} Whether the move was completed
+   * Enter the move-selection interaction and resolve once the user
+   * picks a destination or cancels.
+   * @param {object} options
+   * @param {Token} options.sourceToken
+   * @param {Token} options.targetToken
+   * @param {string} options.direction Movement direction.
+   * @param {number} options.distanceMin
+   * @param {number} options.distanceMax
+   * @returns {Promise<boolean>} Whether the move was completed.
    */
   static async activate(options) {
     const mode = new MoveCanvasMode(options);
@@ -58,7 +56,8 @@ export class MoveCanvasMode {
   /* -------------------------------------------- */
 
   /**
-   * Move a token document to a new position.
+   * Update the token to a new position with movement history stripped, so
+   * forced movement isn't counted against the token's combat-turn movement.
    * Called directly or via socket by the GM.
    * @param {TokenDocument} tokenDoc Token document to move
    * @param {number} x x coordinate (top-left)
@@ -81,11 +80,13 @@ export class MoveCanvasMode {
   }
 
   /* -------------------------------------------- */
-  /*  Lifecycle                                   */
+  /*  LIFECYCLE                                   */
   /* -------------------------------------------- */
 
   /**
-   * Start the canvas mode.
+   * Compute valid positions, draw the highlight, attach input listeners,
+   * and return a promise that resolves when the user picks a destination
+   * or cancels.
    * @returns {Promise<boolean>} Whether the move was completed
    */
   async _start() {
@@ -178,14 +179,9 @@ export class MoveCanvasMode {
       const candidateTopLeft = canvas.grid.getTopLeftPoint(candidateOffset);
       const candidateCenter = canvas.grid.getCenterPoint(candidateOffset);
 
-      // Measure distance from target to candidate
       const distance = this._measureDistance(targetCenter, candidateCenter);
       if ( distance < this.distanceMin || distance > this.distanceMax ) continue;
-
-      // Check direction constraint
       if ( !this._checkDirection(sourceCenter, targetCenter, candidateCenter, sourceDistToTarget) ) continue;
-
-      // Check wall collision
       if ( this._checkWallCollision(targetCenter, candidateCenter) ) continue;
 
       positions.push({ x: candidateTopLeft.x, y: candidateTopLeft.y });
@@ -197,8 +193,9 @@ export class MoveCanvasMode {
   /* -------------------------------------------- */
 
   /**
-   * Get candidate grid offsets within a step radius of the target.
-   * Uses cube coordinates for hex grids to ensure correct neighbor enumeration.
+   * Enumerate every grid cell within `maxSteps` of the target. Hex grids
+   * use cube coordinates to enumerate the hex neighbourhood correctly;
+   * square grids use the simple di/dj bounding box.
    * @param {{ x: number, y: number }} targetCenter Target token center
    * @param {number} maxSteps Maximum grid steps from the target
    * @returns {object[]} Array of { i, j } offset objects
@@ -287,7 +284,8 @@ export class MoveCanvasMode {
   /* -------------------------------------------- */
 
   /**
-   * Check whether a wall blocks movement between two points.
+   * Whether the movement polygon backend reports a wall between the two
+   * points. Uses `mode: "any"` so a single intersecting wall is enough.
    * @param {{ x: number, y: number }} from Starting point
    * @param {{ x: number, y: number }} to Ending point
    * @returns {boolean} Whether a wall blocks the path
@@ -304,42 +302,20 @@ export class MoveCanvasMode {
   /* -------------------------------------------- */
 
   /**
-   * Draw highlights on the canvas for valid positions.
+   * Render the valid-destination highlight: per-cell highlights on
+   * gridded scenes, annulus/line on gridless scenes.
    */
   _drawHighlights() {
-    const isGridless = canvas.grid.type === CONST.GRID_TYPES.GRIDLESS;
-    canvas.interface.grid.addHighlightLayer(HIGHLIGHT_LAYER_NAME);
-
-    if ( isGridless ) {
-      this._drawGridlessHighlight();
-    } else {
-      this._drawGridHighlights();
-    }
+    Highlight.addLayer(HIGHLIGHT_LAYER_NAME);
+    if ( canvas.grid.type === CONST.GRID_TYPES.GRIDLESS ) this._drawGridlessHighlight();
+    else for ( const pos of this.validPositions ) Highlight.highlightCell(HIGHLIGHT_LAYER_NAME, pos);
   }
 
   /* -------------------------------------------- */
 
   /**
-   * Draw grid cell highlights for each valid position.
-   */
-  _drawGridHighlights() {
-    for ( const pos of this.validPositions ) {
-      canvas.interface.grid.highlightPosition(HIGHLIGHT_LAYER_NAME, {
-        x: pos.x,
-        y: pos.y,
-        color: HIGHLIGHT_FILL,
-        border: HIGHLIGHT_BORDER,
-        alpha: HIGHLIGHT_FILL_ALPHA
-      });
-    }
-  }
-
-  /* -------------------------------------------- */
-
-  /**
-   * Get the gridless click tolerance in game units.
-   * Allows a quarter-grid-cell margin on each side so thin rings are clickable.
-   * @returns {number} Tolerance in game units
+   * Quarter-cell tolerance so thin rings stay clickable on gridless scenes.
+   * @returns {number}
    */
   _getGridlessTolerance() {
     return canvas.scene.dimensions.distance / 4;
@@ -348,133 +324,36 @@ export class MoveCanvasMode {
   /* -------------------------------------------- */
 
   /**
-   * Draw the gridless highlight shape, using lines for directional modes
-   * and an annulus for "any" direction, masked by the wall-reachable area.
+   * Draw the gridless highlight: an annulus for "any" direction, otherwise
+   * directional push/pull line(s), all clipped to the wall-reachable polygon
+   * around the target.
    */
   _drawGridlessHighlight() {
-    const hl = canvas.interface.grid.getHighlightLayer(HIGHLIGHT_LAYER_NAME);
-    if ( !hl ) return;
-
     const targetCenter = this.targetToken.center;
     const sourceCenter = this.sourceToken.center;
     const pixelsPerUnit = canvas.grid.size / canvas.scene.dimensions.distance;
     const tolerance = this._getGridlessTolerance();
     const outerRadius = (this.distanceMax + tolerance) * pixelsPerUnit;
     const innerRadius = Math.max(0, (this.distanceMin - tolerance)) * pixelsPerUnit;
-
-    // Compute wall-reachable polygon from the target
-    const wallPoly = CONFIG.Canvas.polygonBackends.move.create(targetCenter, {
-      type: "move",
-      radius: outerRadius + canvas.grid.size
+    const mask = CONFIG.Canvas.polygonBackends.move.create(targetCenter, {
+      type: "move", radius: outerRadius + canvas.grid.size
     });
 
-    // Container for highlight graphics, masked by wall polygon
-    const container = new PIXI.Container();
-
     if ( this.direction === "any" ) {
-      this._drawAnnulus(container, targetCenter, outerRadius, innerRadius);
-    } else {
-      const tolerancePx = tolerance * pixelsPerUnit;
-      if ( this.direction === "push" || this.direction === "pushOrPull" ) {
-        this._drawDirectionalLine(container, targetCenter, sourceCenter, outerRadius, innerRadius, tolerancePx, "push");
-      }
-      if ( this.direction === "pull" || this.direction === "pushOrPull" ) {
-        this._drawDirectionalLine(container, targetCenter, sourceCenter, outerRadius, innerRadius, tolerancePx, "pull");
-      }
+      Highlight.highlightAnnulus(HIGHLIGHT_LAYER_NAME, targetCenter, outerRadius, { innerRadius, mask });
+      return;
     }
 
-    // Apply wall mask
-    const wallMask = new PIXI.Graphics();
-    wallMask.beginFill(0xffffff);
-    wallMask.drawPolygon(wallPoly.points);
-    wallMask.endFill();
-    container.mask = wallMask;
-
-    hl.addChild(wallMask);
-    hl.addChild(container);
-  }
-
-  /* -------------------------------------------- */
-
-  /**
-   * Draw a full annulus (ring) on a container.
-   * @param {PIXI.Container} container PIXI container
-   * @param {{ x: number, y: number }} center Center point
-   * @param {number} outerRadius Outer radius in pixels
-   * @param {number} innerRadius Inner radius in pixels
-   */
-  _drawAnnulus(container, center, outerRadius, innerRadius) {
-    const gfx = new PIXI.Graphics();
-    gfx.beginFill(HIGHLIGHT_FILL, HIGHLIGHT_FILL_ALPHA);
-    gfx.drawCircle(center.x, center.y, outerRadius);
-    if ( innerRadius > 0 ) {
-      gfx.beginHole();
-      gfx.drawCircle(center.x, center.y, innerRadius);
-      gfx.endHole();
+    const halfWidth = tolerance * pixelsPerUnit;
+    const lineOpts = { innerDist: innerRadius, outerDist: outerRadius, halfWidth, mask };
+    // `reverse: true` flips the line direction relative to (origin → toward).
+    // toward = sourceCenter, so reverse=true points away from the source (push).
+    if ( this.direction === "push" || this.direction === "pushOrPull" ) {
+      Highlight.highlightLine(HIGHLIGHT_LAYER_NAME, targetCenter, sourceCenter, { ...lineOpts, reverse: true });
     }
-    gfx.endFill();
-
-    gfx.lineStyle(2, HIGHLIGHT_BORDER, HIGHLIGHT_BORDER_ALPHA);
-    gfx.drawCircle(center.x, center.y, outerRadius);
-    if ( innerRadius > 0 ) {
-      gfx.drawCircle(center.x, center.y, innerRadius);
+    if ( this.direction === "pull" || this.direction === "pushOrPull" ) {
+      Highlight.highlightLine(HIGHLIGHT_LAYER_NAME, targetCenter, sourceCenter, lineOpts);
     }
-    container.addChild(gfx);
-  }
-
-  /* -------------------------------------------- */
-
-  /**
-   * Draw a directional line highlight for push or pull movement.
-   * On gridless, forced movement follows a straight line from/toward the source.
-   * @param {PIXI.Container} container PIXI container
-   * @param {{ x: number, y: number }} targetCenter Target token center
-   * @param {{ x: number, y: number }} sourceCenter Source token center
-   * @param {number} outerDist Outer distance in pixels (includes tolerance)
-   * @param {number} innerDist Inner distance in pixels (includes tolerance)
-   * @param {number} halfWidth Half-width of the line in pixels (for click area visibility)
-   * @param {"push"|"pull"} type Direction type
-   */
-  _drawDirectionalLine(container, targetCenter, sourceCenter, outerDist, innerDist, halfWidth, type) {
-    const dx = sourceCenter.x - targetCenter.x;
-    const dy = sourceCenter.y - targetCenter.y;
-    const dist = Math.sqrt((dx * dx) + (dy * dy));
-    if ( dist <= 0 ) return;
-
-    // Unit direction: push = away from source, pull = toward source
-    const ux = type === "push" ? -(dx / dist) : (dx / dist);
-    const uy = type === "push" ? -(dy / dist) : (dy / dist);
-
-    // Perpendicular direction for width
-    const px = -uy;
-    const py = ux;
-
-    // Line endpoints along the direction
-    const startX = targetCenter.x + (ux * innerDist);
-    const startY = targetCenter.y + (uy * innerDist);
-    const endX = targetCenter.x + (ux * outerDist);
-    const endY = targetCenter.y + (uy * outerDist);
-
-    const gfx = new PIXI.Graphics();
-
-    // Fill
-    gfx.beginFill(HIGHLIGHT_FILL, HIGHLIGHT_FILL_ALPHA);
-    gfx.moveTo(startX + (px * halfWidth), startY + (py * halfWidth));
-    gfx.lineTo(endX + (px * halfWidth), endY + (py * halfWidth));
-    gfx.lineTo(endX - (px * halfWidth), endY - (py * halfWidth));
-    gfx.lineTo(startX - (px * halfWidth), startY - (py * halfWidth));
-    gfx.closePath();
-    gfx.endFill();
-
-    // Border
-    gfx.lineStyle(2, HIGHLIGHT_BORDER, HIGHLIGHT_BORDER_ALPHA);
-    gfx.moveTo(startX + (px * halfWidth), startY + (py * halfWidth));
-    gfx.lineTo(endX + (px * halfWidth), endY + (py * halfWidth));
-    gfx.lineTo(endX - (px * halfWidth), endY - (py * halfWidth));
-    gfx.lineTo(startX - (px * halfWidth), startY - (py * halfWidth));
-    gfx.closePath();
-
-    container.addChild(gfx);
   }
 
   /* -------------------------------------------- */
@@ -482,7 +361,8 @@ export class MoveCanvasMode {
   /* -------------------------------------------- */
 
   /**
-   * Attach event listeners for the canvas mode.
+   * Wire up the canvas pointer-down (for picking) and document-level
+   * pointermove/keydown/contextmenu (for pan, Escape, right-click cancel).
    */
   _attachListeners() {
     canvas.stage.on("pointerdown", this._onPointerDown);
@@ -494,7 +374,7 @@ export class MoveCanvasMode {
   /* -------------------------------------------- */
 
   /**
-   * Detach event listeners.
+   * Mirror of {@link _attachListeners} — remove every listener it added.
    */
   _detachListeners() {
     canvas.stage.off("pointerdown", this._onPointerDown);
@@ -506,7 +386,8 @@ export class MoveCanvasMode {
   /* -------------------------------------------- */
 
   /**
-   * Handle pointer down events on the canvas.
+   * On a left-click, dispatch to the gridded or gridless click handler.
+   * Other mouse buttons are ignored (right-click is handled separately).
    * @param {PIXI.FederatedPointerEvent} event The pointer event
    */
   _onPointerDown(event) {
@@ -559,7 +440,8 @@ export class MoveCanvasMode {
   /* -------------------------------------------- */
 
   /**
-   * Handle a click on a gridded canvas.
+   * Snap the click to the clicked cell's top-left and complete the move
+   * if that cell is in the precomputed valid-positions set.
    * @param {{ x: number, y: number }} pos The click position in canvas coordinates
    */
   _handleGridClick(pos) {
@@ -685,7 +567,8 @@ export class MoveCanvasMode {
   /* -------------------------------------------- */
 
   /**
-   * Execute the token movement.
+   * Move the target token. Apply the update directly if the user has
+   * permission; otherwise relay to an active GM via socket.
    * @param {number} x The x coordinate (top-left)
    * @param {number} y The y coordinate (top-left)
    */

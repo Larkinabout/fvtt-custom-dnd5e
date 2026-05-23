@@ -6,7 +6,7 @@ import { SPLATTER_VS, SPLATTER_FS } from "./shaders/splatter.js";
 import { WAVE_FS } from "./shaders/wave.js";
 
 /* -------------------------------------------- */
-/*  Logging                                     */
+/*  LOGGING                                     */
 /* -------------------------------------------- */
 
 /** Console logger. */
@@ -58,7 +58,7 @@ export class Logger {
 }
 
 /* -------------------------------------------- */
-/*  General Utilities                           */
+/*  GENERAL UTILITIES                           */
 /* -------------------------------------------- */
 
 /**
@@ -163,7 +163,7 @@ export function getOperatorChoices() {
 }
 
 /* -------------------------------------------- */
-/*  Settings                                    */
+/*  SETTINGS                                    */
 /* -------------------------------------------- */
 
 /**
@@ -301,7 +301,7 @@ export async function setDnd5eSetting(key, value) {
 }
 
 /* -------------------------------------------- */
-/*  Flags                                       */
+/*  FLAGS                                       */
 /* -------------------------------------------- */
 
 /**
@@ -343,7 +343,7 @@ export async function unsetFlag(entity, key) {
 }
 
 /* -------------------------------------------- */
-/*  Config                                      */
+/*  CONFIG                                      */
 /* -------------------------------------------- */
 
 /**
@@ -374,7 +374,7 @@ export function resetDnd5eConfig(property) {
 }
 
 /* -------------------------------------------- */
-/*  Documents & Templates                       */
+/*  DOCUMENTS & TEMPLATES                       */
 /* -------------------------------------------- */
 
 /**
@@ -491,7 +491,7 @@ export async function executeMacro(uuid, args = {}) {
 }
 
 /* -------------------------------------------- */
-/*  Dice & Rolls                                */
+/*  DICE & ROLLS                                */
 /* -------------------------------------------- */
 
 /**
@@ -604,7 +604,7 @@ export function calculateHitProbability(advantageMode, attackBonus, targetNumber
 }
 
 /* -------------------------------------------- */
-/*  Actors & Tokens                             */
+/*  ACTORS & TOKENS                             */
 /* -------------------------------------------- */
 
 /**
@@ -814,6 +814,50 @@ export async function untintToken(token) {
 }
 
 /* -------------------------------------------- */
+
+/**
+ * Locate the topmost token at the given canvas world-space coordinates.
+ * @param {number} x
+ * @param {number} y
+ * @returns {Token|null}
+ */
+export function findTargetTokenAt(x, y) {
+  if ( !canvas?.tokens?.quadtree ) return null;
+  const rect = new PIXI.Rectangle(x, y, 0, 0);
+  const collisionTest = ({ t }) => t.visible && t.renderable && t.interactive
+    && t.hitArea?.contains(x - t.x, y - t.y);
+  const matches = [...canvas.tokens.quadtree.getObjects(rect, { collisionTest })]
+    .sort((a, b) => a._lastSortedIndex - b._lastSortedIndex);
+  return matches.at(0) ?? null;
+}
+
+/* -------------------------------------------- */
+
+/**
+ * Get a token's center based on its document's `_source`.
+ * @param {Token|TokenDocument} token
+ * @returns {{x: number, y: number}|null}
+ */
+export function getTokenSourceCenter(token) {
+  const doc = token?.document ?? token;
+  return doc?._source ? doc.getCenterPoint(doc._source) : null;
+}
+
+/* -------------------------------------------- */
+
+/**
+ * Measure distance between two points.
+ * @param {{x: number, y: number}} from
+ * @param {{x: number, y: number}} to
+ * @returns {number} Distance in scene units (e.g. feet).
+ */
+export function measureDistance(from, to) {
+  const grid = canvas.grid;
+  if ( !grid ) return Infinity;
+  return grid.measurePath([grid.getOffset(from), grid.getOffset(to)]).distance;
+}
+
+/* -------------------------------------------- */
 /*  UI                                          */
 /* -------------------------------------------- */
 
@@ -821,15 +865,18 @@ export async function untintToken(token) {
  * Hide all open application windows overlaying the canvas.
  * @param {object} [options]
  * @param {number} [options.duration=200] Fade duration in milliseconds
+ * @param {(app: ApplicationV2) => boolean} [options.exclude] Predicate; apps for
+ *   which this returns true are left visible.
  * @returns {Promise<Function>} A function that restores the hidden applications
  */
-export async function hideApplications({ duration = 200 } = {}) {
+export async function hideApplications({ duration = 200, exclude } = {}) {
   const hidden = [];
 
   for ( const app of foundry.applications.instances.values() ) {
     if ( !app.rendered || !app.element ) continue;
     if ( app.element.ownerDocument.defaultView !== window ) continue;
     if ( !app.options.window?.frame ) continue;
+    if ( exclude?.(app) ) continue;
     hidden.push(app);
   }
 
@@ -851,7 +898,172 @@ export async function hideApplications({ duration = 200 } = {}) {
 }
 
 /* -------------------------------------------- */
-/*  Animations                                  */
+
+/**
+ * Managed wrapper around {@link hideApplications}. Returns a `{ hide, restore }`
+ * pair that hides apps while a drag/placement is active, and restore them on exit.
+ * @param {object} [options]
+ * @param {(app: ApplicationV2) => boolean} [options.exclude] Forwarded to
+ *   {@link hideApplications}; apps for which this returns true stay visible.
+ * @returns {{hide: () => void, restore: () => Promise<void>}}
+ */
+export function createAppHider({ exclude } = {}) {
+  let promise = null;
+  return {
+    hide() {
+      if ( promise ) return;
+      promise = hideApplications({ exclude });
+    },
+    async restore() {
+      if ( !promise ) return;
+      const pending = promise;
+      promise = null;
+      const restorer = await pending;
+      await restorer();
+    }
+  };
+}
+
+/* -------------------------------------------- */
+
+/**
+ * Find the open ApplicationV2 instance whose root element contains the nearest
+ * ancestor of `target` matching `selector`. Returns null if `target` isn't
+ * inside such an element, or if no open app owns it.
+ * @param {EventTarget|null} target
+ * @param {string} selector CSS selector for the app root (e.g. a class on the form).
+ * @returns {ApplicationV2|null}
+ */
+export function findAppForElement(target, selector) {
+  const el = target?.closest?.(selector);
+  if ( !el ) return null;
+  for ( const app of foundry.applications.instances.values() ) {
+    if ( app.element === el || app.element?.contains?.(el) ) return app;
+  }
+  return null;
+}
+
+/* -------------------------------------------- */
+/*  FOLDERS                                     */
+/* -------------------------------------------- */
+
+/**
+ * Resolve a folder by stored id, then by name, creating it if missing.
+ * @param {object} args
+ * @param {string} args.type Folder document type, e.g. `"Actor"`
+ * @param {string} args.name Localised folder name; used for find-by-name and create
+ * @param {string} [args.storedId] Previously-known folder id to try first
+ * @param {string} [args.color] Folder colour applied on create
+ * @returns {Promise<Folder|null>}
+ */
+export async function getOrCreateFolder({ type, name, storedId, color } = {}) {
+  if ( storedId ) {
+    const existing = game.folders?.get(storedId);
+    if ( existing && existing.type === type ) return existing;
+  }
+  const byName = game.folders?.find(f => f.type === type && f.name === name);
+  if ( byName ) return byName;
+  if ( !game.user.isGM ) return null;
+  return Folder.create({ name, type, color });
+}
+
+/* -------------------------------------------- */
+/*  DRAG & DROP                                 */
+/* -------------------------------------------- */
+
+/**
+ * Resolve an owned inventory item from a drag event's target.
+ * Recognises both the standard dnd5e/Foundry `data-uuid` and Tidy 5e's
+ * `data-info-card-entity-uuid`.
+ * @param {DragEvent|MouseEvent} event
+ * @returns {{actor: Actor, item: Item}|null}
+ */
+export function resolveOwnedItemFromDragEvent(event) {
+  const el = event.target;
+  if ( !(el instanceof HTMLElement) ) return null;
+  const itemEl = el.closest("[data-uuid], [data-info-card-entity-uuid]");
+  if ( !itemEl ) return null;
+  if ( itemEl.dataset.activityId || itemEl.dataset.effectId ) return null;
+  const uuid = itemEl.dataset.uuid ?? itemEl.dataset.infoCardEntityUuid;
+  const item = uuid ? fromUuidSync(uuid) : null;
+  if ( item?.documentName !== "Item" ) return null;
+  const actor = item.actor;
+  if ( !actor?.isOwner ) return null;
+  return { actor, item };
+}
+
+/* -------------------------------------------- */
+/*  ITEMS                                       */
+/* -------------------------------------------- */
+
+/**
+ * Find an existing item on the actor that should stack with the given
+ * item data: same name, type, container parent, and compendium source.
+ * @param {Actor} actor
+ * @param {object} itemData
+ * @returns {Item|null}
+ */
+export function findStackableItem(actor, itemData) {
+  const name = itemData.name;
+  const type = itemData.type;
+  const sourceId = itemData._stats?.compendiumSource ?? null;
+  const containerId = itemData.system?.container ?? null;
+  return actor.items.find(existing => {
+    if ( existing.type !== type ) return false;
+    if ( existing.name !== name ) return false;
+    if ( (existing.system?.container ?? null) !== containerId ) return false;
+    const existingSource = existing._stats?.compendiumSource ?? null;
+    if ( sourceId && existingSource && sourceId !== existingSource ) return false;
+    return existing.system?.quantity !== undefined;
+  }) ?? null;
+}
+
+/* -------------------------------------------- */
+
+/**
+ * Add items to the actor by creating or stacking onto existing items.
+ * @param {Actor} actor
+ * @param {object[]} itemDataList
+ * @returns {Promise<void>}
+ */
+export async function createOrStackItems(actor, itemDataList) {
+  if ( !actor || !itemDataList?.length ) return;
+
+  const batchIds = new Set(itemDataList.map(d => d._id).filter(Boolean));
+  const toCreateWithId = [];
+  const toCreateFreshId = [];
+
+  for ( const data of itemDataList ) {
+    const isPartOfBatchTree = data.type === "container"
+      || (data.system?.container && batchIds.has(data.system.container));
+
+    if ( !isPartOfBatchTree ) {
+      const existing = findStackableItem(actor, data);
+      if ( existing ) {
+        const current = existing.system?.quantity ?? 0;
+        const incoming = data.system?.quantity ?? 1;
+        await existing.update({ "system.quantity": current + incoming });
+        continue;
+      }
+      const clone = foundry.utils.deepClone(data);
+      delete clone._id;
+      toCreateFreshId.push(clone);
+      continue;
+    }
+
+    toCreateWithId.push(data);
+  }
+
+  if ( toCreateWithId.length ) {
+    await actor.createEmbeddedDocuments("Item", toCreateWithId, { keepId: true });
+  }
+  if ( toCreateFreshId.length ) {
+    await actor.createEmbeddedDocuments("Item", toCreateFreshId);
+  }
+}
+
+/* -------------------------------------------- */
+/*  ANIMATIONS                                  */
 /* -------------------------------------------- */
 
 /**

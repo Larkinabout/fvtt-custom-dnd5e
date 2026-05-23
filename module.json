@@ -19,6 +19,11 @@
   "esmodules": [
     "scripts/module.js"
   ],
+  "documentTypes": {
+    "Actor": {
+      "item": {}
+    }
+  },
   "styles": [
     "styles/custom-dnd5e.css",
     "styles/custom-dnd5e-character-sheet.css",

@@ -660,27 +660,77 @@ export const CONSTANTS = {
       }
     }
   },
-  GIVE_ITEM: {
+  GIVE_ITEMS: {
     SETTING: {
       ENABLE: {
-        KEY: "enable-give-item",
-        HINT: "CUSTOM_DND5E.setting.enableGiveItem.hint",
-        NAME: "CUSTOM_DND5E.setting.enableGiveItem.name"
+        KEY: "enable-give-items",
+        HINT: "CUSTOM_DND5E.setting.giveItems.enable.hint",
+        NAME: "CUSTOM_DND5E.setting.giveItems.enable.name"
       },
       RANGE: {
-        KEY: "give-item-range",
-        HINT: "CUSTOM_DND5E.setting.giveItemRange.hint",
-        NAME: "CUSTOM_DND5E.setting.giveItemRange.name"
+        KEY: "give-items-range",
+        HINT: "CUSTOM_DND5E.setting.giveItems.range.hint",
+        NAME: "CUSTOM_DND5E.setting.giveItems.range.name"
       },
       REQUIRE_ACCEPTANCE: {
-        KEY: "give-item-require-acceptance",
-        HINT: "CUSTOM_DND5E.setting.giveItemRequireAcceptance.hint",
-        NAME: "CUSTOM_DND5E.setting.giveItemRequireAcceptance.name"
+        KEY: "give-items-require-acceptance",
+        HINT: "CUSTOM_DND5E.setting.giveItems.requireAcceptance.hint",
+        NAME: "CUSTOM_DND5E.setting.giveItems.requireAcceptance.name"
       }
     },
     TEMPLATE: {
-      FORM: "modules/custom-dnd5e/templates/give-item-form.hbs"
+      FORM: "modules/custom-dnd5e/templates/item-interactions/give-item-form.hbs"
     }
+  },
+  DROP_ITEMS: {
+    SETTING: {
+      ENABLE: {
+        KEY: "enable-drop-items",
+        HINT: "CUSTOM_DND5E.setting.dropItems.enable.hint",
+        NAME: "CUSTOM_DND5E.setting.dropItems.enable.name"
+      },
+      RANGE: {
+        KEY: "drop-items-take-range",
+        HINT: "CUSTOM_DND5E.setting.dropItems.takeRange.hint",
+        NAME: "CUSTOM_DND5E.setting.dropItems.takeRange.name"
+      },
+      DROPPABLE_TYPES: {
+        CHOICES: ["weapon", "equipment", "consumable", "tool", "loot", "container"],
+        KEY: "drop-items-droppable-types",
+        HINT: "CUSTOM_DND5E.setting.dropItems.droppableTypes.hint",
+        NAME: "CUSTOM_DND5E.setting.dropItems.droppableTypes.name"
+      },
+      ALLOW_PLAYER_DROPS: {
+        KEY: "drop-items-allow-player-drops",
+        HINT: "CUSTOM_DND5E.setting.dropItems.allowPlayerDrops.hint",
+        NAME: "CUSTOM_DND5E.setting.dropItems.allowPlayerDrops.name"
+      },
+      CHAT_NOTIFICATIONS: {
+        KEY: "drop-items-chat-notifications",
+        HINT: "CUSTOM_DND5E.setting.dropItems.chatNotifications.hint",
+        NAME: "CUSTOM_DND5E.setting.dropItems.chatNotifications.name"
+      },
+      DROP_RANGE: {
+        KEY: "drop-items-drop-range",
+        HINT: "CUSTOM_DND5E.setting.dropItems.dropRange.hint",
+        NAME: "CUSTOM_DND5E.setting.dropItems.dropRange.name"
+      },
+      TOKEN_SCALE: {
+        KEY: "drop-items-token-scale",
+        HINT: "CUSTOM_DND5E.setting.dropItems.tokenScale.hint",
+        NAME: "CUSTOM_DND5E.setting.dropItems.tokenScale.name"
+      },
+      FOLDER_ID: {
+        KEY: "drop-items-folder-id"
+      }
+    },
+    TEMPLATE: {
+      SHEET: "modules/custom-dnd5e/templates/item-interactions/item-actor-sheet.hbs",
+      HUD: "modules/custom-dnd5e/templates/item-interactions/item-token-hud.hbs"
+    },
+    FOLDER_NAME: "CUSTOM_DND5E.dropItems.folderName",
+    ACTOR_TYPE: "custom-dnd5e.item",
+    DEFAULT_ICON: "modules/custom-dnd5e/media/icons/chest.svg"
   },
   GAMEPLAY: {
     MENU: {
@@ -714,6 +764,19 @@ export const CONSTANTS = {
       FORM: "modules/custom-dnd5e/templates/interface-form.hbs"
     },
     UUID: "Compendium.custom-dnd5e.custom-dnd5e-journals.JournalEntry.iFcVxKpMyZrNqW8t"
+  },
+  ITEM_INTERACTIONS: {
+    MENU: {
+      KEY: "item-interactions-menu",
+      HINT: "CUSTOM_DND5E.menu.itemInteractions.hint",
+      ICON: "fas fa-handshake",
+      LABEL: "CUSTOM_DND5E.menu.itemInteractions.label",
+      NAME: "CUSTOM_DND5E.menu.itemInteractions.name"
+    },
+    TEMPLATE: {
+      FORM: "modules/custom-dnd5e/templates/item-interactions/item-interactions-form.hbs"
+    },
+    UUID: "Compendium.custom-dnd5e.custom-dnd5e-journals.JournalEntry.iIqL5xV2bRsNyW8m"
   },
   INSPIRATION: {
     SETTING: {

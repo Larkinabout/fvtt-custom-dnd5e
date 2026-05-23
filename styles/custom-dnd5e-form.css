@@ -111,12 +111,13 @@
     background: none;
     border: none;
     border-radius: 0;
+    color: var(--item-control-interactive-color);
     line-height: normal;
     margin: 0;
     padding: 0;
     outline: none;
+    text-transform: none;
     width: unset;
-    color:  var(--item-control-interactive-color);
 }
 
 .custom-dnd5e-app button.unbutton:focus,

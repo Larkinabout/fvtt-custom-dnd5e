@@ -1,0 +1,52 @@
+<div class="col left">
+    <button type="button" class="control-icon" data-action="sort" data-tooltip aria-label="{{localize "HUD.ToFrontOrBack"}}">
+        <i class="fa-solid fa-bring-forward" inert></i>
+    </button>
+
+    {{#if isGM}}
+    <button type="button" class="control-icon {{lockedClass}}" data-action="locked"
+        data-tooltip aria-label="{{localize (ifThen lockedClass "HUD.Unlock" "HUD.Lock")}}">
+        <i class="fa-solid {{ifThen lockedClass "fa-lock" "fa-lock-open"}}" inert></i>
+    </button>
+    {{/if}}
+
+    {{#if canConfigure}}
+    <button type="button" class="control-icon" data-action="config" data-tooltip aria-label="{{localize "HUD.OpenConfig"}}">
+        <i class="fa-solid fa-gear" inert></i>
+    </button>
+    {{/if}}
+</div>
+
+<div class="col middle"></div>
+
+<div class="col right">
+    {{#if isGM}}
+    <button type="button" class="control-icon {{visibilityClass}}" data-action="visibility"
+        data-tooltip aria-label="{{localize (ifThen visibilityClass "HUD.Show" "HUD.Hide")}}">
+        <i class="fa-solid {{ifThen hidden "fa-eye-slash" "fa-eye"}}" inert></i>
+    </button>
+    {{/if}}
+
+    <button type="button" class="control-icon" data-action="view"
+        data-tooltip aria-label="{{localize viewLabel}}">
+        <i class="fa-solid fa-box-open" inert></i>
+    </button>
+
+    <button type="button" class="control-icon" data-action="take"
+        data-tooltip aria-label="{{localize takeLabel}}">
+        <i class="fa-solid fa-hand-holding-box" inert></i>
+    </button>
+
+    {{#if isGM}}{{#if isContainer}}
+    <button type="button" class="control-icon{{#if containerAffixed}} active{{/if}}"
+        data-action="toggleAffix"
+        data-tooltip aria-label="{{localize affixLabel}}">
+        <i class="fa-solid {{#if containerAffixed}}fa-thumbtack{{else}}fa-thumbtack-slash{{/if}}" inert></i>
+    </button>
+    <button type="button" class="control-icon{{#if containerLocked}} active{{/if}}"
+        data-action="toggleLock"
+        data-tooltip aria-label="{{localize lockLabel}}">
+        <i class="fa-solid {{#if containerLocked}}fa-lock-keyhole{{else}}fa-lock-keyhole-open{{/if}}" inert></i>
+    </button>
+    {{/if}}{{/if}}
+</div>

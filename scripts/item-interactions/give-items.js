@@ -1,28 +1,20 @@
 import { MODULE, CONSTANTS } from "../constants.js";
-import { c5eLoadTemplates, getSetting, hideApplications, Logger, registerSetting } from "../utils.js";
-import { addCursorLabelIcon, setCursorLabelIcon, setCursorLabelPosition } from "./cursor-label.js";
-import { GiveItemForm } from "../forms/give-item-form.js";
+import {
+  c5eLoadTemplates,
+  findStackableItem,
+  findTargetTokenAt,
+  getSetting,
+  getTokenSourceCenter,
+  Logger,
+  measureDistance,
+  registerSetting
+} from "../utils.js";
+import { addCursorLabelIcon, setCursorLabelIcon, setCursorLabelPosition } from "../interface/cursor-label.js";
+import { registerInventoryDragHandler } from "./inventory-drag.js";
+import { GiveItemForm } from "../forms/item-interactions/give-item-form.js";
 
-const SETTING = CONSTANTS.GIVE_ITEM.SETTING;
+const SETTING = CONSTANTS.GIVE_ITEMS.SETTING;
 const GIVE_ICON_ID = "custom-dnd5e-cursor-label-give-item";
-
-/**
- * State for an in-progress drag.
- * @type {{itemUuid: string, item: Item, actorUuid: string, eligibleTokenIds: Set<string>}|null}
- */
-let activeDrag = null;
-
-/**
- * IDs of hooks registered for the duration of a drag.
- * @type {Record<string, number>}
- */
-const dragSceneHookIds = {};
-
-/**
- * Promise resolving to the function that restores hidden applications.
- * @type {Promise<Function>|null}
- */
-let hiddenAppsPromise = null;
 
 /**
  * Track pending gives keyed by request id.
@@ -32,12 +24,16 @@ const pendingGives = new Map();
 
 const GIVEABLE_TYPES = new Set(["weapon", "equipment", "consumable", "tool", "loot"]);
 
+/* -------------------------------------------- */
+/*  REGISTRATION                                */
+/* -------------------------------------------- */
+
 /**
  * Register settings, hooks, and templates.
  */
 export function register() {
   registerSettings();
-  c5eLoadTemplates([CONSTANTS.GIVE_ITEM.TEMPLATE.FORM]);
+  c5eLoadTemplates([CONSTANTS.GIVE_ITEMS.TEMPLATE.FORM]);
   if ( !getSetting(SETTING.ENABLE.KEY) ) return;
   registerHooks();
 }
@@ -86,49 +82,38 @@ function registerHooks() {
   Hooks.on("dropCanvasData", onDropCanvasData);
   Hooks.on("dnd5e.getItemContextOptions", onGetItemContextOptions);
   Hooks.once("ready", () => {
-    addCursorLabelIcon(GIVE_ICON_ID, '<i class="fa-solid fa-hand-holding"></i>');
-    document.addEventListener("dragstart", onDragStart, true);
-    document.addEventListener("dragover", onDragOver, true);
-    document.addEventListener("dragend", onDragEnd, true);
-    document.addEventListener("drop", onDragEnd, true);
+    addCursorLabelIcon(GIVE_ICON_ID, '<i class="fa-solid fa-hand-holding-hand"></i>');
+  });
+  registerInventoryDragHandler({
+    matches: ({ item }) => getSetting(SETTING.ENABLE.KEY) && isGiveable(item),
+    onStart: ({ actor }) => {
+      const state = { eligibleTokenIds: computeEligibleTokenIds(actor), hookIds: {} };
+      const invalidate = () => { state.eligibleTokenIds = computeEligibleTokenIds(actor); };
+      state.hookIds.refreshToken = Hooks.on("refreshToken", invalidate);
+      state.hookIds.sightRefresh = Hooks.on("sightRefresh", invalidate);
+      state.hookIds.createToken = Hooks.on("createToken", invalidate);
+      state.hookIds.deleteToken = Hooks.on("deleteToken", invalidate);
+      return state;
+    },
+    onOver: (event, { state, overCanvas }) => {
+      if ( !overCanvas ) {
+        setCursorLabelIcon(GIVE_ICON_ID, false);
+        return;
+      }
+      const world = canvas.stage.worldTransform.applyInverse({ x: event.clientX, y: event.clientY });
+      const target = findTargetTokenAt(world.x, world.y);
+      setCursorLabelPosition(event.clientX, event.clientY);
+      setCursorLabelIcon(GIVE_ICON_ID, !!target && state.eligibleTokenIds.has(target.id));
+    },
+    onEnd: ({ state }) => {
+      for ( const [name, id] of Object.entries(state.hookIds) ) Hooks.off(name, id);
+      setCursorLabelIcon(GIVE_ICON_ID, false);
+    }
   });
 }
 
 /* -------------------------------------------- */
-
-/**
- * On drag start.
- * @param {DragEvent} event
- */
-function onDragStart(event) {
-  if ( !getSetting(SETTING.ENABLE.KEY) ) return;
-  clearActiveDrag();
-  const el = event.target;
-  if ( !(el instanceof HTMLElement) ) return;
-  const itemEl = el.closest("[data-item-id]");
-  if ( !itemEl ) return;
-  if ( itemEl.dataset.activityId || itemEl.dataset.effectId ) return;
-  const itemId = itemEl.dataset.itemId;
-  if ( !itemId ) return;
-  const actor = findContainingActor(itemEl);
-  if ( !actor?.isOwner ) return;
-  const item = actor.items?.get(itemId);
-  if ( !item || !isGiveable(item) ) return;
-  activeDrag = {
-    itemUuid: item.uuid,
-    item,
-    actorUuid: actor.uuid,
-    eligibleTokenIds: computeEligibleTokenIds(actor)
-  };
-  const invalidate = () => {
-    if ( activeDrag ) activeDrag.eligibleTokenIds = computeEligibleTokenIds(actor);
-  };
-  dragSceneHookIds.refreshToken = Hooks.on("refreshToken", invalidate);
-  dragSceneHookIds.sightRefresh = Hooks.on("sightRefresh", invalidate);
-  dragSceneHookIds.createToken = Hooks.on("createToken", invalidate);
-  dragSceneHookIds.deleteToken = Hooks.on("deleteToken", invalidate);
-}
-
+/*  ELIGIBILITY                                 */
 /* -------------------------------------------- */
 
 /**
@@ -138,111 +123,6 @@ function onDragStart(event) {
  */
 function computeEligibleTokenIds(giverActor) {
   return new Set(getEligibleRecipients(giverActor).map(t => t.id));
-}
-
-/* -------------------------------------------- */
-
-/**
- * Clear active-drag state and its scene hooks.
- */
-function clearActiveDrag() {
-  activeDrag = null;
-  for ( const [name, id] of Object.entries(dragSceneHookIds) ) Hooks.off(name, id);
-  for ( const k of Object.keys(dragSceneHookIds) ) delete dragSceneHookIds[k];
-}
-
-/* -------------------------------------------- */
-
-/**
- * Find containing actor.
- * @param {HTMLElement} el
- * @returns {Actor|null} Containing actor
- */
-function findContainingActor(el) {
-  const v2 = foundry.applications?.instances;
-  if ( v2 ) {
-    for ( const app of v2.values() ) {
-      const root = app.element;
-      if ( root?.contains?.(el) ) {
-        const doc = app.document ?? app.actor ?? null;
-        if ( doc?.documentName === "Actor" ) return doc;
-        if ( doc?.actor ) return doc.actor;
-        return null;
-      }
-    }
-  }
-
-  for ( const app of Object.values(ui.windows ?? {}) ) {
-    const root = app.element?.[0] ?? app.element;
-    if ( root?.contains?.(el) ) {
-      const doc = app.document ?? app.actor ?? null;
-      if ( doc?.documentName === "Actor" ) return doc;
-      if ( doc?.actor ) return doc.actor;
-      return null;
-    }
-  }
-  return null;
-}
-
-/* -------------------------------------------- */
-
-/**
- * On drag over, set visibility of applications and cursor label.
- * @param {DragEvent} event
- */
-function onDragOver(event) {
-  if ( !activeDrag ) return;
-  const view = canvas?.app?.view;
-  if ( !view ) return;
-  const overCanvas = event.target === view;
-  if ( overCanvas ) hideAppsForGive();
-  else restoreAppsForGive();
-  if ( !overCanvas ) {
-    setCursorLabelIcon(GIVE_ICON_ID, false);
-    return;
-  }
-
-  const world = canvas.stage.worldTransform.applyInverse({ x: event.clientX, y: event.clientY });
-  const target = findTargetTokenAt(world.x, world.y);
-  const eligible = !!target && activeDrag.eligibleTokenIds.has(target.id);
-
-  setCursorLabelPosition(event.clientX, event.clientY);
-  setCursorLabelIcon(GIVE_ICON_ID, eligible);
-}
-
-/* -------------------------------------------- */
-
-/**
- * Hide applications while dragging an item.
- */
-function hideAppsForGive() {
-  if ( hiddenAppsPromise ) return;
-  hiddenAppsPromise = hideApplications();
-}
-
-/* -------------------------------------------- */
-
-/**
- * Restore hidden applications.
- * @returns {Promise<void>}
- */
-async function restoreAppsForGive() {
-  if ( !hiddenAppsPromise ) return;
-  const pending = hiddenAppsPromise;
-  hiddenAppsPromise = null;
-  const restore = await pending;
-  await restore();
-}
-
-/* -------------------------------------------- */
-
-/**
- * On drag end, clear active drag, remove cursor label and restore hidden applications.
- */
-async function onDragEnd() {
-  clearActiveDrag();
-  setCursorLabelIcon(GIVE_ICON_ID, false);
-  await restoreAppsForGive();
 }
 
 /* -------------------------------------------- */
@@ -261,7 +141,7 @@ function isEligibleDropTarget(target, item) {
 /* -------------------------------------------- */
 
 /**
- * Whether an item is giveable based on type and quantity.
+ * Whether an item is giveable based on its type and quantity.
  * @param {Item} item
  * @returns {boolean}
  */
@@ -273,21 +153,20 @@ export function isGiveable(item) {
 /* -------------------------------------------- */
 
 /**
- * Get eligible recipients.
+ * Tokens eligible to receive an item from the giver, based on
+ * range, visibility, disposition and type.
  * @param {Actor} giverActor
- * @returns {Token[]} Eligible recipients
+ * @returns {Token[]}
  */
 export function getEligibleRecipients(giverActor) {
   const tokens = canvas.tokens?.placeables ?? [];
   const giverToken = giverActor?.getActiveTokens()?.[0] ?? null;
-  const isGM = game.user.isGM;
 
   const SECRET = CONST.TOKEN_DISPOSITIONS.SECRET;
   const base = tokens.filter(t => {
     if ( !t.actor || t.actor.id === giverActor?.id ) return false;
     if ( t.actor.type !== "character" && t.actor.type !== "npc" ) return false;
     if ( t.document.disposition === SECRET ) return false;
-    if ( !isGM && t.actor.testUserPermission(game.user, "OWNER") ) return false;
     return true;
   });
 
@@ -297,13 +176,14 @@ export function getEligibleRecipients(giverActor) {
 
   const range = Number(getSetting(SETTING.RANGE.KEY)) || 0;
   if ( range > 0 && giverToken ) {
-    filtered = filtered.filter(t => {
-      const path = canvas.grid.measurePath([
-        { x: giverToken.center.x, y: giverToken.center.y },
-        { x: t.center.x, y: t.center.y }
-      ]);
-      return (path?.distance ?? Infinity) <= range;
-    });
+    const giverCenter = getTokenSourceCenter(giverToken);
+    if ( giverCenter ) {
+      filtered = filtered.filter(t => {
+        const targetCenter = getTokenSourceCenter(t);
+        if ( !targetCenter ) return false;
+        return measureDistance(giverCenter, targetCenter) <= range;
+      });
+    }
   }
 
   return filtered;
@@ -335,9 +215,12 @@ export function requiresAcceptance(recipientToken, giverActor) {
 }
 
 /* -------------------------------------------- */
+/*  DROP HANDLERS                               */
+/* -------------------------------------------- */
 
 /**
- * On drop canvas data.
+ * Open the give form when a giveable item is dropped on an
+ * eligible recipient token.
  * @param {Canvas} canvas
  * @param {object} data
  * @param {DragEvent} event
@@ -361,44 +244,29 @@ async function onDropCanvasData(canvas, data, event) {
 /* -------------------------------------------- */
 
 /**
- * Find the topmost token at the given canvas coordinates.
- * @param {number} x
- * @param {number} y
- * @returns {Token|null}
- */
-function findTargetTokenAt(x, y) {
-  if ( !canvas?.tokens?.quadtree ) return null;
-  const rect = new PIXI.Rectangle(x, y, 0, 0);
-  const collisionTest = ({ t }) => t.visible && t.renderable && t.interactive
-    && t.hitArea?.contains(x - t.x, y - t.y);
-  const matches = [...canvas.tokens.quadtree.getObjects(rect, { collisionTest })]
-    .sort((a, b) => a._lastSortedIndex - b._lastSortedIndex);
-  return matches.at(0) ?? null;
-}
-
-/* -------------------------------------------- */
-
-/**
  * Add 'Give...' option to context menu.
  * @param {Item} item
  * @param {object[]} menuItems
  */
 function onGetItemContextOptions(item, menuItems) {
   menuItems.push({
-    name: "CUSTOM_DND5E.giveItem.context.give",
-    icon: '<i class="fas fa-hand-holding" style="position: relative; top: -3px;"></i>',
+    name: "CUSTOM_DND5E.giveItems.context.give",
+    icon: '<i class="fas fa-hand-holding-hand"></i>',
     condition: () => isGiveable(item) && !!item.actor?.isOwner,
     callback: () => GiveItemForm.open({ item })
   });
 }
 
 /* -------------------------------------------- */
+/*  EXECUTE GIVE                                */
+/* -------------------------------------------- */
 
 /**
- * Execute the give.
- * Routes the payload to the recipient's owning user if active, else to an active GM.
+ * Route the give payload to the recipient's owning user if active, else
+ * to an active GM. Records a pending entry so the giver-side handler can
+ * verify the round-trip.
  * @param {Item} item
- * @param {Token|Actor} recipient The recipient Token (preferred) or Actor.
+ * @param {Token|Actor} recipient The recipient Token (preferred) or Actor
  * @param {number} quantity
  * @returns {Promise<void>}
  */
@@ -416,7 +284,7 @@ export async function executeGive(item, recipient, quantity) {
   const targetUser = ownerUser ?? game.users.activeGM;
   if ( !targetUser ) {
     Logger.error(
-      game.i18n.format("CUSTOM_DND5E.giveItem.error.noActiveOwner", { name: recipientActor.name }),
+      game.i18n.format("CUSTOM_DND5E.giveItems.error.noActiveOwner", { name: recipientActor.name }),
       true
     );
     return;
@@ -451,28 +319,7 @@ export async function executeGive(item, recipient, quantity) {
 }
 
 /* -------------------------------------------- */
-/*  Socket handlers                             */
-/* -------------------------------------------- */
-
-/**
- * Find an existing item on the recipient that should stack with the incoming item.
- * @param {Actor} actor
- * @param {object} itemData
- * @returns {Item|null} Stackable item
- */
-function findStackableItem(actor, itemData) {
-  const name = itemData.name;
-  const type = itemData.type;
-  const sourceId = itemData._stats?.compendiumSource ?? null;
-  return actor.items.find(existing => {
-    if ( existing.type !== type ) return false;
-    if ( existing.name !== name ) return false;
-    const existingSource = existing._stats?.compendiumSource ?? null;
-    if ( sourceId && existingSource && sourceId !== existingSource ) return false;
-    return existing.system?.quantity !== undefined;
-  }) ?? null;
-}
-
+/*  SOCKET HANDLERS                             */
 /* -------------------------------------------- */
 
 /**
@@ -491,30 +338,60 @@ export async function handleGiveItem(data) {
 
   if ( needsAccept ) {
     const giver = await fromUuid(giverActorUuid);
-    const accepted = await foundry.applications.api.DialogV2.confirm({
-      window: { title: game.i18n.localize("CUSTOM_DND5E.giveItem.accept.title") },
-      content: `<p>${game.i18n.format("CUSTOM_DND5E.giveItem.accept.content", {
-        giver: giver?.name ?? game.i18n.localize("CUSTOM_DND5E.unknown"),
-        qty: quantity > 1 ? `${quantity}× ` : "",
-        item: itemData.name,
-        recipient: recipient.name
-      })}</p>`,
-      modal: true,
-      yes: { label: game.i18n.localize("CUSTOM_DND5E.accept") },
-      no: { label: game.i18n.localize("CUSTOM_DND5E.reject") }
-    });
+    const accepted = await confirmGiveAcceptance({ giver, recipient, itemData, quantity });
     if ( !accepted ) {
-      const rejectMessage = {
-        action: "giveItemRejected",
-        target: giverUserId,
-        payload: data.payload
-      };
-      if ( giverUserId === game.user.id ) await handleGiveItemRejected(rejectMessage);
-      else game.socket.emit(`module.${MODULE.ID}`, rejectMessage);
+      await notifyRejection(giverUserId, data.payload);
       return;
     }
   }
 
+  const applied = await applyItemToRecipient(recipient, itemData, quantity);
+  if ( !applied ) {
+    await notifyRejection(giverUserId, data.payload);
+    return;
+  }
+
+  const sourceMessage = { action: "giveItemSource", target: giverUserId, payload: data.payload };
+  if ( giverUserId === game.user.id ) await handleGiveItemSource(sourceMessage);
+  else game.socket.emit(`module.${MODULE.ID}`, sourceMessage);
+}
+
+/* -------------------------------------------- */
+
+/**
+ * Show the recipient's accept/reject dialog.
+ * @param {object} args
+ * @param {Actor|null} args.giver
+ * @param {Actor} args.recipient
+ * @param {object} args.itemData
+ * @param {number} args.quantity
+ * @returns {Promise<boolean>}
+ */
+async function confirmGiveAcceptance({ giver, recipient, itemData, quantity }) {
+  return foundry.applications.api.DialogV2.confirm({
+    window: { title: game.i18n.localize("CUSTOM_DND5E.giveItems.accept.title") },
+    content: `<p>${game.i18n.format("CUSTOM_DND5E.giveItems.accept.content", {
+      giver: giver?.name ?? game.i18n.localize("CUSTOM_DND5E.unknown"),
+      qty: quantity > 1 ? `${quantity}× ` : "",
+      item: itemData.name,
+      recipient: recipient.name
+    })}</p>`,
+    modal: true,
+    yes: { label: game.i18n.localize("CUSTOM_DND5E.accept") },
+    no: { label: game.i18n.localize("CUSTOM_DND5E.reject") }
+  });
+}
+
+/* -------------------------------------------- */
+
+/**
+ * Create the item on the recipient (or stack onto an existing match).
+ * @param {Actor} recipient
+ * @param {object} itemData
+ * @param {number} quantity
+ * @returns {Promise<boolean>} Whether the apply succeeded
+ */
+async function applyItemToRecipient(recipient, itemData, quantity) {
   try {
     const create = foundry.utils.deepClone(itemData);
     foundry.utils.setProperty(create, "system.quantity", quantity);
@@ -530,30 +407,33 @@ export async function handleGiveItem(data) {
     delete create.sort;
 
     if ( existing ) {
-      const newQty = (existing.system?.quantity ?? 0) + quantity;
-      await existing.update({ "system.quantity": newQty });
+      await existing.update({ "system.quantity": (existing.system?.quantity ?? 0) + quantity });
     } else {
       await recipient.createEmbeddedDocuments("Item", [create]);
     }
+    return true;
   } catch ( err ) {
     Logger.error(err);
-    ui.notifications.error(game.i18n.format("CUSTOM_DND5E.giveItem.error.createFailed", {
+    ui.notifications.error(game.i18n.format("CUSTOM_DND5E.giveItems.error.createFailed", {
       item: itemData.name,
       recipient: recipient.name
     }));
-
-    const rejectMessage = { action: "giveItemRejected", target: giverUserId, payload: data.payload };
-    if ( giverUserId === game.user.id ) await handleGiveItemRejected(rejectMessage);
-    else game.socket.emit(`module.${MODULE.ID}`, rejectMessage);
-    return;
+    return false;
   }
+}
 
-  const sourceMessage = { action: "giveItemSource", target: giverUserId, payload: data.payload };
-  if ( giverUserId === game.user.id ) {
-    await handleGiveItemSource(sourceMessage);
-  } else {
-    game.socket.emit(`module.${MODULE.ID}`, sourceMessage);
-  }
+/* -------------------------------------------- */
+
+/**
+ * Route a rejection back to the giver.
+ * @param {string} giverUserId
+ * @param {object} payload
+ * @returns {Promise<void>}
+ */
+async function notifyRejection(giverUserId, payload) {
+  const message = { action: "giveItemRejected", target: giverUserId, payload };
+  if ( giverUserId === game.user.id ) await handleGiveItemRejected(message);
+  else game.socket.emit(`module.${MODULE.ID}`, message);
 }
 
 /* -------------------------------------------- */
@@ -567,7 +447,7 @@ export async function handleGiveItemRejected(data) {
   const { itemData, recipientActorUuid, requestId } = data.payload;
   if ( requestId ) pendingGives.delete(requestId);
   const recipient = await fromUuid(recipientActorUuid);
-  ui.notifications.warn(game.i18n.format("CUSTOM_DND5E.giveItem.rejected", {
+  ui.notifications.warn(game.i18n.format("CUSTOM_DND5E.giveItems.rejected", {
     recipient: recipient?.name ?? game.i18n.localize("CUSTOM_DND5E.unknown"),
     item: itemData.name
   }));
@@ -599,17 +479,30 @@ export async function handleGiveItemSource(data) {
     else await item.update({ "system.quantity": current - quantity });
   } catch ( err ) {
     Logger.error(err);
-    ui.notifications.error(game.i18n.format("CUSTOM_DND5E.giveItem.error.sourceFailed", {
+    ui.notifications.error(game.i18n.format("CUSTOM_DND5E.giveItems.error.sourceFailed", {
       item: item.name
     }));
     return;
   }
 
   const recipient = await fromUuid(recipientActorUuid);
+  postGiveChat({ item, recipient, quantity });
+}
+
+/* -------------------------------------------- */
+
+/**
+ * Post a chat message announcing the give.
+ * @param {object} args
+ * @param {Item} args.item
+ * @param {Actor|null} args.recipient
+ * @param {number} args.quantity
+ */
+function postGiveChat({ item, recipient, quantity }) {
   ChatMessage.create({
     speaker: ChatMessage.getSpeaker({ actor: item.actor }),
     whisper: ChatMessage.getWhisperRecipients("GM"),
-    content: `<p>${game.i18n.format("CUSTOM_DND5E.giveItem.chat", {
+    content: `<p>${game.i18n.format("CUSTOM_DND5E.giveItems.chat", {
       giver: item.actor.name,
       qty: quantity > 1 ? `${quantity}× ` : "",
       item: item.name,

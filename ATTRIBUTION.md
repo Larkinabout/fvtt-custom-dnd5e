@@ -25,6 +25,7 @@ The following icons are used in this module:
 | Icon | Author | Licence |
 |------|--------|---------|
 | Body swapping | Lorc | [CC BY 3.0](https://creativecommons.org/licenses/by/3.0/) |
+| Chest | Delapouite | [CC BY 3.0](https://creativecommons.org/licenses/by/3.0/) |
 | Dice target | Delapouite | [CC BY 3.0](https://creativecommons.org/licenses/by/3.0/) |
 | Move | Delapouite | [CC BY 3.0](https://creativecommons.org/licenses/by/3.0/) |
 

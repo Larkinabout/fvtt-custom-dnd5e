@@ -1,0 +1,104 @@
+{
+  "name": "Item Interactions",
+  "_id": "iIqL5xV2bRsNyW8m",
+  "pages": [
+    {
+      "sort": 100000,
+      "name": "Give Items",
+      "type": "text",
+      "_id": "gIvKnW3qXrZjMpNt",
+      "system": {},
+      "title": {
+        "show": true,
+        "level": 1
+      },
+      "image": {},
+      "text": {
+        "format": 1,
+        "content": "<h2 class=\"custom-dnd5e-h2\">Give Items</h2><p>When enabled, allows items to be given to other characters.</p><p>There are two ways to give an item:</p><ul><li><p><strong>Drag-and-drop:</strong> Drag the item from the character sheet onto a token on the canvas.</p></li><li><p><strong>Context menu:</strong> Right-click the item on the character sheet and choose <em>Give…</em></p></li></ul><p>If the giver has a token placed on the active scene, only tokens visible to that token are shown. If the giver has no placed token, all character tokens on the scene are shown. The giver actor is always excluded; other actors the user owns (such as a familiar or sidekick) are valid recipients.</p><p>Items with a quantity greater than 1 prompt for an amount to give.</p><h2>Settings</h2><p>Located in <strong>Game Settings</strong> &gt; <strong>Custom D&amp;D 5e</strong> &gt; <strong>Configure Item Interactions</strong>.</p><h3>Range</h3><p>Optional maximum distance, in grid units, that items can be given. Only applies when the giver has a token placed on the scene. Leave blank for no limit.</p><h3>Require Acceptance</h3><p>When the recipient matches one of the selected options, the recipient is prompted to accept the item. Disposition options apply only to NPC recipients.</p><ul><li><p><strong>Friendly.</strong> NPCs with a Friendly disposition.</p></li><li><p><strong>Neutral.</strong> NPCs with a Neutral disposition.</p></li><li><p><strong>Hostile.</strong> NPCs with a Hostile disposition.</p></li><li><p><strong>PC to PC.</strong> A player character giving an item to another player character.</p></li><li><p><strong>PC to NPC.</strong> A player character giving an item to a non-player character.</p></li><li><p><strong>NPC to PC.</strong> A non-player character giving an item to a player character.</p></li></ul>"
+      },
+      "video": {
+        "controls": true,
+        "volume": 0.5
+      },
+      "src": null,
+      "ownership": {
+        "default": -1,
+        "0wJRsV2r9Hv1a7q0": 3
+      },
+      "flags": {},
+      "_stats": {
+        "compendiumSource": null,
+        "duplicateSource": null,
+        "coreVersion": "14.361",
+        "systemId": "dnd5e",
+        "systemVersion": "5.3.3",
+        "createdTime": 1779200000000,
+        "modifiedTime": 1779576840252,
+        "lastModifiedBy": "2Ab5BheRvt8es88G",
+        "exportSource": null
+      },
+      "category": null,
+      "_key": "!journal.pages!iIqL5xV2bRsNyW8m.gIvKnW3qXrZjMpNt"
+    },
+    {
+      "sort": 200000,
+      "name": "Drop Items",
+      "type": "text",
+      "_id": "dIpKnW3qXrZjMpRt",
+      "system": {},
+      "title": {
+        "show": true,
+        "level": 1
+      },
+      "image": {},
+      "text": {
+        "format": 1,
+        "content": "<h2 class=\"custom-dnd5e-h2\">Drop Items</h2><p>When enabled, allows items to be dropped onto the canvas. There are three ways to drop an item:</p><ul><li><p><strong>Drag from inventory:</strong> Drag an item from a character sheet onto the canvas.</p></li><li><p><strong>Drag from sidebar or compendium:</strong> Drag items directly from the <strong>Items</strong> sidebar or a compendium.</p></li><li><p><strong>Context menu:</strong> Right-click an item on the character sheet and choose <em>Drop…</em>, then left-click to place. Press Esc to cancel.</p></li></ul><p>Each dropped item becomes its own token backed by an Item actor stored in the <em>Dropped Items</em> folder (the folder name can be renamed). Container items carry their contents with them. Items with a quantity greater than 1 prompt for an amount to drop.</p><p>An item can be dropped on:</p><ul><li><p><strong>Empty canvas:</strong> creates a new dropped item token on the canvas.</p></li><li><p><strong>Container item token:</strong> adds the dropped item to that container's contents.</p></li></ul><h2 class=\"custom-dnd5e-h2\">Taking a Dropped Item</h2><p>For players and GM, double-click the token to open the item actor sheet.</p><ul><li><p><strong>Take</strong> — transfer the item (or selected contents) to the chosen character. For loose items, a <em>Take With</em> picker lets you choose which of your owned characters receives the item; characters out of range are dimmed.</p></li><li><p><strong>View / Open</strong> — open the source item or container sheet for inspection.</p></li></ul><h2 class=\"custom-dnd5e-h2\">Containers: Lock and Affix</h2><p>Container item tokens can be Locked and/or Affixed by a GM.</p><ul><li><p><strong>Locked:</strong> The contents can't be viewed or taken.</p></li><li><p><strong>Affixed:</strong> The container itself can't be taken.</p></li></ul><h2>Settings</h2><p>Located in <strong>Game Settings </strong>&gt; <strong>Custom D&amp;D 5e</strong> &gt; <strong>Configure Item Interactions</strong>.</p><h3>Take Range</h3><p>Maximum distance from which a character can take a dropped item. Leave blank for no limit.</p><h3>Drop Range</h3><p>Maximum distance from a character that an item can be dropped. Leave blank for no limit. GMs are not restricted.</p><h3>Token Scale</h3><p>Default scale of a dropped item's token, e.g. <code>0.5</code> for half-grid. The default is <code>1</code>.</p><h3>Droppable Item Types</h3><p>Item types that can be dropped onto the canvas.</p><h3>Allow Player Drops</h3><p>When disabled, only the GM can create dropped items. Players can still take dropped items.</p><h3>Chat Notifications</h3><p>Post chat messages when an item is dropped, placed into a container, or taken.</p>"
+      },
+      "video": {
+        "controls": true,
+        "volume": 0.5
+      },
+      "src": null,
+      "ownership": {
+        "default": -1,
+        "0wJRsV2r9Hv1a7q0": 3
+      },
+      "flags": {},
+      "_stats": {
+        "compendiumSource": null,
+        "duplicateSource": null,
+        "coreVersion": "14.361",
+        "systemId": "dnd5e",
+        "systemVersion": "5.3.3",
+        "createdTime": 1779200000000,
+        "modifiedTime": 1779576731911,
+        "lastModifiedBy": "2Ab5BheRvt8es88G",
+        "exportSource": null
+      },
+      "category": null,
+      "_key": "!journal.pages!iIqL5xV2bRsNyW8m.dIpKnW3qXrZjMpRt"
+    }
+  ],
+  "folder": null,
+  "sort": 0,
+  "ownership": {
+    "default": 0,
+    "0wJRsV2r9Hv1a7q0": 3
+  },
+  "flags": {},
+  "_stats": {
+    "compendiumSource": null,
+    "duplicateSource": null,
+    "coreVersion": "14.361",
+    "systemId": "dnd5e",
+    "systemVersion": "5.3.3",
+    "createdTime": 1779200000000,
+    "modifiedTime": 1779200000000,
+    "lastModifiedBy": "2Ab5BheRvt8es88G",
+    "exportSource": null
+  },
+  "categories": [],
+  "_key": "!journal!iIqL5xV2bRsNyW8m"
+}

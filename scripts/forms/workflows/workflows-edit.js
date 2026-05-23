@@ -35,11 +35,11 @@ const CONDITION_TRIGGERS = ["conditionApplied", "conditionRemoved", "conditionLe
 
 const EFFECT_TRIGGERS = ["effectEnabled", "effectDisabled"];
 
-const CHECKBOX_TRIGGERS = ["checked", "unchecked"];
+export const CHECKBOX_TRIGGERS = ["checked", "unchecked"];
 
-const NUMERIC_COUNTER_TRIGGERS = ["counterValue", "counterValueIncrease", "counterValueDecrease"];
+export const NUMERIC_COUNTER_TRIGGERS = ["counterValue", "counterValueIncrease", "counterValueDecrease"];
 
-const SUCCESS_FAILURE_TRIGGERS = ["successValue", "failureValue"];
+export const SUCCESS_FAILURE_TRIGGERS = ["successValue", "failureValue"];
 
 /* -------------------------------------------- */
 /*  Action Constants                            */
@@ -79,7 +79,7 @@ const RESULTS_WITH_VALUE = ["successWithin", "failureWithin", "successBy", "fail
  * @param {object} [options] Options
  * @param {boolean} [options.localize=false] Whether to localize labels
  */
-function rebuildSelectOptions(selectElement, choices, { localize = false } = {}) {
+export function rebuildSelectOptions(selectElement, choices, { localize = false } = {}) {
   if ( !selectElement ) return;
   const currentValue = selectElement.value;
   selectElement.innerHTML = "";
@@ -507,7 +507,7 @@ export function getFilteredCounterChoiceLabels(counterChoices, actionType) {
  * @param {string} triggerEvent Trigger event type
  * @returns {object} Filtered map of counter key to label
  */
-function getFilteredTriggerCounterChoiceLabels(counterChoices, triggerEvent) {
+export function getFilteredTriggerCounterChoiceLabels(counterChoices, triggerEvent) {
   const labels = {};
   const isCheckbox = CHECKBOX_TRIGGERS.includes(triggerEvent);
   const isNumeric = NUMERIC_COUNTER_TRIGGERS.includes(triggerEvent);

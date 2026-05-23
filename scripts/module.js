@@ -46,7 +46,12 @@ import { register as registerDebug } from "./debug.js";
 import { register as registerEncumbrance, setConfig as setEncumbrance } from "./configurations/encumbrance.js";
 import { register as registerEquipmentTypes, setConfig as setEquipmentTypes } from "./configurations/misc-equipment-types.js";
 import { register as registerExhaustion } from "./gameplay/exhaustion.js";
-import { register as registerGiveItem } from "./interface/give-item.js";
+import { register as registerGiveItems } from "./item-interactions/give-items.js";
+import { register as registerDropItems } from "./item-interactions/drop-items.js";
+import { register as registerInventoryDrag } from "./item-interactions/inventory-drag.js";
+import { ItemActorDataModel } from "./documents/item-actor.js";
+import { registerItemActorSheet } from "./sheets/item-actor-sheet.js";
+import { registerItemTokenHUD } from "./applications/item-token-hud.js";
 import { register as registerFeatureTypes, setConfig as setFeatureTypes } from "./configurations/feature-types.js";
 import { register as registerItemActionTypes, setConfig as setItemActionTypes } from "./configurations/item-action-types.js";
 import { register as registerItemActivationCostTypes, setConfig as setItemActivationCostTypes } from "./configurations/item-activation-cost-types.js";
@@ -57,6 +62,7 @@ import { register as registerLanguages, setConfig as setLanguages } from "./conf
 import { register as registerLootTypes, setConfig as setLootTypes } from "./configurations/loot-types.js";
 import { register as registerMigration, migrate, migrations } from "./migration.js";
 import { register as registerInterface } from "./interface.js";
+import { register as registerItemInteractions } from "./item-interactions.js";
 import { register as registerMisc, setMaxLevel } from "./misc.js";
 import { register as registerRestTypes, setConfig as setRestTypes } from "./configurations/rest-types.js";
 import { register as registerRolls } from "./rolls.js";
@@ -114,6 +120,17 @@ function cloneDnd5eConfig() {
  */
 Hooks.on("init", async () => {
   cloneDnd5eConfig();
+
+  CONFIG.Actor.dataModels ??= {};
+  CONFIG.Actor.dataModels[CONSTANTS.DROP_ITEMS.ACTOR_TYPE] = ItemActorDataModel;
+  CONFIG.Actor.typeIcons ??= {};
+  CONFIG.Actor.typeIcons[CONSTANTS.DROP_ITEMS.ACTOR_TYPE] = "fa-solid fa-treasure-chest";
+  CONFIG.DND5E ??= {};
+  CONFIG.DND5E.defaultArtwork ??= {};
+  CONFIG.DND5E.defaultArtwork.Actor ??= {};
+  CONFIG.DND5E.defaultArtwork.Actor[CONSTANTS.DROP_ITEMS.ACTOR_TYPE] = CONSTANTS.DROP_ITEMS.DEFAULT_ICON;
+  registerItemActorSheet();
+  registerItemTokenHUD();
 
   game.keybindings.register(MODULE.ID, "stopAnimations", {
     name: "CUSTOM_DND5E.keybinding.stopAnimations",
@@ -180,6 +197,7 @@ Hooks.on("init", async () => {
 
   registerGameplay();
   registerInterface();
+  registerItemInteractions();
   registerActivities();
   registerCounters();
   registerTidy5eCounters();
@@ -207,7 +225,9 @@ Hooks.on("init", async () => {
   registerEncumbrance();
   registerEquipmentTypes();
   registerExhaustion();
-  registerGiveItem();
+  registerGiveItems();
+  registerDropItems();
+  registerInventoryDrag();
   registerFeatureTypes();
   registerItemActionTypes();
   registerItemActivationCostTypes();

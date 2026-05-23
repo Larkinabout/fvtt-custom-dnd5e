@@ -1,0 +1,157 @@
+<div class="standard-form custom-dnd5e-drop-items-sheet">
+    {{#if isEmpty}}
+    <div class="custom-dnd5e-drop-items-empty-dropzone">
+        <i class="fa-solid fa-arrow-down-to-bracket"></i>
+        <p>{{localize "CUSTOM_DND5E.dropItems.form.emptyDropzone"}}</p>
+    </div>
+    {{/if}}
+
+    {{#if hasRoot}}
+    <fieldset>
+        <legend>{{localize "CUSTOM_DND5E.item"}}</legend>
+        <div class="custom-dnd5e-give-items-summary custom-dnd5e-drop-items-summary">
+            <button type="button" class="custom-dnd5e-drop-items-summary-img unbutton{{#unless canOpenRoot}} custom-dnd5e-drop-items-summary-static{{/unless}}"
+                {{#if canOpenRoot}}data-action="openItem" data-item-id="{{root.id}}"{{else}}disabled{{/if}}
+                data-tooltip="{{root.name}}" aria-label="{{root.name}}">
+                <img src="{{root.img}}" alt="{{root.name}}" width="48" height="48">
+            </button>
+            <div class="custom-dnd5e-drop-items-summary-text">
+                <button type="button" class="custom-dnd5e-give-items-name custom-dnd5e-drop-items-summary-name unbutton{{#unless canOpenRoot}} custom-dnd5e-drop-items-summary-static{{/unless}}"
+                    {{#if canOpenRoot}}data-action="openItem" data-item-id="{{root.id}}"{{else}}disabled{{/if}}>
+                    {{root.name}}
+                </button>
+                {{#if root.showQuantity}}
+                <p class="hint">{{localize "CUSTOM_DND5E.giveItems.form.available" n=root.quantity}}</p>
+                {{/if}}
+            </div>
+            <div class="custom-dnd5e-drop-items-summary-state">
+                {{#if canToggleAffix}}
+                <button type="button"
+                    class="custom-dnd5e-drop-items-state-btn unbutton{{#if isAffixed}} active{{/if}}"
+                    data-action="toggleAffix"
+                    data-tooltip="{{localize affixTooltip}}"
+                    aria-label="{{localize affixTooltip}}">
+                    <i class="fa-solid fa-fw {{#if isAffixed}}fa-thumbtack{{else}}fa-thumbtack-slash{{/if}}"></i>
+                </button>
+                {{else if showAffixIndicator}}
+                <button type="button" disabled
+                    class="custom-dnd5e-drop-items-state-btn unbutton active"
+                    data-tooltip="{{localize "CUSTOM_DND5E.dropItems.affixed"}}">
+                    <i class="fa-solid fa-fw fa-thumbtack"></i>
+                </button>
+                {{/if}}
+
+                {{#if canToggleLock}}
+                <button type="button"
+                    class="custom-dnd5e-drop-items-state-btn custom-dnd5e-drop-items-lock unbutton{{#if isLocked}} locked active{{/if}}"
+                    data-action="toggleLock"
+                    data-tooltip="{{localize lockTooltip}}"
+                    aria-label="{{localize lockTooltip}}">
+                    <i class="fa-solid fa-fw {{#if isLocked}}fa-lock-keyhole{{else}}fa-lock-keyhole-open{{/if}}"></i>
+                </button>
+                {{else if isLocked}}
+                <button type="button" disabled
+                    class="custom-dnd5e-drop-items-state-btn custom-dnd5e-drop-items-lock unbutton locked active"
+                    data-tooltip="{{localize "CUSTOM_DND5E.dropItems.locked"}}">
+                    <i class="fa-solid fa-fw fa-lock-keyhole"></i>
+                </button>
+                {{/if}}
+
+                {{#if canRemove}}
+                <button type="button"
+                    class="custom-dnd5e-drop-items-state-btn custom-dnd5e-drop-items-state-btn-remove unbutton"
+                    data-action="removeItem" data-item-id="{{root.id}}"
+                    data-tooltip="{{localize "CUSTOM_DND5E.dropItems.form.remove"}}"
+                    aria-label="{{localize "CUSTOM_DND5E.dropItems.form.remove"}}">
+                    <i class="fa-solid fa-fw fa-trash"></i>
+                </button>
+                {{/if}}
+            </div>
+        </div>
+    </fieldset>
+    {{/if}}
+
+    <div class="custom-dnd5e-drop-items-scroll">
+        {{#if showContents}}
+        <fieldset>
+            <legend>{{localize "CUSTOM_DND5E.dropItems.form.contents"}}</legend>
+            {{#if hasContents}}
+            <ol class="unlist custom-dnd5e-drop-items-contents">
+                {{#each contents}}
+                <li class="custom-dnd5e-drop-items-row" data-item-id="{{id}}">
+                    <button type="button" class="custom-dnd5e-drop-items-img unbutton"
+                        data-action="openItem" data-item-id="{{id}}"
+                        data-tooltip="{{name}}{{#if showQuantity}} ×{{quantity}}{{/if}}"
+                        aria-label="{{name}}">
+                        <img src="{{img}}" alt="{{name}}" width="32" height="32">
+                    </button>
+                    <button type="button" class="custom-dnd5e-drop-items-name unbutton"
+                        data-action="openItem" data-item-id="{{id}}"
+                        data-tooltip="{{name}}{{#if showQuantity}} ×{{quantity}}{{/if}}">
+                        {{name}}{{#if showQuantity}} x{{quantity}}{{/if}}
+                    </button>
+                    {{#if ../canRemove}}
+                    <button type="button" class="custom-dnd5e-drop-items-take"
+                        data-action="removeItem" data-item-id="{{id}}">
+                        <i class="fas fa-trash"></i>
+                        {{localize "CUSTOM_DND5E.dropItems.form.remove"}}
+                    </button>
+                    {{else}}
+                    <button type="button" class="custom-dnd5e-drop-items-take"
+                        data-action="takeItem" data-item-id="{{id}}"
+                        {{#unless ../canTake}}disabled{{/unless}}>
+                        <i class="fas fa-hand-paper"></i>
+                        {{localize "CUSTOM_DND5E.dropItems.form.take"}}
+                    </button>
+                    {{/if}}
+                </li>
+                {{/each}}
+            </ol>
+            {{else}}
+            <p class="hint">{{localize "CUSTOM_DND5E.dropItems.form.empty"}}</p>
+            {{/if}}
+        </fieldset>
+        {{/if}}
+
+        {{#if showTakeWithSection}}
+        <fieldset>
+            <legend>{{localize "CUSTOM_DND5E.dropItems.form.takeWith"}}</legend>
+            {{#if hasTakeWithActors}}
+            <div class="custom-dnd5e-actors">
+                {{#each takerActors}}
+                <button type="button"
+                    class="custom-dnd5e-actor unbutton{{#if selected}} selected{{/if}}{{#if locked}} locked{{/if}}"
+                    {{#unless locked}}data-action="selectTaker"{{/unless}}
+                    data-actor-id="{{id}}">
+                    <img src="{{img}}" alt="{{name}}" width="40" height="40">
+                    <span>{{name}}</span>
+                </button>
+                {{/each}}
+            </div>
+            <input type="hidden" name="takerActorId" value="{{selectedActorId}}">
+            {{else}}
+            <p class="hint">{{localize "CUSTOM_DND5E.dropItems.error.noActor"}}</p>
+            {{/if}}
+        </fieldset>
+        {{/if}}
+    </div>
+
+    {{#if showFooter}}
+    <footer class="form-footer">
+        {{#if showTakeContents}}
+        <button type="button" data-action="takeContents"
+            {{#unless canTake}}disabled{{/unless}}>
+            <i class="fas fa-box-open"></i>
+            {{localize "CUSTOM_DND5E.dropItems.form.takeContents"}}
+        </button>
+        {{/if}}
+        {{#if showTakeAll}}
+        <button type="button" class="save-button" data-action="takeAll"
+            {{#unless canTake}}disabled{{/unless}}>
+            <i class="fas fa-hand-holding-box"></i>
+            {{localize buttonLabel}}
+        </button>
+        {{/if}}
+    </footer>
+    {{/if}}
+</div>

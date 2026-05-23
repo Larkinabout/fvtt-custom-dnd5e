@@ -2,98 +2,20 @@ import { CONSTANTS, MODULE } from "../../constants.js";
 import { getOperatorChoices } from "../../utils.js";
 import { CustomDnd5eForm } from "../custom-dnd5e-form.js";
 import {
-  getConditionTriggerChoices,
+  COUNTER_TRIGGERS,
   getConditionChoices,
+  getConditionTriggerChoices,
   getCounterChoices,
   getCounterChoiceLabels,
-  COUNTER_TRIGGERS
+  getFilteredTriggerCounterChoiceLabels,
+  rebuildSelectOptions
 } from "./workflows-edit.js";
 
 const form = "trigger-conditions";
 
-/* -------------------------------------------- */
-/*  Trigger Row Constants (duplicated subset)   */
-/* -------------------------------------------- */
-
-const TRIGGERS_WITH_VALUE = [
-  "counterValue", "successValue", "failureValue"
-];
-
+const TRIGGERS_WITH_VALUE = ["counterValue", "successValue", "failureValue"];
 const CONDITION_TRIGGERS = ["conditionApplied", "conditionRemoved"];
-
 const EFFECT_TRIGGERS = ["effectEnabled", "effectDisabled"];
-
-const CHECKBOX_TRIGGERS = ["checked", "unchecked"];
-
-const NUMERIC_COUNTER_TRIGGERS = ["counterValue", "counterValueIncrease", "counterValueDecrease"];
-
-const SUCCESS_FAILURE_TRIGGERS = ["successValue", "failureValue"];
-
-/* -------------------------------------------- */
-
-/**
- * Filter counter choice labels by trigger event compatibility.
- * @param {object} counterChoices Counter choices map.
- * @param {string} triggerEvent The trigger event type.
- * @returns {object} Filtered map of counter key to label.
- */
-function getFilteredTriggerCounterChoiceLabels(counterChoices, triggerEvent) {
-  const labels = {};
-  const isCheckbox = CHECKBOX_TRIGGERS.includes(triggerEvent);
-  const isNumeric = NUMERIC_COUNTER_TRIGGERS.includes(triggerEvent);
-  const isSuccessFailure = SUCCESS_FAILURE_TRIGGERS.includes(triggerEvent);
-  for ( const [key, data] of Object.entries(counterChoices) ) {
-    if ( isCheckbox && data.type !== "checkbox" ) continue;
-    if ( isNumeric && (data.type === "checkbox" || data.type === "successFailure") ) continue;
-    if ( isSuccessFailure && data.type !== "successFailure" ) continue;
-    labels[key] = data.label;
-  }
-  return labels;
-}
-
-/* -------------------------------------------- */
-
-/**
- * Rebuild a <select> element's options from choices.
- * @param {HTMLSelectElement} selectElement
- * @param {object[]|object} choices Grouped array or flat object.
- * @param {object} [options]
- * @param {boolean} [options.localize=false] Whether to localize labels.
- */
-function rebuildSelectOptions(selectElement, choices, { localize = false } = {}) {
-  if ( !selectElement ) return;
-  const currentValue = selectElement.value;
-  selectElement.innerHTML = "";
-
-  if ( Array.isArray(choices) ) {
-    const groups = new Map();
-    for ( const c of choices ) {
-      const groupLabel = c.group || "";
-      if ( !groups.has(groupLabel) ) groups.set(groupLabel, []);
-      groups.get(groupLabel).push(c);
-    }
-    for ( const [groupLabel, options] of groups ) {
-      const parent = groupLabel
-        ? selectElement.appendChild(Object.assign(document.createElement("optgroup"), { label: groupLabel }))
-        : selectElement;
-      for ( const c of options ) {
-        const option = document.createElement("option");
-        option.value = c.value;
-        option.textContent = localize ? game.i18n.localize(c.label) : c.label;
-        if ( c.value === currentValue ) option.selected = true;
-        parent.appendChild(option);
-      }
-    }
-  } else {
-    for ( const [key, label] of Object.entries(choices) ) {
-      const option = document.createElement("option");
-      option.value = key;
-      option.textContent = localize ? game.i18n.localize(label) : label;
-      if ( key === currentValue ) option.selected = true;
-      selectElement.appendChild(option);
-    }
-  }
-}
 
 /* -------------------------------------------- */
 
