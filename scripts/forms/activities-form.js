@@ -66,7 +66,9 @@ export class ActivitiesForm extends CustomDnd5eForm {
       macro: setting?.macro ?? false,
       move: setting?.move ?? false,
       swap: setting?.swap ?? false,
-      targeting: setting?.targeting ?? false
+      targeting: setting?.targeting ?? false,
+      fallbackTarget: setting?.fallbackTarget ?? false,
+      clearTargetsAfterUse: setting?.clearTargetsAfterUse ?? false
     };
   }
 
@@ -113,7 +115,9 @@ export class ActivitiesForm extends CustomDnd5eForm {
       macro: formData.object.macro ?? false,
       move: formData.object.move ?? false,
       swap: formData.object.swap ?? false,
-      targeting: formData.object.targeting ?? false
+      targeting: formData.object.targeting ?? false,
+      fallbackTarget: formData.object.fallbackTarget ?? false,
+      clearTargetsAfterUse: formData.object.clearTargetsAfterUse ?? false
     });
 
     foundry.applications.settings.SettingsConfig.reloadConfirm();

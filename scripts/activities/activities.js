@@ -9,32 +9,52 @@ import { TargetingMode } from "./targeting-mode.js";
 const constants = CONSTANTS.ACTIVITIES;
 
 /**
+ * Clear the current user's targeted tokens.
+ */
+function _clearUserTargets() {
+  if ( !canvas.ready || !game.user.targets.size ) return;
+  canvas.tokens.setTargets([]);
+}
+
+/**
  * Determine targeting requirements for an activity.
  * @param {Activity} activity Activity being used
+ * @param {object} [options]
+ * @param {boolean} [options.fallback=false] Fall back to 1 creature when no target type or count is set
  * @returns {{ count: number, typeLabel: string } | null} Requirements, or null if no targeting needed
  */
-function _getTargetingRequirements(activity) {
-  const type = activity.target?.affects?.type;
-  const typeLabel = type && CONFIG.DND5E.individualTargetTypes[type]
-    ? game.i18n.localize(CONFIG.DND5E.individualTargetTypes[type].label)
-    : game.i18n.localize(CONFIG.DND5E.individualTargetTypes.creature?.label ?? "Creature");
+function _getTargetingRequirements(activity, { fallback = false } = {}) {
+  const rawType = activity.target?.affects?.type;
+  const labelFor = type => game.i18n.localize(
+    CONFIG.DND5E.individualTargetTypes[type]?.label ?? "Creature"
+  );
 
   // Custom activities that always need targets
   if ( activity.type === "custom-dnd5e-move" ) {
-    return { count: 1, typeLabel };
+    return { count: 1, typeLabel: labelFor(rawType) };
   }
   if ( activity.type === "custom-dnd5e-swap" && !activity.swap?.actorUuid ) {
-    return { count: 1, typeLabel };
+    return { count: 1, typeLabel: labelFor(rawType) };
   }
 
   // Standard activities with individual target data
-  if ( !type || type === "self" || type === "space" ) return null;
-  if ( !CONFIG.DND5E.individualTargetTypes[type] ) return null;
+  if ( rawType === "self" || rawType === "space" ) return null;
   if ( activity.target?.template?.type ) return null;
-  const count = activity.target?.affects?.count;
-  if ( !Number.isInteger(count) || count <= 0 ) return null;
 
-  return { count, typeLabel };
+  let type = rawType;
+  if ( !type ) {
+    if ( !fallback ) return null;
+    type = "creature";
+  }
+  if ( !CONFIG.DND5E.individualTargetTypes[type] ) return null;
+
+  let count = activity.target?.affects?.count;
+  if ( !Number.isInteger(count) || count <= 0 ) {
+    if ( !fallback ) return null;
+    count = 1;
+  }
+
+  return { count, typeLabel: labelFor(type) };
 }
 
 /**
@@ -47,7 +67,14 @@ export function register() {
       scope: "world",
       config: false,
       type: Object,
-      default: { macro: false, move: false, swap: false, targeting: false }
+      default: {
+        macro: false,
+        move: false,
+        swap: false,
+        targeting: false,
+        fallbackTarget: false,
+        clearTargetsAfterUse: false
+      }
     }
   );
 
@@ -85,11 +112,12 @@ export function register() {
   }
 
   if ( setting?.targeting ) {
+    const fallback = !!setting.fallbackTarget;
     Hooks.on("dnd5e.preUseActivity", (activity, usageConfig, dialogConfig, messageConfig) => {
       if ( usageConfig._bypassTargeting ) return true;
       if ( !canvas.ready ) return true;
 
-      const targeting = _getTargetingRequirements(activity);
+      const targeting = _getTargetingRequirements(activity, { fallback });
       if ( !targeting ) return true;
       if ( game.user.targets.size >= targeting.count ) return true;
 
@@ -100,6 +128,16 @@ export function register() {
       });
       return false;
     });
+  }
+
+  if ( setting?.clearTargetsAfterUse ) {
+    // For non-attack activities, clear immediately after use.
+    // For attack activities, defer until the attack roll completes.
+    Hooks.on("dnd5e.postUseActivity", activity => {
+      if ( activity.type === "attack" ) return;
+      _clearUserTargets();
+    });
+    Hooks.on("dnd5e.rollAttack", () => _clearUserTargets());
   }
 
   c5eLoadTemplates([

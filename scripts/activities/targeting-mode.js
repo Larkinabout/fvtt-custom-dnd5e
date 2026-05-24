@@ -28,6 +28,7 @@ export class TargetingMode {
     this._restoreApplications = null;
     this._indicator = null;
     this._targetTokenHookId = null;
+    this._originalSetTarget = null;
     this._onTargetToken = this._onTargetToken.bind(this);
     this._onKeyDown = this._onKeyDown.bind(this);
     this._onContextMenu = this._onContextMenu.bind(this);
@@ -35,7 +36,7 @@ export class TargetingMode {
   }
 
   /* -------------------------------------------- */
-  /*  Static API                                  */
+  /* STATIC API                                   */
   /* -------------------------------------------- */
 
   /**
@@ -55,7 +56,7 @@ export class TargetingMode {
   }
 
   /* -------------------------------------------- */
-  /*  Lifecycle                                   */
+  /*  LIFECYCLE                                   */
   /* -------------------------------------------- */
 
   /**
@@ -112,7 +113,7 @@ export class TargetingMode {
   }
 
   /* -------------------------------------------- */
-  /*  Indicator                                   */
+  /*  INDICATOR                                   */
   /* -------------------------------------------- */
 
   /**
@@ -148,7 +149,7 @@ export class TargetingMode {
   }
 
   /* -------------------------------------------- */
-  /*  Event Listeners                             */
+  /*  EVENT LISTENERS                             */
   /* -------------------------------------------- */
 
   /**
@@ -159,6 +160,7 @@ export class TargetingMode {
     document.addEventListener("keydown", this._onKeyDown);
     document.addEventListener("contextmenu", this._onContextMenu);
     document.addEventListener("pointermove", this._onPointerMove);
+    this._patchSetTarget();
   }
 
   /* -------------------------------------------- */
@@ -174,6 +176,36 @@ export class TargetingMode {
     document.removeEventListener("keydown", this._onKeyDown);
     document.removeEventListener("contextmenu", this._onContextMenu);
     document.removeEventListener("pointermove", this._onPointerMove);
+    this._unpatchSetTarget();
+  }
+
+  /* -------------------------------------------- */
+
+  /**
+   * Patch Token.setTarget so clicks made via the target tool never release other targets,
+   * making each click a simple toggle. Foundry's click callback is captured at token
+   * construction, so we patch setTarget (still resolved via the prototype at call time)
+   * rather than _onClickLeft.
+   */
+  _patchSetTarget() {
+    const TokenClass = foundry.canvas.placeables.Token;
+    const original = TokenClass.prototype.setTarget;
+    this._originalSetTarget = original;
+    TokenClass.prototype.setTarget = function(targeted = true, options = {}) {
+      if ( game.activeTool === "target" ) options = { ...options, releaseOthers: false };
+      return original.call(this, targeted, options);
+    };
+  }
+
+  /* -------------------------------------------- */
+
+  /**
+   * Restore the original Token.setTarget method.
+   */
+  _unpatchSetTarget() {
+    if ( !this._originalSetTarget ) return;
+    foundry.canvas.placeables.Token.prototype.setTarget = this._originalSetTarget;
+    this._originalSetTarget = null;
   }
 
   /* -------------------------------------------- */
