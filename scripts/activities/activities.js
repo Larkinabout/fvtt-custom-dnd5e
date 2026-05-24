@@ -8,6 +8,10 @@ import { TargetingMode } from "./targeting-mode.js";
 
 const constants = CONSTANTS.ACTIVITIES;
 
+/* -------------------------------------------- */
+/*  HELPERS                                     */
+/* -------------------------------------------- */
+
 /**
  * Clear the current user's targeted tokens.
  */
@@ -15,6 +19,8 @@ function _clearUserTargets() {
   if ( !canvas.ready || !game.user.targets.size ) return;
   canvas.tokens.setTargets([]);
 }
+
+/* -------------------------------------------- */
 
 /**
  * Determine targeting requirements for an activity.
@@ -56,6 +62,10 @@ function _getTargetingRequirements(activity, { fallback = false } = {}) {
 
   return { count, typeLabel: labelFor(type) };
 }
+
+/* -------------------------------------------- */
+/*  REGISTRATION                                */
+/* -------------------------------------------- */
 
 /**
  * Register settings and load templates.
