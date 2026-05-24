@@ -621,6 +621,21 @@ export function getActorOwnerIds(actor) {
 /* -------------------------------------------- */
 
 /**
+ * WWhether the user is the primary handler of a document.
+ * @param {Document} [document]
+ * @returns {boolean}
+ */
+export function isPrimaryHandler(document) {
+  const activeGM = game.users.activeGM;
+  if ( activeGM ) return activeGM.id === game.user.id;
+  if ( !document ) return game.user.isGM;
+  const owner = game.users.find(u => u.active && document.testUserPermission(u, "OWNER"));
+  return owner?.id === game.user.id;
+}
+
+/* -------------------------------------------- */
+
+/**
  * Make the actor bloodied.
  * @param {object} actor
  */

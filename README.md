@@ -322,7 +322,22 @@ Actions define what happens when a workflow is triggered. Multiple actions can b
 
 The **Request Roll** action prompts a roll with a configurable DC and supports **On Success** and **On Failure** sub-actions, allowing different actions to execute based on the roll result.
 
-The **Macro** action receives context including the actor, item, event data, roll results, and counter information (counterKey, counterName, counterValue) when triggered by counter events.
+The **Macro** action passes the following properties to the macro script:
+
+| Property | Description |
+| --- | --- |
+| `actor` | The actor the workflow is running on. |
+| `item` | The item the workflow is running on. |
+| `event` | Name of the event that fired the workflow (e.g. `counterValueIncrease`, `zeroHp`, `attackRolled`). |
+| `userId` | ID of the user who triggered the event. |
+| `data` | The hook data from the underlying Foundry hook. |
+| `dieTotal` | Die total for roll-based events. |
+| `rolls` | Array of `Roll` instances for roll-based events. |
+| `counterKey` | Counter key for counter events. |
+| `counterName` | Label of the counter for counter events. |
+| `counterValue` | New value of the counter for counter events. |
+
+Attack Roll (pre-roll) macros additionally receive `sourceActor`, `sourceToken`, `targetActor`, `targetToken`, `rollConfig`, and `config` for inspecting and modifying the roll before it is made.
 
 ### Item Workflows
 

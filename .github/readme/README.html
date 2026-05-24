@@ -250,7 +250,22 @@
 
 <p>The <strong>Request Roll</strong> action prompts a roll with a configurable DC and supports <strong>On Success</strong> and <strong>On Failure</strong> sub-actions, allowing different actions to execute based on the roll result.</p>
 
-<p>The <strong>Macro</strong> action receives context including the actor, item, event data, roll results, and counter information (counterKey, counterName, counterValue) when triggered by counter events.</p>
+<p>The <strong>Macro</strong> action receives an argument object exposing the following properties to the macro script:</p>
+
+<ul>
+    <li><strong><code>actor</code></strong>: The actor the workflow is running on.</li>
+    <li><strong><code>item</code></strong>: The item the workflow is running on.</li>
+    <li><strong><code>event</code></strong>: Name of the event that fired the workflow (e.g. <code>counterValueIncrease</code>, <code>zeroHp</code>, <code>attackRolled</code>).</li>
+    <li><strong><code>userId</code></strong>: ID of the user who triggered the event.</li>
+    <li><strong><code>data</code></strong>: The raw hook data payload from the underlying Foundry hook.</li>
+    <li><strong><code>dieTotal</code></strong>: Die total for roll-based events.</li>
+    <li><strong><code>rolls</code></strong>: Array of <code>Roll</code> instances for roll-based events.</li>
+    <li><strong><code>counterKey</code></strong>: Counter key for counter events.</li>
+    <li><strong><code>counterName</code></strong>: Label of the counter for counter events.</li>
+    <li><strong><code>counterValue</code></strong>: New value of the counter for counter events.</li>
+</ul>
+
+<p>Attack Roll (pre-roll) macros additionally receive <code>sourceActor</code>, <code>sourceToken</code>, <code>targetActor</code>, <code>targetToken</code>, <code>rollConfig</code>, and <code>config</code> for inspecting and modifying the roll before it is made.</p>
 
 <h3>Item Workflows</h3>
 
