@@ -227,7 +227,7 @@ export class ItemActorSheet extends HandlebarsApplicationMixin(ActorSheetV2) {
     }
 
     if ( !this.actor?.system?.isContainer ) {
-      Logger.info(game.i18n.localize("CUSTOM_DND5E.dropItems.error.notContainer"), true);
+      Logger.info(game.i18n.localize("CUSTOM_DND5E.dropItems.error.notContainer"), true, { prefix: false });
       return;
     }
 

@@ -228,7 +228,7 @@ async function onDropCanvasData(_canvas, data, _event) {
  */
 async function dropOntoContainerToken(target, data) {
   if ( target.actor.system.locked ) {
-    Logger.info(game.i18n.localize("CUSTOM_DND5E.dropItems.error.containerLocked"), true);
+    Logger.info(game.i18n.localize("CUSTOM_DND5E.dropItems.error.containerLocked"), true, { prefix: false });
     return false;
   }
   const item = await Item.implementation.fromDropData(data);
@@ -276,11 +276,11 @@ async function dropOntoGround(data) {
   if ( fromActor && !fromActor.isOwner ) return;
   if ( !fromActor && !game.user.isGM ) return;
   if ( fromActor && !game.user.isGM && !getSetting(SETTING.ALLOW_PLAYER_DROPS.KEY) ) {
-    Logger.info(game.i18n.localize("CUSTOM_DND5E.dropItems.error.notAllowed"), true);
+    Logger.info(game.i18n.localize("CUSTOM_DND5E.dropItems.error.notAllowed"), true, { prefix: false });
     return false;
   }
   if ( !isDropInRange(fromActor, data.x, data.y) ) {
-    Logger.info(game.i18n.localize("CUSTOM_DND5E.dropItems.error.dropOutOfRange"), true);
+    Logger.info(game.i18n.localize("CUSTOM_DND5E.dropItems.error.dropOutOfRange"), true, { prefix: false });
     return false;
   }
 
@@ -463,7 +463,8 @@ async function beginPlacement(item) {
 
   Logger.info(
     game.i18n.format("CUSTOM_DND5E.dropItems.placePrompt", { item: item.name }),
-    true
+    true,
+    { prefix: false }
   );
 
   const stage = canvas.app?.stage;
@@ -514,7 +515,7 @@ async function beginPlacement(item) {
       ?? canvas.stage.worldTransform.applyInverse({ x: event.clientX, y: event.clientY });
 
     if ( !isDropInRange(item.actor ?? null, pos.x, pos.y) ) {
-      Logger.info(game.i18n.localize("CUSTOM_DND5E.dropItems.error.dropOutOfRange"), true);
+      Logger.info(game.i18n.localize("CUSTOM_DND5E.dropItems.error.dropOutOfRange"), true, { prefix: false });
       return;
     }
 
@@ -590,7 +591,7 @@ export async function executeDrop({ item, x, y, fromActor = null, quantity }) {
   } else {
     const activeGM = game.users.activeGM;
     if ( !activeGM ) {
-      Logger.error(game.i18n.localize("CUSTOM_DND5E.dropItems.error.noActiveGM"), true);
+      Logger.error(game.i18n.localize("CUSTOM_DND5E.dropItems.error.noActiveGM"), true, { prefix: false });
       return null;
     }
     const payload = {
@@ -808,18 +809,18 @@ export async function addToContainer(itemActor, sourceItem, { quantity } = {}) {
   if ( sourceItem.actor && !sourceItem.actor.isOwner ) return;
   if ( sourceItem.actor?.id === itemActor.id ) return;
   if ( !isDroppable(sourceItem) ) {
-    Logger.info(game.i18n.localize("CUSTOM_DND5E.dropItems.error.cannotDrop"), true);
+    Logger.info(game.i18n.localize("CUSTOM_DND5E.dropItems.error.cannotDrop"), true, { prefix: false });
     return;
   }
 
   if ( itemActor.system?.locked ) {
-    Logger.info(game.i18n.localize("CUSTOM_DND5E.dropItems.error.containerLocked"), true);
+    Logger.info(game.i18n.localize("CUSTOM_DND5E.dropItems.error.containerLocked"), true, { prefix: false });
     return;
   }
 
   const root = Array.from(itemActor.items).find(i => !i.system?.container);
   if ( !root || root.type !== "container" ) {
-    Logger.info(game.i18n.localize("CUSTOM_DND5E.dropItems.error.notContainer"), true);
+    Logger.info(game.i18n.localize("CUSTOM_DND5E.dropItems.error.notContainer"), true, { prefix: false });
     return;
   }
 
@@ -842,7 +843,7 @@ export async function addToContainer(itemActor, sourceItem, { quantity } = {}) {
   } else {
     const activeGM = game.users.activeGM;
     if ( !activeGM ) {
-      Logger.error(game.i18n.localize("CUSTOM_DND5E.dropItems.error.noActiveGM"), true);
+      Logger.error(game.i18n.localize("CUSTOM_DND5E.dropItems.error.noActiveGM"), true, { prefix: false });
       return;
     }
     game.socket.emit(`module.${MODULE.ID}`, {
@@ -887,7 +888,7 @@ export async function populateEmptyItemActor(itemActor, sourceItem, { quantity }
   if ( !sourceItem ) return;
   if ( sourceItem.actor && !sourceItem.actor.isOwner ) return;
   if ( !isDroppable(sourceItem) ) {
-    Logger.info(game.i18n.localize("CUSTOM_DND5E.dropItems.error.cannotDrop"), true);
+    Logger.info(game.i18n.localize("CUSTOM_DND5E.dropItems.error.cannotDrop"), true, { prefix: false });
     return;
   }
 
@@ -1078,14 +1079,15 @@ export async function takeItem(token, { takerActor, itemIds, quantity, skipOverr
 
   takerActor ??= resolveTakerActor();
   if ( !takerActor ) {
-    Logger.info(game.i18n.localize("CUSTOM_DND5E.dropItems.error.noActor"), true);
+    Logger.info(game.i18n.localize("CUSTOM_DND5E.dropItems.error.noActor"), true, { prefix: false });
     return;
   }
 
   if ( !isTakerActorInRange(token.object ?? token, takerActor) ) {
     Logger.info(
       game.i18n.format("CUSTOM_DND5E.dropItems.error.outOfRange", { actor: takerActor.name }),
-      true
+      true,
+      { prefix: false }
     );
     return;
   }
@@ -1118,7 +1120,7 @@ export async function takeItem(token, { takerActor, itemIds, quantity, skipOverr
       payload
     });
   } else {
-    Logger.error(game.i18n.localize("CUSTOM_DND5E.dropItems.error.noActiveGM"), true);
+    Logger.error(game.i18n.localize("CUSTOM_DND5E.dropItems.error.noActiveGM"), true, { prefix: false });
     pendingTakes.delete(requestId);
   }
 }
@@ -1140,7 +1142,7 @@ async function confirmTakeOverrides(itemActor, { itemIds, skipOverrideConfirm } 
   const overrideLock = itemActor.system?.locked && itemIds?.length;
   if ( overrideLock ) {
     if ( !game.user.isGM ) {
-      Logger.info(game.i18n.localize("CUSTOM_DND5E.dropItems.error.containerLocked"), true);
+      Logger.info(game.i18n.localize("CUSTOM_DND5E.dropItems.error.containerLocked"), true, { prefix: false });
       return false;
     }
     if ( !skipOverrideConfirm ) {
@@ -1155,7 +1157,7 @@ async function confirmTakeOverrides(itemActor, { itemIds, skipOverrideConfirm } 
   const overrideAffix = itemActor.system?.affixed && !itemIds?.length;
   if ( overrideAffix ) {
     if ( !game.user.isGM ) {
-      Logger.info(game.i18n.localize("CUSTOM_DND5E.dropItems.error.containerAffixed"), true);
+      Logger.info(game.i18n.localize("CUSTOM_DND5E.dropItems.error.containerAffixed"), true, { prefix: false });
       return false;
     }
     const ok = await ItemDialog.confirm({

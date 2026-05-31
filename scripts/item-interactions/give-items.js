@@ -285,7 +285,8 @@ export async function executeGive(item, recipient, quantity) {
   if ( !targetUser ) {
     Logger.error(
       game.i18n.format("CUSTOM_DND5E.giveItems.error.noActiveOwner", { name: recipientActor.name }),
-      true
+      true,
+      { prefix: false }
     );
     return;
   }

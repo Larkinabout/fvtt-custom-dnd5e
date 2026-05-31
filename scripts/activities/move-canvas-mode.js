@@ -73,7 +73,7 @@ export class MoveCanvasMode {
     try {
       await tokenDoc.update({ x, y });
     } catch (err) {
-      Logger.error(err.message, true);
+      Logger.error(err.message, true, { prefix: false });
     } finally {
       Hooks.off("preUpdateToken", hookId);
     }
