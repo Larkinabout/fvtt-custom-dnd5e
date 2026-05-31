@@ -43,6 +43,7 @@ import { register as registerCreatureTypes, setConfig as setCreatureTypes } from
 import { register as registerCurrency, setConfig as setCurrency } from "./configurations/currency.js";
 import { register as registerDamageTypes, setConfig as setDamageTypes } from "./configurations/damage-types.js";
 import { register as registerDebug } from "./debug.js";
+import { register as registerDetachedSheets } from "./detached-sheets.js";
 import { register as registerEncumbrance, setConfig as setEncumbrance } from "./configurations/encumbrance.js";
 import { register as registerEquipmentTypes, setConfig as setEquipmentTypes } from "./configurations/misc-equipment-types.js";
 import { register as registerExhaustion } from "./gameplay/exhaustion.js";
@@ -254,6 +255,7 @@ Hooks.on("init", async () => {
   registerTokenEffects();
   registerTokenHudImprovements();
   registerDebug();
+  registerDetachedSheets();
 
   setAbilities(getSetting(CONSTANTS.ABILITIES.SETTING.CONFIG.KEY));
   const isV4 = foundry.utils.isNewerVersion(game.dnd5e.version, "3.3.1");

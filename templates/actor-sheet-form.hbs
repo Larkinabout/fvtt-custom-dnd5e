@@ -1,14 +1,53 @@
 <div class="standard-form">
     <div class="standard-form scrollable">
         <fieldset>
-            <legend>{{localize "CUSTOM_DND5E.clientSettings.label"}}</legend>
-            {{#if isGM}}
-            <p>{{localize "CUSTOM_DND5E.clientSettings.note"}}</p>
-            {{/if}}
+            <legend>{{localize "CUSTOM_DND5E.form.actorSheet.group.openDetach"}}</legend>
+            <div class="form-group">
+                <label>{{localize "CUSTOM_DND5E.form.actorSheet.autoDetachActorSheet.label"}}</label>
+                <div class="form-fields">
+                    <dnd5e-checkbox id="custom-dnd5e-auto-detach-actor-sheet" name="autoDetachActorSheet" {{#if autoDetachActorSheet}} checked{{/if}}></dnd5e-checkbox>
+                </div>
+                <p class="hint">{{localize "CUSTOM_DND5E.form.actorSheet.autoDetachActorSheet.note"}}</p>
+            </div>
+            <div class="form-group">
+                <label>{{localize "CUSTOM_DND5E.form.actorSheet.openSingleSheet.label"}}</label>
+                <div class="form-fields">
+                    <dnd5e-checkbox id="custom-dnd5e-open-single-actor-sheet" name="openSingleActorSheet" {{#if openSingleActorSheet}} checked{{/if}}></dnd5e-checkbox>
+                </div>
+                <p class="hint">{{localize "CUSTOM_DND5E.form.actorSheet.openSingleSheet.note"}}</p>
+            </div>
+            <div class="form-group">
+                <label>{{localize "CUSTOM_DND5E.form.actorSheet.openActorSheetOnSelect.label"}}</label>
+                <div class="form-fields">
+                    <dnd5e-checkbox id="custom-dnd5e-open-actor-sheet-on-select" name="openActorSheetOnSelect" {{#if openActorSheetOnSelect}} checked{{/if}}></dnd5e-checkbox>
+                </div>
+                <p class="hint">{{localize "CUSTOM_DND5E.form.actorSheet.openActorSheetOnSelect.note"}}</p>
+            </div>
+            <div class="form-group">
+                <label>{{localize "CUSTOM_DND5E.form.actorSheet.openDetachActorTypes.label"}}</label>
+                <div class="form-fields">
+                    <multi-select name="openDetachActorTypes">
+                        {{#each openDetachActorTypes}}
+                        <option value="{{this.key}}" {{#if this.checked}}selected{{/if}}>{{this.label}}</option>
+                        {{/each}}
+                    </multi-select>
+                </div>
+                <p class="hint">{{localize "CUSTOM_DND5E.form.actorSheet.openDetachActorTypes.note"}}</p>
+            </div>
+            <div class="form-group">
+                <label>{{localize "CUSTOM_DND5E.form.actorSheet.openDetachShowControls.label"}}</label>
+                <div class="form-fields">
+                    <dnd5e-checkbox id="custom-dnd5e-open-detach-show-controls" name="openDetachShowControls" {{#if openDetachShowControls}} checked{{/if}}></dnd5e-checkbox>
+                </div>
+                <p class="hint">{{localize "CUSTOM_DND5E.form.actorSheet.openDetachShowControls.note"}}</p>
+            </div>
+        </fieldset>
+        <fieldset>
+            <legend>{{localize "CUSTOM_DND5E.form.actorSheet.group.sheetDisplay"}}</legend>
             <div class="form-group">
                 <label>{{localize "CUSTOM_DND5E.form.actorSheet.sheetScale.label"}}</label>
                 <div class="form-fields">
-                    <input id="custom-dnd5e-sheet-scale" name="sheetScale" type="number" step=".05" value="{{sheetScale}}"> 
+                    <input id="custom-dnd5e-sheet-scale" name="sheetScale" type="number" step=".05" value="{{sheetScale}}">
                 </div>
                 <p class="hint">{{localize "CUSTOM_DND5E.form.actorSheet.sheetScale.note.1"}}</p>
                 <p class="custom-dnd5e-advice notes">{{localize "CUSTOM_DND5E.form.actorSheet.sheetScale.note.2"}}</p>
@@ -16,7 +55,7 @@
             <div class="form-group">
                 <label>{{localize "CUSTOM_DND5E.form.actorSheet.autoFadeSheet.label"}}</label>
                 <div class="form-fields">
-                    <dnd5e-checkbox id="custom-dnd5e-auto-fade-sheet" name="autoFadeSheet" {{#if autoFadeSheet}} checked{{/if}}></dnd5e-checkbox> 
+                    <dnd5e-checkbox id="custom-dnd5e-auto-fade-sheet" name="autoFadeSheet" {{#if autoFadeSheet}} checked{{/if}}></dnd5e-checkbox>
                 </div>
                 <p class="hint">{{localize "CUSTOM_DND5E.form.actorSheet.autoFadeSheet.note.1"}}</p>
                 <p class="custom-dnd5e-advice notes">{{localize "CUSTOM_DND5E.form.actorSheet.autoFadeSheet.note.2"}}</p>

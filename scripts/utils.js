@@ -558,8 +558,6 @@ function areKeysPressed(event, action) {
     if ( b.modifiers.length ) return false;
     return activeModifiers[b.key];
   });
-  const downKeys = [...game.keyboard.downKeys];
-  Logger.debug(`Getting key pressed for ${action}`, { event, downKeys, isPressed });
   return isPressed;
 }
 

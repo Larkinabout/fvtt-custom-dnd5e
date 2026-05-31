@@ -61,6 +61,11 @@ export class ActorSheetForm extends CustomDnd5eForm {
   async _prepareContext() {
     return {
       isGM: game.user.isGM,
+      autoDetachActorSheet: getFlag(game.user, CONSTANTS.ACTOR_SHEET.SETTING.AUTO_DETACH_ACTOR_SHEET.KEY),
+      openSingleActorSheet: getFlag(game.user, CONSTANTS.ACTOR_SHEET.SETTING.OPEN_SINGLE_ACTOR_SHEET.KEY),
+      openActorSheetOnSelect: getFlag(game.user, CONSTANTS.ACTOR_SHEET.SETTING.OPEN_ACTOR_SHEET_ON_SELECT.KEY),
+      openDetachShowControls: getFlag(game.user, CONSTANTS.ACTOR_SHEET.SETTING.OPEN_DETACH_SHOW_CONTROLS.KEY),
+      openDetachActorTypes: ActorSheetForm.getActorTypeChoices(),
       autoFadeSheet: getFlag(game.user, CONSTANTS.ACTOR_SHEET.SETTING.AUTO_FADE_SHEET.KEY),
       autoMinimiseSheet: getFlag(game.user, CONSTANTS.ACTOR_SHEET.SETTING.AUTO_MINIMISE_SHEET.KEY),
       bannerImage: getSetting(CONSTANTS.ACTOR_SHEET.SETTING.BANNER_IMAGE.KEY),
@@ -76,6 +81,29 @@ export class ActorSheetForm extends CustomDnd5eForm {
       showTokenDisposition: getSetting(CONSTANTS.ACTOR_SHEET.SETTING.SHOW_TOKEN_DISPOSITION.KEY),
       showUseLairAction: getSetting(CONSTANTS.ACTOR_SHEET.SETTING.SHOW_USE_LAIR_ACTION.KEY)
     };
+  }
+
+  /* -------------------------------------------- */
+
+  /**
+   * Get the actor-type choices for the auto-detach filter.
+   * An unset or empty filter falls back to the default selection.
+   *
+   * @returns {Array<{key: string, label: string, checked: boolean}>} Actor type choices.
+   */
+  static getActorTypeChoices() {
+    const setting = CONSTANTS.ACTOR_SHEET.SETTING.OPEN_DETACH_ACTOR_TYPES;
+    const included = getFlag(game.user, setting.KEY);
+    const selected = Array.isArray(included) && included.length > 0 ? included : setting.DEFAULT;
+    const types = (game.documentTypes?.Actor ?? []).filter(type => type !== CONST.BASE_DOCUMENT_TYPE);
+    return types.map(type => {
+      const label = CONFIG.Actor?.typeLabels?.[type];
+      return {
+        key: type,
+        label: label ? game.i18n.localize(label) : type,
+        checked: selected.includes(type)
+      };
+    });
   }
 
   /* -------------------------------------------- */
@@ -116,11 +144,23 @@ export class ActorSheetForm extends CustomDnd5eForm {
    * @param {object} formData The form data.
    */
   static async submit(event, form, formData) {
+    const includedActorTypes = formData.object.openDetachActorTypes ?? [];
     await Promise.all([
+      setFlag(game.user, CONSTANTS.ACTOR_SHEET.SETTING.AUTO_DETACH_ACTOR_SHEET.KEY,
+        formData.object.autoDetachActorSheet),
+      setFlag(game.user, CONSTANTS.ACTOR_SHEET.SETTING.OPEN_SINGLE_ACTOR_SHEET.KEY,
+        formData.object.openSingleActorSheet),
+      setFlag(game.user, CONSTANTS.ACTOR_SHEET.SETTING.OPEN_ACTOR_SHEET_ON_SELECT.KEY,
+        formData.object.openActorSheetOnSelect),
+      setFlag(game.user, CONSTANTS.ACTOR_SHEET.SETTING.OPEN_DETACH_SHOW_CONTROLS.KEY,
+        formData.object.openDetachShowControls),
+      setFlag(game.user, CONSTANTS.ACTOR_SHEET.SETTING.OPEN_DETACH_ACTOR_TYPES.KEY, includedActorTypes),
       setFlag(game.user, CONSTANTS.ACTOR_SHEET.SETTING.AUTO_FADE_SHEET.KEY, formData.object.autoFadeSheet),
       setFlag(game.user, CONSTANTS.ACTOR_SHEET.SETTING.AUTO_MINIMISE_SHEET.KEY, formData.object.autoMinimiseSheet),
       setFlag(game.user, CONSTANTS.ACTOR_SHEET.SETTING.SHEET_SCALE.KEY, formData.object.sheetScale)
     ]);
+
+    ui.controls?.render({ reset: true });
 
     if ( game.user.isGM ) {
       await Promise.all([
