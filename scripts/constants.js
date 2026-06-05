@@ -726,6 +726,22 @@ export const CONSTANTS = {
         HINT: "CUSTOM_DND5E.setting.dropItems.tokenScale.hint",
         NAME: "CUSTOM_DND5E.setting.dropItems.tokenScale.name"
       },
+      IMAGE_SHAPE: {
+        CHOICES: { none: "CUSTOM_DND5E.none", square: "CUSTOM_DND5E.square", circle: "CUSTOM_DND5E.circle" },
+        KEY: "drop-items-image-shape",
+        HINT: "CUSTOM_DND5E.setting.dropItems.imageShape.hint",
+        NAME: "CUSTOM_DND5E.setting.dropItems.imageShape.name"
+      },
+      IMAGE_BORDER_COLOR: {
+        KEY: "drop-items-image-border-color",
+        HINT: "CUSTOM_DND5E.setting.dropItems.imageBorderColor.hint",
+        NAME: "CUSTOM_DND5E.setting.dropItems.imageBorderColor.name"
+      },
+      IMAGE_BORDER_THICKNESS: {
+        KEY: "drop-items-image-border-thickness",
+        HINT: "CUSTOM_DND5E.setting.dropItems.imageBorderThickness.hint",
+        NAME: "CUSTOM_DND5E.setting.dropItems.imageBorderThickness.name"
+      },
       FOLDER_ID: {
         KEY: "drop-items-folder-id"
       }

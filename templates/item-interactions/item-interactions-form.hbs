@@ -88,6 +88,29 @@
                 <p class="hint">{{localize "CUSTOM_DND5E.setting.dropItems.tokenScale.hint"}}</p>
             </div>
             <div class="form-group">
+                <label>{{localize "CUSTOM_DND5E.setting.dropItems.imageShape.name"}}</label>
+                <div class="form-fields">
+                    <select id="custom-dnd5e-drop-items-image-shape" name="dropItemsImageShape">
+                        {{selectOptions dropItemsImageShapeChoices selected=dropItemsImageShape localize=true}}
+                    </select>
+                </div>
+                <p class="hint">{{localize "CUSTOM_DND5E.setting.dropItems.imageShape.hint"}}</p>
+            </div>
+            <div class="form-group">
+                <label>{{localize "CUSTOM_DND5E.setting.dropItems.imageBorderColor.name"}}</label>
+                <div class="form-fields">
+                    <color-picker id="custom-dnd5e-drop-items-image-border-color" name="dropItemsImageBorderColor" value="{{dropItemsImageBorderColor}}"></color-picker>
+                </div>
+                <p class="hint">{{localize "CUSTOM_DND5E.setting.dropItems.imageBorderColor.hint"}}</p>
+            </div>
+            <div class="form-group">
+                <label>{{localize "CUSTOM_DND5E.setting.dropItems.imageBorderThickness.name"}} <span class="units">(px)</span></label>
+                <div class="form-fields">
+                    <range-picker id="custom-dnd5e-drop-items-image-border-thickness" name="dropItemsImageBorderThickness" value="{{dropItemsImageBorderThickness}}" min="0" max="20" step="1"></range-picker>
+                </div>
+                <p class="hint">{{localize "CUSTOM_DND5E.setting.dropItems.imageBorderThickness.hint"}}</p>
+            </div>
+            <div class="form-group">
                 <label>{{localize "CUSTOM_DND5E.setting.dropItems.allowPlayerDrops.name"}}</label>
                 <div class="form-fields">
                     <dnd5e-checkbox id="custom-dnd5e-drop-items-allow-player-drops" name="dropItemsAllowPlayerDrops"{{#if dropItemsAllowPlayerDrops}} checked{{/if}}></dnd5e-checkbox>

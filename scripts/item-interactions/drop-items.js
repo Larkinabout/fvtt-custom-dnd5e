@@ -89,6 +89,34 @@ function registerSettings() {
     default: 1
   });
 
+  registerSetting(SETTING.IMAGE_SHAPE.KEY, {
+    name: game.i18n.localize(SETTING.IMAGE_SHAPE.NAME),
+    hint: game.i18n.localize(SETTING.IMAGE_SHAPE.HINT),
+    scope: "world",
+    config: false,
+    type: String,
+    default: "none",
+    choices: SETTING.IMAGE_SHAPE.CHOICES
+  });
+
+  registerSetting(SETTING.IMAGE_BORDER_COLOR.KEY, {
+    name: game.i18n.localize(SETTING.IMAGE_BORDER_COLOR.NAME),
+    hint: game.i18n.localize(SETTING.IMAGE_BORDER_COLOR.HINT),
+    scope: "world",
+    config: false,
+    type: String,
+    default: "#9f9275"
+  });
+
+  registerSetting(SETTING.IMAGE_BORDER_THICKNESS.KEY, {
+    name: game.i18n.localize(SETTING.IMAGE_BORDER_THICKNESS.NAME),
+    hint: game.i18n.localize(SETTING.IMAGE_BORDER_THICKNESS.HINT),
+    scope: "world",
+    config: false,
+    type: Number,
+    default: 0
+  });
+
   registerSetting(SETTING.DROPPABLE_TYPES.KEY, {
     name: game.i18n.localize(SETTING.DROPPABLE_TYPES.NAME),
     hint: game.i18n.localize(SETTING.DROPPABLE_TYPES.HINT),
@@ -139,6 +167,7 @@ function registerHooks() {
   Hooks.on("stopToken", refreshOpenSheets);
   Hooks.on("updateToken", onTokenPositionChange);
   Hooks.on("refreshToken", onRefreshToken);
+  Hooks.on("destroyToken", onDestroyTokenAppearance);
 
   Hooks.once("ready", () => {
     addCursorLabelIcon(ICON_ID, '<i class="fa-solid fa-hand-holding-box"></i>');
@@ -1424,6 +1453,8 @@ async function onDeleteToken(tokenDoc) {
 }
 
 /* -------------------------------------------- */
+/*  TOKEN APPEARANCE                            */
+/* -------------------------------------------- */
 
 /**
  * Force full grid hit testing for item tokens. When the item icon smaller
@@ -1438,8 +1469,94 @@ function onRefreshToken(token) {
     token.mesh.eventMode = "none";
     token.mesh.interactive = false;
   }
+  applyItemTokenAppearance(token);
 }
 
+/* -------------------------------------------- */
+
+/**
+ * Apply mask/border to an item token.
+ * @param {Token} token
+ */
+function applyItemTokenAppearance(token) {
+  clearItemTokenAppearance(token);
+
+  const shape = getSetting(SETTING.IMAGE_SHAPE.KEY) || "none";
+  const borderThickness = Math.max(0, Number(getSetting(SETTING.IMAGE_BORDER_THICKNESS.KEY)) || 0);
+  if ( shape === "none" && borderThickness <= 0 ) return;
+
+  const mesh = token.mesh;
+  if ( !mesh ) return;
+
+  const center = token.center;
+  const w = token.w;
+  const h = token.h;
+  const tokenScale = Number(getSetting(SETTING.TOKEN_SCALE.KEY)) || 1;
+  const halfW = (w / 2) * tokenScale;
+  const halfH = (h / 2) * tokenScale;
+  const radius = Math.min(halfW, halfH);
+
+  if ( shape !== "none" ) {
+    const mask = new PIXI.Graphics();
+    mask.beginFill(0xFFFFFF);
+    if ( shape === "circle" ) mask.drawCircle(center.x, center.y, radius);
+    else mask.drawRect(center.x - halfW, center.y - halfH, halfW * 2, halfH * 2);
+    mask.endFill();
+    mask.renderable = false;
+    canvas.primary.addChild(mask);
+    mesh.mask = mask;
+    token._customDnd5eMask = mask;
+  }
+
+  if ( borderThickness > 0 && shape !== "none" ) {
+    const border = new PIXI.Graphics();
+    const colorHex = Color.from(getSetting(SETTING.IMAGE_BORDER_COLOR.KEY) || "#9f9275").valueOf();
+    border.lineStyle({ width: borderThickness, color: colorHex, alignment: 0.5, join: PIXI.LINE_JOIN.ROUND });
+    if ( shape === "circle" ) border.drawCircle(center.x, center.y, radius);
+    else border.drawRect(center.x - halfW, center.y - halfH, halfW * 2, halfH * 2);
+    border.elevation = mesh.elevation;
+    border.sortLayer = mesh.sortLayer ?? 700;
+    border.sort = (mesh.sort || 0) + 1;
+    border.zIndex = mesh.zIndex || 0;
+    canvas.primary.addChild(border);
+    canvas.primary.sortDirty = true;
+    token._customDnd5eImageBorder = border;
+  }
+}
+
+/* -------------------------------------------- */
+
+/**
+ * Clear mask/border applied to an item token.
+ * @param {Token} token
+ */
+function clearItemTokenAppearance(token) {
+  const prevMask = token._customDnd5eMask;
+  if ( prevMask ) {
+    if ( token.mesh && token.mesh.mask === prevMask ) token.mesh.mask = null;
+    if ( !prevMask.destroyed ) prevMask.destroy();
+    token._customDnd5eMask = null;
+  }
+  const prevBorder = token._customDnd5eImageBorder;
+  if ( prevBorder ) {
+    if ( !prevBorder.destroyed ) prevBorder.destroy();
+    token._customDnd5eImageBorder = null;
+  }
+}
+
+/* -------------------------------------------- */
+
+/**
+ * Clean up the mask/border when the token is destroyed.
+ * @param {Token} token
+ */
+function onDestroyTokenAppearance(token) {
+  if ( !isItemToken(token) ) return;
+  clearItemTokenAppearance(token);
+}
+
+/* -------------------------------------------- */
+/*  SHEET SYNC                                  */
 /* -------------------------------------------- */
 
 let pendingRefresh = false;
