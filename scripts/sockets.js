@@ -1,6 +1,7 @@
 import { MODULE } from "./constants.js";
 import { animations } from "./utils.js";
 import { MoveCanvasMode } from "./activities/move-canvas-mode.js";
+import { applySwapMoves } from "./activities/activity-swap.js";
 import { handleGiveItem, handleGiveItemRejected, handleGiveItemSource } from "./item-interactions/give-items.js";
 import {
   handleAddToContainer,
@@ -25,19 +26,20 @@ function _onAnimation(options) {
 /**
  * Handle an incoming moveToken socket event.
  * Only processed by the GM client.
- * @param {object} data The socket data
- * @param {object} data.options The move options
- * @param {string} data.options.sceneId The scene id
- * @param {string} data.options.tokenId The token id
- * @param {number} data.options.x The destination x coordinate
- * @param {number} data.options.y The destination y coordinate
+ * @param {object} data
+ * @param {object} data.options
+ * @param {string} data.options.sceneId
+ * @param {string} data.options.tokenId
+ * @param {number} data.options.x Destination x coordinate
+ * @param {number} data.options.y Destination y coordinate
+ * @param {boolean} [data.options.isTeleport] Whether to teleport (skip animation)
  */
 function _onMoveToken(data) {
   if ( !game.user.isGM ) return;
-  const { sceneId, tokenId, x, y } = data.options;
+  const { sceneId, tokenId, x, y, isTeleport } = data.options;
   const scene = game.scenes.get(sceneId);
   const tokenDoc = scene?.tokens.get(tokenId);
-  if ( tokenDoc ) MoveCanvasMode._moveTokenDocument(tokenDoc, x, y);
+  if ( tokenDoc ) MoveCanvasMode._moveTokenDocument(tokenDoc, x, y, { isTeleport });
 }
 
 /* -------------------------------------------- */
@@ -56,7 +58,7 @@ function _onMoveToken(data) {
  * @param {number} data.options.targetY The target destination y coordinate
  * @param {number} data.options.sourceElevation The source destination elevation
  * @param {number} data.options.targetElevation The target destination elevation
- * @param {boolean} data.options.teleport Whether to use displace action to bypass wall collision
+ * @param {boolean} data.options.teleport Whether to teleport (skip animation and wall checks) or walk-animate
  */
 function _onSwapTokens(data) {
   if ( !game.user.isGM ) return;
@@ -69,10 +71,14 @@ function _onSwapTokens(data) {
   const sourceDoc = scene.tokens.get(sourceTokenId);
   const targetDoc = scene.tokens.get(targetTokenId);
   if ( !sourceDoc || !targetDoc ) return;
-  const action = teleport ? "displace" : undefined;
-  const animate = !teleport;
-  sourceDoc.move({ x: sourceX, y: sourceY, elevation: sourceElevation, action }, { animate });
-  targetDoc.move({ x: targetX, y: targetY, elevation: targetElevation, action }, { animate });
+  applySwapMoves(scene, {
+    sourceDoc, targetDoc,
+    newSourcePos: { x: sourceX, y: sourceY },
+    newTargetPos: { x: targetX, y: targetY },
+    sourceElevation: targetElevation,
+    targetElevation: sourceElevation,
+    isTeleport: teleport
+  });
 }
 
 /* -------------------------------------------- */

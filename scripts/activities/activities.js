@@ -23,6 +23,77 @@ function _clearUserTargets() {
 /* -------------------------------------------- */
 
 /**
+ * Get the targeted tokens stored on the chat message.
+ * @param {ChatMessage} [message]
+ * @returns {Promise<Token[]>} List of targeted tokens
+ */
+export async function getTargetedTokensFromMessage(message) {
+  const targetData = message?.getFlag?.("dnd5e", "targets");
+  if ( !targetData?.length ) return [];
+  const tokens = [];
+  for ( const entry of targetData ) {
+    const actor = await fromUuid(entry.uuid);
+    const tokenDoc = actor?.token ?? actor?.getActiveTokens?.()[0]?.document;
+    if ( tokenDoc?.object ) tokens.push(tokenDoc.object);
+  }
+  return tokens;
+}
+
+/* -------------------------------------------- */
+
+/**
+ * Move one or more tokens to new positions, bypassing Foundry's movement
+ * pipeline. Uses `isPaste: true` to avoid movement constraints.
+ * @param {Scene} scene
+ * @param {Array<{tokenDoc: TokenDocument, x: number, y: number, elevation?: number}>} moves
+ * @param {object} [opts]
+ * @param {boolean} [opts.animate=true] Animate the move at walking speed
+ * @param {boolean} [opts.stripHistory=false] Strip movement history so the
+ *   move isn't tracked against combat-turn movement
+ * @returns {Promise<void>}
+ */
+export async function applyBypassedMoves(scene, moves, { animate = true, stripHistory = false } = {}) {
+  if ( !scene || !moves?.length ) return;
+
+  const ids = new Set(moves.map(m => m.tokenDoc.id));
+  const hookId = stripHistory
+    ? Hooks.on("preUpdateToken", (doc, changed) => {
+      if ( !ids.has(doc.id) ) return;
+      delete changed._movementHistory;
+    })
+    : null;
+
+  try {
+    if ( animate ) {
+      const instructions = {};
+      for ( const m of moves ) {
+        instructions[m.tokenDoc.id] = {
+          waypoints: [{
+            x: m.x,
+            y: m.y,
+            elevation: m.elevation ?? m.tokenDoc.elevation,
+            action: "walk"
+          }]
+        };
+      }
+      await scene.moveTokens(instructions, { isPaste: true });
+    } else {
+      const updates = moves.map(m => ({
+        _id: m.tokenDoc.id,
+        x: m.x,
+        y: m.y,
+        elevation: m.elevation ?? m.tokenDoc.elevation
+      }));
+      await scene.updateEmbeddedDocuments("Token", updates, { animate: false, isPaste: true });
+    }
+  } finally {
+    if ( hookId ) Hooks.off("preUpdateToken", hookId);
+  }
+}
+
+/* -------------------------------------------- */
+
+/**
  * Determine targeting requirements for an activity.
  * @param {Activity} activity Activity being used
  * @param {object} [options]
@@ -134,6 +205,7 @@ export function register() {
       const options = { activity, ...targeting, usageConfig, dialogConfig, messageConfig };
       TargetingMode.activate(options).then(completed => {
         if ( !completed ) return;
+        if ( messageConfig?.data?.flags?.dnd5e ) delete messageConfig.data.flags.dnd5e.targets;
         activity.use({ ...usageConfig, _bypassTargeting: true }, dialogConfig, messageConfig);
       });
       return false;

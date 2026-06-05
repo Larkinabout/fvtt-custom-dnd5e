@@ -1,11 +1,12 @@
 import { CONSTANTS } from "../constants.js";
 import { addHelpButton, hideApplications, Logger } from "../utils.js";
 import { MoveCanvasMode } from "./move-canvas-mode.js";
+import { getTargetedTokensFromMessage } from "./activities.js";
 
 const constants = CONSTANTS.ACTIVITIES;
 
 /* -------------------------------------------- */
-/*  Data Model                                  */
+/*  DATA MODEL                                  */
 /* -------------------------------------------- */
 
 /**
@@ -21,6 +22,7 @@ class BaseMoveActivityData extends dnd5e.dataModels.activity.BaseActivityData {
         direction: new StringField({ initial: "push" }),
         distanceMin: new NumberField({ initial: 0, min: 0, integer: true }),
         distanceMax: new NumberField({ initial: 5, min: 0, integer: true }),
+        isTeleport: new BooleanField({ initial: false }),
         autoExecute: new BooleanField({ initial: true })
       })
     };
@@ -28,7 +30,7 @@ class BaseMoveActivityData extends dnd5e.dataModels.activity.BaseActivityData {
 }
 
 /* -------------------------------------------- */
-/*  Activity Sheet                              */
+/*  ACTIVITY SHEET                              */
 /* -------------------------------------------- */
 
 /**
@@ -52,7 +54,7 @@ class MoveActivitySheet extends dnd5e.applications.activity.ActivitySheet {
   };
 
   /* -------------------------------------------- */
-  /*  Rendering                                   */
+  /*  RENDERING                                   */
   /* -------------------------------------------- */
 
   /** @inheritDoc */
@@ -77,7 +79,7 @@ class MoveActivitySheet extends dnd5e.applications.activity.ActivitySheet {
 }
 
 /* -------------------------------------------- */
-/*  Activity                                    */
+/*  ACTIVITY                                    */
 /* -------------------------------------------- */
 
 /**
@@ -85,7 +87,7 @@ class MoveActivitySheet extends dnd5e.applications.activity.ActivitySheet {
  */
 export class MoveActivity extends dnd5e.documents.activity.ActivityMixin(BaseMoveActivityData) {
   /* -------------------------------------------- */
-  /*  Model Configuration                         */
+  /*  MODEL CONFIGURATION                         */
   /* -------------------------------------------- */
 
   /** @inheritDoc */
@@ -112,7 +114,7 @@ export class MoveActivity extends dnd5e.documents.activity.ActivityMixin(BaseMov
   );
 
   /* -------------------------------------------- */
-  /*  Activation                                  */
+  /*  ACTIVATION                                  */
   /* -------------------------------------------- */
 
   /** @override */
@@ -166,7 +168,7 @@ export class MoveActivity extends dnd5e.documents.activity.ActivityMixin(BaseMov
   }
 
   /* -------------------------------------------- */
-  /*  Move Execution                              */
+  /*  MOVE EXECUTION                              */
   /* -------------------------------------------- */
 
   /**
@@ -189,16 +191,7 @@ export class MoveActivity extends dnd5e.documents.activity.ActivityMixin(BaseMov
     }
 
     const chatMessage = message ?? results?.message;
-    const targetData = chatMessage?.getFlag?.("dnd5e", "targets");
-    let targetTokens = [];
-
-    if ( targetData?.length ) {
-      for ( const t of targetData ) {
-        const scene = game.scenes.get(t.sceneId);
-        const tokenDoc = scene?.tokens.get(t.tokenId);
-        if ( tokenDoc?.object ) targetTokens.push(tokenDoc.object);
-      }
-    }
+    let targetTokens = await getTargetedTokensFromMessage(chatMessage);
 
     if ( !targetTokens.length ) {
       targetTokens = Array.from(game.user.targets);
@@ -217,7 +210,8 @@ export class MoveActivity extends dnd5e.documents.activity.ActivityMixin(BaseMov
         targetToken,
         direction: dir,
         distanceMin: this.move.distanceMin,
-        distanceMax: this.move.distanceMax
+        distanceMax: this.move.distanceMax,
+        isTeleport: this.move.isTeleport
       });
     }
 
@@ -225,7 +219,7 @@ export class MoveActivity extends dnd5e.documents.activity.ActivityMixin(BaseMov
   }
 
   /* -------------------------------------------- */
-  /*  Event Listeners and Handlers                */
+  /*  EVENT LISTENERS AND HANDLERS                */
   /* -------------------------------------------- */
 
   /**

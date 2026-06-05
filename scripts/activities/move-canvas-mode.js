@@ -1,6 +1,7 @@
 import { MODULE } from "../constants.js";
 import { Logger } from "../utils.js";
 import * as Highlight from "../canvas/highlight.js";
+import { applyBypassedMoves } from "./activities.js";
 
 const HIGHLIGHT_LAYER_NAME = "custom-dnd5e-move";
 
@@ -13,18 +14,20 @@ export class MoveCanvasMode {
    * Create a MoveCanvasMode instance which highlights valid forced-movement positions
    * and handles user input to select a destination for forced movement.
    * @param {object} options
-   * @param {Token} options.sourceToken Source token performing the move.
-   * @param {Token} options.targetToken Target token being moved.
-   * @param {string} options.direction "push" | "pull" | "any"
-   * @param {number} options.distanceMin Minimum movement distance in game units.
-   * @param {number} options.distanceMax Maximum movement distance in game units.
+   * @param {Token} options.sourceToken
+   * @param {Token} options.targetToken
+   * @param {"push"|"pull"|"any"} options.direction
+   * @param {number} options.distanceMin Minimum movement distance in game units
+   * @param {number} options.distanceMax Maximum movement distance in game units
+   * @param {boolean} [options.isTeleport=false] Whether to teleport (skip animation)
    */
-  constructor({ sourceToken, targetToken, direction, distanceMin, distanceMax }) {
+  constructor({ sourceToken, targetToken, direction, distanceMin, distanceMax, isTeleport = false }) {
     this.sourceToken = sourceToken;
     this.targetToken = targetToken;
     this.direction = direction;
     this.distanceMin = distanceMin;
     this.distanceMax = distanceMax;
+    this.isTeleport = isTeleport;
     this.validPositions = [];
     this._resolve = null;
     this._onPointerDown = this._onPointerDown.bind(this);
@@ -46,6 +49,7 @@ export class MoveCanvasMode {
    * @param {string} options.direction Movement direction.
    * @param {number} options.distanceMin
    * @param {number} options.distanceMax
+   * @param {boolean} [options.isTeleport]
    * @returns {Promise<boolean>} Whether the move was completed.
    */
   static async activate(options) {
@@ -56,26 +60,22 @@ export class MoveCanvasMode {
   /* -------------------------------------------- */
 
   /**
-   * Update the token to a new position with movement history stripped, so
-   * forced movement isn't counted against the token's combat-turn movement.
+   * Move a token to a new position, bypassing Foundry's movement
+   * pipeline. Uses `isPaste: true` to avoid movement constraints.
    * Called directly or via socket by the GM.
    * @param {TokenDocument} tokenDoc Token document to move
    * @param {number} x x coordinate (top-left)
    * @param {number} y y coordinate (top-left)
+   * @param {object} [options]
+   * @param {boolean} [options.isTeleport=false] Whether to teleport (skip animation)
    * @returns {Promise<void>}
    */
-  static async _moveTokenDocument(tokenDoc, x, y) {
-    // Strip movement history from the update so forced movement is not tracked in combat.
-    const hookId = Hooks.on("preUpdateToken", (doc, changed) => {
-      if ( doc.id !== tokenDoc.id ) return;
-      delete changed._movementHistory;
-    });
+  static async _moveTokenDocument(tokenDoc, x, y, { isTeleport = false } = {}) {
     try {
-      await tokenDoc.update({ x, y });
-    } catch (err) {
+      await applyBypassedMoves(tokenDoc.parent, [{ tokenDoc, x, y }],
+        { stripHistory: true, animate: !isTeleport });
+    } catch ( err ) {
       Logger.error(err.message, true, { prefix: false });
-    } finally {
-      Hooks.off("preUpdateToken", hookId);
     }
   }
 
@@ -182,7 +182,7 @@ export class MoveCanvasMode {
       const distance = this._measureDistance(targetCenter, candidateCenter);
       if ( distance < this.distanceMin || distance > this.distanceMax ) continue;
       if ( !this._checkDirection(sourceCenter, targetCenter, candidateCenter, sourceDistToTarget) ) continue;
-      if ( this._checkWallCollision(targetCenter, candidateCenter) ) continue;
+      if ( !this.isTeleport && this._checkWallCollision(targetCenter, candidateCenter) ) continue;
 
       positions.push({ x: candidateTopLeft.x, y: candidateTopLeft.y });
     }
@@ -335,7 +335,7 @@ export class MoveCanvasMode {
     const tolerance = this._getGridlessTolerance();
     const outerRadius = (this.distanceMax + tolerance) * pixelsPerUnit;
     const innerRadius = Math.max(0, (this.distanceMin - tolerance)) * pixelsPerUnit;
-    const mask = CONFIG.Canvas.polygonBackends.move.create(targetCenter, {
+    const mask = this.isTeleport ? null : CONFIG.Canvas.polygonBackends.move.create(targetCenter, {
       type: "move", radius: outerRadius + canvas.grid.size
     });
 
@@ -497,7 +497,7 @@ export class MoveCanvasMode {
       }
     }
 
-    if ( this._checkWallCollision(targetCenter, clampedPos) ) return;
+    if ( !this.isTeleport && this._checkWallCollision(targetCenter, clampedPos) ) return;
 
     const topLeft = this._centerToTopLeft(clampedPos);
     this._completeMovement(topLeft.x, topLeft.y);
@@ -554,7 +554,7 @@ export class MoveCanvasMode {
         y: targetCenter.y + (dir.uy * clampedPx)
       };
 
-      if ( this._checkWallCollision(targetCenter, clampedPos) ) continue;
+      if ( !this.isTeleport && this._checkWallCollision(targetCenter, clampedPos) ) continue;
 
       const topLeft = this._centerToTopLeft(clampedPos);
       this._completeMovement(topLeft.x, topLeft.y);
@@ -576,7 +576,7 @@ export class MoveCanvasMode {
     const tokenDoc = this.targetToken.document;
 
     if ( tokenDoc.canUserModify(game.user, "update") ) {
-      MoveCanvasMode._moveTokenDocument(tokenDoc, x, y);
+      MoveCanvasMode._moveTokenDocument(tokenDoc, x, y, { isTeleport: this.isTeleport });
     } else {
       game.socket.emit(`module.${MODULE.ID}`, {
         action: "moveToken",
@@ -584,7 +584,8 @@ export class MoveCanvasMode {
           sceneId: canvas.scene.id,
           tokenId: tokenDoc.id,
           x,
-          y
+          y,
+          isTeleport: this.isTeleport
         }
       });
     }

@@ -1,10 +1,11 @@
 import { CONSTANTS, MODULE } from "../constants.js";
 import { addHelpButton, Logger } from "../utils.js";
+import { applyBypassedMoves, getTargetedTokensFromMessage } from "./activities.js";
 
 const constants = CONSTANTS.ACTIVITIES;
 
 /* -------------------------------------------- */
-/*  Data Model                                  */
+/*  DATA MODEL                                  */
 /* -------------------------------------------- */
 
 /**
@@ -27,7 +28,7 @@ class BaseSwapActivityData extends dnd5e.dataModels.activity.BaseActivityData {
 }
 
 /* -------------------------------------------- */
-/*  Activity Sheet                              */
+/*  ACTIVITY SHEET                              */
 /* -------------------------------------------- */
 
 /**
@@ -61,7 +62,7 @@ class SwapActivitySheet extends dnd5e.applications.activity.ActivitySheet {
   };
 
   /* -------------------------------------------- */
-  /*  Rendering                                   */
+  /*  RENDERING                                   */
   /* -------------------------------------------- */
 
   /** @inheritDoc */
@@ -124,7 +125,7 @@ class SwapActivitySheet extends dnd5e.applications.activity.ActivitySheet {
 }
 
 /* -------------------------------------------- */
-/*  Activity                                    */
+/*  ACTIVITY                                    */
 /* -------------------------------------------- */
 
 /**
@@ -132,7 +133,7 @@ class SwapActivitySheet extends dnd5e.applications.activity.ActivitySheet {
  */
 export class SwapActivity extends dnd5e.documents.activity.ActivityMixin(BaseSwapActivityData) {
   /* -------------------------------------------- */
-  /*  Model Configuration                         */
+  /*  MODEL CONFIGURATION                         */
   /* -------------------------------------------- */
 
   /** @inheritDoc */
@@ -157,7 +158,7 @@ export class SwapActivity extends dnd5e.documents.activity.ActivityMixin(BaseSwa
   );
 
   /* -------------------------------------------- */
-  /*  Activation                                  */
+  /*  ACTIVATION                                  */
   /* -------------------------------------------- */
 
   /** @override */
@@ -196,7 +197,7 @@ export class SwapActivity extends dnd5e.documents.activity.ActivityMixin(BaseSwa
   }
 
   /* -------------------------------------------- */
-  /*  Swap Execution                              */
+  /*  SWAP EXECUTION                              */
   /* -------------------------------------------- */
 
   /**
@@ -221,13 +222,8 @@ export class SwapActivity extends dnd5e.documents.activity.ActivityMixin(BaseSwa
     let targetToken;
 
     // Try message target data first
-    const targetData = chatMessage?.getFlag?.("dnd5e", "targets");
-    if ( targetData?.length ) {
-      const t = targetData[0];
-      const scene = game.scenes.get(t.sceneId);
-      const tokenDoc = scene?.tokens.get(t.tokenId);
-      if ( tokenDoc?.object ) targetToken = tokenDoc.object;
-    }
+    const messageTokens = await getTargetedTokensFromMessage(chatMessage);
+    if ( messageTokens.length ) targetToken = messageTokens[0];
 
     // Fall back to designated actor
     if ( !targetToken && this.swap.actorUuid ) {
@@ -360,19 +356,11 @@ export class SwapActivity extends dnd5e.documents.activity.ActivityMixin(BaseSwa
     const canModifyBoth = sourceDoc.canUserModify(game.user, "update")
       && targetDoc.canUserModify(game.user, "update");
 
-    // Teleport uses displace action to bypass wall collision
-    const action = this.swap.isTeleport ? "displace" : undefined;
-    const animate = !this.swap.isTeleport;
-
     if ( canModifyBoth ) {
-      await sourceDoc.move(
-        { x: newSourcePos.x, y: newSourcePos.y, elevation: targetElevation, action },
-        { animate }
-      );
-      await targetDoc.move(
-        { x: newTargetPos.x, y: newTargetPos.y, elevation: sourceElevation, action },
-        { animate }
-      );
+      await applySwapMoves(canvas.scene, {
+        sourceDoc, targetDoc, newSourcePos, newTargetPos,
+        sourceElevation, targetElevation, isTeleport: this.swap.isTeleport
+      });
     } else {
       game.socket.emit(`module.${MODULE.ID}`, {
         action: "swapTokens",
@@ -393,7 +381,7 @@ export class SwapActivity extends dnd5e.documents.activity.ActivityMixin(BaseSwa
   }
 
   /* -------------------------------------------- */
-  /*  Event Listeners and Handlers                */
+  /*  EVENT LISTENERS AND HANDLERS                */
   /* -------------------------------------------- */
 
   /**
@@ -406,4 +394,44 @@ export class SwapActivity extends dnd5e.documents.activity.ActivityMixin(BaseSwa
   static #swapToken(event, target, message) {
     this.executeSwap({ message });
   }
+}
+
+/* -------------------------------------------- */
+/*  SHARED HELPERS                              */
+/* -------------------------------------------- */
+
+/**
+ * Swap two tokens' positions on a scene.
+ * @param {Scene} scene
+ * @param {object} args
+ * @param {TokenDocument} args.sourceDoc
+ * @param {TokenDocument} args.targetDoc
+ * @param {{x: number, y: number}} args.newSourcePos
+ * @param {{x: number, y: number}} args.newTargetPos
+ * @param {number} args.sourceElevation
+ * @param {number} args.targetElevation
+ * @param {boolean} args.isTeleport Whether to teleport (skip animation)
+ * @returns {Promise<boolean>} Whether the swap completed
+ */
+export async function applySwapMoves(scene, {
+  sourceDoc, targetDoc, newSourcePos, newTargetPos, sourceElevation, targetElevation, isTeleport
+}) {
+  if ( !isTeleport ) {
+    const sourceObj = sourceDoc.object;
+    const targetObj = targetDoc.object;
+    if ( sourceObj && targetObj ) {
+      const sourceBlocked = sourceObj.checkCollision(targetObj.center, { type: "move" });
+      const targetBlocked = targetObj.checkCollision(sourceObj.center, { type: "move" });
+      if ( sourceBlocked || targetBlocked ) {
+        Logger.info(game.i18n.localize("CUSTOM_DND5E.activities.swap.pathBlocked"), true, { prefix: false });
+        return false;
+      }
+    }
+  }
+
+  await applyBypassedMoves(scene, [
+    { tokenDoc: sourceDoc, x: newSourcePos.x, y: newSourcePos.y, elevation: targetElevation },
+    { tokenDoc: targetDoc, x: newTargetPos.x, y: newTargetPos.y, elevation: sourceElevation }
+  ], { animate: !isTeleport });
+  return true;
 }
