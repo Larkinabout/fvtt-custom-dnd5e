@@ -76,7 +76,7 @@ async function rollAverageDamage(config, usageConfig, dialogConfig, messageConfi
   const isCritical = config.isCritical;
 
   // Damage config
-  const damageConfig = foundry.utils.deepClone(activity.getDamageConfig());
+  const damageConfig = activity.getDamageConfig();
   damageConfig.isCritical = isCritical;
   damageConfig.critical ??= {};
   damageConfig.critical.multiplyNumeric ??= game.settings.get("dnd5e", "criticalDamageModifiers");
@@ -112,7 +112,7 @@ async function rollAverageDamage(config, usageConfig, dialogConfig, messageConfi
     const maxRoll = Roll.create(formula).evaluate({ maximize: true });
 
     const result = Math.round(Math.floor(((await minRoll).total + (await maxRoll).total) / 2));
-    const nt = new NumericTerm({ number: result});
+    const nt = new foundry.dice.terms.NumericTerm({ number: result });
     roll._formula = result.toString();
     roll.terms = [nt];
   }
