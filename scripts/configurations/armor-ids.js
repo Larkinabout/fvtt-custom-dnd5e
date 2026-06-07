@@ -1,145 +1,100 @@
-import { CONSTANTS } from "../constants.js";
-import {
-  checkEmpty,
-  getDefaultDnd5eConfig,
-  getSetting,
-  registerMenu,
-  registerSetting,
-  resetDnd5eConfig,
-  resetSetting } from "../utils.js";
-import { ArmorIdsForm } from "../forms/config-form.js";
-
-const constants = CONSTANTS.ARMOR_IDS;
-const configKey = "armorIds";
-
-/**
- * Register settings and load templates.
- */
-export function register() {
-  registerSettings();
-}
+import { MODULE } from "../constants.js";
+import { ConfigForm, IdForm } from "../forms/config-form.js";
+import { configs } from "./registry.js";
 
 /* -------------------------------------------- */
+/*  CONSTANTS                                   */
+/* -------------------------------------------- */
 
-/**
- * Register settings
- */
-function registerSettings() {
-  registerMenu(
-    constants.MENU.KEY,
-    {
-      hint: game.i18n.localize(constants.MENU.HINT),
-      label: game.i18n.localize(constants.MENU.LABEL),
-      name: game.i18n.localize(constants.MENU.NAME),
-      icon: constants.MENU.ICON,
-      type: ArmorIdsForm,
-      restricted: true,
-      scope: "world"
+const constants = {
+  ID: "armorIds",
+  MENU: {
+    KEY: "armor-ids-menu",
+    HINT: "CUSTOM_DND5E.menu.armorIds.hint",
+    ICON: "fas fa-shield-halved",
+    LABEL: "CUSTOM_DND5E.menu.armorIds.label",
+    NAME: "CUSTOM_DND5E.menu.armorIds.name"
+  },
+  SETTING: {
+    ENABLE: {
+      KEY: "enable-armor-ids"
+    },
+    CONFIG: {
+      KEY: "armor-ids"
     }
-  );
+  },
+  TEMPLATE: {
+    FORM: "modules/custom-dnd5e/templates/config-form.hbs",
+    LIST: "modules/custom-dnd5e/templates/config-edit-in-list.hbs"
+  },
+  UUID: "Compendium.custom-dnd5e.custom-dnd5e-journals.JournalEntry.B48iqFBddUikMMer.JournalEntryPage.ehZqnZslXx3cknv9"
+};
 
-  registerSetting(
-    constants.SETTING.ENABLE.KEY,
-    {
-      scope: "world",
-      config: false,
-      requiresReload: true,
-      type: Boolean,
-      default: false
+/* -------------------------------------------- */
+/*  FORM CLASSES                                */
+/* -------------------------------------------- */
+
+class ArmorIdsForm extends IdForm {
+  /**
+   * Constructor for ArmorIdsForm.
+   */
+  constructor() {
+    super();
+    this.editInList = true;
+    this.listTitle = `CUSTOM_DND5E.form.${constants.ID}.listTitle`;
+    this.requiresReload = true;
+    this.config = configs.armorIds;
+  }
+
+  /* -------------------------------------------- */
+
+  /**
+   * Default options for the form.
+   *
+   * @type {object}
+   */
+  static DEFAULT_OPTIONS = {
+    id: `${MODULE.ID}-armor-ids-form`,
+    window: {
+      title: `CUSTOM_DND5E.form.${constants.ID}.title`
     }
-  );
+  };
 
-  registerSetting(
-    constants.SETTING.CONFIG.KEY,
-    {
-      scope: "world",
-      config: false,
-      type: Object,
-      default: getSettingDefault()
+  /* -------------------------------------------- */
+
+  /**
+   * Parts of the form.
+   *
+   * @type {object}
+   */
+  static PARTS = {
+    form: {
+      template: constants.TEMPLATE.FORM
     }
-  );
-}
+  };
 
-/* -------------------------------------------- */
+  /* -------------------------------------------- */
 
-/**
- * Get default config.
- * @param {string|null} key The key
- * @returns {object} The config
- */
-export function getSettingDefault(key = null) {
-  return getDefaultDnd5eConfig(configKey, key);
-}
-
-/* -------------------------------------------- */
-
-/**
- * Reset config and setting to their default values.
- */
-export async function resetConfigSetting() {
-  await resetDnd5eConfig(configKey);
-  await resetSetting(constants.SETTING.CONFIG.KEY);
-}
-
-/* -------------------------------------------- */
-
-/**
- * Set CONFIG.DND5E.armorIds
- * @param {object} [settingData=null] The setting data
- * @returns {void}
- */
-export function setConfig(settingData = null) {
-  if ( !getSetting(constants.SETTING.ENABLE.KEY) ) return;
-  if ( checkEmpty(settingData) ) return handleEmptyData();
-
-  const mergedSettingData = foundry.utils.mergeObject(
-    foundry.utils.mergeObject(settingData, CONFIG.DND5E[configKey], { overwrite: false }),
-    getSettingDefault(),
-    { overwrite: false }
-  );
-
-  const configData = buildConfig(mergedSettingData);
-
-  Hooks.callAll("customDnd5e.setArmorIdsConfig", configData);
-
-  if ( configData ) {
-    CONFIG.DND5E[configKey] = configData;
+  /**
+   * Get the HTML template for the form.
+   *
+   * @param {object} data Data to pass to the template
+   * @returns {Promise<string>} Rendered template
+   */
+  async _getHtml(data) {
+    return await foundry.applications.handlebars.renderTemplate(configs.armorIds.TEMPLATE.LIST, data);
   }
 }
 
 /* -------------------------------------------- */
-
-/**
- * Handle empty data.
- */
-function handleEmptyData() {
-  if ( checkEmpty(CONFIG.DND5E[configKey]) ) {
-    resetDnd5eConfig(configKey);
-  }
-}
-
+/*  DEFINITION                                  */
 /* -------------------------------------------- */
 
-/**
- * Build config.
- * @param {object} data The data.
- * @returns {object} The config.
- */
-function buildConfig(data) {
-  return Object.fromEntries(
-    Object.keys(data)
-      .filter(key => data[key].visible || data[key].visible === undefined)
-      .map(key => [key, buildConfigEntry(data[key])])
-  );
-}
-
-/* -------------------------------------------- */
-
-/**
- * Build config entry.
- * @param {object} data The data.
- * @returns {object} The config entry.
- */
-function buildConfigEntry(data) {
-  return game.i18n.localize(data.label || data);
-}
+export default {
+  configKey: "armorIds",
+  constants,
+  form: ArmorIdsForm,
+  loadTemplates: false,
+  entryType: "scalar",
+  entry: { source: "labelOrSelf", localize: true }
+};

@@ -1,4 +1,4 @@
-import { CONSTANTS, JOURNAL_HELP_BUTTON, MODULE } from "../constants.js";
+import { CONSTANTS, MODULE } from "../constants.js";
 import { Logger, parseBoolean, setSetting } from "../utils.js";
 import { CustomDnd5eForm } from "./custom-dnd5e-form.js";
 
@@ -11,7 +11,7 @@ export class ConfigEditForm extends CustomDnd5eForm {
   /**
    * Constructor for ConfigEditForm.
    *
-   * @param {object} args Arguments passed to the parent class.
+   * @param {object} args
    */
   constructor(args) {
     super(args);
@@ -27,7 +27,7 @@ export class ConfigEditForm extends CustomDnd5eForm {
 
   /**
    * Get the data object containing the items (handles nested settings).
-   * @returns {object} The data object.
+   * @returns {object} Data object
    */
   _getItemsData() {
     if ( this.settingProperty ) {
@@ -68,7 +68,7 @@ export class ConfigEditForm extends CustomDnd5eForm {
   /**
    * Get the select options for the form.
    *
-   * @returns {object|null} The select options.
+   * @returns {object|null} Select options
    */
   _getSelects() {
     return null;
@@ -79,7 +79,7 @@ export class ConfigEditForm extends CustomDnd5eForm {
   /**
    * Prepare the context for rendering the form.
    *
-   * @returns {Promise<object>} The context data.
+   * @returns {Promise<object>} Context data
    */
   async _prepareContext() {
     const itemsData = this._getItemsData();
@@ -100,8 +100,8 @@ export class ConfigEditForm extends CustomDnd5eForm {
 
   /**
    * Handle form rendering.
-   * @param {object} context The context data.
-   * @param {object} options The options for rendering.
+   * @param {object} context
+   * @param {object} options Rendering options
    */
   _onRender(context, options) {
     super._onRender(context, options);
@@ -146,9 +146,9 @@ export class ConfigEditForm extends CustomDnd5eForm {
   /**
    * Submit the form data.
    *
-   * @param {Event} event The form submission event.
-   * @param {HTMLFormElement} form The form element.
-   * @param {object} formData The form data.
+   * @param {Event} event
+   * @param {HTMLFormElement} form
+   * @param {object} formData
    */
   static async submit(event, form, formData) {
     if ( !this.validateFormData(formData) ) return;
@@ -194,8 +194,8 @@ export class ConfigEditForm extends CustomDnd5eForm {
   /**
    * Process form data, converting boolean values and structuring nested properties.
    *
-   * @param {object} formData The form data.
-   * @returns {object} The processed form data.
+   * @param {object} formData
+   * @returns {object} Processed form data
    */
   processFormData(formData) {
     const processedFormData = {};
@@ -213,8 +213,8 @@ export class ConfigEditForm extends CustomDnd5eForm {
   /**
    * Validate the form data.
    *
-   * @param {object} formData The form data.
-   * @returns {boolean} Whether the form data passed validation.
+   * @param {object} formData
+   * @returns {boolean} Whether the form data passed validation
    */
   validateFormData(formData) {
     const newKey = formData.object[`${this.key}.key`];
@@ -237,7 +237,7 @@ export class ConfigEditForm extends CustomDnd5eForm {
 
   /**
    * Open the form.
-   * @param {object} args The arguments for opening the form.
+   * @param {object} args
    */
   static async open(args) {
     const editForm = args.editForm ?? this;

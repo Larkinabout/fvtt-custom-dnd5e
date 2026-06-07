@@ -9,7 +9,7 @@ export class ActorSheetForm extends CustomDnd5eForm {
   /**
    * Constructor for ActorSheetForm.
    *
-   * @param {...any} args The arguments for the form.
+   * @param {...any} args
    */
   constructor(...args) {
     super(args);
@@ -56,7 +56,7 @@ export class ActorSheetForm extends CustomDnd5eForm {
   /**
    * Prepare the context for rendering the form.
    *
-   * @returns {Promise<object>} The context data.
+   * @returns {Promise<object>} Context data
    */
   async _prepareContext() {
     return {

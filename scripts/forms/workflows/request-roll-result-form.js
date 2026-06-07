@@ -136,7 +136,7 @@ export class RequestRollResultForm extends CustomDnd5eForm {
   /**
    * Prepare the context for rendering the form.
    *
-   * @returns {Promise<object>} The context data.
+   * @returns {Promise<object>} Context data
    */
   async _prepareContext() {
     const actionChoices = getSubActionChoices(this.entityType);

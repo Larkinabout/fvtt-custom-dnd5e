@@ -58,7 +58,7 @@ export class CountersFormEntity extends CountersForm {
   /**
    * Prepare the context for rendering the form.
    *
-   * @returns {Promise<object>} The context data.
+   * @returns {Promise<object>} Context data
    */
   async _prepareContext() {
     this.counters = getFlag(this.entity, "counters") || {};

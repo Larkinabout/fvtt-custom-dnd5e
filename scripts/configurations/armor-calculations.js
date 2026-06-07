@@ -1,155 +1,124 @@
-import { CONSTANTS } from "../constants.js";
-import {
-  c5eLoadTemplates,
-  checkEmpty,
-  getDefaultDnd5eConfig,
-  getSetting,
-  registerMenu,
-  registerSetting,
-  resetDnd5eConfig,
-  resetSetting } from "../utils.js";
-import { ArmorCalculationsForm } from "../forms/config-form.js";
-
-const constants = CONSTANTS.ARMOR_CALCULATIONS;
-const configKey = "armorClasses";
-
-/**
- * Register settings and load templates.
- */
-export function register() {
-  registerSettings();
-
-  const templates = [
-    constants.TEMPLATE.EDIT
-  ];
-  c5eLoadTemplates(templates);
-}
+import { MODULE } from "../constants.js";
+import { ConfigForm } from "../forms/config-form.js";
+import { ConfigEditForm } from "../forms/config-edit-form.js";
+import { configs } from "./registry.js";
 
 /* -------------------------------------------- */
+/*  CONSTANTS                                   */
+/* -------------------------------------------- */
 
-/**
- * Register settings
- */
-function registerSettings() {
-  registerMenu(
-    constants.MENU.KEY,
-    {
-      hint: game.i18n.localize(constants.MENU.HINT),
-      label: game.i18n.localize(constants.MENU.LABEL),
-      name: game.i18n.localize(constants.MENU.NAME),
-      icon: constants.MENU.ICON,
-      type: ArmorCalculationsForm,
-      restricted: true,
-      scope: "world"
+const constants = {
+  ID: "armorCalculations",
+  MENU: {
+    KEY: "armor-calculations-menu",
+    HINT: "CUSTOM_DND5E.menu.armorClasses.hint",
+    ICON: "fas fa-abacus",
+    LABEL: "CUSTOM_DND5E.menu.armorClasses.label",
+    NAME: "CUSTOM_DND5E.menu.armorClasses.name"
+  },
+  SETTING: {
+    ENABLE: {
+      KEY: "enable-armor-calculations"
+    },
+    CONFIG: {
+      KEY: "armor-calculations"
     }
-  );
-
-  registerSetting(
-    constants.SETTING.ENABLE.KEY,
-    {
-      scope: "world",
-      config: false,
-      requiresReload: true,
-      type: Boolean,
-      default: false
-    }
-  );
-
-  registerSetting(
-    constants.SETTING.CONFIG.KEY,
-    {
-      scope: "world",
-      config: false,
-      requiresReload: true,
-      type: Object,
-      default: getSettingDefault()
-    }
-  );
-}
+  },
+  TEMPLATE: {
+    EDIT: "modules/custom-dnd5e/templates/armor-calculations-edit.hbs"
+  },
+  UUID: "Compendium.custom-dnd5e.custom-dnd5e-journals.JournalEntry.B48iqFBddUikMMer.JournalEntryPage.bjFllCYYW9paPCNG"
+};
 
 /* -------------------------------------------- */
-
-/**
- * Get default config.
- * @param {string|null} key The key
- * @returns {object} The config data
- */
-export function getSettingDefault(key = null) {
-  return getDefaultDnd5eConfig(configKey, key);
-}
-
+/*  FORM CLASSES                                */
 /* -------------------------------------------- */
 
-/**
- * Reset config and setting to their default values.
- */
-export async function resetConfigSetting() {
-  await resetDnd5eConfig(configKey);
-  await resetSetting(constants.SETTING.CONFIG.KEY);
-}
-
-/* -------------------------------------------- */
-
-/**
- * Set CONFIG.DND5E.armorCalculations
- * @param {object} [settingData=null] The setting data
- * @returns {void}
- */
-export function setConfig(settingData = null) {
-  if ( !getSetting(constants.SETTING.ENABLE.KEY) ) return;
-  if ( checkEmpty(settingData) ) return handleEmptyData();
-
-  const mergedSettingData = foundry.utils.mergeObject(
-    foundry.utils.mergeObject(settingData, CONFIG.DND5E[configKey], { overwrite: false }),
-    getSettingDefault(),
-    { overwrite: false }
-  );
-
-  const configData = buildConfig(mergedSettingData);
-
-  Hooks.callAll("customDnd5e.setArmorCalculationsConfig", configData);
-
-  if ( configData ) {
-    CONFIG.DND5E[configKey] = configData;
+class ArmorCalculationsEditForm extends ConfigEditForm {
+  /**
+   * Constructor for ArmorCalculationsEditForm.
+   *
+   * @param {object} args
+   */
+  constructor(args) {
+    super(args);
+    this.config = configs.armorCalculations;
+    this.requiresReload = true;
   }
-}
 
-/* -------------------------------------------- */
+  /* -------------------------------------------- */
 
-/**
- * Handle empty data.
- */
-function handleEmptyData() {
-  if ( checkEmpty(CONFIG.DND5E[configKey]) ) {
-    resetDnd5eConfig(configKey);
-  }
-}
+  /**
+   * Default options for the form.
+   *
+   * @type {object}
+   */
+  static DEFAULT_OPTIONS = {
+    id: `${MODULE.ID}-armor-calculations-edit-form`,
+    position: {
+      height: 260
+    },
+    window: {
+      title: `CUSTOM_DND5E.form.${constants.ID}.edit.title`
+    }
+  };
 
-/* -------------------------------------------- */
+  /* -------------------------------------------- */
 
-/**
- * Build config.
- * @param {object} settingData The setting data
- * @returns {object} The config data
- */
-function buildConfig(settingData) {
-  return Object.fromEntries(
-    Object.keys(settingData)
-      .filter(key => settingData[key].visible || settingData[key].visible === undefined)
-      .map(key => [key, buildConfigEntry(settingData[key])])
-  );
-}
-
-/* -------------------------------------------- */
-
-/**
- * Build config entry.
- * @param {object} data The data
- * @returns {object} The config entry
- */
-function buildConfigEntry(data) {
-  return {
-    formula: data.formula,
-    label: game.i18n.localize(data.label)
+  /**
+   * Parts of the form.
+   *
+   * @type {object}
+   */
+  static PARTS = {
+    form: {
+      template: constants.TEMPLATE.EDIT
+    }
   };
 }
+
+/* -------------------------------------------- */
+
+class ArmorCalculationsForm extends ConfigForm {
+  /**
+   * Constructor for ArmorCalculationsForm.
+   */
+  constructor() {
+    super();
+    this.editForm = ArmorCalculationsEditForm;
+    this.listTitle = `CUSTOM_DND5E.form.${constants.ID}.listTitle`;
+    this.requiresReload = false;
+    this.config = configs.armorCalculations;
+  }
+
+  /* -------------------------------------------- */
+
+  /**
+   * Default options for the form.
+   *
+   * @type {object}
+   */
+  static DEFAULT_OPTIONS = {
+    id: `${MODULE.ID}-armor-calculations-form`,
+    window: {
+      title: `CUSTOM_DND5E.form.${constants.ID}.title`
+    }
+  };
+}
+
+/* -------------------------------------------- */
+/*  DEFINITION                                  */
+/* -------------------------------------------- */
+
+export default {
+  configKey: "armorClasses",
+  hookName: "customDnd5e.setArmorCalculationsConfig",
+  constants,
+  form: ArmorCalculationsForm,
+  configRequiresReload: true,
+  entryType: "object",
+  entry: [
+    { key: "formula" },
+    { key: "label", localize: true }
+  ]
+};

@@ -1,5 +1,6 @@
 import { CONSTANTS, MODULE } from "./constants.js";
 import { Logger, getFlag, getSetting, setFlag, unsetFlag, setSetting, registerSetting } from "./utils.js";
+import { configs } from "./configurations/registry.js";
 import { rebuild } from "./workflows/workflows.js";
 
 const constants = CONSTANTS.MIGRATION;
@@ -154,7 +155,7 @@ export async function migrateRerollInitiative() {
 export async function migrateConditions() {
   try {
     Logger.debug("Migrating conditions...");
-    const conditions = foundry.utils.deepClone(getSetting(CONSTANTS.CONDITIONS.SETTING.CONFIG.KEY));
+    const conditions = foundry.utils.deepClone(getSetting(configs.conditions.SETTING.CONFIG.KEY));
 
     if ( !conditions ) return true;
 
@@ -169,7 +170,7 @@ export async function migrateConditions() {
       delete value.icon;
     }
 
-    await setSetting(CONSTANTS.CONDITIONS.SETTING.CONFIG.KEY, conditions);
+    await setSetting(configs.conditions.SETTING.CONFIG.KEY, conditions);
     Logger.debug("Conditions migrated.");
     return true;
   } catch (err) {
@@ -562,7 +563,7 @@ export async function migrateDamageTypeLabels() {
   try {
     Logger.debug("Migrating damage type labels...");
 
-    const damageTypes = getSetting(CONSTANTS.DAMAGE_TYPES.SETTING.CONFIG.KEY);
+    const damageTypes = getSetting(configs.damageTypes.SETTING.CONFIG.KEY);
     if ( !damageTypes || typeof damageTypes !== "object" ) return true;
 
     const newDamageTypes = foundry.utils.deepClone(damageTypes);
@@ -581,7 +582,7 @@ export async function migrateDamageTypeLabels() {
     }
 
     if ( changed ) {
-      await setSetting(CONSTANTS.DAMAGE_TYPES.SETTING.CONFIG.KEY, newDamageTypes);
+      await setSetting(configs.damageTypes.SETTING.CONFIG.KEY, newDamageTypes);
       Logger.debug("Damage type labels migrated.");
     }
 
@@ -706,7 +707,7 @@ export async function migrateRestTypesHitDiceFormula() {
   try {
     Logger.debug("Migrating rest type Hit Dice fractions to formulas...");
 
-    const restTypes = getSetting(CONSTANTS.REST_TYPES.SETTING.CONFIG.KEY);
+    const restTypes = getSetting(configs.restTypes.SETTING.CONFIG.KEY);
     if ( !restTypes || typeof restTypes !== "object" ) return true;
 
     const cloned = foundry.utils.deepClone(restTypes);
@@ -728,7 +729,7 @@ export async function migrateRestTypesHitDiceFormula() {
     }
 
     if ( changed ) {
-      await setSetting(CONSTANTS.REST_TYPES.SETTING.CONFIG.KEY, cloned);
+      await setSetting(configs.restTypes.SETTING.CONFIG.KEY, cloned);
       Logger.debug("Rest type Hit Dice fractions migrated.");
     }
     return true;

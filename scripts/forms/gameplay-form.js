@@ -9,7 +9,7 @@ export class GameplayForm extends CustomDnd5eForm {
   /**
    * Constructor for GameplayForm.
    *
-   * @param {...any} args The arguments for the form.
+   * @param {...any} args
    */
   constructor(...args) {
     super(args);
@@ -57,7 +57,7 @@ export class GameplayForm extends CustomDnd5eForm {
   /**
    * Prepare the context for rendering the form.
    *
-   * @returns {Promise<object>} The context data.
+   * @returns {Promise<object>} Context data
    */
   async _prepareContext() {
     const massiveDamageTableUuid = getSetting(CONSTANTS.HIT_POINTS.SETTING.MASSIVE_DAMAGE_TABLE.KEY);
@@ -68,10 +68,10 @@ export class GameplayForm extends CustomDnd5eForm {
       levelUpHitPointsRerollMinimumValue: getSetting(CONSTANTS.LEVEL_UP.HIT_POINTS.REROLL.MINIMUM_VALUE.SETTING.KEY),
       levelUpHitPointsRerollOnce: getSetting(CONSTANTS.LEVEL_UP.HIT_POINTS.REROLL.ONCE.SETTING.KEY),
       levelUpHitPointsShowTakeAverage: getSetting(CONSTANTS.LEVEL_UP.HIT_POINTS.SHOW_TAKE_AVERAGE.SETTING.KEY),
-      applyBloodied: getSetting(CONSTANTS.BLOODIED.SETTING.APPLY_BLOODIED.KEY),
-      removeBloodiedOnDead: getSetting(CONSTANTS.BLOODIED.SETTING.REMOVE_BLOODIED_ON_DEAD.KEY),
-      bloodiedIcon: getSetting(CONSTANTS.BLOODIED.SETTING.BLOODIED_ICON.KEY),
-      bloodiedTint: getSetting(CONSTANTS.BLOODIED.SETTING.BLOODIED_TINT.KEY),
+      applyBloodied: getSetting(configs.bloodied.SETTING.APPLY_BLOODIED.KEY),
+      removeBloodiedOnDead: getSetting(configs.bloodied.SETTING.REMOVE_BLOODIED_ON_DEAD.KEY),
+      bloodiedIcon: getSetting(configs.bloodied.SETTING.BLOODIED_ICON.KEY),
+      bloodiedTint: getSetting(configs.bloodied.SETTING.BLOODIED_TINT.KEY),
       applyUnconscious: getSetting(CONSTANTS.UNCONSCIOUS.SETTING.APPLY_UNCONSCIOUS.KEY),
       applyDead: getSetting(CONSTANTS.DEAD.SETTING.APPLY_DEAD.KEY),
       applyInstantDeath: getSetting(CONSTANTS.DEAD.SETTING.APPLY_INSTANT_DEATH.KEY),
@@ -226,10 +226,10 @@ export class GameplayForm extends CustomDnd5eForm {
         resetSetting(CONSTANTS.LEVEL_UP.HIT_POINTS.REROLL.MINIMUM_VALUE.SETTING.KEY),
         resetSetting(CONSTANTS.LEVEL_UP.HIT_POINTS.REROLL.ONCE.SETTING.KEY),
         resetSetting(CONSTANTS.LEVEL_UP.HIT_POINTS.SHOW_TAKE_AVERAGE.SETTING.KEY),
-        resetSetting(CONSTANTS.BLOODIED.SETTING.APPLY_BLOODIED.KEY),
-        resetSetting(CONSTANTS.BLOODIED.SETTING.REMOVE_BLOODIED_ON_DEAD.KEY),
-        resetSetting(CONSTANTS.BLOODIED.SETTING.BLOODIED_ICON.KEY),
-        resetSetting(CONSTANTS.BLOODIED.SETTING.BLOODIED_TINT.KEY),
+        resetSetting(configs.bloodied.SETTING.APPLY_BLOODIED.KEY),
+        resetSetting(configs.bloodied.SETTING.REMOVE_BLOODIED_ON_DEAD.KEY),
+        resetSetting(configs.bloodied.SETTING.BLOODIED_ICON.KEY),
+        resetSetting(configs.bloodied.SETTING.BLOODIED_TINT.KEY),
         resetSetting(CONSTANTS.UNCONSCIOUS.SETTING.APPLY_UNCONSCIOUS.KEY),
         resetSetting(CONSTANTS.DEAD.SETTING.APPLY_DEAD.KEY),
         resetSetting(CONSTANTS.DEAD.SETTING.APPLY_INSTANT_DEATH.KEY),
@@ -310,10 +310,10 @@ export class GameplayForm extends CustomDnd5eForm {
       setSetting(CONSTANTS.LEVEL_UP.HIT_POINTS.REROLL.ONCE.SETTING.KEY, formData.object.levelUpHitPointsRerollOnce),
       setSetting(CONSTANTS.LEVEL_UP.HIT_POINTS.SHOW_TAKE_AVERAGE.SETTING.KEY,
         formData.object.levelUpHitPointsShowTakeAverage),
-      setSetting(CONSTANTS.BLOODIED.SETTING.APPLY_BLOODIED.KEY, formData.object.applyBloodied),
-      setSetting(CONSTANTS.BLOODIED.SETTING.REMOVE_BLOODIED_ON_DEAD.KEY, formData.object.removeBloodiedOnDead),
-      setSetting(CONSTANTS.BLOODIED.SETTING.BLOODIED_ICON.KEY, formData.object.bloodiedIcon),
-      setSetting(CONSTANTS.BLOODIED.SETTING.BLOODIED_TINT.KEY, formData.object.bloodiedTint),
+      setSetting(configs.bloodied.SETTING.APPLY_BLOODIED.KEY, formData.object.applyBloodied),
+      setSetting(configs.bloodied.SETTING.REMOVE_BLOODIED_ON_DEAD.KEY, formData.object.removeBloodiedOnDead),
+      setSetting(configs.bloodied.SETTING.BLOODIED_ICON.KEY, formData.object.bloodiedIcon),
+      setSetting(configs.bloodied.SETTING.BLOODIED_TINT.KEY, formData.object.bloodiedTint),
       setSetting(CONSTANTS.UNCONSCIOUS.SETTING.APPLY_UNCONSCIOUS.KEY, formData.object.applyUnconscious),
       setSetting(CONSTANTS.DEAD.SETTING.APPLY_DEAD.KEY, formData.object.applyDead),
       setSetting(CONSTANTS.DEAD.SETTING.APPLY_INSTANT_DEATH.KEY, formData.object.applyInstantDeath),

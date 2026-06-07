@@ -1,157 +1,79 @@
-import { CONSTANTS } from "../constants.js";
-import {
-  checkEmpty,
-  getDefaultDnd5eConfig,
-  getSetting,
-  registerMenu,
-  registerSetting,
-  resetDnd5eConfig,
-  resetSetting } from "../utils.js";
-import { ConsumableTypesForm } from "../forms/config-form.js";
-
-const constants = CONSTANTS.CONSUMABLE_TYPES;
-const configKey = "consumableTypes";
-
-/**
- * Register settings.
- */
-export function register() {
-  registerSettings();
-}
+import { MODULE } from "../constants.js";
+import { ConfigForm } from "../forms/config-form.js";
+import { configs } from "./registry.js";
 
 /* -------------------------------------------- */
+/*  CONSTANTS                                   */
+/* -------------------------------------------- */
 
-/**
- * Register settings.
- */
-function registerSettings() {
-  registerMenu(
-    constants.MENU.KEY,
-    {
-      hint: game.i18n.localize(constants.MENU.HINT),
-      label: game.i18n.localize(constants.MENU.LABEL),
-      name: game.i18n.localize(constants.MENU.NAME),
-      icon: constants.MENU.ICON,
-      type: ConsumableTypesForm,
-      restricted: true,
-      scope: "world"
+const constants = {
+  ID: "consumableTypes",
+  MENU: {
+    KEY: "consumable-types-menu",
+    HINT: "CUSTOM_DND5E.menu.consumableTypes.hint",
+    ICON: "fas fa-flask-round-potion",
+    LABEL: "CUSTOM_DND5E.menu.consumableTypes.label",
+    NAME: "CUSTOM_DND5E.menu.consumableTypes.name"
+  },
+  SETTING: {
+    ENABLE: {
+      KEY: "enable-consumable-types"
+    },
+    CONFIG: {
+      KEY: "consumable-types"
     }
-  );
+  },
+  UUID: "Compendium.custom-dnd5e.custom-dnd5e-journals.JournalEntry.B48iqFBddUikMMer.JournalEntryPage.OgMhctYM5NFh8neL"
+};
 
-  registerSetting(
-    constants.SETTING.ENABLE.KEY,
-    {
-      scope: "world",
-      config: false,
-      requiresReload: true,
-      type: Boolean,
-      default: false
+/* -------------------------------------------- */
+/*  FORM CLASSES                                */
+/* -------------------------------------------- */
+
+class ConsumableTypesForm extends ConfigForm {
+  /**
+   * Constructor for ConsumableTypesForm.
+   */
+  constructor() {
+    super();
+    this.editInList = true;
+    this.listTitle = `CUSTOM_DND5E.form.${constants.ID}.listTitle`;
+    this.nestable = true;
+    this.nestType = "subtypes";
+    this.requiresReload = false;
+    this.config = configs.consumableTypes;
+  }
+
+  /* -------------------------------------------- */
+
+  /**
+   * Default options for the form.
+   *
+   * @type {object}
+   */
+  static DEFAULT_OPTIONS = {
+    id: `${MODULE.ID}-consumable-types-form`,
+    window: {
+      title: `CUSTOM_DND5E.form.${constants.ID}.title`
     }
-  );
-
-  registerSetting(
-    constants.SETTING.CONFIG.KEY,
-    {
-      scope: "world",
-      config: false,
-      type: Object,
-      default: getSettingDefault()
-    }
-  );
+  };
 }
 
 /* -------------------------------------------- */
-
-/**
- * Get default config.
- * @param {string|null} key The key
- * @returns {object} The config
- */
-export function getSettingDefault(key = null) {
-  return getDefaultDnd5eConfig(configKey, key);
-}
-
+/*  DEFINITION                                  */
 /* -------------------------------------------- */
 
-/**
- * Reset config and setting to their default values.
- */
-export async function resetConfigSetting() {
-  await resetDnd5eConfig(configKey);
-  await resetSetting(constants.SETTING.CONFIG.KEY);
-}
-
-/* -------------------------------------------- */
-
-/**
- * Set CONFIG.DND5E.consumableTypes.
- * @param {object} [settingData=null] The setting data
- * @returns {void}
- */
-export function setConfig(settingData = null) {
-  if ( !getSetting(constants.SETTING.ENABLE.KEY) ) return;
-  if ( checkEmpty(settingData) ) return handleEmptyData();
-
-  const mergedSettingData = foundry.utils.mergeObject(
-    foundry.utils.mergeObject(settingData, CONFIG.DND5E[configKey], { overwrite: false }),
-    getSettingDefault(),
-    { overwrite: false }
-  );
-
-  const configData = buildConfig(mergedSettingData);
-
-  Hooks.callAll("customDnd5e.setConsumableTypesConfig", configData);
-
-  if ( configData ) {
-    CONFIG.DND5E[configKey] = configData;
-  }
-}
-
-
-/* -------------------------------------------- */
-
-/**
- * Handle empty data.
- */
-function handleEmptyData() {
-  if ( checkEmpty(CONFIG.DND5E[configKey]) ) {
-    resetDnd5eConfig(configKey);
-  }
-}
-
-/* -------------------------------------------- */
-
-/**
- * Build config.
- * @param {object} settingData The setting data
- * @param {boolean} [isSubtype=false] Whether the data is a subtype
- * @returns {object} The config data
- */
-function buildConfig(settingData, isSubtype = false) {
-  return Object.fromEntries(
-    Object.keys(settingData)
-      .filter(key => settingData[key].visible || settingData[key].visible === undefined)
-      .map(key => [key, buildConfigEntry(settingData[key], isSubtype)])
-  );
-}
-
-/* -------------------------------------------- */
-
-/**
- * Build config entry.
- * @param {object} data The data
- * @param {boolean} [isSubtype=false] Whether the data is a subtype
- * @returns {object} The config entry
- */
-function buildConfigEntry(data, isSubtype = false) {
-  if ( isSubtype ) {
-    return game.i18n.localize(data.label || data);
-  } else {
-    return {
-      label: game.i18n.localize(data.label || data),
-      ...(data.subtypes !== undefined && {
-        subtypes: buildConfig(data.subtypes, true)
-      })
-    };
-  }
-}
+export default {
+  configKey: "consumableTypes",
+  constants,
+  form: ConsumableTypesForm,
+  loadTemplates: false,
+  entryType: "object",
+  entry: [
+    { key: "label", localize: true, transform: (v, data) => v || data },
+    { key: "subtypes", conditional: "defined", children: {
+      entryType: "scalar",
+      entry: { source: "labelOrSelf", localize: true }
+    } }
+  ]
+};

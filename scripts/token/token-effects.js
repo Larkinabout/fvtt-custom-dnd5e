@@ -1,5 +1,5 @@
 import { CONSTANTS } from "../constants.js";
-import { updateBloodied } from "../configurations/bloodied.js";
+import { configs } from "../configurations/registry.js";
 import {
   Logger,
   getFlag,
@@ -63,12 +63,12 @@ function updateTokenEffects(active, activeEffect, userId) {
     tint = getSetting(CONSTANTS.DEAD.SETTING.DEAD_TINT.KEY);
     rotation = getSetting(CONSTANTS.DEAD.SETTING.DEAD_ROTATION.KEY);
   } else {
-    if ( bloodied ) { tint = getSetting(CONSTANTS.BLOODIED.SETTING.BLOODIED_TINT.KEY); }
+    if ( bloodied ) { tint = getSetting(configs.bloodied.SETTING.BLOODIED_TINT.KEY); }
     if ( prone ) { rotation = getSetting(CONSTANTS.PRONE.SETTING.PRONE_ROTATION.KEY); }
   }
 
   if ( [...activeEffect.statuses].includes("dead") && !activeEffect?.flags?.["custom-dnd5e"]?.ignore ) {
-    updateBloodied(actor, null, dead);
+    configs.bloodied.updateBloodied(actor, null, dead);
   }
 
   if ( tint ) {

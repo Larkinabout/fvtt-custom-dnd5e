@@ -1,158 +1,148 @@
-import { CONSTANTS } from "../constants.js";
-import {
-  c5eLoadTemplates,
-  checkEmpty,
-  getSetting,
-  registerMenu,
-  registerSetting,
-  getDefaultDnd5eConfig,
-  resetDnd5eConfig,
-  resetSetting } from "../utils.js";
-import { SpellSchoolsForm } from "../forms/config-form.js";
-
-const constants = CONSTANTS.SPELL_SCHOOLS;
-const configKey = "spellSchools";
-
-/**
- * Register settings and load templates.
- */
-export function register() {
-  registerSettings();
-
-  const templates = [
-    constants.TEMPLATE.EDIT
-  ];
-  c5eLoadTemplates(templates);
-}
+import { MODULE } from "../constants.js";
+import { ConfigForm } from "../forms/config-form.js";
+import { ConfigEditForm } from "../forms/config-edit-form.js";
+import { configs } from "./registry.js";
 
 /* -------------------------------------------- */
+/*  CONSTANTS                                   */
+/* -------------------------------------------- */
 
-/**
- * Register settings.
- */
-function registerSettings() {
-  registerMenu(
-    constants.MENU.KEY,
-    {
-      hint: game.i18n.localize(constants.MENU.HINT),
-      label: game.i18n.localize(constants.MENU.LABEL),
-      name: game.i18n.localize(constants.MENU.NAME),
-      icon: constants.MENU.ICON,
-      type: SpellSchoolsForm,
-      restricted: true,
-      scope: "world"
+const constants = {
+  ID: "spell-schools",
+  MENU: {
+    KEY: "spell-schools-menu",
+    HINT: "CUSTOM_DND5E.menu.spellSchools.hint",
+    ICON: "fas fa-book-sparkles",
+    LABEL: "CUSTOM_DND5E.menu.spellSchools.label",
+    NAME: "CUSTOM_DND5E.menu.spellSchools.name"
+  },
+  SETTING: {
+    ENABLE: {
+      KEY: "enable-spell-schools"
+    },
+    CONFIG: {
+      KEY: "spell-schools"
     }
-  );
+  },
+  TEMPLATE: {
+    EDIT: "modules/custom-dnd5e/templates/spell-schools-edit.hbs",
+    FORM: "modules/custom-dnd5e/templates/config-form.hbs",
+    LIST: "modules/custom-dnd5e/templates/config-list.hbs"
+  },
+  UUID: "Compendium.custom-dnd5e.custom-dnd5e-journals.JournalEntry.B48iqFBddUikMMer.JournalEntryPage.PlVATLzmAndA0gfR"
+};
 
-  registerSetting(
-    constants.SETTING.ENABLE.KEY,
-    {
-      scope: "world",
-      config: false,
-      requiresReload: true,
-      type: Boolean,
-      default: false
+/* -------------------------------------------- */
+/*  FORM CLASSES                                */
+/* -------------------------------------------- */
+
+class SpellSchoolsEditForm extends ConfigEditForm {
+  /**
+   * Constructor for SpellSchoolsEditForm.
+   *
+   * @param {object} args
+   */
+  constructor(args) {
+    super(args);
+    this.config = configs.spellSchools;
+    this.requiresReload = true;
+  }
+
+  /* -------------------------------------------- */
+
+  /**
+   * Default options for the form.
+   *
+   * @type {object}
+   */
+  static DEFAULT_OPTIONS = {
+    id: `${MODULE.ID}-spell-schools-edit-form`,
+    position: {
+      height: 320
+    },
+    window: {
+      title: "CUSTOM_DND5E.form.spellSchools.edit.title"
     }
-  );
+  };
 
-  registerSetting(
-    constants.SETTING.CONFIG.KEY,
-    {
-      scope: "world",
-      config: false,
-      requiresReload: true,
-      type: Object,
-      default: getSettingDefault()
+  /* -------------------------------------------- */
+
+  /**
+   * Parts of the form.
+   *
+   * @type {object}
+   */
+  static PARTS = {
+    form: {
+      template: constants.TEMPLATE.EDIT
     }
-  );
-}
+  };
 
-/* -------------------------------------------- */
+  /* -------------------------------------------- */
 
-/**
- * Get default config.
- * @param {string|null} key The key
- * @returns {object} The config
- */
-export function getSettingDefault(key = null) {
-  return getDefaultDnd5eConfig(configKey, key);
-}
-
-/* -------------------------------------------- */
-
-/**
- * Reset config and setting to their default values.
- */
-export async function resetConfigSetting() {
-  await resetDnd5eConfig(configKey);
-  await resetSetting(constants.SETTING.CONFIG.KEY);
-}
-
-/* -------------------------------------------- */
-
-/**
- * Set CONFIG.DND5E.spellSchools
- * @param {object} [settingData=null] The setting data
- * @returns {void}
- */
-export function setConfig(settingData = null) {
-  if ( !getSetting(constants.SETTING.ENABLE.KEY) ) return;
-  if ( checkEmpty(settingData) ) return handleEmptyData();
-
-  const mergedSettingData = foundry.utils.mergeObject(
-    foundry.utils.mergeObject(settingData, CONFIG.DND5E[configKey], { overwrite: false }),
-    getSettingDefault(),
-    { overwrite: false }
-  );
-
-  const configData = buildConfig(mergedSettingData);
-
-  Hooks.callAll("customDnd5e.setSpellSchoolsConfig", configData);
-
-  if ( configData ) {
-    CONFIG.DND5E[configKey] = configData;
+  /**
+   * Get the select options for the form.
+   *
+   * @returns {object} Select options
+   */
+  _getSelects() {
+    return {
+      rollMode: {
+        choices: {
+          default: "CUSTOM_DND5E.default",
+          blindroll: "CHAT.MODES.blind",
+          gmroll: "CHAT.MODES.gm",
+          publicroll: "CHAT.MODES.public",
+          selfroll: "CHAT.MODES.self"
+        }
+      }
+    };
   }
 }
 
 /* -------------------------------------------- */
 
-/**
- * Handle empty data.
- */
-function handleEmptyData() {
-  if ( checkEmpty(CONFIG.DND5E[configKey]) ) {
-    resetDnd5eConfig(configKey);
+class SpellSchoolsForm extends ConfigForm {
+  /**
+   * Constructor for SpellSchoolsForm.
+   */
+  constructor() {
+    super();
+    this.editForm = SpellSchoolsEditForm;
+    this.listTitle = "CUSTOM_DND5E.form.spellSchools.listTitle";
+    this.requiresReload = false;
+    this.config = configs.spellSchools;
   }
-}
 
-/* -------------------------------------------- */
+  /* -------------------------------------------- */
 
-/**
- * Build config.
- * @param {object} settingData The setting data
- * @returns {object} The config data
- */
-function buildConfig(settingData) {
-  return Object.fromEntries(
-    Object.keys(settingData)
-      .filter(key => settingData[key].visible || settingData[key].visible === undefined)
-      .map(key => [key, buildConfigEntry(settingData[key])])
-  );
-}
-
-/* -------------------------------------------- */
-
-/**
- * Build config entry.
- * @param {object} data The data
- * @returns {object} The config entry
- */
-function buildConfigEntry(data) {
-  return {
-    fullKey: data.fullKey,
-    icon: data.icon,
-    label: game.i18n.localize(data.label),
-    reference: data.reference
+  /**
+   * Default options for the form.
+   *
+   * @type {object}
+   */
+  static DEFAULT_OPTIONS = {
+    id: `${MODULE.ID}-spell-schools-form`,
+    window: {
+      title: "CUSTOM_DND5E.form.spellSchools.title"
+    }
   };
 }
 
+/* -------------------------------------------- */
+/*  DEFINITION                                  */
+/* -------------------------------------------- */
+
+export default {
+  configKey: "spellSchools",
+  constants,
+  form: SpellSchoolsForm,
+  configRequiresReload: true,
+  entryType: "object",
+  entry: [
+    { key: "fullKey" },
+    { key: "icon" },
+    { key: "label", localize: true },
+    { key: "reference" }
+  ]
+};

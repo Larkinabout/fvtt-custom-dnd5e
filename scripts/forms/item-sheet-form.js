@@ -9,7 +9,7 @@ export class ItemSheetForm extends CustomDnd5eForm {
   /**
    * Constructor for ItemSheetForm.
    *
-   * @param {...any} args The arguments for the form.
+   * @param {...any} args
    */
   constructor(...args) {
     super(args);
@@ -57,7 +57,7 @@ export class ItemSheetForm extends CustomDnd5eForm {
   /**
    * Prepare the context for rendering the form.
    *
-   * @returns {Promise<object>} The context data.
+   * @returns {Promise<object>} Context data
    */
   async _prepareContext() {
     return {

@@ -1,11 +1,12 @@
-import { MODULE, CONSTANTS } from "../constants.js";
+import { MODULE } from "../constants.js";
 import { getSetting } from "../utils.js";
+import { configs } from "../configurations/registry.js";
 
 /**
  * Patch the prepareEncumbrance function to include custom encumbrance calculations.
  */
 export function patchPrepareEncumbrance() {
-  if ( !getSetting(CONSTANTS.ENCUMBRANCE.SETTING.ENABLE.KEY) ) return;
+  if ( !getSetting(configs.encumbrance.SETTING.ENABLE.KEY) ) return;
   if ( game.modules.get("variant-encumbrance-dnd5e")?.active ) return;
   libWrapper.register(MODULE.ID, "dnd5e.dataModels.actor.AttributesFields.prepareEncumbrance", prepareEncumbrancePatch, "OVERRIDE");
 }
@@ -13,17 +14,17 @@ export function patchPrepareEncumbrance() {
 /**
  * Calculate encumbrance details for an Actor.
  * @this {CharacterData|NPCData|VehicleData}
- * @param {object} rollData  The Actor's roll data.
+ * @param {object} rollData Actor's roll data
  * @param {object} [options]
- * @param {Function} [options.validateItem]  Determine whether an item's weight should count toward encumbrance.
+ * @param {Function} [options.validateItem] Determine whether an item's weight should count toward encumbrance.
  */
 async function prepareEncumbrancePatch(rollData, { validateItem } = {}) {
   const convertWeight = dnd5e.utils.convertWeight;
   const simplifyBonus = dnd5e.utils.simplifyBonus;
 
-  const equippedMod = (this.parent?.type === "character") ? getSetting(CONSTANTS.ENCUMBRANCE.EQUIPPED_ITEM_WEIGHT_MODIFIER.SETTING.KEY) || 0 : 1;
-  const proficientEquippedMod = (this.parent?.type === "character") ? getSetting(CONSTANTS.ENCUMBRANCE.PROFICIENT_EQUIPPED_ITEM_WEIGHT_MODIFIER.SETTING.KEY) || 0 : 1;
-  const unequippedMod = (this.parent?.type === "character") ? getSetting(CONSTANTS.ENCUMBRANCE.UNEQUIPPED_ITEM_WEIGHT_MODIFIER.SETTING.KEY) || 0 : 1;
+  const equippedMod = (this.parent?.type === "character") ? getSetting(configs.encumbrance.EQUIPPED_ITEM_WEIGHT_MODIFIER.SETTING.KEY) || 0 : 1;
+  const proficientEquippedMod = (this.parent?.type === "character") ? getSetting(configs.encumbrance.PROFICIENT_EQUIPPED_ITEM_WEIGHT_MODIFIER.SETTING.KEY) || 0 : 1;
+  const unequippedMod = (this.parent?.type === "character") ? getSetting(configs.encumbrance.UNEQUIPPED_ITEM_WEIGHT_MODIFIER.SETTING.KEY) || 0 : 1;
 
   const config = CONFIG.DND5E.encumbrance;
   const encumbrance = this.attributes.encumbrance ??= {};

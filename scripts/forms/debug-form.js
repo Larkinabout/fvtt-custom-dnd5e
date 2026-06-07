@@ -10,7 +10,7 @@ export class DebugForm extends CustomDnd5eForm {
   /**
    * Constructor for DebugForm.
    *
-   * @param {...any} args The arguments for the form.
+   * @param {...any} args
    */
   constructor(...args) {
     super(args);
@@ -55,7 +55,7 @@ export class DebugForm extends CustomDnd5eForm {
   /**
    * Prepare the context for rendering the form.
    *
-   * @returns {Promise<object>} The context data.
+   * @returns {Promise<object>} Context data
    */
   async _prepareContext() {
     return { debug: getSetting(CONSTANTS.DEBUG.SETTING.KEY) };

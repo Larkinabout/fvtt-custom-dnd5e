@@ -9,7 +9,7 @@ export class RollsForm extends CustomDnd5eForm {
   /**
    * Constructor for RollsForm.
    *
-   * @param {...any} args The arguments for the form.
+   * @param {...any} args
    */
   constructor(...args) {
     super(args);
@@ -56,7 +56,7 @@ export class RollsForm extends CustomDnd5eForm {
   /**
    * Prepare the context for rendering the form.
    *
-   * @returns {Promise<object>} The context data.
+   * @returns {Promise<object>} Context data
    */
   async _prepareContext() {
     const rolls = getSetting(CONSTANTS.ROLLS.SETTING.ROLLS.KEY);

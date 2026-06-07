@@ -1,17 +1,18 @@
-import { MODULE, CONSTANTS } from "../constants.js";
+import { MODULE } from "../constants.js";
 import { getFlag, getSetting } from "../utils.js";
+import { configs } from "../configurations/registry.js";
 
 /**
  * Patch the _prepareSenses function to include custom senses.
  */
 export function patchPrepareSenses() {
-  if ( !getSetting(CONSTANTS.SENSES.SETTING.ENABLE.KEY) ) return;
+  if ( !getSetting(configs.senses.SETTING.ENABLE.KEY) ) return;
   libWrapper.register(MODULE.ID, "dnd5e.applications.actor.BaseActorSheet.prototype._prepareSenses", prepareSensesPatch, "WRAPPER");
 }
 
 /**
  * Prepare actor senses for display.
- * @param {ApplicationRenderContext} context  Context being prepared.
+ * @param {ApplicationRenderContext} context
  * @returns {object[]}
  * @protected
  */
@@ -19,7 +20,7 @@ function prepareSensesPatch(wrapped, context) {
   const systemSenses = wrapped(context);
 
   const actor = context.actor;
-  const senses = getSetting(CONSTANTS.SENSES.SETTING.CONFIG.KEY);
+  const senses = getSetting(configs.senses.SETTING.CONFIG.KEY);
   const customSenses = [];
 
   Object.entries(senses)

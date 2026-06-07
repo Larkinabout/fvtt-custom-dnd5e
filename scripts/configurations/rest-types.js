@@ -1,4 +1,3 @@
-import { CONSTANTS } from "../constants.js";
 import {
   c5eLoadTemplates,
   checkEmpty,
@@ -8,11 +7,138 @@ import {
   registerSetting,
   resetDnd5eConfig,
   resetSetting } from "../utils.js";
-import { RestTypesForm } from "../forms/config-form.js";
+import { MODULE } from "../constants.js";
+import { ConfigForm } from "../forms/config-form.js";
+import { ConfigEditForm } from "../forms/config-edit-form.js";
 import { register as registerCustomRestDialog, getCustomRestDialog } from "../forms/custom-rest-dialog.js";
+import { configs } from "./registry.js";
 
-const constants = CONSTANTS.REST_TYPES;
-const configKey = "restTypes";
+/* -------------------------------------------- */
+/*  CONSTANTS                                   */
+/* -------------------------------------------- */
+
+export const constants = {
+  ID: "rest-types",
+  MENU: {
+    KEY: "rest-types-menu",
+    HINT: "CUSTOM_DND5E.menu.restTypes.hint",
+    ICON: "fas fa-bed",
+    LABEL: "CUSTOM_DND5E.menu.restTypes.label",
+    NAME: "CUSTOM_DND5E.menu.restTypes.name"
+  },
+  SETTING: {
+    ENABLE: {
+      KEY: "enable-rest-types"
+    },
+    CONFIG: {
+      KEY: "rest-types"
+    }
+  },
+  TEMPLATE: {
+    EDIT: "modules/custom-dnd5e/templates/rest-types-edit.hbs"
+  },
+  UUID: "Compendium.custom-dnd5e.custom-dnd5e-journals.JournalEntry.B48iqFBddUikMMer.JournalEntryPage.rT4kYmNpV3tZbW9x"
+};
+export const configKey = "restTypes";
+
+/* -------------------------------------------- */
+/*  FORM CLASSES                                */
+/* -------------------------------------------- */
+
+/**
+ * Per-rest-type edit form.
+ * @extends ConfigEditForm
+ */
+class RestTypesEditForm extends ConfigEditForm {
+  /**
+   * Constructor for RestTypesEditForm.
+   * @param {object} args
+   */
+  constructor(args) {
+    super(args);
+    this.config = configs.restTypes;
+    this.requiresReload = true;
+  }
+
+  /* -------------------------------------------- */
+
+  /**
+   * Get the select options for the form.
+   * @returns {object} Select options
+   */
+  _getSelects() {
+    const activationPeriods = Object.fromEntries(
+      Object.entries(CONFIG.DND5E.activityActivationTypes)
+        .map(([key, value]) => [key, value.label])
+    );
+
+    const recoverPeriods = Object.fromEntries(
+      Object.entries(CONFIG.DND5E.limitedUsePeriods)
+        .filter(([, value]) => !value.deprecated)
+        .map(([key, value]) => [key, value.label])
+    );
+
+    const recoverSpellSlotTypes = Object.fromEntries(
+      Object.entries(CONFIG.DND5E.spellcasting)
+        .filter(([, value]) => value.type)
+        .map(([key, value]) => [key, value.label])
+    );
+
+    return { activationPeriods, recoverPeriods, recoverSpellSlotTypes };
+  }
+
+  /* -------------------------------------------- */
+
+  static DEFAULT_OPTIONS = {
+    id: `${MODULE.ID}-rest-types-edit-form`,
+    position: {
+      height: 600
+    },
+    window: {
+      title: "CUSTOM_DND5E.form.restTypes.edit.title"
+    }
+  };
+
+  /* -------------------------------------------- */
+
+  static PARTS = {
+    form: {
+      template: constants.TEMPLATE.EDIT
+    }
+  };
+}
+
+/* -------------------------------------------- */
+
+/**
+ * Rest types settings menu form.
+ * @extends ConfigForm
+ */
+class RestTypesForm extends ConfigForm {
+  /**
+   * Constructor for RestTypesForm.
+   */
+  constructor() {
+    super();
+    this.editForm = RestTypesEditForm;
+    this.listTitle = "CUSTOM_DND5E.form.restTypes.listTitle";
+    this.requiresReload = true;
+    this.config = configs.restTypes;
+  }
+
+  /* -------------------------------------------- */
+
+  static DEFAULT_OPTIONS = {
+    id: `${MODULE.ID}-rest-types-form`,
+    window: {
+      title: "CUSTOM_DND5E.form.restTypes.title"
+    }
+  };
+}
+
+/* -------------------------------------------- */
+/*  REGISTRATION                                */
+/* -------------------------------------------- */
 
 /**
  * Register settings and load templates.
@@ -69,6 +195,8 @@ function registerSettings() {
 }
 
 /* -------------------------------------------- */
+/*  CONFIG                                      */
+/* -------------------------------------------- */
 
 /**
  * Normalise the default config.
@@ -116,12 +244,13 @@ export async function resetConfigSetting() {
 /* -------------------------------------------- */
 
 /**
- * Set CONFIG.DND5E.restTypes
- * @param {object} [settingData=null] Setting data
+ * Set CONFIG.DND5E.restTypes.
+ * @param {object} [settingData=null]
  * @returns {void}
  */
-export function setConfig(settingData = null) {
+export function setConfig(settingData) {
   if ( !getSetting(constants.SETTING.ENABLE.KEY) ) return;
+  settingData ??= getSetting(constants.SETTING.CONFIG.KEY);
   if ( checkEmpty(settingData) ) return handleEmptyData();
 
   const mergedSettingData = foundry.utils.mergeObject(
@@ -155,7 +284,7 @@ function handleEmptyData() {
 
 /**
  * Build config.
- * @param {object} settingData Setting data
+ * @param {object} settingData
  * @returns {object} Config data
  */
 function buildConfig(settingData) {
@@ -170,8 +299,8 @@ function buildConfig(settingData) {
 
 /**
  * Register a dynamic rest result chat message translation.
- * @param {string} key Key
- * @param {string} label Label
+ * @param {string} key
+ * @param {string} label
  * @returns {string} Translation key
  */
 function registerRestResultMessage(key, label) {
@@ -184,8 +313,8 @@ function registerRestResultMessage(key, label) {
 
 /**
  * Build config entry.
- * @param {string} key Key
- * @param {object} data Data
+ * @param {string} key
+ * @param {object} data
  * @returns {object} Config entry
  */
 function buildConfigEntry(key, data) {
@@ -221,12 +350,14 @@ function buildConfigEntry(key, data) {
 }
 
 /* -------------------------------------------- */
+/*  REST HOOKS                                  */
+/* -------------------------------------------- */
 
 const hookIds = new Map();
 
 /**
  * Register hooks for custom rest type behaviour.
- * @param {object} configData Config data
+ * @param {object} configData
  */
 function registerHooks(configData) {
   unregisterHooks();
@@ -251,7 +382,7 @@ function unregisterHooks() {
 
 /**
  * Register hooks to override Hit Dice recovery.
- * @param {object} configData Config data
+ * @param {object} configData
  */
 function registerHitDiceRecoveryHooks(configData) {
   for ( const [type, restType] of Object.entries(configData) ) {
@@ -291,8 +422,8 @@ function evaluateHitDiceFormula(formula, actor, roundUp) {
 /* -------------------------------------------- */
 
 /**
- * Register hooks to apply fractional recovert to Hit Points.
- * @param {object} configData Config data
+ * Register hooks to apply fractional recovery to Hit Points.
+ * @param {object} configData
  */
 function registerHitPointsFractionHook(configData) {
   const hasHpFraction = Object.values(configData).some(r =>
@@ -318,7 +449,7 @@ function registerHitPointsFractionHook(configData) {
 
 /**
  * Register hook to apply fractional recovery to Spell Slots.
- * @param {object} configData Config data
+ * @param {object} configData
  */
 function registerSpellSlotFractionHook(configData) {
   const hasSpellFraction = Object.values(configData).some(r =>

@@ -1,4 +1,3 @@
-import { CONSTANTS } from "../constants.js";
 import {
   Logger,
   c5eLoadTemplates,
@@ -7,13 +6,214 @@ import {
   registerMenu,
   registerSetting,
   resetDnd5eConfig,
+  resetSetting,
   setSetting,
   makeBloodied,
   unmakeBloodied } from "../utils.js";
-import { BloodiedForm } from "../forms/bloodied-form.js";
+import { MODULE } from "../constants.js";
+import { CustomDnd5eForm } from "../forms/custom-dnd5e-form.js";
+import { configs } from "./registry.js";
 
-const constants = CONSTANTS.BLOODIED;
-const configKey = "bloodied";
+/* -------------------------------------------- */
+/*  CONSTANTS                                   */
+/* -------------------------------------------- */
+
+export const constants = {
+  ID: "bloodied",
+  MENU: {
+    KEY: "bloodied-menu",
+    HINT: "CUSTOM_DND5E.menu.bloodied.hint",
+    ICON: "fas fa-droplet",
+    LABEL: "CUSTOM_DND5E.menu.bloodied.label",
+    NAME: "CUSTOM_DND5E.menu.bloodied.name"
+  },
+  SETTING: {
+    APPLY_BLOODIED: {
+      KEY: "apply-bloodied"
+    },
+    BLOODIED_ICON: {
+      KEY: "bloodied-icon"
+    },
+    BLOODIED_STATUS: {
+      KEY: "bloodied-status"
+    },
+    BLOODIED_TINT: {
+      KEY: "bloodied-tint"
+    },
+    CONFIG: {
+      KEY: "bloodied"
+    },
+    ENABLE: {
+      KEY: "enable-bloodied"
+    },
+    REMOVE_BLOODIED_ON_DEAD: {
+      KEY: "remove-bloodied-on-dead"
+    }
+  },
+  TEMPLATE: {
+    FORM: "modules/custom-dnd5e/templates/bloodied-form.hbs"
+  },
+  ICON: "modules/custom-dnd5e/media/icons/bloodied.svg",
+  CONDITION_UUID: "Compendium.custom-dnd5e.custom-dnd5e-journals.JournalEntry.ngr8w6WBycK59brj.JournalEntryPage.sV0ZCKxwh4n4ZU1P",
+  UUID: "Compendium.custom-dnd5e.custom-dnd5e-journals.JournalEntry.B48iqFBddUikMMer.JournalEntryPage.GjOBdXwapcYvUihc"
+};
+export const configKey = "bloodied";
+
+/* -------------------------------------------- */
+/*  FORM CLASS                                  */
+/* -------------------------------------------- */
+
+/**
+ * Bloodied settings menu form.
+ * @extends CustomDnd5eForm
+ */
+class BloodiedForm extends CustomDnd5eForm {
+  /**
+   * Constructor for BloodiedForm.
+   * @param {...any} args
+   */
+  constructor(...args) {
+    super(args);
+
+    this.config = configs.bloodied;
+    this.type = "bloodied";
+  }
+
+  /* -------------------------------------------- */
+
+  static DEFAULT_OPTIONS = {
+    actions: {
+      reset: BloodiedForm.reset
+    },
+    form: {
+      handler: BloodiedForm.submit
+    },
+    id: `${MODULE.ID}-bloodied-form`,
+    window: {
+      title: `CUSTOM_DND5E.form.${constants.ID}.title`
+    }
+  };
+
+  static PARTS = {
+    form: {
+      template: constants.TEMPLATE.FORM
+    }
+  };
+
+  /* -------------------------------------------- */
+
+  /**
+   * Prepare the context for rendering the form.
+   * @returns {Promise<object>} Context data
+   */
+  async _prepareContext() {
+    this.setting = getSetting(this.settingKey) || foundry.utils.deepClone(CONFIG.DND5E.bloodied);
+    const context = foundry.utils.deepClone(this.setting);
+    context.applyBloodied = getSetting(constants.SETTING.APPLY_BLOODIED.KEY);
+    context.bloodiedStatus = getSetting(constants.SETTING.BLOODIED_STATUS.KEY) || "player";
+    context.bloodiedTint = getSetting(constants.SETTING.BLOODIED_TINT.KEY);
+    context.removeBloodiedOnDead = getSetting(constants.SETTING.REMOVE_BLOODIED_ON_DEAD.KEY);
+    context.reference = this.setting.reference || constants.CONDITION_UUID;
+    context.selects = this.#getSelects();
+
+    if ( this.enableConfigKey ) {
+      context.enableConfig = getSetting(this.enableConfigKey);
+    }
+
+    return context;
+  }
+
+  /* -------------------------------------------- */
+
+  /**
+   * Get the select options for the form.
+   * @returns {object} Select options
+   */
+  #getSelects() {
+    return {
+      status: {
+        choices: {
+          all: "SETTINGS.DND5E.BLOODIED.All",
+          player: "SETTINGS.DND5E.BLOODIED.Player",
+          none: "SETTINGS.DND5E.BLOODIED.None"
+        }
+      }
+    };
+  }
+
+  /* -------------------------------------------- */
+
+  /**
+   * Reset the form to default settings.
+   */
+  static async reset() {
+    const reset = async () => {
+      await Promise.all([
+        setSetting(this.settingKey, CONFIG.CUSTOM_DND5E[this.type]),
+        resetSetting(constants.SETTING.APPLY_BLOODIED.KEY),
+        resetSetting(constants.SETTING.BLOODIED_STATUS.KEY),
+        resetSetting(constants.SETTING.BLOODIED_TINT.KEY),
+        resetSetting(constants.SETTING.REMOVE_BLOODIED_ON_DEAD.KEY)
+      ]);
+      this.setConfig(CONFIG.CUSTOM_DND5E[this.type]);
+      this.render(true);
+    };
+
+    await foundry.applications.api.DialogV2.confirm({
+      window: {
+        title: game.i18n.localize("CUSTOM_DND5E.dialog.reset.title")
+      },
+      content: `<p>${game.i18n.localize("CUSTOM_DND5E.dialog.reset.content")}</p>`,
+      modal: true,
+      yes: {
+        label: game.i18n.localize("CUSTOM_DND5E.yes"),
+        callback: async () => {
+          reset();
+        }
+      },
+      no: {
+        label: game.i18n.localize("CUSTOM_DND5E.no")
+      }
+    });
+  }
+
+  /* -------------------------------------------- */
+
+  /**
+   * Submit the form data.
+   * @param {Event} event
+   * @param {HTMLFormElement} form
+   * @param {object} formData
+   */
+  static async submit(event, form, formData) {
+    const ignore = ["enableConfig", "applyBloodied", "bloodiedStatus", "bloodiedTint"];
+
+    this.enableConfig = formData.object.enableConfig;
+    await setSetting(this.enableConfigKey, this.enableConfig);
+    delete formData.object.enableConfig;
+
+    Object.entries(formData.object).forEach(([key, value]) => {
+      if ( ignore.includes(key) ) return;
+
+      foundry.utils.setProperty(this.setting, key, value);
+    });
+
+    await Promise.all([
+      setSetting(this.settingKey, this.setting),
+      overrideBloodied(formData.object.applyBloodied, formData.object.bloodiedStatus),
+      setSetting(constants.SETTING.BLOODIED_TINT.KEY, formData.object.bloodiedTint),
+      setSetting(constants.SETTING.REMOVE_BLOODIED_ON_DEAD.KEY, formData.object.removeBloodiedOnDead)
+    ]);
+
+    this.setConfig(this.setting);
+
+    foundry.applications.settings.SettingsConfig.reloadConfirm();
+  }
+}
+
+/* -------------------------------------------- */
+/*  REGISTRATION                                */
+/* -------------------------------------------- */
 
 /**
  * Register settings and load templates.
@@ -66,7 +266,7 @@ function registerSettings() {
   );
 
   registerSetting(
-    CONSTANTS.BLOODIED.SETTING.APPLY_BLOODIED.KEY,
+    constants.SETTING.APPLY_BLOODIED.KEY,
     {
       scope: "world",
       config: false,
@@ -77,7 +277,7 @@ function registerSettings() {
   );
 
   registerSetting(
-    CONSTANTS.BLOODIED.SETTING.BLOODIED_STATUS.KEY,
+    constants.SETTING.BLOODIED_STATUS.KEY,
     {
       scope: "world",
       config: false,
@@ -87,7 +287,7 @@ function registerSettings() {
   );
 
   registerSetting(
-    CONSTANTS.BLOODIED.SETTING.BLOODIED_TINT.KEY,
+    constants.SETTING.BLOODIED_TINT.KEY,
     {
       scope: "world",
       config: false,
@@ -97,7 +297,7 @@ function registerSettings() {
   );
 
   registerSetting(
-    CONSTANTS.BLOODIED.SETTING.REMOVE_BLOODIED_ON_DEAD.KEY,
+    constants.SETTING.REMOVE_BLOODIED_ON_DEAD.KEY,
     {
       scope: "world",
       config: false,
@@ -109,13 +309,16 @@ function registerSettings() {
 }
 
 /* -------------------------------------------- */
+/*  CONFIG                                      */
+/* -------------------------------------------- */
 
 /**
- * Set CONFIG.DND5E.encumbrance.
- * @param {object} [settingData=null] The setting data
+ * Set CONFIG.DND5E.bloodied.
+ * @param {object} [settingData=null]
  */
-export async function setConfig(settingData = null) {
+export async function setConfig(settingData) {
   if ( !getSetting(constants.SETTING.ENABLE.KEY) ) return;
+  settingData ??= getSetting(constants.SETTING.CONFIG.KEY);
   if ( checkEmpty(settingData) ) {
     if ( checkEmpty(CONFIG.DND5E[configKey]) ) {
       resetDnd5eConfig(configKey);
@@ -132,11 +335,13 @@ export async function setConfig(settingData = null) {
 }
 
 /* -------------------------------------------- */
+/*  BLOODIED LIFECYCLE                          */
+/* -------------------------------------------- */
 
 /**
  * Override the Bloodied setting in the system and update related settings.
  * @param {boolean} applyBloodied Whether to apply the Bloodied override.
- * @param {string} bloodiedStatus The status to set for Bloodied if not applying the override.
+ * @param {string} bloodiedStatus Status to set for Bloodied if not applying the override.
  */
 export function overrideBloodied(applyBloodied, bloodiedStatus) {
   if ( applyBloodied ) {
@@ -144,8 +349,8 @@ export function overrideBloodied(applyBloodied, bloodiedStatus) {
   } else {
     game.settings.set("dnd5e", "bloodied", bloodiedStatus);
   }
-  setSetting(CONSTANTS.BLOODIED.SETTING.APPLY_BLOODIED.KEY, applyBloodied);
-  setSetting(CONSTANTS.BLOODIED.SETTING.BLOODIED_STATUS.KEY, bloodiedStatus);
+  setSetting(constants.SETTING.APPLY_BLOODIED.KEY, applyBloodied);
+  setSetting(constants.SETTING.BLOODIED_STATUS.KEY, bloodiedStatus);
 }
 
 /* -------------------------------------------- */
@@ -156,8 +361,8 @@ export function overrideBloodied(applyBloodied, bloodiedStatus) {
  * Add the Bloodied status effect to CONFIG.statusEffects.
  */
 export function addBloodiedCondition() {
-  if ( !getSetting(CONSTANTS.BLOODIED.SETTING.APPLY_BLOODIED.KEY)
-    || getSetting(CONSTANTS.BLOODIED.SETTING.BLOODIED_STATUS.KEY) === "none" ) return;
+  if ( !getSetting(constants.SETTING.APPLY_BLOODIED.KEY)
+    || getSetting(constants.SETTING.BLOODIED_STATUS.KEY) === "none" ) return;
 
   Logger.debug("Registering Bloodied...");
 
@@ -170,7 +375,6 @@ export function addBloodiedCondition() {
 
   const bloodied = buildBloodied();
 
-  // Add bloodied to CONFIG.statusEffects if not already present
   if ( !CONFIG.statusEffects.some(e => e.id === "bloodied") ) {
     CONFIG.statusEffects.push(bloodied.statusEffect);
   }
@@ -196,17 +400,16 @@ export function addBloodiedCondition() {
 
 /**
  * Build Bloodied data.
- *
- * @returns {object} The Bloodied data
+ * @returns {object} Bloodied data
  */
 export function buildBloodied() {
-  const bloodied = getSetting(CONSTANTS.BLOODIED.SETTING.CONFIG.KEY);
+  const bloodied = getSetting(constants.SETTING.CONFIG.KEY);
   const name = game.i18n.localize(
     bloodied?.name
     ?? CONFIG.DND5E.bloodied.name
     ?? "CUSTOM_DND5E.bloodied");
-  const img = bloodied.img ?? CONSTANTS.BLOODIED.ICON;
-  const reference = bloodied?.reference || CONSTANTS.BLOODIED.CONDITION_UUID;
+  const img = bloodied.img ?? constants.ICON;
+  const reference = bloodied?.reference || constants.CONDITION_UUID;
 
   return {
     conditionType: {
@@ -231,14 +434,14 @@ export function buildBloodied() {
  * If 'Apply Bloodied' is enabled, apply or remove the Bloodied condition and other token effects
  * based on the HP change.
  * If the actor is dead and 'Remove Bloodied on Dead' is enabled, remove the Bloodied condition.
- * @param {object} actor The actor
- * @param {object} updates The updates
+ * @param {object} actor
+ * @param {object} updates
  * @param {boolean} dead Whether or not the actor is dead
  * @returns {boolean} Whether the Bloodied condition was updated
  */
 export function updateBloodied(actor, updates, dead) {
-  if ( !getSetting(CONSTANTS.BLOODIED.SETTING.APPLY_BLOODIED.KEY) ) return false;
-  const bloodiedStatus = getSetting(CONSTANTS.BLOODIED.SETTING.BLOODIED_STATUS.KEY);
+  if ( !getSetting(constants.SETTING.APPLY_BLOODIED.KEY) ) return false;
+  const bloodiedStatus = getSetting(constants.SETTING.BLOODIED_STATUS.KEY);
   if ( (bloodiedStatus === "player" && actor.type !== "character") || bloodiedStatus === "none" ) return false;
 
   Logger.debug("Updating Bloodied...");
@@ -258,12 +461,12 @@ export function updateBloodied(actor, updates, dead) {
     return false;
   } else if ( currentHp <= halfHp
         && !actor.effects.has("dnd5ebloodied000")
-        && !(dead && getSetting(CONSTANTS.BLOODIED.SETTING.REMOVE_BLOODIED_ON_DEAD.KEY)) ) {
+        && !(dead && getSetting(constants.SETTING.REMOVE_BLOODIED_ON_DEAD.KEY)) ) {
     makeBloodied(actor);
     Logger.debug("Bloodied updated", { bloodied: true });
     return true;
   } else if ( (currentHp > halfHp && actor.effects.has("dnd5ebloodied000"))
-        || (dead && getSetting(CONSTANTS.BLOODIED.SETTING.REMOVE_BLOODIED_ON_DEAD.KEY)) ) {
+        || (dead && getSetting(constants.SETTING.REMOVE_BLOODIED_ON_DEAD.KEY)) ) {
     unmakeBloodied(actor);
     Logger.debug("Bloodied updated", { bloodied: false });
     return false;

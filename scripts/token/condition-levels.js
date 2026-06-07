@@ -1,4 +1,5 @@
 import { CONSTANTS, MODULE } from "../constants.js";
+import { configs } from "../configurations/registry.js";
 import { getSetting } from "../utils.js";
 import { workflows } from "../workflows/workflows.js";
 import { applyRadialEffects } from "./radial-status-effects.js";
@@ -46,7 +47,7 @@ async function onClickCondition(event) {
   const target = event.target?.closest?.(".effect-control") ?? event.target;
   if ( !target?.classList?.contains("effect-control") ) return;
 
-  if ( !getSetting(CONSTANTS.CONDITIONS.SETTING.ENABLE.KEY) ) return;
+  if ( !getSetting(configs.conditions.SETTING.ENABLE.KEY) ) return;
 
   const statusId = target.dataset?.statusId;
   if ( !statusId ) return;
@@ -224,7 +225,7 @@ function refreshEffectsPatch(wrapped, ...args) {
   // Apply radial status effects if enabled
   applyRadialEffects(this);
 
-  if ( !getSetting(CONSTANTS.CONDITIONS.SETTING.ENABLE.KEY) ) return;
+  if ( !getSetting(configs.conditions.SETTING.ENABLE.KEY) ) return;
 
   const actor = this.actor;
   if ( !actor ) return;
@@ -312,7 +313,7 @@ function addLevelBadge(container, sprite, level) {
  * @param {HTMLElement} html HTML element
  */
 function onRenderTokenHUD(app, html) {
-  if ( !getSetting(CONSTANTS.CONDITIONS.SETTING.ENABLE.KEY) ) return;
+  if ( !getSetting(configs.conditions.SETTING.ENABLE.KEY) ) return;
 
   const actor = app.object?.actor;
   if ( !actor ) return;

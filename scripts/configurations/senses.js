@@ -1,70 +1,80 @@
-import { CONSTANTS } from "../constants.js";
-import {
-  Logger,
-  c5eLoadTemplates,
-  checkEmpty,
-  getDefaultDnd5eConfig,
-  getFlag,
-  getSetting,
-  registerMenu,
-  registerSetting,
-  resetDnd5eConfig,
-  resetSetting } from "../utils.js";
-import { SensesForm } from "../forms/config-form.js";
+import { registerConfig } from "./config-engine.js";
+import { MODULE } from "../constants.js";
+import { Logger, c5eLoadTemplates, getFlag, getSetting } from "../utils.js";
+import { ConfigForm } from "../forms/config-form.js";
+import { configs } from "./registry.js";
 
-const constants = CONSTANTS.SENSES;
-const configKey = "senses";
+/* -------------------------------------------- */
+/*  CONSTANTS                                   */
+/* -------------------------------------------- */
 
-/**
- * Register settings and hooks, and load templates.
- */
-export function register() {
-  registerSettings();
-  registerHooks();
+const constants = {
+  ID: "senses",
+  MENU: {
+    KEY: "senses-menu",
+    HINT: "CUSTOM_DND5E.menu.senses.hint",
+    ICON: "fas fa-eye",
+    LABEL: "CUSTOM_DND5E.menu.senses.label",
+    NAME: "CUSTOM_DND5E.menu.senses.name"
+  },
+  SETTING: {
+    ENABLE: {
+      KEY: "enable-senses"
+    },
+    CONFIG: {
+      KEY: "senses"
+    }
+  },
+  TEMPLATE: {
+    CONFIG_FORM_GROUP: "modules/custom-dnd5e/templates/movement-senses-config-form-group.hbs"
+  },
+  UUID: "Compendium.custom-dnd5e.custom-dnd5e-journals.JournalEntry.B48iqFBddUikMMer.JournalEntryPage.UC0cWoAGMtU6yISR"
+};
 
-  const templates = [constants.TEMPLATE.CONFIG_FORM_GROUP];
-  c5eLoadTemplates(templates);
+/* -------------------------------------------- */
+/*  FORM CLASSES                                */
+/* -------------------------------------------- */
+
+class SensesForm extends ConfigForm {
+  /**
+   * Constructor for SensesForm.
+   */
+  constructor() {
+    super();
+    this.editInList = true;
+    this.listTitle = "CUSTOM_DND5E.form.senses.listTitle";
+    this.requiresReload = false;
+    this.config = configs.senses;
+    this.setConfig = null; // Temporarily disabled until custom senses is supported in the dnd5e system
+    this.includeConfig = false;
+  }
+
+  /* -------------------------------------------- */
+
+  /**
+   * Default options for the form.
+   *
+   * @type {object}
+   */
+  static DEFAULT_OPTIONS = {
+    id: `${MODULE.ID}-senses-form`,
+    window: {
+      title: "CUSTOM_DND5E.form.senses.title"
+    }
+  };
 }
 
 /* -------------------------------------------- */
 
+/* -------------------------------------------- */
+
 /**
- * Register settings.
+ * Register settings, hooks, and templates.
  */
-function registerSettings() {
-  registerMenu(
-    constants.MENU.KEY,
-    {
-      hint: game.i18n.localize(constants.MENU.HINT),
-      label: game.i18n.localize(constants.MENU.LABEL),
-      name: game.i18n.localize(constants.MENU.NAME),
-      icon: constants.MENU.ICON,
-      type: SensesForm,
-      restricted: true,
-      scope: "world"
-    }
-  );
-
-  registerSetting(
-    constants.SETTING.ENABLE.KEY,
-    {
-      scope: "world",
-      config: false,
-      requiresReload: true,
-      type: Boolean,
-      default: false
-    }
-  );
-
-  registerSetting(
-    constants.SETTING.CONFIG.KEY,
-    {
-      scope: "world",
-      config: false,
-      type: Object,
-      default: getSettingDefault()
-    }
-  );
+export function register() {
+  registerConfig(DEFINITION);
+  registerHooks();
+  c5eLoadTemplates([DEFINITION.constants.TEMPLATE.CONFIG_FORM_GROUP]);
 }
 
 /* -------------------------------------------- */
@@ -73,107 +83,24 @@ function registerSettings() {
  * Register hooks.
  */
 function registerHooks() {
-  if ( !getSetting(constants.SETTING.ENABLE.KEY) ) return;
+  if ( !getSetting(DEFINITION.constants.SETTING.ENABLE.KEY) ) return;
   Hooks.on("renderMovementSensesConfig", addCustomSensesToConfig);
 }
 
 /* -------------------------------------------- */
-
-/**
- * Get default config.
- * @param {string|null} key The key
- * @returns {object} The config data
- */
-export function getSettingDefault(key = null) {
-  return getDefaultDnd5eConfig(configKey, key);
-}
-
-/* -------------------------------------------- */
-
-/**
- * Reset config and setting to their default values.
- */
-export async function resetConfigSetting() {
-  await resetDnd5eConfig(configKey);
-  await resetSetting(constants.SETTING.CONFIG.KEY);
-}
-
-/* -------------------------------------------- */
-
-/**
- * Set CONFIG.DND5E.senses
- * @param {object} [settingData=null] The setting data
- * @returns {void}
- */
-export function setConfig(settingData = null) {
-  if ( !getSetting(constants.SETTING.ENABLE.KEY) ) return;
-  if ( checkEmpty(settingData) ) return handleEmptyData();
-
-  const mergedSettingData = foundry.utils.mergeObject(
-    foundry.utils.mergeObject(settingData, CONFIG.DND5E[configKey], { overwrite: false }),
-    getSettingDefault(),
-    { overwrite: false }
-  );
-
-  const configData = buildConfig(mergedSettingData);
-
-  Hooks.callAll("customDnd5e.setSensesConfig", configData);
-
-  if ( configData ) {
-    CONFIG.DND5E[configKey] = configData;
-  }
-}
-
-
-/* -------------------------------------------- */
-
-/**
- * Handle empty data.
- */
-function handleEmptyData() {
-  if ( checkEmpty(CONFIG.DND5E[configKey]) ) {
-    resetDnd5eConfig(configKey);
-  }
-}
-
-/* -------------------------------------------- */
-
-/**
- * Build config.
- * @param {object} settingData The setting data
- * @returns {object} The config data
- */
-function buildConfig(settingData) {
-  return Object.fromEntries(
-    Object.keys(settingData)
-      .filter(key => settingData[key].visible || settingData[key].visible === undefined)
-      .map(key => [key, buildConfigEntry(settingData[key])])
-  );
-}
-
-/* -------------------------------------------- */
-
-/**
- * Build config entry.
- * @param {object} data The data
- * @returns {object} The config entry
- */
-function buildConfigEntry(data) {
-  return game.i18n.localize(data.label || data);
-}
-
+/*  UI INJECTION                                */
 /* -------------------------------------------- */
 
 /**
  * Add custom senses to the Movement and Senses Configuration sheet.
- * @param {object} app The app
- * @param {object} html The HTML
+ * @param {object} app
+ * @param {HTMLElement} html
  */
 async function addCustomSensesToConfig(app, html) {
   Logger.debug("Adding custom senses...");
   const actor = app.document;
   const systemSenses = ["blindsight", "darkvision", "tremorsense", "truesight"];
-  const senses = getSetting(constants.SETTING.CONFIG.KEY);
+  const senses = getSetting(DEFINITION.constants.SETTING.CONFIG.KEY);
   const outerElement = html.querySelector("fieldset.card");
   let lastElement = null;
 
@@ -190,7 +117,9 @@ async function addCustomSensesToConfig(app, html) {
       }
     } else if ( value.visible && value.visible !== undefined && !systemSenses.includes(key) ) {
       const data = { label: value.label, inputName: `flags.custom-dnd5e.${key}`, inputValue: getFlag(actor, key) };
-      const template = await foundry.applications.handlebars.renderTemplate(constants.TEMPLATE.CONFIG_FORM_GROUP, data);
+      const template = await foundry.applications.handlebars.renderTemplate(
+        DEFINITION.constants.TEMPLATE.CONFIG_FORM_GROUP, data
+      );
 
       if ( lastElement ) {
         lastElement.insertAdjacentHTML("afterend", template);
@@ -206,3 +135,17 @@ async function addCustomSensesToConfig(app, html) {
   }
   Logger.debug("Custom senses added");
 }
+
+/* -------------------------------------------- */
+/*  DEFINITION                                  */
+/* -------------------------------------------- */
+
+const DEFINITION = {
+  configKey: "senses",
+  constants,
+  form: SensesForm,
+  loadTemplates: false,
+  entryType: "scalar",
+  entry: { source: "labelOrSelf", localize: true }
+};
+export default DEFINITION;

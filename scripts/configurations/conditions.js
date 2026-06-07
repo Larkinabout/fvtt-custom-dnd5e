@@ -1,4 +1,3 @@
-import { CONSTANTS } from "../constants.js";
 import {
   Logger,
   c5eLoadTemplates,
@@ -9,11 +8,215 @@ import {
   registerSetting,
   resetDnd5eConfig,
   resetSetting } from "../utils.js";
-import { ConditionsForm } from "../forms/config-form.js";
+import { MODULE } from "../constants.js";
+import { ConfigForm } from "../forms/config-form.js";
+import { ConfigEditForm } from "../forms/config-edit-form.js";
 import { buildBloodied } from "./bloodied.js";
+import { configs } from "./registry.js";
 
-const constants = CONSTANTS.CONDITIONS;
-const configKey = "conditionTypes";
+/* -------------------------------------------- */
+/*  CONSTANTS                                   */
+/* -------------------------------------------- */
+
+export const constants = {
+  MENU: {
+    KEY: "conditions-menu",
+    HINT: "CUSTOM_DND5E.menu.conditions.hint",
+    ICON: "fas fa-skull",
+    LABEL: "CUSTOM_DND5E.menu.conditions.label",
+    NAME: "CUSTOM_DND5E.menu.conditions.name"
+  },
+  SETTING: {
+    ENABLE: {
+      KEY: "enable-conditions"
+    },
+    CONFIG: {
+      KEY: "conditions"
+    }
+  },
+  TEMPLATE: {
+    EDIT: "modules/custom-dnd5e/templates/conditions-edit.hbs",
+    FORM: "modules/custom-dnd5e/templates/config-form.hbs",
+    LIST: "modules/custom-dnd5e/templates/config-list.hbs"
+  },
+  UUID: "Compendium.custom-dnd5e.custom-dnd5e-journals.JournalEntry.B48iqFBddUikMMer.JournalEntryPage.DOx3PrYi19dFzcA1"
+};
+export const configKey = "conditionTypes";
+
+/* -------------------------------------------- */
+/*  FORM CLASSES                                */
+/* -------------------------------------------- */
+
+/**
+ * Per-condition edit form.
+ * @extends ConfigEditForm
+ */
+class ConditionsEditForm extends ConfigEditForm {
+  /**
+   * Constructor for ConditionsEditForm.
+   * @param {object} args Arguments passed to the parent class.
+   */
+  constructor(args) {
+    super(args);
+    this.config = configs.conditions;
+  }
+
+  /* -------------------------------------------- */
+
+  static DEFAULT_OPTIONS = {
+    actions: {
+      clearMacro: ConditionsEditForm.clearMacro
+    },
+    id: `${MODULE.ID}-conditions-edit`,
+    position: {
+      height: 600
+    },
+    window: {
+      title: "CUSTOM_DND5E.form.conditions.edit.title"
+    }
+  };
+
+  /* -------------------------------------------- */
+
+  static PARTS = {
+    form: {
+      template: constants.TEMPLATE.EDIT
+    }
+  };
+
+  /* -------------------------------------------- */
+
+  /**
+   * Get the select options for the form.
+   * @returns {object} Select options
+   */
+  _getSelects() {
+    const statusEffects = Object.fromEntries(
+      CONFIG.statusEffects.map(statusEffect => [statusEffect.id, statusEffect.name])
+    );
+    return { riders: statusEffects, statuses: statusEffects };
+  }
+
+  /* -------------------------------------------- */
+
+  /**
+   * Prepare the context for rendering the form.
+   * @returns {Promise<object>} Context data
+   */
+  async _prepareContext() {
+    const context = await super._prepareContext();
+    if ( context.macroUuid ) {
+      const macro = await fromUuid(context.macroUuid);
+      context.macroName = macro?.name ?? "";
+    }
+    if ( context.macroDisabledUuid ) {
+      const macro = await fromUuid(context.macroDisabledUuid);
+      context.macroDisabledName = macro?.name ?? "";
+    }
+    return context;
+  }
+
+  /* -------------------------------------------- */
+
+  /**
+   * Handle form rendering.
+   * @param {object} context
+   * @param {object} options
+   */
+  _onRender(context, options) {
+    super._onRender(context, options);
+    const macroDrops = this.element.querySelectorAll(".custom-dnd5e-macro-drop");
+    for ( const macroDrop of macroDrops ) {
+      macroDrop.addEventListener("drop", (event) => this.#onDropMacro(event));
+    }
+  }
+
+  /* -------------------------------------------- */
+
+  /**
+   * Handle dropping a Macro onto the form.
+   * @param {DragEvent} event
+   */
+  async #onDropMacro(event) {
+    event.preventDefault();
+    event.stopPropagation();
+    const container = event.currentTarget;
+    const data = foundry.applications.ux.TextEditor.implementation.getDragEventData(event);
+    if ( data?.type !== "Macro" ) return;
+    const macro = await Macro.implementation.fromDropData(data);
+    if ( !macro ) return;
+
+    const input = container.querySelector('input[type="hidden"]');
+    if ( input ) input.value = macro.uuid;
+
+    const macroField = container.querySelector(".custom-dnd5e-macro-field");
+    const dropArea = container.querySelector(".drop-area");
+    const nameEl = container.querySelector(".custom-dnd5e-macro-name");
+    if ( nameEl ) nameEl.textContent = macro.name;
+    if ( macroField ) macroField.classList.remove("hidden");
+    if ( dropArea ) dropArea.classList.add("hidden");
+  }
+
+  /* -------------------------------------------- */
+
+  /**
+   * Clear the macro selection.
+   * @param {Event} event
+   * @param {HTMLElement} target
+   */
+  static clearMacro(event, target) {
+    const container = target.closest(".custom-dnd5e-macro-drop");
+    const input = container.querySelector('input[type="hidden"]');
+    if ( input ) input.value = "";
+
+    const macroField = container.querySelector(".custom-dnd5e-macro-field");
+    const dropArea = container.querySelector(".drop-area");
+    if ( macroField ) macroField.classList.add("hidden");
+    if ( dropArea ) dropArea.classList.remove("hidden");
+  }
+}
+
+/* -------------------------------------------- */
+
+/**
+ * Conditions settings menu form.
+ * @extends ConfigForm
+ */
+class ConditionsForm extends ConfigForm {
+  /**
+   * Constructor for ConditionsForm.
+   */
+  constructor() {
+    super();
+    this.editForm = ConditionsEditForm;
+    this.label = "CUSTOM_DND5E.name";
+    this.listTitle = "CUSTOM_DND5E.form.conditions.listTitle";
+    this.includeConfig = false;
+    this.requiresReload = false;
+    this.config = configs.conditions;
+  }
+
+  /* -------------------------------------------- */
+
+  static DEFAULT_OPTIONS = {
+    id: `${MODULE.ID}-conditions-form`,
+    window: {
+      title: `CUSTOM_DND5E.form.${constants.ID}.title`
+    }
+  };
+
+  /* -------------------------------------------- */
+
+  async _prepareContext() {
+    const context = await super._prepareContext();
+    context.items = mergeConfig(context.items);
+    return context;
+  }
+}
+
+/* -------------------------------------------- */
+/*  REGISTRATION                                */
+/* -------------------------------------------- */
 
 /**
  * Register settings and load templates.
@@ -35,7 +238,7 @@ export function register() {
 
 /**
  * Apply overlay flag to active effects for conditions configured as overlays.
- * @param {ActiveEffect} effect The active effect being created.
+ * @param {ActiveEffect} effect
  */
 function applyOverlay(effect) {
   if ( !getSetting(constants.SETTING.ENABLE.KEY) ) return;
@@ -51,9 +254,9 @@ function applyOverlay(effect) {
 
 /**
  * Execute a macro when a condition with a configured macro is applied.
- * @param {ActiveEffect} effect The active effect being created.
- * @param {object} options The creation options.
- * @param {string} userId The ID of the user who created the effect.
+ * @param {ActiveEffect} effect
+ * @param {object} options
+ * @param {string} userId
  */
 async function executeConditionMacro(effect, options, userId) {
   if ( !getSetting(constants.SETTING.ENABLE.KEY) ) return;
@@ -79,9 +282,9 @@ async function executeConditionMacro(effect, options, userId) {
 
 /**
  * Execute a macro when a condition with a configured disabled macro is removed.
- * @param {ActiveEffect} effect The active effect being deleted.
- * @param {object} options The deletion options.
- * @param {string} userId The ID of the user who deleted the effect.
+ * @param {ActiveEffect} effect
+ * @param {object} options
+ * @param {string} userId
  */
 async function executeConditionDisabledMacro(effect, options, userId) {
   if ( !getSetting(constants.SETTING.ENABLE.KEY) ) return;
@@ -106,7 +309,7 @@ async function executeConditionDisabledMacro(effect, options, userId) {
 /* -------------------------------------------- */
 
 /**
- * Register menu.
+ * Register the conditions menu in Foundry's settings UI.
  */
 export function registerMenu() {
   c5eRegisterMenu(
@@ -152,11 +355,13 @@ function registerSettings() {
 }
 
 /* -------------------------------------------- */
+/*  CONFIG                                      */
+/* -------------------------------------------- */
 
 /**
  * Get dnd5e config.
- * @param {string|null} key The key
- * @returns {object} The conditions and status effects
+ * @param {string|null} key
+ * @returns {object} Conditions and status effects
  */
 export function getSettingDefault(key = null) {
   const data = buildData({
@@ -198,8 +403,8 @@ export async function resetConfigSetting() {
 
 /**
  * Merge data with CONFIG and setting defaults to include conditions from other modules.
- * @param {object} data The setting data
- * @returns {object} The merged data
+ * @param {object} data Setting data
+ * @returns {object} Merged data
  */
 export function mergeConfig(data) {
   const conditionTypes = foundry.utils.deepClone(CONFIG.DND5E.conditionTypes);
@@ -216,8 +421,8 @@ export function mergeConfig(data) {
 
 /**
  * Build setting data.
- * @param {object} config The config data
- * @returns {object} The setting data
+ * @param {object} config Config data
+ * @returns {object} Setting data
  */
 function buildData(config) {
   let data = foundry.utils.deepClone(
@@ -225,7 +430,7 @@ function buildData(config) {
       ? { [config.key]: config.conditionTypes[config.key] }
       : config.conditionTypes) ?? {};
 
-  if ( !config.key && getSetting(CONSTANTS.BLOODIED.SETTING.APPLY_BLOODIED.KEY) ) {
+  if ( !config.key && getSetting(configs.bloodied.SETTING.APPLY_BLOODIED.KEY) ) {
     const bloodied = buildBloodied();
 
     const conditionTypes = {};
@@ -272,10 +477,11 @@ function buildData(config) {
 
 /**
  * Set CONFIG.DND5E.conditionTypes and CONFIG.statusEffects.
- * @param {object} data The data
+ * @param {object} data
  */
-export function setConfig(data = null) {
+export function setConfig(data) {
   if ( !getSetting(constants.SETTING.ENABLE.KEY) ) return;
+  data ??= getSetting(constants.SETTING.CONFIG.KEY);
 
   const properties = ["conditionTypes", "statusEffects"];
 
@@ -348,5 +554,4 @@ export function setConfig(data = null) {
       configType[property] = config[property];
     }
   });
-
 }

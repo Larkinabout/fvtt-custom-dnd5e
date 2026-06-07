@@ -1,11 +1,12 @@
-import { MODULE, CONSTANTS } from "../constants.js";
+import { MODULE } from "../constants.js";
 import { getSetting } from "../utils.js";
+import { configs } from "../configurations/registry.js";
 
 /**
  * Patch _prepareSkillsTools to filter out skills not in CONFIG.DND5E.skills.
  */
 export function patchPrepareSkillsTools() {
-  if ( !getSetting(CONSTANTS.SKILLS.SETTING.ENABLE.KEY) ) return;
+  if ( !getSetting(configs.skills.SETTING.ENABLE.KEY) ) return;
   libWrapper.register(MODULE.ID, "dnd5e.applications.actor.BaseActorSheet.prototype._prepareSkillsTools", prepareSkillsToolsPatch, "WRAPPER");
 }
 

@@ -1,4 +1,4 @@
-import { MODULE } from "../constants.js";
+import { JOURNAL_HELP_BUTTON, MODULE } from "../constants.js";
 import { Logger, openDocument, setSetting } from "../utils.js";
 
 const itemClass = `${MODULE.ID}-item`;
@@ -15,13 +15,92 @@ export class CustomDnd5eForm extends HandlebarsApplicationMixin(ApplicationV2) {
   /**
    * Constructor for CustomDnd5eForm.
    *
-   * @param {object} [options={}] The options for the form.
+   * @param {object} [options={}]
    */
   constructor(options = {}) {
     super(options);
     this.nestable = false;
     this.nestType = "children";
     this.includeConfig = true;
+  }
+
+  /* -------------------------------------------- */
+
+  /**
+   * Set the config data from the form data.
+   * @param {object} data
+   * @returns {void|Promise<void>}
+   */
+  setConfig(data) {
+    return this.config.setConfig(data);
+  }
+
+  /* -------------------------------------------- */
+
+  /**
+   * The `CONFIG.DND5E` key for the config.
+   * @returns {string|undefined}
+   */
+  get configKey() { return this._configKey ?? this.config?.configKey; }
+
+  set configKey(value) { this._configKey = value; }
+
+  /* -------------------------------------------- */
+
+  /**
+   * The setting key for the stored data.
+   * @returns {string|undefined}
+   */
+  get settingKey() { return this._settingKey ?? this.config?.constants?.SETTING?.CONFIG?.KEY; }
+
+  set settingKey(value) { this._settingKey = value; }
+
+  /* -------------------------------------------- */
+
+  /**
+   * The setting key for the enabled state of the custom config.
+   * @returns {string|undefined}
+   */
+  get enableConfigKey() { return this._enableConfigKey ?? this.config?.constants?.SETTING?.ENABLE?.KEY; }
+
+  set enableConfigKey(value) { this._enableConfigKey = value; }
+
+  /* -------------------------------------------- */
+
+  /**
+   * The journal help button descriptor for the window header.
+   * Cached on first access.
+   * @returns {object|undefined}
+   */
+  get headerButton() {
+    if ( this._headerButton ) return this._headerButton;
+    const uuid = this.config?.constants?.UUID;
+    if ( !uuid ) return undefined;
+    this._headerButton = { ...JOURNAL_HELP_BUTTON, uuid };
+    return this._headerButton;
+  }
+
+  set headerButton(value) { this._headerButton = value; }
+
+  /* -------------------------------------------- */
+
+  /**
+   * Get the default config entry for a key.
+   * @param {string|null} [key=null]
+   * @returns {object}
+   */
+  getSettingDefault(key = null) {
+    return this.config.getSettingDefault(key);
+  }
+
+  /* -------------------------------------------- */
+
+  /**
+   * Reset the config and its stored setting to defaults.
+   * @returns {Promise<void>}
+   */
+  async resetConfigSetting() {
+    return this.config.resetConfigSetting();
   }
 
   /* -------------------------------------------- */
@@ -66,8 +145,8 @@ export class CustomDnd5eForm extends HandlebarsApplicationMixin(ApplicationV2) {
   /**
    * Create a new item.
    *
-   * @param {Event} event The event that triggered the action.
-   * @param {HTMLElement} target The target element.
+   * @param {Event} event
+   * @param {HTMLElement} target
    */
   static createItem(event, target) {}
 
@@ -76,8 +155,8 @@ export class CustomDnd5eForm extends HandlebarsApplicationMixin(ApplicationV2) {
   /**
    * Reset the form.
    *
-   * @param {Event} event The event that triggered the action.
-   * @param {HTMLElement} target The target element.
+   * @param {Event} event
+   * @param {HTMLElement} target
    */
   static reset(event, target) {}
 
@@ -86,8 +165,8 @@ export class CustomDnd5eForm extends HandlebarsApplicationMixin(ApplicationV2) {
   /**
    * Delete an item.
    *
-   * @param {Event} event The event that triggered the action.
-   * @param {HTMLElement} target The target element.
+   * @param {Event} event
+   * @param {HTMLElement} target
    */
   static async deleteItem(event, target) {
     const item = target.closest(".custom-dnd5e-item");
@@ -131,8 +210,8 @@ export class CustomDnd5eForm extends HandlebarsApplicationMixin(ApplicationV2) {
   /**
    * Open the help document.
    *
-   * @param {Event} event The event that triggered the action.
-   * @param {HTMLElement} target The target element.
+   * @param {Event} event
+   * @param {HTMLElement} target
    */
   static async openHelp(event, target) {
     const uuid = target.dataset.uuid;
@@ -144,8 +223,8 @@ export class CustomDnd5eForm extends HandlebarsApplicationMixin(ApplicationV2) {
   /**
    * Handle dropping a Macro onto a row element.
    *
-   * @param {DragEvent} event The drop event.
-   * @param {HTMLElement} row The row element containing the macro drop zone.
+   * @param {DragEvent} event
+   * @param {HTMLElement} row Row element containing the macro drop zone
    */
   async _onDropMacro(event, row) {
     event.preventDefault();
@@ -171,8 +250,8 @@ export class CustomDnd5eForm extends HandlebarsApplicationMixin(ApplicationV2) {
   /**
    * Clear the macro selection for a row element.
    *
-   * @param {Event} event The event that triggered the action.
-   * @param {HTMLElement} target The target element.
+   * @param {Event} event
+   * @param {HTMLElement} target
    */
   static clearMacro(event, target) {
     const row = target.closest(".custom-dnd5e-action-row, .custom-dnd5e-item");
@@ -192,8 +271,8 @@ export class CustomDnd5eForm extends HandlebarsApplicationMixin(ApplicationV2) {
   /**
    * Toggle expand/collapse of a collapsible item.
    *
-   * @param {Event} event The event that triggered the action.
-   * @param {HTMLElement} target The target element.
+   * @param {Event} event
+   * @param {HTMLElement} target
    */
   static toggleExpand(event, target) {
     const item = target.closest(".collapsible");
@@ -209,8 +288,8 @@ export class CustomDnd5eForm extends HandlebarsApplicationMixin(ApplicationV2) {
   /**
    * Handle the rendering of the form.
    *
-   * @param {object} context The context for rendering.
-   * @param {object} options The options for rendering.
+   * @param {object} context
+   * @param {object} options
    */
   _onRender(context, options) {
     if ( this.headerButton ) {
@@ -248,7 +327,7 @@ export class CustomDnd5eForm extends HandlebarsApplicationMixin(ApplicationV2) {
   /**
    * Attach drag event listeners to an item.
    *
-   * @param {HTMLElement} item The item element to attach listeners to.
+   * @param {HTMLElement} item Item element to attach listeners to
    */
   _attachDragListeners(item) {
     const dragElement = item.querySelector(".custom-dnd5e-drag");
@@ -276,7 +355,7 @@ export class CustomDnd5eForm extends HandlebarsApplicationMixin(ApplicationV2) {
   /**
    * Toggle the visibility of a list based on a checkbox.
    *
-   * @param {HTMLInputElement} checkbox The checkbox element.
+   * @param {HTMLInputElement} checkbox
    */
   _onToggleList(checkbox) {
     const checkParent = checkbox => {
@@ -349,7 +428,7 @@ export class CustomDnd5eForm extends HandlebarsApplicationMixin(ApplicationV2) {
   /**
    * Handle drag leave events.
    *
-   * @param {Event} event The event that triggered the action.
+   * @param {Event} event
    */
   _onDragLeave(event) {
     if ( !this.sourceItem ) return;
@@ -365,7 +444,7 @@ export class CustomDnd5eForm extends HandlebarsApplicationMixin(ApplicationV2) {
   /**
    * Handle drag end events.
    *
-   * @param {Event} event The event that triggered the action.
+   * @param {Event} event
    */
   _onDragEnd(event) {
     if ( !this.sourceItem ) return;
@@ -412,7 +491,7 @@ export class CustomDnd5eForm extends HandlebarsApplicationMixin(ApplicationV2) {
   /**
    * Clean up empty collapsible containers after a drag-out.
    *
-   * @param {HTMLElement|null} parentItem The parent collapsible item to check.
+   * @param {HTMLElement|null} parentItem Parent collapsible item to check.
    */
   #cleanupEmptyCollapsible(parentItem) {
     if ( !parentItem ) return;
@@ -449,7 +528,7 @@ export class CustomDnd5eForm extends HandlebarsApplicationMixin(ApplicationV2) {
 
   /**
    * Insert the source item based on the mouse position over the target item.
-   * @returns {boolean} Whether the source item was inserted successfully.
+   * @returns {boolean} Whether the source item was inserted successfully
    */
   #insertSourceItem() {
     if ( this.sourceItem === this.targetItem ) return false;
@@ -553,7 +632,7 @@ export class CustomDnd5eForm extends HandlebarsApplicationMixin(ApplicationV2) {
   /**
    * Get the drag element based on the event.
    *
-   * @param {Event} event The event that triggered the action.
+   * @param {Event} event
    */
   #getDragElement(event) {
     const yPct = (event.clientY - event.target.getBoundingClientRect().top)
@@ -575,8 +654,8 @@ export class CustomDnd5eForm extends HandlebarsApplicationMixin(ApplicationV2) {
   /**
    * Get the changed keys from the form data.
    *
-   * @param {object} formData The form data.
-   * @returns {object} The changed keys.
+   * @param {object} formData
+   * @returns {object} Changed keys.
    */
   getChangedKeys(formData) {
     const changedKeys = {};
@@ -594,8 +673,8 @@ export class CustomDnd5eForm extends HandlebarsApplicationMixin(ApplicationV2) {
   /**
    * Validate the form data.
    *
-   * @param {object} formData The form data.
-   * @returns {boolean} Whether the form data passed validation.
+   * @param {object} formData
+   * @returns {boolean} Whether the form data passed validation
    */
   validateFormData(formData) {
     const keys = {};
@@ -631,8 +710,8 @@ export class CustomDnd5eForm extends HandlebarsApplicationMixin(ApplicationV2) {
   /**
    * Process the form data for storing into settings.
    *
-   * @param {object} args The arguments.
-   * @returns {object} The processed form data.
+   * @param {object} args
+   * @returns {object} Processed form data
    */
   processFormData(args) {
     const { formData, changedKeys, propertiesToIgnore, setting } = args;
@@ -688,7 +767,7 @@ export class CustomDnd5eForm extends HandlebarsApplicationMixin(ApplicationV2) {
   /**
    * Update the properties for all actors to the changed keys.
    *
-   * @param {object} args The arguments.
+   * @param {object} args
    */
   updateActorKeys(args) {
     const { changedKeys, actorProperties } = args;
@@ -721,11 +800,11 @@ export class CustomDnd5eForm extends HandlebarsApplicationMixin(ApplicationV2) {
   /**
    * Handle the form submission.
    *
-   * @param {object} processedFormData The processed form data.
-   * @param {string} settingKey The setting key.
-   * @param {boolean} enableConfig Whether the config is enabled.
-   * @param {Function} setConfig The function to set the config.
-   * @param {boolean} [requiresReload=false] Whether a reload is required.
+   * @param {object} processedFormData
+   * @param {string} settingKey
+   * @param {boolean} enableConfig Whether the config is enabled
+   * @param {Function} setConfig
+   * @param {boolean} [requiresReload=false] Whether a reload of Foundry is required
    */
   async handleSubmit(processedFormData, settingKey, enableConfig, setConfig, requiresReload = false) {
     try {

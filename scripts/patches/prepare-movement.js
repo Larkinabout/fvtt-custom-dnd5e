@@ -1,12 +1,13 @@
-import { MODULE, CONSTANTS } from "../constants.js";
+import { MODULE } from "../constants.js";
 import { getSetting } from "../utils.js";
+import { configs } from "../configurations/registry.js";
 
 /**
  * Patch the prepareMovement function to use multiplier-based speed reduction for encumbrance.
  */
 export function patchPrepareMovement() {
-  if ( !getSetting(CONSTANTS.ENCUMBRANCE.SETTING.ENABLE.KEY) ) return;
-  if ( getSetting(CONSTANTS.ENCUMBRANCE.SPEED_REDUCTION_MODE.SETTING.KEY) !== "multiplier" ) return;
+  if ( !getSetting(configs.encumbrance.SETTING.ENABLE.KEY) ) return;
+  if ( getSetting(configs.encumbrance.SPEED_REDUCTION_MODE.SETTING.KEY) !== "multiplier" ) return;
   if ( game.modules.get("variant-encumbrance-dnd5e")?.active ) return;
   libWrapper.register(MODULE.ID, "dnd5e.dataModels.actor.AttributesFields.prepareMovement", prepareMovementPatch, "OVERRIDE");
 }
@@ -41,10 +42,10 @@ function prepareMovementPatch(rollData = this.parent.getRollData()) {
   const bonus = simplifyBonus(this.attributes.movement.bonus, rollData);
   this.attributes.movement.max = 0;
 
-  const encumberedMultiplier = getSetting(CONSTANTS.ENCUMBRANCE.SPEED_REDUCTION_MULTIPLIER_ENCUMBERED.SETTING.KEY) ?? 0.67;
-  const heavilyEncumberedMultiplier = getSetting(CONSTANTS.ENCUMBRANCE.SPEED_REDUCTION_MULTIPLIER_HEAVILY_ENCUMBERED.SETTING.KEY) ?? 0.33;
-  const exceedingCapacityMultiplier = getSetting(CONSTANTS.ENCUMBRANCE.SPEED_REDUCTION_MULTIPLIER_EXCEEDING_CARRYING_CAPACITY.SETTING.KEY) ?? 0;
-  const rounding = getSetting(CONSTANTS.ENCUMBRANCE.SPEED_REDUCTION_MULTIPLIER_ROUNDING.SETTING.KEY) || 1;
+  const encumberedMultiplier = getSetting(configs.encumbrance.SPEED_REDUCTION_MULTIPLIER_ENCUMBERED.SETTING.KEY) ?? 0.67;
+  const heavilyEncumberedMultiplier = getSetting(configs.encumbrance.SPEED_REDUCTION_MULTIPLIER_HEAVILY_ENCUMBERED.SETTING.KEY) ?? 0.33;
+  const exceedingCapacityMultiplier = getSetting(configs.encumbrance.SPEED_REDUCTION_MULTIPLIER_EXCEEDING_CARRYING_CAPACITY.SETTING.KEY) ?? 0;
+  const rounding = getSetting(configs.encumbrance.SPEED_REDUCTION_MULTIPLIER_ROUNDING.SETTING.KEY) || 1;
 
   for ( const type of Object.keys(CONFIG.DND5E.movementTypes) ) {
     let speed = Math.max(0, this.attributes.movement[type] - reduction);

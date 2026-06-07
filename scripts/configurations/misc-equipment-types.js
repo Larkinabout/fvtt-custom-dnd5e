@@ -1,145 +1,72 @@
-import { CONSTANTS } from "../constants.js";
-import {
-  checkEmpty,
-  getDefaultDnd5eConfig,
-  getSetting,
-  registerMenu,
-  registerSetting,
-  resetDnd5eConfig,
-  resetSetting } from "../utils.js";
-import { MiscEquipmentTypesForm } from "../forms/config-form.js";
-
-const constants = CONSTANTS.MISC_EQUIPMENT_TYPES;
-const configKey = "miscEquipmentTypes";
-
-/**
- * Register settings and hooks.
- */
-export function register() {
-  registerSettings();
-}
+import { MODULE } from "../constants.js";
+import { ConfigForm } from "../forms/config-form.js";
+import { configs } from "./registry.js";
 
 /* -------------------------------------------- */
+/*  CONSTANTS                                   */
+/* -------------------------------------------- */
 
-/**
- * Register settings.
- */
-function registerSettings() {
-  registerMenu(
-    constants.MENU.KEY,
-    {
-      hint: game.i18n.localize(constants.MENU.HINT),
-      label: game.i18n.localize(constants.MENU.LABEL),
-      name: game.i18n.localize(constants.MENU.NAME),
-      icon: constants.MENU.ICON,
-      type: MiscEquipmentTypesForm,
-      restricted: true,
-      scope: "world"
+const constants = {
+  ID: "miscEquipmentTypes",
+  MENU: {
+    KEY: "misc-equipment-types-menu",
+    HINT: "CUSTOM_DND5E.menu.miscEquipmentTypes.hint",
+    ICON: "fas fa-ring-diamond",
+    LABEL: "CUSTOM_DND5E.menu.miscEquipmentTypes.label",
+    NAME: "CUSTOM_DND5E.menu.miscEquipmentTypes.name"
+  },
+  SETTING: {
+    ENABLE: {
+      KEY: "enable-misc-equipment-types"
+    },
+    CONFIG: {
+      KEY: "misc-equipment-types"
     }
-  );
-
-  registerSetting(
-    constants.SETTING.ENABLE.KEY,
-    {
-      scope: "world",
-      config: false,
-      requiresReload: true,
-      type: Boolean,
-      default: false
-    }
-  );
-
-  registerSetting(
-    constants.SETTING.CONFIG.KEY,
-    {
-      scope: "world",
-      config: false,
-      type: Object,
-      default: getSettingDefault()
-    }
-  );
-}
+  },
+  UUID: "Compendium.custom-dnd5e.custom-dnd5e-journals.JournalEntry.B48iqFBddUikMMer.JournalEntryPage.koB9uAZtQ9f2n1f8"
+};
 
 /* -------------------------------------------- */
-
-/**
- * Get default config.
- * @param {string|null} key The key
- * @returns {object} The config data
- */
-export function getSettingDefault(key = null) {
-  return getDefaultDnd5eConfig(configKey, key);
-}
-
+/*  FORM CLASSES                                */
 /* -------------------------------------------- */
 
-/**
- * Reset config and setting to their default values.
- */
-export async function resetConfigSetting() {
-  await resetDnd5eConfig(configKey);
-  await resetSetting(constants.SETTING.CONFIG.KEY);
-}
-
-/* -------------------------------------------- */
-
-/**
- * Set CONFIG.DND5E.miscEquipmentTypes.
- * @param {object} [settingData=null] The setting data
- * @returns {void}
- */
-export function setConfig(settingData = null) {
-  if ( !getSetting(constants.SETTING.ENABLE.KEY) ) return;
-  if ( checkEmpty(settingData) ) return handleEmptyData();
-
-  const mergedSettingData = foundry.utils.mergeObject(
-    foundry.utils.mergeObject(settingData, CONFIG.DND5E[configKey], { overwrite: false }),
-    getSettingDefault(),
-    { overwrite: false }
-  );
-
-  const configData = buildConfig(mergedSettingData);
-
-  Hooks.callAll("customDnd5e.setEquipmentTypesConfig", configData);
-
-  if ( configData ) {
-    CONFIG.DND5E[configKey] = configData;
+class MiscEquipmentTypesForm extends ConfigForm {
+  /**
+   * Constructor for MiscEquipmentTypesForm.
+   */
+  constructor() {
+    super();
+    this.editInList = true;
+    this.listTitle = "CUSTOM_DND5E.form.miscEquipmentTypes.listTitle";
+    this.requiresReload = false;
+    this.config = configs.miscEquipmentTypes;
   }
+
+  /* -------------------------------------------- */
+
+  /**
+   * Default options for the form.
+   *
+   * @type {object}
+   */
+  static DEFAULT_OPTIONS = {
+    id: `${MODULE.ID}-equipment-types-form`,
+    window: {
+      title: "CUSTOM_DND5E.form.miscEquipmentTypes.title"
+    }
+  };
 }
 
 /* -------------------------------------------- */
-
-/**
- * Handle empty data.
- */
-function handleEmptyData() {
-  if ( checkEmpty(CONFIG.DND5E[configKey]) ) {
-    resetDnd5eConfig(configKey);
-  }
-}
-
+/*  DEFINITION                                  */
 /* -------------------------------------------- */
 
-/**
- * Build config.
- * @param {object} settingData The setting data
- * @returns {object} The config data
- */
-function buildConfig(settingData) {
-  return Object.fromEntries(
-    Object.keys(settingData)
-      .filter(key => settingData[key].visible || settingData[key].visible === undefined)
-      .map(key => [key, buildConfigEntry(settingData[key])])
-  );
-}
-
-/* -------------------------------------------- */
-
-/**
- * Build config entry.
- * @param {object} data The data
- * @returns {object} The config entry
- */
-function buildConfigEntry(data) {
-  return game.i18n.localize(data.label || data);
-}
+export default {
+  configKey: "miscEquipmentTypes",
+  hookName: "customDnd5e.setEquipmentTypesConfig",
+  constants,
+  form: MiscEquipmentTypesForm,
+  loadTemplates: false,
+  entryType: "scalar",
+  entry: { source: "labelOrSelf", localize: true }
+};

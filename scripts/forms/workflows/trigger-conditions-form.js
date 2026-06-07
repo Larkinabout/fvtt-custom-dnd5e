@@ -83,7 +83,7 @@ export class TriggerConditionsForm extends CustomDnd5eForm {
   /**
    * Prepare the context for rendering the form.
    *
-   * @returns {Promise<object>} The context data.
+   * @returns {Promise<object>} Context data
    */
   async _prepareContext() {
     const triggerChoices = getConditionTriggerChoices(this.entityType);

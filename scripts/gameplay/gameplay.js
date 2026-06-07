@@ -1,5 +1,5 @@
 import { CONSTANTS, SHEET_TYPE } from "../constants.js";
-import { updateBloodied } from "../configurations/bloodied.js";
+import { configs } from "../configurations/registry.js";
 import { register as registerAverageDamage } from "./average-damage.js";
 import { register as registerMobDamage } from "./mob-damage.js";
 import { register as registerProbabilisticDamage } from "./probalistic-damage.js";
@@ -309,7 +309,7 @@ function registerHooks() {
     updateHp(actor, updates);
     if ( !instantDeath ) {
       const dead = updateDead(actor, updates);
-      updateBloodied(actor, updates, dead);
+      configs.bloodied.updateBloodied(actor, updates, dead);
       if ( !dead ) {
         applyMassiveDamage(actor, updates);
         updateUnconscious(actor, updates);
@@ -887,7 +887,7 @@ function applyInstantDeath(actor, updates) {
       content: game.i18n.format("CUSTOM_DND5E.message.instantDeath", { name: actor.name })
     });
 
-    updateBloodied(actor, updates, true);
+    configs.bloodied.updateBloodied(actor, updates, true);
 
     return tokenEffects;
   }

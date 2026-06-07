@@ -1,155 +1,122 @@
-import { CONSTANTS } from "../constants.js";
-import {
-  c5eLoadTemplates,
-  checkEmpty,
-  getSetting,
-  registerMenu,
-  registerSetting,
-  getDefaultDnd5eConfig,
-  resetDnd5eConfig,
-  resetSetting } from "../utils.js";
-import { WeaponMasteriesForm } from "../forms/config-form.js";
-
-const constants = CONSTANTS.WEAPON_MASTERIES;
-const configKey = "weaponMasteries";
-
-/**
- * Register settings and load templates.
- */
-export function register() {
-  registerSettings();
-
-  const templates = [
-    constants.TEMPLATE.EDIT
-  ];
-  c5eLoadTemplates(templates);
-}
+import { MODULE } from "../constants.js";
+import { ConfigForm } from "../forms/config-form.js";
+import { ConfigEditForm } from "../forms/config-edit-form.js";
+import { configs } from "./registry.js";
 
 /* -------------------------------------------- */
+/*  CONSTANTS                                   */
+/* -------------------------------------------- */
 
-/**
- * Register settings.
- */
-function registerSettings() {
-  registerMenu(
-    constants.MENU.KEY,
-    {
-      hint: game.i18n.localize(constants.MENU.HINT),
-      label: game.i18n.localize(constants.MENU.LABEL),
-      name: game.i18n.localize(constants.MENU.NAME),
-      icon: constants.MENU.ICON,
-      type: WeaponMasteriesForm,
-      restricted: true,
-      scope: "world"
+const constants = {
+  ID: "weapon-masteries",
+  MENU: {
+    KEY: "weapon-masteries-menu",
+    HINT: "CUSTOM_DND5E.menu.weaponMasteries.hint",
+    ICON: "fas fa-hand-fist",
+    LABEL: "CUSTOM_DND5E.menu.weaponMasteries.label",
+    NAME: "CUSTOM_DND5E.menu.weaponMasteries.name"
+  },
+  SETTING: {
+    ENABLE: {
+      KEY: "enable-weapon-masteries"
+    },
+    CONFIG: {
+      KEY: "weapon-masteries"
     }
-  );
-
-  registerSetting(
-    constants.SETTING.ENABLE.KEY,
-    {
-      scope: "world",
-      config: false,
-      requiresReload: true,
-      type: Boolean,
-      default: false
-    }
-  );
-
-  registerSetting(
-    constants.SETTING.CONFIG.KEY,
-    {
-      scope: "world",
-      config: false,
-      requiresReload: true,
-      type: Object,
-      default: getSettingDefault()
-    }
-  );
-}
+  },
+  TEMPLATE: {
+    EDIT: "modules/custom-dnd5e/templates/weapon-masteries-edit.hbs",
+    FORM: "modules/custom-dnd5e/templates/config-form.hbs",
+    LIST: "modules/custom-dnd5e/templates/config-list.hbs"
+  },
+  UUID: "Compendium.custom-dnd5e.custom-dnd5e-journals.JournalEntry.B48iqFBddUikMMer.JournalEntryPage.wM3kTpNxR7vYhD9c"
+};
 
 /* -------------------------------------------- */
-
-/**
- * Get default config.
- * @param {string|null} key The key
- * @returns {object} The config
- */
-export function getSettingDefault(key = null) {
-  return getDefaultDnd5eConfig(configKey, key);
-}
-
+/*  FORM CLASSES                                */
 /* -------------------------------------------- */
 
-/**
- * Reset config and setting to their default values.
- */
-export async function resetConfigSetting() {
-  await resetDnd5eConfig(configKey);
-  await resetSetting(constants.SETTING.CONFIG.KEY);
-}
-
-/* -------------------------------------------- */
-
-/**
- * Set CONFIG.DND5E.weaponMasteries
- * @param {object} [settingData=null] The setting data
- * @returns {void}
- */
-export function setConfig(settingData = null) {
-  if ( !getSetting(constants.SETTING.ENABLE.KEY) ) return;
-  if ( checkEmpty(settingData) ) return handleEmptyData();
-
-  const mergedSettingData = foundry.utils.mergeObject(
-    foundry.utils.mergeObject(settingData, CONFIG.DND5E[configKey], { overwrite: false }),
-    getSettingDefault(),
-    { overwrite: false }
-  );
-
-  const configData = buildConfig(mergedSettingData);
-
-  Hooks.callAll("customDnd5e.setWeaponMasteriesConfig", configData);
-
-  if ( configData ) {
-    CONFIG.DND5E[configKey] = configData;
+class WeaponMasteriesEditForm extends ConfigEditForm {
+  /**
+   * Constructor for WeaponMasteriesEditForm.
+   * @param {object} args
+   */
+  constructor(args) {
+    super(args);
+    this.config = configs.weaponMasteries;
+    this.requiresReload = true;
   }
-}
 
-/* -------------------------------------------- */
+  /* -------------------------------------------- */
 
-/**
- * Handle empty data.
- */
-function handleEmptyData() {
-  if ( checkEmpty(CONFIG.DND5E[configKey]) ) {
-    resetDnd5eConfig(configKey);
-  }
-}
+  /**
+   * Default options for the form.
+   * @type {object}
+   */
+  static DEFAULT_OPTIONS = {
+    id: `${MODULE.ID}-weapon-masteries-edit-form`,
+    position: {
+      height: 260
+    },
+    window: {
+      title: "CUSTOM_DND5E.form.weaponMasteries.edit.title"
+    }
+  };
 
-/* -------------------------------------------- */
+  /* -------------------------------------------- */
 
-/**
- * Build config.
- * @param {object} settingData The setting data
- * @returns {object} The config data
- */
-function buildConfig(settingData) {
-  return Object.fromEntries(
-    Object.keys(settingData)
-      .filter(key => settingData[key].visible || settingData[key].visible === undefined)
-      .map(key => [key, buildConfigEntry(settingData[key])])
-  );
-}
-
-/* -------------------------------------------- */
-
-/**
- * Build config entry.
- * @param {object} data The data
- * @returns {object} The config entry
- */
-function buildConfigEntry(data) {
-  return {
-    label: game.i18n.localize(data.label),
-    reference: data.reference
+  /**
+   * Parts of the form.
+   * @type {object}
+   */
+  static PARTS = {
+    form: {
+      template: constants.TEMPLATE.EDIT
+    }
   };
 }
+
+/* -------------------------------------------- */
+
+class WeaponMasteriesForm extends ConfigForm {
+  /**
+   * Constructor for WeaponMasteriesForm.
+   */
+  constructor() {
+    super();
+    this.editForm = WeaponMasteriesEditForm;
+    this.listTitle = "CUSTOM_DND5E.form.weaponMasteries.listTitle";
+    this.requiresReload = false;
+    this.config = configs.weaponMasteries;
+  }
+
+  /* -------------------------------------------- */
+
+  /**
+   * Default options for the form.
+   *
+   * @type {object}
+   */
+  static DEFAULT_OPTIONS = {
+    id: `${MODULE.ID}-weapon-masteries-form`,
+    window: {
+      title: "CUSTOM_DND5E.form.weaponMasteries.title"
+    }
+  };
+}
+
+/* -------------------------------------------- */
+/*  DEFINITION                                  */
+/* -------------------------------------------- */
+
+export default {
+  configKey: "weaponMasteries",
+  constants,
+  form: WeaponMasteriesForm,
+  configRequiresReload: true,
+  entryType: "object",
+  entry: [
+    { key: "label", localize: true },
+    { key: "reference" }
+  ]
+};
