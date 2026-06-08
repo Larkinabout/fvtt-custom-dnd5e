@@ -37,7 +37,6 @@ export const constants = {
   },
   TEMPLATE: {
     FORM: "modules/custom-dnd5e/templates/calendar/calendar-form.hbs",
-    LIST: "modules/custom-dnd5e/templates/calendar/calendar-list.hbs",
     EDIT: "modules/custom-dnd5e/templates/calendar/calendar-edit-form.hbs",
     MONTHS_LIST: "modules/custom-dnd5e/templates/calendar/calendar-months-list.hbs",
     DAYS_LIST: "modules/custom-dnd5e/templates/calendar/calendar-days-list.hbs",
@@ -601,7 +600,6 @@ export function register() {
 
   const templates = [
     constants.TEMPLATE.FORM,
-    constants.TEMPLATE.LIST,
     constants.TEMPLATE.EDIT,
     constants.TEMPLATE.MONTHS_LIST,
     constants.TEMPLATE.DAYS_LIST,

@@ -3,21 +3,37 @@
         <fieldset>
             <legend>
                 <span>{{localize "CUSTOM_DND5E.menu.itemInteractions.giveItems"}}</span>
-                <button type="button" class="unbutton control-button" data-action="help" data-uuid="Compendium.custom-dnd5e.custom-dnd5e-journals.JournalEntry.iIqL5xV2bRsNyW8m.JournalEntryPage.gIvKnW3qXrZjMpNt" data-tooltip="{{localize "CUSTOM_DND5E.openGuide"}}" aria-label="{{localize "CUSTOM_DND5E.openGuide"}}">
+                <button
+                    type="button"
+                    class="unbutton control-button"
+                    data-action="help"
+                    data-uuid="Compendium.custom-dnd5e.custom-dnd5e-journals.JournalEntry.iIqL5xV2bRsNyW8m.JournalEntryPage.gIvKnW3qXrZjMpNt"
+                    data-tooltip="{{localize "CUSTOM_DND5E.openGuide"}}"
+                    aria-label="{{localize "CUSTOM_DND5E.openGuide"}}">
                     <i class="fas fa-circle-info" inert></i>
                 </button>
             </legend>
             <div class="form-group">
                 <label>{{localize "CUSTOM_DND5E.setting.giveItems.enable.name"}}</label>
                 <div class="form-fields">
-                    <dnd5e-checkbox id="custom-dnd5e-give-items-enable" name="giveItemsEnable"{{#if giveItemsEnable}} checked{{/if}}></dnd5e-checkbox>
+                    <dnd5e-checkbox
+                        id="custom-dnd5e-give-items-enable"
+                        name="giveItemsEnable"
+                        {{#if giveItemsEnable}}checked{{/if}}></dnd5e-checkbox>
                 </div>
                 <p class="hint">{{localize "CUSTOM_DND5E.setting.giveItems.enable.hint"}}</p>
             </div>
             <div class="form-group">
                 <label>{{localize "CUSTOM_DND5E.setting.giveItems.range.name"}}{{#if giveItemsRangeUnits}} <span class="units">({{giveItemsRangeUnits}})</span>{{/if}}</label>
                 <div class="form-fields">
-                    <input id="custom-dnd5e-give-items-range" name="giveItemsRange" type="number" value="{{giveItemsRange}}" min="0" step="1" placeholder="{{localize "CUSTOM_DND5E.setting.giveItems.range.placeholder"}}">
+                    <input
+                        id="custom-dnd5e-give-items-range"
+                        name="giveItemsRange"
+                        type="number"
+                        value="{{giveItemsRange}}"
+                        min="0"
+                        step="1"
+                        placeholder="{{localize "CUSTOM_DND5E.setting.giveItems.range.placeholder"}}">
                 </div>
                 <p class="hint">{{localize "CUSTOM_DND5E.setting.giveItems.range.hint"}}</p>
             </div>
@@ -25,27 +41,39 @@
                 <label>{{localize "CUSTOM_DND5E.setting.giveItems.requireAcceptance.name"}}</label>
                 <div class="form-fields custom-dnd5e-checkboxes">
                     <label class="checkbox">
-                        <dnd5e-checkbox name="giveItemsRequireAcceptanceFriendly"{{#if giveItemsRequireAcceptanceFriendly}} checked{{/if}}></dnd5e-checkbox>
+                        <dnd5e-checkbox
+                            name="giveItemsRequireAcceptanceFriendly"
+                            {{#if giveItemsRequireAcceptanceFriendly}}checked{{/if}}></dnd5e-checkbox>
                         {{localize "CUSTOM_DND5E.friendly"}}
                     </label>
                     <label class="checkbox">
-                        <dnd5e-checkbox name="giveItemsRequireAcceptanceNeutral"{{#if giveItemsRequireAcceptanceNeutral}} checked{{/if}}></dnd5e-checkbox>
+                        <dnd5e-checkbox
+                            name="giveItemsRequireAcceptanceNeutral"
+                            {{#if giveItemsRequireAcceptanceNeutral}}checked{{/if}}></dnd5e-checkbox>
                         {{localize "CUSTOM_DND5E.neutral"}}
                     </label>
                     <label class="checkbox">
-                        <dnd5e-checkbox name="giveItemsRequireAcceptanceHostile"{{#if giveItemsRequireAcceptanceHostile}} checked{{/if}}></dnd5e-checkbox>
+                        <dnd5e-checkbox
+                            name="giveItemsRequireAcceptanceHostile"
+                            {{#if giveItemsRequireAcceptanceHostile}}checked{{/if}}></dnd5e-checkbox>
                         {{localize "CUSTOM_DND5E.hostile"}}
                     </label>
                     <label class="checkbox">
-                        <dnd5e-checkbox name="giveItemsRequireAcceptancePcToPc"{{#if giveItemsRequireAcceptancePcToPc}} checked{{/if}}></dnd5e-checkbox>
+                        <dnd5e-checkbox
+                            name="giveItemsRequireAcceptancePcToPc"
+                            {{#if giveItemsRequireAcceptancePcToPc}}checked{{/if}}></dnd5e-checkbox>
                         {{localize "CUSTOM_DND5E.pcToPc"}}
                     </label>
                     <label class="checkbox">
-                        <dnd5e-checkbox name="giveItemsRequireAcceptancePcToNpc"{{#if giveItemsRequireAcceptancePcToNpc}} checked{{/if}}></dnd5e-checkbox>
+                        <dnd5e-checkbox
+                            name="giveItemsRequireAcceptancePcToNpc"
+                            {{#if giveItemsRequireAcceptancePcToNpc}}checked{{/if}}></dnd5e-checkbox>
                         {{localize "CUSTOM_DND5E.pcToNpc"}}
                     </label>
                     <label class="checkbox">
-                        <dnd5e-checkbox name="giveItemsRequireAcceptanceNpcToPc"{{#if giveItemsRequireAcceptanceNpcToPc}} checked{{/if}}></dnd5e-checkbox>
+                        <dnd5e-checkbox
+                            name="giveItemsRequireAcceptanceNpcToPc"
+                            {{#if giveItemsRequireAcceptanceNpcToPc}}checked{{/if}}></dnd5e-checkbox>
                         {{localize "CUSTOM_DND5E.npcToPc"}}
                     </label>
                 </div>
@@ -55,35 +83,64 @@
         <fieldset>
             <legend>
                 <span>{{localize "CUSTOM_DND5E.menu.itemInteractions.dropItems"}}</span>
-                <button type="button" class="unbutton control-button" data-action="help" data-uuid="Compendium.custom-dnd5e.custom-dnd5e-journals.JournalEntry.iIqL5xV2bRsNyW8m.JournalEntryPage.dIpKnW3qXrZjMpRt" data-tooltip="{{localize "CUSTOM_DND5E.openGuide"}}" aria-label="{{localize "CUSTOM_DND5E.openGuide"}}">
+                <button
+                    type="button"
+                    class="unbutton control-button"
+                    data-action="help"
+                    data-uuid="Compendium.custom-dnd5e.custom-dnd5e-journals.JournalEntry.iIqL5xV2bRsNyW8m.JournalEntryPage.dIpKnW3qXrZjMpRt"
+                    data-tooltip="{{localize "CUSTOM_DND5E.openGuide"}}"
+                    aria-label="{{localize "CUSTOM_DND5E.openGuide"}}">
                     <i class="fas fa-circle-info" inert></i>
                 </button>
             </legend>
             <div class="form-group">
                 <label>{{localize "CUSTOM_DND5E.setting.dropItems.enable.name"}}</label>
                 <div class="form-fields">
-                    <dnd5e-checkbox id="custom-dnd5e-drop-items-enable" name="dropItemsEnable"{{#if dropItemsEnable}} checked{{/if}}></dnd5e-checkbox>
+                    <dnd5e-checkbox
+                        id="custom-dnd5e-drop-items-enable"
+                        name="dropItemsEnable"
+                        {{#if dropItemsEnable}}checked{{/if}}></dnd5e-checkbox>
                 </div>
                 <p class="hint">{{localize "CUSTOM_DND5E.setting.dropItems.enable.hint"}}</p>
             </div>
             <div class="form-group">
                 <label>{{localize "CUSTOM_DND5E.setting.dropItems.takeRange.name"}}{{#if dropItemsDropRangeUnits}} <span class="units">({{dropItemsDropRangeUnits}})</span>{{/if}}</label>
                 <div class="form-fields">
-                    <input id="custom-dnd5e-drop-items-take-range" name="dropItemsTakeRange" type="number" value="{{dropItemsTakeRange}}" min="0" step="1" placeholder="{{localize "CUSTOM_DND5E.setting.dropItems.takeRange.placeholder"}}">
+                    <input
+                        id="custom-dnd5e-drop-items-take-range"
+                        name="dropItemsTakeRange"
+                        type="number"
+                        value="{{dropItemsTakeRange}}"
+                        min="0"
+                        step="1"
+                        placeholder="{{localize "CUSTOM_DND5E.setting.dropItems.takeRange.placeholder"}}">
                 </div>
                 <p class="hint">{{localize "CUSTOM_DND5E.setting.dropItems.takeRange.hint"}}</p>
             </div>
             <div class="form-group">
                 <label>{{localize "CUSTOM_DND5E.setting.dropItems.dropRange.name"}}{{#if dropItemsDropRangeUnits}} <span class="units">({{dropItemsDropRangeUnits}})</span>{{/if}}</label>
                 <div class="form-fields">
-                    <input id="custom-dnd5e-drop-items-drop-range" name="dropItemsDropRange" type="number" value="{{dropItemsDropRange}}" min="0" step="1" placeholder="{{localize "CUSTOM_DND5E.setting.dropItemsDropRange.placeholder"}}">
+                    <input
+                        id="custom-dnd5e-drop-items-drop-range"
+                        name="dropItemsDropRange"
+                        type="number"
+                        value="{{dropItemsDropRange}}"
+                        min="0"
+                        step="1"
+                        placeholder="{{localize "CUSTOM_DND5E.setting.dropItemsDropRange.placeholder"}}">
                 </div>
                 <p class="hint">{{localize "CUSTOM_DND5E.setting.dropItems.dropRange.hint"}}</p>
             </div>
             <div class="form-group">
                 <label>{{localize "CUSTOM_DND5E.setting.dropItems.tokenScale.name"}}</label>
                 <div class="form-fields">
-                    <input id="custom-dnd5e-drop-items-token-scale" name="dropItemsTokenScale" type="number" value="{{dropItemsTokenScale}}" min="0.1" step="0.05">
+                    <input
+                        id="custom-dnd5e-drop-items-token-scale"
+                        name="dropItemsTokenScale"
+                        type="number"
+                        value="{{dropItemsTokenScale}}"
+                        min="0.1"
+                        step="0.05">
                 </div>
                 <p class="hint">{{localize "CUSTOM_DND5E.setting.dropItems.tokenScale.hint"}}</p>
             </div>
@@ -99,28 +156,44 @@
             <div class="form-group">
                 <label>{{localize "CUSTOM_DND5E.setting.dropItems.imageBorderColor.name"}}</label>
                 <div class="form-fields">
-                    <color-picker id="custom-dnd5e-drop-items-image-border-color" name="dropItemsImageBorderColor" value="{{dropItemsImageBorderColor}}"></color-picker>
+
+                    <color-picker
+                        id="custom-dnd5e-drop-items-image-border-color"
+                        name="dropItemsImageBorderColor"
+                        value="{{dropItemsImageBorderColor}}"></color-picker>
                 </div>
                 <p class="hint">{{localize "CUSTOM_DND5E.setting.dropItems.imageBorderColor.hint"}}</p>
             </div>
             <div class="form-group">
                 <label>{{localize "CUSTOM_DND5E.setting.dropItems.imageBorderThickness.name"}} <span class="units">(px)</span></label>
                 <div class="form-fields">
-                    <range-picker id="custom-dnd5e-drop-items-image-border-thickness" name="dropItemsImageBorderThickness" value="{{dropItemsImageBorderThickness}}" min="0" max="20" step="1"></range-picker>
+                    <range-picker
+                        id="custom-dnd5e-drop-items-image-border-thickness"
+                        name="dropItemsImageBorderThickness"
+                        value="{{dropItemsImageBorderThickness}}"
+                        min="0"
+                        max="20"
+                        step="1"></range-picker>
                 </div>
                 <p class="hint">{{localize "CUSTOM_DND5E.setting.dropItems.imageBorderThickness.hint"}}</p>
             </div>
             <div class="form-group">
                 <label>{{localize "CUSTOM_DND5E.setting.dropItems.allowPlayerDrops.name"}}</label>
                 <div class="form-fields">
-                    <dnd5e-checkbox id="custom-dnd5e-drop-items-allow-player-drops" name="dropItemsAllowPlayerDrops"{{#if dropItemsAllowPlayerDrops}} checked{{/if}}></dnd5e-checkbox>
+                    <dnd5e-checkbox
+                        id="custom-dnd5e-drop-items-allow-player-drops"
+                        name="dropItemsAllowPlayerDrops"
+                        {{#if dropItemsAllowPlayerDrops}}checked{{/if}}></dnd5e-checkbox>
                 </div>
                 <p class="hint">{{localize "CUSTOM_DND5E.setting.dropItems.allowPlayerDrops.hint"}}</p>
             </div>
             <div class="form-group">
                 <label>{{localize "CUSTOM_DND5E.setting.dropItems.chatNotifications.name"}}</label>
                 <div class="form-fields">
-                    <dnd5e-checkbox id="custom-dnd5e-drop-items-chat-notifications" name="dropItemsChatNotifications"{{#if dropItemsChatNotifications}} checked{{/if}}></dnd5e-checkbox>
+                    <dnd5e-checkbox
+                        id="custom-dnd5e-drop-items-chat-notifications"
+                        name="dropItemsChatNotifications"
+                        {{#if dropItemsChatNotifications}}checked{{/if}}></dnd5e-checkbox>
                 </div>
                 <p class="hint">{{localize "CUSTOM_DND5E.setting.dropItems.chatNotifications.hint"}}</p>
             </div>
@@ -129,7 +202,9 @@
                 <div class="form-fields custom-dnd5e-checkboxes">
                     {{#each dropItemsDroppableTypes}}
                     <label class="checkbox">
-                        <dnd5e-checkbox name="dropItemsDroppableType_{{type}}"{{#if checked}} checked{{/if}}></dnd5e-checkbox>
+                        <dnd5e-checkbox
+                            name="dropItemsDroppableType_{{type}}"
+                            {{#if checked}}checked{{/if}}></dnd5e-checkbox>
                         {{localize label}}
                     </label>
                     {{/each}}

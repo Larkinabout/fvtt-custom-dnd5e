@@ -34,7 +34,7 @@ export class CountersForm extends CustomDnd5eForm {
 
   static PARTS = {
     form: {
-      template: `modules/${MODULE.ID}/templates/counters/${form}.hbs`
+      template: CONSTANTS.CONFIG.TEMPLATE.SECTIONS
     }
   };
 
@@ -46,10 +46,36 @@ export class CountersForm extends CustomDnd5eForm {
       actor: getSetting(CONSTANTS.COUNTERS.SETTING.ACTOR_COUNTERS.KEY) || {},
       item: getSetting(CONSTANTS.COUNTERS.SETTING.ITEM_COUNTERS.KEY) || {}
     };
+    const counters = getSetting(CONSTANTS.COUNTERS.SETTING.COUNTERS.KEY) || false;
+    const copyProperty = {
+      action: "copy-property",
+      icon: "fa-solid fa-at",
+      tooltip: "CUSTOM_DND5E.form.counters.copyProperty.tooltip"
+    };
+    const section = (tab, actorType) => ({
+      tab,
+      actorType,
+      listTitle: "CUSTOM_DND5E.form.counters.listTitle",
+      showNew: true,
+      list: {
+        items: this.settings[actorType],
+        prefix: `${actorType}.`,
+        toggleField: "visible",
+        editAction: "edit",
+        showToggle: true,
+        showSystem: false,
+        rowActions: [copyProperty],
+        extraInputs: [{ name: "actorType", value: actorType }, { name: "key", useKey: true }]
+      }
+    });
     return {
       activeTab: this.tabGroups.primary ?? "actors",
-      counters: getSetting(CONSTANTS.COUNTERS.SETTING.COUNTERS.KEY) || false,
-      settings: this.settings
+      enableToggle: { name: "counters", label: "CUSTOM_DND5E.enableCounters", checked: counters !== false },
+      tabs: [
+        { id: "actors", label: "CUSTOM_DND5E.actors", icon: "fa-solid fa-users" },
+        { id: "items", label: "CUSTOM_DND5E.items", icon: "fa-solid fa-backpack" }
+      ],
+      sections: [section("actors", "actor"), section("items", "item")]
     };
   }
 

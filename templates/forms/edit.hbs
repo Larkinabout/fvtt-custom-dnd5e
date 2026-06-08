@@ -1,0 +1,24 @@
+<div class="standard-form">
+    <div class="standard-form scrollable">
+        <input
+            id="custom-dnd5e-system"
+            name="{{key}}.system"
+            type="hidden"
+            value="{{#if (customDnd5eBoolFalse system)}}false{{else}}true{{/if}}">
+        {{#each groups}}
+        {{#if legend}}
+        <fieldset>
+            <legend>{{localize legend}}</legend>
+            {{#each fields}}
+            {{> "modules/custom-dnd5e/templates/fields/field.hbs"}}
+            {{/each}}
+        </fieldset>
+        {{else}}
+        {{#each fields}}
+        {{> "modules/custom-dnd5e/templates/fields/field.hbs"}}
+        {{/each}}
+        {{/if}}
+        {{/each}}
+    </div>
+    {{> "modules/custom-dnd5e/templates/footer.hbs" system=system}}
+</div>

@@ -25,11 +25,6 @@ const constants = {
       KEY: "activation-costs"
     }
   },
-  TEMPLATE: {
-    EDIT: "modules/custom-dnd5e/templates/activation-costs-edit.hbs",
-    FORM: "modules/custom-dnd5e/templates/config-form.hbs",
-    LIST: "modules/custom-dnd5e/templates/config-list.hbs"
-  },
   UUID: "Compendium.custom-dnd5e.custom-dnd5e-journals.JournalEntry.B48iqFBddUikMMer.JournalEntryPage.LehHpGOmEbRQ4day"
 };
 
@@ -39,8 +34,6 @@ const constants = {
 
 class ActivationCostsEditForm extends ConfigEditForm {
   /**
-   * Constructor for ActivationCostsEditForm.
-   *
    * @param {object} args
    */
   constructor(args) {
@@ -52,15 +45,10 @@ class ActivationCostsEditForm extends ConfigEditForm {
   /* -------------------------------------------- */
 
   /**
-   * Default options for the form.
-   *
    * @type {object}
    */
   static DEFAULT_OPTIONS = {
     id: `${MODULE.ID}-activation-costs-edit-form`,
-    position: {
-      height: 300
-    },
     window: {
       title: `CUSTOM_DND5E.form.${constants.ID}.edit.title`
     }
@@ -69,23 +57,18 @@ class ActivationCostsEditForm extends ConfigEditForm {
   /* -------------------------------------------- */
 
   /**
-   * Parts of the form.
-   *
-   * @type {object}
+   * @type {object[]}
    */
-  static PARTS = {
-    form: {
-      template: constants.TEMPLATE.EDIT
-    }
-  };
+  static FIELDS = [
+    { name: "label", type: "text", label: "CUSTOM_DND5E.label", localizeValue: true },
+    { name: "group", type: "text", label: "CUSTOM_DND5E.group", localizeValue: true },
+    { name: "scalar", type: "checkbox", label: "CUSTOM_DND5E.scalar" }
+  ];
 }
 
 /* -------------------------------------------- */
 
 class ActivationCostsForm extends ConfigForm {
-  /**
-   * Constructor for ActivationCostsForm.
-   */
   constructor() {
     super();
     this.editForm = ActivationCostsEditForm;
@@ -97,8 +80,6 @@ class ActivationCostsForm extends ConfigForm {
   /* -------------------------------------------- */
 
   /**
-   * Default options for the form.
-   *
    * @type {object}
    */
   static DEFAULT_OPTIONS = {
@@ -110,7 +91,7 @@ class ActivationCostsForm extends ConfigForm {
 }
 
 /* -------------------------------------------- */
-
+/*  REGISTRATION                                */
 /* -------------------------------------------- */
 
 /**

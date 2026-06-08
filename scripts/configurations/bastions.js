@@ -1,4 +1,4 @@
-import { MODULE } from "../constants.js";
+import { CONSTANTS, MODULE } from "../constants.js";
 import {
   c5eLoadTemplates,
   checkEmpty,
@@ -36,12 +36,7 @@ export const constants = {
     }
   },
   TEMPLATE: {
-    FORM: "modules/custom-dnd5e/templates/bastions/bastions-form.hbs",
-    SIZES_LIST: "modules/custom-dnd5e/templates/bastions/bastions-sizes-list.hbs",
-    SIZES_EDIT: "modules/custom-dnd5e/templates/bastions/bastions-sizes-edit.hbs",
-    TYPES_LIST: "modules/custom-dnd5e/templates/bastions/bastions-types-list.hbs",
-    ORDERS_LIST: "modules/custom-dnd5e/templates/bastions/bastions-orders-list.hbs",
-    ORDERS_EDIT: "modules/custom-dnd5e/templates/bastions/bastions-orders-edit.hbs"
+    FORM: "modules/custom-dnd5e/templates/bastions/bastions-form.hbs"
   },
   UUID: "Compendium.custom-dnd5e.custom-dnd5e-journals.JournalEntry.B48iqFBddUikMMer.JournalEntryPage.qR7xKmNpL2vYbW4c"
 };
@@ -78,26 +73,18 @@ class BastionsOrdersEditForm extends ConfigEditForm {
 
   /* -------------------------------------------- */
 
-  static PARTS = {
-    form: {
-      template: constants.TEMPLATE.ORDERS_EDIT
-    }
-  };
-
-  /* -------------------------------------------- */
-
   /**
-   * Prepare the context for rendering the form.
-   * @returns {Promise<object>} Context data
+   * @type {object[]}
    */
-  async _prepareContext() {
-    const context = await super._prepareContext();
-
-    if ( context.label ) {
-      context.label = game.i18n.localize(context.label);
-    }
-    return context;
-  }
+  static FIELDS = [
+    { name: "label", type: "text", label: "CUSTOM_DND5E.label", localizeValue: true },
+    { name: "icon", type: "filePicker", label: "CUSTOM_DND5E.icon" },
+    { name: "duration", type: "number", label: "CUSTOM_DND5E.bastions.duration", min: 0, placeholder: "—" },
+    { name: "basic", type: "checkbox", label: "CUSTOM_DND5E.bastions.basic",
+      tooltip: "CUSTOM_DND5E.bastions.basicTooltip" },
+    { name: "hidden", type: "checkbox", label: "CUSTOM_DND5E.bastions.hidden",
+      tooltip: "CUSTOM_DND5E.bastions.hiddenTooltip" }
+  ];
 }
 
 /* -------------------------------------------- */
@@ -129,26 +116,15 @@ class BastionsSizesEditForm extends ConfigEditForm {
 
   /* -------------------------------------------- */
 
-  static PARTS = {
-    form: {
-      template: constants.TEMPLATE.SIZES_EDIT
-    }
-  };
-
-  /* -------------------------------------------- */
-
   /**
-   * Prepare the context for rendering the form.
-   * @returns {Promise<object>} Context data
+   * @type {object[]}
    */
-  async _prepareContext() {
-    const context = await super._prepareContext();
-
-    if ( context.label ) {
-      context.label = game.i18n.localize(context.label);
-    }
-    return context;
-  }
+  static FIELDS = [
+    { name: "label", type: "text", label: "CUSTOM_DND5E.label", localizeValue: true },
+    { name: "days", type: "number", label: "CUSTOM_DND5E.bastions.days", min: 0 },
+    { name: "squares", type: "number", label: "CUSTOM_DND5E.bastions.squares", min: 0 },
+    { name: "value", type: "number", label: "CUSTOM_DND5E.bastions.value", min: 0 }
+  ];
 }
 
 /* -------------------------------------------- */
@@ -417,8 +393,12 @@ class BastionsForm extends CustomDnd5eForm {
         return;
       }
       case "types":
-        data = { types: { [key]: { key, label: "", visible: true, system: false } } };
-        template = await foundry.applications.handlebars.renderTemplate(constants.TEMPLATE.TYPES_LIST, data);
+        data = {
+          items: { [key]: { key, label: "", visible: true, system: false } },
+          prefix: "types.",
+          label: "CUSTOM_DND5E.label"
+        };
+        template = await foundry.applications.handlebars.renderTemplate(CONSTANTS.CONFIG.TEMPLATE.EDIT_IN_LIST, data);
         break;
       case "orders": {
         const args = {
@@ -631,12 +611,7 @@ export function register() {
   registerSettings();
 
   const templates = [
-    constants.TEMPLATE.FORM,
-    constants.TEMPLATE.SIZES_LIST,
-    constants.TEMPLATE.SIZES_EDIT,
-    constants.TEMPLATE.TYPES_LIST,
-    constants.TEMPLATE.ORDERS_LIST,
-    constants.TEMPLATE.ORDERS_EDIT
+    constants.TEMPLATE.FORM
   ];
   c5eLoadTemplates(templates);
 }

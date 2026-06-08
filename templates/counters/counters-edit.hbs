@@ -1,12 +1,20 @@
 <div class="standard-form">
     <nav class="sheet-tabs tabs" style="flex: none;">
-        <a class="item{{#if (eq activeTab 'options')}} active{{/if}}" data-action="tab" data-group="primary" data-tab="options">
+        <a
+            class="item{{#if (eq activeTab 'options')}} active{{/if}}"
+            data-action="tab"
+            data-group="primary"
+            data-tab="options">
             <span>
                 <i class="fa-solid fa-gear"></i>
                 {{localize "CUSTOM_DND5E.general"}}
             </span>
         </a>
-        <a class="item{{#if (eq activeTab 'workflows')}} active{{/if}}" data-action="tab" data-group="primary" data-tab="workflows">
+        <a
+            class="item{{#if (eq activeTab 'workflows')}} active{{/if}}"
+            data-action="tab"
+            data-group="primary"
+            data-tab="workflows">
             <span>
                 <i class="fa-solid fa-bolt-lightning"></i>
                 {{localize "CUSTOM_DND5E.workflows"}}
@@ -31,7 +39,9 @@
                     <label>{{localize "CUSTOM_DND5E.form.workflows.actorTypes.label"}}</label>
                     <div class="form-fields">
                         <label class="checkbox">
-                            <dnd5e-checkbox name="{{key}}.actorTypes.character" {{checked actorTypes.character}}></dnd5e-checkbox>
+                            <dnd5e-checkbox
+                                name="{{key}}.actorTypes.character"
+                                {{checked actorTypes.character}}></dnd5e-checkbox>
                             <span>{{localize "CUSTOM_DND5E.characters"}}</span>
                         </label>
                         <label class="checkbox">
@@ -39,7 +49,9 @@
                             <span>{{localize "CUSTOM_DND5E.npcs"}}</span>
                         </label>
                         <label class="checkbox">
-                            <dnd5e-checkbox name="{{key}}.actorTypes.group" {{checked actorTypes.group}}></dnd5e-checkbox>
+                            <dnd5e-checkbox
+                                name="{{key}}.actorTypes.group"
+                                {{checked actorTypes.group}}></dnd5e-checkbox>
                             <span>{{localize "CUSTOM_DND5E.groups"}}</span>
                         </label>
                     </div>
@@ -94,21 +106,37 @@
                 </div>
             </fieldset>
         </section>
-        <section class="tab{{#if (eq activeTab 'workflows')}} active{{/if}}" data-group="primary" data-tab="workflows" style="height: 100%;">
+        <section
+            class="tab{{#if (eq activeTab 'workflows')}} active{{/if}}"
+            data-group="primary"
+            data-tab="workflows"
+            style="height: 100%;">
             <div class="scrollable" style="height: 100%;">
                 <div class="custom-dnd5e-items-sections">
                     <div class="items-section card">
                         <div class="items-header header">
                             <h3 class="item-name">{{localize "CUSTOM_DND5E.workflows"}}</h3>
-                            <button type="button" data-action="pasteWorkflow" class="unbutton control-button item-control always-interactive" style="margin-right: 0.5rem;" data-tooltip="{{localize 'CUSTOM_DND5E.pasteFromClipboard'}}" data-tooltip-direction="UP" aria-label="{{localize 'CUSTOM_DND5E.pasteFromClipboard'}}">
+                            <button
+                                type="button"
+                                data-action="pasteWorkflow"
+                                class="unbutton control-button item-control always-interactive"
+                                style="margin-right: 0.5rem;"
+                                data-tooltip="{{localize 'CUSTOM_DND5E.pasteFromClipboard'}}"
+                                data-tooltip-direction="UP"
+                                aria-label="{{localize 'CUSTOM_DND5E.pasteFromClipboard'}}">
                                 <i class="fa-regular fa-paste" inert></i>
                             </button>
                         </div>
                         <ol class="item-list unlist custom-dnd5e-list">
-                            {{> "modules/custom-dnd5e/templates/counters/counters-workflows-list.hbs" workflows=workflows}}
+                            {{> "modules/custom-dnd5e/templates/counters/counters-workflows-list.hbs"
+                                workflows=workflows}}
                         </ol>
                     </div>
-                    <button type="button" data-action="newWorkflow" class="gold-button always-interactive" aria-label="{{localize 'CUSTOM_DND5E.form.button.new.label'}}">
+                    <button
+                        type="button"
+                        data-action="newWorkflow"
+                        class="gold-button always-interactive"
+                        aria-label="{{localize 'CUSTOM_DND5E.form.button.new.label'}}">
                         <i class="fas fa-plus" inert></i>
                     </button>
                 </div>

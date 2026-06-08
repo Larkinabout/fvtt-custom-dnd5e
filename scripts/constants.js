@@ -6,9 +6,14 @@ export const MODULE = {
 export const CONSTANTS = {
   CONFIG: {
     TEMPLATE: {
-      FORM: "modules/custom-dnd5e/templates/config-form.hbs",
-      EDIT_IN_LIST: "modules/custom-dnd5e/templates/config-edit-in-list.hbs",
-      LIST: "modules/custom-dnd5e/templates/config-list.hbs"
+      FORM: "modules/custom-dnd5e/templates/forms/list-form.hbs",
+      SECTIONS: "modules/custom-dnd5e/templates/forms/sections-form.hbs",
+      EDIT: "modules/custom-dnd5e/templates/forms/edit.hbs",
+      EDIT_IN_LIST: "modules/custom-dnd5e/templates/forms/list-edit.hbs",
+      LIST: "modules/custom-dnd5e/templates/forms/list.hbs",
+      FIELD: "modules/custom-dnd5e/templates/fields/field.hbs",
+      FIELD_CHECKBOX_GRID: "modules/custom-dnd5e/templates/fields/checkbox-grid.hbs",
+      FIELD_MACRO_DROP: "modules/custom-dnd5e/templates/fields/macro-drop.hbs"
     }
   },
   ACTIVITIES: {
@@ -126,9 +131,6 @@ export const CONSTANTS = {
       lair: "@resources.lair.value"
     },
     TEMPLATE: {
-      FORM: "modules/custom-dnd5e/templates/counters/counters-form.hbs",
-      FORM_ENTITY: "modules/custom-dnd5e/templates/counters/counters-form-entity.hbs",
-      LIST: "modules/custom-dnd5e/templates/counters/counters-list.hbs",
       EDIT: "modules/custom-dnd5e/templates/counters/counters-edit.hbs",
       WORKFLOWS_LIST: "modules/custom-dnd5e/templates/counters/counters-workflows-list.hbs",
       DND5E_ACTOR: "modules/custom-dnd5e/templates/counters/dnd5e/counters-actor.hbs",
@@ -637,10 +639,7 @@ export const CONSTANTS = {
       }
     },
     TEMPLATE: {
-      FORM: "modules/custom-dnd5e/templates/workflows/workflows-form.hbs",
-      LIST: "modules/custom-dnd5e/templates/workflows/workflows-list.hbs",
       EDIT: "modules/custom-dnd5e/templates/workflows/workflows-edit.hbs",
-      FORM_ENTITY: "modules/custom-dnd5e/templates/workflows/workflows-form-entity.hbs",
       TRIGGER_ROW: "modules/custom-dnd5e/templates/workflows/workflows-trigger-row.hbs",
       ACTION_ROW: "modules/custom-dnd5e/templates/workflows/workflows-action-row.hbs",
       REQUEST_ROLL_RESULT: "modules/custom-dnd5e/templates/workflows/request-roll-result-form.hbs",
@@ -657,8 +656,8 @@ export const CONSTANTS = {
   },
   UUID: {
     TEMPLATE: {
-      FORM: "modules/custom-dnd5e/templates/config-form.hbs",
-      LIST: "modules/custom-dnd5e/templates/config-edit-in-list.hbs"
+      FORM: "modules/custom-dnd5e/templates/forms/list-form.hbs",
+      LIST: "modules/custom-dnd5e/templates/forms/list-edit.hbs"
     }
   },
 };

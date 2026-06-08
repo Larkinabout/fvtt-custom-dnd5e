@@ -4,16 +4,32 @@
         <span class="roboto-upper">{{localize "CUSTOM_DND5E.form.actorSheet.tokenDisposition.label"}}</span>
     </h3>
     <div class="custom-dnd5e-disposition-buttons">
-        <button type="button" data-disposition="-2" class="custom-dnd5e-disposition-button{{#if (eq disposition -2)}} active{{/if}}" data-tooltip="{{localize 'TOKEN.DISPOSITION.SECRET'}}">
+        <button
+            type="button"
+            data-disposition="-2"
+            class="custom-dnd5e-disposition-button{{#if (eq disposition -2)}} active{{/if}}"
+            data-tooltip="{{localize 'TOKEN.DISPOSITION.SECRET'}}">
             <i class="fa-solid fa-face-disguise"></i>
         </button>
-        <button type="button" data-disposition="-1" class="custom-dnd5e-disposition-button{{#if (eq disposition -1)}} active{{/if}}" data-tooltip="{{localize 'TOKEN.DISPOSITION.HOSTILE'}}">
+        <button
+            type="button"
+            data-disposition="-1"
+            class="custom-dnd5e-disposition-button{{#if (eq disposition -1)}} active{{/if}}"
+            data-tooltip="{{localize 'TOKEN.DISPOSITION.HOSTILE'}}">
             <i class="fa-solid fa-face-angry"></i>
         </button>
-        <button type="button" data-disposition="0" class="custom-dnd5e-disposition-button{{#if (eq disposition 0)}} active{{/if}}" data-tooltip="{{localize 'TOKEN.DISPOSITION.NEUTRAL'}}">
+        <button
+            type="button"
+            data-disposition="0"
+            class="custom-dnd5e-disposition-button{{#if (eq disposition 0)}} active{{/if}}"
+            data-tooltip="{{localize 'TOKEN.DISPOSITION.NEUTRAL'}}">
             <i class="fa-solid fa-face-expressionless"></i>
         </button>
-        <button type="button" data-disposition="1" class="custom-dnd5e-disposition-button{{#if (eq disposition 1)}} active{{/if}}" data-tooltip="{{localize 'TOKEN.DISPOSITION.FRIENDLY'}}">
+        <button
+            type="button"
+            data-disposition="1"
+            class="custom-dnd5e-disposition-button{{#if (eq disposition 1)}} active{{/if}}"
+            data-tooltip="{{localize 'TOKEN.DISPOSITION.FRIENDLY'}}">
             <i class="fa-solid fa-face-smile"></i>
         </button>
     </div>

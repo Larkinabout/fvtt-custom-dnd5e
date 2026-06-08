@@ -1,6 +1,7 @@
 import { CONSTANTS, JOURNAL_HELP_BUTTON, MODULE } from "../constants.js";
 import { getSetting, setSetting, resetSetting } from "../utils.js";
 import { CustomDnd5eForm } from "./custom-dnd5e-form.js";
+import { configs } from "../configurations/registry.js";
 
 /**
  * Class representing the Gameplay Form.

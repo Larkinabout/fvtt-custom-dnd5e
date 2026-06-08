@@ -1,0 +1,56 @@
+<div class="form-group{{#if (customDnd5eEq type "checkboxGrid")}} stacked checkbox-grid{{/if}}">
+    <label class="{{labelClass}}"{{#if tooltip}} data-tooltip="{{tooltip}}"{{/if}}>{{localize label}}</label>
+    <div class="form-fields{{#if (customDnd5eEq type "macroDrop")}} custom-dnd5e-macro-drop{{/if}}">
+        {{#if customTemplate}}
+        {{> (lookup this "customTemplate")}}
+        {{else if (customDnd5eEq type "key")}}
+        {{#if isSystem}}
+        <input id="custom-dnd5e-disabled-key" disabled name="{{disabledInputName}}" type="text" value="{{value}}">
+        <input id="custom-dnd5e-key" name="{{inputName}}" type="hidden" value="{{value}}">
+        {{else}}
+        <input id="custom-dnd5e-key" name="{{inputName}}" type="text" value="{{value}}">
+        {{/if}}
+        {{else if (customDnd5eEq type "text")}}
+        <input
+            id="{{id}}"
+            name="{{inputName}}"
+            type="text"
+            value="{{value}}"
+            {{#if placeholder}}placeholder="{{placeholder}}"{{/if}}
+            {{#if disabled}}disabled{{/if}}>
+        {{else if (customDnd5eEq type "number")}}
+        <input
+            id="{{id}}"
+            name="{{inputName}}"
+            type="number"
+            value="{{value}}"
+            {{#if step}}step="{{step}}"{{/if}}
+            {{#if min}}min="{{min}}"{{/if}}
+            {{#if max}}max="{{max}}"{{/if}}
+            {{#if placeholder}}placeholder="{{placeholder}}"{{/if}}>
+        {{else if (customDnd5eEq type "checkbox")}}
+        <dnd5e-checkbox id="{{id}}" name="{{inputName}}"{{#if checked}} checked{{/if}}></dnd5e-checkbox>
+        {{else if (customDnd5eEq type "select")}}
+        <select id="{{id}}" name="{{inputName}}"{{#if disabled}} disabled{{/if}}>
+            {{selectOptions choices selected=value localize=localizeChoices}}
+        </select>
+        {{else if (customDnd5eEq type "multiSelect")}}
+        <multi-select name="{{inputName}}">
+            {{selectOptions choices selected=value}}
+        </multi-select>
+        {{else if (customDnd5eEq type "filePicker")}}
+        <file-picker id="{{id}}" name="{{inputName}}" type="image" value="{{value}}"></file-picker>
+        {{else if (customDnd5eEq type "colorPicker")}}
+        <color-picker id="{{id}}" name="{{inputName}}" value="{{value}}"></color-picker>
+        {{else if (customDnd5eEq type "textarea")}}
+        <textarea id="{{id}}" name="{{inputName}}">{{value}}</textarea>
+        {{else if (customDnd5eEq type "checkboxGrid")}}
+        {{> "modules/custom-dnd5e/templates/fields/checkbox-grid.hbs"}}
+        {{else if (customDnd5eEq type "macroDrop")}}
+        {{> "modules/custom-dnd5e/templates/fields/macro-drop.hbs"}}
+        {{/if}}
+    </div>
+    {{#if hint}}
+    <p class="hint">{{localize hint}}</p>
+    {{/if}}
+</div>

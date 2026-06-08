@@ -23,11 +23,6 @@ const constants = {
       KEY: "tool-ids"
     }
   },
-  TEMPLATE: {
-    EDIT: "modules/custom-dnd5e/templates/tools-edit.hbs",
-    FORM: "modules/custom-dnd5e/templates/config-form.hbs",
-    LIST: "modules/custom-dnd5e/templates/config-edit-in-list.hbs"
-  },
   UUID: "Compendium.custom-dnd5e.custom-dnd5e-journals.JournalEntry.B48iqFBddUikMMer.JournalEntryPage.mBgCguO7mTNQuPtz"
 };
 
@@ -37,8 +32,6 @@ const constants = {
 
 class ToolsEditForm extends ConfigEditForm {
   /**
-   * Constructor for ToolsEditForm.
-   *
    * @param {object} args
    */
   constructor(args) {
@@ -50,15 +43,10 @@ class ToolsEditForm extends ConfigEditForm {
   /* -------------------------------------------- */
 
   /**
-   * Default options for the form.
-   *
    * @type {object}
    */
   static DEFAULT_OPTIONS = {
     id: `${MODULE.ID}-tools-edit-form`,
-    position: {
-      height: 250
-    },
     window: {
       title: "CUSTOM_DND5E.form.tools.edit.title"
     }
@@ -67,23 +55,17 @@ class ToolsEditForm extends ConfigEditForm {
   /* -------------------------------------------- */
 
   /**
-   * Parts of the form.
-   *
-   * @type {object}
+   * @type {object[]}
    */
-  static PARTS = {
-    form: {
-      template: constants.TEMPLATE.EDIT
-    }
-  };
+  static FIELDS = [
+    { name: "id", type: "text", label: "CUSTOM_DND5E.id", localizeValue: true },
+    { name: "ability", type: "text", label: "CUSTOM_DND5E.ability", localizeValue: true }
+  ];
 }
 
 /* -------------------------------------------- */
 
 class ToolsForm extends IdForm {
-  /**
-   * Constructor for ToolsForm.
-   */
   constructor() {
     super();
     this.editForm = ToolsEditForm;
@@ -96,8 +78,6 @@ class ToolsForm extends IdForm {
   /* -------------------------------------------- */
 
   /**
-   * Default options for the form.
-   *
    * @type {object}
    */
   static DEFAULT_OPTIONS = {

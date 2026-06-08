@@ -44,7 +44,7 @@ export class WorkflowsForm extends JournalDropMixin(CustomDnd5eForm) {
 
   static PARTS = {
     form: {
-      template: `modules/${MODULE.ID}/templates/workflows/${form}.hbs`
+      template: CONSTANTS.CONFIG.TEMPLATE.SECTIONS
     }
   };
 
@@ -64,11 +64,34 @@ export class WorkflowsForm extends JournalDropMixin(CustomDnd5eForm) {
   async _prepareContext() {
     this.actorSetting = getSetting(CONSTANTS.WORKFLOWS.SETTING.ACTOR_WORKFLOWS.KEY) || {};
     this.itemSetting = getSetting(CONSTANTS.WORKFLOWS.SETTING.ITEM_WORKFLOWS.KEY) || {};
+    const copy = { action: "copy", icon: "fa-regular fa-clipboard", tooltip: "CUSTOM_DND5E.copyToClipboard" };
+    const paste = { action: "paste", icon: "fa-regular fa-paste", tooltip: "CUSTOM_DND5E.pasteFromClipboard" };
+    const section = (tab, items) => ({
+      tab,
+      listTitle: "CUSTOM_DND5E.form.workflows.listTitle",
+      showNew: true,
+      headerActions: [paste],
+      list: {
+        items,
+        toggleField: "enabled",
+        editAction: "edit",
+        showToggle: true,
+        showSystem: false,
+        rowActions: [copy]
+      }
+    });
     return {
       activeTab: this.tabGroups.primary ?? "actors",
-      enabled: getSetting(CONSTANTS.WORKFLOWS.SETTING.ENABLE.KEY) || false,
-      actorTriggers: this.actorSetting,
-      itemTriggers: this.itemSetting
+      enableToggle: {
+        name: "enabled",
+        label: "CUSTOM_DND5E.form.workflows.enable",
+        checked: getSetting(CONSTANTS.WORKFLOWS.SETTING.ENABLE.KEY) || false
+      },
+      tabs: [
+        { id: "actors", label: "CUSTOM_DND5E.actors", icon: "fa-solid fa-users" },
+        { id: "items", label: "CUSTOM_DND5E.items", icon: "fa-solid fa-suitcase" }
+      ],
+      sections: [section("actors", this.actorSetting), section("items", this.itemSetting)]
     };
   }
 

@@ -24,11 +24,6 @@ const constants = {
       KEY: "damage-types"
     }
   },
-  TEMPLATE: {
-    EDIT: "modules/custom-dnd5e/templates/damage-types-edit.hbs",
-    FORM: "modules/custom-dnd5e/templates/config-form.hbs",
-    LIST: "modules/custom-dnd5e/templates/config-list.hbs"
-  },
   UUID: "Compendium.custom-dnd5e.custom-dnd5e-journals.JournalEntry.B48iqFBddUikMMer.JournalEntryPage.qkB3382uO7YUUApw"
 };
 
@@ -38,8 +33,6 @@ const constants = {
 
 class DamageTypesEditForm extends ConfigEditForm {
   /**
-   * Constructor for DamageTypesEditForm.
-   *
    * @param {object} args
    */
   constructor(args) {
@@ -51,15 +44,10 @@ class DamageTypesEditForm extends ConfigEditForm {
   /* -------------------------------------------- */
 
   /**
-   * Default options for the form.
-   *
    * @type {object}
    */
   static DEFAULT_OPTIONS = {
     id: `${MODULE.ID}-damage-types-edit-form`,
-    position: {
-      height: 340
-    },
     window: {
       title: `CUSTOM_DND5E.form.${constants.ID}.edit.title`
     }
@@ -68,23 +56,20 @@ class DamageTypesEditForm extends ConfigEditForm {
   /* -------------------------------------------- */
 
   /**
-   * Parts of the form.
-   *
-   * @type {object}
+   * @type {object[]}
    */
-  static PARTS = {
-    form: {
-      template: constants.TEMPLATE.EDIT
-    }
-  };
+  static FIELDS = [
+    { name: "label", type: "text", label: "CUSTOM_DND5E.label", localizeValue: true },
+    { name: "icon", type: "filePicker", label: "CUSTOM_DND5E.icon" },
+    { name: "color", type: "colorPicker", label: "CUSTOM_DND5E.color" },
+    { name: "reference", type: "text", label: "CUSTOM_DND5E.reference" },
+    { name: "isPhysical", type: "checkbox", label: "CUSTOM_DND5E.physical" }
+  ];
 }
 
 /* -------------------------------------------- */
 
 class DamageTypesForm extends ConfigForm {
-  /**
-   * Constructor for DamageTypesForm.
-   */
   constructor() {
     super();
     this.editForm = DamageTypesEditForm;
@@ -97,8 +82,6 @@ class DamageTypesForm extends ConfigForm {
   /* -------------------------------------------- */
 
   /**
-   * Default options for the form.
-   *
    * @type {object}
    */
   static DEFAULT_OPTIONS = {

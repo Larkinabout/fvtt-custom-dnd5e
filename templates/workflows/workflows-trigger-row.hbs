@@ -44,7 +44,12 @@
                     <select name="triggers.{{triggerId}}.result" class="custom-dnd5e-trigger-result">
                         {{selectOptions conditionChoicesForTrigger selected=result localize=true}}
                     </select>
-                    <input name="triggers.{{triggerId}}.value" type="text" value="{{value}}" class="custom-dnd5e-trigger-value{{#unless showValueInput}} hidden{{/unless}}" placeholder="{{localize 'CUSTOM_DND5E.form.workflows.triggerValue.label'}}">
+                    <input
+                        name="triggers.{{triggerId}}.value"
+                        type="text"
+                        value="{{value}}"
+                        class="custom-dnd5e-trigger-value{{#unless showValueInput}} hidden{{/unless}}"
+                        placeholder="{{localize 'CUSTOM_DND5E.form.workflows.triggerValue.label'}}">
                 </div>
             </div>
         </div>
@@ -56,7 +61,12 @@
                 <i class="fas fa-pen-to-square{{#if hasConditions}} active{{/if}}" inert></i>
             </button>
             {{/unless}}
-            <button type="button" data-action="deleteRow" class="unbutton control-button item-control always-interactive" data-tooltip="{{localize 'CUSTOM_DND5E.form.button.delete.tooltip'}}" aria-label="{{localize 'CUSTOM_DND5E.form.button.delete.tooltip'}}">
+            <button
+                type="button"
+                data-action="deleteRow"
+                class="unbutton control-button item-control always-interactive"
+                data-tooltip="{{localize 'CUSTOM_DND5E.form.button.delete.tooltip'}}"
+                aria-label="{{localize 'CUSTOM_DND5E.form.button.delete.tooltip'}}">
                 <i class="fas fa-trash" inert></i>
             </button>
         </div>

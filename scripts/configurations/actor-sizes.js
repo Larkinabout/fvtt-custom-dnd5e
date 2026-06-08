@@ -24,9 +24,6 @@ const constants = {
       KEY: "actor-sizes"
     }
   },
-  TEMPLATE: {
-    EDIT: "modules/custom-dnd5e/templates/actor-sizes-edit.hbs"
-  },
   UUID: "Compendium.custom-dnd5e.custom-dnd5e-journals.JournalEntry.B48iqFBddUikMMer.JournalEntryPage.V3QbxNviHsZd8Ssb"
 };
 
@@ -36,8 +33,6 @@ const constants = {
 
 class ActorSizesEditForm extends ConfigEditForm {
   /**
-   * Constructor for ActorSizesEditForm.
-   *
    * @param {object} args
    */
   constructor(args) {
@@ -49,15 +44,10 @@ class ActorSizesEditForm extends ConfigEditForm {
   /* -------------------------------------------- */
 
   /**
-   * Default options for the form.
-   *
    * @type {object}
    */
   static DEFAULT_OPTIONS = {
     id: `${MODULE.ID}-actor-sizes-edit-form`,
-    position: {
-      height: 460
-    },
     window: {
       title: `CUSTOM_DND5E.form.${constants.ID}.edit.title`
     }
@@ -66,23 +56,29 @@ class ActorSizesEditForm extends ConfigEditForm {
   /* -------------------------------------------- */
 
   /**
-   * Parts of the form.
-   *
-   * @type {object}
+   * Default CSS class applied to field labels.
+   * @type {string}
    */
-  static PARTS = {
-    form: {
-      template: constants.TEMPLATE.EDIT
-    }
-  };
+  static LABEL_CLASS = "custom-dnd5e-edit-label-fixed-lg";
+
+  /* -------------------------------------------- */
+
+  /**
+   * @type {object[]}
+   */
+  static FIELDS = [
+    { name: "label", type: "text", label: "CUSTOM_DND5E.label", localizeValue: true },
+    { name: "abbreviation", type: "text", label: "CUSTOM_DND5E.abbreviation", localizeValue: true },
+    { name: "hitDie", type: "number", label: "CUSTOM_DND5E.hitDie", step: 1 },
+    { name: "token", type: "number", label: "CUSTOM_DND5E.tokenSize", step: 0.05 },
+    { name: "dynamicTokenScale", type: "number", label: "CUSTOM_DND5E.dynamicTokenScale", step: 0.05 },
+    { name: "capacityMultiplier", type: "number", label: "CUSTOM_DND5E.capacityMultiplier", step: 0.05 }
+  ];
 }
 
 /* -------------------------------------------- */
 
 class ActorSizesForm extends ConfigForm {
-  /**
-   * Constructor for ActorSizesForm.
-   */
   constructor() {
     super();
     this.editForm = ActorSizesEditForm;
@@ -94,8 +90,6 @@ class ActorSizesForm extends ConfigForm {
   /* -------------------------------------------- */
 
   /**
-   * Default options for the form.
-   *
    * @type {object}
    */
   static DEFAULT_OPTIONS = {

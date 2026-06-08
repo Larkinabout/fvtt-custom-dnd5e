@@ -1,6 +1,5 @@
 import {
   Logger,
-  c5eLoadTemplates,
   checkEmpty,
   executeMacro,
   registerMenu as c5eRegisterMenu,
@@ -19,6 +18,7 @@ import { configs } from "./registry.js";
 /* -------------------------------------------- */
 
 export const constants = {
+  ID: "conditions",
   MENU: {
     KEY: "conditions-menu",
     HINT: "CUSTOM_DND5E.menu.conditions.hint",
@@ -34,11 +34,6 @@ export const constants = {
       KEY: "conditions"
     }
   },
-  TEMPLATE: {
-    EDIT: "modules/custom-dnd5e/templates/conditions-edit.hbs",
-    FORM: "modules/custom-dnd5e/templates/config-form.hbs",
-    LIST: "modules/custom-dnd5e/templates/config-list.hbs"
-  },
   UUID: "Compendium.custom-dnd5e.custom-dnd5e-journals.JournalEntry.B48iqFBddUikMMer.JournalEntryPage.DOx3PrYi19dFzcA1"
 };
 export const configKey = "conditionTypes";
@@ -53,8 +48,7 @@ export const configKey = "conditionTypes";
  */
 class ConditionsEditForm extends ConfigEditForm {
   /**
-   * Constructor for ConditionsEditForm.
-   * @param {object} args Arguments passed to the parent class.
+   * @param {object} args
    */
   constructor(args) {
     super(args);
@@ -64,13 +58,7 @@ class ConditionsEditForm extends ConfigEditForm {
   /* -------------------------------------------- */
 
   static DEFAULT_OPTIONS = {
-    actions: {
-      clearMacro: ConditionsEditForm.clearMacro
-    },
     id: `${MODULE.ID}-conditions-edit`,
-    position: {
-      height: 600
-    },
     window: {
       title: "CUSTOM_DND5E.form.conditions.edit.title"
     }
@@ -78,11 +66,36 @@ class ConditionsEditForm extends ConfigEditForm {
 
   /* -------------------------------------------- */
 
-  static PARTS = {
-    form: {
-      template: constants.TEMPLATE.EDIT
-    }
-  };
+  /**
+   * Default CSS class applied to field labels.
+   * @type {string}
+   */
+  static LABEL_CLASS = "custom-dnd5e-edit-label-wide";
+
+  /* -------------------------------------------- */
+
+  /**
+   * @type {object[]}
+   */
+  static FIELDS = [
+    { name: "name", type: "text", label: "CUSTOM_DND5E.name", localizeValue: true },
+    { name: "img", type: "filePicker", label: "CUSTOM_DND5E.icon" },
+    { name: "reference", type: "text", label: "CUSTOM_DND5E.reference" },
+    { name: "levels", type: "number", label: "CUSTOM_DND5E.levels" },
+    { name: "reduction.rolls", type: "number", label: "CUSTOM_DND5E.rollsReduction",
+      condition: ({ key }) => key === "exhaustion" },
+    { name: "reduction.speed", type: "number", label: "CUSTOM_DND5E.speedReduction",
+      condition: ({ key }) => key === "exhaustion" },
+    { name: "special", type: "text", label: "CUSTOM_DND5E.special" },
+    { name: "hud", type: "checkbox", label: "CUSTOM_DND5E.includeOnHud", default: true },
+    { name: "sheet", type: "checkbox", label: "CUSTOM_DND5E.includeOnSheet" },
+    { name: "overlay", type: "checkbox", label: "CUSTOM_DND5E.overlay" },
+    { name: "pseudo", type: "checkbox", label: "CUSTOM_DND5E.pseudo" },
+    { name: "riders", type: "multiSelect", label: "CUSTOM_DND5E.riders", choices: "riders" },
+    { name: "statuses", type: "multiSelect", label: "CUSTOM_DND5E.statuses", choices: "statuses" },
+    { name: "macroUuid", type: "macroDrop", label: "CUSTOM_DND5E.macroOnApply" },
+    { name: "macroDisabledUuid", type: "macroDrop", label: "CUSTOM_DND5E.macroOnRemove" }
+  ];
 
   /* -------------------------------------------- */
 
@@ -97,83 +110,6 @@ class ConditionsEditForm extends ConfigEditForm {
     return { riders: statusEffects, statuses: statusEffects };
   }
 
-  /* -------------------------------------------- */
-
-  /**
-   * Prepare the context for rendering the form.
-   * @returns {Promise<object>} Context data
-   */
-  async _prepareContext() {
-    const context = await super._prepareContext();
-    if ( context.macroUuid ) {
-      const macro = await fromUuid(context.macroUuid);
-      context.macroName = macro?.name ?? "";
-    }
-    if ( context.macroDisabledUuid ) {
-      const macro = await fromUuid(context.macroDisabledUuid);
-      context.macroDisabledName = macro?.name ?? "";
-    }
-    return context;
-  }
-
-  /* -------------------------------------------- */
-
-  /**
-   * Handle form rendering.
-   * @param {object} context
-   * @param {object} options
-   */
-  _onRender(context, options) {
-    super._onRender(context, options);
-    const macroDrops = this.element.querySelectorAll(".custom-dnd5e-macro-drop");
-    for ( const macroDrop of macroDrops ) {
-      macroDrop.addEventListener("drop", (event) => this.#onDropMacro(event));
-    }
-  }
-
-  /* -------------------------------------------- */
-
-  /**
-   * Handle dropping a Macro onto the form.
-   * @param {DragEvent} event
-   */
-  async #onDropMacro(event) {
-    event.preventDefault();
-    event.stopPropagation();
-    const container = event.currentTarget;
-    const data = foundry.applications.ux.TextEditor.implementation.getDragEventData(event);
-    if ( data?.type !== "Macro" ) return;
-    const macro = await Macro.implementation.fromDropData(data);
-    if ( !macro ) return;
-
-    const input = container.querySelector('input[type="hidden"]');
-    if ( input ) input.value = macro.uuid;
-
-    const macroField = container.querySelector(".custom-dnd5e-macro-field");
-    const dropArea = container.querySelector(".drop-area");
-    const nameEl = container.querySelector(".custom-dnd5e-macro-name");
-    if ( nameEl ) nameEl.textContent = macro.name;
-    if ( macroField ) macroField.classList.remove("hidden");
-    if ( dropArea ) dropArea.classList.add("hidden");
-  }
-
-  /* -------------------------------------------- */
-
-  /**
-   * Clear the macro selection.
-   * @param {Event} event
-   * @param {HTMLElement} target
-   */
-  static clearMacro(event, target) {
-    const container = target.closest(".custom-dnd5e-macro-drop");
-    const input = container.querySelector('input[type="hidden"]');
-    if ( input ) input.value = "";
-
-    const macroField = container.querySelector(".custom-dnd5e-macro-field");
-    const dropArea = container.querySelector(".drop-area");
-    if ( macroField ) macroField.classList.add("hidden");
-    if ( dropArea ) dropArea.classList.remove("hidden");
-  }
 }
 
 /* -------------------------------------------- */
@@ -227,11 +163,6 @@ export function register() {
   Hooks.on("preCreateActiveEffect", applyOverlay);
   Hooks.on("createActiveEffect", executeConditionMacro);
   Hooks.on("deleteActiveEffect", executeConditionDisabledMacro);
-
-  const templates = [
-    constants.TEMPLATE.EDIT
-  ];
-  c5eLoadTemplates(templates);
 }
 
 /* -------------------------------------------- */

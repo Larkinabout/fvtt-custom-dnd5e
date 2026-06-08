@@ -9,6 +9,28 @@ const listClassSelector = `.${listClass}`;
 /* -------------------------------------------- */
 
 /**
+ * Recursively convert string entries into `{ label }` objects, descending into nested
+ * `children`/`subtypes`.
+ *
+ * @param {object} data Config data
+ * @returns {object} Converted config data
+ */
+export function labeliseConfigData(data) {
+  Object.entries(data).forEach(([key, value]) => {
+    if ( typeof value === "string" ) {
+      data[key] = { label: value };
+    }
+
+    if ( value?.children || value?.subtypes ) {
+      labeliseConfigData(value.children || value.subtypes);
+    }
+  });
+  return data;
+}
+
+/* -------------------------------------------- */
+
+/**
  * Class representing the Config Form.
  *
  * @extends CustomDnd5eForm
@@ -77,23 +99,9 @@ export class ConfigForm extends CustomDnd5eForm {
       ? foundry.utils.mergeObject(liveConfig, this.setting)
       : this.setting;
 
-    const labelise = data => {
-      Object.entries(data).forEach(([key, value]) => {
-        if ( typeof value === "string" ) {
-          data[key] = { label: value };
-        }
-
-        if ( value?.children || value?.subtypes ) {
-          labelise(value?.children || value?.subtypes);
-        }
-      });
-    };
-
-    labelise(data);
+    labeliseConfigData(data);
 
     const context = { label: this.label, listTitle: this.listTitle, items: data };
-    const selects = this._getSelects();
-    if ( selects ) context.selects = selects;
     if ( this.disableCreate ) context.disableCreate = this.disableCreate;
     if ( this.editInList ) context.editInList = this.editInList;
 
@@ -103,17 +111,6 @@ export class ConfigForm extends CustomDnd5eForm {
     }
 
     return context;
-  }
-
-  /* -------------------------------------------- */
-
-  /**
-   * Get the select options for the form.
-   *
-   * @returns {object|null} Select options
-   */
-  _getSelects() {
-    return null;
   }
 
   /* -------------------------------------------- */

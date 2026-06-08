@@ -1,6 +1,6 @@
 {
   "type": "module",
-  "name": "eslint-plugin-custom-eslint-rules",
+  "name": "@larkinabout/eslint-plugin-custom-rules",
   "version": "1.0.0",
   "main": "index.mjs"
 }

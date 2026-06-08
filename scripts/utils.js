@@ -383,6 +383,10 @@ export function resetDnd5eConfig(property) {
  */
 export async function openDocument(uuid) {
   const document = await fromUuid(uuid);
+  if ( !document ) {
+    Logger.error(`Document '${uuid}' not found`, true);
+    return;
+  }
   if ( document instanceof JournalEntryPage ) {
     document.parent.sheet.render(true, {pageId: document.id, anchor: undefined});
   } else {

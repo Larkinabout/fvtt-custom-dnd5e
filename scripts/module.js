@@ -242,9 +242,14 @@ Hooks.on("init", async () => {
   registerNegativeHp();
 
   const templates = [
+    CONSTANTS.CONFIG.TEMPLATE.EDIT,
     CONSTANTS.CONFIG.TEMPLATE.EDIT_IN_LIST,
     CONSTANTS.CONFIG.TEMPLATE.FORM,
+    CONSTANTS.CONFIG.TEMPLATE.SECTIONS,
     CONSTANTS.CONFIG.TEMPLATE.LIST,
+    CONSTANTS.CONFIG.TEMPLATE.FIELD,
+    CONSTANTS.CONFIG.TEMPLATE.FIELD_CHECKBOX_GRID,
+    CONSTANTS.CONFIG.TEMPLATE.FIELD_MACRO_DROP,
     CONSTANTS.ACTOR_SHEET.TEMPLATE.CHARACTER_SHEET_2,
     CONSTANTS.ACTOR_SHEET.TEMPLATE.CHARACTER_DETAILS,
     CONSTANTS.MESSAGE.TEMPLATE.ROLL_REQUEST_CARD,
@@ -260,22 +265,11 @@ Hooks.on("ready", async () => {
   Handlebars.registerHelper({
     customDnd5eBoolFalse: function(value) { return value === false; },
     customDnd5eEq: function(a, b) { return a === b; },
-    customDnd5eRandomId: function() { return foundry.utils.randomID(); },
-    customDnd5eTrue: function(value) { return !!value; },
-    customDnd5eUndef: function(value) { return typeof value === "undefined" || value === null; },
     customDnd5eDotNotateChild: function(childType, parent, child) {
       if ( parent ) {
         return `${parent}.${childType}.${child}`;
       }
       return `${child}`;
-    },
-    customDnd5eShowActionValue: function(value) {
-      const allowed = ["increase", "decrease", "set"];
-      return allowed.includes(value);
-    },
-    customDnd5eShowTriggerValue: function(value) {
-      const allowed = ["counterValue", "successValue", "failureValue", "attackRolled"];
-      return allowed.includes(value);
     }
   });
 

@@ -1,0 +1,70 @@
+{{#each items as |item key|}}
+<li class="item custom-dnd5e-item" data-key="{{../dataKeyPrefix}}{{key}}">
+    <div class="item-row">
+        <i class="custom-dnd5e-drag fa-solid fa-grip-lines" draggable="true"></i>
+        {{#if ../showToggle}}
+        <dnd5e-checkbox
+            id="custom-dnd5e-{{../toggleField}}"
+            name="{{../prefix}}{{key}}.{{../toggleField}}"
+            data-tooltip="{{localize (concat "CUSTOM_DND5E.form.checkbox." ../toggleField ".tooltip")}}"
+            {{#unless (customDnd5eBoolFalse (lookup item ../toggleField))}}checked{{/unless}}></dnd5e-checkbox>
+        {{/if}}
+        {{#if ../showSystem}}
+        <input
+            id="custom-dnd5e-system"
+            name="{{../prefix}}{{key}}.system"
+            type="hidden"
+            value="{{#if (customDnd5eBoolFalse system)}}false{{else}}true{{/if}}">
+        {{/if}}
+        {{#each ../extraInputs}}
+        <input
+            id="custom-dnd5e-{{name}}"
+            name="{{../../prefix}}{{key}}.{{name}}"
+            type="hidden"
+            value="{{#if useKey}}{{key}}{{else}}{{value}}{{/if}}">
+        {{/each}}
+        <div class="item-name">
+            {{#if label}}
+            <span class="title">{{localize label}}</span>
+            {{else}}
+                {{#if name}}
+            <span class="title">{{localize name}}</span>
+                {{else}}
+            <span class="title">{{localize key}}</span>
+                {{/if}}
+            {{/if}}
+        </div>
+        <div class="item-controls always-visible">
+            <button
+                type="button"
+                data-action="{{../editAction}}"
+                class="unbutton control-button item-control always-interactive"
+                data-tooltip="{{localize 'CUSTOM_DND5E.edit'}}"
+                data-tooltip-direction="UP"
+                aria-label="{{localize 'CUSTOM_DND5E.edit'}}">
+                <i class="fa-solid fa-pen-to-square" inert></i>
+            </button>
+            {{#each ../rowActions}}
+            <button
+                type="button"
+                data-action="{{action}}"
+                class="unbutton control-button item-control always-interactive"
+                data-tooltip="{{localize tooltip}}"
+                data-tooltip-direction="UP"
+                aria-label="{{localize tooltip}}">
+                <i class="{{icon}}" inert></i>
+            </button>
+            {{/each}}
+            <button
+                type="button"
+                data-action="delete"
+                class="unbutton control-button item-control always-interactive{{#if ../showSystem}}{{#unless (customDnd5eBoolFalse system)}} hidden{{/unless}}{{/if}}"
+                data-tooltip="{{localize 'CUSTOM_DND5E.form.button.delete.tooltip'}}"
+                aria-label="{{localize 'CUSTOM_DND5E.form.button.delete.tooltip'}}">
+                <i class="fas fa-trash" inert></i>
+            </button>
+            <input id="custom-dnd5e-delete" name="{{../prefix}}{{key}}.delete" type="hidden" value="false">
+        </div>
+    </div>
+</li>
+{{/each}}

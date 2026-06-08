@@ -1,11 +1,17 @@
 <div class="form-group">
     <label>{{localize "CUSTOM_DND5E.spendCampSupplies.label"}}</label>
     <div class="form-fields">
-        <dnd5e-checkbox  name="spendCampSupplies" id="custom-dnd5e-spend-camp-supplies" {{checked spend}}></dnd5e-checkbox>
+        <dnd5e-checkbox
+            name="spendCampSupplies"
+            id="custom-dnd5e-spend-camp-supplies"
+            {{checked spend}}></dnd5e-checkbox>
     </div>
 
 </div>
 <div class="custom-dnd5e-camp-supplies" data-quantity="{{quantity}}" data-required="{{required}}">
-    <img title="{{localize "CUSTOM_DND5E.campSupplies"}}" alt="{{localize "CUSTOM_DND5E.campSupplies"}}" src="icons/magic/fire/flame-burning-campfire-rocks.webp">
+    <img
+        title="{{localize "CUSTOM_DND5E.campSupplies"}}"
+        alt="{{localize "CUSTOM_DND5E.campSupplies"}}"
+        src="icons/magic/fire/flame-burning-campfire-rocks.webp">
     <p {{#if (lt quantity required)}}class="custom-dnd5e-failure"{{/if}}>{{localize "CUSTOM_DND5E.available" quantity=quantity}}</p>
 </div>

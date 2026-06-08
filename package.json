@@ -10,7 +10,7 @@
     "@babel/eslint-parser": "^7.26.8",
     "@foundryvtt/foundryvtt-cli": "^1.0.4",
     "eslint": "^9.20.1",
-    "eslint-plugin-custom-eslint-rules": "file:./custom-eslint-rules",
+    "@larkinabout/eslint-plugin-custom-eslint-rules": "file:./custom-eslint-rules",
     "eslint-plugin-import": "^2.31.0",
     "eslint-plugin-jsdoc": "^46.5.0",
     "eslint-plugin-n": "^16.6.2",

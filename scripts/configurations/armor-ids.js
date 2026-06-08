@@ -1,4 +1,4 @@
-import { MODULE } from "../constants.js";
+import { CONSTANTS, MODULE } from "../constants.js";
 import { ConfigForm, IdForm } from "../forms/config-form.js";
 import { configs } from "./registry.js";
 
@@ -22,10 +22,6 @@ const constants = {
     CONFIG: {
       KEY: "armor-ids"
     }
-  },
-  TEMPLATE: {
-    FORM: "modules/custom-dnd5e/templates/config-form.hbs",
-    LIST: "modules/custom-dnd5e/templates/config-edit-in-list.hbs"
   },
   UUID: "Compendium.custom-dnd5e.custom-dnd5e-journals.JournalEntry.B48iqFBddUikMMer.JournalEntryPage.ehZqnZslXx3cknv9"
 };
@@ -69,21 +65,9 @@ class ArmorIdsForm extends IdForm {
    */
   static PARTS = {
     form: {
-      template: constants.TEMPLATE.FORM
+      template: CONSTANTS.CONFIG.TEMPLATE.FORM
     }
   };
-
-  /* -------------------------------------------- */
-
-  /**
-   * Get the HTML template for the form.
-   *
-   * @param {object} data Data to pass to the template
-   * @returns {Promise<string>} Rendered template
-   */
-  async _getHtml(data) {
-    return await foundry.applications.handlebars.renderTemplate(configs.armorIds.TEMPLATE.LIST, data);
-  }
 }
 
 /* -------------------------------------------- */

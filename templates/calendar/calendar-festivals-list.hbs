@@ -2,7 +2,11 @@
 <li class="item custom-dnd5e-item" data-index="{{this.index}}">
     <div class="item-row">
         <div class="item-name">
-            <input type="text" name="festivals.{{this.index}}.name" value="{{this.name}}" placeholder="{{localize "CUSTOM_DND5E.form.calendars.festivalName"}}">
+            <input
+                type="text"
+                name="festivals.{{this.index}}.name"
+                value="{{this.name}}"
+                placeholder="{{localize "CUSTOM_DND5E.form.calendars.festivalName"}}">
         </div>
         <div class="item-month">
             <input type="number" name="festivals.{{this.index}}.month" value="{{this.month}}" min="1">
@@ -11,7 +15,14 @@
             <input type="number" name="festivals.{{this.index}}.day" value="{{this.day}}" min="1">
         </div>
         <div class="item-controls always-visible">
-            <button type="button" data-action="removeRow" data-section="festivals" data-index="{{this.index}}" class="unbutton control-button item-control always-interactive" data-tooltip="{{localize 'CUSTOM_DND5E.form.button.delete.tooltip'}}" aria-label="{{localize 'CUSTOM_DND5E.form.button.delete.tooltip'}}">
+            <button
+                type="button"
+                data-action="removeRow"
+                data-section="festivals"
+                data-index="{{this.index}}"
+                class="unbutton control-button item-control always-interactive"
+                data-tooltip="{{localize 'CUSTOM_DND5E.form.button.delete.tooltip'}}"
+                aria-label="{{localize 'CUSTOM_DND5E.form.button.delete.tooltip'}}">
                 <i class="fas fa-trash" inert></i>
             </button>
         </div>

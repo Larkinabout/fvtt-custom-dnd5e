@@ -24,11 +24,6 @@ const constants = {
       KEY: "spell-schools"
     }
   },
-  TEMPLATE: {
-    EDIT: "modules/custom-dnd5e/templates/spell-schools-edit.hbs",
-    FORM: "modules/custom-dnd5e/templates/config-form.hbs",
-    LIST: "modules/custom-dnd5e/templates/config-list.hbs"
-  },
   UUID: "Compendium.custom-dnd5e.custom-dnd5e-journals.JournalEntry.B48iqFBddUikMMer.JournalEntryPage.PlVATLzmAndA0gfR"
 };
 
@@ -38,8 +33,6 @@ const constants = {
 
 class SpellSchoolsEditForm extends ConfigEditForm {
   /**
-   * Constructor for SpellSchoolsEditForm.
-   *
    * @param {object} args
    */
   constructor(args) {
@@ -51,15 +44,10 @@ class SpellSchoolsEditForm extends ConfigEditForm {
   /* -------------------------------------------- */
 
   /**
-   * Default options for the form.
-   *
    * @type {object}
    */
   static DEFAULT_OPTIONS = {
     id: `${MODULE.ID}-spell-schools-edit-form`,
-    position: {
-      height: 320
-    },
     window: {
       title: "CUSTOM_DND5E.form.spellSchools.edit.title"
     }
@@ -68,44 +56,19 @@ class SpellSchoolsEditForm extends ConfigEditForm {
   /* -------------------------------------------- */
 
   /**
-   * Parts of the form.
-   *
-   * @type {object}
+   * @type {object[]}
    */
-  static PARTS = {
-    form: {
-      template: constants.TEMPLATE.EDIT
-    }
-  };
-
-  /* -------------------------------------------- */
-
-  /**
-   * Get the select options for the form.
-   *
-   * @returns {object} Select options
-   */
-  _getSelects() {
-    return {
-      rollMode: {
-        choices: {
-          default: "CUSTOM_DND5E.default",
-          blindroll: "CHAT.MODES.blind",
-          gmroll: "CHAT.MODES.gm",
-          publicroll: "CHAT.MODES.public",
-          selfroll: "CHAT.MODES.self"
-        }
-      }
-    };
-  }
+  static FIELDS = [
+    { name: "fullKey", type: "text", label: "CUSTOM_DND5E.fullKey", localizeValue: true },
+    { name: "label", type: "text", label: "CUSTOM_DND5E.label", localizeValue: true },
+    { name: "icon", type: "filePicker", label: "CUSTOM_DND5E.icon" },
+    { name: "reference", type: "text", label: "CUSTOM_DND5E.reference" }
+  ];
 }
 
 /* -------------------------------------------- */
 
 class SpellSchoolsForm extends ConfigForm {
-  /**
-   * Constructor for SpellSchoolsForm.
-   */
   constructor() {
     super();
     this.editForm = SpellSchoolsEditForm;
@@ -117,8 +80,6 @@ class SpellSchoolsForm extends ConfigForm {
   /* -------------------------------------------- */
 
   /**
-   * Default options for the form.
-   *
    * @type {object}
    */
   static DEFAULT_OPTIONS = {

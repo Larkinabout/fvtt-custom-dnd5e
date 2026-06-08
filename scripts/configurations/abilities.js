@@ -20,9 +20,6 @@ const constants = {
     ENABLE: { KEY: "enable-abilities" },
     CONFIG: { KEY: "abilities" }
   },
-  TEMPLATE: {
-    EDIT: "modules/custom-dnd5e/templates/abilities-edit.hbs"
-  },
   UUID: "Compendium.custom-dnd5e.custom-dnd5e-journals.JournalEntry.B48iqFBddUikMMer.JournalEntryPage.tVG6b7kBJUOVvpwP"
 };
 
@@ -36,7 +33,6 @@ const constants = {
  */
 class AbilitiesEditForm extends ConfigEditForm {
   /**
-   * Constructor for AbilitiesEditForm.
    * @param {object} args
    */
   constructor(args) {
@@ -45,15 +41,30 @@ class AbilitiesEditForm extends ConfigEditForm {
     this.requiresReload = true;
   }
 
+  /* -------------------------------------------- */
+
   static DEFAULT_OPTIONS = {
     id: `${MODULE.ID}-abilities-edit-form`,
-    position: { height: 500 },
     window: { title: `CUSTOM_DND5E.form.${constants.ID}.edit.title` }
   };
 
-  static PARTS = {
-    form: { template: constants.TEMPLATE.EDIT }
-  };
+  /* -------------------------------------------- */
+
+  /**
+   * @type {object[]}
+   */
+  static FIELDS = [
+    { name: "fullKey", type: "text", label: "CUSTOM_DND5E.fullKey", localizeValue: true },
+    { name: "label", type: "text", label: "CUSTOM_DND5E.label", localizeValue: true },
+    { name: "abbreviation", type: "text", label: "CUSTOM_DND5E.abbreviation", localizeValue: true },
+    { name: "improvement", type: "checkbox", label: "Include for ASI", default: true },
+    { name: "type", type: "select", label: "CUSTOM_DND5E.type", choices: "type", localizeChoices: true,
+      disabledWhenSystem: true },
+    { name: "reference", type: "text", label: "CUSTOM_DND5E.reference" },
+    { name: "rollMode", type: "select", label: "CUSTOM_DND5E.rollMode", choices: "rollMode", localizeChoices: true }
+  ];
+
+  /* -------------------------------------------- */
 
   /**
    * Select options for the form.
@@ -87,9 +98,6 @@ class AbilitiesEditForm extends ConfigEditForm {
  * @extends ConfigForm
  */
 class AbilitiesForm extends ConfigForm {
-  /**
-   * Constructor for AbilitiesForm.
-   */
   constructor() {
     super();
     this.editForm = AbilitiesEditForm;

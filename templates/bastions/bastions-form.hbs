@@ -1,31 +1,52 @@
 <div class="standard-form custom-dnd5e-tabbed">
     <div class="form-group">
-        <label class="flex1" style="min-width:80px; max-width:200px;">{{localize "CUSTOM_DND5E.enableConfiguration"}}</label>
+        <label
+            class="flex1"
+            style="min-width:80px; max-width:200px;">{{localize "CUSTOM_DND5E.enableConfiguration"}}</label>
         <div class="form-fields">
-            <dnd5e-checkbox id="custom-dnd5e-enable-config" name="enableConfig"{{#if (ne enableConfig false)}} checked{{/if}}></dnd5e-checkbox>
+            <dnd5e-checkbox
+                id="custom-dnd5e-enable-config"
+                name="enableConfig"
+                {{#if (ne enableConfig false)}}checked{{/if}}></dnd5e-checkbox>
         </div>
     </div>
     <hr>
     <nav class="sheet-tabs tabs">
-        <a class="item{{#if (eq activeTab 'sizes')}} active{{/if}}" data-action="tab" data-group="primary" data-tab="sizes">
+        <a
+            class="item{{#if (eq activeTab 'sizes')}} active{{/if}}"
+            data-action="tab"
+            data-group="primary"
+            data-tab="sizes">
             <span>
                 <i class="fa-solid fa-expand"></i>
                 {{localize "CUSTOM_DND5E.bastions.sizes"}}
             </span>
         </a>
-        <a class="item{{#if (eq activeTab 'types')}} active{{/if}}" data-action="tab" data-group="primary" data-tab="types">
+        <a
+            class="item{{#if (eq activeTab 'types')}} active{{/if}}"
+            data-action="tab"
+            data-group="primary"
+            data-tab="types">
             <span>
                 <i class="fa-solid fa-building"></i>
                 {{localize "CUSTOM_DND5E.bastions.types"}}
             </span>
         </a>
-        <a class="item{{#if (eq activeTab 'orders')}} active{{/if}}" data-action="tab" data-group="primary" data-tab="orders">
+        <a
+            class="item{{#if (eq activeTab 'orders')}} active{{/if}}"
+            data-action="tab"
+            data-group="primary"
+            data-tab="orders">
             <span>
                 <i class="fa-solid fa-scroll"></i>
                 {{localize "CUSTOM_DND5E.bastions.orders"}}
             </span>
         </a>
-        <a class="item{{#if (eq activeTab 'advancement')}} active{{/if}}" data-action="tab" data-group="primary" data-tab="advancement">
+        <a
+            class="item{{#if (eq activeTab 'advancement')}} active{{/if}}"
+            data-action="tab"
+            data-group="primary"
+            data-tab="advancement">
             <span>
                 <i class="fa-solid fa-chart-line"></i>
                 {{localize "CUSTOM_DND5E.bastions.advancement"}}
@@ -44,10 +65,21 @@
                             <h3 class="item-name">{{localize "CUSTOM_DND5E.bastions.sizes"}}</h3>
                         </div>
                         <ol class="item-list unlist custom-dnd5e-list">
-                            {{> "modules/custom-dnd5e/templates/bastions/bastions-sizes-list.hbs" sizes=sizes}}
+                            {{> "modules/custom-dnd5e/templates/forms/list.hbs"
+                                items=sizes
+                                prefix="sizes."
+                                dataKeyPrefix="sizes."
+                                toggleField="visible"
+                                editAction="editSize"
+                                showToggle=true
+                                showSystem=true}}
                         </ol>
                     </div>
-                    <button type="button" data-action="new" class="gold-button always-interactive" aria-label="{{localize 'CUSTOM_DND5E.form.button.new.label'}}">
+                    <button
+                        type="button"
+                        data-action="new"
+                        class="gold-button always-interactive"
+                        aria-label="{{localize 'CUSTOM_DND5E.form.button.new.label'}}">
                         <i class="fas fa-plus" inert></i>
                     </button>
                 </div>
@@ -67,10 +99,17 @@
                             <h3 class="item-name">{{localize "CUSTOM_DND5E.bastions.types"}}</h3>
                         </div>
                         <ol class="item-list unlist custom-dnd5e-list">
-                            {{> "modules/custom-dnd5e/templates/bastions/bastions-types-list.hbs" types=types}}
+                            {{> "modules/custom-dnd5e/templates/forms/list-edit.hbs"
+                                items=types
+                                prefix="types."
+                                label="CUSTOM_DND5E.label"}}
                         </ol>
                     </div>
-                    <button type="button" data-action="new" class="gold-button always-interactive" aria-label="{{localize 'CUSTOM_DND5E.form.button.new.label'}}">
+                    <button
+                        type="button"
+                        data-action="new"
+                        class="gold-button always-interactive"
+                        aria-label="{{localize 'CUSTOM_DND5E.form.button.new.label'}}">
                         <i class="fas fa-plus" inert></i>
                     </button>
                 </div>
@@ -90,10 +129,21 @@
                             <h3 class="item-name">{{localize "CUSTOM_DND5E.bastions.orders"}}</h3>
                         </div>
                         <ol class="item-list unlist custom-dnd5e-list">
-                            {{> "modules/custom-dnd5e/templates/bastions/bastions-orders-list.hbs" orders=orders}}
+                            {{> "modules/custom-dnd5e/templates/forms/list.hbs"
+                                items=orders
+                                prefix="orders."
+                                dataKeyPrefix="orders."
+                                toggleField="visible"
+                                editAction="editOrder"
+                                showToggle=true
+                                showSystem=true}}
                         </ol>
                     </div>
-                    <button type="button" data-action="new" class="gold-button always-interactive" aria-label="{{localize 'CUSTOM_DND5E.form.button.new.label'}}">
+                    <button
+                        type="button"
+                        data-action="new"
+                        class="gold-button always-interactive"
+                        aria-label="{{localize 'CUSTOM_DND5E.form.button.new.label'}}">
                         <i class="fas fa-plus" inert></i>
                     </button>
                 </div>
@@ -104,7 +154,10 @@
         </section>
 
         {{!-- Advancement Tab --}}
-        <section class="tab{{#if (eq activeTab 'advancement')}} active{{/if}}" data-group="primary" data-tab="advancement">
+        <section
+            class="tab{{#if (eq activeTab 'advancement')}} active{{/if}}"
+            data-group="primary"
+            data-tab="advancement">
             <p class="hint">{{localize "CUSTOM_DND5E.bastions.advancementHint"}}</p>
             <div class="scrollable fieldset-list">
                 <fieldset>
@@ -127,7 +180,11 @@
                     <div class="form-group">
                         <label>{{localize "CUSTOM_DND5E.bastions.level"}} {{this.level}}</label>
                         <div class="form-fields">
-                            <input type="number" name="advancement.special.{{this.level}}" value="{{this.count}}" min="0">
+                            <input
+                                type="number"
+                                name="advancement.special.{{this.level}}"
+                                value="{{this.count}}"
+                                min="0">
                         </div>
                     </div>
                     {{/each}}

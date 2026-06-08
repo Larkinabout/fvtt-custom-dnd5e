@@ -1,5 +1,4 @@
 import {
-  c5eLoadTemplates,
   checkEmpty,
   getDefaultDnd5eConfig,
   getSetting,
@@ -18,7 +17,7 @@ import { configs } from "./registry.js";
 /* -------------------------------------------- */
 
 export const constants = {
-  ID: "rest-types",
+  ID: "restTypes",
   MENU: {
     KEY: "rest-types-menu",
     HINT: "CUSTOM_DND5E.menu.restTypes.hint",
@@ -34,9 +33,6 @@ export const constants = {
       KEY: "rest-types"
     }
   },
-  TEMPLATE: {
-    EDIT: "modules/custom-dnd5e/templates/rest-types-edit.hbs"
-  },
   UUID: "Compendium.custom-dnd5e.custom-dnd5e-journals.JournalEntry.B48iqFBddUikMMer.JournalEntryPage.rT4kYmNpV3tZbW9x"
 };
 export const configKey = "restTypes";
@@ -51,7 +47,6 @@ export const configKey = "restTypes";
  */
 class RestTypesEditForm extends ConfigEditForm {
   /**
-   * Constructor for RestTypesEditForm.
    * @param {object} args
    */
   constructor(args) {
@@ -59,6 +54,103 @@ class RestTypesEditForm extends ConfigEditForm {
     this.config = configs.restTypes;
     this.requiresReload = true;
   }
+
+  /* -------------------------------------------- */
+
+  /**
+   * @type {object}
+   */
+  static DEFAULT_OPTIONS = {
+    id: `${MODULE.ID}-rest-types-edit-form`,
+    window: {
+      title: `CUSTOM_DND5E.form.${constants.ID}.edit.title`
+    }
+  };
+
+  /* -------------------------------------------- */
+
+  /**
+   * @type {object[]}
+   */
+  static FIELDS = [
+    {
+      legend: "CUSTOM_DND5E.general",
+      fields: [
+        { name: "label", type: "text", label: "CUSTOM_DND5E.label", localizeValue: true },
+        { name: "icon", type: "text", label: "CUSTOM_DND5E.icon", placeholder: "fa-solid fa-bench-tree" },
+        { name: "hint", type: "textarea", label: "CUSTOM_DND5E.restHint.label", hint: "CUSTOM_DND5E.restHint.hint" }
+      ]
+    },
+    {
+      legend: "CUSTOM_DND5E.durationMinutes",
+      fields: [
+        { name: "durationGritty", type: "number", label: "CUSTOM_DND5E.gritty", step: 1, min: 0 },
+        { name: "durationNormal", type: "number", label: "CUSTOM_DND5E.normal", step: 1, min: 0 },
+        { name: "durationEpic", type: "number", label: "CUSTOM_DND5E.epic", step: 1, min: 0 }
+      ]
+    },
+    {
+      legend: "CUSTOM_DND5E.restBehaviour",
+      fields: [
+        { name: "newDay", type: "checkbox", label: "CUSTOM_DND5E.newDay.label",
+          hint: "CUSTOM_DND5E.newDay.hint" },
+        { name: "advanceBastionTurn", type: "checkbox", label: "CUSTOM_DND5E.advanceBastionTurn.label",
+          hint: "CUSTOM_DND5E.advanceBastionTurn.hint", labelClass: "custom-dnd5e-edit-label-flex2" },
+        { name: "exhaustionDelta", type: "number", label: "CUSTOM_DND5E.exhaustionDelta.label",
+          hint: "CUSTOM_DND5E.exhaustionDelta.hint", step: 1 }
+      ]
+    },
+    {
+      legend: "CUSTOM_DND5E.spellSlots",
+      fields: [
+        { name: "recoverSpellSlotTypes", type: "multiSelect", label: "CUSTOM_DND5E.recoverSpellSlotTypes.label",
+          hint: "CUSTOM_DND5E.recoverSpellSlotTypes.hint", choices: "recoverSpellSlotTypes" },
+        { name: "spellSlotFraction", type: "number", label: "CUSTOM_DND5E.spellSlotFraction.label",
+          hint: "CUSTOM_DND5E.spellSlotFraction.hint", step: 0.05, min: 0, max: 1,
+          labelClass: "custom-dnd5e-edit-label-flex2" }
+      ]
+    },
+    {
+      legend: "DND5E.HitPoints",
+      fields: [
+        { name: "recoverHitPoints", type: "checkbox", label: "CUSTOM_DND5E.recoverHitPoints" },
+        { name: "hitPointsFraction", type: "number", label: "CUSTOM_DND5E.hitPointsFraction.label",
+          hint: "CUSTOM_DND5E.hitPointsFraction.hint", step: 0.05, min: 0, max: 1,
+          labelClass: "custom-dnd5e-edit-label-flex2" }
+      ]
+    },
+    {
+      legend: "DND5E.HitDice",
+      fields: [
+        { name: "hitDice", type: "checkbox", label: "CUSTOM_DND5E.spendHitDice.label",
+          hint: "CUSTOM_DND5E.spendHitDice.hint" },
+        { name: "recoverHitDice", type: "checkbox", label: "CUSTOM_DND5E.recoverHitDice" },
+        { name: "hitDiceFormula", type: "text", label: "CUSTOM_DND5E.hitDiceFormula.label",
+          hint: "CUSTOM_DND5E.hitDiceFormula.hint", placeholder: "@attributes.hd.max * 0.5",
+          labelClass: "custom-dnd5e-edit-label-flex2" },
+        { name: "hitDiceRoundUp", type: "checkbox", label: "CUSTOM_DND5E.hitDiceRoundUp.label",
+          hint: "CUSTOM_DND5E.hitDiceRoundUp.hint", labelClass: "custom-dnd5e-edit-label-flex2" }
+      ]
+    },
+    {
+      legend: "CUSTOM_DND5E.temporaryHitPoints",
+      fields: [
+        { name: "recoverTemp", type: "checkbox", label: "CUSTOM_DND5E.removeTemp",
+          labelClass: "custom-dnd5e-edit-label-flex2" },
+        { name: "recoverTempMax", type: "checkbox", label: "CUSTOM_DND5E.removeTempMax",
+          labelClass: "custom-dnd5e-edit-label-flex2" }
+      ]
+    },
+    {
+      legend: "CUSTOM_DND5E.periods",
+      fields: [
+        { name: "recoverPeriods", type: "multiSelect", label: "CUSTOM_DND5E.recoverPeriods.label",
+          hint: "CUSTOM_DND5E.recoverPeriods.hint", choices: "recoverPeriods" },
+        { name: "activationPeriods", type: "multiSelect", label: "CUSTOM_DND5E.activationPeriods.label",
+          hint: "CUSTOM_DND5E.activationPeriods.hint", choices: "activationPeriods" }
+      ]
+    }
+  ];
 
   /* -------------------------------------------- */
 
@@ -87,25 +179,6 @@ class RestTypesEditForm extends ConfigEditForm {
     return { activationPeriods, recoverPeriods, recoverSpellSlotTypes };
   }
 
-  /* -------------------------------------------- */
-
-  static DEFAULT_OPTIONS = {
-    id: `${MODULE.ID}-rest-types-edit-form`,
-    position: {
-      height: 600
-    },
-    window: {
-      title: "CUSTOM_DND5E.form.restTypes.edit.title"
-    }
-  };
-
-  /* -------------------------------------------- */
-
-  static PARTS = {
-    form: {
-      template: constants.TEMPLATE.EDIT
-    }
-  };
 }
 
 /* -------------------------------------------- */
@@ -115,13 +188,10 @@ class RestTypesEditForm extends ConfigEditForm {
  * @extends ConfigForm
  */
 class RestTypesForm extends ConfigForm {
-  /**
-   * Constructor for RestTypesForm.
-   */
   constructor() {
     super();
     this.editForm = RestTypesEditForm;
-    this.listTitle = "CUSTOM_DND5E.form.restTypes.listTitle";
+    this.listTitle = `CUSTOM_DND5E.form.${constants.ID}.listTitle`;
     this.requiresReload = true;
     this.config = configs.restTypes;
   }
@@ -131,7 +201,7 @@ class RestTypesForm extends ConfigForm {
   static DEFAULT_OPTIONS = {
     id: `${MODULE.ID}-rest-types-form`,
     window: {
-      title: "CUSTOM_DND5E.form.restTypes.title"
+      title: `CUSTOM_DND5E.form.${constants.ID}.title`
     }
   };
 }
@@ -146,18 +216,10 @@ class RestTypesForm extends ConfigForm {
 export function register() {
   registerCustomRestDialog();
   registerSettings();
-
-  const templates = [
-    constants.TEMPLATE.EDIT
-  ];
-  c5eLoadTemplates(templates);
 }
 
 /* -------------------------------------------- */
 
-/**
- * Register settings.
- */
 function registerSettings() {
   registerMenu(
     constants.MENU.KEY,
@@ -224,7 +286,7 @@ function normaliseDefault(defaults) {
 
 /**
  * Get default config.
- * @param {string|null} key Key
+ * @param {string|null} key
  * @returns {object} Config data
  */
 export function getSettingDefault(key = null) {

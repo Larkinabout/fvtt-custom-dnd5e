@@ -1,5 +1,4 @@
 import {
-  c5eLoadTemplates,
   checkEmpty,
   getSetting,
   registerMenu,
@@ -32,9 +31,6 @@ export const constants = {
       KEY: "item-properties"
     }
   },
-  TEMPLATE: {
-    EDIT: "modules/custom-dnd5e/templates/item-properties-edit.hbs"
-  },
   UUID: "Compendium.custom-dnd5e.custom-dnd5e-journals.JournalEntry.B48iqFBddUikMMer.JournalEntryPage.dM6sUm93mUi9oeBo"
 };
 export const configKey = "itemProperties";
@@ -49,7 +45,6 @@ export const configKey = "itemProperties";
  */
 class ItemPropertiesEditForm extends ConfigEditForm {
   /**
-   * Constructor for ItemPropertiesEditForm.
    * @param {object} args
    */
   constructor(args) {
@@ -60,11 +55,11 @@ class ItemPropertiesEditForm extends ConfigEditForm {
 
   /* -------------------------------------------- */
 
+  /**
+   * @type {object}
+   */
   static DEFAULT_OPTIONS = {
     id: `${MODULE.ID}-item-properties-edit-form`,
-    position: {
-      height: 450
-    },
     window: {
       title: "CUSTOM_DND5E.form.itemProperties.edit.title"
     }
@@ -72,32 +67,18 @@ class ItemPropertiesEditForm extends ConfigEditForm {
 
   /* -------------------------------------------- */
 
-  static PARTS = {
-    form: {
-      template: constants.TEMPLATE.EDIT
-    }
-  };
-
-  /* -------------------------------------------- */
-
   /**
-   * Prepare the context for rendering the form.
-   * @returns {Promise<object>} Context data
+   * @type {object[]}
    */
-  async _prepareContext() {
-    const context = {
-      ...this.setting[this.key],
-      key: this.key,
-      selects: this._getSelects(),
-      itemTypes: this._getItemTypes()
-    };
-
-    if ( this.system === false ) {
-      context.system = false;
-    }
-
-    return context;
-  }
+  static FIELDS = [
+    { name: "label", type: "text", label: "CUSTOM_DND5E.label", localizeValue: true },
+    { name: "abbreviation", type: "text", label: "CUSTOM_DND5E.abbreviation", localizeValue: true },
+    { name: "icon", type: "filePicker", label: "CUSTOM_DND5E.icon" },
+    { name: "isPhysical", type: "checkbox", label: "CUSTOM_DND5E.physical" },
+    { name: "isTag", type: "checkbox", label: "CUSTOM_DND5E.tag" },
+    { name: "reference", type: "text", label: "CUSTOM_DND5E.reference" },
+    { name: "itemTypes", type: "checkboxGrid", label: "CUSTOM_DND5E.itemTypes", items: form => form._getItemTypes() }
+  ];
 
   /* -------------------------------------------- */
 
@@ -128,20 +109,19 @@ class ItemPropertiesEditForm extends ConfigEditForm {
  * @extends ConfigForm
  */
 class ItemPropertiesForm extends ConfigForm {
-  /**
-   * Constructor for ItemPropertiesForm.
-   */
   constructor() {
     super();
     this.editForm = ItemPropertiesEditForm;
     this.listTitle = "CUSTOM_DND5E.form.itemProperties.listTitle";
     this.requiresReload = false;
     this.config = configs.itemProperties;
-    this.configKeys = ["itemProperties", "validProperties"];
   }
 
   /* -------------------------------------------- */
 
+  /**
+   * @type {object}
+   */
   static DEFAULT_OPTIONS = {
     id: `${MODULE.ID}-item-properties-form`,
     window: {
@@ -159,11 +139,6 @@ class ItemPropertiesForm extends ConfigForm {
  */
 export function register() {
   registerSettings();
-
-  const templates = [
-    constants.TEMPLATE.EDIT
-  ];
-  c5eLoadTemplates(templates);
 }
 
 /* -------------------------------------------- */

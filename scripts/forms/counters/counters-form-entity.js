@@ -49,7 +49,7 @@ export class CountersFormEntity extends CountersForm {
    */
   static PARTS = {
     form: {
-      template: `modules/${MODULE.ID}/templates/counters/${form}.hbs`
+      template: CONSTANTS.CONFIG.TEMPLATE.SECTIONS
     }
   };
 
@@ -68,8 +68,25 @@ export class CountersFormEntity extends CountersForm {
     const displayCounters = Object.fromEntries(
       Object.entries(this.counters).filter(([_, c]) => c && c.type !== undefined)
     );
+    const actorType = this.entity.documentName === "Item" ? "item" : "actor";
     return {
-      counters: displayCounters
+      sections: [{
+        listTitle: "CUSTOM_DND5E.form.counters.listTitle",
+        showNew: true,
+        list: {
+          items: displayCounters,
+          toggleField: "visible",
+          editAction: "edit",
+          showToggle: true,
+          showSystem: false,
+          rowActions: [{
+            action: "copy-property",
+            icon: "fa-solid fa-at",
+            tooltip: "CUSTOM_DND5E.form.counters.copyProperty.tooltip"
+          }],
+          extraInputs: [{ name: "actorType", value: actorType }, { name: "key", useKey: true }]
+        }
+      }]
     };
   }
 

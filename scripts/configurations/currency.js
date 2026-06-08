@@ -26,9 +26,6 @@ const constants = {
       KEY: "currency"
     }
   },
-  TEMPLATE: {
-    EDIT: "modules/custom-dnd5e/templates/currency-edit.hbs"
-  },
   UUID: "Compendium.custom-dnd5e.custom-dnd5e-journals.JournalEntry.B48iqFBddUikMMer.JournalEntryPage.dmzCGf2LPoBlfu9m"
 };
 
@@ -38,8 +35,6 @@ const constants = {
 
 class CurrencyEditForm extends ConfigEditForm {
   /**
-   * Constructor for CurrencyEditForm.
-   *
    * @param {object} args
    */
   constructor(args) {
@@ -51,15 +46,10 @@ class CurrencyEditForm extends ConfigEditForm {
   /* -------------------------------------------- */
 
   /**
-   * Default options for the form.
-   *
    * @type {object}
    */
   static DEFAULT_OPTIONS = {
     id: `${MODULE.ID}-currency-edit-form`,
-    position: {
-      height: 340
-    },
     window: {
       title: `CUSTOM_DND5E.form.${constants.ID}.edit.title`
     }
@@ -68,23 +58,19 @@ class CurrencyEditForm extends ConfigEditForm {
   /* -------------------------------------------- */
 
   /**
-   * Parts of the form.
-   *
-   * @type {object}
+   * @type {object[]}
    */
-  static PARTS = {
-    form: {
-      template: constants.TEMPLATE.EDIT
-    }
-  };
+  static FIELDS = [
+    { name: "label", type: "text", label: "CUSTOM_DND5E.label", localizeValue: true },
+    { name: "abbreviation", type: "text", label: "CUSTOM_DND5E.abbreviation", localizeValue: true },
+    { name: "conversion", type: "number", label: "CUSTOM_DND5E.conversion", step: "any" },
+    { name: "icon", type: "filePicker", label: "CUSTOM_DND5E.icon" }
+  ];
 }
 
 /* -------------------------------------------- */
 
 class CurrencyForm extends ConfigForm {
-  /**
-   * Constructor for CurrencyForm.
-   */
   constructor() {
     super();
     this.editForm = CurrencyEditForm;
@@ -96,8 +82,6 @@ class CurrencyForm extends ConfigForm {
   /* -------------------------------------------- */
 
   /**
-   * Default options for the form.
-   *
    * @type {object}
    */
   static DEFAULT_OPTIONS = {
@@ -109,7 +93,7 @@ class CurrencyForm extends ConfigForm {
 }
 
 /* -------------------------------------------- */
-
+/*  REGISTRATION                                */
 /* -------------------------------------------- */
 
 /**

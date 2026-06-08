@@ -24,9 +24,6 @@ const constants = {
       KEY: "armor-calculations"
     }
   },
-  TEMPLATE: {
-    EDIT: "modules/custom-dnd5e/templates/armor-calculations-edit.hbs"
-  },
   UUID: "Compendium.custom-dnd5e.custom-dnd5e-journals.JournalEntry.B48iqFBddUikMMer.JournalEntryPage.bjFllCYYW9paPCNG"
 };
 
@@ -36,8 +33,6 @@ const constants = {
 
 class ArmorCalculationsEditForm extends ConfigEditForm {
   /**
-   * Constructor for ArmorCalculationsEditForm.
-   *
    * @param {object} args
    */
   constructor(args) {
@@ -49,15 +44,10 @@ class ArmorCalculationsEditForm extends ConfigEditForm {
   /* -------------------------------------------- */
 
   /**
-   * Default options for the form.
-   *
    * @type {object}
    */
   static DEFAULT_OPTIONS = {
     id: `${MODULE.ID}-armor-calculations-edit-form`,
-    position: {
-      height: 260
-    },
     window: {
       title: `CUSTOM_DND5E.form.${constants.ID}.edit.title`
     }
@@ -66,23 +56,17 @@ class ArmorCalculationsEditForm extends ConfigEditForm {
   /* -------------------------------------------- */
 
   /**
-   * Parts of the form.
-   *
-   * @type {object}
+   * @type {object[]}
    */
-  static PARTS = {
-    form: {
-      template: constants.TEMPLATE.EDIT
-    }
-  };
+  static FIELDS = [
+    { name: "label", type: "text", label: "CUSTOM_DND5E.label", localizeValue: true },
+    { name: "formula", type: "text", label: "CUSTOM_DND5E.formula" }
+  ];
 }
 
 /* -------------------------------------------- */
 
 class ArmorCalculationsForm extends ConfigForm {
-  /**
-   * Constructor for ArmorCalculationsForm.
-   */
   constructor() {
     super();
     this.editForm = ArmorCalculationsEditForm;
@@ -94,8 +78,6 @@ class ArmorCalculationsForm extends ConfigForm {
   /* -------------------------------------------- */
 
   /**
-   * Default options for the form.
-   *
    * @type {object}
    */
   static DEFAULT_OPTIONS = {

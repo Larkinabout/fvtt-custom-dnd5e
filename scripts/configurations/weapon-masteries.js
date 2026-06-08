@@ -24,11 +24,6 @@ const constants = {
       KEY: "weapon-masteries"
     }
   },
-  TEMPLATE: {
-    EDIT: "modules/custom-dnd5e/templates/weapon-masteries-edit.hbs",
-    FORM: "modules/custom-dnd5e/templates/config-form.hbs",
-    LIST: "modules/custom-dnd5e/templates/config-list.hbs"
-  },
   UUID: "Compendium.custom-dnd5e.custom-dnd5e-journals.JournalEntry.B48iqFBddUikMMer.JournalEntryPage.wM3kTpNxR7vYhD9c"
 };
 
@@ -38,7 +33,6 @@ const constants = {
 
 class WeaponMasteriesEditForm extends ConfigEditForm {
   /**
-   * Constructor for WeaponMasteriesEditForm.
    * @param {object} args
    */
   constructor(args) {
@@ -50,14 +44,10 @@ class WeaponMasteriesEditForm extends ConfigEditForm {
   /* -------------------------------------------- */
 
   /**
-   * Default options for the form.
    * @type {object}
    */
   static DEFAULT_OPTIONS = {
     id: `${MODULE.ID}-weapon-masteries-edit-form`,
-    position: {
-      height: 260
-    },
     window: {
       title: "CUSTOM_DND5E.form.weaponMasteries.edit.title"
     }
@@ -66,22 +56,17 @@ class WeaponMasteriesEditForm extends ConfigEditForm {
   /* -------------------------------------------- */
 
   /**
-   * Parts of the form.
-   * @type {object}
+   * @type {object[]}
    */
-  static PARTS = {
-    form: {
-      template: constants.TEMPLATE.EDIT
-    }
-  };
+  static FIELDS = [
+    { name: "label", type: "text", label: "CUSTOM_DND5E.label", localizeValue: true },
+    { name: "reference", type: "text", label: "CUSTOM_DND5E.reference" }
+  ];
 }
 
 /* -------------------------------------------- */
 
 class WeaponMasteriesForm extends ConfigForm {
-  /**
-   * Constructor for WeaponMasteriesForm.
-   */
   constructor() {
     super();
     this.editForm = WeaponMasteriesEditForm;
@@ -93,8 +78,6 @@ class WeaponMasteriesForm extends ConfigForm {
   /* -------------------------------------------- */
 
   /**
-   * Default options for the form.
-   *
    * @type {object}
    */
   static DEFAULT_OPTIONS = {

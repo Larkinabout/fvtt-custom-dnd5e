@@ -1,0 +1,89 @@
+<div class="standard-form custom-dnd5e-tabbed">
+    {{#if enableToggle}}
+    <div class="form-group">
+        <label class="flex1" style="min-width:80px; max-width:200px;">{{localize enableToggle.label}}</label>
+        <div class="form-fields">
+            <dnd5e-checkbox
+                id="custom-dnd5e-{{enableToggle.name}}"
+                name="{{enableToggle.name}}"
+                {{#if enableToggle.checked}}checked{{/if}}></dnd5e-checkbox>
+        </div>
+    </div>
+    <hr>
+    {{/if}}
+    {{#if tabs}}
+    <nav class="sheet-tabs tabs">
+        {{#each tabs}}
+        <a
+            class="item{{#if (customDnd5eEq ../activeTab id)}} active{{/if}}"
+            data-action="tab"
+            data-group="primary"
+            data-tab="{{id}}">
+            <span>{{#if icon}}<i class="{{icon}}"></i> {{/if}}{{localize label}}</span>
+        </a>
+        {{/each}}
+    </nav>
+    <hr>
+    {{/if}}
+    <div class="standard-form custom-dnd5e-tab-container">
+        {{#each sections}}
+        {{#if ../tabs}}
+        <section
+            class="tab{{#if (customDnd5eEq ../activeTab tab)}} active{{/if}}"
+            {{#if actorType}}data-actor-type="{{actorType}}"{{/if}}
+            data-group="primary"
+            data-tab="{{tab}}">
+        {{else}}
+        <section class="tab active">
+        {{/if}}
+            <div class="scrollable">
+                <div class="custom-dnd5e-items-sections">
+                    <div class="items-section card">
+                        <div class="items-header header">
+                            <h3 class="item-name">{{localize listTitle}}</h3>
+                            {{#each headerActions}}
+                            <button
+                                type="button"
+                                data-action="{{action}}"
+                                class="unbutton control-button item-control always-interactive"
+                                style="margin-right: 0.5rem;"
+                                data-tooltip="{{localize tooltip}}"
+                                data-tooltip-direction="UP"
+                                aria-label="{{localize tooltip}}">
+                                <i class="{{icon}}" inert></i>
+                            </button>
+                            {{/each}}
+                        </div>
+                        <ol class="item-list unlist custom-dnd5e-list">
+                            {{> "modules/custom-dnd5e/templates/forms/list.hbs"
+                                items=list.items
+                                prefix=list.prefix
+                                dataKeyPrefix=list.dataKeyPrefix
+                                toggleField=list.toggleField
+                                editAction=list.editAction
+                                showToggle=list.showToggle
+                                showSystem=list.showSystem
+                                rowActions=list.rowActions
+                                extraInputs=list.extraInputs}}
+                        </ol>
+                    </div>
+                    {{#if showNew}}
+                    <button
+                        type="button"
+                        data-action="new"
+                        class="gold-button always-interactive"
+                        aria-label="{{localize 'CUSTOM_DND5E.form.button.new.label'}}">
+                        <i class="fas fa-plus" inert></i>
+                    </button>
+                    {{/if}}
+                </div>
+            </div>
+        </section>
+        {{/each}}
+    </div>
+    <footer class="form-footer" data-application-part="footer">
+        <button type="submit" class="save-button">
+            <i class="fas fa-solid fa-floppy-disk"></i>{{localize "CUSTOM_DND5E.form.button.save.label"}}
+        </button>
+    </footer>
+</div>

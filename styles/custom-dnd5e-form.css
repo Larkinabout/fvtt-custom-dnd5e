@@ -672,3 +672,30 @@
 .tidy5e-sheet.application.theme-light:where(.quadrone) :is(button,.button):where(:not(.header-control):not(.controls-dropdown .control)).custom-dnd5e-disposition-button.active i {
     color: var(--color-text-primary);
 }
+
+.custom-dnd5e-app .custom-dnd5e-edit-label {
+    flex: 1;
+    min-width: 80px;
+    max-width: 100px;
+}
+
+.custom-dnd5e-app .custom-dnd5e-edit-label-wide {
+    flex: 1;
+    min-width: 80px;
+    max-width: 120px;
+}
+
+.custom-dnd5e-app .custom-dnd5e-edit-label-fixed-lg {
+    flex: 1;
+    min-width: 140px;
+    max-width: 140px;
+}
+
+.custom-dnd5e-app .custom-dnd5e-edit-label-flex2 {
+    flex: 2;
+    min-width: 80px;
+}
+
+.custom-dnd5e-app .custom-dnd5e-edit-label-full {
+    flex: 0 0 100%;
+}

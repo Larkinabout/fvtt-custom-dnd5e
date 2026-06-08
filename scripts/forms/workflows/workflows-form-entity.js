@@ -1,4 +1,4 @@
-import { MODULE } from "../../constants.js";
+import { CONSTANTS, MODULE } from "../../constants.js";
 import { deleteProperty, getFlag, Logger, setFlag, unsetFlag } from "../../utils.js";
 import { WorkflowsForm } from "./workflows-form.js";
 import { WorkflowsEditForm } from "./workflows-edit.js";
@@ -32,7 +32,7 @@ export class WorkflowsFormEntity extends WorkflowsForm {
 
   static PARTS = {
     form: {
-      template: `modules/${MODULE.ID}/templates/workflows/${form}.hbs`
+      template: CONSTANTS.CONFIG.TEMPLATE.SECTIONS
     }
   };
 
@@ -42,7 +42,18 @@ export class WorkflowsFormEntity extends WorkflowsForm {
   async _prepareContext() {
     this.triggers = getFlag(this.entity, "triggers") || {};
     return {
-      triggers: this.triggers
+      sections: [{
+        listTitle: "CUSTOM_DND5E.form.workflows.listTitle",
+        showNew: true,
+        list: {
+          items: this.triggers,
+          toggleField: "enabled",
+          editAction: "edit",
+          showToggle: true,
+          showSystem: false,
+          rowActions: [{ action: "copy", icon: "fa-regular fa-clipboard", tooltip: "CUSTOM_DND5E.copyToClipboard" }]
+        }
+      }]
     };
   }
 

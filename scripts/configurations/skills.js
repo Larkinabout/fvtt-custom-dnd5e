@@ -24,9 +24,6 @@ const constants = {
       KEY: "skills"
     }
   },
-  TEMPLATE: {
-    EDIT: "modules/custom-dnd5e/templates/skills-edit.hbs"
-  },
   UUID: "Compendium.custom-dnd5e.custom-dnd5e-journals.JournalEntry.B48iqFBddUikMMer.JournalEntryPage.0SCQdu9sYAjcDqAk"
 };
 
@@ -36,8 +33,6 @@ const constants = {
 
 class SkillsEditForm extends ConfigEditForm {
   /**
-   * Constructor for SkillsEditForm.
-   *
    * @param {object} args
    */
   constructor(args) {
@@ -49,15 +44,10 @@ class SkillsEditForm extends ConfigEditForm {
   /* -------------------------------------------- */
 
   /**
-   * Default options for the form.
-   *
    * @type {object}
    */
   static DEFAULT_OPTIONS = {
     id: `${MODULE.ID}-skills-edit-form`,
-    position: {
-      height: 400
-    },
     window: {
       title: "CUSTOM_DND5E.form.skills.edit.title"
     }
@@ -66,15 +56,16 @@ class SkillsEditForm extends ConfigEditForm {
   /* -------------------------------------------- */
 
   /**
-   * Parts of the form.
-   *
-   * @type {object}
+   * @type {object[]}
    */
-  static PARTS = {
-    form: {
-      template: constants.TEMPLATE.EDIT
-    }
-  };
+  static FIELDS = [
+    { name: "fullKey", type: "text", label: "CUSTOM_DND5E.fullKey", localizeValue: true },
+    { name: "label", type: "text", label: "CUSTOM_DND5E.label", localizeValue: true },
+    { name: "ability", type: "text", label: "CUSTOM_DND5E.ability" },
+    { name: "icon", type: "filePicker", label: "CUSTOM_DND5E.icon" },
+    { name: "reference", type: "text", label: "CUSTOM_DND5E.reference" },
+    { name: "rollMode", type: "select", label: "CUSTOM_DND5E.rollMode", choices: "rollMode", localizeChoices: true }
+  ];
 
   /* -------------------------------------------- */
 
@@ -101,9 +92,6 @@ class SkillsEditForm extends ConfigEditForm {
 /* -------------------------------------------- */
 
 class SkillsForm extends ConfigForm {
-  /**
-   * Constructor for SkillsForm.
-   */
   constructor() {
     super();
     this.editForm = SkillsEditForm;
@@ -115,8 +103,6 @@ class SkillsForm extends ConfigForm {
   /* -------------------------------------------- */
 
   /**
-   * Default options for the form.
-   *
    * @type {object}
    */
   static DEFAULT_OPTIONS = {

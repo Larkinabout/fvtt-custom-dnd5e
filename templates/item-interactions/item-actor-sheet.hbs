@@ -10,13 +10,17 @@
     <fieldset>
         <legend>{{localize "CUSTOM_DND5E.item"}}</legend>
         <div class="custom-dnd5e-give-items-summary custom-dnd5e-drop-items-summary">
-            <button type="button" class="custom-dnd5e-drop-items-summary-img unbutton{{#unless canOpenRoot}} custom-dnd5e-drop-items-summary-static{{/unless}}"
+            <button
+                type="button"
+                class="custom-dnd5e-drop-items-summary-img unbutton{{#unless canOpenRoot}} custom-dnd5e-drop-items-summary-static{{/unless}}"
                 {{#if canOpenRoot}}data-action="openItem" data-item-id="{{root.id}}"{{else}}disabled{{/if}}
                 data-tooltip="{{root.name}}" aria-label="{{root.name}}">
                 <img src="{{root.img}}" alt="{{root.name}}" width="48" height="48">
             </button>
             <div class="custom-dnd5e-drop-items-summary-text">
-                <button type="button" class="custom-dnd5e-give-items-name custom-dnd5e-drop-items-summary-name unbutton{{#unless canOpenRoot}} custom-dnd5e-drop-items-summary-static{{/unless}}"
+                <button
+                    type="button"
+                    class="custom-dnd5e-give-items-name custom-dnd5e-drop-items-summary-name unbutton{{#unless canOpenRoot}} custom-dnd5e-drop-items-summary-static{{/unless}}"
                     {{#if canOpenRoot}}data-action="openItem" data-item-id="{{root.id}}"{{else}}disabled{{/if}}>
                     {{root.name}}
                 </button>

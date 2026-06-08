@@ -1,8 +1,13 @@
 <div class="standard-form">
     <div class="form-group">
-        <label class="flex1" style="min-width:80px; max-width:200px;">{{localize "CUSTOM_DND5E.enableConfiguration"}}</label>
+        <label
+            class="flex1"
+            style="min-width:80px; max-width:200px;">{{localize "CUSTOM_DND5E.enableConfiguration"}}</label>
         <div class="form-fields">
-            <dnd5e-checkbox id="custom-dnd5e-enable-config" name="enableConfig"{{#if (ne enableConfig false)}} checked{{/if}}></dnd5e-checkbox>
+            <dnd5e-checkbox
+                id="custom-dnd5e-enable-config"
+                name="enableConfig"
+                {{#if (ne enableConfig false)}}checked{{/if}}></dnd5e-checkbox>
         </div>
     </div>
     <hr>
@@ -14,10 +19,18 @@
                         <h3 class="item-name">{{localize "CUSTOM_DND5E.form.calendars.listTitle"}}</h3>
                     </div>
                     <ol class="item-list unlist custom-dnd5e-list">
-                        {{> "modules/custom-dnd5e/templates/calendar/calendar-list.hbs" items=items}}
+                        {{> "modules/custom-dnd5e/templates/forms/list.hbs"
+                            items=items
+                            editAction="edit"
+                            showToggle=false
+                            showSystem=false}}
                     </ol>
                 </div>
-                <button type="button" data-action="new" class="gold-button always-interactive" aria-label="{{localize 'CUSTOM_DND5E.form.button.new.label'}}">
+                <button
+                    type="button"
+                    data-action="new"
+                    class="gold-button always-interactive"
+                    aria-label="{{localize 'CUSTOM_DND5E.form.button.new.label'}}">
                     <i class="fas fa-plus" inert></i>
                 </button>
             </div>

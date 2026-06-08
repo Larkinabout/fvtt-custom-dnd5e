@@ -1,4 +1,4 @@
-import { c5eLoadTemplates,
+import {
   checkEmpty,
   getSetting,
   registerMenu,
@@ -7,7 +7,7 @@ import { c5eLoadTemplates,
   resetSetting,
   setSetting } from "../utils.js";
 import { MODULE } from "../constants.js";
-import { ConfigForm } from "../forms/config-form.js";
+import { ConfigForm, labeliseConfigData } from "../forms/config-form.js";
 import { configs } from "./registry.js";
 
 /* -------------------------------------------- */
@@ -30,10 +30,6 @@ export const constants = {
     CONFIG: {
       KEY: "armor-proficiencies"
     }
-  },
-  TEMPLATE: {
-    FORM: "modules/custom-dnd5e/templates/config-form.hbs",
-    LIST: "modules/custom-dnd5e/templates/config-edit-in-list.hbs"
   },
   UUID: "Compendium.custom-dnd5e.custom-dnd5e-journals.JournalEntry.B48iqFBddUikMMer.JournalEntryPage.mTVSShsLO960Kmrk"
 };
@@ -82,19 +78,7 @@ class ArmorProficienciesForm extends ConfigForm {
   async _prepareContext() {
     this.setting = getSetting(this.settingKey) || this.settingDefault;
 
-    const labelise = data => {
-      Object.entries(data).forEach(([key, value]) => {
-        if ( typeof value === "string" ) {
-          data[key] = { label: value };
-        }
-
-        if ( value.children ) {
-          labelise(value.children);
-        }
-      });
-    };
-
-    labelise(this.setting);
+    labeliseConfigData(this.setting);
 
     return { editInList: this.editInList, label: this.label, listTitle: this.listTitle, items: this.setting };
   }
@@ -136,16 +120,10 @@ class ArmorProficienciesForm extends ConfigForm {
 /* -------------------------------------------- */
 
 /**
- * Register settings and load templates.
+ * Register settings.
  */
 export function register() {
   registerSettings();
-
-  const templates = [
-    constants.TEMPLATE.FORM,
-    constants.TEMPLATE.LIST
-  ];
-  c5eLoadTemplates(templates);
 }
 
 /* -------------------------------------------- */

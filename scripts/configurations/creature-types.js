@@ -24,11 +24,6 @@ const constants = {
       KEY: "creature-types"
     }
   },
-  TEMPLATE: {
-    EDIT: "modules/custom-dnd5e/templates/creature-types-edit.hbs",
-    FORM: "modules/custom-dnd5e/templates/config-form.hbs",
-    LIST: "modules/custom-dnd5e/templates/config-list.hbs"
-  },
   UUID: "Compendium.custom-dnd5e.custom-dnd5e-journals.JournalEntry.B48iqFBddUikMMer.JournalEntryPage.sRMUy8oNAZNCQOG0"
 };
 
@@ -38,8 +33,6 @@ const constants = {
 
 class CreatureTypesEditForm extends ConfigEditForm {
   /**
-   * Constructor for CreatureTypesEditForm.
-   *
    * @param {object} args
    */
   constructor(args) {
@@ -51,15 +44,10 @@ class CreatureTypesEditForm extends ConfigEditForm {
   /* -------------------------------------------- */
 
   /**
-   * Default options for the form.
-   *
    * @type {object}
    */
   static DEFAULT_OPTIONS = {
     id: `${MODULE.ID}-creature-types-edit-form`,
-    position: {
-      height: 340
-    },
     window: {
       title: `CUSTOM_DND5E.form.${constants.ID}.edit.title`
     }
@@ -68,23 +56,20 @@ class CreatureTypesEditForm extends ConfigEditForm {
   /* -------------------------------------------- */
 
   /**
-   * Parts of the form.
-   *
-   * @type {object}
+   * @type {object[]}
    */
-  static PARTS = {
-    form: {
-      template: constants.TEMPLATE.EDIT
-    }
-  };
+  static FIELDS = [
+    { name: "label", type: "text", label: "CUSTOM_DND5E.label", localizeValue: true },
+    { name: "plural", type: "text", label: "CUSTOM_DND5E.plural", localizeValue: true },
+    { name: "icon", type: "filePicker", label: "CUSTOM_DND5E.icon" },
+    { name: "reference", type: "text", label: "CUSTOM_DND5E.reference" },
+    { name: "detectAlignment", type: "checkbox", label: "CUSTOM_DND5E.detectAlignment" }
+  ];
 }
 
 /* -------------------------------------------- */
 
 class CreatureTypesForm extends ConfigForm {
-  /**
-   * Constructor for CreatureTypesForm.
-   */
   constructor() {
     super();
     this.editForm = CreatureTypesEditForm;
@@ -97,8 +82,6 @@ class CreatureTypesForm extends ConfigForm {
   /* -------------------------------------------- */
 
   /**
-   * Default options for the form.
-   *
    * @type {object}
    */
   static DEFAULT_OPTIONS = {
