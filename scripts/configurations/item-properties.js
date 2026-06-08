@@ -15,7 +15,7 @@ import { configs } from "./registry.js";
 /* -------------------------------------------- */
 
 export const constants = {
-  ID: "item-properties",
+  ID: "itemProperties",
   MENU: {
     KEY: "item-properties-menu",
     HINT: "CUSTOM_DND5E.menu.itemProperties.hint",
@@ -34,6 +34,7 @@ export const constants = {
   UUID: "Compendium.custom-dnd5e.custom-dnd5e-journals.JournalEntry.B48iqFBddUikMMer.JournalEntryPage.dM6sUm93mUi9oeBo"
 };
 export const configKey = "itemProperties";
+export const configKeys = ["itemProperties", "validProperties"];
 
 /* -------------------------------------------- */
 /*  FORM CLASSES                                */
@@ -61,7 +62,7 @@ class ItemPropertiesEditForm extends ConfigEditForm {
   static DEFAULT_OPTIONS = {
     id: `${MODULE.ID}-item-properties-edit-form`,
     window: {
-      title: "CUSTOM_DND5E.form.itemProperties.edit.title"
+      title: `CUSTOM_DND5E.form.${constants.ID}.edit.title`
     }
   };
 
@@ -112,7 +113,7 @@ class ItemPropertiesForm extends ConfigForm {
   constructor() {
     super();
     this.editForm = ItemPropertiesEditForm;
-    this.listTitle = "CUSTOM_DND5E.form.itemProperties.listTitle";
+    this.listTitle = `CUSTOM_DND5E.form.${constants.ID}.listTitle`;
     this.requiresReload = false;
     this.config = configs.itemProperties;
   }
@@ -125,7 +126,7 @@ class ItemPropertiesForm extends ConfigForm {
   static DEFAULT_OPTIONS = {
     id: `${MODULE.ID}-item-properties-form`,
     window: {
-      title: "CUSTOM_DND5E.form.itemProperties.title"
+      title: `CUSTOM_DND5E.form.${constants.ID}.title`
     }
   };
 }

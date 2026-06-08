@@ -1,6 +1,6 @@
 import { CONSTANTS, MODULE } from "./constants.js";
 import { animations, c5eLoadTemplates, getSetting, registerSetting } from "./utils.js";
-import { configs } from "./configurations/registry.js";
+import { configs, getConfigKeys } from "./configurations/registry.js";
 import { register as registerGameplay, registerNegativeHp } from "./gameplay/gameplay.js";
 import { register as registerActivities } from "./activities/activities.js";
 import { registerSockets } from "./sockets.js";
@@ -67,18 +67,7 @@ import { registerCharacterSheet } from "./sheets/character-sheet.js";
  */
 function cloneDnd5eConfig() {
   CONFIG.CUSTOM_DND5E = {};
-  const propertiesToClone = [
-    "abilities", "abilityActivationTypes", "activityActivationTypes", "actorSizes",
-    "armorClasses", "armorIds", "armorProficiencies", "armorProficienciesMap", "armorTypes",
-    "bloodied", "conditionTypes", "consumableTypes", "creatureTypes", "currencies",
-    "damageTypes", "encumbrance", "facilities", "featureTypes",
-    "itemActionTypes", "itemProperties", "itemRarity", "languages", "lootTypes",
-    "maxAbilityScore", "maxLevel", "miscEquipmentTypes", "restTypes", "senses", "skills",
-    "spellSchools", "toolProficiencies", "tools", "toolTypes",
-    "validProperties", "weaponIds", "weaponMasteries", "weaponProficiencies",
-    "weaponProficienciesMap", "weaponProperties", "weaponTypes"
-  ];
-  for ( const key of propertiesToClone ) {
+  for ( const key of getConfigKeys() ) {
     if ( key in CONFIG.DND5E ) {
       CONFIG.CUSTOM_DND5E[key] = foundry.utils.deepClone(CONFIG.DND5E[key]);
     }

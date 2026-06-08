@@ -103,3 +103,26 @@ export const configs = {
   toolProficiencies: {...toolProficienciesMod, ...toolProficienciesMod.constants},
   weaponProficiencies: {...weaponProficienciesMod, ...weaponProficienciesMod.constants}
 };
+
+/* -------------------------------------------- */
+
+/**
+ * CONFIG.DND5E properties not managed by the registry.
+ * @type {string[]}
+ */
+const NON_REGISTRY_CONFIG_KEYS = ["maxAbilityScore", "maxLevel"];
+
+/* -------------------------------------------- */
+
+/**
+ * Get CONFIG.DND5E properties managed by the module.
+ * @returns {string[]} Sorted, de-duplicated config keys
+ */
+export function getConfigKeys() {
+  const keys = new Set(NON_REGISTRY_CONFIG_KEYS);
+  for ( const config of Object.values(configs) ) {
+    const configKeys = config.configKeys ?? (config.configKey ? [config.configKey] : []);
+    configKeys.forEach(key => keys.add(key));
+  }
+  return [...keys].sort();
+}

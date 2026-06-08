@@ -15,6 +15,7 @@ import { configs } from "./registry.js";
 /* -------------------------------------------- */
 
 export const constants = {
+  ID: "weaponProficiencies",
   MENU: {
     KEY: "weapon-proficiencies-menu",
     HINT: "CUSTOM_DND5E.menu.weaponProficiencies.hint",
@@ -32,6 +33,8 @@ export const constants = {
   },
   UUID: "Compendium.custom-dnd5e.custom-dnd5e-journals.JournalEntry.B48iqFBddUikMMer.JournalEntryPage.Cy09wdPVi8XrkjJ2"
 };
+
+export const configKeys = ["weaponProficiencies", "weaponProficienciesMap", "weaponTypes"];
 
 /* -------------------------------------------- */
 /*  FORM CLASS                                  */
@@ -53,7 +56,7 @@ class WeaponProficienciesForm extends ConfigForm {
     this.config = configs.weaponProficiencies;
     this.settingDefault = this.config.getSettingDefault();
     this.setting = getSetting(this.settingKey) || this.settingDefault;
-    this.listTitle = "CUSTOM_DND5E.form.weaponProficiencies.listTitle";
+    this.listTitle = `CUSTOM_DND5E.form.${constants.ID}.listTitle`;
   }
 
   /* -------------------------------------------- */
@@ -64,7 +67,7 @@ class WeaponProficienciesForm extends ConfigForm {
     },
     id: `${MODULE.ID}-weapon-proficiencies-form`,
     window: {
-      title: "CUSTOM_DND5E.form.weaponProficiencies.title"
+      title: `CUSTOM_DND5E.form.${constants.ID}.title`
     }
   };
 

@@ -1,6 +1,7 @@
 import { MODULE, CONSTANTS } from "./constants.js";
 import { c5eLoadTemplates, Logger, getSetting, setSetting, registerMenu, showImportDialog } from "./utils.js";
 import { DebugForm } from "./forms/debug-form.js";
+import { getConfigKeys } from "./configurations/registry.js";
 
 const constants = CONSTANTS.DEBUG;
 
@@ -40,9 +41,34 @@ function registerSettings() {
 /* -------------------------------------------- */
 
 /**
+ * Serialise a CONFIG.DND5E value for JSON export.
+ * @param {string} key
+ * @param {*} value
+ * @returns {*} JSON-serialisable value
+ */
+function serialiseConfigValue(key, value) {
+  if ( key === "validProperties" ) return convertSetsToArrays(value);
+  if ( key === "restTypes" ) {
+    return Object.fromEntries(Object.entries(value ?? {}).map(([k, v]) => [k, {
+      ...v,
+      ...(v.dialogClass && { dialogClass: v.dialogClass.name }),
+      ...(v.recoverSpellSlotTypes instanceof Set && { recoverSpellSlotTypes: [...v.recoverSpellSlotTypes] })
+    }]));
+  }
+  return value;
+}
+
+/* -------------------------------------------- */
+
+/**
  * Exports data to JSON file.
  */
 export async function exportData() {
+  const configDnd5e = {};
+  for ( const key of getConfigKeys() ) {
+    configDnd5e[key] = serialiseConfigValue(key, CONFIG.DND5E[key]);
+  }
+
   const data = {
     customDnd5eVersion: game.modules.get(MODULE.ID).version,
     dnd5eVersion: game.system.version,
@@ -55,52 +81,7 @@ export async function exportData() {
     config: {
       statusEffects: CONFIG.statusEffects
     },
-    configDnd5e: {
-      abilities: CONFIG.DND5E.abilities,
-      abilityActivationTypes: CONFIG.DND5E.abilityActivationTypes,
-      activityActivationTypes: CONFIG.DND5E.activityActivationTypes,
-      actorSizes: CONFIG.DND5E.actorSizes,
-      armorClasses: CONFIG.DND5E.armorClasses,
-      armorIds: CONFIG.DND5E.armorIds,
-      armorProficiencies: CONFIG.DND5E.armorProficiencies,
-      armorProficienciesMap: CONFIG.DND5E.armorProficienciesMap,
-      armorTypes: CONFIG.DND5E.armorTypes,
-      bloodied: CONFIG.DND5E.bloodied,
-      conditionTypes: CONFIG.DND5E.conditionTypes,
-      consumableTypes: CONFIG.DND5E.consumableTypes,
-      creatureTypes: CONFIG.DND5E.creatureTypes,
-      currencies: CONFIG.DND5E.currencies,
-      damageTypes: CONFIG.DND5E.damageTypes,
-      encumbrance: CONFIG.DND5E.encumbrance,
-      facilities: CONFIG.DND5E.facilities,
-      featureTypes: CONFIG.DND5E.featureTypes,
-      itemActionTypes: CONFIG.DND5E.itemActionTypes,
-      itemProperties: CONFIG.DND5E.itemProperties,
-      itemRarity: CONFIG.DND5E.itemRarity,
-      languages: CONFIG.DND5E.languages,
-      lootTypes: CONFIG.DND5E.lootTypes,
-      maxAbilityScore: CONFIG.DND5E.maxAbilityScore,
-      maxLevel: CONFIG.DND5E.maxLevel,
-      miscEquipmentTypes: CONFIG.DND5E.miscEquipmentTypes,
-      restTypes: Object.fromEntries(Object.entries(CONFIG.DND5E.restTypes ?? {}).map(([key, value]) => [key, {
-        ...value,
-        ...(value.dialogClass && { dialogClass: value.dialogClass.name }),
-        ...(value.recoverSpellSlotTypes instanceof Set && { recoverSpellSlotTypes: [...value.recoverSpellSlotTypes] })
-      }])),
-      senses: CONFIG.DND5E.senses,
-      skills: CONFIG.DND5E.skills,
-      spellSchools: CONFIG.DND5E.spellSchools,
-      tools: CONFIG.DND5E.tools,
-      toolProficiencies: CONFIG.DND5E.toolProficiencies,
-      toolTypes: CONFIG.DND5E.toolTypes,
-      validProperties: convertSetsToArrays(CONFIG.DND5E.validProperties),
-      weaponIds: CONFIG.DND5E.weaponIds,
-      weaponMasteries: CONFIG.DND5E.weaponMasteries,
-      weaponProficiencies: CONFIG.DND5E.weaponProficiencies,
-      weaponProficienciesMap: CONFIG.DND5E.weaponProficienciesMap,
-      weaponProperties: CONFIG.DND5E.weaponProperties,
-      weaponTypes: CONFIG.DND5E.weaponTypes
-    }
+    configDnd5e
   };
 
   saveDataToFile(JSON.stringify(data, null, 2), "text/json", `${MODULE.ID}.json`);
@@ -121,7 +102,7 @@ export async function importData() {
 
 /**
  * Process the import file.
- * @param {File} file The file to import
+ * @param {File} file File to import
  * @returns {Promise<boolean>} Whether the process succeeded
  */
 async function processImport(file) {
@@ -155,7 +136,7 @@ async function processImport(file) {
 
 /**
  * Overwrite the module's settings.
- * @param {object} setting The settings
+ * @param {object} setting
  */
 async function overwriteSettings(setting) {
   if ( !setting ) {
@@ -174,7 +155,7 @@ async function overwriteSettings(setting) {
 
 /**
  * Overwrite properties in CONFIG.
- * @param {object} config The config
+ * @param {object} config
  */
 async function overwriteConfig(config) {
   if ( !config ) return;
@@ -188,7 +169,7 @@ async function overwriteConfig(config) {
 
 /**
  * Overwrite properties in CONFIG.DND5E.
- * @param {object} configDnd5e The config
+ * @param {object} configDnd5e
  */
 async function overwriteConfigDnd5e(configDnd5e) {
   if ( !configDnd5e ) {
@@ -207,8 +188,8 @@ async function overwriteConfigDnd5e(configDnd5e) {
 
 /**
  * Convert sets to arrays for export to JSON.
- * @param {object} obj The object containing the sets
- * @returns {object} The object with the sets converted to arrays
+ * @param {object} obj Object containing the sets
+ * @returns {object} Object with the sets converted to arrays
  */
 function convertSetsToArrays(obj) {
   if ( obj instanceof Set ) {

@@ -33,6 +33,8 @@ export const constants = {
   UUID: "Compendium.custom-dnd5e.custom-dnd5e-journals.JournalEntry.B48iqFBddUikMMer.JournalEntryPage.Ls4Rn45UNhTBagHD"
 };
 
+export const configKeys = ["toolProficiencies", "toolTypes"];
+
 /* -------------------------------------------- */
 /*  FORM CLASS                                  */
 /* -------------------------------------------- */
