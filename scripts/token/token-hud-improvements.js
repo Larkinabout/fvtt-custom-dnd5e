@@ -9,6 +9,10 @@ const constants = CONSTANTS.TOKEN;
 let paletteTimeout = null;
 const HOVER_DELAY = 200;
 const DEFAULT_HUD_SCALE = 1;
+const DEFAULT_STATUS_EFFECT_ROWS = 8;
+const DEFAULT_STATUS_EFFECT_COLUMNS = 5;
+const EFFECT_CELL_SIZE = 25;
+const EFFECT_CELL_GAP = 3;
 
 /* -------------------------------------------- */
 
@@ -48,6 +52,30 @@ function registerSettings() {
       config: false,
       type: Number,
       default: DEFAULT_HUD_SCALE
+    }
+  );
+
+  registerSetting(
+    constants.SETTING.HUD_STATUS_EFFECT_ROWS.KEY,
+    {
+      name: game.i18n.localize("CUSTOM_DND5E.setting.tokenHudStatusEffectRows.name"),
+      hint: game.i18n.localize("CUSTOM_DND5E.setting.tokenHudStatusEffectRows.hint"),
+      scope: "world",
+      config: false,
+      type: Number,
+      default: DEFAULT_STATUS_EFFECT_ROWS
+    }
+  );
+
+  registerSetting(
+    constants.SETTING.HUD_STATUS_EFFECT_COLUMNS.KEY,
+    {
+      name: game.i18n.localize("CUSTOM_DND5E.setting.tokenHudStatusEffectColumns.name"),
+      hint: game.i18n.localize("CUSTOM_DND5E.setting.tokenHudStatusEffectColumns.hint"),
+      scope: "world",
+      config: false,
+      type: Number,
+      default: DEFAULT_STATUS_EFFECT_COLUMNS
     }
   );
 }
@@ -95,7 +123,31 @@ function onRenderTokenHUD(hud, html) {
     palette.addEventListener("mouseleave", () => schedulePaletteClose(hud));
   }
 
+  applyStatusEffectGrid(html);
+
   requestAnimationFrame(() => applyHudScale(hud));
+}
+
+/* -------------------------------------------- */
+
+/**
+ * Resize the status effects palette grid.
+ * @param {HTMLElement} html
+ */
+function applyStatusEffectGrid(html) {
+  const rows = Number(getSetting(constants.SETTING.HUD_STATUS_EFFECT_ROWS.KEY)) || DEFAULT_STATUS_EFFECT_ROWS;
+  const columns = Number(getSetting(constants.SETTING.HUD_STATUS_EFFECT_COLUMNS.KEY)) || DEFAULT_STATUS_EFFECT_COLUMNS;
+  if ( rows === DEFAULT_STATUS_EFFECT_ROWS && columns === DEFAULT_STATUS_EFFECT_COLUMNS ) return;
+
+  const statusEffects = html.querySelector(".status-effects");
+  if ( !statusEffects ) return;
+
+  if ( rows !== DEFAULT_STATUS_EFFECT_ROWS ) {
+    statusEffects.style.height = `${rows * (EFFECT_CELL_SIZE + EFFECT_CELL_GAP) + 2 * EFFECT_CELL_GAP}px`;
+  }
+  if ( columns !== DEFAULT_STATUS_EFFECT_COLUMNS ) {
+    statusEffects.style.gridTemplateColumns = `repeat(${columns}, ${EFFECT_CELL_SIZE}px)`;
+  }
 }
 
 /* -------------------------------------------- */

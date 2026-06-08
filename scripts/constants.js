@@ -603,6 +603,16 @@ export const CONSTANTS = {
         KEY: "token-hud-scale",
         HINT: "CUSTOM_DND5E.setting.tokenHudScale.hint",
         NAME: "CUSTOM_DND5E.setting.tokenHudScale.name"
+      },
+      HUD_STATUS_EFFECT_ROWS: {
+        KEY: "token-hud-status-effect-rows",
+        HINT: "CUSTOM_DND5E.setting.tokenHudStatusEffectRows.hint",
+        NAME: "CUSTOM_DND5E.setting.tokenHudStatusEffectRows.name"
+      },
+      HUD_STATUS_EFFECT_COLUMNS: {
+        KEY: "token-hud-status-effect-columns",
+        HINT: "CUSTOM_DND5E.setting.tokenHudStatusEffectColumns.hint",
+        NAME: "CUSTOM_DND5E.setting.tokenHudStatusEffectColumns.name"
       }
     }
   },

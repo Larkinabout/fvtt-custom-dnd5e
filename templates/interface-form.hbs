@@ -264,6 +264,32 @@
                 </div>
                 <p class="hint">{{localize "CUSTOM_DND5E.setting.tokenHudScale.hint"}}</p>
             </div>
+            <div class="form-group">
+                <label>{{localize "CUSTOM_DND5E.setting.tokenHudStatusEffectRows.name"}}</label>
+                <div class="form-fields">
+                    <range-picker
+                        id="custom-dnd5e-token-hud-status-effect-rows"
+                        name="tokenHudStatusEffectRows"
+                        value="{{tokenHudStatusEffectRows}}"
+                        min="1"
+                        max="20"
+                        step="1"></range-picker>
+                </div>
+                <p class="hint">{{localize "CUSTOM_DND5E.setting.tokenHudStatusEffectRows.hint"}}</p>
+            </div>
+            <div class="form-group">
+                <label>{{localize "CUSTOM_DND5E.setting.tokenHudStatusEffectColumns.name"}}</label>
+                <div class="form-fields">
+                    <range-picker
+                        id="custom-dnd5e-token-hud-status-effect-columns"
+                        name="tokenHudStatusEffectColumns"
+                        value="{{tokenHudStatusEffectColumns}}"
+                        min="1"
+                        max="12"
+                        step="1"></range-picker>
+                </div>
+                <p class="hint">{{localize "CUSTOM_DND5E.setting.tokenHudStatusEffectColumns.hint"}}</p>
+            </div>
         </fieldset>
     </div>
     <footer class="form-footer" data-application-part="footer">
