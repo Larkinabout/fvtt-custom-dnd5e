@@ -11,6 +11,8 @@ export const CONSTANTS = {
       EDIT: "modules/custom-dnd5e/templates/forms/edit.hbs",
       EDIT_IN_LIST: "modules/custom-dnd5e/templates/forms/list-edit.hbs",
       LIST: "modules/custom-dnd5e/templates/forms/list.hbs",
+      TABLE: "modules/custom-dnd5e/templates/forms/table.hbs",
+      TABLE_ROWS: "modules/custom-dnd5e/templates/forms/table-rows.hbs",
       FIELD: "modules/custom-dnd5e/templates/fields/field.hbs",
       FIELD_CHECKBOX_GRID: "modules/custom-dnd5e/templates/fields/checkbox-grid.hbs",
       FIELD_MACRO_DROP: "modules/custom-dnd5e/templates/fields/macro-drop.hbs"

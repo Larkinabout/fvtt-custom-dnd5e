@@ -37,11 +37,7 @@ export const constants = {
   },
   TEMPLATE: {
     FORM: "modules/custom-dnd5e/templates/calendar/calendar-form.hbs",
-    EDIT: "modules/custom-dnd5e/templates/calendar/calendar-edit-form.hbs",
-    MONTHS_LIST: "modules/custom-dnd5e/templates/calendar/calendar-months-list.hbs",
-    DAYS_LIST: "modules/custom-dnd5e/templates/calendar/calendar-days-list.hbs",
-    SEASONS_LIST: "modules/custom-dnd5e/templates/calendar/calendar-seasons-list.hbs",
-    FESTIVALS_LIST: "modules/custom-dnd5e/templates/calendar/calendar-festivals-list.hbs"
+    EDIT: "modules/custom-dnd5e/templates/calendar/calendar-edit-form.hbs"
   },
   UUID: "Compendium.custom-dnd5e.custom-dnd5e-journals.JournalEntry.B48iqFBddUikMMer.JournalEntryPage.cR8kYmNpV3tZbW5d"
 };
@@ -118,6 +114,48 @@ class CalendarEditForm extends HandlebarsApplicationMixin(ApplicationV2) {
   /* -------------------------------------------- */
 
   /**
+   * @type {Object<string, object[]>}
+   */
+  static COLUMNS = {
+    months: [
+      { key: "name", type: "text", header: "CUSTOM_DND5E.form.calendars.monthName",
+        cellClass: "item-name", primary: true, placeholder: "CUSTOM_DND5E.form.calendars.monthName" },
+      { key: "abbreviation", type: "text", header: "CUSTOM_DND5E.form.calendars.abbreviation",
+        cellClass: "item-abbreviation", placeholder: "CUSTOM_DND5E.form.calendars.abbreviation" },
+      { key: "ordinal", type: "number", header: "#", cellClass: "item-ordinal", placeholder: "#", min: "1" },
+      { key: "days", type: "number", header: "CUSTOM_DND5E.form.calendars.daysInMonth",
+        cellClass: "item-days", min: "1", default: 30 },
+      { key: "leapDays", type: "number", header: "CUSTOM_DND5E.form.calendars.leapDays",
+        cellClass: "item-leap-days", min: "0" }
+    ],
+    days: [
+      { key: "name", type: "text", header: "CUSTOM_DND5E.form.calendars.dayName",
+        cellClass: "item-name", primary: true, placeholder: "CUSTOM_DND5E.form.calendars.dayName" },
+      { key: "abbreviation", type: "text", header: "CUSTOM_DND5E.form.calendars.abbreviation",
+        cellClass: "item-abbreviation", placeholder: "CUSTOM_DND5E.form.calendars.abbreviation" },
+      { key: "ordinal", type: "number", header: "#", cellClass: "item-ordinal", placeholder: "#", min: "1" }
+    ],
+    seasons: [
+      { key: "name", type: "text", header: "CUSTOM_DND5E.form.calendars.seasonName",
+        cellClass: "item-name", primary: true, placeholder: "CUSTOM_DND5E.form.calendars.seasonName" },
+      { key: "dayStart", type: "number", header: "CUSTOM_DND5E.form.calendars.dayStart",
+        cellClass: "item-day-start", min: "0", default: 0 },
+      { key: "dayEnd", type: "number", header: "CUSTOM_DND5E.form.calendars.dayEnd",
+        cellClass: "item-day-end", min: "0", default: 0 }
+    ],
+    festivals: [
+      { key: "name", type: "text", header: "CUSTOM_DND5E.form.calendars.festivalName",
+        cellClass: "item-name", primary: true, placeholder: "CUSTOM_DND5E.form.calendars.festivalName" },
+      { key: "month", type: "number", header: "CUSTOM_DND5E.form.calendars.month",
+        cellClass: "item-month", min: "1", default: 1 },
+      { key: "day", type: "number", header: "CUSTOM_DND5E.form.calendars.day",
+        cellClass: "item-day", min: "1", default: 1 }
+    ]
+  };
+
+  /* -------------------------------------------- */
+
+  /**
    * Get a default empty calendar.
    * @returns {object} Default calendar data
    */
@@ -182,6 +220,7 @@ class CalendarEditForm extends HandlebarsApplicationMixin(ApplicationV2) {
         .sort((a, b) => (a.dayStart ?? 0) - (b.dayStart ?? 0)),
       festivals: (data.festivals ?? []).map((f, i) => ({ ...f, index: i }))
         .sort((a, b) => (a.month ?? 0) - (b.month ?? 0) || (a.day ?? 0) - (b.day ?? 0)),
+      columns: CalendarEditForm.COLUMNS,
       activeTab: this.tabGroups.primary ?? "general"
     };
   }
@@ -197,43 +236,22 @@ class CalendarEditForm extends HandlebarsApplicationMixin(ApplicationV2) {
     const section = target.dataset.section;
     if ( !section ) return;
 
+    const columns = CalendarEditForm.COLUMNS[section];
+    if ( !columns ) return;
+
     const list = this.element.querySelector(`ol[data-section="${section}"]`);
     if ( !list ) return;
 
-    const existingItems = list.querySelectorAll("li");
-    const nextIndex = existingItems.length;
-    const nextOrdinal = nextIndex + 1;
+    const nextIndex = list.querySelectorAll("li").length;
+    
+    const row = { index: nextIndex };
+    for ( const column of columns ) row[column.key] = column.default ?? "";
+    if ( "ordinal" in row ) row.ordinal = nextIndex + 1;
 
-    let templatePath;
-    let data;
-
-    switch ( section ) {
-      case "months":
-        templatePath = constants.TEMPLATE.MONTHS_LIST;
-        data = { months: [{ name: "", abbreviation: "", ordinal: nextOrdinal, days: 30, leapDays: "" }] };
-        // Remap index for the template
-        data.months = data.months.map((m, i) => ({ ...m, index: nextIndex + i }));
-        break;
-      case "days":
-        templatePath = constants.TEMPLATE.DAYS_LIST;
-        data = { days: [{ name: "", abbreviation: "", ordinal: nextOrdinal }] };
-        data.days = data.days.map((d, i) => ({ ...d, index: nextIndex + i }));
-        break;
-      case "seasons":
-        templatePath = constants.TEMPLATE.SEASONS_LIST;
-        data = { seasons: [{ name: "", dayStart: 0, dayEnd: 0 }] };
-        data.seasons = data.seasons.map((s, i) => ({ ...s, index: nextIndex + i }));
-        break;
-      case "festivals":
-        templatePath = constants.TEMPLATE.FESTIVALS_LIST;
-        data = { festivals: [{ name: "", month: 1, day: 1 }] };
-        data.festivals = data.festivals.map((f, i) => ({ ...f, index: nextIndex + i }));
-        break;
-      default:
-        return;
-    }
-
-    const html = await foundry.applications.handlebars.renderTemplate(templatePath, data);
+    const html = await foundry.applications.handlebars.renderTemplate(
+      CONSTANTS.CONFIG.TEMPLATE.TABLE_ROWS,
+      { section, columns, rows: [row] }
+    );
     list.insertAdjacentHTML("beforeend", html);
 
     const scrollable = list.closest(".scrollable");
@@ -600,11 +618,7 @@ export function register() {
 
   const templates = [
     constants.TEMPLATE.FORM,
-    constants.TEMPLATE.EDIT,
-    constants.TEMPLATE.MONTHS_LIST,
-    constants.TEMPLATE.DAYS_LIST,
-    constants.TEMPLATE.SEASONS_LIST,
-    constants.TEMPLATE.FESTIVALS_LIST
+    constants.TEMPLATE.EDIT
   ];
   c5eLoadTemplates(templates);
 }

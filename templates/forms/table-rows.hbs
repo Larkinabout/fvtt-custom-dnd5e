@@ -1,24 +1,23 @@
-{{#each festivals}}
+{{#each rows}}
 <li class="item custom-dnd5e-item" data-index="{{this.index}}">
     <div class="item-row">
-        <div class="item-name">
+        {{#each ../columns}}
+        <div class="{{cellClass}}">
             <input
-                type="text"
-                name="festivals.{{this.index}}.name"
-                value="{{this.name}}"
-                placeholder="{{localize "CUSTOM_DND5E.form.calendars.festivalName"}}">
+                type="{{type}}"
+                name="{{../../section}}.{{../index}}.{{key}}"
+                value="{{lookup .. key}}"
+                {{#if placeholder}}placeholder="{{localize placeholder}}"{{/if}}
+                {{#if min}}min="{{min}}"{{/if}}
+                {{#if max}}max="{{max}}"{{/if}}
+                {{#if step}}step="{{step}}"{{/if}}>
         </div>
-        <div class="item-month">
-            <input type="number" name="festivals.{{this.index}}.month" value="{{this.month}}" min="1">
-        </div>
-        <div class="item-day">
-            <input type="number" name="festivals.{{this.index}}.day" value="{{this.day}}" min="1">
-        </div>
+        {{/each}}
         <div class="item-controls always-visible">
             <button
                 type="button"
                 data-action="removeRow"
-                data-section="festivals"
+                data-section="{{../section}}"
                 data-index="{{this.index}}"
                 class="unbutton control-button item-control always-interactive"
                 data-tooltip="{{localize 'CUSTOM_DND5E.form.button.delete.tooltip'}}"
