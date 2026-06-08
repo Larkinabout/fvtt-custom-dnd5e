@@ -7,7 +7,7 @@
             <dnd5e-checkbox
                 id="custom-dnd5e-enable-config"
                 name="enableConfig"
-                {{#if (ne enableConfig false)}}checked{{/if}}></dnd5e-checkbox>
+                {{customDnd5eChecked enableConfig}}></dnd5e-checkbox>
         </div>
     </div>
     <hr>
@@ -60,7 +60,7 @@
                     <dnd5e-checkbox
                         id="custom-dnd5e-apply-bloodied"
                         name="applyBloodied"
-                        {{#if applyBloodied}}checked{{/if}}></dnd5e-checkbox>
+                        {{checked applyBloodied}}></dnd5e-checkbox>
                 </div>
                 <p class="hint">{{localize "CUSTOM_DND5E.form.bloodied.applyBloodied.note1"}}</p>
                 <p class="custom-dnd5e-warning notes">{{localize "CUSTOM_DND5E.form.bloodied.applyBloodied.note2"}}</p>
@@ -71,7 +71,7 @@
                     <dnd5e-checkbox
                         id="custom-dnd5e-remove-bloodied-on-dead"
                         name="removeBloodiedOnDead"
-                        {{#if removeBloodiedOnDead}}checked{{/if}}></dnd5e-checkbox>
+                        {{checked removeBloodiedOnDead}}></dnd5e-checkbox>
                 </div>
                 <p class="hint">{{localize "CUSTOM_DND5E.form.bloodied.removeBloodiedOnDead.note"}}</p>
             </div>

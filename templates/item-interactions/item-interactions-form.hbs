@@ -19,7 +19,7 @@
                     <dnd5e-checkbox
                         id="custom-dnd5e-give-items-enable"
                         name="giveItemsEnable"
-                        {{#if giveItemsEnable}}checked{{/if}}></dnd5e-checkbox>
+                        {{checked giveItemsEnable}}></dnd5e-checkbox>
                 </div>
                 <p class="hint">{{localize "CUSTOM_DND5E.setting.giveItems.enable.hint"}}</p>
             </div>
@@ -43,37 +43,37 @@
                     <label class="checkbox">
                         <dnd5e-checkbox
                             name="giveItemsRequireAcceptanceFriendly"
-                            {{#if giveItemsRequireAcceptanceFriendly}}checked{{/if}}></dnd5e-checkbox>
+                            {{checked giveItemsRequireAcceptanceFriendly}}></dnd5e-checkbox>
                         {{localize "CUSTOM_DND5E.friendly"}}
                     </label>
                     <label class="checkbox">
                         <dnd5e-checkbox
                             name="giveItemsRequireAcceptanceNeutral"
-                            {{#if giveItemsRequireAcceptanceNeutral}}checked{{/if}}></dnd5e-checkbox>
+                            {{checked giveItemsRequireAcceptanceNeutral}}></dnd5e-checkbox>
                         {{localize "CUSTOM_DND5E.neutral"}}
                     </label>
                     <label class="checkbox">
                         <dnd5e-checkbox
                             name="giveItemsRequireAcceptanceHostile"
-                            {{#if giveItemsRequireAcceptanceHostile}}checked{{/if}}></dnd5e-checkbox>
+                            {{checked giveItemsRequireAcceptanceHostile}}></dnd5e-checkbox>
                         {{localize "CUSTOM_DND5E.hostile"}}
                     </label>
                     <label class="checkbox">
                         <dnd5e-checkbox
                             name="giveItemsRequireAcceptancePcToPc"
-                            {{#if giveItemsRequireAcceptancePcToPc}}checked{{/if}}></dnd5e-checkbox>
+                            {{checked giveItemsRequireAcceptancePcToPc}}></dnd5e-checkbox>
                         {{localize "CUSTOM_DND5E.pcToPc"}}
                     </label>
                     <label class="checkbox">
                         <dnd5e-checkbox
                             name="giveItemsRequireAcceptancePcToNpc"
-                            {{#if giveItemsRequireAcceptancePcToNpc}}checked{{/if}}></dnd5e-checkbox>
+                            {{checked giveItemsRequireAcceptancePcToNpc}}></dnd5e-checkbox>
                         {{localize "CUSTOM_DND5E.pcToNpc"}}
                     </label>
                     <label class="checkbox">
                         <dnd5e-checkbox
                             name="giveItemsRequireAcceptanceNpcToPc"
-                            {{#if giveItemsRequireAcceptanceNpcToPc}}checked{{/if}}></dnd5e-checkbox>
+                            {{checked giveItemsRequireAcceptanceNpcToPc}}></dnd5e-checkbox>
                         {{localize "CUSTOM_DND5E.npcToPc"}}
                     </label>
                 </div>
@@ -99,7 +99,7 @@
                     <dnd5e-checkbox
                         id="custom-dnd5e-drop-items-enable"
                         name="dropItemsEnable"
-                        {{#if dropItemsEnable}}checked{{/if}}></dnd5e-checkbox>
+                        {{checked dropItemsEnable}}></dnd5e-checkbox>
                 </div>
                 <p class="hint">{{localize "CUSTOM_DND5E.setting.dropItems.enable.hint"}}</p>
             </div>
@@ -183,7 +183,7 @@
                     <dnd5e-checkbox
                         id="custom-dnd5e-drop-items-allow-player-drops"
                         name="dropItemsAllowPlayerDrops"
-                        {{#if dropItemsAllowPlayerDrops}}checked{{/if}}></dnd5e-checkbox>
+                        {{checked dropItemsAllowPlayerDrops}}></dnd5e-checkbox>
                 </div>
                 <p class="hint">{{localize "CUSTOM_DND5E.setting.dropItems.allowPlayerDrops.hint"}}</p>
             </div>
@@ -193,7 +193,7 @@
                     <dnd5e-checkbox
                         id="custom-dnd5e-drop-items-chat-notifications"
                         name="dropItemsChatNotifications"
-                        {{#if dropItemsChatNotifications}}checked{{/if}}></dnd5e-checkbox>
+                        {{checked dropItemsChatNotifications}}></dnd5e-checkbox>
                 </div>
                 <p class="hint">{{localize "CUSTOM_DND5E.setting.dropItems.chatNotifications.hint"}}</p>
             </div>
@@ -204,7 +204,7 @@
                     <label class="checkbox">
                         <dnd5e-checkbox
                             name="dropItemsDroppableType_{{type}}"
-                            {{#if checked}}checked{{/if}}></dnd5e-checkbox>
+                            {{checked checked}}></dnd5e-checkbox>
                         {{localize label}}
                     </label>
                     {{/each}}

@@ -28,14 +28,14 @@
         <div class="form-group">
             <label>{{ localize "CUSTOM_DND5E.activities.move.fields.isTeleport.label" }}</label>
             <div class="form-fields">
-                <dnd5e-checkbox name="move.isTeleport"{{#if source.move.isTeleport}} checked{{/if}}></dnd5e-checkbox>
+                <dnd5e-checkbox name="move.isTeleport" {{checked source.move.isTeleport}}></dnd5e-checkbox>
             </div>
             <p class="hint">{{ localize "CUSTOM_DND5E.activities.move.fields.isTeleport.hint" }}</p>
         </div>
         <div class="form-group">
             <label>{{ localize "CUSTOM_DND5E.activities.move.fields.autoExecute.label" }}</label>
             <div class="form-fields">
-                <dnd5e-checkbox name="move.autoExecute"{{#if source.move.autoExecute}} checked{{/if}}></dnd5e-checkbox>
+                <dnd5e-checkbox name="move.autoExecute" {{checked source.move.autoExecute}}></dnd5e-checkbox>
             </div>
             <p class="hint">{{ localize "CUSTOM_DND5E.activities.move.fields.autoExecute.hint" }}</p>
         </div>

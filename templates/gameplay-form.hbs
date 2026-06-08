@@ -19,7 +19,7 @@
                     <dnd5e-checkbox
                         id="custom-dnd5e-apply-dead"
                         name="applyDead"
-                        {{#if applyDead}}checked{{/if}}></dnd5e-checkbox>
+                        {{checked applyDead}}></dnd5e-checkbox>
                 </div>
                 <p class="hint">{{localize "CUSTOM_DND5E.form.gameplay.dead.applyDead.note"}}</p>
             </div>
@@ -29,7 +29,7 @@
                     <dnd5e-checkbox
                         id="custom-dnd5e-apply-instant-death"
                         name="applyInstantDeath"
-                        {{#if applyInstantDeath}}checked{{/if}}></dnd5e-checkbox>
+                        {{checked applyInstantDeath}}></dnd5e-checkbox>
                 </div>
                 <p class="hint">{{localize "CUSTOM_DND5E.form.gameplay.dead.applyInstantDeath.note"}}</p>
             </div>
@@ -174,7 +174,7 @@
                     <dnd5e-checkbox
                         id="custom-dnd5e-apply-exhaustion-on-zero-hp"
                         name="applyExhaustionOnZeroHp"
-                        {{#if applyExhaustionOnZeroHp}}checked{{/if}}></dnd5e-checkbox>
+                        {{checked applyExhaustionOnZeroHp}}></dnd5e-checkbox>
                 </div>
                 <p class="hint">{{localize "CUSTOM_DND5E.form.gameplay.exhaustion.applyExhaustionOnZeroHp.note"}}</p>
             </div>
@@ -184,7 +184,7 @@
                     <dnd5e-checkbox
                         id="custom-dnd5e-apply-exhaustion-on-combat-end"
                         name="applyExhaustionOnCombatEnd"
-                        {{#if applyExhaustionOnCombatEnd}}checked{{/if}}></dnd5e-checkbox>
+                        {{checked applyExhaustionOnCombatEnd}}></dnd5e-checkbox>
                 </div>
                 <p class="hint">{{localize "CUSTOM_DND5E.form.gameplay.exhaustion.applyExhaustionOnCombatEnd.note"}}</p>
             </div>
@@ -194,7 +194,7 @@
                     <dnd5e-checkbox
                         id="custom-dnd5e-exhaustion-animation"
                         name="exhaustionAnimation"
-                        {{#if exhaustionAnimation}}checked{{/if}}></dnd5e-checkbox>
+                        {{checked exhaustionAnimation}}></dnd5e-checkbox>
                 </div>
                 <p class="hint">{{localize "CUSTOM_DND5E.form.gameplay.exhaustion.exhaustionAnimation.note"}}</p>
             </div>
@@ -206,7 +206,7 @@
                         <dnd5e-checkbox
                             id="custom-dnd5e-exhaustion-request-saving-throw"
                             name="exhaustionRequestSavingThrow"
-                            {{#if exhaustionRequestSavingThrow}}checked{{/if}}></dnd5e-checkbox>
+                            {{checked exhaustionRequestSavingThrow}}></dnd5e-checkbox>
                     </div>
                     <p class="hint">{{localize "CUSTOM_DND5E.form.gameplay.exhaustion.exhaustionRequestSavingThrow.note"}}</p>
                 </div>
@@ -229,7 +229,7 @@
                             <dnd5e-checkbox
                                 id="custom-dnd5e-exhaustion-saving-throw-dc-scaling"
                                 name="exhaustionSavingThrowDcScaling"
-                                {{#if exhaustionSavingThrowDcScaling}}checked{{/if}}></dnd5e-checkbox>
+                                {{checked exhaustionSavingThrowDcScaling}}></dnd5e-checkbox>
                         </div>
                         <p class="hint">{{localize "CUSTOM_DND5E.form.gameplay.exhaustion.exhaustionSavingThrowDcScaling.note"}}</p>
                     </div>
@@ -255,7 +255,7 @@
                     <dnd5e-checkbox
                         id="custom-dnd5e-apply-massive-damage"
                         name="applyMassiveDamage"
-                        {{#if applyMassiveDamage}}checked{{/if}}></dnd5e-checkbox>
+                        {{checked applyMassiveDamage}}></dnd5e-checkbox>
                 </div>
                 <p class="hint">{{localize "CUSTOM_DND5E.form.gameplay.hitPoints.applyMassiveDamage.note"}}</p>
             </div>
@@ -286,7 +286,7 @@
                     <dnd5e-checkbox
                         id="custom-dnd5e-massive-damage-animation"
                         name="massiveDamageAnimation"
-                        {{#if massiveDamageAnimation}}checked{{/if}}></dnd5e-checkbox>
+                        {{checked massiveDamageAnimation}}></dnd5e-checkbox>
                 </div>
                 <p class="hint">{{localize "CUSTOM_DND5E.form.gameplay.hitPoints.massiveDamageAnimation.note"}}</p>
             </div>
@@ -322,7 +322,7 @@
                     <dnd5e-checkbox
                         id="custom-dnd5e-level-up-hit-points-reroll-once"
                         name="levelUpHitPointsRerollOnce"
-                        {{#if levelUpHitPointsRerollOnce}}checked{{/if}}></dnd5e-checkbox>
+                        {{checked levelUpHitPointsRerollOnce}}></dnd5e-checkbox>
                 </div>
                 <p class="hint">{{localize "CUSTOM_DND5E.form.gameplay.rollingHitPoints.rerollOnce.note"}}</p>
             </div>
@@ -332,7 +332,7 @@
                     <dnd5e-checkbox
                         id="custom-dnd5e-level-up-hit-points-show-take-average"
                         name="levelUpHitPointsShowTakeAverage"
-                        {{#if levelUpHitPointsShowTakeAverage}}checked{{/if}}></dnd5e-checkbox>
+                        {{checked levelUpHitPointsShowTakeAverage}}></dnd5e-checkbox>
                 </div>
                 <p class="hint">{{localize "CUSTOM_DND5E.form.gameplay.rollingHitPoints.showTakeAverage.note"}}</p>
             </div>
@@ -343,7 +343,7 @@
                     <dnd5e-checkbox
                         id="custom-dnd5e-apply-negative-hp"
                         name="applyNegativeHp"
-                        {{#if applyNegativeHp}}checked{{/if}}></dnd5e-checkbox>
+                        {{checked applyNegativeHp}}></dnd5e-checkbox>
                 </div>
                 <p class="hint">{{localize "CUSTOM_DND5E.form.gameplay.hitPoints.applyNegativeHp.note"}}</p>
             </div>
@@ -353,7 +353,7 @@
                     <dnd5e-checkbox
                         id="custom-dnd5e-apply-negative-hp-npc"
                         name="applyNegativeHpNpc"
-                        {{#if applyNegativeHpNpc}}checked{{/if}}></dnd5e-checkbox>
+                        {{checked applyNegativeHpNpc}}></dnd5e-checkbox>
                 </div>
                 <p class="hint">{{localize "CUSTOM_DND5E.form.gameplay.hitPoints.applyNegativeHpNpc.note"}}</p>
             </div>
@@ -363,7 +363,7 @@
                     <dnd5e-checkbox
                         id="custom-dnd5e-negative-hp-heal-from-zero"
                         name="negativeHpHealFromZero"
-                        {{#if negativeHpHealFromZero}}checked{{/if}}></dnd5e-checkbox>
+                        {{checked negativeHpHealFromZero}}></dnd5e-checkbox>
                 </div>
                 <p class="hint">{{localize "CUSTOM_DND5E.form.gameplay.hitPoints.negativeHpHealFromZero.note"}}</p>
             </div>
@@ -426,35 +426,35 @@
                         <dnd5e-checkbox
                             id="custom-dnd5e-rollAbilityCheck"
                             name="awardInspirationRollTypes.rollAbilityCheck"
-                            {{#if awardInspirationRollTypes.rollAbilityCheck}}checked{{/if}}></dnd5e-checkbox>
+                            {{checked awardInspirationRollTypes.rollAbilityCheck}}></dnd5e-checkbox>
                         <span>{{localize "CUSTOM_DND5E.abilityCheck"}}</span>
                     </label>
                     <label class="checkbox">
                         <dnd5e-checkbox
                             id="custom-dnd5e-rollAttack"
                             name="awardInspirationRollTypes.rollAttack"
-                            {{#if awardInspirationRollTypes.rollAttack}}checked{{/if}}></dnd5e-checkbox>
+                            {{checked awardInspirationRollTypes.rollAttack}}></dnd5e-checkbox>
                         <span>{{localize "CUSTOM_DND5E.attackRoll"}}</span>
                     </label>
                     <label class="checkbox">
                         <dnd5e-checkbox
                             id="custom-dnd5e-rollSavingThrow"
                             name="awardInspirationRollTypes.rollSavingThrow"
-                            {{#if awardInspirationRollTypes.rollSavingThrow}}checked{{/if}}></dnd5e-checkbox>
+                            {{checked awardInspirationRollTypes.rollSavingThrow}}></dnd5e-checkbox>
                         <span>{{localize "CUSTOM_DND5E.savingThrow"}}</span>
                     </label>
                     <label class="checkbox">
                         <dnd5e-checkbox
                             id="custom-dnd5e-rollSkill"
                             name="awardInspirationRollTypes.rollSkill"
-                            {{#if awardInspirationRollTypes.rollSkill}}checked{{/if}}></dnd5e-checkbox>
+                            {{checked awardInspirationRollTypes.rollSkill}}></dnd5e-checkbox>
                         <span>{{localize "CUSTOM_DND5E.skillCheck"}}</span>
                     </label>
                     <label class="checkbox">
                         <dnd5e-checkbox
                             id="custom-dnd5e-rollToolCheck"
                             name="awardInspirationRollTypes.rollToolCheck"
-                            {{#if awardInspirationRollTypes.rollToolCheck}}checked{{/if}}></dnd5e-checkbox>
+                            {{checked awardInspirationRollTypes.rollToolCheck}}></dnd5e-checkbox>
                         <span>{{localize "CUSTOM_DND5E.toolCheck"}}</span>
                     </label>
                     </div>
@@ -465,7 +465,7 @@
                     <dnd5e-checkbox
                         id="custom-dnd5e-inspiration-animation"
                         name="inspirationAnimation"
-                        {{#if inspirationAnimation}}checked{{/if}}></dnd5e-checkbox>
+                        {{checked inspirationAnimation}}></dnd5e-checkbox>
                 </div>
                 <p class="hint">{{localize "CUSTOM_DND5E.form.gameplay.inspiration.inspirationAnimation.note"}}</p>
             </div>
@@ -512,7 +512,7 @@
                     <dnd5e-checkbox
                         id="custom-dnd5e-enable-mob-damage"
                         name="enableMobDamage"
-                        {{#if enableMobDamage}}checked{{/if}}></dnd5e-checkbox>
+                        {{checked enableMobDamage}}></dnd5e-checkbox>
                 </div>
                 <p class="hint">{{localize "CUSTOM_DND5E.form.gameplay.mobDamage.enable.note"}}</p>
             </div>
@@ -522,7 +522,7 @@
                     <dnd5e-checkbox
                         id="custom-dnd5e-use-average-mob-damage"
                         name="useAverageMobDamage"
-                        {{#if useAverageMobDamage}}checked{{/if}}></dnd5e-checkbox>
+                        {{checked useAverageMobDamage}}></dnd5e-checkbox>
                 </div>
                 <p class="hint">{{localize "CUSTOM_DND5E.form.gameplay.mobDamage.useAverageDamage.note"}}</p>
             </div>
@@ -603,7 +603,7 @@
                     <dnd5e-checkbox
                         id="custom-dnd5e-use-camp-supplies"
                         name="useCampSupplies"
-                        {{#if useCampSupplies}}checked{{/if}}></dnd5e-checkbox>
+                        {{checked useCampSupplies}}></dnd5e-checkbox>
                 </div>
                 <p class="hint">{{localize "CUSTOM_DND5E.form.gameplay.resting.useCampSupplies.note"}}</p>
             </div>
@@ -627,7 +627,7 @@
                     <dnd5e-checkbox
                         id="custom-dnd5e-apply-unconscious"
                         name="applyUnconscious"
-                        {{#if applyUnconscious}}checked{{/if}}></dnd5e-checkbox>
+                        {{checked applyUnconscious}}></dnd5e-checkbox>
                 </div>
                 <p class="hint">{{localize "CUSTOM_DND5E.form.gameplay.unconscious.applyUnconscious.note"}}</p>
             </div>

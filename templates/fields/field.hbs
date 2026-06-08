@@ -29,7 +29,7 @@
             {{#if max}}max="{{max}}"{{/if}}
             {{#if placeholder}}placeholder="{{placeholder}}"{{/if}}>
         {{else if (customDnd5eEq type "checkbox")}}
-        <dnd5e-checkbox id="{{id}}" name="{{inputName}}"{{#if checked}} checked{{/if}}></dnd5e-checkbox>
+        <dnd5e-checkbox id="{{id}}" name="{{inputName}}" {{checked checked}}></dnd5e-checkbox>
         {{else if (customDnd5eEq type "select")}}
         <select id="{{id}}" name="{{inputName}}"{{#if disabled}} disabled{{/if}}>
             {{selectOptions choices selected=value localize=localizeChoices}}

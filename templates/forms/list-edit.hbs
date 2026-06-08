@@ -8,7 +8,7 @@
             id="custom-dnd5e-visible"
             name="{{../prefix}}{{customDnd5eDotNotateChild ../childType ../parentKey key}}.visible"
             data-tooltip="{{localize "CUSTOM_DND5E.form.checkbox.visible.tooltip"}}"
-            {{#unless (customDnd5eBoolFalse visible)}}checked{{/unless}}></dnd5e-checkbox>
+            {{customDnd5eChecked visible}}></dnd5e-checkbox>
         <input
             id="custom-dnd5e-parentKey"
             name="{{../prefix}}{{customDnd5eDotNotateChild ../childType ../parentKey key}}.parentKey"

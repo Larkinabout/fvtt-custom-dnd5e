@@ -266,6 +266,7 @@ Hooks.on("init", async () => {
 Hooks.on("ready", async () => {
   Handlebars.registerHelper({
     customDnd5eBoolFalse: function(value) { return value === false; },
+    customDnd5eChecked: function(value) { return value !== false ? "checked" : ""; },
     customDnd5eEq: function(a, b) { return a === b; },
     customDnd5eDotNotateChild: function(childType, parent, child) {
       if ( parent ) {

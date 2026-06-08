@@ -19,7 +19,7 @@
                     name="flags.custom-dnd5e.{{counter.property}}"
                     placeholder="false"
                     data-dtype="Boolean"
-                    {{#if counter.value}}checked{{/if}}
+                    {{checked counter.value}}
                     {{#unless counter.canEdit}}disabled{{/unless}}></dnd5e-checkbox>
             </div>
         </li>

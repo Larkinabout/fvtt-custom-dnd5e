@@ -7,7 +7,7 @@
             id="custom-dnd5e-{{../toggleField}}"
             name="{{../prefix}}{{key}}.{{../toggleField}}"
             data-tooltip="{{localize (concat "CUSTOM_DND5E.form.checkbox." ../toggleField ".tooltip")}}"
-            {{#unless (customDnd5eBoolFalse (lookup item ../toggleField))}}checked{{/unless}}></dnd5e-checkbox>
+            {{customDnd5eChecked (lookup item ../toggleField)}}></dnd5e-checkbox>
         {{/if}}
         {{#if ../showSystem}}
         <input
