@@ -124,7 +124,7 @@ export class ItemActorSheet extends HandlebarsApplicationMixin(ActorSheetV2) {
       selectedActorId: this._selectedActorId ?? "",
       canTake: !!this._selectedActorId,
       buttonLabel,
-      isEmpty: !root && game.user.isGM,
+      isEmpty: !root && game.user.isGM && !actor.system?.droppedAt,
       showFooter,
       showTakeAll,
       showTakeContents,
