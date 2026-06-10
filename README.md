@@ -25,12 +25,14 @@ For full attribution and licensing details, see [ATTRIBUTION.md](ATTRIBUTION.md)
 - [Configure Rolls](#configure-rolls)
 - [Actor Sheet](#actor-sheet)
 - [Item Sheet](#item-sheet)
+- [Item Interactions](#item-interactions)
 - [Smaller Form Character Sheet](#smaller-form-character-sheet)
 - [Chat Commands](#chat-commands)
 - [Show Pressed Keys](#show-pressed-keys)
 - [Ruler Travel Time](#ruler-travel-time)
 - [Animations](#animations)
 - [Radial Status Effects](#radial-status-effects)
+- [Condition Levels](#condition-levels)
 - [Token Border Shape](#token-border-shape)
 - [Token Distance](#token-distance)
 - [Token HUD Improvements](#token-hud-improvements)
@@ -298,11 +300,11 @@ Triggers define when a workflow fires. Multiple triggers can be added to a singl
 
 **Rest Triggers:** Short Rest, Long Rest.
 
-**Condition Triggers:** Condition Applied, Condition Removed.
+**Condition Triggers:** Condition Applied, Condition Removed, Condition Level Changed.
 
 **Effect Triggers:** Effect Enabled, Effect Disabled.
 
-**Equipment Triggers:** Item Equipped, Item Unequipped.
+**Item Triggers:** Item Equipped, Item Unequipped, Item Used.
 
 **Counter Triggers:** Counter Value Changed, Counter Value Increased, Counter Value Decreased, Counter Checked, Counter Unchecked, Success Value, Failure Value.
 
@@ -346,6 +348,10 @@ Item workflows use a subset of triggers (Attack Roll, Item Equipped, Item Unequi
 ### Per-Actor and Per-Item Workflows
 
 Workflows can also be configured on individual actors via the Configure Workflows button on the Effects tab of the actor sheet, or on individual items. Per-actor and per-item workflows follow the same trigger and action system as world workflows.
+
+### Copy & Paste
+
+Workflows can be copied and pasted making it easy to duplicate or share workflows.
 
 <p align="right">(<a href="#custom-dd-5e">back to top</a>)</p>
 
@@ -462,6 +468,9 @@ Customise the actor sheet with client and world settings for characters and NPCs
 - **Show/Hide Legendary Resistance:** Show or hide Legendary Resistance on the NPC sheet.
 - **Show/Hide Use Lair Action:** Show or hide the Use Lair Action button on the NPC sheet.
 
+### Open / Detach
+Automatically open actor sheets as detached windows or when a token is selected, with options to limit the behaviour to chosen actor types and add toggle buttons to the scene controls.
+
 <p align="right">(<a href="#custom-dd-5e">back to top</a>)</p>
 
 ---
@@ -469,6 +478,29 @@ Customise the actor sheet with client and world settings for characters and NPCs
 ## Item Sheet
 
 Set the minimum role required to toggle Identified/Unidentified on the item.
+
+<p align="right">(<a href="#custom-dd-5e">back to top</a>)</p>
+
+---
+
+## Item Interactions
+
+Configure how players exchange items in play. Give items directly to other characters, or drop them onto the canvas to be picked up.
+
+### Give Items
+
+Give an item to another character by dragging it onto their token or using the item's context menu, with optional range limits and acceptance prompts.
+
+### Drop Items
+
+Drop items onto the canvas as tokens that other players can pick up, with configurable drop and take ranges, droppable item types, and dropped-token appearance.
+
+<details>
+    <summary>See Video</summary>
+
+![Custom D&D 5e Give and Drop Items](./.github/readme/custom-dnd5e-give-drop-items.gif)
+
+</details>
 
 <p align="right">(<a href="#custom-dd-5e">back to top</a>)</p>
 
@@ -570,6 +602,14 @@ When enabled, allows clicking a radial status effect icon to disable it on a lef
 
 ---
 
+## Condition Levels
+
+Conditions configured with multiple levels show a clickable level badge on the token, letting you raise or lower the level directly from the Token HUD.
+
+<p align="right">(<a href="#custom-dd-5e">back to top</a>)</p>
+
+---
+
 ## Token Border Shape
 
 Choose the shape of the token's border when it is selected or hovered.
@@ -611,6 +651,7 @@ Improves the Token HUD with hover-to-open palettes, button styling, and fixed HU
 - **Hover-to-open palettes:** Hovering over the Status Effects or Movement Actions buttons opens the palette automatically.
 - **Button styling:** Enhanced visual feedback for status effect icons and control buttons.
 - **Fixed HUD size:** The Token HUD maintains a consistent size on screen regardless of the canvas zoom level.
+- **Customisable size:** Adjust the overall HUD scale and the number of status-effect rows and columns.
 
 <p align="right">(<a href="#custom-dd-5e">back to top</a>)</p>
 

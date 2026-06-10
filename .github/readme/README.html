@@ -1,5 +1,5 @@
 <div class="badges">
-    <a href="https://discord.gg/AyaGmYPfx"><img src="https://img.shields.io/discord/1479823526813892790?style=for-the-badge" alt="Discord"></a>
+    <a href="https://discord.gg/JN3PUxPbYx"><img src="https://img.shields.io/discord/1479823526813892790?style=for-the-badge" alt="Discord"></a>
     <img src="https://img.shields.io/github/downloads/Larkinabout/fvtt-custom-dnd5e/latest/module.zip?color=2b82fc&amp;label=DOWNLOADS&amp;style=for-the-badge" alt="Downloads">
     <a href="https://forge-vtt.com/bazaar#package=custom-dnd5e"><img src="https://img.shields.io/badge/dynamic/json?label=Forge%20Installs&amp;query=package.installs&amp;suffix=%25&amp;url=https%3A%2F%2Fforge-vtt.com%2Fapi%2Fbazaar%2Fpackage%2Fcustom-dnd5e&amp;colorB=448d34&amp;style=for-the-badge" alt="Forge Installs"></a>
 </div>
@@ -23,12 +23,14 @@
     <li><a href="#configure-rolls">Configure Rolls</a></li>
     <li><a href="#actor-sheet">Actor Sheet</a></li>
     <li><a href="#item-sheet">Item Sheet</a></li>
+    <li><a href="#item-interactions">Item Interactions</a></li>
     <li><a href="#smaller-form-character-sheet">Smaller Form Character Sheet</a></li>
     <li><a href="#chat-commands">Chat Commands</a></li>
     <li><a href="#show-pressed-keys">Show Pressed Keys</a></li>
     <li><a href="#ruler-travel-time">Ruler Travel Time</a></li>
     <li><a href="#animations">Animations</a></li>
     <li><a href="#radial-status-effects">Radial Status Effects</a></li>
+    <li><a href="#condition-levels">Condition Levels</a></li>
     <li><a href="#token-border-shape">Token Border Shape</a></li>
     <li><a href="#token-distance">Token Distance</a></li>
     <li><a href="#token-hud-improvements">Token HUD Improvements</a></li>
@@ -226,11 +228,11 @@
 
 <p><strong>Rest Triggers:</strong> Short Rest, Long Rest.</p>
 
-<p><strong>Condition Triggers:</strong> Condition Applied, Condition Removed.</p>
+<p><strong>Condition Triggers:</strong> Condition Applied, Condition Removed, Condition Level Changed.</p>
 
 <p><strong>Effect Triggers:</strong> Effect Enabled, Effect Disabled.</p>
 
-<p><strong>Equipment Triggers:</strong> Item Equipped, Item Unequipped.</p>
+<p><strong>Item Triggers:</strong> Item Equipped, Item Unequipped, Item Used.</p>
 
 <p><strong>Counter Triggers:</strong> Counter Value Changed, Counter Value Increased, Counter Value Decreased, Counter Checked, Counter Unchecked, Success Value, Failure Value.</p>
 
@@ -274,6 +276,10 @@
 <h3>Per-Actor and Per-Item Workflows</h3>
 
 <p>Workflows can also be configured on individual actors via the Configure Workflows button on the Effects tab of the actor sheet, or on individual items. Per-actor and per-item workflows follow the same trigger and action system as world workflows.</p>
+
+<h3>Copy &amp; Paste</h3>
+
+<p>Workflows can be copied and pasted making it easy to duplicate or share workflows.</p>
 
 <p align="right">(<a href="#custom-dd-5e">back to top</a>)</p>
 
@@ -383,6 +389,10 @@
     <li><strong>Show/Hide Use Lair Action:</strong> Show or hide the Use Lair Action button on the NPC sheet.</li>
 </ul>
 
+<h3>Open / Detach</h3>
+
+<p>Automatically open actor sheets as detached windows or when a token is selected, with options to limit the behaviour to chosen actor types and add toggle buttons to the scene controls.</p>
+
 <p align="right">(<a href="#custom-dd-5e">back to top</a>)</p>
 
 <hr>
@@ -390,6 +400,24 @@
 <h2 id="item-sheet">Item Sheet</h2>
 
 <p>Set the minimum role required to toggle Identified/Unidentified on the item.</p>
+
+<p align="right">(<a href="#custom-dd-5e">back to top</a>)</p>
+
+<hr>
+
+<h2 id="item-interactions">Item Interactions</h2>
+
+<p>Configure how players exchange items in play. Give items directly to other characters, or drop them onto the canvas to be picked up.</p>
+
+<h3>Give Items</h3>
+
+<p>Give an item to another character by dragging it onto their token or using the item's context menu, with optional range limits and acceptance prompts.</p>
+
+<h3>Drop Items</h3>
+
+<p>Drop items onto the canvas as tokens that other players can pick up, with configurable drop and take ranges, droppable item types, and token appearance.</p>
+
+<p><img src="https://github.com/Larkinabout/fvtt-custom-dnd5e/blob/main/.github/readme/custom-dnd5e-give-drop-items.gif?raw=true" alt="Custom D&amp;D 5e Give and Drop Items"></p>
 
 <p align="right">(<a href="#custom-dd-5e">back to top</a>)</p>
 
@@ -461,6 +489,14 @@
 
 <hr>
 
+<h2 id="condition-levels">Condition Levels</h2>
+
+<p>Conditions configured with multiple levels show a clickable level badge on the token, letting you raise or lower the level directly from the Token HUD.</p>
+
+<p align="right">(<a href="#custom-dd-5e">back to top</a>)</p>
+
+<hr>
+
 <h2 id="token-border-shape">Token Border Shape</h2>
 
 <p>Choose the shape of the token's border when it is selected or hovered.</p>
@@ -493,6 +529,7 @@
     <li><strong>Hover-to-open palettes:</strong> Hovering over the Status Effects or Movement Actions buttons opens the palette automatically.</li>
     <li><strong>Button styling:</strong> Enhanced visual feedback for status effect icons and control button.</li>
     <li><strong>Fixed HUD size:</strong> The Token HUD maintains a consistent size on screen regardless of the canvas zoom level.</li>
+    <li><strong>Customisable size:</strong> Adjust the overall HUD scale and the number of status-effect rows and columns.</li>
 </ul>
 
 <p align="right">(<a href="#custom-dd-5e">back to top</a>)</p>
