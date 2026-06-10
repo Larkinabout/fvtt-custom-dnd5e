@@ -777,7 +777,7 @@ function postDropChat({ item, fromActor, quantity }) {
   ChatMessage.create({
     speaker: ChatMessage.getSpeaker({ actor: fromActor }),
     content: `<p>${content}</p>`,
-    flags: { "custom-dnd5e": { source: "loot" } }
+    flags: { "custom-dnd5e": { source: "dropItems" } }
   });
 }
 
@@ -1007,7 +1007,7 @@ function postAddChat({ sourceItem, fromActor, itemActor, quantity }) {
   ChatMessage.create({
     speaker: fromActor ? ChatMessage.getSpeaker({ actor: fromActor }) : ChatMessage.getSpeaker(),
     content: `<p>${content}</p>`,
-    flags: { "custom-dnd5e": { source: "loot" } }
+    flags: { "custom-dnd5e": { source: "dropItems" } }
   });
 }
 
@@ -1411,7 +1411,7 @@ export async function handleConfirmTakeItem(data) {
     content: `<p>${game.i18n.format("CUSTOM_DND5E.dropItems.chat.pickedUp", {
       actor: takerActorName, qty, item
     })}</p>`,
-    flags: { "custom-dnd5e": { source: "loot" } }
+    flags: { "custom-dnd5e": { source: "dropItems" } }
   });
 }
 
@@ -1439,17 +1439,76 @@ export async function handleDropItem(data) {
 
 /**
  * Delete the item actor when its token is removed from a scene.
+ * When the removal is an undo of the original drop, the contents are first returned to
+ * the actor the item was dropped from.
  * Only runs on the GM client to avoid duplicate deletes.
  * @param {TokenDocument} tokenDoc
+ * @param {object} options
+ * @param {string} userId
  */
-async function onDeleteToken(tokenDoc) {
+async function onDeleteToken(tokenDoc, options, userId) {
   if ( !game.user.isGM ) return;
   if ( !isItemToken(tokenDoc) ) return;
   const actorId = tokenDoc.actorId;
   if ( !actorId ) return;
   const worldActor = game.actors?.get(actorId);
   if ( !worldActor ) return;
+  if ( options?.isUndo && game.user.id === userId ) {
+    await returnDroppedItemsToSource(worldActor);
+  }
   await worldActor.delete().catch(err => Logger.error(err));
+}
+
+/* -------------------------------------------- */
+
+/**
+ * Return a dropped item actor's contents to the actor it was dropped from.
+ * @param {Actor} itemActor
+ * @returns {Promise<void>}
+ */
+async function returnDroppedItemsToSource(itemActor) {
+  const sourceUuid = itemActor.system?.droppedBy;
+  if ( !sourceUuid ) return;
+  const sourceActor = await fromUuid(sourceUuid);
+  if ( !sourceActor ) return;
+
+  const itemsToTransfer = Array.from(itemActor.items);
+  if ( !itemsToTransfer.length ) return;
+
+  const rootItem = itemsToTransfer.find(i => i.type !== "container") ?? itemsToTransfer[0];
+  const transferred = await transferItemsToTaker({
+    takerActor: sourceActor,
+    itemsToTransfer,
+    rootItem,
+    partialQty: null
+  });
+  if ( !transferred ) return;
+
+  if ( getSetting(SETTING.CHAT_NOTIFICATIONS.KEY) ) {
+    postReturnChat({ itemActor, sourceActor, quantity: rootItem?.system?.quantity ?? 1 });
+  }
+}
+
+/* -------------------------------------------- */
+
+/**
+ * Post a chat message announcing that a dropped item was returned to its
+ * source actor after an undo.
+ * @param {object} args
+ * @param {Actor} args.itemActor
+ * @param {Actor} args.sourceActor
+ * @param {number} args.quantity
+ */
+function postReturnChat({ itemActor, sourceActor, quantity }) {
+  const qty = quantity > 1 ? `${quantity}× ` : "";
+  const content = game.i18n.format("CUSTOM_DND5E.dropItems.chat.returned", {
+    actor: sourceActor.name, qty, item: itemActor.name
+  });
+  ChatMessage.create({
+    speaker: ChatMessage.getSpeaker({ actor: sourceActor }),
+    content: `<p>${content}</p>`,
+    flags: { "custom-dnd5e": { source: "dropItems" } }
+  });
 }
 
 /* -------------------------------------------- */

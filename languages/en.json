@@ -170,6 +170,7 @@
     "CUSTOM_DND5E.dropItems.chat.containerContents": "the contents of {container}",
     "CUSTOM_DND5E.dropItems.chat.dropped": "{actor} dropped {qty}{item}.",
     "CUSTOM_DND5E.dropItems.chat.pickedUp": "{actor} picked up {qty}{item}.",
+    "CUSTOM_DND5E.dropItems.chat.returned": "{qty}{item} was returned to {actor}.",
     "CUSTOM_DND5E.dropItems.confirmAdd.content": "Place {qty}{item} into {container}?",
     "CUSTOM_DND5E.dropItems.confirmAdd.title": "Place in {container}",
     "CUSTOM_DND5E.dropItems.confirmOverrideAffix.content": "This container is affixed in place. Pick it up anyway?",
