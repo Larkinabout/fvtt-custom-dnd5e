@@ -4,6 +4,10 @@ import { ActorSheetForm } from "./forms/actor-sheet-form.js";
 
 const constants = CONSTANTS.ACTOR_SHEET;
 
+/* -------------------------------------------- */
+/*  REGISTRATION                                */
+/* -------------------------------------------- */
+
 /**
  * Register settings and hooks, and load templates.
  */
@@ -200,25 +204,31 @@ function registerHooks() {
 }
 
 /* -------------------------------------------- */
+/*  AUTO-FADE                                   */
+/* -------------------------------------------- */
 
 /**
  * Enable auto-fade.
- * @param {object} html The HTML
+ * @param {HTMLElement} html
  */
 function enableAutoFade(html) {
-  html.addEventListener("mouseleave", event => { reduceOpacity(event, html); });
-  html.addEventListener("mouseenter", event => { increaseOpacity(event, html); });
+  onSheetPointerLeave(
+    html,
+    event => reduceOpacity(event, html),
+    event => increaseOpacity(event, html)
+  );
 }
 
 /* -------------------------------------------- */
 
 /**
  * Reduce opacity.
- * @param {object} event The event
- * @param {object} html The HTML
+ * @param {MouseEvent} event
+ * @param {HTMLElement} html
  */
 function reduceOpacity(event, html) {
   if ( event.ctrlKey ) return;
+
   html.style.transition = "opacity 0.2s ease 0s";
   html.style.opacity = "0.2";
 }
@@ -227,8 +237,8 @@ function reduceOpacity(event, html) {
 
 /**
  * Increase opacity.
- * @param {object} event The event
- * @param {object} html The HTML
+ * @param {MouseEvent} event
+ * @param {HTMLElement} html
  */
 function increaseOpacity(event, html) {
   const id = html.id;
@@ -239,23 +249,28 @@ function increaseOpacity(event, html) {
 }
 
 /* -------------------------------------------- */
+/*  AUTO-MINIMISE                               */
+/* -------------------------------------------- */
 
 /**
  * Enable auto-minimise.
- * @param {object} app The app
- * @param {object} html The HTML
+ * @param {ApplicationV2} app
+ * @param {HTMLElement} html
  */
 function enableAutoMinimise(app, html) {
-  html.addEventListener("mouseleave", event => { minimise(event, app); });
-  html.addEventListener("mouseenter", event => { maximise(event, app); });
+  onSheetPointerLeave(
+    html,
+    event => minimise(event, app),
+    event => maximise(event, app)
+  );
 }
 
 /* -------------------------------------------- */
 
 /**
  * Minimise sheet.
- * @param {object} event The event
- * @param {object} app The app
+ * @param {MouseEvent} event
+ * @param {ApplicationV2} app
  */
 function minimise(event, app) {
   if ( event.ctrlKey ) return;
@@ -266,8 +281,8 @@ function minimise(event, app) {
 
 /**
  * Maximise sheet.
- * @param {object} event The event
- * @param {object} app The app
+ * @param {MouseEvent} event
+ * @param {ApplicationV2} app
  */
 function maximise(event, app) {
   if ( event.ctrlKey ) return;
@@ -276,11 +291,69 @@ function maximise(event, app) {
 }
 
 /* -------------------------------------------- */
+/*  HELPERS                                     */
+/* -------------------------------------------- */
+
+/**
+ * Run a callback when the cursor leaves the sheet, and another when it returns.
+ * @param {HTMLElement} html
+ * @param {Function} onLeave
+ * @param {Function} onReturn
+ */
+function onSheetPointerLeave(html, onLeave, onReturn) {
+  let watching = false;
+
+  const onPointerMove = event => {
+    if ( isOverSheetOrOverlay(event.target, html) ) return;
+    stopWatching();
+    onLeave(event);
+  };
+
+  const stopWatching = () => {
+    if ( !watching ) return;
+    document.removeEventListener("mousemove", onPointerMove);
+    watching = false;
+  };
+
+  html.addEventListener("mouseleave", event => {
+    if ( isOverSheetOrOverlay(event.relatedTarget, html) ) {
+      if ( !watching ) {
+        watching = true;
+        document.addEventListener("mousemove", onPointerMove);
+      }
+      return;
+    }
+    onLeave(event);
+  });
+
+  html.addEventListener("mouseenter", event => {
+    stopWatching();
+    onReturn(event);
+  });
+}
+
+/* -------------------------------------------- */
+
+/**
+ * Whether the node is the sheet, or a tooltip or context menu spawned from it.
+ * @param {EventTarget} node
+ * @param {HTMLElement} html
+ * @returns {boolean}
+ */
+function isOverSheetOrOverlay(node, html) {
+  if ( !node ) return false;
+  if ( html.contains(node) ) return true;
+  return !!node.closest?.("#context-menu, #tooltip");
+}
+
+/* -------------------------------------------- */
+/*  SHEET DISPLAY                               */
+/* -------------------------------------------- */
 
 /**
  * Scale the character sheet.
- * @param {object} sheetType The sheet type
- * @param {object} app The app
+ * @param {object} sheetType
+ * @param {ApplicationV2} app
  */
 function setSheetScale(sheetType, app) {
   if ( !sheetType.character || sheetType.legacy ) return;
@@ -296,8 +369,8 @@ function setSheetScale(sheetType, app) {
 
 /**
  * Set banner image on the character sheet.
- * @param {object} sheetType The sheet type
- * @param {object} html The HTML
+ * @param {object} sheetType
+ * @param {HTMLElement} html
  */
 function setBannerImage(sheetType, html) {
   if ( !sheetType.character ) return;
@@ -329,11 +402,13 @@ function setBannerImage(sheetType, html) {
 }
 
 /* -------------------------------------------- */
+/*  SHEET ELEMENTS                              */
+/* -------------------------------------------- */
 
 /**
  * Remove Death Saves from the character sheet.
- * @param {object} sheetType The sheet type
- * @param {object} html The HTML
+ * @param {object} sheetType
+ * @param {HTMLElement} html
  */
 function removeDeathSaves(sheetType, html) {
   if ( sheetType.character ) {
@@ -348,8 +423,8 @@ function removeDeathSaves(sheetType, html) {
 
 /**
  * Remove encumbrance from the character sheet.
- * @param {object} sheetType The sheet type
- * @param {object} html The HTML
+ * @param {object} sheetType
+ * @param {HTMLElement} html
  */
 function removeEncumbrance(sheetType, html) {
   if ( sheetType.character ) {
@@ -362,8 +437,8 @@ function removeEncumbrance(sheetType, html) {
 
 /**
  * Remove exhaustion from the character sheet.
- * @param {object} sheetType The sheet type
- * @param {object} html The HTML
+ * @param {object} sheetType
+ * @param {HTMLElement} html
  */
 function removeExhaustion(sheetType, html) {
   if ( sheetType.character ) {
@@ -390,8 +465,8 @@ function removeExhaustion(sheetType, html) {
 
 /**
  * Remove inspiration from the character sheet.
- * @param {object} sheetType The sheet type
- * @param {object} html The HTML
+ * @param {object} sheetType
+ * @param {HTMLElement} html
  */
 function removeInspiration(sheetType, html) {
   if ( sheetType.character ) {
@@ -404,8 +479,8 @@ function removeInspiration(sheetType, html) {
 
 /**
  * Remove Legendary Actions from the NPC sheet.
- * @param {object} sheetType The sheet type
- * @param {object} html The HTML
+ * @param {object} sheetType
+ * @param {HTMLElement} html
  */
 function removeLegendaryActions(sheetType, html) {
   if ( !sheetType.npc ) return;
@@ -421,8 +496,8 @@ function removeLegendaryActions(sheetType, html) {
 
 /**
  * Remove Legendary Resistance from the NPC sheet.
- * @param {object} sheetType The sheet type
- * @param {object} html The HTML
+ * @param {object} sheetType
+ * @param {HTMLElement} html
  */
 function removeLegendaryResistance(sheetType, html) {
   if ( !sheetType.npc ) return;
@@ -438,8 +513,8 @@ function removeLegendaryResistance(sheetType, html) {
 
 /**
  * Remove Manage Currency from the character sheet.
- * @param {object} sheetType The sheet type
- * @param {object} html The HTML
+ * @param {object} sheetType
+ * @param {HTMLElement} html
  */
 function removeManageCurrency(sheetType, html) {
   if ( sheetType.character && !sheetType.legacy ) {
@@ -452,8 +527,8 @@ function removeManageCurrency(sheetType, html) {
 
 /**
  * Remove Use Lair Action from the NPC sheet.
- * @param {object} sheetType The sheet type
- * @param {object} html The HTML
+ * @param {object} sheetType
+ * @param {HTMLElement} html
  */
 function removeUseLairAction(sheetType, html) {
   if ( !sheetType.npc ) return;
@@ -467,8 +542,8 @@ function removeUseLairAction(sheetType, html) {
 
 /**
  * Insert token disposition buttons into the NPC sheet sidebar.
- * @param {object} app The app
- * @param {object} html The HTML
+ * @param {ApplicationV2} app
+ * @param {HTMLElement} html
  */
 async function insertTokenDisposition(app, html) {
   const sidebar = html.querySelector(".sidebar");
