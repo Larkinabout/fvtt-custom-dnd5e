@@ -82,7 +82,7 @@ export class ConfigEditForm extends CustomDnd5eForm {
     },
     id: `${MODULE.ID}-config-edit`,
     position: {
-      width: 450,
+      width: 500,
       height: "auto"
     },
     window: {

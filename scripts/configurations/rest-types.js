@@ -76,44 +76,58 @@ class RestTypesEditForm extends ConfigEditForm {
     {
       legend: "CUSTOM_DND5E.general",
       fields: [
-        { name: "label", type: "text", label: "CUSTOM_DND5E.label", localizeValue: true },
-        { name: "icon", type: "text", label: "CUSTOM_DND5E.icon", placeholder: "fa-solid fa-bench-tree" },
-        { name: "hint", type: "textarea", label: "CUSTOM_DND5E.restHint.label", hint: "CUSTOM_DND5E.restHint.hint" }
+        { name: "label", type: "text", label: "CUSTOM_DND5E.label", localizeValue: true,
+          labelClass: "custom-dnd5e-edit-label-flex2" },
+        { name: "icon", type: "text", label: "CUSTOM_DND5E.icon", placeholder: "fa-solid fa-bench-tree",
+          labelClass: "custom-dnd5e-edit-label-flex2" },
+        { name: "hint", type: "textarea", label: "CUSTOM_DND5E.restHint.label", hint: "CUSTOM_DND5E.restHint.hint",
+          labelClass: "custom-dnd5e-edit-label-flex2" }
       ]
     },
     {
       legend: "CUSTOM_DND5E.durationMinutes",
       fields: [
-        { name: "durationGritty", type: "number", label: "CUSTOM_DND5E.gritty", step: 1, min: 0 },
-        { name: "durationNormal", type: "number", label: "CUSTOM_DND5E.normal", step: 1, min: 0 },
-        { name: "durationEpic", type: "number", label: "CUSTOM_DND5E.epic", step: 1, min: 0 }
+        { name: "durationGritty", type: "number", label: "CUSTOM_DND5E.gritty", step: 1, min: 0,
+          labelClass: "custom-dnd5e-edit-label-flex2" },
+        { name: "durationNormal", type: "number", label: "CUSTOM_DND5E.normal", step: 1, min: 0,
+          labelClass: "custom-dnd5e-edit-label-flex2" },
+        { name: "durationEpic", type: "number", label: "CUSTOM_DND5E.epic", step: 1, min: 0,
+          labelClass: "custom-dnd5e-edit-label-flex2" }
       ]
     },
     {
       legend: "CUSTOM_DND5E.restBehaviour",
       fields: [
         { name: "newDay", type: "checkbox", label: "CUSTOM_DND5E.newDay.label",
-          hint: "CUSTOM_DND5E.newDay.hint" },
+          hint: "CUSTOM_DND5E.newDay.hint", labelClass: "custom-dnd5e-edit-label-flex2" },
         { name: "advanceBastionTurn", type: "checkbox", label: "CUSTOM_DND5E.advanceBastionTurn.label",
           hint: "CUSTOM_DND5E.advanceBastionTurn.hint", labelClass: "custom-dnd5e-edit-label-flex2" },
         { name: "exhaustionDelta", type: "number", label: "CUSTOM_DND5E.exhaustionDelta.label",
-          hint: "CUSTOM_DND5E.exhaustionDelta.hint", step: 1 }
+          hint: "CUSTOM_DND5E.exhaustionDelta.hint", step: 1, labelClass: "custom-dnd5e-edit-label-flex2" }
       ]
     },
     {
       legend: "CUSTOM_DND5E.spellSlots",
       fields: [
         { name: "recoverSpellSlotTypes", type: "multiSelect", label: "CUSTOM_DND5E.recoverSpellSlotTypes.label",
-          hint: "CUSTOM_DND5E.recoverSpellSlotTypes.hint", choices: "recoverSpellSlotTypes" },
+          hint: "CUSTOM_DND5E.recoverSpellSlotTypes.hint", choices: "recoverSpellSlotTypes",
+          labelClass: "custom-dnd5e-edit-label-flex2" },
+        { name: "spellSlotRecovery", type: "select", label: "CUSTOM_DND5E.recoveryMethod.label",
+          hint: "CUSTOM_DND5E.recoveryMethod.hint", choices: "spellSlotRecoveryMethods", localizeChoices: true,
+          labelClass: "custom-dnd5e-edit-label-flex2" },
         { name: "spellSlotFraction", type: "number", label: "CUSTOM_DND5E.spellSlotFraction.label",
           hint: "CUSTOM_DND5E.spellSlotFraction.hint", step: 0.05, min: 0, max: 1,
+          labelClass: "custom-dnd5e-edit-label-flex2" },
+        { name: "spellSlotCount", type: "number", label: "CUSTOM_DND5E.spellSlotCount.label",
+          hint: "CUSTOM_DND5E.spellSlotCount.hint", step: 1, min: 0,
           labelClass: "custom-dnd5e-edit-label-flex2" }
       ]
     },
     {
       legend: "DND5E.HitPoints",
       fields: [
-        { name: "recoverHitPoints", type: "checkbox", label: "CUSTOM_DND5E.recoverHitPoints" },
+        { name: "recoverHitPoints", type: "checkbox", label: "CUSTOM_DND5E.recoverHitPoints",
+          labelClass: "custom-dnd5e-edit-label-flex2" },
         { name: "hitPointsFraction", type: "number", label: "CUSTOM_DND5E.hitPointsFraction.label",
           hint: "CUSTOM_DND5E.hitPointsFraction.hint", step: 0.05, min: 0, max: 1,
           labelClass: "custom-dnd5e-edit-label-flex2" }
@@ -124,7 +138,8 @@ class RestTypesEditForm extends ConfigEditForm {
       fields: [
         { name: "hitDice", type: "checkbox", label: "CUSTOM_DND5E.spendHitDice.label",
           hint: "CUSTOM_DND5E.spendHitDice.hint" },
-        { name: "recoverHitDice", type: "checkbox", label: "CUSTOM_DND5E.recoverHitDice" },
+        { name: "recoverHitDice", type: "checkbox", label: "CUSTOM_DND5E.recoverHitDice",
+          labelClass: "custom-dnd5e-edit-label-flex2" },
         { name: "hitDiceFormula", type: "text", label: "CUSTOM_DND5E.hitDiceFormula.label",
           hint: "CUSTOM_DND5E.hitDiceFormula.hint", placeholder: "@attributes.hd.max * 0.5",
           labelClass: "custom-dnd5e-edit-label-flex2" },
@@ -145,9 +160,11 @@ class RestTypesEditForm extends ConfigEditForm {
       legend: "CUSTOM_DND5E.periods",
       fields: [
         { name: "recoverPeriods", type: "multiSelect", label: "CUSTOM_DND5E.recoverPeriods.label",
-          hint: "CUSTOM_DND5E.recoverPeriods.hint", choices: "recoverPeriods" },
+          hint: "CUSTOM_DND5E.recoverPeriods.hint", choices: "recoverPeriods",
+          labelClass: "custom-dnd5e-edit-label-flex2" },
         { name: "activationPeriods", type: "multiSelect", label: "CUSTOM_DND5E.activationPeriods.label",
-          hint: "CUSTOM_DND5E.activationPeriods.hint", choices: "activationPeriods" }
+          hint: "CUSTOM_DND5E.activationPeriods.hint", choices: "activationPeriods",
+          labelClass: "custom-dnd5e-edit-label-flex2" }
       ]
     }
   ];
@@ -176,7 +193,38 @@ class RestTypesEditForm extends ConfigEditForm {
         .map(([key, value]) => [key, value.label])
     );
 
-    return { activationPeriods, recoverPeriods, recoverSpellSlotTypes };
+    const spellSlotRecoveryMethods = {
+      fraction: "CUSTOM_DND5E.recoveryMethod.fraction",
+      fixed: "CUSTOM_DND5E.recoveryMethod.fixed"
+    };
+
+    return { activationPeriods, recoverPeriods, recoverSpellSlotTypes, spellSlotRecoveryMethods };
+  }
+
+  /* -------------------------------------------- */
+
+  /**
+   * Toggle the spell slot recovery input shown for the selected recovery method.
+   * @param {object} context
+   * @param {object} options Rendering options
+   */
+  _onRender(context, options) {
+    super._onRender(context, options);
+
+    const select = this.element.querySelector("#custom-dnd5e-spellSlotRecovery");
+    if ( !select ) return;
+
+    const fractionGroup = this.element.querySelector("#custom-dnd5e-spellSlotFraction")?.closest(".form-group");
+    const countGroup = this.element.querySelector("#custom-dnd5e-spellSlotCount")?.closest(".form-group");
+
+    const toggle = () => {
+      const fixed = select.value === "fixed";
+      fractionGroup?.classList.toggle("hidden", fixed);
+      countGroup?.classList.toggle("hidden", !fixed);
+    };
+
+    toggle();
+    select.addEventListener("change", toggle);
   }
 
 }
@@ -399,7 +447,9 @@ function buildConfigEntry(key, data) {
     ...(data.activationPeriods !== undefined && { activationPeriods: data.activationPeriods }),
     ...(data.recoverPeriods !== undefined && { recoverPeriods: data.recoverPeriods }),
     ...(data.recoverSpellSlotTypes !== undefined && { recoverSpellSlotTypes: new Set(data.recoverSpellSlotTypes) }),
+    ...(data.spellSlotRecovery !== undefined && { spellSlotRecovery: data.spellSlotRecovery }),
     ...(data.spellSlotFraction !== undefined && { spellSlotFraction: Number(data.spellSlotFraction) }),
+    ...(data.spellSlotCount !== undefined && { spellSlotCount: Number(data.spellSlotCount) }),
     ...(data.exhaustionDelta !== undefined && { exhaustionDelta: Number(data.exhaustionDelta) }),
     ...(data.recoverHitDice !== undefined && { recoverHitDice: data.recoverHitDice }),
     ...(data.hitDiceFormula !== undefined && data.hitDiceFormula !== "" && { hitDiceFormula: String(data.hitDiceFormula) }),
@@ -425,7 +475,7 @@ function registerHooks(configData) {
   unregisterHooks();
   registerHitDiceRecoveryHooks(configData);
   registerHitPointsFractionHook(configData);
-  registerSpellSlotFractionHook(configData);
+  registerSpellSlotRecoveryHook(configData);
 }
 
 /* -------------------------------------------- */
@@ -510,25 +560,41 @@ function registerHitPointsFractionHook(configData) {
 /* -------------------------------------------- */
 
 /**
- * Register hook to apply fractional recovery to Spell Slots.
+ * Register hook to apply partial recovery to Spell Slots.
+ *
+ * Two methods are supported per rest type:
+ * - "fraction" recovers a fraction of each level's maximum (at least one slot)
+ * - "fixed" recovers a flat number of slots for every level.
  * @param {object} configData
  */
-function registerSpellSlotFractionHook(configData) {
-  const hasSpellFraction = Object.values(configData).some(r =>
-    r.spellSlotFraction !== undefined && r.spellSlotFraction !== 1
+function registerSpellSlotRecoveryHook(configData) {
+  const hasPartialRecovery = Object.values(configData).some(r =>
+    (r.spellSlotRecovery === "fixed")
+      ? r.spellSlotCount > 0
+      : (r.spellSlotFraction !== undefined && r.spellSlotFraction !== 1)
   );
-  if ( !hasSpellFraction ) return;
+  if ( !hasPartialRecovery ) return;
 
   const id = Hooks.on("dnd5e.preRestCompleted", (actor, result, config) => {
     const restType = CONFIG.DND5E.restTypes[config.type];
     if ( !restType?.recoverSpellSlotTypes?.size ) return;
-    if ( restType.spellSlotFraction === undefined || restType.spellSlotFraction >= 1 ) return;
+
+    const method = restType.spellSlotRecovery ?? "fraction";
+    if ( method === "fixed" ) {
+      if ( !(restType.spellSlotCount > 0) ) return;
+    } else if ( restType.spellSlotFraction === undefined || restType.spellSlotFraction >= 1 ) {
+      return;
+    }
+
     const spells = actor.system.spells;
     if ( !spells ) return;
+
     for ( const [key, slot] of Object.entries(spells) ) {
       if ( !restType.recoverSpellSlotTypes.has(slot.type) ) continue;
       if ( !slot.max ) continue;
-      const recovered = Math.max(1, Math.floor(slot.max * restType.spellSlotFraction));
+      const recovered = (method === "fixed")
+        ? restType.spellSlotCount
+        : Math.max(1, Math.floor(slot.max * restType.spellSlotFraction));
       result.updateData[`system.spells.${key}.value`] = Math.min(slot.max, slot.value + recovered);
     }
   });
