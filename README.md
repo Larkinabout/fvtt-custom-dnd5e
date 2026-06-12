@@ -388,6 +388,7 @@ Customise D&D 5e system configurations. For help and advice on modifying a confi
 - **Item Rarity**: Common, Uncommon, Rare, etc.
 - **Languages**: Common, Dwarvish, Elvish, etc.
 - **Loot Types**: Art Object, Adventuring Gear, Gemstone, etc.
+- **Movement Types**: Walk, Climb, Fly, Swim, etc.
 - **Rest Types**: Short Rest, Long Rest, etc.
 - **Senses**: Blindsight, Darkvision, Tremorsense, etc.
 - **Skills**: Athletics, Acrobatics, Stealth, etc.

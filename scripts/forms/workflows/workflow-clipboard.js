@@ -78,7 +78,7 @@ export function validateWorkflowSchema(data, defaultEntityType = "actor") {
   }
 
   const allowedKeys = new Set([
-    "name", "enabled", "entityType", "actorTypes", "target", "triggers", "actions"
+    "name", "enabled", "visible", "entityType", "actorTypes", "target", "triggers", "actions"
   ]);
   for ( const key of Object.keys(data) ) {
     if ( !allowedKeys.has(key) ) {

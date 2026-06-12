@@ -58,6 +58,7 @@ export async function migrate() {
   if ( shouldRun("4.2.0") ) isSuccess &&= await migrateWorkflowTriggerEvents();
   if ( shouldRun("5.1.0") ) isSuccess &&= await migrateRestTypesHitDiceFormula();
   if ( shouldRun("5.1.0") ) isSuccess &&= await migrateTokenBorderEnable();
+  if ( shouldRun("5.3.0") ) isSuccess &&= await migrateCustomSensesToNamespace();
 
   if ( isSuccess ) {
     await setSetting(constants.VERSION.SETTING.KEY, moduleVersion);
@@ -763,12 +764,49 @@ export async function migrateTokenBorderEnable() {
 /* -------------------------------------------- */
 
 /**
+ * Move custom sense values from `flags.custom-dnd5e.<key>` into the
+ * `flags.custom-dnd5e.senses.<key>` namespace.
+ * @returns {Promise<boolean>} Whether the migration was successful
+ */
+export async function migrateCustomSensesToNamespace() {
+  try {
+    Logger.debug("Migrating custom senses to the senses namespace...");
+
+    const senses = getSetting(configs.senses.SETTING.CONFIG.KEY);
+    if ( !senses || typeof senses !== "object" ) return true;
+
+    const systemSenses = new Set(Object.keys(CONFIG.CUSTOM_DND5E?.senses ?? {}));
+    const customSenseKeys = Object.keys(senses).filter(key => !systemSenses.has(key));
+    if ( !customSenseKeys.length || !game.actors ) return true;
+
+    for ( const actor of game.actors ) {
+      for ( const key of customSenseKeys ) {
+        const oldValue = getFlag(actor, key);
+        if ( oldValue === undefined || oldValue === null ) continue;
+        if ( typeof oldValue === "object" ) continue;
+        await setFlag(actor, `senses.${key}`, oldValue);
+        await unsetFlag(actor, key);
+      }
+    }
+
+    Logger.debug("Custom senses migrated.");
+    return true;
+  } catch (err) {
+    Logger.error(`Failed to migrate custom senses: ${err.message}`);
+    return false;
+  }
+}
+
+/* -------------------------------------------- */
+
+/**
  * All migration functions, exposed for testing via the module API.
  */
 export const migrations = {
   migrateActorCounters,
   migrateConditions,
   migrateAwardInspirationRollType,
+  migrateCustomSensesToNamespace,
   migrateDamageTypeLabels,
   migrateRerollInitiative,
   migrateRestTypesHitDiceFormula,

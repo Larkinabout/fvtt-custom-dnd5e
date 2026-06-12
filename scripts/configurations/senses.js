@@ -65,7 +65,7 @@ class SensesForm extends ConfigForm {
 }
 
 /* -------------------------------------------- */
-
+/*  REGISTRATION                                */
 /* -------------------------------------------- */
 
 /**
@@ -92,14 +92,16 @@ function registerHooks() {
 /* -------------------------------------------- */
 
 /**
- * Add custom senses to the Movement and Senses Configuration sheet.
+ * Add custom senses to the Senses Configuration sheet.
  * @param {object} app
  * @param {HTMLElement} html
  */
 async function addCustomSensesToConfig(app, html) {
+  if ( app.options.type !== "senses" ) return;
+
   Logger.debug("Adding custom senses...");
   const actor = app.document;
-  const systemSenses = ["blindsight", "darkvision", "tremorsense", "truesight"];
+  const systemSenses = new Set(Object.keys(CONFIG.CUSTOM_DND5E?.senses ?? {}));
   const senses = getSetting(DEFINITION.constants.SETTING.CONFIG.KEY);
   const outerElement = html.querySelector("fieldset.card");
   let lastElement = null;
@@ -115,8 +117,12 @@ async function addCustomSensesToConfig(app, html) {
         }
         lastElement = existingElement;
       }
-    } else if ( value.visible && value.visible !== undefined && !systemSenses.includes(key) ) {
-      const data = { label: value.label, inputName: `flags.custom-dnd5e.${key}`, inputValue: getFlag(actor, key) };
+    } else if ( value.visible && value.visible !== undefined && !systemSenses.has(key) ) {
+      const data = {
+        label: value.label,
+        inputName: `flags.custom-dnd5e.senses.${key}`,
+        inputValue: getFlag(actor, `senses.${key}`)
+      };
       const template = await foundry.applications.handlebars.renderTemplate(
         DEFINITION.constants.TEMPLATE.CONFIG_FORM_GROUP, data
       );

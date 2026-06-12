@@ -57,6 +57,7 @@ import { patchD20Die } from "./patches/d20-die.js";
 import { patchD20Roll } from "./patches/d20-roll.js";
 import { patchPrepareEncumbrance } from "./patches/prepare-encumbrance.js";
 import { patchPrepareMovement } from "./patches/prepare-movement.js";
+import { patchPrepareDerivedData } from "./patches/prepare-derived-data.js";
 import { patchPrepareMovementAttribution } from "./patches/prepare-movement-attribution.js";
 import { patchPrepareSenses } from "./patches/prepare-senses.js";
 import { patchPrepareSkillsTools } from "./patches/prepare-skills-tools.js";
@@ -147,6 +148,7 @@ Hooks.on("init", async () => {
   patchD20Roll();
   patchPrepareEncumbrance();
   patchPrepareMovement();
+  patchPrepareDerivedData();
   patchPrepareMovementAttribution();
   patchPrepareSenses();
   patchPrepareSkillsTools();
@@ -195,6 +197,7 @@ Hooks.on("init", async () => {
   registerItemSheet();
   configs.languages.register();
   configs.lootTypes.register();
+  configs.movementTypes.register();
   configs.restTypes.register();
   registerRolls();
   configs.senses.register();
@@ -282,6 +285,7 @@ Hooks.on("ready", async () => {
   configs.creatureTypes.setConfig();
   configs.damageTypes.setConfig();
   configs.miscEquipmentTypes.setConfig();
+  configs.movementTypes.setConfig();
   configs.featureTypes.setConfig();
   const isV4 = foundry.utils.isNewerVersion(game.dnd5e.version, "3.3.1");
   if ( !isV4 ) {

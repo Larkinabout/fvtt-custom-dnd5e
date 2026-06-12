@@ -12,6 +12,7 @@ export function patchPrepareSenses() {
 
 /**
  * Prepare actor senses for display.
+ * @param {Function} wrapped
  * @param {ApplicationRenderContext} context
  * @returns {object[]}
  * @protected
@@ -26,7 +27,7 @@ function prepareSensesPatch(wrapped, context) {
   Object.entries(senses)
     .filter(([_, value]) => value.system === false)
     .forEach(([key, value]) => {
-      const flag = getFlag(actor, key);
+      const flag = getFlag(actor, `senses.${key}`);
       if ( flag ) customSenses.push({ label: value.label, value: flag });
     });
 
