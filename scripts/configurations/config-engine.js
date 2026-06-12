@@ -1,4 +1,5 @@
 import {
+  assignDnd5eConfig,
   c5eLoadTemplates,
   checkEmpty,
   getDefaultDnd5eConfig,
@@ -156,7 +157,7 @@ export function setConfig(def, settingData) {
   Hooks.callAll(getHookName(def), configData);
 
   if ( configData ) {
-    CONFIG.DND5E[def.configKey] = configData;
+    assignDnd5eConfig(def.configKey, configData);
   }
 }
 

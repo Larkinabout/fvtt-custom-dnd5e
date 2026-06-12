@@ -48,7 +48,7 @@ export class Logger {
     } catch {
       return;
     }
-    if ( !data ) {
+    if ( data === undefined ) {
       console.log(`${MODULE.NAME} Debug | ${message}`);
       return;
     }
@@ -107,9 +107,9 @@ export function parseBoolean(value) {
  * Resolve a formula string containing @attribute paths against an entity's roll data.
  * Supports plain numbers, attribute paths (e.g. @scale.monk.ki-points) and
  * calculations (e.g. @abilities.str.value / 2).
- * @param {object} entity The entity.
- * @param {string|number} formula The formula.
- * @returns {number|null} The resolved numeric value, or null if resolution fails
+ * @param {object} entity
+ * @param {string|number} formula
+ * @returns {number|null} Resolved numeric value, or null if resolution fails
  */
 export function resolveFormula(entity, formula) {
   if ( typeof formula === "number" ) return formula;
@@ -130,7 +130,7 @@ export function resolveFormula(entity, formula) {
 /**
  * Compare a value against a target using the given operator.
  * @param {number} value
- * @param {string} operator "eq", "lt", "gt", "neq"
+ * @param {"eq"|"lt"|"gt"|"neq"} operator
  * @param {number} target
  * @returns {boolean}
  */
@@ -240,7 +240,7 @@ export function getDefaultSetting(key) {
 export async function setSetting(key, value) {
   if ( game.settings.settings.has(`${MODULE.ID}.${key}`) ) {
     await game.settings.set(MODULE.ID, key, value);
-    Logger.debug(`Setting '${key}' set to '${value}'`);
+    Logger.debug(`Setting '${key}' set to`, value);
   } else {
     Logger.debug(`Setting '${key}' not found`);
   }
@@ -258,7 +258,7 @@ export async function resetSetting(key) {
     const value = setting.default;
     if ( value !== undefined ) {
       await game.settings.set(MODULE.ID, key, value);
-      Logger.debug(`Setting '${key}' reset to '${value}'`);
+      Logger.debug(`Setting '${key}' reset to`, value);
     } else {
       Logger.debug(`Setting '${key}' default not defined`);
     }
@@ -294,7 +294,7 @@ export function getDnd5eSetting(key, defaultValue = null) {
 export async function setDnd5eSetting(key, value) {
   if ( game.settings.settings.has(`dnd5e.${key}`) ) {
     await game.settings.set("dnd5e", key, value);
-    Logger.debug(`Setting '${key}' set to '${value}'`);
+    Logger.debug(`Setting '${key}' set to`, value);
   } else {
     Logger.debug(`Setting '${key}' not found`);
   }
@@ -363,14 +363,33 @@ export function getDefaultDnd5eConfig(property, key = null) {
 /* -------------------------------------------- */
 
 /**
+ * Assign data to a `CONFIG.DND5E` property, mutating the existing object in place when possible.
+ * @param {string} property
+ * @param {object} data
+ * @returns {object}
+ */
+export function assignDnd5eConfig(property, data) {
+  const current = CONFIG.DND5E[property];
+  if ( foundry.utils.getType(current) === "Object" && foundry.utils.getType(data) === "Object" ) {
+    for ( const key of Object.keys(current) ) delete current[key];
+    Object.assign(current, data);
+    return current;
+  }
+  CONFIG.DND5E[property] = data;
+  return CONFIG.DND5E[property];
+}
+
+/* -------------------------------------------- */
+
+/**
  * Reset the dnd5e config to its default.
  * @param {string} property
  * @returns {object}
  */
 export function resetDnd5eConfig(property) {
-  CONFIG.DND5E[property] = foundry.utils.deepClone(CONFIG.CUSTOM_DND5E[property]);
+  const result = assignDnd5eConfig(property, foundry.utils.deepClone(CONFIG.CUSTOM_DND5E[property]));
   Logger.debug(`Config 'CONFIG.DND5E.${property}' reset to default`);
-  return CONFIG.DND5E[property];
+  return result;
 }
 
 /* -------------------------------------------- */
