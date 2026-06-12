@@ -557,6 +557,7 @@ export class WorkflowsEditForm extends CustomDnd5eForm {
     this.name = args.data.name;
     this.entity = args.data.entity;
     this.entityType = args.data.entityType || "actor";
+    this.counterKey = args.data.counterKey ?? this.setting[this.key]?.counterKey;
     this._requestRollResults = {};
     this._triggerConditions = {};
 
@@ -1254,6 +1255,8 @@ export class WorkflowsEditForm extends CustomDnd5eForm {
         group.triggers[triggerId].conditions = conditions;
       }
     }
+
+    if ( this.counterKey ) group.counterKey = this.counterKey;
 
     this.setting[this.key] = group;
 

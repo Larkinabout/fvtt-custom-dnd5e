@@ -11,6 +11,7 @@ import { getActionChoices } from "./workflows-edit.js";
  */
 export async function copyWorkflowToClipboard(workflow, entityType, fallbackName = "") {
   const payload = foundry.utils.deepClone({ ...workflow, entityType });
+  delete payload.counterKey;
   const json = JSON.stringify(payload, null, 2);
 
   try {

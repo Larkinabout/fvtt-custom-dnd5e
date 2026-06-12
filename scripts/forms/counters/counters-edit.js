@@ -40,6 +40,8 @@ export class CountersEditForm extends CustomDnd5eForm {
   }
 
   /* -------------------------------------------- */
+  /*  STATIC PROPERTIES                           */
+  /* -------------------------------------------- */
 
   static DEFAULT_OPTIONS = {
     actions: {
@@ -68,6 +70,8 @@ export class CountersEditForm extends CustomDnd5eForm {
   };
 
   /* -------------------------------------------- */
+  /*  RENDER CONTEXT                              */
+  /* -------------------------------------------- */
 
   #getSelects() {
     return {
@@ -94,12 +98,14 @@ export class CountersEditForm extends CustomDnd5eForm {
   /* -------------------------------------------- */
 
   /**
-   * Check whether a workflow references the given counter key in any trigger or action.
+   * Check whether a workflow belongs to the given counter, either because it was created against the
+   * counter or because a trigger or action references it.
    * @param {object} workflow The workflow
    * @param {string} counterKey The counter key
-   * @returns {boolean} Whether the workflow references the counter key
+   * @returns {boolean} Whether the workflow belongs to the counter key
    */
   #workflowReferencesCounter(workflow, counterKey) {
+    if ( workflow.counterKey === counterKey ) return true;
     const triggers = Object.values(workflow.triggers || {});
     const actions = Object.values(workflow.actions || {});
     return triggers.some(t => COUNTER_TRIGGERS.includes(t.event) && t.counterKey === counterKey)
@@ -165,7 +171,7 @@ export class CountersEditForm extends CustomDnd5eForm {
   }
 
   /* -------------------------------------------- */
-  /*  Workflow Actions                             */
+  /*  WORKFLOW ACTIONS                            */
   /* -------------------------------------------- */
 
   static async newWorkflow() {
@@ -181,7 +187,8 @@ export class CountersEditForm extends CustomDnd5eForm {
         key,
         name: "",
         entity: this.entity,
-        entityType: this.actorType
+        entityType: this.actorType,
+        counterKey: this.key
       }
     };
     await WorkflowsEditForm.open(args);
@@ -287,6 +294,7 @@ export class CountersEditForm extends CustomDnd5eForm {
       if ( !entries?.length ) return;
       const workflow = foundry.utils.deepClone(entries[0]);
       delete workflow.entityType;
+      workflow.counterKey = form.key;
 
       for ( const trigger of Object.values(workflow.triggers || {}) ) {
         if ( COUNTER_TRIGGERS.includes(trigger.event) ) trigger.counterKey = form.key;
@@ -320,7 +328,51 @@ export class CountersEditForm extends CustomDnd5eForm {
   }
 
   /* -------------------------------------------- */
-  /*  Submit                                      */
+
+  /**
+   * Migrate every workflow reference from an old counter key to a new one when the counter is renamed.
+   * @param {string} oldKey
+   * @param {string} newKey
+   */
+  async #migrateWorkflowCounterKey(oldKey, newKey) {
+    const workflows = this.entity
+      ? (getFlag(this.entity, "triggers") || {})
+      : (getSetting(workflowsSettingKey(this.actorType)) || {});
+
+    let changed = false;
+    for ( const workflow of Object.values(workflows) ) {
+      if ( workflow.counterKey === oldKey ) {
+        workflow.counterKey = newKey;
+        changed = true;
+      }
+      for ( const trigger of Object.values(workflow.triggers || {}) ) {
+        if ( COUNTER_TRIGGERS.includes(trigger.event) && trigger.counterKey === oldKey ) {
+          trigger.counterKey = newKey;
+          changed = true;
+        }
+      }
+      for ( const action of Object.values(workflow.actions || {}) ) {
+        if ( COUNTER_ACTIONS.includes(action.type) && action.counterKey === oldKey ) {
+          action.counterKey = newKey;
+          changed = true;
+        }
+      }
+    }
+
+    if ( !changed ) return;
+
+    if ( this.entity ) {
+      await unsetFlag(this.entity, "triggers");
+      await setFlag(this.entity, "triggers", workflows);
+      ensureEventHooks(workflows, this.actorType);
+    } else {
+      await setSetting(workflowsSettingKey(this.actorType), workflows);
+      rebuild();
+    }
+  }
+
+  /* -------------------------------------------- */
+  /*  FORM SUBMISSION                             */
   /* -------------------------------------------- */
 
   static async submit(event, form, formData) {
@@ -386,6 +438,8 @@ export class CountersEditForm extends CustomDnd5eForm {
           }
         }
       }
+
+      await this.#migrateWorkflowCounterKey(oldKey, newKey);
 
       this.key = newKey;
     }
