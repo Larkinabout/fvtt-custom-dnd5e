@@ -627,6 +627,46 @@
       "_key": "!journal.pages!B48iqFBddUikMMer.4h10hYx01hjbUQL6"
     },
     {
+      "sort": 1620000,
+      "name": "Movement Types",
+      "type": "text",
+      "_id": "eB8rvEuqHwPK8NXd",
+      "system": {},
+      "title": {
+        "show": true,
+        "level": 1
+      },
+      "image": {},
+      "text": {
+        "format": 1,
+        "content": "<p>Located in <strong>Game Settings</strong> &gt; <strong>Configure Settings</strong> &gt; <strong>Custom D&amp;D 5e</strong> &gt; <strong>Configure Movement Types</strong></p><h2 class=\"custom-dnd5e-h2\">Create a Movement Type</h2><ol><li><p>Click <strong>Create New</strong>.</p></li><li><p>Enter a <strong>Key</strong>.</p></li><li><p>Enter a <strong>Label</strong>.</p></li><li><p>(Optional) Enter an <strong>Icon</strong> as a Font Awesome class.</p><article class=\"custom-dnd5e-note\"><header><span class=\"fa-solid fa-note-sticky\">&#8203;</span><p>Note</p></header><p>The icon appears on the movement action in the Token HUD.</p></article></li><li><p>(Optional) Pick an <strong>Image</strong> to use for the movement action in the Token HUD instead of an icon.</p></li><li><p>(Optional) Select a <strong>Travel Pace Group</strong> of Land, Air or Water to group this movement type when calculating travel pace.</p></li><li><p>(Optional) Enable <strong>Walk Fallback</strong> to use the walking speed when this movement type is active but has no value.</p></li><li><p>(Optional) Enable <strong>Hidden</strong> to hide the movement type. The type still exists and can be set via active effects.</p></li><li><p>(Optional) Enable <strong>Teleport</strong> to move instantly to the destination, ignoring terrain difficulty.</p><article class=\"custom-dnd5e-note\"><header><span class=\"fa-solid fa-note-sticky\">&#8203;</span><p>Note</p></header><p><strong>Teleport</strong> and <strong>Cost Multiplier</strong> are only available for custom movement types.</p></article></li><li><p>(Optional) Enter a <strong>Cost Multiplier</strong> to multiply the movement cost per foot, e.g. 2 means each foot of movement costs 2. Leave blank for normal cost.</p></li><li><p>Click <strong>Save and Close</strong>.</p></li></ol><table><caption>Example Movement Type</caption><thead><tr><th><p><strong>Property</strong></p></th><th><p><strong>Value</strong></p></th></tr></thead><tbody><tr><td><p>Key</p></td><td><p>glide</p></td></tr><tr><td><p>Label</p></td><td><p>Glide</p></td></tr><tr><td><p>Icon</p></td><td><p>fa-solid fa-feather</p></td></tr><tr><td><p>Travel Pace Group</p></td><td><p>Air</p></td></tr><tr><td><p>Cost Multiplier</p></td><td><p>0.5</p></td></tr></tbody></table>"
+      },
+      "video": {
+        "controls": true,
+        "volume": 0.5
+      },
+      "src": null,
+      "ownership": {
+        "default": -1,
+        "0wJRsV2r9Hv1a7q0": 3,
+        "5bwQyYIyVQxjjJ3v": 3
+      },
+      "flags": {},
+      "_stats": {
+        "compendiumSource": null,
+        "duplicateSource": null,
+        "exportSource": null,
+        "coreVersion": "13.348",
+        "systemId": "dnd5e",
+        "systemVersion": "5.1.10",
+        "createdTime": 1781280212168,
+        "modifiedTime": 1781280212168,
+        "lastModifiedBy": "0wJRsV2r9Hv1a7q0"
+      },
+      "category": null,
+      "_key": "!journal.pages!B48iqFBddUikMMer.eB8rvEuqHwPK8NXd"
+    },
+    {
       "sort": 1700000,
       "name": "Senses",
       "type": "text",

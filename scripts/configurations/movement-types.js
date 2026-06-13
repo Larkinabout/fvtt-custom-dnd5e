@@ -29,7 +29,7 @@ const constants = {
   TEMPLATE: {
     CONFIG_FORM_GROUP: "modules/custom-dnd5e/templates/movement-config-form-group.hbs"
   },
-  UUID: "Compendium.custom-dnd5e.custom-dnd5e-journals.JournalEntry.B48iqFBddUikMMer.JournalEntryPage.UC0cWoAGMtU6yISR"
+  UUID: "Compendium.custom-dnd5e.custom-dnd5e-journals.JournalEntry.B48iqFBddUikMMer.JournalEntryPage.eB8rvEuqHwPK8NXd"
 };
 
 /* -------------------------------------------- */
