@@ -101,7 +101,7 @@ export class CountersEditForm extends CustomDnd5eForm {
    * Check whether a workflow belongs to the given counter, either because it was created against the
    * counter or because a trigger or action references it.
    * @param {object} workflow The workflow
-   * @param {string} counterKey The counter key
+   * @param {string} counterKey
    * @returns {boolean} Whether the workflow belongs to the counter key
    */
   #workflowReferencesCounter(workflow, counterKey) {

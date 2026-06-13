@@ -238,7 +238,7 @@ function cleanWorkflows(workflows) {
  *   { name, visible, actorTypes, triggers: { id: { event, operator, value, counterKey } }, actions: { id: { type, actionValue, macroUuid, counterKey, conditionId } } }
  *
  * @param {object} oldTrigger The old trigger object
- * @param {string} counterKey The counter key
+ * @param {string} counterKey
  * @param {string} counterLabel The counter label
  * @param {string[]} actorTypes The actor types this counter applies to
  * @returns {object} The new workflow object

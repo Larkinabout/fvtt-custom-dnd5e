@@ -8,27 +8,7 @@ import { register as registerActorSheet } from "./actor-sheet.js";
 import { register as registerActorSheetTidy5e } from "./actor-sheet-tidy5e.js";
 import { register as registerCampSupplies } from "./gameplay/camp-supplies.js";
 import { register as registerConditionLevels } from "./token/condition-levels.js";
-import {
-  register as registerCounters,
-  checkCheckbox,
-  uncheckCheckbox,
-  toggleCheckbox,
-  increaseFraction,
-  decreaseFraction,
-  modifyFraction,
-  setFraction,
-  increaseNumber,
-  decreaseNumber,
-  modifyNumber,
-  setNumber,
-  increaseSuccess,
-  decreaseSuccess,
-  modifySuccess,
-  increaseFailure,
-  decreaseFailure,
-  modifyFailure,
-  togglePip
-} from "./counters/counters.js";
+import { register as registerCounters, counters } from "./counters/counters.js";
 import { register as registerDebug } from "./debug.js";
 import { register as registerDetachedSheets } from "./detached-sheets.js";
 import { register as registerExhaustion } from "./gameplay/exhaustion.js";
@@ -108,26 +88,7 @@ Hooks.on("init", async () => {
   const module = game.modules.get(MODULE.ID);
   module.api = {
     animations,
-    counters: {
-      checkCheckbox,
-      uncheckCheckbox,
-      toggleCheckbox,
-      increaseFraction,
-      decreaseFraction,
-      modifyFraction,
-      setFraction,
-      increaseNumber,
-      decreaseNumber,
-      modifyNumber,
-      setNumber,
-      increaseSuccess,
-      decreaseSuccess,
-      modifySuccess,
-      increaseFailure,
-      decreaseFailure,
-      modifyFailure,
-      togglePip
-    },
+    counters,
     migrations,
     workflows
   };

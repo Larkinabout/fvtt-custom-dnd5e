@@ -2,7 +2,23 @@ import { CONSTANTS, MODULE, SETTING_BY_ENTITY_TYPE, SHEET_TYPE } from "../consta
 import { c5eLoadTemplates, compareValues, executeMacro, getFlag, setFlag, unsetFlag, getSetting, setSetting, isPrimaryHandler, Logger, registerMenu, registerSetting, resolveFormula } from "../utils.js";
 import { WorkflowsForm } from "../forms/workflows/workflows-form.js";
 import { WorkflowsFormEntity } from "../forms/workflows/workflows-form-entity.js";
-import { counters } from "../counters/counters.js";
+import {
+  checkCheckbox,
+  decreaseFraction,
+  decreaseNumber,
+  getCounters,
+  getCounterValue,
+  getSuccessFailureValue,
+  hasDataChanged,
+  increaseFraction,
+  increaseNumber,
+  mergeCounters,
+  resolveTriggerValue,
+  setFraction,
+  setNumber,
+  toggleCheckbox,
+  uncheckCheckbox
+} from "../counters/counters.js";
 
 const constants = CONSTANTS.WORKFLOWS;
 const LOG_PREFIX = "Workflows |";
@@ -293,7 +309,7 @@ function handleAction(action, {
       const macroArgs = { actor, item: entity.documentName === "Item" ? entity : null, event, dieTotal, rolls, data, userId };
       if ( counterKey ) {
         const rawKey = counterKey.startsWith("counters.") ? counterKey.slice(9) : counterKey;
-        const counter = counters.getCounters(entity, rawKey);
+        const counter = getCounters(entity, rawKey);
         macroArgs.counterKey = rawKey;
         macroArgs.counterName = counter?.label ? game.i18n.localize(counter.label) : rawKey;
         macroArgs.counterValue = counterValue;
@@ -428,25 +444,25 @@ function executeCounterAction(entity, action) {
 
   switch (action.type) {
     case "increase":
-      if ( counter.type === "fraction" ) counters.increaseFraction(entity, counterKey, action.actionValue);
-      else counters.increaseNumber(entity, counterKey, action.actionValue);
+      if ( counter.type === "fraction" ) increaseFraction(entity, counterKey, action.actionValue);
+      else increaseNumber(entity, counterKey, action.actionValue);
       break;
     case "decrease":
-      if ( counter.type === "fraction" ) counters.decreaseFraction(entity, counterKey, action.actionValue);
-      else counters.decreaseNumber(entity, counterKey, action.actionValue);
+      if ( counter.type === "fraction" ) decreaseFraction(entity, counterKey, action.actionValue);
+      else decreaseNumber(entity, counterKey, action.actionValue);
       break;
     case "set":
-      if ( counter.type === "fraction" ) counters.setFraction(entity, counterKey, action.actionValue);
-      else counters.setNumber(entity, counterKey, action.actionValue);
+      if ( counter.type === "fraction" ) setFraction(entity, counterKey, action.actionValue);
+      else setNumber(entity, counterKey, action.actionValue);
       break;
     case "check":
-      counters.checkCheckbox(entity, counterKey);
+      checkCheckbox(entity, counterKey);
       break;
     case "uncheck":
-      counters.uncheckCheckbox(entity, counterKey);
+      uncheckCheckbox(entity, counterKey);
       break;
     case "toggle":
-      counters.toggleCheckbox(entity, counterKey);
+      toggleCheckbox(entity, counterKey);
       break;
   }
 }
@@ -973,11 +989,11 @@ function handleUpdateActor(actor, data, options, userId) {
   }
 
   // Counter-based events
-  if ( !counters.hasDataChanged(data) ) return;
+  if ( !hasDataChanged(data) ) return;
 
   const settingKey = SETTING_BY_ENTITY_TYPE.COUNTERS[actor.type];
   if ( !settingKey ) return;
-  const merged = counters.mergeCounters(actor, settingKey);
+  const merged = mergeCounters(actor, settingKey);
   if ( !merged ) return;
 
   Logger.debug(`${LOG_PREFIX} handleUpdateActor: counter events`, { actor: actor.name, counterCount: Object.keys(merged).length });
@@ -985,7 +1001,7 @@ function handleUpdateActor(actor, data, options, userId) {
 
   for ( const [counterKey, counter] of Object.entries(merged) ) {
     if ( ["fraction", "number", "pips"].includes(counter.type) ) {
-      const value = counters.getCounterValue(data, counterKey);
+      const value = getCounterValue(data, counterKey);
       if ( value !== null && value !== undefined ) {
         processEvent("counterValue", { actor, data, counterKey, counterValue: value, userId });
         if ( previousCounterValues ) {
@@ -996,14 +1012,14 @@ function handleUpdateActor(actor, data, options, userId) {
       }
     }
     if ( counter.type === "checkbox" ) {
-      const value = counters.getCounterValue(data, counterKey);
+      const value = getCounterValue(data, counterKey);
       if ( value === true ) processEvent("checked", { actor, data, counterKey, counterValue: value, userId });
       if ( value === false ) processEvent("unchecked", { actor, data, counterKey, counterValue: value, userId });
     }
     if ( counter.type === "successFailure" ) {
-      const sv = counters.getSuccessFailureValue(data, counterKey, "success");
+      const sv = getSuccessFailureValue(data, counterKey, "success");
       if ( sv !== null ) processEvent("successValue", { actor, data, counterKey, counterValue: sv, userId });
-      const fv = counters.getSuccessFailureValue(data, counterKey, "failure");
+      const fv = getSuccessFailureValue(data, counterKey, "failure");
       if ( fv !== null ) processEvent("failureValue", { actor, data, counterKey, counterValue: fv, userId });
     }
   }
@@ -1032,9 +1048,9 @@ function handleUpdateItem(item, data, options, userId) {
   }
 
   // Counter changes
-  if ( !counters.hasDataChanged(data) ) return;
+  if ( !hasDataChanged(data) ) return;
 
-  const merged = counters.mergeCounters(item, SETTING_BY_ENTITY_TYPE.COUNTERS.item);
+  const merged = mergeCounters(item, SETTING_BY_ENTITY_TYPE.COUNTERS.item);
   if ( !merged ) return;
 
   Logger.debug(`${LOG_PREFIX} handleUpdateItem`, { item: item.name, counterCount: Object.keys(merged).length });
@@ -1042,7 +1058,7 @@ function handleUpdateItem(item, data, options, userId) {
 
   for ( const [counterKey, counter] of Object.entries(merged) ) {
     if ( ["fraction", "number", "pips"].includes(counter.type) ) {
-      const value = counters.getCounterValue(data, counterKey);
+      const value = getCounterValue(data, counterKey);
       if ( value !== null && value !== undefined ) {
         processItemEvent("counterValue", { item, data, counterKey, counterValue: value, userId });
         if ( previousCounterValues ) {
@@ -1053,14 +1069,14 @@ function handleUpdateItem(item, data, options, userId) {
       }
     }
     if ( counter.type === "checkbox" ) {
-      const value = counters.getCounterValue(data, counterKey);
+      const value = getCounterValue(data, counterKey);
       if ( value === true ) processItemEvent("checked", { item, data, counterKey, counterValue: value, userId });
       if ( value === false ) processItemEvent("unchecked", { item, data, counterKey, counterValue: value, userId });
     }
     if ( counter.type === "successFailure" ) {
-      const sv = counters.getSuccessFailureValue(data, counterKey, "success");
+      const sv = getSuccessFailureValue(data, counterKey, "success");
       if ( sv !== null ) processItemEvent("successValue", { item, data, counterKey, counterValue: sv, userId });
-      const fv = counters.getSuccessFailureValue(data, counterKey, "failure");
+      const fv = getSuccessFailureValue(data, counterKey, "failure");
       if ( fv !== null ) processItemEvent("failureValue", { item, data, counterKey, counterValue: fv, userId });
     }
   }
@@ -1347,7 +1363,7 @@ function matchTriggerAgainstEvent(trigger, event, {
   const isCounterValueTrigger = ["counterValue", "successValue", "failureValue", "conditionLevelChanged"].includes(trigger.event);
   const actualValue = isCounterValueTrigger ? counterValue : dieTotal;
   const targetValue = (typeof trigger.value === "string" && trigger.value.startsWith("@"))
-    ? counters.resolveTriggerValue(actor, trigger.value) : Number(trigger.value);
+    ? resolveTriggerValue(actor, trigger.value) : Number(trigger.value);
 
   const result = compareValues(actualValue, trigger.operator, targetValue);
   Logger.debug(`${LOG_PREFIX} matchTriggerAgainstEvent: value comparison`, { event, actualValue, operator: trigger.operator, targetValue, result });
@@ -1418,14 +1434,14 @@ function checkTriggerState(trigger, entity) {
       const rawKey = trigger.counterKey.startsWith("counters.") ? trigger.counterKey : `counters.${trigger.counterKey}`;
       let actualValue;
       if ( trigger.event === "successValue" ) {
-        actualValue = counters.getSuccessFailureValue(entity, rawKey, "success");
+        actualValue = getSuccessFailureValue(entity, rawKey, "success");
       } else if ( trigger.event === "failureValue" ) {
-        actualValue = counters.getSuccessFailureValue(entity, rawKey, "failure");
+        actualValue = getSuccessFailureValue(entity, rawKey, "failure");
       } else {
-        actualValue = counters.getCounterValue(entity, rawKey);
+        actualValue = getCounterValue(entity, rawKey);
       }
       const targetValue = (typeof trigger.value === "string" && trigger.value.startsWith("@"))
-        ? counters.resolveTriggerValue(entity, trigger.value) : Number(trigger.value);
+        ? resolveTriggerValue(entity, trigger.value) : Number(trigger.value);
       return compareValues(actualValue, trigger.operator, targetValue);
     }
     // Event-only triggers that cannot be state-checked — treat as satisfied
