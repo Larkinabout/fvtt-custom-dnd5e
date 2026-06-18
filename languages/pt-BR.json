@@ -935,7 +935,7 @@
     "CUSTOM_DND5E.rotation": "Rotação",
     "CUSTOM_DND5E.rounding": "Arredondamento",
     "CUSTOM_DND5E.savingThrow": "Salvaguarda",
-    "CUSTOM_DND5E.scalar": "Grandeza Escalar",
+    "CUSTOM_DND5E.scalar": "Escalar",
     "CUSTOM_DND5E.set": "Definir",
     "CUSTOM_DND5E.setCounter": "Definir Contador",
     "CUSTOM_DND5E.setting.applyElevationToSelectedTokens.hint": "Ao aplicar elevação através da HUD de um token, aplica para todos os tokens selecionados.",
