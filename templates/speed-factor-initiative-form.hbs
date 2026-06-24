@@ -1,0 +1,93 @@
+<div id="custom-dnd5e-form" class="standard-form">
+    <div class="standard-form scrollable">
+        <fieldset>
+            <legend>{{localize "CUSTOM_DND5E.speedFactorInitiative.form.title"}}</legend>
+            <div class="form-group">
+                <label>{{localize "CUSTOM_DND5E.speedFactorInitiative.form.enable.label"}}</label>
+                <div class="form-fields">
+                    <dnd5e-checkbox
+                        id="custom-dnd5e-enable-speed-factor-initiative"
+                        name="enable"
+                        {{checked enable}}></dnd5e-checkbox>
+                </div>
+                <p class="hint">{{localize "CUSTOM_DND5E.speedFactorInitiative.form.enable.note"}}</p>
+            </div>
+            <div class="form-group">
+                <label>{{localize "CUSTOM_DND5E.speedFactorInitiative.form.revealChoices.label"}}</label>
+                <div class="form-fields">
+                    <select id="custom-dnd5e-speed-factor-reveal-choices" name="revealChoices">
+                        {{selectOptions selects.revealChoices.choices selected=revealChoices localize=true}}
+                    </select>
+                </div>
+                <p class="hint">{{localize "CUSTOM_DND5E.speedFactorInitiative.form.revealChoices.note"}}</p>
+            </div>
+            <div class="form-group">
+                <label>{{localize "CUSTOM_DND5E.speedFactorInitiative.form.gatherTimeout.label"}} <span class="units">({{localize "CUSTOM_DND5E.seconds"}})</span></label>
+                <div class="form-fields">
+                    <input
+                        id="custom-dnd5e-speed-factor-gather-timeout"
+                        name="gatherTimeout"
+                        type="number"
+                        min="1"
+                        placeholder="{{localize 'CUSTOM_DND5E.speedFactorInitiative.form.gatherTimeout.placeholder'}}"
+                        value="{{gatherTimeout}}">
+                </div>
+                <p class="hint">{{localize "CUSTOM_DND5E.speedFactorInitiative.form.gatherTimeout.note"}}</p>
+            </div>
+            <div class="form-group">
+                <label>{{localize "CUSTOM_DND5E.speedFactorInitiative.form.timeoutAction.label"}}</label>
+                <div class="form-fields">
+                    <select id="custom-dnd5e-speed-factor-timeout-action" name="timeoutAction">
+                        {{selectOptions selects.timeoutAction.choices selected=timeoutAction localize=true}}
+                    </select>
+                </div>
+                <p class="hint">{{localize "CUSTOM_DND5E.speedFactorInitiative.form.timeoutAction.note"}}</p>
+            </div>
+        </fieldset>
+        <fieldset>
+            <legend>{{localize "CUSTOM_DND5E.speedFactorInitiative.form.sizeModifiers.heading"}}</legend>
+            <p class="hint">{{localize "CUSTOM_DND5E.speedFactorInitiative.form.sizeModifiers.note"}}</p>
+            {{#each sizes as |size|}}
+            <div class="form-group">
+                <label>{{localize size.label}}</label>
+                <div class="form-fields">
+                    <input
+                        id="custom-dnd5e-speed-factor-size-{{size.key}}"
+                        name="sizeModifiers.{{size.key}}"
+                        type="number"
+                        step="1"
+                        value="{{size.modifier}}">
+                </div>
+            </div>
+            {{/each}}
+        </fieldset>
+        <fieldset>
+            <legend>{{localize "CUSTOM_DND5E.speedFactorInitiative.form.actions.heading"}}</legend>
+            <p class="hint">{{localize "CUSTOM_DND5E.speedFactorInitiative.form.actions.note"}}</p>
+            <div class="form-group">
+                <button type="button" data-action="openActions" class="always-interactive">
+                    <i class="fas fa-list-check"></i>
+                    {{localize "CUSTOM_DND5E.speedFactorInitiative.form.actions.openButton"}}
+                </button>
+            </div>
+        </fieldset>
+        <fieldset>
+            <legend>{{localize "CUSTOM_DND5E.speedFactorInitiative.form.weapons.heading"}}</legend>
+            <p class="hint">{{localize "CUSTOM_DND5E.speedFactorInitiative.form.weapons.note"}}</p>
+            <div class="form-group">
+                <button type="button" data-action="openWeapons" class="always-interactive">
+                    <i class="fas fa-gavel"></i>
+                    {{localize "CUSTOM_DND5E.speedFactorInitiative.form.weapons.openButton"}}
+                </button>
+            </div>
+        </fieldset>
+    </div>
+    <footer class="form-footer" data-application-part="footer">
+        <button type="button" data-action="reset" class="reset-button bright">
+            <i class="fas fa-arrow-rotate-left"></i>{{localize "CUSTOM_DND5E.form.button.reset.label"}}
+        </button>
+        <button type="submit" class="save-button">
+            <i class="fas fa-solid fa-floppy-disk"></i>{{localize "CUSTOM_DND5E.form.button.save.label"}}
+        </button>
+    </footer>
+</div>

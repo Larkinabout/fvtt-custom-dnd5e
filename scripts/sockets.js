@@ -10,6 +10,7 @@ import {
   handleConfirmTakeItem
 } from "./item-interactions/drop-items.js";
 import { executeRequestedRoll } from "./workflows/workflows.js";
+import { handleActionChosen, handleRequestAction } from "./gameplay/speed-factor-initiative.js";
 
 /**
  * Handle an incoming animation socket event.
@@ -125,6 +126,8 @@ const HANDLERS = {
   confirmTakeItem: handleConfirmTakeItem,
   moveToken: _onMoveToken,
   requestRoll: _onRequestRoll,
+  sfRequestAction: handleRequestAction,
+  sfActionChosen: handleActionChosen,
   stopAnimations: _onStopAnimations,
   swapTokens: _onSwapTokens
 };

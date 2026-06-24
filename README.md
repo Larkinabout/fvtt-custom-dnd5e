@@ -158,6 +158,20 @@ Apply Massive Damage as per the variant rule (DMG pg. 273).
 
 </details>
 
+### Speed Factor Initiative
+Replace the standard initiative method with the Speed Factor Initiative variant (Dungeon Master's Guide (2014), pg. 270). Each round, every combatant chooses one or more actions, then initiative is rolled for everyone with a modifier based on the creature's size and their chosen action(s). Choices are hidden until initiative is rolled, then revealed.
+- **Size:** Configure size modifiers for each creature.
+- **Actions:** Configure the available actions and their initiative modifiers.
+- **Spells:** Display spells available to the active combatant.
+- **Weapons:** Configure modifiers for each weapon and, optionally, display only the weapons available to the active combatant.
+
+<details>
+    <summary>See Video</summary>
+
+![Custom D&D 5e Speed Factor Initiative](./.github/readme/custom-dnd5e-speed-factor-initiative.gif)
+
+</details>
+
 ### Award Inspiration
 Award Inspiration when a set value is rolled for an ability check, attack roll, saving throw and/or skill check.
 

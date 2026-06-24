@@ -2,6 +2,7 @@ import { CONSTANTS, MODULE } from "./constants.js";
 import { animations, c5eLoadTemplates, getSetting, registerSetting } from "./utils.js";
 import { configs, getConfigKeys } from "./configurations/registry.js";
 import { register as registerGameplay, registerNegativeHp } from "./gameplay/gameplay.js";
+import { register as registerSpeedFactorInitiative } from "./gameplay/speed-factor-initiative.js";
 import { register as registerActivities } from "./activities/activities.js";
 import { registerSockets } from "./sockets.js";
 import { register as registerActorSheet } from "./actor-sheet.js";
@@ -118,6 +119,7 @@ Hooks.on("init", async () => {
   registerCharacterSheet();
 
   registerGameplay();
+  registerSpeedFactorInitiative();
   registerInterface();
   registerItemInteractions();
   registerActivities();

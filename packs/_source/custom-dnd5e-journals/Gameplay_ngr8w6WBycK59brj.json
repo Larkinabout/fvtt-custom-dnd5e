@@ -396,6 +396,45 @@
       "_key": "!journal.pages!ngr8w6WBycK59brj.PinXfgV1fJKcVAcG"
     },
     {
+      "sort": 560000,
+      "name": "Speed Factor Initiative",
+      "type": "text",
+      "_id": "sFiW8mKzQ2rXnVb3",
+      "system": {},
+      "title": {
+        "show": true,
+        "level": 1
+      },
+      "image": {},
+      "text": {
+        "format": 1,
+        "content": "<p>Speed Factor Initiative is an optional initiative method based on the variant rule from the Dungeon Master's Guide (2014), page 270.</p><p>When enabled, each combatant chooses one or more actions at the start of every round. Initiative is then rolled for all combatants with a modifier equal to the creature's size plus the chosen action(s). Choices are hidden until initiative is rolled, then revealed.</p><article class=\"custom-dnd5e-note\"><header><span class=\"fa-solid fa-note-sticky\">&#8203;</span><p>Note</p></header><p>Players choose actions for their own combatants. The GM chooses for NPCs and for player characters whose owner is not logged in.</p></article><h2 class=\"custom-dnd5e-h2\">Enable</h2><p>When enabled, replaces the standard initiative method with Speed Factor Initiative. This replaces the <strong>Reroll Initiative Each Round</strong> behaviour.</p><h2 class=\"custom-dnd5e-h2\">Reveal Choices</h2><p>The minimum role required to see chosen actions once initiative has been rolled. A combatant's owner can always see its own choice, and choices are hidden from others while combatants are still selecting.</p><h2 class=\"custom-dnd5e-h2\">Selection Timeout</h2><p>How long, in seconds, to wait for combatants to choose an action before rolling anyway. Leave empty to wait indefinitely.</p><h2 class=\"custom-dnd5e-h2\">Default Action on Timeout</h2><p>The action assigned to any combatant who hasn't chosen when the Selection Timeout is reached. Choose <strong>Skip (no action)</strong> to roll with only the size modifier instead.</p><h2 class=\"custom-dnd5e-h2\">Size Modifiers</h2><p>The initiative modifier applied for each creature size. Custom sizes are included automatically.</p><h2 class=\"custom-dnd5e-h2\">Actions</h2><p>Configure the actions and initiative modifiers combatants choose from each round. Add, edit, reorder, hide or delete actions. Combatants may select more than one action, for example a main action and a Bonus Action, and the chosen modifiers are summed.</p><h3 class=\"custom-dnd5e-h3\">Is a Group</h3><p>Turn an action into a group. In the action bar its button opens a popover of the actions assigned to it, along with any automatically included weapon, spell and spell level actions.</p><h3 class=\"custom-dnd5e-h3\">Include Weapons</h3><p>Automatically include actions for weapons in the group.</p><h3 class=\"custom-dnd5e-h3\">Filter to Available Weapons</h3><p>Filter the included weapons to those available to the combatant.</p><h3 class=\"custom-dnd5e-h3\">Include Spells</h3><p>Automatically include actions for spells available to the combatant.</p><h3 class=\"custom-dnd5e-h3\">Include Spell Levels</h3><p>Automatically include actions for spell levels (0&ndash;9).</p><h3 class=\"custom-dnd5e-h3\">Initiative Modifier</h3><p>The value added to the initiative roll when the action is chosen.</p><h2 class=\"custom-dnd5e-h2\">Weapons</h2><p>Configure a per-weapon initiative modifier. Defaults are seeded from each weapon's properties following the variant rule: a light or finesse weapon is +2, a heavy weapon is -2, a two-handed weapon is -2, and a weapon with the Loading property is -5. Modifiers for different properties are summed, so a heavy, two-handed weapon is -4.</p>"
+      },
+      "video": {
+        "controls": true,
+        "volume": 0.5
+      },
+      "src": null,
+      "ownership": {
+        "default": -1,
+        "0wJRsV2r9Hv1a7q0": 3
+      },
+      "flags": {},
+      "_stats": {
+        "compendiumSource": null,
+        "duplicateSource": null,
+        "coreVersion": "14.363",
+        "systemId": "dnd5e",
+        "systemVersion": "5.3.3",
+        "createdTime": 1771960000000,
+        "modifiedTime": 1771960000000,
+        "lastModifiedBy": "0wJRsV2r9Hv1a7q0",
+        "exportSource": null
+      },
+      "category": null,
+      "_key": "!journal.pages!ngr8w6WBycK59brj.sFiW8mKzQ2rXnVb3"
+    },
+    {
       "sort": 350000,
       "name": "Exhaustion",
       "type": "text",

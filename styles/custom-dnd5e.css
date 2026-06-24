@@ -784,3 +784,268 @@ body.theme-dark .dnd5e2.sheet.custom-dnd5e-drop-items-sheet {
     padding: 0.15rem 0.4rem;
     width: 100%;
 }
+
+/* Speed Factor Initiative */
+.custom-dnd5e-speed-factor-action {
+    font-size: var(--font-size-11);
+    opacity: 0.85;
+    font-style: italic;
+}
+
+.custom-dnd5e-speed-factor-bar {
+    z-index: 70;
+    padding: 0;
+    background: var(--color-cool-5-90);
+    border: 1px solid var(--color-border-dark, #1a1a1a);
+    border-radius: 3px;
+}
+
+.custom-dnd5e-speed-factor-action-bar {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.custom-dnd5e-speed-factor-bar .custom-dnd5e-speed-factor-grid {
+    display: grid;
+    gap: 2px;
+    width: auto;
+    max-width: none;
+    margin: 0;
+}
+
+.custom-dnd5e-speed-factor-active {
+    outline: 2px solid var(--dnd5e-color-gold, #9f7f47);
+    outline-offset: -2px;
+}
+
+.custom-dnd5e-speed-factor-choose:hover,
+.custom-dnd5e-speed-factor-choose.active,
+.custom-dnd5e-speed-factor-choose.active:hover,
+.custom-dnd5e-speed-factor-auto:hover,
+.custom-dnd5e-speed-factor-auto.active,
+.custom-dnd5e-speed-factor-auto.active:hover {
+    background: #5252d7;
+    border-color: #5252d7;
+    color: var(--color-light-1, #fff);
+}
+
+.custom-dnd5e-speed-factor-choose,
+.custom-dnd5e-speed-factor-choose:hover,
+.custom-dnd5e-speed-factor-choose:focus,
+.custom-dnd5e-speed-factor-auto,
+.custom-dnd5e-speed-factor-auto:hover,
+.custom-dnd5e-speed-factor-auto:focus {
+    box-shadow: none;
+}
+
+.custom-dnd5e-speed-factor-action-button {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    padding: 0.35rem 0.2rem;
+    height: auto;
+    width: 100px;
+    min-height: 60px;
+    text-align: center;
+    line-height: 1.1;
+    border: 2px solid transparent;
+    border-radius: 0;
+    background: rgba(255, 255, 255, 0.07);
+    font-size: var(--font-size-11);
+}
+
+.custom-dnd5e-speed-factor-action-button img,
+.custom-dnd5e-speed-factor-action-button i,
+.custom-dnd5e-speed-factor-action-button .modifier {
+    flex: 0 0 auto;
+}
+
+.custom-dnd5e-speed-factor-action-button .label {
+    flex: 1 1 auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+}
+
+.custom-dnd5e-speed-factor-action-button:hover {
+    background: rgba(82, 82, 215, 0.6);
+    box-shadow: none;
+}
+
+.custom-dnd5e-speed-factor-action-button.selected,
+.custom-dnd5e-speed-factor-list-button.selected,
+.custom-dnd5e-speed-factor-spell-level-button.selected {
+    background: rgba(82, 82, 215, 0.4);
+    border: 2px solid rgb(82, 82, 215);
+}
+
+.custom-dnd5e-speed-factor-skip {
+    color: #d8a657;
+    border-color: rgba(216, 166, 87, 0.5);
+}
+
+.custom-dnd5e-speed-factor-skip:hover {
+    background: rgba(216, 166, 87, 0.25);
+    border-color: #d8a657;
+}
+
+.custom-dnd5e-speed-factor-done {
+    color: #6abe6a;
+    border-color: rgba(106, 190, 106, 0.5);
+}
+
+.custom-dnd5e-speed-factor-done:hover {
+    background: rgba(106, 190, 106, 0.25);
+    border-color: #6abe6a;
+}
+
+.custom-dnd5e-speed-factor-done .modifier {
+    font-variant-numeric: tabular-nums;
+}
+
+.custom-dnd5e-speed-factor-action-button:focus,
+.custom-dnd5e-speed-factor-action-button:focus-visible,
+.custom-dnd5e-speed-factor-list-button:focus,
+.custom-dnd5e-speed-factor-list-button:focus-visible,
+.custom-dnd5e-speed-factor-spell-level-button:focus,
+.custom-dnd5e-speed-factor-spell-level-button:focus-visible {
+    box-shadow: none;
+}
+
+.custom-dnd5e-speed-factor-action-button img {
+    width: 1rem;
+    height: 1rem;
+    object-fit: contain;
+    border: none;
+}
+
+.custom-dnd5e-speed-factor-action-button i {
+    font-size: 1rem;
+    opacity: 0.7;
+}
+
+.custom-dnd5e-speed-factor-action-button .modifier {
+    font-size: var(--font-size-11);
+    opacity: 0.75;
+    min-height: 1.1em;
+}
+
+.custom-dnd5e-speed-factor-spell-popover,
+.custom-dnd5e-speed-factor-weapon-popover,
+.custom-dnd5e-speed-factor-group-popover {
+    position: fixed;
+    z-index: 71;
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    padding: 0.4rem;
+    background: var(--color-cool-5, #1b1d2a);
+    border: 1px solid var(--color-border-dark, #1a1a1a);
+    border-radius: 4px;
+    max-width: min(600px, 90vw);
+}
+
+.custom-dnd5e-speed-factor-spell-popover.hidden,
+.custom-dnd5e-speed-factor-weapon-popover.hidden,
+.custom-dnd5e-speed-factor-group-popover.hidden {
+    display: none;
+}
+
+.custom-dnd5e-speed-factor-group-popover .custom-dnd5e-speed-factor-grid {
+    grid-template-columns: repeat(auto-fit, 100px);
+}
+
+.custom-dnd5e-speed-factor-group-button .modifier {
+    opacity: 0.7;
+}
+
+.custom-dnd5e-speed-factor-spell-popover-label {
+    font-size: var(--font-size-11);
+    font-weight: bold;
+    text-transform: uppercase;
+    opacity: 0.7;
+    text-align: center;
+}
+
+.custom-dnd5e-speed-factor-spell-levels {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 2px;
+}
+
+.custom-dnd5e-speed-factor-spell-level-button {
+    width: 28px;
+    height: 28px;
+    padding: 0;
+    border: 2px solid transparent;
+    border-radius: 3px;
+    background: rgba(255, 255, 255, 0.07);
+    font-weight: bold;
+}
+
+.custom-dnd5e-speed-factor-spell-level-button:hover {
+    background: rgba(82, 82, 215, 0.6);
+    box-shadow: none;
+}
+
+.custom-dnd5e-speed-factor-weapons,
+.custom-dnd5e-speed-factor-spell-list,
+.custom-dnd5e-speed-factor-member-list {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    max-height: 320px;
+    overflow-y: auto;
+    min-width: 160px;
+}
+
+.custom-dnd5e-speed-factor-weapon-button,
+.custom-dnd5e-speed-factor-list-button {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+    padding: 0.2rem 0.4rem;
+    border: 2px solid transparent;
+    border-radius: 3px;
+    background: rgba(255, 255, 255, 0.07);
+    text-align: left;
+}
+
+.custom-dnd5e-speed-factor-weapon-button .label {
+    text-transform: capitalize;
+}
+
+.custom-dnd5e-speed-factor-list-button .label {
+    flex: 1;
+}
+
+.custom-dnd5e-speed-factor-list-button > img,
+.custom-dnd5e-speed-factor-list-button > i {
+    flex: 0 0 auto;
+    width: 1rem;
+    height: 1rem;
+    font-size: 1rem;
+    object-fit: contain;
+    border: none;
+    text-align: center;
+}
+
+.custom-dnd5e-speed-factor-weapon-button .modifier,
+.custom-dnd5e-speed-factor-list-button .modifier {
+    opacity: 0.75;
+    font-variant-numeric: tabular-nums;
+}
+
+.custom-dnd5e-speed-factor-weapon-button:hover,
+.custom-dnd5e-speed-factor-list-button:hover {
+    background: rgba(82, 82, 215, 0.6);
+    box-shadow: none;
+}
+
+#custom-dnd5e-speed-factor-weapons-form .item-name .title {
+    flex: 1;
+}

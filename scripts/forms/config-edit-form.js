@@ -211,103 +211,14 @@ export class ConfigEditForm extends CustomDnd5eForm {
       const resolvedFields = [];
       for ( const field of descriptors ) {
         if ( field.condition && !field.condition({ key: this.key, entry, form: this }) ) continue;
-        resolvedFields.push(await this._resolveField(field, entry, group, isSystem, context.selects));
+        const labelClass = field.labelClass ?? group.labelClass ?? this.constructor.LABEL_CLASS
+          ?? "custom-dnd5e-edit-label";
+        resolvedFields.push(await this._resolveField(field, entry, this.key, isSystem, context.selects, labelClass));
       }
-      resolvedGroups.push({ legend: group.legend, fields: resolvedFields });
+      resolvedGroups.push({ legend: group.legend, cssClass: group.cssClass, fields: resolvedFields });
     }
 
     return resolvedGroups;
-  }
-
-  /* -------------------------------------------- */
-
-  /**
-   * Resolve a single field descriptor into a field context.
-   * @param {EditFieldDescriptor} field
-   * @param {object} entry
-   * @param {EditFieldGroup} group
-   * @param {boolean} isSystem Whether the entry is a system entry
-   * @param {object|null} selects Select options from _getSelects
-   * @returns {Promise<object>} Resolved field context
-   */
-  async _resolveField(field, entry, group, isSystem, selects) {
-    const labelClass = field.labelClass ?? group.labelClass ?? this.constructor.LABEL_CLASS
-      ?? "custom-dnd5e-edit-label";
-
-    if ( field.type === "key" ) {
-      return {
-        type: "key",
-        label: "CUSTOM_DND5E.key",
-        labelClass,
-        inputName: `${this.key}.key`,
-        disabledInputName: `${this.key}.disabledKey`,
-        value: game.i18n.localize(this.key),
-        isSystem
-      };
-    }
-
-    const resolved = {
-      type: field.type,
-      label: field.label,
-      hint: field.hint,
-      tooltip: field.tooltip ? game.i18n.localize(field.tooltip) : undefined,
-      placeholder: field.placeholder,
-      labelClass,
-      customTemplate: field.template,
-      inputName: `${this.key}.${field.name}`,
-      id: `custom-dnd5e-${field.name.replace(/\./g, "-")}`,
-      disabled: !!(field.disabledWhenSystem && isSystem)
-    };
-
-    let value = foundry.utils.getProperty(entry, field.name);
-    if ( field.localizeValue && typeof value === "string" ) value = game.i18n.localize(value);
-    resolved.value = value;
-
-    if ( field.type === "checkbox" ) {
-      resolved.checked = (field.default === true) ? value !== false : !!value;
-    }
-
-    for ( const attr of ["step", "min", "max"] ) {
-      if ( field[attr] !== undefined ) resolved[attr] = String(field[attr]);
-    }
-
-    if ( field.choices !== undefined ) {
-      resolved.choices = this._resolveChoices(field.choices, selects);
-      resolved.localizeChoices = field.localizeChoices ?? false;
-    }
-
-    if ( field.type === "macroDrop" ) {
-      const macro = value ? await fromUuid(value) : null;
-      resolved.macroName = macro?.name ?? "";
-    }
-
-    if ( field.type === "checkboxGrid" ) {
-      resolved.items = field.items(this).map(item => ({
-        ...item,
-        inputName: `${this.key}.${item.key}`,
-        id: `custom-dnd5e-${item.key}`
-      }));
-      resolved.labelClass = "custom-dnd5e-edit-label-full";
-    }
-
-    return resolved;
-  }
-
-  /* -------------------------------------------- */
-
-  /**
-   * Resolve a choices descriptor into a choices object for selectOptions.
-   * @param {string|object|Function} choices
-   * @param {object|null} selects Select options from _getSelects
-   * @returns {object} Choices object
-   */
-  _resolveChoices(choices, selects) {
-    if ( typeof choices === "string" ) {
-      const select = selects?.[choices];
-      return select?.choices ?? select;
-    }
-    if ( typeof choices === "function" ) return choices(this);
-    return choices;
   }
 
   /* -------------------------------------------- */

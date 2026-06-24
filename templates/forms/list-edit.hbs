@@ -20,6 +20,12 @@
             type="hidden"
             value="{{#if (customDnd5eBoolFalse system)}}false{{else}}true{{/if}}">
         <div class="item-name">
+            {{#if fields}}
+            <span class="title">{{localize label}}</span>
+            {{#each fields}}
+            {{> "modules/custom-dnd5e/templates/fields/field.hbs"}}
+            {{/each}}
+            {{else}}
             <div class="form-group">
                 <label class="flex0">{{localize "CUSTOM_DND5E.key"}}</label>
                 <div class="form-fields">
@@ -46,6 +52,7 @@
                         value="{{localize label}}">
                 </div>
             </div>
+            {{/if}}
         </div>
         <div class="item-controls always-visible">
             {{#if (or item.children item.subtypes)}}

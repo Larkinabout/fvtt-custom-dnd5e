@@ -106,6 +106,107 @@ export class CustomDnd5eForm extends HandlebarsApplicationMixin(ApplicationV2) {
   /* -------------------------------------------- */
 
   /**
+   * Get the select options for resolving select/multiSelect field choices.
+   * @returns {object|null}
+   */
+  _getSelects() {
+    return null;
+  }
+
+  /* -------------------------------------------- */
+
+  /**
+   * Resolve a choices descriptor into a choices object for selectOptions.
+   * @param {string|object|Function} choices
+   * @param {object|null} selects Select options from `_getSelects`
+   * @returns {object} Choices object
+   */
+  _resolveChoices(choices, selects) {
+    if ( typeof choices === "string" ) {
+      const select = selects?.[choices];
+      return select?.choices ?? select;
+    }
+    if ( typeof choices === "function" ) return choices(this);
+    return choices;
+  }
+
+  /* -------------------------------------------- */
+
+  /**
+   * Resolve a single field descriptor into a field context for the `field.hbs` template.
+   * Shared by the edit dialog and the inline list.
+   * @param {object} field
+   * @param {object} entry
+   * @param {string} key Entry key
+   * @param {boolean} isSystem Whether the entry is a system entry
+   * @param {object|null} selects Select options from `_getSelects`
+   * @param {string} labelClass CSS class for the label
+   * @returns {Promise<object>} Resolved field context
+   */
+  async _resolveField(field, entry, key, isSystem, selects, labelClass) {
+    if ( field.type === "key" ) {
+      return {
+        type: "key",
+        label: "CUSTOM_DND5E.key",
+        labelClass,
+        inputName: `${key}.key`,
+        disabledInputName: `${key}.disabledKey`,
+        value: game.i18n.localize(key),
+        isSystem
+      };
+    }
+
+    const resolved = {
+      type: field.type,
+      label: field.label,
+      hint: field.hint,
+      unit: field.unit,
+      tooltip: field.tooltip ? game.i18n.localize(field.tooltip) : undefined,
+      placeholder: field.placeholder,
+      labelClass,
+      customTemplate: field.template,
+      inputName: `${key}.${field.name}`,
+      id: `custom-dnd5e-${field.name.replace(/\./g, "-")}`,
+      disabled: !!(field.disabledWhenSystem && isSystem)
+    };
+
+    let value = foundry.utils.getProperty(entry, field.name);
+    if ( field.localizeValue && typeof value === "string" ) value = game.i18n.localize(value);
+    resolved.value = value;
+
+    if ( field.type === "checkbox" ) {
+      resolved.checked = (field.default === true) ? value !== false : !!value;
+    }
+
+    for ( const attr of ["step", "min", "max"] ) {
+      if ( field[attr] !== undefined ) resolved[attr] = String(field[attr]);
+    }
+
+    if ( field.choices !== undefined ) {
+      resolved.choices = this._resolveChoices(field.choices, selects);
+      resolved.localizeChoices = field.localizeChoices ?? false;
+    }
+
+    if ( field.type === "macroDrop" ) {
+      const macro = value ? await fromUuid(value) : null;
+      resolved.macroName = macro?.name ?? "";
+    }
+
+    if ( field.type === "checkboxGrid" ) {
+      resolved.items = field.items(this).map(item => ({
+        ...item,
+        inputName: `${key}.${item.key}`,
+        id: `custom-dnd5e-${item.key}`
+      }));
+      resolved.labelClass = "custom-dnd5e-edit-label-full";
+    }
+
+    return resolved;
+  }
+
+  /* -------------------------------------------- */
+
+  /**
    * Default options for the form.
    *
    * @type {object}

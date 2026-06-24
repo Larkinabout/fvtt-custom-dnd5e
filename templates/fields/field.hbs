@@ -1,5 +1,7 @@
 <div class="form-group{{#if (customDnd5eEq type "checkboxGrid")}} stacked checkbox-grid{{/if}}">
-    <label class="{{labelClass}}"{{#if tooltip}} data-tooltip="{{tooltip}}"{{/if}}>{{localize label}}</label>
+    <label class="{{labelClass}}"{{#if tooltip}} data-tooltip="{{tooltip}}"{{/if}}>
+        {{localize label}}{{#if unit}} <span class="units">({{localize unit}})</span>{{/if}}
+    </label>
     <div class="form-fields{{#if (customDnd5eEq type "macroDrop")}} custom-dnd5e-macro-drop{{/if}}">
         {{#if customTemplate}}
         {{> (lookup this "customTemplate")}}

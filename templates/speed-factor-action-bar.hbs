@@ -1,0 +1,116 @@
+{{#*inline "sfActionButton"}}
+<button
+    type="button"
+    data-action="chooseAction"
+    data-action-key="{{key}}"
+    data-tooltip="{{#if description}}{{description}}{{else}}{{modifierLabel}}{{/if}}"
+    class="{{#if buttonClass}}{{buttonClass}}{{else}}custom-dnd5e-speed-factor-action-button{{/if}}">
+    {{#if img}}
+    <img src="{{img}}" alt="{{label}}">
+    {{else if icon}}
+    <i class="{{icon}}"></i>
+    {{else}}
+    <i class="fas fa-bolt"></i>
+    {{/if}}
+    <span class="label">{{label}}</span>
+    <span class="modifier">{{modifierLabel}}</span>
+</button>
+{{/inline}}
+<div class="custom-dnd5e-speed-factor-action-bar">
+    <div class="custom-dnd5e-speed-factor-grid">
+        {{#each actions as |action|}}
+        {{#if action.isGroup}}
+        <button
+            type="button"
+            data-action="toggleGroup"
+            data-group-key="{{action.key}}"
+            class="custom-dnd5e-speed-factor-action-button custom-dnd5e-speed-factor-group-button">
+            {{#if action.img}}
+            <img src="{{action.img}}" alt="{{action.label}}">
+            {{else if action.icon}}
+            <i class="{{action.icon}}"></i>
+            {{else}}
+            <i class="fas fa-folder"></i>
+            {{/if}}
+            <span class="label">{{action.label}}</span>
+            <span class="modifier"><i class="fas fa-expand"></i></span>
+        </button>
+        {{else}}
+        {{> sfActionButton key=action.key label=action.label img=action.img icon=action.icon description=action.description modifierLabel=action.modifierLabel}}
+        {{/if}}
+        {{/each}}
+        <button
+            type="button"
+            data-action="done"
+            data-tooltip="{{localize 'CUSTOM_DND5E.speedFactorInitiative.dialog.skip'}}"
+            class="custom-dnd5e-speed-factor-action-button custom-dnd5e-speed-factor-skip">
+            <i class="fas fa-forward-step"></i>
+            <span class="label">{{localize "CUSTOM_DND5E.speedFactorInitiative.dialog.skip"}}</span>
+            <span class="modifier"></span>
+        </button>
+    </div>
+    {{#each actions as |group|}}
+    {{#if group.isGroup}}
+    <div class="custom-dnd5e-speed-factor-group-popover hidden" data-group-key="{{group.key}}">
+        {{#if group.members.length}}
+        <div class="custom-dnd5e-speed-factor-member-list">
+            {{#each group.members as |member|}}
+            {{> sfActionButton key=member.key label=member.label img=member.img icon=member.icon description=member.description modifierLabel=member.modifierLabel buttonClass="custom-dnd5e-speed-factor-list-button"}}
+            {{/each}}
+        </div>
+        {{/if}}
+        {{#if group.includeWeapons}}
+        {{#if group.weapons.length}}
+        <div class="custom-dnd5e-speed-factor-spell-popover-label">{{localize "CUSTOM_DND5E.speedFactorInitiative.dialog.weapon.label"}}</div>
+        <div class="custom-dnd5e-speed-factor-weapons">
+            {{#each group.weapons as |weapon|}}
+            <button
+                type="button"
+                data-action="chooseWeapon"
+                data-group-key="{{group.key}}"
+                data-weapon-key="{{weapon.key}}"
+                class="custom-dnd5e-speed-factor-list-button">
+                <span class="label">{{weapon.label}}</span>
+                <span class="modifier">{{weapon.modifierLabel}}</span>
+            </button>
+            {{/each}}
+        </div>
+        {{/if}}
+        {{/if}}
+        {{#if group.includeSpells}}
+        {{#if @root.spellList}}
+        <div class="custom-dnd5e-speed-factor-spell-popover-label">{{localize "CUSTOM_DND5E.speedFactorInitiative.dialog.spell.label"}}</div>
+        <div class="custom-dnd5e-speed-factor-spell-list">
+            {{#each @root.spellList as |spell|}}
+            <button
+                type="button"
+                data-action="chooseSpell"
+                data-group-key="{{group.key}}"
+                data-spell-level="{{spell.level}}"
+                data-spell-name="{{spell.name}}"
+                class="custom-dnd5e-speed-factor-list-button">
+                <span class="label">{{spell.name}}</span>
+                <span class="modifier">{{spell.modifierLabel}}</span>
+            </button>
+            {{/each}}
+        </div>
+        {{/if}}
+        {{/if}}
+        {{#if group.includeSpellLevels}}
+        <div class="custom-dnd5e-speed-factor-spell-popover-label">{{localize "CUSTOM_DND5E.speedFactorInitiative.dialog.spellLevel.label"}}</div>
+        <div class="custom-dnd5e-speed-factor-spell-levels">
+            {{#each @root.spellLevels as |spell|}}
+            <button
+                type="button"
+                data-action="chooseSpellLevel"
+                data-group-key="{{group.key}}"
+                data-level="{{spell.level}}"
+                data-tooltip="{{spell.modifier}}"
+                class="custom-dnd5e-speed-factor-spell-level-button">{{spell.level}}</button>
+            {{/each}}
+        </div>
+        {{/if}}
+    </div>
+    {{/if}}
+    {{/each}}
+</div>

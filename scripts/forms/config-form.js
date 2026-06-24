@@ -1,5 +1,5 @@
 import { CONSTANTS, MODULE } from "../constants.js";
-import { getDefaultSetting, getSetting, setSetting } from "../utils.js";
+import { getDefaultSetting, getSetting, resetSetting, setSetting } from "../utils.js";
 import { CustomDnd5eForm } from "./custom-dnd5e-form.js";
 import { ConfigEditForm } from "./config-edit-form.js";
 
@@ -26,6 +26,32 @@ export function labeliseConfigData(data) {
     }
   });
   return data;
+}
+
+/* -------------------------------------------- */
+
+/**
+ * Build a lightweight config for a setting list not backed by `CONFIG.DND5E`.
+ * @param {object} args
+ * @param {string} args.settingKey
+ * @param {string} args.uuid Help journal UUID
+ * @param {() => object} args.getDefaults Returns the full defaults map (key → entry)
+ * @returns {object} Config descriptor
+ */
+export function createListSettingConfig({ settingKey, uuid, getDefaults }) {
+  return {
+    configKey: undefined,
+    constants: {
+      SETTING: { CONFIG: { KEY: settingKey } },
+      UUID: uuid
+    },
+    setConfig: () => {},
+    getSettingDefault: (key = null) => {
+      const defaults = getDefaults();
+      return foundry.utils.deepClone(key ? defaults[key] : defaults);
+    },
+    resetConfigSetting: async () => resetSetting(settingKey)
+  };
 }
 
 /* -------------------------------------------- */
@@ -231,7 +257,7 @@ export class ConfigForm extends CustomDnd5eForm {
     if ( !this.validateFormData(formData) ) return;
 
     if ( !this.requiresReload && this.enableConfigKey ) {
-      this.requiresReload = (this.enableConfig !== formData.object.enableConfig)
+      this.requiresReload = (this.enableConfig !== formData.object.enableConfig);
     }
 
     this.enableConfig = formData.object.enableConfig;

@@ -18,6 +18,7 @@ import {
   getActorOwnerIds
 } from "../utils.js";
 import { GameplayForm } from "../forms/gameplay-form.js";
+import { isSpeedFactorEnabled } from "./speed-factor-initiative.js";
 
 const constants = CONSTANTS.GAMEPLAY;
 
@@ -445,6 +446,8 @@ export function registerNegativeHp() {
  * @param {object} options The options
  */
 export async function rerollInitiative(combat, data, options) {
+  if ( isSpeedFactorEnabled() ) return;
+
   let mode = getSetting(CONSTANTS.INITIATIVE.SETTING.REROLL_INITIATIVE_EACH_ROUND.KEY);
   if ( mode === true ) mode = "rerollAll";
   if ( mode === false || mode === "false" ) mode = "off";

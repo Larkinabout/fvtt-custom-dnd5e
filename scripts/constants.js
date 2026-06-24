@@ -341,6 +341,50 @@ export const CONSTANTS = {
       }
     }
   },
+  SPEED_FACTOR_INITIATIVE: {
+    ID: "speedFactorInitiative",
+    MENU: {
+      KEY: "speed-factor-initiative-menu",
+      HINT: "CUSTOM_DND5E.menu.speedFactorInitiative.hint",
+      ICON: "fas fa-gauge-high",
+      LABEL: "CUSTOM_DND5E.menu.speedFactorInitiative.label",
+      NAME: "CUSTOM_DND5E.menu.speedFactorInitiative.name"
+    },
+    SETTING: {
+      ENABLE: {
+        KEY: "enable-speed-factor-initiative"
+      },
+      SIZE_MODIFIERS: {
+        KEY: "speed-factor-initiative-size-modifiers"
+      },
+      ACTIONS: {
+        KEY: "speed-factor-initiative-actions"
+      },
+      WEAPONS: {
+        KEY: "speed-factor-initiative-weapons"
+      },
+      REVEAL_CHOICES: {
+        KEY: "speed-factor-initiative-reveal-choices"
+      },
+      GATHER_TIMEOUT: {
+        KEY: "speed-factor-initiative-gather-timeout"
+      },
+      TIMEOUT_ACTION: {
+        KEY: "speed-factor-initiative-timeout-action"
+      }
+    },
+    TEMPLATE: {
+      FORM: "modules/custom-dnd5e/templates/speed-factor-initiative-form.hbs",
+      ACTIONS_FORM: "modules/custom-dnd5e/templates/speed-factor-actions-form.hbs",
+      WEAPONS_FORM: "modules/custom-dnd5e/templates/speed-factor-weapons-form.hbs",
+      ACTION_BAR: "modules/custom-dnd5e/templates/speed-factor-action-bar.hbs"
+    },
+    FLAG: {
+      SPEED_FACTOR: "speedFactor",
+      REVEALED: "speedFactorRevealed"
+    },
+    UUID: "Compendium.custom-dnd5e.custom-dnd5e-journals.JournalEntry.ngr8w6WBycK59brj.JournalEntryPage.sFiW8mKzQ2rXnVb3"
+  },
   INTERFACE: {
     MENU: {
       KEY: "interface-menu",
