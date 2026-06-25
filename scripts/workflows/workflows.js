@@ -1306,8 +1306,9 @@ function matchTriggerAgainstEvent(trigger, event, {
   // Roll subtype triggers must match the specific ability/skill/tool
   if ( trigger.rollSubtype && trigger.rollSubtype !== rollSubtype ) return false;
 
-  // Condition triggers must match the conditionId
-  if ( trigger.conditionId && trigger.conditionId !== conditionId ) return false;
+  // Condition triggers must match the conditionId ("any"/"all" match any condition)
+  if ( trigger.conditionId && !["any", "all"].includes(trigger.conditionId)
+    && trigger.conditionId !== conditionId ) return false;
 
   // Effect triggers must match the effectName (case-insensitive)
   if ( trigger.effectName && (!effectName || trigger.effectName.toLowerCase() !== effectName.toLowerCase()) ) {
@@ -1395,11 +1396,11 @@ function checkTriggerState(trigger, entity) {
       return pct != null ? pct <= 50 : true;
     }
     case "conditionApplied": {
-      if ( !trigger.conditionId ) return true;
+      if ( !trigger.conditionId || ["any", "all"].includes(trigger.conditionId) ) return true;
       return actor?.statuses?.has(trigger.conditionId) ?? true;
     }
     case "conditionRemoved": {
-      if ( !trigger.conditionId ) return true;
+      if ( !trigger.conditionId || ["any", "all"].includes(trigger.conditionId) ) return true;
       return !(actor?.statuses?.has(trigger.conditionId) ?? false);
     }
     case "conditionLevelChanged": {

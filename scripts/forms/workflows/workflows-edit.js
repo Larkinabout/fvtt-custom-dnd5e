@@ -350,12 +350,14 @@ export function getSubActionChoices(entityType = "actor") {
 
 /**
  * Build condition choices from status effects.
- * @returns {object} Map of condition IDs
+ * @param {object} [options]
+ * @param {"all"|"any"} [options.wildcard="all"] Wildcard to include
+ * @returns {object} Map of condition IDs to localized label
  */
-export function getConditionChoices() {
-  const choices = {
-    all: game.i18n.localize("CUSTOM_DND5E.form.workflows.action.condition.all")
-  };
+export function getConditionChoices({ wildcard = "all" } = {}) {
+  const choices = wildcard === "any"
+    ? { any: game.i18n.localize("CUSTOM_DND5E.any") }
+    : { all: game.i18n.localize("CUSTOM_DND5E.form.workflows.action.condition.all") };
   for ( const effect of CONFIG.statusEffects ) {
     if ( effect.id ) choices[effect.id] = effect.name;
   }
@@ -652,7 +654,9 @@ export class WorkflowsEditForm extends CustomDnd5eForm {
         rollSubtypeChoices: getRollSubtypeChoices(triggerEvent),
         conditionChoicesForTrigger: isResultEvent ? resultOperatorChoices : operatorChoices,
         triggerChoices,
-        conditionChoices: triggerEvent === "conditionLevelChanged" ? getLeveledConditionChoices() : conditionChoices,
+        conditionChoices: triggerEvent === "conditionLevelChanged"
+          ? getLeveledConditionChoices()
+          : getConditionChoices({ wildcard: "any" }),
         counterChoices: getFilteredTriggerCounterChoiceLabels(this.counterChoices, triggerEvent),
         hasConditions: Object.keys(conditionsData).length > 0
       });
@@ -777,7 +781,7 @@ export class WorkflowsEditForm extends CustomDnd5eForm {
 
       const rebuildConditionSelectChoices = () => {
         const choices = eventSelect.value === "conditionLevelChanged"
-          ? getLeveledConditionChoices() : getConditionChoices();
+          ? getLeveledConditionChoices() : getConditionChoices({ wildcard: "any" });
         rebuildSelectOptions(conditionSelect, choices);
       };
 
@@ -984,7 +988,7 @@ export class WorkflowsEditForm extends CustomDnd5eForm {
       rollSubtypeChoices: getRollSubtypeChoices("attackRolled"),
       conditionChoicesForTrigger: getResultOperatorChoices(),
       triggerChoices: getTriggerChoices(this.entityType),
-      conditionChoices: getConditionChoices(),
+      conditionChoices: getConditionChoices({ wildcard: "any" }),
       counterChoices: getCounterChoiceLabels(getCounterChoices(this.entityType, this.entity)),
       hasConditions: false
     };

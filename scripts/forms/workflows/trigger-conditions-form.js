@@ -87,7 +87,7 @@ export class TriggerConditionsForm extends CustomDnd5eForm {
    */
   async _prepareContext() {
     const triggerChoices = getConditionTriggerChoices(this.entityType);
-    const conditionChoices = getConditionChoices();
+    const conditionChoices = getConditionChoices({ wildcard: "any" });
     const operatorChoices = getOperatorChoices();
     this.counterChoices = getCounterChoices(this.entityType, this.entity);
 
@@ -206,7 +206,7 @@ export class TriggerConditionsForm extends CustomDnd5eForm {
   static async addCondition(event, target) {
     const conditionId = foundry.utils.randomID();
     const triggerChoices = getConditionTriggerChoices(this.entityType);
-    const conditionChoices = getConditionChoices();
+    const conditionChoices = getConditionChoices({ wildcard: "any" });
     const operatorChoices = getOperatorChoices();
     const counterChoices = getCounterChoices(this.entityType, this.entity);
 
