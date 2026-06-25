@@ -109,12 +109,23 @@ function onCanvasTearDown() {
 /* -------------------------------------------- */
 
 /**
+ * Whether the Select Tokens control is the active canvas tool.
+ * @returns {boolean}
+ */
+function isSelectToolActive() {
+  return ui.controls?.control?.name === "tokens" && game.activeTool === "select";
+}
+
+/* -------------------------------------------- */
+
+/**
  * On stage pointer down.
  * @param {PIXI.FederatedPointerEvent} event
  */
 function onStagePointerDown(event) {
   if ( event.button !== undefined && event.button !== 0 ) return;
   if ( !getSetting(constants.SETTING.CLICK_TO_TOGGLE.KEY) ) return;
+  if ( !isSelectToolActive() ) return;
   if ( !isPointerOverCanvas(event) ) return;
 
   const hit = hitTestRegistry(event.global);
@@ -177,6 +188,10 @@ function hitTestRegistry(globalPoint) {
  */
 function onStagePointerMove(event) {
   if ( !getSetting(constants.SETTING.CLICK_TO_TOGGLE.KEY) ) {
+    if ( hoveredEntry ) clearHoverState();
+    return;
+  }
+  if ( !isSelectToolActive() ) {
     if ( hoveredEntry ) clearHoverState();
     return;
   }
