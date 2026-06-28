@@ -147,6 +147,18 @@ function applyElevationToSelected(token, data, options, id) {
 /* -------------------------------------------- */
 
 /**
+ * Set CONFIG.DND5E.equipmentTypes using CONFIG.DND5E.miscEquipmentTypes and CONFIG.DND5E.armorTypes
+ */
+export function setEquipmentTypes(maxLevel = null) {
+  CONFIG.DND5E.equipmentTypes = {
+    ...CONFIG.DND5E.miscEquipmentTypes,
+    ...CONFIG.DND5E.armorTypes
+  };
+}
+
+/* -------------------------------------------- */
+
+/**
  * Set CONFIG.DND5E.maxAbilityScore.
  * @param {number|null} maxAbilityScore The max ability score
  */
