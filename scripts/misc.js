@@ -149,7 +149,7 @@ function applyElevationToSelected(token, data, options, id) {
 /**
  * Set CONFIG.DND5E.equipmentTypes using CONFIG.DND5E.miscEquipmentTypes and CONFIG.DND5E.armorTypes
  */
-export function setEquipmentTypes(maxLevel = null) {
+export function setEquipmentTypes() {
   CONFIG.DND5E.equipmentTypes = {
     ...CONFIG.DND5E.miscEquipmentTypes,
     ...CONFIG.DND5E.armorTypes
