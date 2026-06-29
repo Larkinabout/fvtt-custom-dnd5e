@@ -1,5 +1,5 @@
 import { MODULE } from "./constants.js";
-import { animations } from "./utils.js";
+import { animations, playLocalAnimation } from "./animations.js";
 import { MoveCanvasMode } from "./activities/move-canvas-mode.js";
 import { applySwapMoves } from "./activities/activity-swap.js";
 import { handleGiveItem, handleGiveItemRejected, handleGiveItemSource } from "./item-interactions/give-items.js";
@@ -18,8 +18,7 @@ import { handleActionChosen, handleRequestAction } from "./gameplay/speed-factor
  */
 function _onAnimation(options) {
   const { type, options: animOptions } = options;
-  const handler = animations[type];
-  if ( handler ) handler(animOptions);
+  playLocalAnimation(type, animOptions);
 }
 
 /* -------------------------------------------- */

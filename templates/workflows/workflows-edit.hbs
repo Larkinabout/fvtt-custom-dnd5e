@@ -9,6 +9,21 @@
 
         {{#unless isActor}}{{#unless isItem}}
         <div class="form-group">
+            <label>{{localize "CUSTOM_DND5E.form.workflows.fireMode.label"}}</label>
+            <div class="form-fields">
+                <select name="fireMode">
+                    <option value="actor" {{#if (eq fireMode "actor")}}selected{{/if}}>
+                        {{localize "CUSTOM_DND5E.form.workflows.fireMode.choices.actor"}}
+                    </option>
+                    <option value="once" {{#if (eq fireMode "once")}}selected{{/if}}>
+                        {{localize "CUSTOM_DND5E.form.workflows.fireMode.choices.once"}}
+                    </option>
+                </select>
+            </div>
+            <p class="hint">{{localize "CUSTOM_DND5E.form.workflows.fireMode.hint"}}</p>
+        </div>
+
+        <div class="form-group">
             <label>{{localize "CUSTOM_DND5E.form.workflows.actorTypes.label"}}</label>
             <div class="form-fields">
                 <label class="checkbox">

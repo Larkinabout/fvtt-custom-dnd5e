@@ -3,8 +3,8 @@ import { configs } from "../configurations/registry.js";
 import { register as registerAverageDamage } from "./average-damage.js";
 import { register as registerMobDamage } from "./mob-damage.js";
 import { register as registerProbabilisticDamage } from "./probalistic-damage.js";
+import { animations } from "../animations.js";
 import {
-  animations,
   c5eLoadTemplates,
   Logger,
   getDefaultSetting,

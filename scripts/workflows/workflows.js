@@ -875,9 +875,10 @@ function handlePreUpdateActor(actor, data, options, userId) {
 function handleCombatStart(combat, data) {
   if ( !isPrimaryHandler() ) return;
   Logger.debug(`${LOG_PREFIX} handleCombatStart`, { combatantCount: combat.combatants.size });
+  const firedOnce = new Set();
   combat.combatants.forEach(combatant => {
     const actor = combatant.actor;
-    if ( actor ) processEvent("startOfCombat", { actor, data });
+    if ( actor ) processEvent("startOfCombat", { actor, data, firedOnce });
   });
 }
 
@@ -892,14 +893,15 @@ function handleCombatStart(combat, data) {
 function handleDeleteCombat(combat, options, userId) {
   if ( !isPrimaryHandler() ) return;
   Logger.debug(`${LOG_PREFIX} handleDeleteCombat`, { combatantCount: combat.combatants.size });
+  const firedOnce = new Set();
   combat.combatants.forEach(combatant => {
     const actor = combatant.actor;
     if ( !actor ) return;
-    processEvent("endOfCombat", { actor, userId });
+    processEvent("endOfCombat", { actor, userId, firedOnce });
     const hasZeroHpFlag = getFlag(actor, "zeroHpCombatEnd");
     Logger.debug(`${LOG_PREFIX} handleDeleteCombat: zeroHpCombatEnd flag`, { actor: actor.name, hasZeroHpFlag });
     if ( hasZeroHpFlag ) {
-      processEvent("zeroHpCombatEnd", { actor, userId });
+      processEvent("zeroHpCombatEnd", { actor, userId, firedOnce });
       unsetFlag(actor, "zeroHpCombatEnd");
     }
   });
@@ -917,13 +919,52 @@ function handleDeleteCombat(combat, options, userId) {
 function handleUpdateCombat(combat, data, options, userId) {
   if ( !isPrimaryHandler() ) return;
   Logger.debug(`${LOG_PREFIX} handleUpdateCombat`, { previousCombatantId: combat?.previous?.combatantId, currentCombatant: combat.combatant?.actor?.name });
+  const firedOnce = new Set();
   if ( combat?.previous?.combatantId ) {
     const previousActor = combat.combatants.get(combat.previous.combatantId)?.actor;
-    if ( previousActor ) processEvent("endOfTurn", { actor: previousActor, data, userId });
+    if ( previousActor ) {
+      processEvent("endOfTurn", { actor: previousActor, data, userId, firedOnce });
+      processEvent("eachTurn", { actor: previousActor, data, userId, firedOnce });
+    }
   }
 
   const actor = combat.combatant?.actor;
-  if ( actor ) processEvent("startOfTurn", { actor, data, userId });
+  if ( actor ) {
+    processEvent("startOfTurn", { actor, data, userId, firedOnce });
+    processEvent("eachTurn", { actor, data, userId, firedOnce });
+  }
+}
+
+/* -------------------------------------------- */
+
+/**
+ * Fire day, dawn, and dusk events as world time passes.
+ * @param {number} worldTime
+ * @param {number} deltaTime Elapsed time in seconds
+ * @param {object} options
+ * @param {string} userId
+ */
+function handleUpdateWorldTime(worldTime, deltaTime, options, userId) {
+  if ( !isPrimaryHandler() ) return;
+
+  const deltas = options?.dnd5e?.deltas;
+  if ( !deltas ) return;
+
+  const events = [];
+  if ( deltas.midnights > 0 ) events.push("day");
+  if ( deltas.sunrises > 0 ) events.push("dawn");
+  if ( deltas.sunsets > 0 ) events.push("dusk");
+  if ( !events.length ) return;
+
+  Logger.debug(`${LOG_PREFIX} handleUpdateWorldTime`, { worldTime, deltaTime, events });
+
+  const data = { worldTime, deltaTime, deltas };
+  const firedOnce = new Set();
+  for ( const actor of game.actors ) {
+    for ( const event of events ) {
+      processEvent(event, { actor, data, userId, firedOnce });
+    }
+  }
 }
 
 /* -------------------------------------------- */
@@ -1192,6 +1233,10 @@ export const EVENT_TO_HOOK = {
   zeroHpCombatEnd: "deleteCombat",
   startOfTurn: "updateCombat",
   endOfTurn: "updateCombat",
+  eachTurn: "updateCombat",
+  day: "updateWorldTime",
+  dawn: "updateWorldTime",
+  dusk: "updateWorldTime",
   shortRest: "dnd5e.restCompleted",
   longRest: "dnd5e.restCompleted",
   counterValue: "updateActor",
@@ -1252,6 +1297,7 @@ const HOOK_HANDLERS = {
   combatStart: handleCombatStart,
   deleteCombat: handleDeleteCombat,
   updateCombat: handleUpdateCombat,
+  updateWorldTime: handleUpdateWorldTime,
   "dnd5e.restCompleted": handleRest,
   "dnd5e.longRest": handleGroupRest,
   "dnd5e.shortRest": handleGroupRest,
@@ -1421,7 +1467,8 @@ function checkTriggerState(trigger, entity) {
       return !(actor?.effects?.some(e => !e.disabled && e.name?.toLowerCase() === name) ?? false);
     }
     case "startOfTurn":
-    case "endOfTurn": {
+    case "endOfTurn":
+    case "eachTurn": {
       return game.combat?.combatant?.actor === actor;
     }
     case "startOfCombat":
@@ -1509,6 +1556,7 @@ function workflowMatchesEvent(workflow, event, {
  * @param {string|null} [options.conditionId] Condition ID
  * @param {string|null} [options.effectName] Effect name
  * @param {string|null} [options.userId] ID of the user who triggered the event
+ * @param {Set<object>|null} [options.firedOnce] Shared set tracking workflows already executed
  */
 function processEvent(event, {
   actor,
@@ -1519,7 +1567,8 @@ function processEvent(event, {
   counterValue = null,
   conditionId = null,
   effectName = null,
-  userId = null
+  userId = null,
+  firedOnce = null
 }) {
   if ( !actor ) return;
 
@@ -1556,6 +1605,11 @@ function processEvent(event, {
     );
     Logger.debug(`${LOG_PREFIX} Workflow match result`, { name: workflow.name, event, matches });
     if ( !matches ) continue;
+
+    if ( workflow.fireMode === "once" && firedOnce ) {
+      if ( firedOnce.has(workflow) ) continue;
+      firedOnce.add(workflow);
+    }
 
     // Execute ALL actions in the workflow — resolve group members if target is "members"
     const actions = workflow.actions || {};

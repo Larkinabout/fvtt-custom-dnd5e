@@ -1,6 +1,6 @@
 import { CONSTANTS } from "../constants.js";
+import { animations } from "../animations.js";
 import {
-  animations,
   getFlag,
   setFlag,
   unsetFlag,

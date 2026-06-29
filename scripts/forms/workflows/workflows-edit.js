@@ -130,6 +130,7 @@ function getTriggerChoices(entityType = "actor") {
     const rollsGroup = game.i18n.localize("CUSTOM_DND5E.form.workflows.trigger.group.rolls");
     const hpGroup = game.i18n.localize("CUSTOM_DND5E.form.workflows.trigger.group.hitPoints");
     const combatGroup = game.i18n.localize("CUSTOM_DND5E.form.workflows.trigger.group.combat");
+    const timeGroup = game.i18n.localize("CUSTOM_DND5E.form.workflows.trigger.group.time");
     const restGroup = game.i18n.localize("CUSTOM_DND5E.form.workflows.trigger.group.rest");
     const conditionsGroup = game.i18n.localize("CUSTOM_DND5E.form.workflows.trigger.group.conditions");
 
@@ -152,7 +153,11 @@ function getTriggerChoices(entityType = "actor") {
       { value: "endOfCombat", label: "CUSTOM_DND5E.endOfCombat", group: combatGroup },
       { value: "startOfTurn", label: "CUSTOM_DND5E.startOfTurn", group: combatGroup },
       { value: "endOfTurn", label: "CUSTOM_DND5E.endOfTurn", group: combatGroup },
+      { value: "eachTurn", label: "CUSTOM_DND5E.eachTurn", group: combatGroup },
       { value: "zeroHpCombatEnd", label: "CUSTOM_DND5E.form.counters.triggers.trigger.choices.zeroHpCombatEnd", group: combatGroup },
+      { value: "day", label: "CUSTOM_DND5E.form.workflows.trigger.choices.day", group: timeGroup },
+      { value: "dawn", label: "CUSTOM_DND5E.form.workflows.trigger.choices.dawn", group: timeGroup },
+      { value: "dusk", label: "CUSTOM_DND5E.form.workflows.trigger.choices.dusk", group: timeGroup },
       { value: "shortRest", label: "CUSTOM_DND5E.shortRest", group: restGroup },
       { value: "longRest", label: "CUSTOM_DND5E.longRest", group: restGroup },
       { value: "conditionApplied", label: "CUSTOM_DND5E.form.workflows.trigger.choices.conditionApplied", group: conditionsGroup },
@@ -228,6 +233,7 @@ export function getConditionTriggerChoices(entityType = "actor") {
       { value: "endOfCombat", label: "CUSTOM_DND5E.endOfCombat", group: combatGroup },
       { value: "startOfTurn", label: "CUSTOM_DND5E.startOfTurn", group: combatGroup },
       { value: "endOfTurn", label: "CUSTOM_DND5E.endOfTurn", group: combatGroup },
+      { value: "eachTurn", label: "CUSTOM_DND5E.eachTurn", group: combatGroup },
       { value: "conditionApplied", label: "CUSTOM_DND5E.form.workflows.trigger.choices.conditionApplied", group: conditionsGroup },
       { value: "conditionRemoved", label: "CUSTOM_DND5E.form.workflows.trigger.choices.conditionRemoved", group: conditionsGroup },
       { value: "conditionLevelChanged", label: "CUSTOM_DND5E.form.workflows.trigger.choices.conditionLevelChanged", group: conditionsGroup },
@@ -723,6 +729,7 @@ export class WorkflowsEditForm extends CustomDnd5eForm {
       isItem: this.entityType === "item",
       isGroup: !!(this.entity && this.entity.type === "group"),
       target: group.target || "group",
+      fireMode: group.fireMode || "actor",
       actorTypes: {
         character: group.actorTypes ? group.actorTypes.includes("character") : true,
         npc: group.actorTypes ? group.actorTypes.includes("npc") : true,
@@ -1172,6 +1179,10 @@ export class WorkflowsEditForm extends CustomDnd5eForm {
 
     if ( data.target ) {
       group.target = data.target;
+    }
+
+    if ( data.fireMode === "once" ) {
+      group.fireMode = "once";
     }
 
     // Parse triggers
