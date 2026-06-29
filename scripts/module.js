@@ -142,6 +142,7 @@ Hooks.on("init", async () => {
   configs.calendar.register();
   registerCampSupplies();
   configs.conditions.registerMenu();
+  configs.conditionEffects.registerMenu();
   registerConditionLevels();
   configs.consumableTypes.register();
   configs.creatureTypes.register();
@@ -234,6 +235,7 @@ Hooks.on("ready", async () => {
 
   CONFIG.CUSTOM_DND5E.coreStatusEffects = foundry.utils.deepClone(CONFIG.statusEffects);
   configs.conditions.register();
+  configs.conditionEffects.register();
 
   await migrate();
 
@@ -244,6 +246,7 @@ Hooks.on("ready", async () => {
   configs.bastions.setConfig();
   configs.bloodied.setConfig();
   configs.conditions.setConfig();
+  configs.conditionEffects.setConfig();
   configs.bloodied.addBloodiedCondition();
   configs.consumableTypes.setConfig();
   configs.creatureTypes.setConfig();

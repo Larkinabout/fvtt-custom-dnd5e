@@ -1487,6 +1487,44 @@
       "category": null,
       "_id": "rT4kYmNpV3tZbW9x",
       "_key": "!journal.pages!B48iqFBddUikMMer.rT4kYmNpV3tZbW9x"
+    },
+    {
+      "sort": 750000,
+      "name": "Condition Effects",
+      "type": "text",
+      "system": {},
+      "title": {
+        "show": true,
+        "level": 1
+      },
+      "image": {},
+      "text": {
+        "format": 1,
+        "content": "<p>Located in <strong>Game Settings</strong> &gt; <strong>Configure Settings</strong> &gt; <strong>Custom D&amp;D 5e</strong> &gt; <strong>Configure Condition Effects</strong></p><p>The D&amp;D 5e system applies a number of mechanical effects based on a creature's conditions, for example halving or zeroing movement, halving maximum hit points, and imposing disadvantage on attacks, ability checks, saving throws and initiative. This menu lets you control which conditions and exhaustion thresholds trigger each of those built-in effects, so you can disable a trigger or add one of your own.</p><article class=\"custom-dnd5e-note\"><header><p><span class=\"fa-solid fa-note-sticky\">​</span></p><p>Note</p></header><p>This menu changes which triggers fire the effects the system already provides. It does not allow you to create entirely new effect types.</p></article><p>Check <strong>Enable Configuration</strong> to apply your changes.</p><h2 class=\"custom-dnd5e-h2\">Edit a Condition Effect</h2><ol><li><p>Click the <strong>Edit</strong> button for an effect, such as <em>Half Movement</em>.</p></li><li><p>Add or remove entries in the <strong>Triggers</strong> list. A trigger is either a condition (e.g. <em>Grappled</em>) or an exhaustion threshold (e.g. <em>Exhaustion ≥ 2</em>).</p><article class=\"custom-dnd5e-note\"><header><p><span class=\"fa-solid fa-note-sticky\">​</span></p><p>Note</p></header><p>An exhaustion trigger such as <em>Exhaustion ≥ 2</em> applies at that exhaustion level <em>or</em> higher. Exhaustion triggers only take effect when the D&amp;D 5e system’s <strong>Rules Version</strong> is set to <strong>Legacy</strong>. On Modern rules, exhaustion uses flat reductions, which can be modified within the <strong>Exhaustion</strong> condition in the <strong>Configure Conditions</strong> menu. </p></article></li><li><p>Click <strong>Save and Close</strong>.</p></li></ol><h2 class=\"custom-dnd5e-h2\">Exhaustion (Legacy Rules)</h2><p>On the Legacy (2014) ruleset, the default exhaustion thresholds are:</p><table><thead><tr><th><p><strong>Exhaustion Level</strong></p></th><th><p><strong>Effect</strong></p></th></tr></thead><tbody><tr><td><p>1</p></td><td><p>Disadvantage on ability checks</p></td></tr><tr><td><p>2</p></td><td><p>Speed halved</p></td></tr><tr><td><p>3</p></td><td><p>Disadvantage on attack rolls and saving throws</p></td></tr><tr><td><p>4</p></td><td><p>Hit point maximum halved</p></td></tr><tr><td><p>5</p></td><td><p>Speed reduced to 0</p></td></tr></tbody></table>"
+      },
+      "video": {
+        "controls": true,
+        "volume": 0.5
+      },
+      "src": null,
+      "ownership": {
+        "default": -1
+      },
+      "flags": {},
+      "_stats": {
+        "compendiumSource": null,
+        "duplicateSource": null,
+        "coreVersion": "14.363",
+        "systemId": "dnd5e",
+        "systemVersion": "5.3.0",
+        "createdTime": 1782747640338,
+        "modifiedTime": 1782755993030,
+        "lastModifiedBy": "2Ab5BheRvt8es88G",
+        "exportSource": null
+      },
+      "category": null,
+      "_id": "GFGyxJBgpdj0hXb8",
+      "_key": "!journal.pages!B48iqFBddUikMMer.GFGyxJBgpdj0hXb8"
     }
   ],
   "folder": null,

@@ -34,6 +34,7 @@ import * as armorProficienciesMod from "./armor-proficiencies.js";
 import * as bastionsMod from "./bastions.js";
 import * as bloodiedMod from "./bloodied.js";
 import * as calendarMod from "./calendar.js";
+import * as conditionEffectsMod from "./condition-effects.js";
 import * as conditionsMod from "./conditions.js";
 import * as encumbranceMod from "./encumbrance.js";
 import * as itemPropertiesMod from "./item-properties.js";
@@ -98,6 +99,7 @@ export const configs = {
   bastions: {...bastionsMod, ...bastionsMod.constants},
   bloodied: {...bloodiedMod, ...bloodiedMod.constants},
   calendar: {...calendarMod, ...calendarMod.constants},
+  conditionEffects: {...conditionEffectsMod, ...conditionEffectsMod.constants},
   conditions: {...conditionsMod, ...conditionsMod.constants},
   encumbrance: {...encumbranceMod, ...encumbranceMod.constants},
   itemProperties: {...itemPropertiesMod, ...itemPropertiesMod.constants},

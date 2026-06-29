@@ -391,6 +391,7 @@ Customise D&D 5e system configurations. For help and advice on modifying a confi
 - **Bastions**: Facilities, sizes, build orders and subtypes.
 - **Calendar**: Custom campaign calendars with months, days and seasons.
 - **Conditions/Status Effects**: Blinded, Charmed, Dead, etc. Includes overlay options.
+- **Condition effects**: Choose which conditions trigger built-in mechanical effects.
 - **Consumable Types**: Ammo, Food, Poison, etc.
 - **Creature Types**: Aberration, Beast, Celestial, etc.
 - **Currencies**: Copper, Silver, Gold, etc. Includes conversion configuration.
