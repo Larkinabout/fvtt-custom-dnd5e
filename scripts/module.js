@@ -24,7 +24,7 @@ import { register as registerItemSheet } from "./item-sheet.js";
 import { register as registerMigration, migrate, migrations } from "./migration.js";
 import { register as registerInterface } from "./interface.js";
 import { register as registerItemInteractions } from "./item-interactions.js";
-import { register as registerMisc, setMaxLevel } from "./misc.js";
+import { register as registerMisc, setEquipmentTypes, setMaxLevel } from "./misc.js";
 import { register as registerRolls } from "./rolls.js";
 import { register as registerRadialStatusEffects } from "./token/radial-status-effects.js";
 import { register as registerRulerTravelTime } from "./interface/ruler-travel-time.js";
@@ -265,5 +265,6 @@ Hooks.on("ready", async () => {
   configs.weaponIds.setConfig();
   configs.weaponMasteries.setConfig();
   configs.weaponProficiencies.setConfig();
+  setEquipmentTypes();
   setMaxLevel(getSetting(CONSTANTS.MAX_LEVEL.SETTING.KEY));
 });
