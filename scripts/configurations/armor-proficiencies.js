@@ -4,10 +4,10 @@ import {
   registerMenu,
   registerSetting,
   resetDnd5eConfig,
-  resetSetting,
-  setSetting } from "../utils.js";
+  resetSetting } from "../utils.js";
 import { MODULE } from "../constants.js";
-import { ConfigForm, labeliseConfigData } from "../forms/config-form.js";
+import { setEquipmentTypes } from "../misc.js";
+import { ConfigForm } from "../forms/config-form.js";
 import { configs } from "./registry.js";
 
 /* -------------------------------------------- */
@@ -62,59 +62,11 @@ class ArmorProficienciesForm extends ConfigForm {
   /* -------------------------------------------- */
 
   static DEFAULT_OPTIONS = {
-    actions: {
-      reset: ArmorProficienciesForm.reset
-    },
     id: `${MODULE.ID}-armor-proficiencies-form`,
     window: {
       title: `CUSTOM_DND5E.form.${constants.ID}.title`
     }
   };
-
-  /* -------------------------------------------- */
-
-  /**
-   * Prepare the context for rendering the form.
-   * @returns {Promise<object>} Context data
-   */
-  async _prepareContext() {
-    this.setting = getSetting(this.settingKey) || this.settingDefault;
-
-    labeliseConfigData(this.setting);
-
-    return { editInList: this.editInList, label: this.label, listTitle: this.listTitle, items: this.setting };
-  }
-
-  /* -------------------------------------------- */
-
-  /**
-   * Reset the form to its default settings.
-   * @returns {Promise<void>}
-   */
-  static async reset() {
-    const reset = async () => {
-      await setSetting(this.settingKey, this.settingDefault);
-      setConfig(this.settingDefault);
-      this.render(true);
-    };
-
-    await foundry.applications.api.DialogV2.confirm({
-      window: {
-        title: game.i18n.localize("CUSTOM_DND5E.dialog.reset.title")
-      },
-      content: `<p>${game.i18n.localize("CUSTOM_DND5E.dialog.reset.content")}</p>`,
-      modal: true,
-      yes: {
-        label: game.i18n.localize("CUSTOM_DND5E.yes"),
-        callback: async () => {
-          reset();
-        }
-      },
-      no: {
-        label: game.i18n.localize("CUSTOM_DND5E.no")
-      }
-    });
-  }
 }
 
 /* -------------------------------------------- */
@@ -218,8 +170,9 @@ function buildConfigSetting(config) {
  * Reset config and setting to their default values.
  */
 export async function resetConfigSetting() {
-  await resetDnd5eConfig(configKey);
+  configKeys.forEach(key => resetDnd5eConfig(key));
   await resetSetting(constants.SETTING.CONFIG.KEY);
+  setEquipmentTypes();
 }
 
 /* -------------------------------------------- */
@@ -267,6 +220,8 @@ export function setConfig(data) {
       CONFIG.DND5E[property] = config[property];
     }
   });
+
+  setEquipmentTypes();
 }
 
 /* -------------------------------------------- */
@@ -281,4 +236,6 @@ function handleEmptyData(properties) {
       resetDnd5eConfig(property);
     }
   });
+
+  setEquipmentTypes();
 }

@@ -3,6 +3,7 @@ import {
   registerConfig,
   resetConfigSetting as engineResetConfigSetting,
   setConfig as engineSetConfig } from "./config-engine.js";
+import { setEquipmentTypes } from "../misc.js";
 
 // Configs using the shared config engine.
 import abilities from "./abilities.js";
@@ -85,7 +86,12 @@ export const configs = {
   itemRarity: bind(itemRarity),
   languages: bind(languages),
   lootTypes: bind(lootTypes),
-  miscEquipmentTypes: bind(miscEquipmentTypes),
+  miscEquipmentTypes: bind(miscEquipmentTypes, {
+    setConfig: data => {
+      engineSetConfig(miscEquipmentTypes, data);
+      setEquipmentTypes();
+    }
+  }),
   movementTypes: bind(movementTypes, { register: registerMovementTypes }),
   senses: bind(senses, { register: registerSenses }),
   skills: bind(skills),
