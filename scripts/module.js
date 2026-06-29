@@ -264,6 +264,6 @@ Hooks.on("ready", async () => {
   configs.weaponIds.setConfig();
   configs.weaponMasteries.setConfig();
   configs.weaponProficiencies.setConfig();
-  setEquipmentTypes()
+  setEquipmentTypes();
   setMaxLevel(getSetting(CONSTANTS.MAX_LEVEL.SETTING.KEY));
 });
