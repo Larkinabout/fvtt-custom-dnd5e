@@ -110,6 +110,28 @@
                     {{/if}}
                 </li>
                 {{/each}}
+                {{#each currencies}}
+                <li class="custom-dnd5e-drop-items-row custom-dnd5e-drop-items-currency-row"
+                    data-currency="{{key}}">
+                    <span class="custom-dnd5e-drop-items-img custom-dnd5e-drop-items-currency-img"
+                        data-tooltip="{{label}}" aria-label="{{label}}">
+                        <img src="{{icon}}" alt="{{label}}" width="20" height="20">
+                    </span>
+                    <button type="button"
+                        class="custom-dnd5e-drop-items-name custom-dnd5e-drop-items-currency-name unbutton"
+                        data-tooltip="{{label}}">
+                        {{value}} {{label}} ({{abbr}})
+                    </button>
+                    {{#unless ../canRemove}}
+                    <button type="button" class="custom-dnd5e-drop-items-take"
+                        data-action="takeCurrency" data-currency-key="{{key}}"
+                        {{#unless ../canTake}}disabled{{/unless}}>
+                        <i class="fas fa-hand-paper"></i>
+                        {{localize "CUSTOM_DND5E.dropItems.form.take"}}
+                    </button>
+                    {{/unless}}
+                </li>
+                {{/each}}
             </ol>
             {{else}}
             <p class="hint">{{localize "CUSTOM_DND5E.dropItems.form.empty"}}</p>
@@ -126,13 +148,13 @@
                 <button type="button"
                     class="custom-dnd5e-actor unbutton{{#if selected}} selected{{/if}}{{#if locked}} locked{{/if}}"
                     {{#unless locked}}data-action="selectTaker"{{/unless}}
-                    data-actor-id="{{id}}">
+                    data-taker-uuid="{{uuid}}">
                     <img src="{{img}}" alt="{{name}}" width="40" height="40">
                     <span>{{name}}</span>
                 </button>
                 {{/each}}
             </div>
-            <input type="hidden" name="takerActorId" value="{{selectedActorId}}">
+            <input type="hidden" name="takerUuid" value="{{selectedTakerUuid}}">
             {{else}}
             <p class="hint">{{localize "CUSTOM_DND5E.dropItems.error.noActor"}}</p>
             {{/if}}

@@ -515,6 +515,11 @@ button[data-custom-dnd5e="stop-animations"].fade-out {
 /* -------------------------------------------- */
 /* ITEM ACTOR SHEET                             */
 /* -------------------------------------------- */
+.dnd5e2.sheet.custom-dnd5e-drop-items-sheet {
+    min-width: 300px;
+    min-height: 450px;
+}
+
 body.theme-dark .dnd5e2.sheet.custom-dnd5e-drop-items-sheet {
     --dnd5e-item-header-image: url("/systems/dnd5e/ui/official/banner-item-dark.webp");
 }
@@ -780,9 +785,32 @@ body.theme-dark .dnd5e2.sheet.custom-dnd5e-drop-items-sheet {
 .custom-dnd5e-app button.custom-dnd5e-drop-items-take,
 .custom-dnd5e-drop-items-take {
     font-size: var(--font-size-12);
+    line-height: 1;
     margin-top: auto;
-    padding: 0.15rem 0.4rem;
+    padding: 0.5rem 0.2rem;
     width: 100%;
+}
+
+.custom-dnd5e-drop-items-currency-img,
+.custom-dnd5e-drop-items-currency-img:hover {
+    align-items: center;
+    border: 2px solid var(--dnd5e-color-gold);
+    border-radius: 4px;
+    cursor: default;
+    display: flex;
+    height: 32px;
+    justify-content: center;
+    transform: none;
+    width: 32px;
+}
+
+.custom-dnd5e-drop-items-currency-img img {
+    border: 0;
+}
+
+.custom-dnd5e-app button.custom-dnd5e-drop-items-currency-name,
+.custom-dnd5e-drop-items-currency-name {
+    cursor: default;
 }
 
 /* Speed Factor Initiative */

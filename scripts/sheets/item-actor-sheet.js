@@ -31,7 +31,7 @@ export function registerItemActorSheet() {
 export class ItemActorSheet extends HandlebarsApplicationMixin(ActorSheetV2) {
   /** @inheritdoc */
   static DEFAULT_OPTIONS = {
-    classes: [`${MODULE.ID}-loot-sheet`, `${MODULE.ID}-app`, "dnd5e2", "sheet"],
+    classes: [`${MODULE.ID}-drop-items-sheet`, `${MODULE.ID}-app`, "dnd5e2", "sheet"],
     position: { width: 560, height: "auto" },
     window: {
       resizable: true,
@@ -40,6 +40,7 @@ export class ItemActorSheet extends HandlebarsApplicationMixin(ActorSheetV2) {
     actions: {
       takeAll: ItemActorSheet.#onTakeAll,
       takeContents: ItemActorSheet.#onTakeContents,
+      takeCurrency: ItemActorSheet.#onTakeCurrency,
       takeItem: ItemActorSheet.#onTakeItem,
       openItem: ItemActorSheet.#onOpenItem,
       selectTaker: ItemActorSheet.#onSelectTaker,
@@ -60,8 +61,8 @@ export class ItemActorSheet extends HandlebarsApplicationMixin(ActorSheetV2) {
 
   /* -------------------------------------------- */
 
-  /** @type {string|null} */
-  _selectedActorId = null;
+  /** @type {string|null} Uuid of the selected actor. */
+  _selectedTakerUuid = null;
 
   /* -------------------------------------------- */
 
@@ -81,17 +82,17 @@ export class ItemActorSheet extends HandlebarsApplicationMixin(ActorSheetV2) {
     const isOnCanvas = !!token;
     const eligible = token ? getEligibleTakers(token) : [];
 
-    if ( !this._selectedActorId && eligible.length === 1 ) {
-      this._selectedActorId = eligible[0].id;
-    } else if ( this._selectedActorId && !eligible.some(a => a.id === this._selectedActorId) ) {
-      this._selectedActorId = null;
+    if ( !this._selectedTakerUuid && eligible.length === 1 ) {
+      this._selectedTakerUuid = eligible[0].uuid;
+    } else if ( this._selectedTakerUuid && !eligible.some(a => a.uuid === this._selectedTakerUuid) ) {
+      this._selectedTakerUuid = null;
     }
 
     const takerActors = eligible.map(a => ({
-      id: a.id,
+      uuid: a.uuid,
       name: a.name,
       img: a.img,
-      selected: a.id === this._selectedActorId,
+      selected: a.uuid === this._selectedTakerUuid,
       locked: eligible.length === 1
     }));
 
@@ -104,8 +105,11 @@ export class ItemActorSheet extends HandlebarsApplicationMixin(ActorSheetV2) {
     const canToggleAffix = isContainer && game.user.isGM;
     const hideContents = isLocked && !game.user.isGM;
     const showContents = isContainer && !hideContents;
-    const showTakeContents = showContents && contents.length > 0;
+    const currencies = isContainer ? buildCurrencyRows(root.system?.currency) : [];
+    const hasContentRows = contents.length > 0 || currencies.length > 0;
+    const showTakeContents = showContents && hasContentRows;
     const showTakeAll = isOnCanvas && !!root && (!isAffixed || game.user.isGM);
+
     const showFooter = showTakeAll || (isOnCanvas && showTakeContents);
     const canOpenRoot = !isLocked || game.user.isGM;
     const canRemove = !isOnCanvas && game.user.isGM;
@@ -115,14 +119,15 @@ export class ItemActorSheet extends HandlebarsApplicationMixin(ActorSheetV2) {
       hasRoot: !!root,
       isContainer,
       contents,
-      hasContents: showContents && contents.length > 0,
+      currencies,
+      hasContents: showContents && hasContentRows,
       showContents,
       takerActors,
       hasTakeWithActors: takerActors.length > 0,
       showTakeWithSection: isOnCanvas,
       takerActorName: takerActors.length === 1 ? takerActors[0].name : null,
-      selectedActorId: this._selectedActorId ?? "",
-      canTake: !!this._selectedActorId,
+      selectedTakerUuid: this._selectedTakerUuid ?? "",
+      canTake: !!this._selectedTakerUuid,
       buttonLabel,
       isEmpty: !root && game.user.isGM && !actor.system?.droppedAt,
       showFooter,
@@ -163,29 +168,16 @@ export class ItemActorSheet extends HandlebarsApplicationMixin(ActorSheetV2) {
       const max = Math.floor((window.innerHeight ?? 1080) * 0.95);
       if ( position.height > max ) position.height = max;
     }
-    return super.setPosition(position);
-  }
-
-  /* -------------------------------------------- */
-
-  /**
-   * Reset the stored height to "auto" before each render.
-   * @override
-   */
-  _configureRenderOptions(options) {
-    super._configureRenderOptions(options);
-    if ( !this._userResized ) this.position.height = "auto";
-  }
-
-  /* -------------------------------------------- */
-
-  /**
-   * Track when user resizes the window.
-   * @override
-   */
-  _onResize(event) {
-    super._onResize?.(event);
-    this._userResized = true;
+    const result = super.setPosition(position);
+    if ( !this._heightLocked && result?.height === "auto" ) {
+      const height = this.element?.clientHeight;
+      if ( Number.isFinite(height) && height > 0 ) {
+        this._heightLocked = true;
+        this.position.height = height;
+        this.options.position.height = height;
+      }
+    }
+    return result;
   }
 
   /* -------------------------------------------- */
@@ -248,12 +240,13 @@ export class ItemActorSheet extends HandlebarsApplicationMixin(ActorSheetV2) {
   /* -------------------------------------------- */
 
   /**
-   * Resolve the taker actor from id.
+   * Resolve the selected taker actor from its uuid.
    * @returns {Actor|null}
    */
   #takerActor() {
-    if ( !this._selectedActorId ) return null;
-    return game.actors?.get(this._selectedActorId) ?? null;
+    if ( !this._selectedTakerUuid ) return null;
+    const doc = fromUuidSync(this._selectedTakerUuid);
+    return doc?.documentName === "Actor" ? doc : null;
   }
 
   /* -------------------------------------------- */
@@ -285,8 +278,61 @@ export class ItemActorSheet extends HandlebarsApplicationMixin(ActorSheetV2) {
       if ( !item.system?.container ) rootId = item.id;
       else itemIds.push(item.id);
     }
-    if ( !rootId || !itemIds.length ) return;
-    await takeItem(token, { takerActor: takerActor, itemIds });
+    if ( !rootId ) return;
+    await takeItem(token, { takerActor: takerActor, itemIds, currency: true });
+  }
+
+  /* -------------------------------------------- */
+
+  /**
+   * Take a single currency denomination.
+   * @this {ItemActorSheet}
+   * @param {Event} _event
+   * @param {HTMLElement} target
+   */
+  static async #onTakeCurrency(_event, target) {
+    const key = target?.dataset?.currencyKey;
+    if ( !key ) return;
+    const token = this.#getToken();
+    const takerActor = this.#takerActor();
+    if ( !token || !takerActor ) return;
+
+    const available = Number(this.#rootCurrency()?.[key]) || 0;
+    if ( available <= 0 ) return;
+
+    const label = game.i18n.localize(CONFIG.DND5E.currencies[key]?.label ?? key);
+    const overrideLock = available > 1 && !!this.actor.system?.locked && game.user.isGM;
+
+    let amount = available;
+    if ( available > 1 ) {
+      amount = await ItemDialog.quantity({
+        title: overrideLock
+          ? game.i18n.localize("CUSTOM_DND5E.dropItems.confirmOverrideLock.title")
+          : game.i18n.format("CUSTOM_DND5E.dropItems.promptQuantity.takeTitle", { item: label }),
+        prompt: game.i18n.format("CUSTOM_DND5E.dropItems.promptQuantity.take", { item: label }),
+        max: available,
+        warning: overrideLock
+          ? game.i18n.localize("CUSTOM_DND5E.dropItems.confirmOverrideLock.content")
+          : null
+      });
+      if ( amount === null ) return;
+    }
+
+    await takeItem(token, {
+      takerActor: takerActor, itemIds: [], currency: { [key]: amount },
+      skipOverrideConfirm: overrideLock
+    });
+  }
+
+  /* -------------------------------------------- */
+
+  /**
+   * Get the loose currency held by the root container item, if any.
+   * @returns {object|null}
+   */
+  #rootCurrency() {
+    const root = Array.from(this.actor.items).find(i => !i.system?.container);
+    return root?.type === "container" ? (root.system?.currency ?? null) : null;
   }
 
   /* -------------------------------------------- */
@@ -362,9 +408,9 @@ export class ItemActorSheet extends HandlebarsApplicationMixin(ActorSheetV2) {
    */
   static #onSelectTaker(_event, target) {
     if ( target.classList.contains("locked") ) return;
-    const actorId = target.dataset?.actorId ?? null;
-    if ( !actorId ) return;
-    this._selectedActorId = actorId;
+    const uuid = target.dataset?.takerUuid ?? null;
+    if ( !uuid ) return;
+    this._selectedTakerUuid = uuid;
     this.render(false);
   }
 
@@ -455,6 +501,31 @@ function itemRow(item) {
     showQuantity: Number.isFinite(quantity) && quantity > 1,
     isContainer: item.type === "container"
   };
+}
+
+/* -------------------------------------------- */
+
+/**
+ * Build display rows for a container's loose currency, in config order,
+ * limited to denominations with a positive amount.
+ * @param {object|null|undefined} currency
+ * @returns {object[]}
+ */
+function buildCurrencyRows(currency) {
+  if ( !currency ) return [];
+  const rows = [];
+  for ( const [key, config] of Object.entries(CONFIG.DND5E.currencies) ) {
+    const value = Number(currency[key]) || 0;
+    if ( value <= 0 ) continue;
+    rows.push({
+      key,
+      value,
+      label: game.i18n.localize(config.label),
+      abbr: game.i18n.localize(config.abbreviation),
+      icon: config.icon
+    });
+  }
+  return rows;
 }
 
 /* -------------------------------------------- */

@@ -1052,7 +1052,7 @@ export function getEligibleTakers(itemToken) {
     return true;
   });
 
-  // De-dupe by actor.
+  // De-dupe by the token's actor uuid.
   const byActor = new Map();
   for ( const t of candidates ) {
     if ( range > 0 && tokenObj ) {
@@ -1061,7 +1061,7 @@ export function getEligibleTakers(itemToken) {
       if ( !itemTokenCenter || !takerActorCenter ) continue;
       if ( measureDistance(itemTokenCenter, takerActorCenter) > range ) continue;
     }
-    if ( !byActor.has(t.actor.id) ) byActor.set(t.actor.id, t.actor);
+    if ( !byActor.has(t.actor.uuid) ) byActor.set(t.actor.uuid, t.actor);
   }
   return Array.from(byActor.values());
 }
@@ -1069,7 +1069,7 @@ export function getEligibleTakers(itemToken) {
 /* -------------------------------------------- */
 
 /**
- * Check whether a actor is within range to take the given item.
+ * Check whether an actor is within range to take the given item.
  * @param {Token} itemToken
  * @param {Actor} takerActor
  * @returns {boolean}
@@ -1077,12 +1077,15 @@ export function getEligibleTakers(itemToken) {
 export function isTakerActorInRange(itemToken, takerActor) {
   const range = Number(getSetting(SETTING.RANGE.KEY)) || 0;
   if ( range <= 0 ) return true;
-  const takerToken = takerActor?.getActiveTokens()?.[0];
-  if ( !takerToken ) return true; // No token placed: skip range check.
-  const takerActorCenter = getTokenSourceCenter(takerToken);
+  const takerTokens = takerActor?.getActiveTokens?.() ?? [];
+  if ( !takerTokens.length ) return true; // No token placed: skip range check.
   const itemTokenCenter = getTokenSourceCenter(itemToken);
-  if ( !takerActorCenter || !itemTokenCenter ) return true;
-  return measureDistance(takerActorCenter, itemTokenCenter) <= range;
+  if ( !itemTokenCenter ) return true;
+  return takerTokens.some(token => {
+    const takerActorCenter = getTokenSourceCenter(token);
+    if ( !takerActorCenter ) return false;
+    return measureDistance(takerActorCenter, itemTokenCenter) <= range;
+  });
 }
 
 /* -------------------------------------------- */
@@ -1094,17 +1097,21 @@ export function isTakerActorInRange(itemToken, takerActor) {
  * @param {object} [opts]
  * @param {Actor} [opts.takerActor]
  * @param {string[]} [opts.itemIds] Specific item ids; defaults to all
+ * @param {boolean|string[]|object} [opts.currency] Currency to transfer:
+ *   - `true` for every denomination
+ *   - an array of denomination keys (e.g. `["gp"]`)
+ *   - or an object of amounts keyed by denomination (e.g. `{gp: 5}`)
  * @param {boolean} [opts.skipOverrideConfirm] Caller has already confirmed
  *   the lock/affix override; skip the in-`takeItem` confirm dialog
  * @param {number} [opts.quantity] Partial-stack quantity for a single-item take
  * @returns {Promise<void>}
  */
-export async function takeItem(token, { takerActor, itemIds, quantity, skipOverrideConfirm } = {}) {
+export async function takeItem(token, { takerActor, itemIds, quantity, currency, skipOverrideConfirm } = {}) {
   const doc = token?.document ?? token;
   const itemActor = doc?.actor;
   if ( !itemActor || itemActor.type !== ACTOR_TYPE ) return;
 
-  if ( !await confirmTakeOverrides(itemActor, { itemIds, skipOverrideConfirm }) ) return;
+  if ( !await confirmTakeOverrides(itemActor, { itemIds, currency, skipOverrideConfirm }) ) return;
 
   takerActor ??= resolveTakerActor();
   if ( !takerActor ) {
@@ -1135,6 +1142,7 @@ export async function takeItem(token, { takerActor, itemIds, quantity, skipOverr
     takerActorUuid: takerActor.uuid,
     takerActorUserId: game.user.id,
     itemIds: itemIds ?? null,
+    currency: currency ?? null,
     quantity: Number.isFinite(quantity) ? quantity : null,
     requestId
   };
@@ -1164,11 +1172,15 @@ export async function takeItem(token, { takerActor, itemIds, quantity, skipOverr
  * @param {Actor} itemActor
  * @param {object} opts
  * @param {string[]} [opts.itemIds]
+ * @param {boolean} [opts.currency]
  * @param {boolean} [opts.skipOverrideConfirm]
  * @returns {Promise<boolean>} Whether the take should proceed
  */
-async function confirmTakeOverrides(itemActor, { itemIds, skipOverrideConfirm } = {}) {
-  const overrideLock = itemActor.system?.locked && itemIds?.length;
+async function confirmTakeOverrides(itemActor, { itemIds, currency, skipOverrideConfirm } = {}) {
+  const takingContents = !!itemIds?.length || !!currency;
+  const takingContainer = !Array.isArray(itemIds) && !currency;
+
+  const overrideLock = itemActor.system?.locked && takingContents;
   if ( overrideLock ) {
     if ( !game.user.isGM ) {
       Logger.info(game.i18n.localize("CUSTOM_DND5E.dropItems.error.containerLocked"), true, { prefix: false });
@@ -1183,7 +1195,7 @@ async function confirmTakeOverrides(itemActor, { itemIds, skipOverrideConfirm } 
     }
   }
 
-  const overrideAffix = itemActor.system?.affixed && !itemIds?.length;
+  const overrideAffix = itemActor.system?.affixed && takingContainer;
   if ( overrideAffix ) {
     if ( !game.user.isGM ) {
       Logger.info(game.i18n.localize("CUSTOM_DND5E.dropItems.error.containerAffixed"), true, { prefix: false });
@@ -1219,19 +1231,37 @@ export async function handleTakeItem(data) {
     notifyTaker(takerActorUserId, requestId, { error: ctx.error });
     return;
   }
-  const { itemActor, takerActor, itemsToTransfer, rootItem, available, partialQty, isPartial } = ctx;
+  const {
+    itemActor, takerActor, itemsToTransfer, rootItem, available, partialQty, isPartial,
+    containerRoot, currencyToTake
+  } = ctx;
 
-  const transferred = await transferItemsToTaker({
-    takerActor, itemsToTransfer, rootItem, partialQty
-  });
-  if ( !transferred ) {
-    notifyTaker(takerActorUserId, requestId, { error: "CUSTOM_DND5E.dropItems.error.takeFailed" });
-    return;
+  if ( itemsToTransfer.length ) {
+    const transferred = await transferItemsToTaker({
+      takerActor, itemsToTransfer, rootItem, partialQty
+    });
+    if ( !transferred ) {
+      notifyTaker(takerActorUserId, requestId, { error: "CUSTOM_DND5E.dropItems.error.takeFailed" });
+      return;
+    }
   }
 
-  await consumeFromItemActor({
-    itemActor, itemsToTransfer, rootItem, available, partialQty, isPartial, tokenUuid
-  });
+  let currencyTransferred = false;
+  if ( currencyToTake ) {
+    currencyTransferred = await transferCurrencyToTaker({ takerActor, currency: currencyToTake });
+    if ( !currencyTransferred ) {
+      notifyTaker(takerActorUserId, requestId, { error: "CUSTOM_DND5E.dropItems.error.takeFailed" });
+      return;
+    }
+  }
+
+  if ( currencyTransferred ) await deductItemActorCurrency(containerRoot, currencyToTake);
+
+  if ( itemsToTransfer.length ) {
+    await consumeFromItemActor({
+      itemActor, itemsToTransfer, rootItem, available, partialQty, isPartial, tokenUuid
+    });
+  }
 
   notifyTaker(takerActorUserId, requestId, {
     takerActorName: takerActor.name,
@@ -1239,7 +1269,8 @@ export async function handleTakeItem(data) {
     singletonName: itemsToTransfer.length === 1 ? itemsToTransfer[0].name : null,
     containerInTransfer: itemsToTransfer.some(i => i.type === "container"),
     itemCount: itemsToTransfer.length,
-    pickedQty: partialQty ?? itemsToTransfer.reduce((s, i) => s + (i.system?.quantity ?? 1), 0)
+    takenQty: partialQty ?? itemsToTransfer.reduce((s, i) => s + (i.system?.quantity ?? 1), 0),
+    takenCurrency: currencyTransferred ? formatCurrency(currencyToTake) : null
   });
 }
 
@@ -1251,29 +1282,37 @@ export async function handleTakeItem(data) {
  * @returns {Promise<object>}
  */
 async function resolveTakeContext(payload) {
-  const { itemActorUuid, takerActorUuid, takerActorUserId, itemIds, quantity } = payload;
+  const { itemActorUuid, takerActorUuid, takerActorUserId, itemIds, currency, quantity } = payload;
   const itemActor = await fromUuid(itemActorUuid);
   const takerActor = await fromUuid(takerActorUuid);
   if ( !itemActor || itemActor.type !== ACTOR_TYPE || !takerActor ) {
     return { error: "CUSTOM_DND5E.dropItems.error.takeFailed" };
   }
 
+  const takingContainer = !Array.isArray(itemIds) && !currency;
+
   const takerActorIsGM = !!game.users.get(takerActorUserId)?.isGM;
   if ( !takerActorIsGM ) {
-    if ( itemActor.system?.locked && itemIds?.length ) {
+    if ( itemActor.system?.locked && !takingContainer ) {
       return { error: "CUSTOM_DND5E.dropItems.error.containerLocked" };
     }
-    if ( itemActor.system?.affixed && !itemIds?.length ) {
+    if ( itemActor.system?.affixed && takingContainer ) {
       return { error: "CUSTOM_DND5E.dropItems.error.containerAffixed" };
     }
   }
 
-  const itemsToTransfer = itemIds?.length
+  const itemsToTransfer = Array.isArray(itemIds)
     ? itemActor.items.filter(i => itemIds.includes(i.id))
     : Array.from(itemActor.items);
-  if ( !itemsToTransfer.length ) return { error: "CUSTOM_DND5E.dropItems.form.empty" };
 
-  const rootItem = itemsToTransfer.find(i => i.type !== "container") ?? itemsToTransfer[0];
+  const containerRoot = Array.from(itemActor.items).find(i => !i.system?.container);
+  const currencyToTake = currency && containerRoot?.type === "container"
+    ? takeCurrency(containerRoot.system?.currency, currency)
+    : null;
+
+  if ( !itemsToTransfer.length && !currencyToTake ) return { error: "CUSTOM_DND5E.dropItems.form.empty" };
+
+  const rootItem = itemsToTransfer.find(i => i.type !== "container") ?? itemsToTransfer[0] ?? null;
   const available = rootItem?.system?.quantity ?? 1;
   const partialQty = (itemsToTransfer.length === 1 && rootItem?.type !== "container"
     && Number.isFinite(quantity))
@@ -1281,7 +1320,10 @@ async function resolveTakeContext(payload) {
     : null;
   const isPartial = partialQty !== null && partialQty < available;
 
-  return { itemActor, takerActor, itemsToTransfer, rootItem, available, partialQty, isPartial };
+  return {
+    itemActor, takerActor, itemsToTransfer, rootItem, available, partialQty, isPartial,
+    containerRoot, currencyToTake
+  };
 }
 
 /* -------------------------------------------- */
@@ -1359,6 +1401,122 @@ async function consumeFromItemActor({
 }
 
 /* -------------------------------------------- */
+/*  CURRENCY                                    */
+/* -------------------------------------------- */
+
+/**
+ * Reduce a currency object to its positive denominations.
+ * @param {object|null|undefined} currency
+ * @returns {object|null} Positive amounts keyed by denomination, or null if empty
+ */
+function sanitizeCurrency(currency) {
+  if ( !currency ) return null;
+  const result = {};
+  for ( const key of Object.keys(CONFIG.DND5E.currencies) ) {
+    const amount = Number(currency[key]) || 0;
+    if ( amount > 0 ) result[key] = amount;
+  }
+  return Object.keys(result).length ? result : null;
+}
+
+/* -------------------------------------------- */
+
+/**
+ * Resolve the subset of a container's currency to transfer.
+ * @param {object|null|undefined} currency Source currency amounts
+ * @param {boolean|string[]|object} request Currency to take:
+ *   - `true` for every denomination
+ *   - an array of denomination keys (e.g. `["gp"]`)
+ *   - or an object of amounts keyed by denomination (e.g. `{gp: 5}`)
+ * @returns {object|null} Positive amounts keyed by denomination, or null
+ */
+function takeCurrency(currency, request) {
+  const sanitized = sanitizeCurrency(currency);
+  if ( !sanitized ) return null;
+  if ( request === true ) return sanitized;
+
+  const result = {};
+  if ( Array.isArray(request) ) {
+    for ( const key of request ) {
+      if ( sanitized[key] ) result[key] = sanitized[key];
+    }
+  } else if ( request && typeof request === "object" ) {
+    for ( const [key, amount] of Object.entries(request) ) {
+      const available = sanitized[key] ?? 0;
+      const take = Math.min(Math.max(0, Math.floor(Number(amount) || 0)), available);
+      if ( take > 0 ) result[key] = take;
+    }
+  } else {
+    return null;
+  }
+  return Object.keys(result).length ? result : null;
+}
+
+/* -------------------------------------------- */
+
+/**
+ * Format a currency object as a localised, comma-separated string.
+ * @param {object|null} currency
+ * @returns {string}
+ */
+function formatCurrency(currency) {
+  if ( !currency ) return "";
+  const parts = [];
+  for ( const [key, config] of Object.entries(CONFIG.DND5E.currencies) ) {
+    const amount = Number(currency[key]) || 0;
+    if ( amount <= 0 ) continue;
+    parts.push(`${amount} ${game.i18n.localize(config.abbreviation)}`);
+  }
+  return parts.join(", ");
+}
+
+/* -------------------------------------------- */
+
+/**
+ * Add the given currency to the taker actor.
+ * @param {object} args
+ * @param {Actor} args.takerActor
+ * @param {object} args.currency Positive amounts keyed by denomination
+ * @returns {Promise<boolean>} Whether the update succeeded
+ */
+async function transferCurrencyToTaker({ takerActor, currency }) {
+  try {
+    const updates = {};
+    for ( const [key, amount] of Object.entries(currency) ) {
+      const current = Number(takerActor.system?.currency?.[key]) || 0;
+      updates[`system.currency.${key}`] = current + amount;
+    }
+    await takerActor.update(updates);
+    return true;
+  } catch ( err ) {
+    Logger.error(err);
+    return false;
+  }
+}
+
+/* -------------------------------------------- */
+
+/**
+ * Deduct the taken amounts from the container item.
+ * @param {Item|null} containerItem
+ * @param {object|null} currencyTaken Positive amounts keyed by denomination
+ * @returns {Promise<void>}
+ */
+async function deductItemActorCurrency(containerItem, currencyTaken) {
+  if ( !containerItem || !currencyTaken ) return;
+  try {
+    const updates = {};
+    for ( const [key, amount] of Object.entries(currencyTaken) ) {
+      const current = Number(containerItem.system?.currency?.[key]) || 0;
+      updates[`system.currency.${key}`] = Math.max(0, current - amount);
+    }
+    await containerItem.update(updates);
+  } catch ( err ) {
+    Logger.error(err);
+  }
+}
+
+/* -------------------------------------------- */
 
 /**
  * Send the confirm response either locally or over the socket.
@@ -1385,7 +1543,8 @@ function notifyTaker(takerActorUserId, requestId, payload) {
 export async function handleConfirmTakeItem(data) {
   if ( data.target !== game.user.id ) return;
   const {
-    requestId, takerActorName, lootName, singletonName, containerInTransfer, itemCount, pickedQty, error
+    requestId, takerActorName, lootName, singletonName, containerInTransfer, itemCount, takenQty,
+    takenCurrency, error
   } = data.payload;
   if ( requestId ) pendingTakes.delete(requestId);
 
@@ -1397,20 +1556,39 @@ export async function handleConfirmTakeItem(data) {
   if ( !getSetting(SETTING.CHAT_NOTIFICATIONS.KEY) ) return;
 
   let qty = "";
-  let item;
-  if ( containerInTransfer ) {
-    item = lootName;
-  } else if ( itemCount === 1 && singletonName ) {
-    qty = pickedQty > 1 ? `${pickedQty}× ` : "";
-    item = singletonName;
+  let item = null;
+  let itemIsGeneric = false;
+  if ( itemCount > 0 ) {
+    if ( containerInTransfer ) {
+      item = lootName;
+    } else if ( itemCount === 1 && singletonName ) {
+      qty = takenQty > 1 ? `${takenQty}× ` : "";
+      item = singletonName;
+    } else {
+      item = game.i18n.format("CUSTOM_DND5E.dropItems.chat.containerContents", { container: lootName });
+      itemIsGeneric = true;
+    }
+  }
+
+  let content;
+  if ( item && takenCurrency && !itemIsGeneric ) {
+    content = game.i18n.format("CUSTOM_DND5E.dropItems.chat.pickedUpWithCurrency", {
+      actor: takerActorName, qty, item, currency: takenCurrency
+    });
+  } else if ( item ) {
+    content = game.i18n.format("CUSTOM_DND5E.dropItems.chat.pickedUp", {
+      actor: takerActorName, qty, item
+    });
+  } else if ( takenCurrency ) {
+    content = game.i18n.format("CUSTOM_DND5E.dropItems.chat.pickedUp", {
+      actor: takerActorName, qty: "", item: takenCurrency
+    });
   } else {
-    item = game.i18n.format("CUSTOM_DND5E.dropItems.chat.containerContents", { container: lootName });
+    return;
   }
 
   ChatMessage.create({
-    content: `<p>${game.i18n.format("CUSTOM_DND5E.dropItems.chat.pickedUp", {
-      actor: takerActorName, qty, item
-    })}</p>`,
+    content: `<p>${content}</p>`,
     flags: { "custom-dnd5e": { source: "dropItems" } }
   });
 }
