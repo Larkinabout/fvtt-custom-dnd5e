@@ -434,8 +434,9 @@ export function getWeaponChoicesForCombatant(combatant, filter = false) {
 export function getSpellChoicesForCombatant(combatant) {
   const spells = (combatant?.actor?.itemTypes?.spell ?? []).filter(spell => {
     const level = Number(spell.system?.level ?? 0);
-    const mode = spell.system?.preparation?.mode;
-    return level === 0 || spell.system?.preparation?.prepared || ["always", "atwill", "innate", "pact"].includes(mode);
+    const method = spell.system?.method;
+    const prepared = Number(spell.system?.prepared ?? 0);
+    return level === 0 || prepared > 0 || ["atwill", "innate", "pact"].includes(method);
   });
 
   spells.sort((a, b) => (Number(a.system?.level ?? 0) - Number(b.system?.level ?? 0)) || a.name.localeCompare(b.name));
