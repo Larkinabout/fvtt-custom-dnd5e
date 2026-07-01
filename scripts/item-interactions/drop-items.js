@@ -1128,6 +1128,19 @@ export async function takeItem(token, { takerActor, itemIds, quantity, currency,
     return;
   }
 
+  if ( !Array.isArray(itemIds) && !currency && !Number.isFinite(quantity) ) {
+    const items = Array.from(itemActor.items);
+    const root = items.length === 1 ? items[0] : null;
+    if ( root && root.type !== "container" && (root.system?.quantity ?? 1) > 1 ) {
+      const chosen = await promptQuantity(root, {
+        title: game.i18n.format("CUSTOM_DND5E.dropItems.promptQuantity.takeTitle", { item: root.name }),
+        prompt: game.i18n.format("CUSTOM_DND5E.dropItems.promptQuantity.take", { item: root.name })
+      });
+      if ( chosen === null ) return;
+      quantity = chosen;
+    }
+  }
+
   const requestId = foundry.utils.randomID(16);
   pendingTakes.set(requestId, {
     itemActorUuid: itemActor.uuid,
