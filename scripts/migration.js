@@ -61,6 +61,7 @@ export async function migrate() {
   if ( shouldRun("5.3.0") ) isSuccess &&= await migrateCustomSensesToNamespace();
   if ( shouldRun("5.4.0") ) isSuccess &&= await migrateBloodiedThreshold();
   if ( shouldRun("5.4.0") ) isSuccess &&= await migrateArmorCalculations();
+  if ( shouldRun("5.4.0") ) isSuccess &&= await migrateStaleSystemLabels();
 
   if ( isSuccess ) {
     await setSetting(constants.VERSION.SETTING.KEY, moduleVersion);
@@ -864,6 +865,81 @@ export async function migrateArmorCalculations() {
 /* -------------------------------------------- */
 
 /**
+ * Configs whose stored entries hold localization keys renamed in dnd5e 6.0.0.
+ */
+const STALE_LABEL_CONFIGS = [
+  { id: "armorCalculations", fields: ["label"] },
+  { id: "itemProperties", fields: ["label", "abbreviation"] },
+  { id: "itemRarity", fields: ["label"] }
+];
+
+/* -------------------------------------------- */
+
+/**
+ * Whether a stored value is a system localization key that no longer exists.
+ * @param {string} value
+ * @returns {boolean} Whether the value is a stale system localization key
+ */
+function isStaleSystemKey(value) {
+  return value.startsWith("DND5E.") && !game.i18n.has(value);
+}
+
+/* -------------------------------------------- */
+
+/**
+ * Replace stale system localization keys in stored configs with the current system defaults.
+ * @returns {Promise<boolean>} Whether the migration was successful
+ */
+export async function migrateStaleSystemLabels() {
+  try {
+    for ( const { id, fields } of STALE_LABEL_CONFIGS ) {
+      const config = configs[id];
+      const setting = getSetting(config.SETTING.CONFIG.KEY);
+      if ( !setting || typeof setting !== "object" ) continue;
+
+      const cloned = foundry.utils.deepClone(setting);
+      let changed = false;
+
+      for ( const [key, entry] of Object.entries(cloned) ) {
+        const systemDefault = CONFIG.CUSTOM_DND5E?.[config.configKey]?.[key];
+        if ( systemDefault === undefined ) continue;
+
+        if ( typeof entry === "string" ) {
+          if ( isStaleSystemKey(entry) && typeof systemDefault === "string" && game.i18n.has(systemDefault) ) {
+            cloned[key] = systemDefault;
+            changed = true;
+          }
+          continue;
+        }
+
+        if ( !entry || typeof entry !== "object" || entry.system === false ) continue;
+
+        for ( const field of fields ) {
+          const value = entry[field];
+          const defaultValue = (typeof systemDefault === "object") ? systemDefault?.[field] : systemDefault;
+          if ( typeof value !== "string" || !isStaleSystemKey(value) ) continue;
+          if ( typeof defaultValue !== "string" || !game.i18n.has(defaultValue) ) continue;
+          entry[field] = defaultValue;
+          changed = true;
+        }
+      }
+
+      if ( changed ) {
+        Logger.debug(`Migrating stale system labels for '${id}'...`);
+        await setSetting(config.SETTING.CONFIG.KEY, cloned);
+        Logger.debug(`Stale system labels for '${id}' migrated.`);
+      }
+    }
+    return true;
+  } catch (err) {
+    Logger.error(`Failed to migrate stale system labels: ${err.message}`);
+    return false;
+  }
+}
+
+/* -------------------------------------------- */
+
+/**
  * All migration functions, exposed for testing via the module API.
  */
 export const migrations = {
@@ -877,6 +953,7 @@ export const migrations = {
   migrateRerollInitiative,
   migrateRestTypesHitDiceFormula,
   migrateRollMode,
+  migrateStaleSystemLabels,
   migrateTokenBorderEnable,
   migrateWorkflowTriggerEvents
 };
