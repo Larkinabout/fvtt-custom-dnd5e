@@ -329,6 +329,7 @@
     "CUSTOM_DND5E.form.bloodied.bloodiedTint.note.2": "Must be in hex color format. Leave blank for no tint",
     "CUSTOM_DND5E.form.bloodied.removeBloodiedOnDead.label": "Remove on Dead",
     "CUSTOM_DND5E.form.bloodied.removeBloodiedOnDead.note": "Remove the Bloodied condition when a creature has the Dead status effect",
+    "CUSTOM_DND5E.form.bloodied.threshold.note": "Percentage of max HP at or below which a creature becomes Bloodied",
     "CUSTOM_DND5E.form.bloodied.title": "Configure Bloodied",
     "CUSTOM_DND5E.form.button.delete.label": "Delete",
     "CUSTOM_DND5E.form.button.delete.tooltip": "Delete",

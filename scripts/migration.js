@@ -59,6 +59,7 @@ export async function migrate() {
   if ( shouldRun("5.1.0") ) isSuccess &&= await migrateRestTypesHitDiceFormula();
   if ( shouldRun("5.1.0") ) isSuccess &&= await migrateTokenBorderEnable();
   if ( shouldRun("5.3.0") ) isSuccess &&= await migrateCustomSensesToNamespace();
+  if ( shouldRun("5.4.0") ) isSuccess &&= await migrateBloodiedThreshold();
 
   if ( isSuccess ) {
     await setSetting(constants.VERSION.SETTING.KEY, moduleVersion);
@@ -800,10 +801,39 @@ export async function migrateCustomSensesToNamespace() {
 /* -------------------------------------------- */
 
 /**
+ * Convert the Bloodied threshold from a fraction of max HP to a percentage.
+ * In dnd5e 6.0.0, `CONFIG.DND5E.bloodied.threshold` changed from a fraction to a
+ * percentage.
+ * @returns {Promise<boolean>} Whether the migration was successful
+ */
+export async function migrateBloodiedThreshold() {
+  try {
+    const bloodied = getSetting(configs.bloodied.SETTING.CONFIG.KEY);
+    if ( !bloodied || typeof bloodied !== "object" ) return true;
+
+    const threshold = Number(bloodied.threshold);
+    if ( !Number.isFinite(threshold) || threshold > 1 ) return true;
+
+    Logger.debug("Migrating Bloodied threshold to a percentage...");
+    const cloned = foundry.utils.deepClone(bloodied);
+    cloned.threshold = Math.round(threshold * 100);
+    await setSetting(configs.bloodied.SETTING.CONFIG.KEY, cloned);
+    Logger.debug("Bloodied threshold migrated.");
+    return true;
+  } catch (err) {
+    Logger.error(`Failed to migrate Bloodied threshold: ${err.message}`);
+    return false;
+  }
+}
+
+/* -------------------------------------------- */
+
+/**
  * All migration functions, exposed for testing via the module API.
  */
 export const migrations = {
   migrateActorCounters,
+  migrateBloodiedThreshold,
   migrateConditions,
   migrateAwardInspirationRollType,
   migrateCustomSensesToNamespace,
