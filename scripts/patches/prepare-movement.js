@@ -14,6 +14,7 @@ export function patchPrepareMovement() {
 
 /**
  * Prepare movement speeds, applying multiplier-based encumbrance reductions.
+ * Based on `AttributesFields.prepareMovement` from dnd5e 6.0.1.
  * @this {CharacterData|NPCData|VehicleData}
  * @param {object} rollData The Actor's roll data.
  */
@@ -21,14 +22,16 @@ function prepareMovementPatch(rollData = this.parent.getRollData()) {
   const simplifyBonus = dnd5e.utils.simplifyBonus;
   const convertLength = dnd5e.utils.convertLength;
   const defaultUnits = dnd5e.utils.defaultUnits;
+  const ConditionData = dnd5e.dataModels.activeEffect.ConditionData;
 
   const statuses = this.parent.statuses;
   const noMovement = this.parent.hasConditionEffect("noMovement");
   const crawl = this.parent.hasConditionEffect("crawl");
+  const speeds = this.attributes.movement.speeds;
   for ( const type of Object.keys(CONFIG.DND5E.movementTypes) ) {
-    if ( noMovement || (crawl && (type !== "walk")) ) this.attributes.movement[type] = 0;
-    else this.attributes.movement[type] = Math.max(0, simplifyBonus(this.attributes.movement[type], rollData));
-    if ( type === "walk" ) this.attributes.movement.speed = this.attributes.movement.walk;
+    if ( noMovement || (crawl && (type !== "walk")) ) speeds[type] = 0;
+    else speeds[type] = Math.max(0, simplifyBonus(speeds[type], rollData));
+    if ( type === "walk" ) this.attributes.movement.speed = speeds.walk;
   }
 
   const halfMovement = this.parent.hasConditionEffect("halfMovement");
@@ -36,22 +39,38 @@ function prepareMovementPatch(rollData = this.parent.getRollData()) {
   const heavilyEncumbered = statuses.has("heavilyEncumbered");
   const exceedingCarryingCapacity = statuses.has("exceedingCarryingCapacity");
   const units = this.attributes.movement.units ??= defaultUnits("length");
-  let reduction = dnd5e.settings.rulesVersion === "modern" && !this.traits?.ci?.value?.has("exhaustion")
-    ? (this.attributes.exhaustion ?? 0) * (CONFIG.DND5E.conditionTypes.exhaustion?.reduction?.speed ?? 0) : 0;
+
+  let reduction = statuses.reduce((acc, status) => {
+    const immune = this.traits?.ci?.value?.has(status);
+    if ( immune ) return acc;
+
+    const speed = CONFIG.DND5E.conditionTypes[status]?.reduction?.speed ?? 0;
+    const level = ConditionData.hasLevels(status)
+      ? this.parent.system.conditions[status] ?? 0
+      : Boolean(statuses.has(status));
+    return acc + (level * speed);
+  }, 0);
+  if ( ((this.attributes.ac?.equippedArmor?.system.strength ?? 0) > (this.abilities?.str?.value ?? Infinity))
+    && !this.parent.flags.dnd5e?.ignoreArmorSpeedReduction && this.isCreature ) {
+    reduction += CONFIG.DND5E.armorSpeedReduction;
+  }
   reduction = convertLength(reduction, CONFIG.DND5E.defaultUnits.length.imperial, units);
   const bonus = simplifyBonus(this.attributes.movement.bonus, rollData);
+  const multiplier = this.attributes.movement.multiplier * (halfMovement ? 0.5 : 1);
   this.attributes.movement.max = 0;
 
-  const encumberedMultiplier = getSetting(configs.encumbrance.SPEED_REDUCTION_MULTIPLIER_ENCUMBERED.SETTING.KEY) ?? 0.67;
-  const heavilyEncumberedMultiplier = getSetting(configs.encumbrance.SPEED_REDUCTION_MULTIPLIER_HEAVILY_ENCUMBERED.SETTING.KEY) ?? 0.33;
-  const exceedingCapacityMultiplier = getSetting(configs.encumbrance.SPEED_REDUCTION_MULTIPLIER_EXCEEDING_CARRYING_CAPACITY.SETTING.KEY) ?? 0;
+  const encumberedMultiplier =
+    getSetting(configs.encumbrance.SPEED_REDUCTION_MULTIPLIER_ENCUMBERED.SETTING.KEY) ?? 0.67;
+  const heavilyEncumberedMultiplier =
+    getSetting(configs.encumbrance.SPEED_REDUCTION_MULTIPLIER_HEAVILY_ENCUMBERED.SETTING.KEY) ?? 0.33;
+  const exceedingCapacityMultiplier =
+    getSetting(configs.encumbrance.SPEED_REDUCTION_MULTIPLIER_EXCEEDING_CARRYING_CAPACITY.SETTING.KEY) ?? 0;
   const rounding = getSetting(configs.encumbrance.SPEED_REDUCTION_MULTIPLIER_ROUNDING.SETTING.KEY) || 1;
 
   for ( const type of Object.keys(CONFIG.DND5E.movementTypes) ) {
-    let speed = Math.max(0, this.attributes.movement[type] - reduction);
-    if ( speed ) {
-      speed = Math.max(0, speed + bonus);
-      if ( halfMovement ) speed *= 0.5;
+    let speed = Math.max(0, speeds[type] - reduction);
+    if ( (speed * multiplier) > 0 ) {
+      speed = Math.max(0, speed + bonus) * multiplier;
       if ( heavilyEncumbered ) {
         speed = Math.max(0, speed * heavilyEncumberedMultiplier);
       } else if ( encumbered ) {
@@ -60,11 +79,14 @@ function prepareMovementPatch(rollData = this.parent.getRollData()) {
       if ( exceedingCarryingCapacity ) {
         speed = Math.max(0, speed * exceedingCapacityMultiplier);
       }
+      speeds[type] = Math.round(speed / rounding) * rounding;
+    } else {
+      speeds[type] = 0;
     }
-    this.attributes.movement[type] = Math.round(speed / rounding) * rounding;
-    this.attributes.movement.max = Math.max(speed, this.attributes.movement.max);
-    if ( type === "walk" ) this.attributes.movement.speed = speed;
+    this.attributes.movement.max = Math.max(speeds[type], this.attributes.movement.max);
+    if ( type === "walk" ) this.attributes.movement.speed = speeds[type];
   }
-  const baseSpeed = this._source.attributes.movement.walk || this.attributes.movement.fromSpecies?.walk;
-  this.attributes.movement.slowed = this.attributes.movement.walk <= (simplifyBonus(baseSpeed, rollData) / 2);
+  const baseSpeed = this._source.attributes.movement.speeds.walk || this.attributes.movement.fromSpecies?.walk;
+  this.attributes.movement.slowed = speeds.walk <= (simplifyBonus(baseSpeed, rollData) / 2);
+  speeds.jump = (this.abilities?.str.value ?? 0) / 2;
 }
