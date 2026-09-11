@@ -174,7 +174,13 @@ export class ConfigEditForm extends CustomDnd5eForm {
    */
   async _prepareContext() {
     const itemsData = this._getItemsData();
-    const entry = itemsData[this.key] ?? {};
+
+    let entry = itemsData[this.key];
+    if ( !entry ) {
+      try { entry = this.getSettingDefault(this.key); } catch {}
+    }
+    entry ??= {};
+
     const context = {
       ...entry,
       key: this.key,
