@@ -62,6 +62,7 @@ export async function migrate() {
   if ( shouldRun("5.4.0") ) isSuccess &&= await migrateBloodiedThreshold();
   if ( shouldRun("5.4.0") ) isSuccess &&= await migrateArmorCalculations();
   if ( shouldRun("5.4.0") ) isSuccess &&= await migrateStaleSystemLabels();
+  if ( shouldRun("5.4.0") ) isSuccess &&= await migrateConditionEffects();
 
   if ( isSuccess ) {
     await setSetting(constants.VERSION.SETTING.KEY, moduleVersion);
@@ -940,12 +941,65 @@ export async function migrateStaleSystemLabels() {
 /* -------------------------------------------- */
 
 /**
+ * dnd5e 5.x default condition effect triggers changed in dnd5e 6.0.0.
+ */
+const OLD_CONDITION_EFFECT_DEFAULTS = {
+  noMovement: ["exhaustion-5", "grappled", "paralyzed", "petrified", "restrained", "unconscious"],
+  halfMovement: ["exhaustion-2"],
+  halfHealth: ["exhaustion-4"],
+  abilityCheckDisadvantage: ["poisoned", "exhaustion-1"],
+  abilitySaveDisadvantage: ["exhaustion-3"],
+  attackDisadvantage: ["poisoned", "exhaustion-3"]
+};
+
+/* -------------------------------------------- */
+
+/**
+ * Reset condition effect triggers that still match their dnd5e 5.x defaults.
+ * @returns {Promise<boolean>} Whether the migration was successful
+ */
+export async function migrateConditionEffects() {
+  try {
+    const setting = getSetting(configs.conditionEffects.SETTING.CONFIG.KEY);
+    if ( !setting || typeof setting !== "object" ) return true;
+
+    const cloned = foundry.utils.deepClone(setting);
+    let changed = false;
+
+    for ( const [key, oldDefaults] of Object.entries(OLD_CONDITION_EFFECT_DEFAULTS) ) {
+      const entry = cloned[key];
+      if ( !entry || !Array.isArray(entry.triggers) ) continue;
+
+      const stored = new Set(entry.triggers);
+      const old = new Set(oldDefaults);
+      if ( stored.size !== old.size || ![...stored].every(trigger => old.has(trigger)) ) continue;
+
+      entry.triggers = [...(CONFIG.CUSTOM_DND5E?.conditionEffects?.[key] ?? [])];
+      changed = true;
+    }
+
+    if ( changed ) {
+      Logger.debug("Migrating condition effect triggers...");
+      await setSetting(configs.conditionEffects.SETTING.CONFIG.KEY, cloned);
+      Logger.debug("Condition effect triggers migrated.");
+    }
+    return true;
+  } catch (err) {
+    Logger.error(`Failed to migrate condition effect triggers: ${err.message}`);
+    return false;
+  }
+}
+
+/* -------------------------------------------- */
+
+/**
  * All migration functions, exposed for testing via the module API.
  */
 export const migrations = {
   migrateActorCounters,
   migrateArmorCalculations,
   migrateBloodiedThreshold,
+  migrateConditionEffects,
   migrateConditions,
   migrateAwardInspirationRollType,
   migrateCustomSensesToNamespace,
