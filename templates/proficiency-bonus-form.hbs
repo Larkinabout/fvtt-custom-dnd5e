@@ -1,0 +1,70 @@
+<div class="standard-form custom-dnd5e-tabbed">
+    <nav class="sheet-tabs tabs">
+        {{#each tabs}}
+        <a
+            class="item{{#if (customDnd5eEq ../activeTab id)}} active{{/if}}"
+            data-action="tab"
+            data-group="primary"
+            data-tab="{{id}}">
+            <span>{{#if icon}}<i class="{{icon}}"></i> {{/if}}{{localize label}}</span>
+        </a>
+        {{/each}}
+    </nav>
+    <hr>
+    <div class="standard-form custom-dnd5e-tab-container">
+        {{#each sections}}
+        <section
+            class="tab{{#if (customDnd5eEq ../activeTab tab)}} active{{/if}}"
+            data-actor-type="{{actorType}}"
+            data-group="primary"
+            data-tab="{{tab}}">
+            <div class="form-group">
+                <label class="custom-dnd5e-enable-label">{{localize enableLabel}}</label>
+                <div class="form-fields">
+                    <dnd5e-checkbox
+                        id="custom-dnd5e-enable-{{actorType}}-proficiency-bonus"
+                        name="{{actorType}}.enable"
+                        {{checked enable}}></dnd5e-checkbox>
+                </div>
+            </div>
+            <div class="scrollable fieldset-list">
+                <fieldset>
+                    <legend>
+                        <span>{{localize tableHeading}}</span>
+                    </legend>
+                    {{#if @root.diceMode}}
+                    <p class="custom-dnd5e-advice notes">
+                        {{localize "CUSTOM_DND5E.form.proficiencyBonus.proficiencyDice.note"}}
+                    </p>
+                    {{/if}}
+                    {{#each rows}}
+                    <div class="form-group">
+                        <label>{{this.label}}</label>
+                        <div class="form-fields">
+                            <input
+                                type="number"
+                                step="1"
+                                {{#if @root.diceMode}}min="0"{{/if}}
+                                name="{{../actorType}}.table.{{this.level}}"
+                                value="{{this.value}}"
+                                placeholder="{{this.placeholder}}">
+                            {{#if @root.diceMode}}
+                            <span class="custom-dnd5e-pb-dice">{{this.dice}}</span>
+                            {{/if}}
+                        </div>
+                    </div>
+                    {{/each}}
+                </fieldset>
+            </div>
+        </section>
+        {{/each}}
+    </div>
+    <footer class="form-footer" data-application-part="footer">
+        <button type="button" data-action="reset" class="reset-button bright">
+            <i class="fas fa-arrow-rotate-left"></i>{{localize "CUSTOM_DND5E.form.button.reset.label"}}
+        </button>
+        <button type="submit" class="save-button">
+            <i class="fas fa-solid fa-floppy-disk"></i>{{localize "CUSTOM_DND5E.form.button.save.label"}}
+        </button>
+    </footer>
+</div>

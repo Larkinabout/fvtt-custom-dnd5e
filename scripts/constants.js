@@ -513,6 +513,34 @@ export const CONSTANTS = {
       PROBABILISTIC_DAMAGE: "modules/custom-dnd5e/templates/probabilistic-damage.hbs"
     }
   },
+  PROFICIENCY_BONUS: {
+    ID: "proficiency-bonus",
+    MENU: {
+      KEY: "proficiency-bonus-menu",
+      HINT: "CUSTOM_DND5E.menu.proficiencyBonus.hint",
+      ICON: "fas fa-award",
+      LABEL: "CUSTOM_DND5E.menu.proficiencyBonus.label",
+      NAME: "CUSTOM_DND5E.menu.proficiencyBonus.name"
+    },
+    SETTING: {
+      CHARACTER_ENABLE: {
+        KEY: "enable-proficiency-bonus-character"
+      },
+      CHARACTER_PROFICIENCY_BONUS: {
+        KEY: "proficiency-bonus-character"
+      },
+      NPC_ENABLE: {
+        KEY: "enable-proficiency-bonus-npc"
+      },
+      NPC_PROFICIENCY_BONUS: {
+        KEY: "proficiency-bonus-npc"
+      }
+    },
+    TEMPLATE: {
+      FORM: "modules/custom-dnd5e/templates/proficiency-bonus-form.hbs"
+    },
+    UUID: "Compendium.custom-dnd5e.custom-dnd5e-journals.JournalEntry.B48iqFBddUikMMer.JournalEntryPage.pR5kYmNpV3tZbW7f"
+  },
   PRONE: {
     SETTING: {
       PRONE_ROTATION: {

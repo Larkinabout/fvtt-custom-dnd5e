@@ -699,3 +699,18 @@
 .custom-dnd5e-app .custom-dnd5e-edit-label-full {
     flex: 0 0 100%;
 }
+
+.custom-dnd5e-app .custom-dnd5e-enable-label {
+    flex: 1;
+    min-width: 80px;
+    white-space: nowrap;
+}
+
+.custom-dnd5e-app .custom-dnd5e-pb-dice {
+    flex: 0 0 auto;
+    align-self: center;
+    min-width: 48px;
+    color: var(--color-text-dark-secondary, #7a7971);
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+}

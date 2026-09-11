@@ -3,6 +3,7 @@ import { c5eLoadTemplates, getSetting, registerSetting } from "./utils.js";
 import { animations } from "./animations.js";
 import { configs, getConfigKeys } from "./configurations/registry.js";
 import { register as registerGameplay, registerNegativeHp } from "./gameplay/gameplay.js";
+
 import { register as registerSpeedFactorInitiative } from "./gameplay/speed-factor-initiative.js";
 import { register as registerActivities } from "./activities/activities.js";
 import { registerSockets } from "./sockets.js";
@@ -25,6 +26,7 @@ import { register as registerMigration, migrate, migrations } from "./migration.
 import { register as registerInterface } from "./interface.js";
 import { register as registerItemInteractions } from "./item-interactions.js";
 import { register as registerMisc, setEquipmentTypes, setMaxLevel } from "./misc.js";
+import { register as registerProficiencyBonus } from "./gameplay/proficiency-bonus.js";
 import { register as registerRolls } from "./rolls.js";
 import { register as registerRadialStatusEffects } from "./token/radial-status-effects.js";
 import { register as registerRulerTravelTime } from "./interface/ruler-travel-time.js";
@@ -37,6 +39,7 @@ import { register as registerTokenEffects } from "./token/token-effects.js";
 import { register as registerTokenHudImprovements } from "./token/token-hud-improvements.js";
 import { patchD20Die } from "./patches/d20-die.js";
 import { patchD20Roll } from "./patches/d20-roll.js";
+import { patchPrepareBaseData } from "./patches/prepare-base-data.js";
 import { patchPrepareEncumbrance } from "./patches/prepare-encumbrance.js";
 import { patchPrepareMovement } from "./patches/prepare-movement.js";
 import { patchPrepareDerivedData } from "./patches/prepare-derived-data.js";
@@ -109,6 +112,7 @@ Hooks.on("init", async () => {
 
   patchD20Die();
   patchD20Roll();
+  patchPrepareBaseData();
   patchPrepareEncumbrance();
   patchPrepareMovement();
   patchPrepareDerivedData();
@@ -163,6 +167,7 @@ Hooks.on("init", async () => {
   configs.languages.register();
   configs.lootTypes.register();
   configs.movementTypes.register();
+  registerProficiencyBonus();
   configs.restTypes.register();
   registerRolls();
   configs.senses.register();
