@@ -59,10 +59,10 @@ export async function migrate() {
   if ( shouldRun("5.1.0") ) isSuccess &&= await migrateRestTypesHitDiceFormula();
   if ( shouldRun("5.1.0") ) isSuccess &&= await migrateTokenBorderEnable();
   if ( shouldRun("5.3.0") ) isSuccess &&= await migrateCustomSensesToNamespace();
-  if ( shouldRun("5.4.0") ) isSuccess &&= await migrateBloodiedThreshold();
-  if ( shouldRun("5.4.0") ) isSuccess &&= await migrateArmorCalculations();
-  if ( shouldRun("5.4.0") ) isSuccess &&= await migrateStaleSystemLabels();
-  if ( shouldRun("5.4.0") ) isSuccess &&= await migrateConditionEffects();
+  if ( shouldRun("5.5.0") ) isSuccess &&= await migrateBloodiedThreshold();
+  if ( shouldRun("5.5.0") ) isSuccess &&= await migrateArmorCalculations();
+  if ( shouldRun("5.5.0") ) isSuccess &&= await migrateStaleSystemLabels();
+  if ( shouldRun("5.5.0") ) isSuccess &&= await migrateConditionEffects();
 
   if ( isSuccess ) {
     await setSetting(constants.VERSION.SETTING.KEY, moduleVersion);
