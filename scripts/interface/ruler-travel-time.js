@@ -169,17 +169,17 @@ function onHoverToken(token, hovered) {
  */
 function getTokenSpeed(token) {
   const actor = token?.actor;
-  const movement = actor?.system?.attributes?.movement;
-  if ( !movement ) return null;
+  const speeds = actor?.system?.attributes?.movement?.speeds;
+  if ( !speeds ) return null;
   const action = token.document?.movementAction || "walk";
   if ( ["blink", "displace"].includes(action) ) return null;
 
   const speedType = ACTION_SPEED_MAP[action] || "walk";
-  let speed = movement[speedType] || movement.walk || 0;
+  let speed = speeds[speedType] || speeds.walk || 0;
 
   if ( ["crawl", "jump"].includes(action) ) speed /= 2;
-  if ( action === "climb" && !movement.climb ) {
-    speed = (movement.walk || 0) / 2;
+  if ( action === "climb" && !speeds.climb ) {
+    speed = (speeds.walk || 0) / 2;
   }
 
   if ( speed <= 0 ) return null;
