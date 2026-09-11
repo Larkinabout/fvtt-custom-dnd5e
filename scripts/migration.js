@@ -60,6 +60,7 @@ export async function migrate() {
   if ( shouldRun("5.1.0") ) isSuccess &&= await migrateTokenBorderEnable();
   if ( shouldRun("5.3.0") ) isSuccess &&= await migrateCustomSensesToNamespace();
   if ( shouldRun("5.4.0") ) isSuccess &&= await migrateBloodiedThreshold();
+  if ( shouldRun("5.4.0") ) isSuccess &&= await migrateArmorCalculations();
 
   if ( isSuccess ) {
     await setSetting(constants.VERSION.SETTING.KEY, moduleVersion);
@@ -829,10 +830,45 @@ export async function migrateBloodiedThreshold() {
 /* -------------------------------------------- */
 
 /**
+ * Remove the `flat` and `default` armor class calculations.
+ * Carry over a customized `default` formula to the `armored` calculation.
+ * @returns {Promise<boolean>} Whether the migration was successful
+ */
+export async function migrateArmorCalculations() {
+  try {
+    const armorClasses = getSetting(configs.armorCalculations.SETTING.CONFIG.KEY);
+    if ( !armorClasses || typeof armorClasses !== "object" ) return true;
+    if ( !("flat" in armorClasses) && !("default" in armorClasses) ) return true;
+
+    Logger.debug("Migrating armor class calculations...");
+    const cloned = foundry.utils.deepClone(armorClasses);
+
+    const oldDefaultFormula = "@attributes.ac.armor + @attributes.ac.dex";
+    const defaultFormula = cloned.default?.formula?.trim();
+    if ( defaultFormula && defaultFormula !== oldDefaultFormula && !cloned.armored?.formula ) {
+      cloned.armored = { ...cloned.armored, formula: defaultFormula };
+    }
+
+    delete cloned.flat;
+    delete cloned.default;
+
+    await setSetting(configs.armorCalculations.SETTING.CONFIG.KEY, cloned);
+    Logger.debug("Armor class calculations migrated.");
+    return true;
+  } catch (err) {
+    Logger.error(`Failed to migrate armor class calculations: ${err.message}`);
+    return false;
+  }
+}
+
+/* -------------------------------------------- */
+
+/**
  * All migration functions, exposed for testing via the module API.
  */
 export const migrations = {
   migrateActorCounters,
+  migrateArmorCalculations,
   migrateBloodiedThreshold,
   migrateConditions,
   migrateAwardInspirationRollType,

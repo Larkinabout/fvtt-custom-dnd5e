@@ -101,6 +101,7 @@ export default {
   entryType: "object",
   entry: [
     { key: "formula" },
-    { key: "label", localize: true }
+    { key: "label", localize: true, systemLabelFallback: true },
+    { key: "armored", conditional: "defined" }
   ]
 };
