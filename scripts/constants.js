@@ -753,6 +753,11 @@ export const JOURNAL_HELP_BUTTON = {
   uuid: null
 };
 
+/**
+ * Status effects the D&D 5e system applies automatically based on each token's own state.
+ */
+export const SYSTEM_MANAGED_STATUSES = new Set(["bloodied", "falling"]);
+
 export const SETTING_BY_ENTITY_TYPE = {
   COUNTERS: {
     actor: CONSTANTS.COUNTERS.SETTING.ACTOR_COUNTERS.KEY,

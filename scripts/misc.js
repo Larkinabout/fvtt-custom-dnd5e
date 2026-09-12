@@ -1,4 +1,4 @@
-import { CONSTANTS } from "./constants.js";
+import { CONSTANTS, SYSTEM_MANAGED_STATUSES } from "./constants.js";
 import { registerSettings as registerChatCommandsSetting, registerHooks as registerChatCommandsHooks } from "./chat-commands.js";
 import { registerSettings as registerCursorLabelSettings, registerHooks as registerCursorLabelHooks } from "./interface/cursor-label.js";
 import { getSetting, registerSetting } from "./utils.js";
@@ -96,13 +96,6 @@ function registerHooks() {
   registerChatCommandsHooks();
   registerCursorLabelHooks();
 }
-
-/* -------------------------------------------- */
-
-/**
- * Status effects the D&D 5e system applies automatically based on each token's own state.
- */
-const SYSTEM_MANAGED_STATUSES = new Set(["bloodied", "falling"]);
 
 /* -------------------------------------------- */
 

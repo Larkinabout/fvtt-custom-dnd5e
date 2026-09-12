@@ -1,9 +1,10 @@
-import { MODULE, CONSTANTS } from "../constants.js";
+import { MODULE, CONSTANTS, SYSTEM_MANAGED_STATUSES } from "../constants.js";
 import { getSetting, registerSetting } from "../utils.js";
 import { addCursorLabelIcon, setCursorLabelIcon, setCursorLabelPosition } from "../interface/cursor-label.js";
 
 const DISABLE_ICON_ID = "custom-dnd5e-cursor-label-radial-disable";
 const DELETE_ICON_ID = "custom-dnd5e-cursor-label-radial-delete";
+const BLOCKED_ICON_ID = "custom-dnd5e-cursor-label-radial-blocked";
 const HOVER_SCALE_FACTOR = 1.2;
 const HOVER_ANIM_DURATION = 120;
 
@@ -133,6 +134,9 @@ function onStagePointerDown(event) {
   event.stopPropagation?.();
   event.stopImmediatePropagation?.();
   event.nativeEvent?.stopPropagation?.();
+
+  if ( isSystemManaged(hit.ae) ) return;
+
   const isCondition = (hit.ae.statuses?.size ?? 0) > 0;
   if ( isCondition || event.shiftKey ) hit.ae.delete();
   else hit.ae.update({ disabled: !hit.ae.disabled });
@@ -271,12 +275,24 @@ function onShiftKeyChange(event) {
 /* -------------------------------------------- */
 
 /**
+ * Whether the effect applies a status the D&D 5e system manages automatically.
+ * @param {ActiveEffect} ae
+ * @returns {boolean}
+ */
+function isSystemManaged(ae) {
+  return [...(ae.statuses ?? [])].some(status => SYSTEM_MANAGED_STATUSES.has(status));
+}
+
+/* -------------------------------------------- */
+
+/**
  * Determine which action a click would perform.
  * @param {ActiveEffect} ae
  * @param {boolean} shift
- * @returns {"delete"|"disable"}
+ * @returns {"delete"|"disable"|"blocked"}
  */
 function actionVariant(ae, shift) {
+  if ( isSystemManaged(ae) ) return "blocked";
   const isCondition = (ae.statuses?.size ?? 0) > 0;
   return (isCondition || shift) ? "delete" : "disable";
 }
@@ -292,6 +308,7 @@ function clearHoverState() {
   setCanvasCursor("");
   setCursorLabelIcon(DISABLE_ICON_ID, false);
   setCursorLabelIcon(DELETE_ICON_ID, false);
+  setCursorLabelIcon(BLOCKED_ICON_ID, false);
 }
 
 /* -------------------------------------------- */
@@ -313,32 +330,33 @@ function setCanvasCursor(value) {
 function addCursorLabels() {
   addCursorLabelIcon(DISABLE_ICON_ID, '<i class="fa-solid fa-toggle-off"></i>');
   addCursorLabelIcon(DELETE_ICON_ID, '<i class="fa-sharp fa-solid fa-xmark"></i>');
+  addCursorLabelIcon(BLOCKED_ICON_ID, '<i class="fa-solid fa-ban"></i>');
 }
 
 /* -------------------------------------------- */
 
 /**
  * Show the radial cursor label.
- * @param {"delete"|"disable"} variant
+ * @param {"delete"|"disable"|"blocked"} variant
  * @param {number|undefined} clientX
  * @param {number|undefined} clientY
  */
 function showCursorLabel(variant, clientX, clientY) {
   addCursorLabels();
   if ( clientX !== undefined && clientY !== undefined ) setCursorLabelPosition(clientX, clientY);
-  setCursorLabelIcon(DISABLE_ICON_ID, variant === "disable");
-  setCursorLabelIcon(DELETE_ICON_ID, variant === "delete");
+  setCursorLabel(variant);
 }
 
 /* -------------------------------------------- */
 
 /**
  * Set which icon is visible in the cursor label.
- * @param {"delete"|"disable"} variant
+ * @param {"delete"|"disable"|"blocked"} variant
  */
 function setCursorLabel(variant) {
   setCursorLabelIcon(DISABLE_ICON_ID, variant === "disable");
   setCursorLabelIcon(DELETE_ICON_ID, variant === "delete");
+  setCursorLabelIcon(BLOCKED_ICON_ID, variant === "blocked");
 }
 
 /* -------------------------------------------- */
