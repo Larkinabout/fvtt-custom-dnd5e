@@ -171,7 +171,7 @@
       "image": {},
       "text": {
         "format": 1,
-        "content": "<h2 class=\"custom-dnd5e-h2\">Rolling Hit Points</h2><h3 class=\"custom-dnd5e-h3\">Minimum Value</h3><p>When rolling for Hit Points, automatically reroll if the die result is below the minimum value.</p><h3 class=\"custom-dnd5e-h3\">Reroll Once</h3><ul><li><p>If enabled: Reroll only once when the die result is below the minimum value.</p></li><li><p>If disabled: Continue rerolling until the die result meets or exceeds the minimum value.</p></li></ul><h3 class=\"custom-dnd5e-h3\">Show Take Average</h3><p>Choose to display or hide the \"Take Average\" checkbox on the Hit Points Advancement Step dialog.</p><h2 class=\"custom-dnd5e-h2\">Negative Hit Points</h2><h3 class=\"custom-dnd5e-h3\">Apply Negative Hit Points for Player Characters</h3><p>When enabled, a player character's Hit Points can be reduced below zero into negative values.</p><h3 class=\"custom-dnd5e-h3\">Apply Negative Hit Points for NPCs</h3><p>When enabled, an NPC's Hit Points can be reduced below zero into negative values.</p><h3 class=\"custom-dnd5e-h3\">Heal from 0 HP</h3><ul><li><p>If enabled: When a creature regains Hit Points, they recover from 0 HP regardless of their negative value.</p></li><li><p>If disabled: Creatures recover from their actual negative HP value.</p></li></ul>"
+        "content": "<h2 class=\"custom-dnd5e-h2\">Rolling Hit Points</h2><h3 class=\"custom-dnd5e-h3\">Minimum Value</h3><p>When rolling for Hit Points, automatically reroll if the die result is below the minimum value.</p><h3 class=\"custom-dnd5e-h3\">Reroll Once</h3><ul><li><p>If enabled: Reroll only once when the die result is below the minimum value.</p></li><li><p>If disabled: Continue rerolling until the die result meets or exceeds the minimum value.</p></li></ul><h3 class=\"custom-dnd5e-h3\">Show Take Average</h3><p>Choose to display or hide the \"Take Average\" checkbox on the Hit Points Advancement Step dialog.</p><h2 class=\"custom-dnd5e-h2\">Negative Hit Points</h2><h3 class=\"custom-dnd5e-h3\">Apply Negative Hit Points for Player Characters</h3><p>When enabled, a player character's Hit Points can be reduced below zero into negative values.</p><h3 class=\"custom-dnd5e-h3\">Apply Negative Hit Points for NPCs</h3><p>When enabled, an NPC's Hit Points can be reduced below zero into negative values.</p><h3 class=\"custom-dnd5e-h3\">Per-Actor Override</h3><p>To override the world settings for a specific actor, open the actor's <strong>Hit Points Configuration</strong> (the cog beside Hit Points on the sheet) and set <strong>Negative HP</strong>:</p><ul><li><p><strong>Default:</strong> Use the world's Negative HP settings.</p></li><li><p><strong>On:</strong> This actor's HP can go below zero, even when the world settings are disabled.</p></li><li><p><strong>Off:</strong> This actor's HP cannot go below zero, even when the world settings are enabled.</p></li></ul><h3 class=\"custom-dnd5e-h3\">Heal from 0 HP</h3><ul><li><p>If enabled: When a creature regains Hit Points, they recover from 0 HP regardless of their negative value.</p></li><li><p>If disabled: Creatures recover from their actual negative HP value.</p></li></ul>"
       },
       "video": {
         "controls": true,
@@ -190,7 +190,7 @@
         "systemId": "dnd5e",
         "systemVersion": "4.0.0",
         "createdTime": 1726520913888,
-        "modifiedTime": 1726524136980,
+        "modifiedTime": 1789227235969,
         "lastModifiedBy": "0wJRsV2r9Hv1a7q0",
         "exportSource": null
       },

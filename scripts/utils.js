@@ -313,6 +313,27 @@ export function getFlag(entity, key) {
 /* -------------------------------------------- */
 
 /**
+ * Whether negative HP applies to an actor.
+ * @param {object} actor
+ * @param {object} [options]
+ * @param {boolean} [options.includeInstantDeath=true] Whether 'Apply Instant Death' also enables
+ *   negative HP for non-NPC actors
+ * @param {string} [options.override] Resolve using this override value instead of the actor's
+ *   stored flag
+ * @returns {boolean} Whether negative HP applies
+ */
+export function hasNegativeHp(actor, { includeInstantDeath = true, override } = {}) {
+  override ??= actor ? getFlag(actor, "negativeHp") : null;
+  if ( override === "on" ) return true;
+  if ( override === "off" ) return false;
+  if ( actor?.type === "npc" ) return getSetting(CONSTANTS.HIT_POINTS.SETTING.APPLY_NEGATIVE_HP_NPC.KEY);
+  return getSetting(CONSTANTS.HIT_POINTS.SETTING.APPLY_NEGATIVE_HP.KEY)
+    || (includeInstantDeath && getSetting(CONSTANTS.DEAD.SETTING.APPLY_INSTANT_DEATH.KEY));
+}
+
+/* -------------------------------------------- */
+
+/**
  * Set a flag on an entity.
  * @param {object} entity
  * @param {string} key
@@ -719,7 +740,7 @@ export async function unmakeUnconscious(actor) {
  */
 export async function makeDead(actor, data = null) {
   Logger.debug("Making Dead...", actor);
-  const applyNegativeHp = getSetting(CONSTANTS.HIT_POINTS.SETTING.APPLY_NEGATIVE_HP.KEY);
+  const applyNegativeHp = hasNegativeHp(actor, { includeInstantDeath: false });
   if ( data ) {
     if ( !applyNegativeHp ) {
       if ( data["system.attributes.hp.value"] !== undefined ) {

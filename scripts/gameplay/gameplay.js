@@ -1,4 +1,4 @@
-import { CONSTANTS, SHEET_TYPE } from "../constants.js";
+import { CONSTANTS, MODULE, SHEET_TYPE } from "../constants.js";
 import { configs } from "../configurations/registry.js";
 import { register as registerAverageDamage } from "./average-damage.js";
 import { register as registerMobDamage } from "./mob-damage.js";
@@ -8,7 +8,9 @@ import {
   c5eLoadTemplates,
   Logger,
   getDefaultSetting,
+  getFlag,
   getSetting,
+  hasNegativeHp,
   registerMenu,
   registerSetting,
   makeDead,
@@ -413,14 +415,30 @@ export function modifyHitPointsFlowDialog(app, html, data) {
 
 /**
  * If 'Apply Negative HP' is enabled, set the min HP value in the schema to undefined.
- * This will allow HP to go below 0.
+ * This will allow HP to go below 0. Actors with the Negative HP override flag set to 'on'
+ * remove the min HP value from their data model's schema regardless of the world settings.
  */
 export function registerNegativeHp() {
+  Hooks.on("preUpdateActor", (actor, data) => {
+    const override = foundry.utils.getProperty(data, `flags.${MODULE.ID}.negativeHp`);
+    if ( override === undefined ) return;
+    const hp = actor.system?.attributes?.hp?.value ?? 0;
+    if ( hp >= 0 ) return;
+    const allowed = hasNegativeHp(actor, { override });
+    foundry.utils.setProperty(data, "system.attributes.hp.value", allowed ? hp : 0);
+  });
+
+  Hooks.on("updateActor", (actor, data) => {
+    if ( foundry.utils.getProperty(data, `flags.${MODULE.ID}.negativeHp`) === "on" ) {
+      removeHpMin(actor);
+    }
+  });
+
+  Hooks.on("renderHitPointsConfig", addNegativeHpToConfig);
+
   const applyNegativeHp = getSetting(CONSTANTS.HIT_POINTS.SETTING.APPLY_NEGATIVE_HP.KEY)
         || getSetting(CONSTANTS.DEAD.SETTING.APPLY_INSTANT_DEATH.KEY);
   const applyNegativeHpNpc = getSetting(CONSTANTS.HIT_POINTS.SETTING.APPLY_NEGATIVE_HP_NPC.KEY);
-
-  if ( !applyNegativeHp && !applyNegativeHpNpc ) return;
 
   Logger.debug("Registering Negative HP...");
 
@@ -432,7 +450,68 @@ export function registerNegativeHp() {
     dnd5e.dataModels.actor.NPCData.schema.fields.attributes.fields.hp.fields.value.min = undefined;
   }
 
+  for ( const actor of game.actors ?? [] ) {
+    if ( getFlag(actor, "negativeHp") === "on" ) removeHpMin(actor);
+  }
+  Hooks.on("canvasReady", () => {
+    for ( const token of canvas.scene?.tokens ?? [] ) {
+      if ( !token.actorLink && token.actor && getFlag(token.actor, "negativeHp") === "on" ) {
+        removeHpMin(token.actor);
+      }
+    }
+  });
+
   Logger.debug("Negative HP registered");
+}
+
+/* -------------------------------------------- */
+
+/**
+ * Remove the minimum HP value from the schema, allowing HP to go below 0.
+ * @param {object} actor
+ */
+function removeHpMin(actor) {
+  const field = actor?.system?.constructor?.schema?.fields?.attributes?.fields?.hp?.fields?.value;
+  if ( field ) field.min = undefined;
+}
+
+/* -------------------------------------------- */
+
+/**
+ * Add the Negative HP override to the Hit Points Configuration sheet.
+ * Triggered by the 'renderHitPointsConfig' hook.
+ * @param {object} app
+ * @param {HTMLElement} html
+ */
+function addNegativeHpToConfig(app, html) {
+  if ( !game.user.isGM ) return;
+
+  const actor = app.document;
+  if ( actor?.documentName !== "Actor" ) return;
+  if ( html.querySelector("#custom-dnd5e-negative-hp") ) return;
+
+  const value = getFlag(actor, "negativeHp") ?? "default";
+  const choices = [
+    { key: "default", label: game.i18n.localize("CUSTOM_DND5E.default") },
+    { key: "on", label: game.i18n.localize("CUSTOM_DND5E.on") },
+    { key: "off", label: game.i18n.localize("CUSTOM_DND5E.off") }
+  ];
+  const options = choices.map(choice =>
+    `<option value="${choice.key}"${(choice.key === value) ? " selected" : ""}>${choice.label}</option>`
+  ).join("");
+
+  const fieldset = document.createElement("fieldset");
+  fieldset.classList.add("card");
+  fieldset.innerHTML = `
+    <legend>${MODULE.NAME}</legend>
+    <div class="form-group">
+        <label>${game.i18n.localize("CUSTOM_DND5E.negativeHp.label")}</label>
+        <div class="form-fields">
+            <select id="custom-dnd5e-negative-hp" name="flags.${MODULE.ID}.negativeHp">${options}</select>
+        </div>
+        <p class="hint">${game.i18n.localize("CUSTOM_DND5E.negativeHp.hint")}</p>
+    </div>`;
+  (html.querySelector("section.flexcol") ?? html).appendChild(fieldset);
 }
 
 /* -------------------------------------------- */
@@ -598,13 +677,8 @@ function healActor(actor, data, options) {
 
   if ( !foundry.utils.hasProperty(data,"system.attributes.hp.value") ) return;
 
-  const applyNegativeHp = getSetting(CONSTANTS.HIT_POINTS.SETTING.APPLY_NEGATIVE_HP.KEY);
-  const applyNegativeHpNpc = getSetting(CONSTANTS.HIT_POINTS.SETTING.APPLY_NEGATIVE_HP_NPC.KEY);
-  const applyInstantDeath = getSetting(CONSTANTS.DEAD.SETTING.APPLY_INSTANT_DEATH.KEY);
   const healFromZero = getSetting(CONSTANTS.HIT_POINTS.SETTING.NEGATIVE_HP_HEAL_FROM_ZERO.KEY);
-
-  const hasNegativeHp = (actor.type === "npc") ? applyNegativeHpNpc : (applyNegativeHp || applyInstantDeath);
-  if ( !hasNegativeHp || !healFromZero ) return;
+  if ( !hasNegativeHp(actor) || !healFromZero ) return;
 
   if ( _skipHealFromZero ) {
     _skipHealFromZero = false;
@@ -630,11 +704,7 @@ function healActor(actor, data, options) {
  * @param {object} options The options
  */
 function recalculateDamage(actor, amount, updates, options) {
-  const hasNegativeHp = (actor.type === "npc")
-    ? getSetting(CONSTANTS.HIT_POINTS.SETTING.APPLY_NEGATIVE_HP_NPC.KEY)
-    : (getSetting(CONSTANTS.HIT_POINTS.SETTING.APPLY_NEGATIVE_HP.KEY)
-        || getSetting(CONSTANTS.DEAD.SETTING.APPLY_INSTANT_DEATH.KEY));
-  if ( !hasNegativeHp ) return;
+  if ( !hasNegativeHp(actor) ) return;
 
   const hpValue = actor?.system?.attributes?.hp?.value ?? 0;
 
@@ -793,8 +863,7 @@ function updateDeathSaves(source, actor, data, options) {
  * @param {object} updates The updates
  */
 function updateHp(actor, updates) {
-  if ( getSetting(CONSTANTS.HIT_POINTS.SETTING.APPLY_NEGATIVE_HP.KEY) && actor.type === "character" ) return;
-  if ( getSetting(CONSTANTS.HIT_POINTS.SETTING.APPLY_NEGATIVE_HP_NPC.KEY) && actor.type === "npc" ) return;
+  if ( hasNegativeHp(actor, { includeInstantDeath: false }) ) return;
 
   Logger.debug("Updating HP...");
 
@@ -823,7 +892,7 @@ function updateHpMeter(app, html, data) {
   const sheetType = SHEET_TYPE[app.constructor.name];
 
   if ( !sheetType || sheetType.legacy ) return;
-  if ( !sheetType.character && !(sheetType.npc && getSetting(CONSTANTS.HIT_POINTS.SETTING.APPLY_NEGATIVE_HP_NPC.KEY)) ) return;
+  if ( !sheetType.character && !(sheetType.npc && hasNegativeHp(app.actor)) ) return;
 
   Logger.debug("Updating HP meter...");
 
