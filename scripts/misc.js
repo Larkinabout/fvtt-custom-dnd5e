@@ -100,12 +100,20 @@ function registerHooks() {
 /* -------------------------------------------- */
 
 /**
+ * Status effects the D&D 5e system applies automatically based on each token's own state.
+ */
+const SYSTEM_MANAGED_STATUSES = new Set(["bloodied", "falling"]);
+
+/* -------------------------------------------- */
+
+/**
  * Toggle effect on selected tokens.
  * @param {boolean} active Whether the effect is active
  * @param {object} activeEffect The active effect
  */
 async function toggleEffectOnSelected(active, activeEffect) {
   if ( canvas.tokens.controlled.length <= 1 || activeEffect.origin || activeEffect?.flags["custom-dnd5e"]?.ignore ) return;
+  if ( [...activeEffect.statuses].some(status => SYSTEM_MANAGED_STATUSES.has(status)) ) return;
 
   const statusId = [...activeEffect.statuses][0];
   const overlay = activeEffect?.flags?.core?.overlay ?? false;
