@@ -99,7 +99,7 @@ export default {
   loadTemplates: false,
   entryType: "object",
   entry: [
-    { key: "ability" },
-    { key: "id" }
+    { key: "ability", required: true },
+    { key: "id", required: true }
   ]
 };

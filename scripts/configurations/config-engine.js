@@ -1,4 +1,5 @@
 import {
+  Logger,
   assignDnd5eConfig,
   c5eLoadTemplates,
   checkEmpty,
@@ -22,6 +23,7 @@ import {
  *   unless the stored entry opts out via `data.system === false`.
  * @property {{entryType: "object"|"scalar", entry: *}} [children]
  *   Sub-definition for nested entries. When set, the field value is recursively shaped.
+ * @property {boolean} [required] Skip the whole entry when this field's built value is empty.
  */
 
 /**
@@ -29,6 +31,7 @@ import {
  * @property {"labelOrSelf"|"key"} [source] Where to read the value from. `"labelOrSelf"` means `data.label ?? data`.
  * @property {string} [key] When `source === "key"`, the field on `data` to read.
  * @property {boolean} [localize] Pass the value through `game.i18n.localize`.
+ * @property {boolean} [required] Skip the entry when the built value is empty.
  */
 
 /**
@@ -200,7 +203,8 @@ function mergeSettingData(def, settingData) {
 /* -------------------------------------------- */
 
 /**
- * Build the config object from merged setting data. Filters out hidden entries.
+ * Build the config object from merged setting data. Filters out hidden entries and entries
+ * missing required values.
  * @param {ConfigDefinition} def
  * @param {object} settingData
  * @returns {object} Config data
@@ -210,7 +214,27 @@ function buildConfig(def, settingData) {
     Object.keys(settingData)
       .filter(key => settingData[key]?.visible || settingData[key]?.visible === undefined)
       .map(key => [key, buildEntry(def, key, settingData[key])])
+      .filter(([key, entry]) => {
+        if ( hasRequiredEntryValues(def, entry) ) return true;
+        Logger.info(`Skipped '${def.configKey}' entry '${key}' because it is missing required values`);
+        return false;
+      })
   );
+}
+
+/* -------------------------------------------- */
+
+/**
+ * Whether a built entry has values for all fields marked as required in the entry descriptors.
+ * @param {ConfigDefinition} def
+ * @param {object|string} entry
+ * @returns {boolean}
+ */
+function hasRequiredEntryValues(def, entry) {
+  const isEmpty = value => value === undefined || value === null || value === "";
+  if ( def.entryType === "scalar" ) return !def.entry?.required || !isEmpty(entry);
+  if ( !Array.isArray(def.entry) ) return true;
+  return def.entry.every(field => !field.required || !isEmpty(entry?.[field.key]));
 }
 
 /* -------------------------------------------- */

@@ -79,5 +79,5 @@ export default {
   form: WeaponIdsForm,
   loadTemplates: false,
   entryType: "scalar",
-  entry: { source: "labelOrSelf", localize: true }
+  entry: { source: "labelOrSelf", localize: true, required: true }
 };
