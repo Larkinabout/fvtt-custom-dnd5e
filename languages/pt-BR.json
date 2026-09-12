@@ -65,8 +65,6 @@
     "CUSTOM_DND5E.activities.swap.swapButton": "Trocar",
     "CUSTOM_DND5E.activities.swap.targetTypeMismatch": "{name} não é {type}.",
     "CUSTOM_DND5E.activities.swap.title": "Trocar",
-    "CUSTOM_DND5E.activities.targeting.clearTargetsAfterUse.hint": "Limpa os alvos após uma atividade ser utilizada. Para atividades de ataque, os alvos são removidos após a jogada de ataque.",
-    "CUSTOM_DND5E.activities.targeting.clearTargetsAfterUse.label": "Limpar Alvos Após Uso",
     "CUSTOM_DND5E.activities.targeting.enable.hint": "Quando ativada, essa opção solicita a seleção de um alvo antes de usar atividades que exigem alvos individuais.",
     "CUSTOM_DND5E.activities.targeting.enable.label": "Habilitar Aviso de Marcação",
     "CUSTOM_DND5E.activities.targeting.fallbackTarget.hint": "Quando nenhum alvo for especificado na atividade, usa 1 criatura como alvo padrão.",

@@ -68,7 +68,16 @@ export class ActivitiesForm extends CustomDnd5eForm {
       swap: setting?.swap ?? false,
       targeting: setting?.targeting ?? false,
       fallbackTarget: setting?.fallbackTarget ?? false,
-      clearTargetsAfterUse: setting?.clearTargetsAfterUse ?? false
+      clearTargets: setting?.clearTargets ?? "none",
+      selects: {
+        clearTargets: {
+          choices: {
+            none: "CUSTOM_DND5E.none",
+            before: "CUSTOM_DND5E.activities.targeting.clearTargets.before",
+            after: "CUSTOM_DND5E.activities.targeting.clearTargets.after"
+          }
+        }
+      }
     };
   }
 
@@ -117,7 +126,7 @@ export class ActivitiesForm extends CustomDnd5eForm {
       swap: formData.object.swap ?? false,
       targeting: formData.object.targeting ?? false,
       fallbackTarget: formData.object.fallbackTarget ?? false,
-      clearTargetsAfterUse: formData.object.clearTargetsAfterUse ?? false
+      clearTargets: formData.object.clearTargets ?? "none"
     });
 
     foundry.applications.settings.SettingsConfig.reloadConfirm();

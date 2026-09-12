@@ -63,6 +63,7 @@ export async function migrate() {
   if ( shouldRun("5.5.0") ) isSuccess &&= await migrateArmorCalculations();
   if ( shouldRun("5.5.0") ) isSuccess &&= await migrateStaleSystemLabels();
   if ( shouldRun("5.5.0") ) isSuccess &&= await migrateConditionEffects();
+  if ( shouldRun("5.5.0") ) isSuccess &&= await migrateActivitiesClearTargets();
 
   if ( isSuccess ) {
     await setSetting(constants.VERSION.SETTING.KEY, moduleVersion);
@@ -993,9 +994,38 @@ export async function migrateConditionEffects() {
 /* -------------------------------------------- */
 
 /**
+ * Convert the activities `clearTargetsAfterUse` checkbox to the `clearTargets` choice.
+ * @returns {Promise<boolean>} Whether the migration was successful
+ */
+export async function migrateActivitiesClearTargets() {
+  try {
+    const setting = getSetting(CONSTANTS.ACTIVITIES.SETTING.CONFIG.KEY);
+    if ( !setting || typeof setting !== "object" ) return true;
+    if ( !("clearTargetsAfterUse" in setting) && !("clearTargetsBeforeUse" in setting) ) return true;
+
+    Logger.debug("Migrating activities clear targets...");
+    const cloned = foundry.utils.deepClone(setting);
+    cloned.clearTargets ??= cloned.clearTargetsBeforeUse ? "before"
+      : cloned.clearTargetsAfterUse ? "after" : "none";
+    delete cloned.clearTargetsBeforeUse;
+    delete cloned.clearTargetsAfterUse;
+
+    await setSetting(CONSTANTS.ACTIVITIES.SETTING.CONFIG.KEY, cloned);
+    Logger.debug("Activities clear targets migrated.");
+    return true;
+  } catch (err) {
+    Logger.error(`Failed to migrate activities clear targets: ${err.message}`);
+    return false;
+  }
+}
+
+/* -------------------------------------------- */
+
+/**
  * All migration functions, exposed for testing via the module API.
  */
 export const migrations = {
+  migrateActivitiesClearTargets,
   migrateActorCounters,
   migrateArmorCalculations,
   migrateBloodiedThreshold,
