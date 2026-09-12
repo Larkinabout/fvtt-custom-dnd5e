@@ -210,7 +210,7 @@
       "image": {},
       "text": {
         "format": 1,
-        "content": "<h2 class=\"custom-dnd5e-h2\">Chat Commands</h2><p>When enabled, the following slash commands can be entered into the chat input:</p><ul><li><code>/attack</code> or <code>/a</code> &mdash; Roll an attack.</li><li><code>/damage</code> or <code>/d</code> &mdash; Roll damage.</li><li><code>/heal</code>, <code>/healing</code>, or <code>/h</code> &mdash; Roll healing.</li><li><code>/save</code> or <code>/s</code> &mdash; Request a saving throw.</li><li><code>/check</code> or <code>/c</code> &mdash; Request an ability check.</li><li><code>/skill</code> or <code>/k</code> &mdash; Request a skill check.</li><li><code>/tool</code> or <code>/t</code> &mdash; Request a tool check.</li><li><code>/concentration</code> or <code>/con</code> &mdash; Request a Concentration saving throw.</li><li><code>/item</code> &mdash; Use an item.</li></ul><p>Each command accepts a key=value configuration string after the command name. Multiple sub-configurations can be split with <code>&amp;</code>.</p><p>Requires a reload when changed.</p>"
+        "content": "<h2 class=\"custom-dnd5e-h2\">Chat Command Shorthands</h2><p>The D&amp;D 5e system provides chat commands that can be entered into the chat input: <code>/attack</code>, <code>/check</code>, <code>/concentration</code>, <code>/damage</code>, <code>/heal</code>, <code>/save</code>, <code>/skill</code> and <code>/tool</code>. They use the same options as the system's text enrichers.</p><p>When enabled, the following shorthand aliases are added:</p><ul><li><code>/a</code> &mdash; <code>/attack</code> (e.g. <code>/a +5</code>)</li><li><code>/c</code> &mdash; <code>/check</code> (e.g. <code>/c ath 12</code>)</li><li><code>/con</code> &mdash; <code>/concentration</code> (e.g. <code>/con 10</code>)</li><li><code>/d</code> &mdash; <code>/damage</code> (e.g. <code>/d 2d6 fire</code>)</li><li><code>/h</code> &mdash; <code>/heal</code> (e.g. <code>/h 2d4+2</code>)</li><li><code>/k</code> &mdash; <code>/skill</code> (e.g. <code>/k prc 15</code>)</li><li><code>/s</code> &mdash; <code>/save</code> (e.g. <code>/s dex 15</code>)</li><li><code>/t</code> &mdash; <code>/tool</code> (e.g. <code>/t thief</code>)</li></ul><p>Check, save, skill and tool commands roll immediately for the selected tokens. Add <code>request</code> to post a roll request card to chat instead (e.g. <code>/s dex 15 request</code>). Multiple damage parts can be split with <code>&amp;</code> (e.g. <code>/d 2d10+8[piercing] &amp; 2d6[fire]</code>).</p><p>Requires a reload when changed.</p>"
       },
       "video": {
         "controls": true,
@@ -229,7 +229,7 @@
         "systemId": "dnd5e",
         "systemVersion": "5.2.5",
         "createdTime": 1778500000000,
-        "modifiedTime": 1779090866035,
+        "modifiedTime": 1789211303330,
         "lastModifiedBy": "2Ab5BheRvt8es88G",
         "exportSource": null
       },
