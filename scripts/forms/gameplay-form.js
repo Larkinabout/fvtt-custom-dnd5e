@@ -1,5 +1,5 @@
 import { CONSTANTS, JOURNAL_HELP_BUTTON, MODULE } from "../constants.js";
-import { getSetting, setSetting, resetSetting } from "../utils.js";
+import { getSetting, setSetting, resetSetting, syncAutoApplyDowned } from "../utils.js";
 import { CustomDnd5eForm } from "./custom-dnd5e-form.js";
 import { configs } from "../configurations/registry.js";
 
@@ -103,6 +103,14 @@ export class GameplayForm extends CustomDnd5eForm {
       proneRotation: getSetting(CONSTANTS.PRONE.SETTING.PRONE_ROTATION.KEY),
       useCampSupplies: getSetting(CONSTANTS.RESTING.SETTING.USE_CAMP_SUPPLIES.KEY),
       selects: {
+        applyDead: {
+          choices: {
+            none: "CUSTOM_DND5E.none",
+            dead: "CUSTOM_DND5E.dead",
+            unconscious: "CUSTOM_DND5E.unconscious",
+            deadUnlessImportant: "CUSTOM_DND5E.form.gameplay.dead.applyDead.deadUnlessImportant"
+          }
+        },
         averageDamage: {
           choices: {
             neither: "CUSTOM_DND5E.neither",
@@ -356,6 +364,8 @@ export class GameplayForm extends CustomDnd5eForm {
       setSetting(CONSTANTS.PRONE.SETTING.PRONE_ROTATION.KEY, formData.object.proneRotation),
       setSetting(CONSTANTS.RESTING.SETTING.USE_CAMP_SUPPLIES.KEY, formData.object.useCampSupplies)
     ]);
+
+    await syncAutoApplyDowned();
 
     foundry.applications.settings.SettingsConfig.reloadConfirm();
   }

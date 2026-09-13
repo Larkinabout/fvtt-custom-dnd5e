@@ -79,7 +79,7 @@ Apply Instant Death when a character suffers damage equal to or greater than the
 </details>
 
 ### Dead
-- Apply the Dead status effect when an NPC is reduced to zero HP.
+- Apply the Dead or Unconscious status effect when an NPC is reduced to zero HP, with an option to apply Unconscious only to NPCs with the Important trait.
 - Tint and/or rotate the token when it gains the Dead status effect.
 
 <details>

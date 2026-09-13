@@ -16,10 +16,9 @@
             <div class="form-group">
                 <label>{{localize "CUSTOM_DND5E.form.gameplay.dead.applyDead.label"}}</label>
                 <div class="form-fields">
-                    <dnd5e-checkbox
-                        id="custom-dnd5e-apply-dead"
-                        name="applyDead"
-                        {{checked applyDead}}></dnd5e-checkbox>
+                    <select id="custom-dnd5e-apply-dead" name="applyDead">
+                        {{selectOptions selects.applyDead.choices selected=applyDead localize=true}}
+                    </select>
                 </div>
                 <p class="hint">{{localize "CUSTOM_DND5E.form.gameplay.dead.applyDead.note"}}</p>
             </div>

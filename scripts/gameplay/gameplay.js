@@ -120,8 +120,8 @@ function registerSettings() {
     {
       scope: "world",
       config: false,
-      type: Boolean,
-      default: false
+      type: String,
+      default: "none"
     }
   );
 
@@ -740,14 +740,17 @@ function recalculateDamage(actor, amount, updates, options) {
 
 /**
  * Triggered by the 'dnd5e.preApplyDamage' hook.
- * If 'Apply Dead' is enabled, apply or remove the Dead condition and other token effects based on the HP change.
+ * If 'Apply Status on 0 HP' is set, apply or remove the Dead or Unconscious condition and other
+ * token effects based on the HP change. With the 'Dead unless Important' option, NPCs with the
+ * D&D 5e system's Important trait become Unconscious instead of Dead.
  * @param {object} actor The actor
  * @param {object} updates The updates
- * @returns {boolean} Whether the Dead condition was updated
+ * @returns {boolean} Whether the Dead condition was applied
  */
 function updateDead(actor, updates) {
   if ( actor.type !== "npc" ) return false;
-  if ( !getSetting(CONSTANTS.DEAD.SETTING.APPLY_DEAD.KEY) ) return false;
+  const applyDead = getSetting(CONSTANTS.DEAD.SETTING.APPLY_DEAD.KEY);
+  if ( !applyDead || applyDead === "none" ) return false;
 
   Logger.debug("Updating Dead...");
 
@@ -759,15 +762,28 @@ function updateDead(actor, updates) {
   if ( maxHp === 0 ) {
     Logger.debug("Dead not updated. Max HP is 0.");
     return false;
-  } else if ( currentHp <= 0 ) {
-    makeDead(actor, updates);
-    Logger.debug("Dead updated", { dead: true });
-    return true;
-  } else {
-    unmakeDead(actor, updates);
-    Logger.debug("Dead updated", { dead: false });
+  }
+
+  const status = (applyDead === "unconscious"
+    || (applyDead === "deadUnlessImportant" && actor.system?.traits?.important))
+    ? "unconscious"
+    : "dead";
+
+  if ( currentHp <= 0 ) {
+    if ( status === "dead" ) {
+      makeDead(actor, updates);
+      Logger.debug("Dead updated", { dead: true });
+      return true;
+    }
+    makeUnconscious(actor);
+    Logger.debug("Dead updated", { unconscious: true });
     return false;
   }
+
+  unmakeDead(actor, updates);
+  unmakeUnconscious(actor);
+  Logger.debug("Dead updated", { dead: false });
+  return false;
 }
 
 /* -------------------------------------------- */

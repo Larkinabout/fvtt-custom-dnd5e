@@ -783,6 +783,21 @@ export async function unmakeDead(actor) {
 /* -------------------------------------------- */
 
 /**
+ * If the 'Apply Status on 0 HP' setting is set, set the D&D 5e system's 'Auto-Apply Downed'
+ * setting to 'Never' to avoid both the module and the system applying statuses on 0 HP.
+ */
+export async function syncAutoApplyDowned() {
+  if ( !game.user.isGM ) return;
+  const applyDead = getSetting(CONSTANTS.DEAD.SETTING.APPLY_DEAD.KEY);
+  if ( !applyDead || applyDead === "none" ) return;
+  if ( game.settings.get("dnd5e", "autoApplyDowned") === "none" ) return;
+  await game.settings.set("dnd5e", "autoApplyDowned", "none");
+  Logger.debug("System's 'Auto-Apply Downed' setting set to 'Never'");
+}
+
+/* -------------------------------------------- */
+
+/**
  * Rotate a token.
  * @param {object} token
  * @param {number} rotation

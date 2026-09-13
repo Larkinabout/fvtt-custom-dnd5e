@@ -1,5 +1,5 @@
 import { CONSTANTS, MODULE } from "./constants.js";
-import { c5eLoadTemplates, getSetting, registerSetting } from "./utils.js";
+import { c5eLoadTemplates, getSetting, registerSetting, syncAutoApplyDowned } from "./utils.js";
 import { animations } from "./animations.js";
 import { configs, getConfigKeys } from "./configurations/registry.js";
 import { register as registerGameplay, registerNegativeHp } from "./gameplay/gameplay.js";
@@ -253,6 +253,7 @@ Hooks.on("ready", async () => {
   configs.conditions.setConfig();
   configs.conditionEffects.setConfig();
   configs.bloodied.addBloodiedCondition();
+  syncAutoApplyDowned();
   configs.consumableTypes.setConfig();
   configs.creatureTypes.setConfig();
   configs.damageTypes.setConfig();

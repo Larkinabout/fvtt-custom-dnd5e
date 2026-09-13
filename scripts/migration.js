@@ -65,6 +65,7 @@ export async function migrate() {
   if ( shouldRun("5.5.0") ) isSuccess &&= await migrateConditionEffects();
   if ( shouldRun("5.5.0") ) isSuccess &&= await migrateActivitiesClearTargets();
   if ( shouldRun("5.5.0") ) isSuccess &&= await migrateConditionLevels();
+  if ( shouldRun("5.5.0") ) isSuccess &&= await migrateApplyDead();
 
   if ( isSuccess ) {
     await setSetting(constants.VERSION.SETTING.KEY, moduleVersion);
@@ -1070,10 +1071,32 @@ export async function migrateConditionLevels() {
 /* -------------------------------------------- */
 
 /**
+ * Convert the 'Apply Dead' checkbox to the 'Apply Status on 0 HP' choice.
+ * @returns {Promise<boolean>} Whether the migration was successful
+ */
+export async function migrateApplyDead() {
+  try {
+    const value = getSetting(CONSTANTS.DEAD.SETTING.APPLY_DEAD.KEY);
+    if ( ["none", "dead", "unconscious", "deadUnlessImportant"].includes(value) ) return true;
+
+    Logger.debug("Migrating apply dead...");
+    await setSetting(CONSTANTS.DEAD.SETTING.APPLY_DEAD.KEY, (value === true || value === "true") ? "dead" : "none");
+    Logger.debug("Apply dead migrated.");
+    return true;
+  } catch (err) {
+    Logger.error(`Failed to migrate apply dead: ${err.message}`);
+    return false;
+  }
+}
+
+/* -------------------------------------------- */
+
+/**
  * All migration functions, exposed for testing via the module API.
  */
 export const migrations = {
   migrateActivitiesClearTargets,
+  migrateApplyDead,
   migrateActorCounters,
   migrateArmorCalculations,
   migrateBloodiedThreshold,
