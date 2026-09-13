@@ -78,24 +78,55 @@ class ConditionsEditForm extends ConfigEditForm {
    * @type {object[]}
    */
   static FIELDS = [
-    { name: "name", type: "text", label: "CUSTOM_DND5E.name", localizeValue: true },
-    { name: "img", type: "filePicker", label: "CUSTOM_DND5E.icon" },
-    { name: "reference", type: "text", label: "CUSTOM_DND5E.reference" },
-    { name: "levels", type: "number", label: "CUSTOM_DND5E.levels" },
-    { name: "reduction.rolls", type: "number", label: "CUSTOM_DND5E.rollsReduction",
-      condition: ({ key }) => key === "exhaustion" },
-    { name: "reduction.speed", type: "number", label: "CUSTOM_DND5E.speedReduction",
-      condition: ({ key }) => key === "exhaustion" },
-    { name: "special", type: "text", label: "CUSTOM_DND5E.special" },
-    { name: "hud", type: "checkbox", label: "CUSTOM_DND5E.includeOnHud", default: true },
-    { name: "sheet", type: "checkbox", label: "CUSTOM_DND5E.includeOnSheet" },
-    { name: "overlay", type: "checkbox", label: "CUSTOM_DND5E.overlay" },
-    { name: "pseudo", type: "checkbox", label: "CUSTOM_DND5E.pseudo" },
-    { name: "riders", type: "multiSelect", label: "CUSTOM_DND5E.riders", choices: "riders" },
-    { name: "statuses", type: "multiSelect", label: "CUSTOM_DND5E.statuses", choices: "statuses" },
-    { name: "macroUuid", type: "macroDrop", label: "CUSTOM_DND5E.macroOnApply" },
-    { name: "macroDisabledUuid", type: "macroDrop", label: "CUSTOM_DND5E.macroOnRemove" }
+    { legend: "CUSTOM_DND5E.details", fields: [
+      { name: "name", type: "text", label: "CUSTOM_DND5E.name", localizeValue: true },
+      { name: "img", type: "filePicker", label: "CUSTOM_DND5E.icon" },
+      { name: "reference", type: "text", label: "CUSTOM_DND5E.reference",
+        hint: "CUSTOM_DND5E.form.conditions.reference.hint" }
+    ] },
+    { legend: "CUSTOM_DND5E.levels", fields: [
+      { name: "levels", type: "number", label: "CUSTOM_DND5E.form.conditions.numberOfLevels.label",
+        hint: "CUSTOM_DND5E.form.conditions.numberOfLevels.hint" },
+      { name: "reduction.rolls", type: "number", label: "CUSTOM_DND5E.rollsReduction",
+        hint: "CUSTOM_DND5E.form.conditions.rollsReduction.hint",
+        condition: ({ key }) => key === "exhaustion" },
+      { name: "reduction.speed", type: "number", label: "CUSTOM_DND5E.speedReduction",
+        hint: "CUSTOM_DND5E.form.conditions.speedReduction.hint",
+        condition: ({ key }) => key === "exhaustion" }
+    ] },
+    { legend: "CUSTOM_DND5E.display", fields: [
+      { name: "hud", type: "checkbox", label: "CUSTOM_DND5E.includeOnHud", default: true,
+        hint: "CUSTOM_DND5E.form.conditions.hud.hint" },
+      { name: "sheet", type: "checkbox", label: "CUSTOM_DND5E.includeOnSheet",
+        hint: "CUSTOM_DND5E.form.conditions.sheet.hint" },
+      { name: "overlay", type: "checkbox", label: "CUSTOM_DND5E.overlay",
+        hint: "CUSTOM_DND5E.form.conditions.overlay.hint" }
+    ] },
+    { legend: "CUSTOM_DND5E.behaviour", fields: [
+      { name: "pseudo", type: "checkbox", label: "CUSTOM_DND5E.pseudo",
+        hint: "CUSTOM_DND5E.form.conditions.pseudo.hint" },
+      { name: "neverBlockMovement", type: "checkbox", label: "CUSTOM_DND5E.neverBlocksMovement",
+        hint: "CUSTOM_DND5E.form.conditions.neverBlockMovement.hint" },
+      { name: "special", type: "text", label: "CUSTOM_DND5E.special",
+        hint: "CUSTOM_DND5E.form.conditions.special.hint" },
+      { name: "riders", type: "multiSelect", label: "CUSTOM_DND5E.riders", choices: "riders",
+        hint: "CUSTOM_DND5E.form.conditions.riders.hint" },
+      { name: "statuses", type: "multiSelect", label: "CUSTOM_DND5E.statuses", choices: "statuses",
+        hint: "CUSTOM_DND5E.form.conditions.statuses.hint" }
+    ] },
+    { legend: "CUSTOM_DND5E.macros", fields: [
+      { name: "macroUuid", type: "macroDrop", label: "CUSTOM_DND5E.macroOnApply" },
+      { name: "macroDisabledUuid", type: "macroDrop", label: "CUSTOM_DND5E.macroOnRemove" }
+    ] }
   ];
+
+  /* -------------------------------------------- */
+
+  /**
+   * Maximum number of per-level condition rows to render.
+   * @type {number}
+   */
+  static MAX_LEVEL_ROWS = 20;
 
   /* -------------------------------------------- */
 
@@ -108,6 +139,66 @@ class ConditionsEditForm extends ConfigEditForm {
       CONFIG.statusEffects.map(statusEffect => [statusEffect.id, statusEffect.name])
     );
     return { riders: statusEffects, statuses: statusEffects };
+  }
+
+  /* -------------------------------------------- */
+
+  /**
+   * Handle form rendering. Renders a conditions multi-select per level inside the Levels
+   * fieldset and re-renders the rows when the number of levels changes.
+   * @param {object} context
+   * @param {object} options
+   */
+  _onRender(context, options) {
+    super._onRender(context, options);
+
+    const levelsInput = this.element.querySelector('input[name$=".levels"]');
+    const fieldset = levelsInput?.closest("fieldset");
+    if ( !fieldset ) return;
+
+    this.#renderLevelConditionRows(fieldset, levelsInput.value);
+    levelsInput.addEventListener("change", () => this.#renderLevelConditionRows(fieldset, levelsInput.value));
+  }
+
+  /* -------------------------------------------- */
+
+  /**
+   * Render a conditions multi-select per level as direct children of the Levels fieldset,
+   * preserving current selections for levels that remain.
+   * @param {HTMLElement} fieldset
+   * @param {number|string} levels
+   */
+  #renderLevelConditionRows(fieldset, levels) {
+    levels = Math.min(Number(levels) || 0, this.constructor.MAX_LEVEL_ROWS);
+    const stored = this._getItemsData()?.[this.key]?.conditions ?? {};
+    const choices = this._getSelects()?.riders ?? {};
+    const rowClass = "custom-dnd5e-level-condition";
+
+    // Preserve the current selections before rebuilding the rows
+    const current = {};
+    fieldset.querySelectorAll(`.${rowClass} multi-select`).forEach(multiSelect => {
+      const level = multiSelect.getAttribute("name")?.split(".").pop();
+      if ( level ) current[level] = multiSelect.value;
+    });
+    fieldset.querySelectorAll(`.${rowClass}`).forEach(row => row.remove());
+
+    for ( let level = 1; level <= levels; level++ ) {
+      const selected = current[level] ?? stored[level] ?? [];
+      const options = Object.entries(choices).map(([id, name]) =>
+        `<option value="${id}"${selected.includes(id) ? " selected" : ""}>${game.i18n.localize(name)}</option>`
+      ).join("");
+
+      const group = document.createElement("div");
+      group.classList.add("form-group", rowClass);
+      group.innerHTML = `
+        <label class="${this.constructor.LABEL_CLASS}">
+            ${game.i18n.format("CUSTOM_DND5E.form.conditions.conditionsAtLevel", { level })}
+        </label>
+        <div class="form-fields">
+            <multi-select name="${this.key}.conditions.${level}">${options}</multi-select>
+        </div>`;
+      fieldset.appendChild(group);
+    }
   }
 
 }
@@ -447,7 +538,9 @@ export function setConfig(data) {
         config.conditionTypes[key] = {
           img: value?.img ?? value?.icon ?? "icons/svg/hazard.svg",
           name: localisedName,
+          ...(value.conditions !== undefined && { conditions: value.conditions }),
           ...(value.levels && { levels: value.levels }),
+          ...(value.neverBlockMovement && { neverBlockMovement: value.neverBlockMovement }),
           ...(value.pseudo && { pseudo: value.pseudo }),
           ...(value.reduction !== undefined && { reduction: value.reduction }),
           ...(value.reference !== undefined && { reference: value.reference }),
@@ -473,6 +566,11 @@ export function setConfig(data) {
         ...(value.riders !== undefined && { riders: value.riders }),
         ...(value.statuses !== undefined && { statuses: value.statuses })
       });
+
+      if ( CONFIG.DND5E.neverBlockStatuses ) {
+        if ( value.neverBlockMovement ) CONFIG.DND5E.neverBlockStatuses.add(key);
+        else CONFIG.DND5E.neverBlockStatuses.delete(key);
+      }
     });
 
   // Apply the config to CONFIG.DND5E
@@ -485,4 +583,6 @@ export function setConfig(data) {
       configType[property] = config[property];
     }
   });
+
+  Hooks.callAll("customDnd5e.conditionsConfigApplied", config);
 }

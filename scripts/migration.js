@@ -64,6 +64,7 @@ export async function migrate() {
   if ( shouldRun("5.5.0") ) isSuccess &&= await migrateStaleSystemLabels();
   if ( shouldRun("5.5.0") ) isSuccess &&= await migrateConditionEffects();
   if ( shouldRun("5.5.0") ) isSuccess &&= await migrateActivitiesClearTargets();
+  if ( shouldRun("5.5.0") ) isSuccess &&= await migrateConditionLevels();
 
   if ( isSuccess ) {
     await setSetting(constants.VERSION.SETTING.KEY, moduleVersion);
@@ -1022,6 +1023,53 @@ export async function migrateActivitiesClearTargets() {
 /* -------------------------------------------- */
 
 /**
+ * Move condition levels from the module's `conditionLevel` flag to the D&D 5e system's native
+ * leveled conditions introduced in dnd5e 6.0.0.
+ * @returns {Promise<boolean>} Whether the migration was successful
+ */
+export async function migrateConditionLevels() {
+  try {
+    Logger.debug("Migrating condition levels...");
+
+    const migrateActorEffects = async actor => {
+      for ( const effect of Array.from(actor?.effects ?? []) ) {
+        const level = effect.getFlag(MODULE.ID, "conditionLevel");
+        if ( level === undefined ) continue;
+
+        const statusId = [...(effect.statuses ?? [])][0];
+        if ( !statusId ) {
+          await effect.unsetFlag(MODULE.ID, "conditionLevel");
+          continue;
+        }
+
+        await effect.delete();
+        const isLeveled = Number.isFinite(CONFIG.DND5E.conditionTypes[statusId]?.levels);
+        await actor.toggleStatusEffect(statusId, isLeveled
+          ? { levels: Number(level) || 1 }
+          : { active: true });
+      }
+    };
+
+    for ( const actor of game.actors ?? [] ) {
+      await migrateActorEffects(actor);
+    }
+    for ( const scene of game.scenes ?? [] ) {
+      for ( const token of scene.tokens ) {
+        if ( !token.actorLink && token.actor ) await migrateActorEffects(token.actor);
+      }
+    }
+
+    Logger.debug("Condition levels migrated.");
+    return true;
+  } catch (err) {
+    Logger.error(`Failed to migrate condition levels: ${err.message}`);
+    return false;
+  }
+}
+
+/* -------------------------------------------- */
+
+/**
  * All migration functions, exposed for testing via the module API.
  */
 export const migrations = {
@@ -1030,6 +1078,7 @@ export const migrations = {
   migrateArmorCalculations,
   migrateBloodiedThreshold,
   migrateConditionEffects,
+  migrateConditionLevels,
   migrateConditions,
   migrateAwardInspirationRollType,
   migrateCustomSensesToNamespace,

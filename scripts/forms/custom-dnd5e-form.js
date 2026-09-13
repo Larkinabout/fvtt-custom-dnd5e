@@ -819,17 +819,26 @@ export class CustomDnd5eForm extends HandlebarsApplicationMixin(ApplicationV2) {
     const processedFormData = {};
     const settingData = setting ? foundry.utils.deepClone(setting) : null;
 
+    // Replace original keys with new keys
+    const renameKeyParts = key => key.split(".").map(part => changedKeys[part] ?? part);
+
+    // Property paths the form manages via its own inputs. When initialising an entry from the
+    // stored setting, object-valued properties under a form-managed path are excluded so that
+    // nested child entries deleted in the form are not resurrected, while plain data objects
+    // without inputs are preserved.
+    const formManagedPaths = new Set();
+    if ( settingData ) {
+      for ( const key of Object.keys(formData.object) ) {
+        const keyParts = renameKeyParts(key);
+        for ( let i = 1; i < keyParts.length; i++ ) {
+          formManagedPaths.add(keyParts.slice(0, i).join("."));
+        }
+      }
+    }
+
     // Helper function to set properties
     const setProperty = ([key, value]) => {
-      const keyParts = key.split(".");
-
-      // Replace original key with new key
-      keyParts.forEach((part, index) => {
-        if ( changedKeys[part] ) {
-          keyParts[index] = changedKeys[part];
-        }
-      });
-
+      const keyParts = renameKeyParts(key);
       const lastProperty = keyParts.pop();
       const propertyPath = keyParts.join(".");
 
@@ -841,12 +850,14 @@ export class CustomDnd5eForm extends HandlebarsApplicationMixin(ApplicationV2) {
         if ( value ) return; // Don't set the 'system' value if it is true
       }
 
-      // If setting passed, initialise property with setting data (excluding nested objects)
+      // If setting passed, initialise property with setting data, excluding form-managed nested objects
       if ( settingData ) {
         const existingData = foundry.utils.getProperty(settingData, propertyPath);
         if ( !foundry.utils.getProperty(processedFormData, propertyPath) && typeof existingData === "object" ) {
           const shallowData = Object.fromEntries(
-            Object.entries(existingData).filter(([_, v]) => typeof v !== "object" || v === null || Array.isArray(v))
+            Object.entries(existingData).filter(([k, v]) =>
+              typeof v !== "object" || v === null || Array.isArray(v)
+              || !formManagedPaths.has(`${propertyPath}.${k}`))
           );
           foundry.utils.setProperty(processedFormData, propertyPath, shallowData);
         }
