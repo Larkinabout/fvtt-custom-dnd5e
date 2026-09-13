@@ -1,9 +1,13 @@
 import { MODULE } from "../constants.js";
 import { Logger } from "../utils.js";
 import * as Highlight from "../canvas/highlight.js";
+import { addCursorLabelIcon, setCursorLabelIcon, setCursorLabelPosition } from "../interface/cursor-label.js";
 import { applyBypassedMoves } from "./activities.js";
 
 const HIGHLIGHT_LAYER_NAME = "custom-dnd5e-move";
+const PATH_HIGHLIGHT_LAYER_NAME = "custom-dnd5e-move-path";
+const MOVE_ICON_ID = "custom-dnd5e-cursor-label-move";
+const MOVE_ICON_HTML = '<i class="fa-solid fa-arrows-up-down-left-right"></i>';
 
 /**
  * Canvas interaction mode for forced movement.
@@ -30,6 +34,7 @@ export class MoveCanvasMode {
     this.isTeleport = isTeleport;
     this.validPositions = [];
     this._resolve = null;
+    this._previewClone = null;
     this._onPointerDown = this._onPointerDown.bind(this);
     this._onPointerMove = this._onPointerMove.bind(this);
     this._onKeyDown = this._onKeyDown.bind(this);
@@ -112,11 +117,13 @@ export class MoveCanvasMode {
   /* -------------------------------------------- */
 
   /**
-   * Clean up highlights and listeners.
+   * Clean up highlights, listeners, and the hover indicator.
    */
   _cleanup() {
     canvas.interface.grid.destroyHighlightLayer(HIGHLIGHT_LAYER_NAME);
+    canvas.interface.grid.destroyHighlightLayer(PATH_HIGHLIGHT_LAYER_NAME);
     this._detachListeners();
+    this._clearHoverIndicator();
   }
 
   /* -------------------------------------------- */
@@ -175,7 +182,14 @@ export class MoveCanvasMode {
 
     const candidateOffsets = this._getCandidateOffsets(targetCenter, maxSteps);
 
+    // The target token cannot be moved onto a grid space occupied by the source token
+    const sourceOccupied = new Set(
+      this.sourceToken.document.getOccupiedGridSpaceOffsets().map(o => `${o.i},${o.j}`)
+    );
+
     for ( const candidateOffset of candidateOffsets ) {
+      if ( sourceOccupied.has(`${candidateOffset.i},${candidateOffset.j}`) ) continue;
+
       const candidateTopLeft = canvas.grid.getTopLeftPoint(candidateOffset);
       const candidateCenter = canvas.grid.getCenterPoint(candidateOffset);
 
@@ -269,16 +283,50 @@ export class MoveCanvasMode {
 
     const sourceDistToCandidate = this._measureDistance(sourceCenter, candidateCenter);
 
-    if ( this.direction === "push" ) {
-      return sourceDistToCandidate > sourceDistToTarget;
-    }
-    if ( this.direction === "pull" ) {
-      return sourceDistToCandidate < sourceDistToTarget;
-    }
     if ( this.direction === "pushOrPull" ) {
-      return sourceDistToCandidate !== sourceDistToTarget;
+      return this._checkDirectionalMove(
+        "push", sourceCenter, targetCenter, candidateCenter, sourceDistToTarget, sourceDistToCandidate
+      ) || this._checkDirectionalMove(
+        "pull", sourceCenter, targetCenter, candidateCenter, sourceDistToTarget, sourceDistToCandidate
+      );
     }
-    return true;
+    return this._checkDirectionalMove(
+      this.direction, sourceCenter, targetCenter, candidateCenter, sourceDistToTarget, sourceDistToCandidate
+    );
+  }
+
+  /* -------------------------------------------- */
+
+  /**
+   * Check whether a candidate position is a valid destination.
+   * @param {"push"|"pull"} direction
+   * @param {{ x: number, y: number }} sourceCenter
+   * @param {{ x: number, y: number }} targetCenter
+   * @param {{ x: number, y: number }} candidateCenter
+   * @param {number} sourceDistToTarget
+   * @param {number} sourceDistToCandidate
+   * @returns {boolean} Whether the candidate is a valid destination
+   */
+  _checkDirectionalMove(direction, sourceCenter, targetCenter, candidateCenter, sourceDistToTarget,
+    sourceDistToCandidate) {
+    if ( direction === "push" && (sourceDistToCandidate <= sourceDistToTarget) ) return false;
+    if ( direction === "pull" && (sourceDistToCandidate >= sourceDistToTarget) ) return false;
+
+    if ( (sourceCenter.x === targetCenter.x) && (sourceCenter.y === targetCenter.y) ) return true;
+
+    if ( direction === "pull" ) {
+      const alongLine = ((candidateCenter.x - sourceCenter.x) * (targetCenter.x - sourceCenter.x))
+        + ((candidateCenter.y - sourceCenter.y) * (targetCenter.y - sourceCenter.y));
+      if ( alongLine < 0 ) return false;
+    }
+
+    const Ray = foundry.canvas.geometry.Ray;
+    let lineAngle = new Ray(sourceCenter, targetCenter).angle;
+    if ( direction === "pull" ) lineAngle += Math.PI;
+    const moveAngle = new Ray(targetCenter, candidateCenter).angle;
+    const deviation = Math.abs(Math.normalizeRadians(moveAngle - lineAngle));
+    const maxDeviation = canvas.grid.isHexagonal ? (Math.PI / 3) : (Math.PI / 4);
+    return deviation <= (maxDeviation + 1e-6);
   }
 
   /* -------------------------------------------- */
@@ -308,7 +356,10 @@ export class MoveCanvasMode {
   _drawHighlights() {
     Highlight.addLayer(HIGHLIGHT_LAYER_NAME);
     if ( canvas.grid.type === CONST.GRID_TYPES.GRIDLESS ) this._drawGridlessHighlight();
-    else for ( const pos of this.validPositions ) Highlight.highlightCell(HIGHLIGHT_LAYER_NAME, pos);
+    else {
+      for ( const pos of this.validPositions ) Highlight.highlightCell(HIGHLIGHT_LAYER_NAME, pos);
+      Highlight.addLayer(PATH_HIGHLIGHT_LAYER_NAME);
+    }
   }
 
   /* -------------------------------------------- */
@@ -386,21 +437,17 @@ export class MoveCanvasMode {
   /* -------------------------------------------- */
 
   /**
-   * On a left-click, dispatch to the gridded or gridless click handler.
-   * Other mouse buttons are ignored (right-click is handled separately).
+   * On a left-click, complete the movement if the clicked point resolves to
+   * a valid destination. Other mouse buttons are ignored (right-click is
+   * handled separately).
    * @param {PIXI.FederatedPointerEvent} event The pointer event
    */
   _onPointerDown(event) {
     if ( event.button !== 0 ) return;
 
     const pos = event.getLocalPosition(canvas.stage);
-    const isGridless = canvas.grid.type === CONST.GRID_TYPES.GRIDLESS;
-
-    if ( isGridless ) {
-      this._handleGridlessClick(pos);
-    } else {
-      this._handleGridClick(pos);
-    }
+    const destination = this._getDestination(pos);
+    if ( destination ) this._completeMovement(destination.x, destination.y);
   }
 
   /* -------------------------------------------- */
@@ -416,12 +463,142 @@ export class MoveCanvasMode {
   /* -------------------------------------------- */
 
   /**
-   * Handle pointer move for edge-of-screen canvas panning.
-   * Delegates to Canvas's built-in edge pan handler.
-   * @param {PointerEvent} event The pointer event
+   * Handle pointer move: edge-of-screen canvas panning (via Canvas's built-in
+   * edge pan handler) and the valid-destination hover indicator.
+   * @param {PointerEvent} event
    */
   _onPointerMove(event) {
     canvas._onDragCanvasPan(event);
+    this._updateHoverIndicator(event);
+  }
+
+  /* -------------------------------------------- */
+
+  /**
+   * Show a cursor label and pointer cursor while hovering over a point
+   * where a click would execute the movement.
+   * @param {PointerEvent} event
+   */
+  _updateHoverIndicator(event) {
+    let destination = null;
+    if ( event.target === canvas.app?.view ) {
+      const pos = canvas.canvasCoordinatesFromClient({ x: event.clientX, y: event.clientY });
+      destination = this._getDestination(pos);
+    }
+    if ( destination ) {
+      addCursorLabelIcon(MOVE_ICON_ID, MOVE_ICON_HTML);
+      setCursorLabelPosition(event.clientX, event.clientY);
+      this._drawHoverPath(destination);
+    } else {
+      this._clearHoverPath();
+      this._clearHoverPreview();
+    }
+    setCursorLabelIcon(MOVE_ICON_ID, !!destination);
+    this._setCanvasCursor(destination ? "pointer" : "");
+  }
+
+  /* -------------------------------------------- */
+
+  /**
+   * Show the path from the target token to the hovered destination.
+   * @param {{ x: number, y: number }} destination Destination top-left point
+   */
+  _drawHoverPath(destination) {
+    const ruler = canvas.controls?.ruler;
+    if ( !ruler ) return;
+
+    const isGridless = canvas.grid.type === CONST.GRID_TYPES.GRIDLESS;
+    const from = isGridless ? this.targetToken.center : this._getSnappedCenter(this.targetToken);
+    const to = {
+      x: destination.x + (this.targetToken.w / 2),
+      y: destination.y + (this.targetToken.h / 2)
+    };
+    const elevation = this.targetToken.document.elevation ?? 0;
+
+    ruler.path = [{ x: from.x, y: from.y, elevation }, { x: to.x, y: to.y, elevation }];
+
+    // Highlight the grid spaces the movement would pass through.
+    if ( !isGridless ) {
+      canvas.interface.grid.clearHighlightLayer(PATH_HIGHLIGHT_LAYER_NAME);
+      const color = game.user.color;
+      for ( const offset of canvas.grid.getDirectPath([from, to]) ) {
+        Highlight.highlightCell(PATH_HIGHLIGHT_LAYER_NAME, offset, {
+          fill: color, fillAlpha: 0.5, border: null
+        });
+      }
+    }
+
+    this._drawHoverPreview(destination);
+  }
+
+  /* -------------------------------------------- */
+
+  /**
+   * Show a faded preview clone of the target token at the hovered destination.
+   * @param {{ x: number, y: number }} destination Destination top-left point
+   */
+  _drawHoverPreview(destination) {
+    if ( !this._previewClone ) {
+      const clone = this.targetToken.clone();
+      clone.document.updateSource({ alpha: this.targetToken.document.alpha * 0.5 });
+      clone.eventMode = "none";
+      clone.visible = false;
+      canvas.tokens.preview.addChild(clone);
+      clone.draw().then(c => {
+        if ( !c.destroyed ) c.visible = true;
+      });
+      this._previewClone = clone;
+    }
+
+    this._previewClone.document.x = destination.x;
+    this._previewClone.document.y = destination.y;
+    this._previewClone.renderFlags.set({ refreshPosition: true });
+  }
+
+  /* -------------------------------------------- */
+
+  /**
+   * Remove the hover preview clone.
+   */
+  _clearHoverPreview() {
+    if ( !this._previewClone ) return;
+    canvas.tokens.preview.removeChild(this._previewClone);
+    this._previewClone.destroy({ children: true });
+    this._previewClone = null;
+  }
+
+  /* -------------------------------------------- */
+
+  /**
+   * Clear the hover path from the ruler and the path highlight layer.
+   */
+  _clearHoverPath() {
+    canvas.controls?.ruler?.reset();
+    canvas.interface?.grid?.clearHighlightLayer?.(PATH_HIGHLIGHT_LAYER_NAME);
+  }
+
+  /* -------------------------------------------- */
+
+  /**
+   * Hide the hover cursor label, path line, and preview clone, and restore the
+   * default canvas cursor.
+   */
+  _clearHoverIndicator() {
+    setCursorLabelIcon(MOVE_ICON_ID, false);
+    this._setCanvasCursor("");
+    this._clearHoverPath();
+    this._clearHoverPreview();
+  }
+
+  /* -------------------------------------------- */
+
+  /**
+   * Set the cursor on the canvas DOM element.
+   * @param {string} value The CSS cursor value
+   */
+  _setCanvasCursor(value) {
+    const view = canvas?.app?.view;
+    if ( view ) view.style.cursor = value;
   }
 
   /* -------------------------------------------- */
@@ -436,49 +613,64 @@ export class MoveCanvasMode {
   }
 
   /* -------------------------------------------- */
-  /*  Click Handling                              */
+  /*  DESTINATION RESOLUTION                      */
   /* -------------------------------------------- */
 
   /**
-   * Snap the click to the clicked cell's top-left and complete the move
-   * if that cell is in the precomputed valid-positions set.
-   * @param {{ x: number, y: number }} pos The click position in canvas coordinates
+   * Resolve a canvas point to the destination the target token would move to,
+   * or null when the point is not a valid destination. Shared by the click
+   * handler and the hover indicator.
+   * @param {{ x: number, y: number }} pos
+   * @returns {{ x: number, y: number }|null} Destination top-left point, or null
    */
-  _handleGridClick(pos) {
+  _getDestination(pos) {
+    const isGridless = canvas.grid.type === CONST.GRID_TYPES.GRIDLESS;
+    return isGridless ? this._getGridlessDestination(pos) : this._getGridDestination(pos);
+  }
+
+  /* -------------------------------------------- */
+
+  /**
+   * Snap the point to its cell's top-left and return it when that cell is in
+   * the precomputed valid-positions set.
+   * @param {{ x: number, y: number }} pos
+   * @returns {{ x: number, y: number }|null} Destination top-left point, or null
+   */
+  _getGridDestination(pos) {
     const snapped = canvas.grid.getTopLeftPoint(canvas.grid.getOffset(pos));
-    const match = this.validPositions.find(p => p.x === snapped.x && p.y === snapped.y);
-    if ( match ) this._completeMovement(match.x, match.y);
+    return this.validPositions.find(p => p.x === snapped.x && p.y === snapped.y) ?? null;
   }
 
   /* -------------------------------------------- */
 
   /**
-   * Handle a click on a gridless canvas.
-   * For directional modes, projects the click onto the push/pull line.
+   * Resolve a point on a gridless canvas.
+   * For directional modes, projects the point onto the push/pull line.
    * For "any" direction, validates within the annulus.
-   * @param {{ x: number, y: number }} pos The click position in canvas coordinates
+   * @param {{ x: number, y: number }} pos
+   * @returns {{ x: number, y: number }|null} Destination top-left point, or null
    */
-  _handleGridlessClick(pos) {
+  _getGridlessDestination(pos) {
     if ( this.direction === "any" ) {
-      this._handleGridlessAnyClick(pos);
-    } else {
-      this._handleGridlessDirectionalClick(pos);
+      return this._getGridlessAnyDestination(pos);
     }
+    return this._getGridlessDirectionalDestination(pos);
   }
 
   /* -------------------------------------------- */
 
   /**
-   * Handle a gridless click for "any" direction (annulus validation).
-   * @param {{ x: number, y: number }} pos The click position in canvas coordinates
+   * Resolve a gridless point for "any" direction (annulus validation).
+   * @param {{ x: number, y: number }} pos
+   * @returns {{ x: number, y: number }|null} Destination top-left point, or null
    */
-  _handleGridlessAnyClick(pos) {
+  _getGridlessAnyDestination(pos) {
     const targetCenter = this.targetToken.center;
     const pixelsPerUnit = canvas.grid.size / canvas.scene.dimensions.distance;
     const tolerance = this._getGridlessTolerance();
 
     const distance = this._measureDistance(targetCenter, pos);
-    if ( distance < (this.distanceMin - tolerance) || distance > (this.distanceMax + tolerance) ) return;
+    if ( distance < (this.distanceMin - tolerance) || distance > (this.distanceMax + tolerance) ) return null;
 
     // Clamp to min/max if within tolerance but outside actual range
     let clampedPos = pos;
@@ -497,20 +689,21 @@ export class MoveCanvasMode {
       }
     }
 
-    if ( !this.isTeleport && this._checkWallCollision(targetCenter, clampedPos) ) return;
+    if ( !this.isTeleport && this._checkWallCollision(targetCenter, clampedPos) ) return null;
+    if ( this._overlapsSourceToken(clampedPos) ) return null;
 
-    const topLeft = this._centerToTopLeft(clampedPos);
-    this._completeMovement(topLeft.x, topLeft.y);
+    return this._centerToTopLeft(clampedPos);
   }
 
   /* -------------------------------------------- */
 
   /**
-   * Handle a gridless click for directional modes (line projection).
-   * Projects the click onto the push/pull line from the target through/toward the source.
-   * @param {{ x: number, y: number }} pos The click position in canvas coordinates
+   * Resolve a gridless point for directional modes (line projection).
+   * Projects the point onto the push/pull line from the target through/toward the source.
+   * @param {{ x: number, y: number }} pos
+   * @returns {{ x: number, y: number }|null} Destination top-left point, or null
    */
-  _handleGridlessDirectionalClick(pos) {
+  _getGridlessDirectionalDestination(pos) {
     const targetCenter = this.targetToken.center;
     const sourceCenter = this.sourceToken.center;
     const pixelsPerUnit = canvas.grid.size / canvas.scene.dimensions.distance;
@@ -520,7 +713,7 @@ export class MoveCanvasMode {
     const dx = sourceCenter.x - targetCenter.x;
     const dy = sourceCenter.y - targetCenter.y;
     const sourceDist = Math.sqrt((dx * dx) + (dy * dy));
-    if ( sourceDist <= 0 ) return;
+    if ( sourceDist <= 0 ) return null;
 
     // Build direction(s) to test
     const directions = [];
@@ -555,11 +748,26 @@ export class MoveCanvasMode {
       };
 
       if ( !this.isTeleport && this._checkWallCollision(targetCenter, clampedPos) ) continue;
+      if ( this._overlapsSourceToken(clampedPos) ) continue;
 
-      const topLeft = this._centerToTopLeft(clampedPos);
-      this._completeMovement(topLeft.x, topLeft.y);
-      return;
+      return this._centerToTopLeft(clampedPos);
     }
+
+    return null;
+  }
+
+  /* -------------------------------------------- */
+
+  /**
+   * Whether the target token would overlap the source token.
+   * @param {{ x: number, y: number }} center
+   * @returns {boolean} Whether the moved target token would overlap the source token
+   */
+  _overlapsSourceToken(center) {
+    const topLeft = this._centerToTopLeft(center);
+    const source = this.sourceToken;
+    return (topLeft.x < source.x + source.w) && (topLeft.x + this.targetToken.w > source.x)
+      && (topLeft.y < source.y + source.h) && (topLeft.y + this.targetToken.h > source.y);
   }
 
   /* -------------------------------------------- */
@@ -569,8 +777,8 @@ export class MoveCanvasMode {
   /**
    * Move the target token. Apply the update directly if the user has
    * permission; otherwise relay to an active GM via socket.
-   * @param {number} x The x coordinate (top-left)
-   * @param {number} y The y coordinate (top-left)
+   * @param {number} x
+   * @param {number} y
    */
   _executeMovement(x, y) {
     const tokenDoc = this.targetToken.document;
