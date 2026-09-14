@@ -34,6 +34,17 @@
                         </select>
                     </div>
                 </div>
+                {{#if isItemCounter}}
+                <div class="form-group">
+                    <label>{{localize "CUSTOM_DND5E.form.counters.displayOnActorSheet.label"}}</label>
+                    <div class="form-fields">
+                        <select id="custom-dnd5e-display-on-actor-sheet" name="{{key}}.displayOnActorSheet">
+                            {{selectOptions selects.displayOnActorSheet.choices selected=displayOnActorSheet localize=true}}
+                        </select>
+                    </div>
+                    <p class="hint">{{localize "CUSTOM_DND5E.form.counters.displayOnActorSheet.hint"}}</p>
+                </div>
+                {{/if}}
                 {{#if isActorCounter}}{{#unless isEntity}}
                 <div class="form-group">
                     <label>{{localize "CUSTOM_DND5E.form.workflows.actorTypes.label"}}</label>

@@ -136,7 +136,9 @@ async function addCounters(app, html, data) {
   if ( !sheetType ) return;
 
   const entity = sheetType.item ? app : app.actor;
-  const counters = mergeCounters(entity, sheetType.countersSetting);
+  const counters = (sheetType.character || sheetType.npc)
+    ? getActorSheetCounters(app.actor, sheetType.countersSetting)
+    : mergeCounters(entity, sheetType.countersSetting);
 
   if ( !data?.editable && checkEmpty(counters) ) return;
 
@@ -160,11 +162,45 @@ async function addCounters(app, html, data) {
  */
 function addItemCounters(app, html, data) {
   if ( !getSetting(constants.SETTING.COUNTERS.KEY) ) return;
+  adjustItemSheetWidth(app, html);
   const container = html.querySelector("#custom-dnd5e-counters");
   if ( !container ) return;
   const settingKey = CONSTANTS.COUNTERS.SETTING.ITEM_COUNTERS.KEY;
   const counters = mergeCounters(app.document, settingKey);
   setupCounterInteractions(app.document, counters, container, app.isEditable);
+}
+
+/* -------------------------------------------- */
+
+/**
+ * The number of tabs the item sheet's default width supports.
+ * @type {number}
+ */
+const ITEM_SHEET_BASE_TAB_COUNT = 5;
+
+/* -------------------------------------------- */
+
+/**
+ * Widen the item sheet when the Counters tab pushes the tab navigation beyond the number of
+ * tabs the default sheet width supports.
+ * @param {ApplicationV2} app
+ * @param {HTMLElement} html
+ */
+function adjustItemSheetWidth(app, html) {
+  if ( app.customDnd5eWidthAdjusted ) return;
+
+  const nav = html.querySelector("nav.sheet-tabs:not(.nested-tabs)");
+  if ( !nav ) return;
+
+  const base = app.options?.position?.width ?? 500;
+  const extra = nav.querySelectorAll("[data-tab]").length - ITEM_SHEET_BASE_TAB_COUNT;
+  if ( extra <= 0 ) return;
+
+  const width = base + (extra * Math.round(base / ITEM_SHEET_BASE_TAB_COUNT));
+  if ( (app.position?.width ?? base) < width ) {
+    app.customDnd5eWidthAdjusted = true;
+    app.setPosition({ width });
+  }
 }
 
 /* -------------------------------------------- */
@@ -282,54 +318,90 @@ export function setupCounterInteractions(entity, counters, container, editable) 
   if ( entity.document ) entity = entity.document;
 
   Object.entries(counters).forEach(([key, counter]) => {
-    if ( !counter.canEdit ) return;
-
     const counterElement = container.querySelector(`[data-id="${key}"]`);
     if ( !counterElement ) return;
+
+    // Open the item sheet when the item icon is clicked
+    if ( counter.item ) {
+      counterElement.querySelector(".custom-dnd5e-counters-item-icon")
+        ?.addEventListener("click", () => counter.item.sheet.render(true));
+    }
+
+    if ( !counter.canEdit ) return;
+
+    const target = counter.item ?? entity;
     const links = counterElement.querySelectorAll(".custom-dnd5e-counters-link");
     const inputs = counterElement.querySelectorAll("input");
 
     switch (counter.type) {
       case "fraction":
-        links[0].addEventListener("click", () => increaseFraction(entity, counter.property));
-        links[0].addEventListener("contextmenu", () => decreaseFraction(entity, counter.property));
+        links[0].addEventListener("click", () => increaseFraction(target, counter.property));
+        links[0].addEventListener("contextmenu", () => decreaseFraction(target, counter.property));
         inputs.forEach(input => {
           input.addEventListener("click", selectInputContent);
           if ( input.dataset?.input === "value" ) {
-            input.addEventListener("keyup", () => checkValue(input, entity, counter.property), true);
+            input.addEventListener("keyup", () => checkValue(input, target, counter.property), true);
           }
         });
         break;
       case "number":
-        links[0].addEventListener("click", () => { increaseNumber(entity, counter.property); });
-        links[0].addEventListener("contextmenu", () => decreaseNumber(entity, counter.property));
+        links[0].addEventListener("click", () => { increaseNumber(target, counter.property); });
+        links[0].addEventListener("contextmenu", () => decreaseNumber(target, counter.property));
         inputs.forEach(input => {
           input.addEventListener("click", selectInputContent);
           if ( input.dataset?.input === "value" ) {
-            input.addEventListener("keyup", () => checkValue(input, entity, key), true);
+            input.addEventListener("keyup", () => checkValue(input, target, counter.property), true);
           }
         });
         break;
       case "pips":
         counterElement.querySelectorAll(".pip").forEach(pip => {
-          pip.addEventListener("click", () => togglePip(entity, counter.property, Number(pip.dataset.n)));
+          pip.addEventListener("click", () => togglePip(target, counter.property, Number(pip.dataset.n)));
         });
         break;
       case "successFailure":
         links.forEach(link => {
           if ( link.dataset?.input === "success" ) {
-            link.addEventListener("click", () => increaseSuccess(entity, counter.property));
-            link.addEventListener("contextmenu", () => decreaseSuccess(entity, counter.property));
+            link.addEventListener("click", () => increaseSuccess(target, counter.property));
+            link.addEventListener("contextmenu", () => decreaseSuccess(target, counter.property));
           } else if ( link.dataset?.input === "failure" ) {
-            link.addEventListener("click", () => increaseFailure(entity, counter.property));
-            link.addEventListener("contextmenu", () => decreaseFailure(entity, counter.property));
+            link.addEventListener("click", () => increaseFailure(target, counter.property));
+            link.addEventListener("contextmenu", () => decreaseFailure(target, counter.property));
           }
         });
         inputs.forEach(input => {
           input.addEventListener("click", selectInputContent);
         });
     }
+
+    // Item counter inputs are not part of the actor sheet's form, so persist changes to the item
+    if ( counter.item ) bindItemCounterInputs(counter.item, counter, counterElement);
   });
+}
+
+/* -------------------------------------------- */
+
+/**
+ * Persist input changes on an item counter displayed on the actor sheet directly to the item.
+ * @param {Item} item
+ * @param {object} counter
+ * @param {HTMLElement} counterElement
+ */
+function bindItemCounterInputs(item, counter, counterElement) {
+  const base = counter.property.endsWith(".value") ? counter.property.slice(0, -6) : counter.property;
+
+  counterElement.querySelectorAll("input[data-input]").forEach(input => {
+    input.addEventListener("change", () => {
+      item.setFlag(MODULE.ID, `${base}.${input.dataset.input}`, Number(input.value) || 0);
+    });
+  });
+
+  if ( counter.type === "checkbox" ) {
+    const checkbox = counterElement.querySelector("dnd5e-checkbox");
+    checkbox?.addEventListener("change", () => {
+      item.setFlag(MODULE.ID, `${base}.value`, checkbox.checked);
+    });
+  }
 }
 
 /* -------------------------------------------- */
@@ -472,6 +544,37 @@ export function getSuccessFailureValue(data, counterKey, property) {
 
 /* -------------------------------------------- */
 /*  COUNTER PROCESSING                          */
+/* -------------------------------------------- */
+
+/**
+ * Get the counters to display on an actor sheet: the actor's own counters plus any counters
+ * on the actor's items that are set to display on the actor sheet.
+ * @param {Actor} actor
+ * @param {string} settingKey
+ * @returns {object} Counters
+ */
+export function getActorSheetCounters(actor, settingKey) {
+  if ( actor?.document ) actor = actor.document;
+  const counters = mergeCounters(actor, settingKey);
+  if ( !["character", "npc"].includes(actor?.type) ) return counters;
+
+  for ( const item of actor.items ) {
+    const itemCounters = mergeCounters(item, constants.SETTING.ITEM_COUNTERS.KEY);
+    for ( const [key, counter] of Object.entries(itemCounters) ) {
+      const display = counter.displayOnActorSheet ?? "never";
+      if ( display === "never" ) continue;
+      if ( display === "equipped" && !item.system.equipped ) continue;
+      counter.item = item;
+      counter.itemName = item.name;
+      counter.itemImg = item.img;
+      counter.isItemCounter = true;
+      counters[`item-${item.id}-${key}`] = counter;
+    }
+  }
+
+  return counters;
+}
+
 /* -------------------------------------------- */
 
 /**

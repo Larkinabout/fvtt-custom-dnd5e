@@ -75,6 +75,13 @@ export class CountersEditForm extends CustomDnd5eForm {
 
   #getSelects() {
     return {
+      displayOnActorSheet: {
+        choices: {
+          never: "CUSTOM_DND5E.never",
+          always: "CUSTOM_DND5E.always",
+          equipped: "CUSTOM_DND5E.whenEquipped"
+        }
+      },
       type: {
         choices: {
           checkbox: "CUSTOM_DND5E.checkbox",
@@ -145,7 +152,9 @@ export class CountersEditForm extends CustomDnd5eForm {
       type,
       workflows,
       selects: this.#getSelects(),
+      displayOnActorSheet: counterData?.displayOnActorSheet || "never",
       isActorCounter: this.actorType === "actor",
+      isItemCounter: this.actorType === "item",
       isEntity: !!this.entity,
       actorTypes: {
         character: counterData?.actorTypes ? counterData.actorTypes.includes("character") : true,

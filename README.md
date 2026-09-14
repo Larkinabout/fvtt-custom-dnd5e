@@ -282,7 +282,7 @@ Add counters to character sheets with four types: checkbox, fraction, number and
 
 ![Custom D&D 5e Counters](./.github/readme/custom-dnd5e-counters.gif)
 
-Set triggers to automatically change counter values based on HP thresholds, combat events, or item attack rolls. Triggers can execute macros with custom operators. Counter actions include increasing or decreasing values, destroying items, and reducing item quantities. Counters can also be added to items and group actor sheets, and are compatible with Tidy5e character sheets.
+Set triggers to automatically change counter values based on HP thresholds, combat events, or item attack rolls. Triggers can execute macros with custom operators. Counter actions include increasing or decreasing values, destroying items, and reducing item quantities. Counters can also be added to items and group actor sheets, and are compatible with Tidy5e character sheets. Item counters can optionally be displayed on the owning actor's sheet, always or only while the item is equipped.
 
 <details>
     <summary>See Video</summary>
