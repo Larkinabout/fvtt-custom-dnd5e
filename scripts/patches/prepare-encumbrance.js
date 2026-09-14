@@ -22,9 +22,13 @@ async function prepareEncumbrancePatch(rollData, { validateItem } = {}) {
   const convertWeight = dnd5e.utils.convertWeight;
   const simplifyBonus = dnd5e.utils.simplifyBonus;
 
-  const equippedMod = (this.parent?.type === "character") ? getSetting(configs.encumbrance.EQUIPPED_ITEM_WEIGHT_MODIFIER.SETTING.KEY) || 0 : 1;
-  const proficientEquippedMod = (this.parent?.type === "character") ? getSetting(configs.encumbrance.PROFICIENT_EQUIPPED_ITEM_WEIGHT_MODIFIER.SETTING.KEY) || 0 : 1;
-  const unequippedMod = (this.parent?.type === "character") ? getSetting(configs.encumbrance.UNEQUIPPED_ITEM_WEIGHT_MODIFIER.SETTING.KEY) || 0 : 1;
+  const useWeightModifiers = ["character", "npc"].includes(this.parent?.type);
+  const equippedMod = useWeightModifiers
+    ? getSetting(configs.encumbrance.EQUIPPED_ITEM_WEIGHT_MODIFIER.SETTING.KEY) || 0 : 1;
+  const proficientEquippedMod = useWeightModifiers
+    ? getSetting(configs.encumbrance.PROFICIENT_EQUIPPED_ITEM_WEIGHT_MODIFIER.SETTING.KEY) || 0 : 1;
+  const unequippedMod = useWeightModifiers
+    ? getSetting(configs.encumbrance.UNEQUIPPED_ITEM_WEIGHT_MODIFIER.SETTING.KEY) || 0 : 1;
 
   const config = CONFIG.DND5E.encumbrance;
   const encumbrance = this.attributes.encumbrance ??= {};
