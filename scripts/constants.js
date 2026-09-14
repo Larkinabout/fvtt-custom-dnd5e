@@ -149,6 +149,9 @@ export const CONSTANTS = {
       APPLY_INSTANT_DEATH: {
         KEY: "apply-instant-death"
       },
+      NEGATIVE_HP_DEATH_THRESHOLD: {
+        KEY: "negative-hp-death-threshold"
+      },
       DEAD_ROTATION: {
         KEY: "dead-rotation"
       },

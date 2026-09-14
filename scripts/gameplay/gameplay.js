@@ -15,6 +15,7 @@ import {
   hasNegativeHp,
   registerMenu,
   registerSetting,
+  resolveFormula,
   makeDead,
   unmakeDead,
   makeUnconscious,
@@ -134,6 +135,16 @@ function registerSettings() {
       config: false,
       type: Boolean,
       default: false
+    }
+  );
+
+  registerSetting(
+    CONSTANTS.DEAD.SETTING.NEGATIVE_HP_DEATH_THRESHOLD.KEY,
+    {
+      scope: "world",
+      config: false,
+      type: String,
+      default: ""
     }
   );
 
@@ -330,7 +341,8 @@ function registerHooks() {
   Hooks.on("dnd5e.preApplyDamage", (actor, amount, updates, options) => {
     if ( options.isDelta === false ) _skipHealFromZero = true;
     recalculateDamage(actor, amount, updates, options);
-    const instantDeath = applyInstantDeath(actor, updates);
+    const instantDeath = applyInstantDeath(actor, updates)
+      || applyDeathOnNegativeHpThreshold(actor, updates);
     updateHp(actor, updates);
     if ( !instantDeath ) {
       const dead = updateDead(actor, updates);
@@ -1003,6 +1015,48 @@ function applyInstantDeath(actor, updates) {
   }
 
   Logger.debug("Instant Death updated...");
+
+  return false;
+}
+
+/* -------------------------------------------- */
+
+/**
+ * Triggered by the 'dnd5e.preApplyDamage' hook.
+ * If a Negative HP Death Threshold is set, apply the Dead status effect when a character's
+ * HP drops to or below the negative of the resolved threshold.
+ * @param {object} actor
+ * @param {object} updates
+ * @returns {boolean} Whether death is applied
+ */
+function applyDeathOnNegativeHpThreshold(actor, updates) {
+  if ( actor.type !== "character" ) return false;
+  const formula = getSetting(CONSTANTS.DEAD.SETTING.NEGATIVE_HP_DEATH_THRESHOLD.KEY);
+  if ( !formula || !hasNegativeHp(actor) ) return false;
+
+  Logger.debug("Updating Negative HP Death Threshold...");
+
+  const currentHp = foundry.utils.getProperty(updates, "system.attributes.hp.value");
+  if ( typeof currentHp !== "number" || currentHp >= 0 ) return false;
+
+  const threshold = resolveFormula(actor, formula);
+  if ( !threshold || threshold <= 0 ) return false;
+
+  const previousHp = actor?.system?.attributes?.hp?.value;
+  if ( typeof previousHp === "number" && previousHp <= -threshold ) return true;
+
+  if ( currentHp <= -threshold ) {
+    const tokenEffects = makeDead(actor, updates);
+    ChatMessage.create({
+      content: game.i18n.format("CUSTOM_DND5E.message.negativeHpDeath", { name: actor.name })
+    });
+
+    configs.bloodied.updateBloodied(actor, updates, true);
+
+    return tokenEffects;
+  }
+
+  Logger.debug("Negative HP Death Threshold updated...");
 
   return false;
 }

@@ -33,6 +33,17 @@
                 <p class="hint">{{localize "CUSTOM_DND5E.form.gameplay.dead.applyInstantDeath.note"}}</p>
             </div>
             <div class="form-group">
+                <label>{{localize "CUSTOM_DND5E.form.gameplay.dead.negativeHpDeathThreshold.label"}}</label>
+                <div class="form-fields">
+                    <input
+                        id="custom-dnd5e-negative-hp-death-threshold"
+                        name="negativeHpDeathThreshold"
+                        type="text"
+                        value="{{negativeHpDeathThreshold}}">
+                </div>
+                <p class="hint">{{localize "CUSTOM_DND5E.form.gameplay.dead.negativeHpDeathThreshold.note"}}</p>
+            </div>
+            <div class="form-group">
                 <label>{{localize "CUSTOM_DND5E.rotation"}}</label>
                 <div class="form-fields">
                     <input id="custom-dnd5e-dead-rotation" name="deadRotation" type="number" value="{{deadRotation}}"> 
