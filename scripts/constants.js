@@ -219,8 +219,14 @@ export const CONSTANTS = {
       MASSIVE_DAMAGE_ANIMATION: {
         KEY: "massive-damage-animation"
       },
+      MASSIVE_DAMAGE_DC: {
+        KEY: "massive-damage-dc"
+      },
       MASSIVE_DAMAGE_TABLE: {
         KEY: "massive-damage-table"
+      },
+      MASSIVE_DAMAGE_THRESHOLD: {
+        KEY: "massive-damage-threshold"
       },
       APPLY_NEGATIVE_HP: {
         KEY: "apply-negative-hp"
@@ -477,11 +483,6 @@ export const CONSTANTS = {
       NAME: "CUSTOM_DND5E.setting.maxLevel.name"
     },
     UUID: "Compendium.custom-dnd5e.custom-dnd5e-journals.JournalEntry.B48iqFBddUikMMer.JournalEntryPage.4h10hYx01hjbUQL6"
-  },
-  MESSAGE: {
-    TEMPLATE: {
-      ROLL_REQUEST_CARD: "modules/custom-dnd5e/templates/roll-request-card.hbs"
-    }
   },
   MIGRATION: {
     VERSION: {

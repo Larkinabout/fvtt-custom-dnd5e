@@ -7,8 +7,10 @@ import { animations } from "../animations.js";
 import {
   c5eLoadTemplates,
   Logger,
+  createSaveRequestMessage,
   getDefaultSetting,
   getFlag,
+  getSaveRequestMessage,
   getSetting,
   hasNegativeHp,
   registerMenu,
@@ -192,8 +194,28 @@ function registerSettings() {
     {
       scope: "world",
       config: false,
-      type: Boolean,
-      default: false
+      type: String,
+      default: "neither"
+    }
+  );
+
+  registerSetting(
+    CONSTANTS.HIT_POINTS.SETTING.MASSIVE_DAMAGE_THRESHOLD.KEY,
+    {
+      scope: "world",
+      config: false,
+      type: Number,
+      default: 50
+    }
+  );
+
+  registerSetting(
+    CONSTANTS.HIT_POINTS.SETTING.MASSIVE_DAMAGE_DC.KEY,
+    {
+      scope: "world",
+      config: false,
+      type: Number,
+      default: 15
     }
   );
 
@@ -989,14 +1011,17 @@ function applyInstantDeath(actor, updates) {
 
 /**
  * Triggered by the 'updateActor' hook and called by the 'recalculateDamage' function.
- * If the difference between the previous HP and the current HP is greater than or equal to half the max HP,
- * create a massive damage card.
+ * If the difference between the previous HP and the current HP is greater than or equal to
+ * the configured percentage of max HP, create a massive damage card.
  * @param {object} actor The actor
  * @param {object} updates The updates
  * @returns {boolean} Whether massive damage is applied
  */
 function applyMassiveDamage(actor, updates) {
-  if ( actor.type !== "character"|| !getSetting(CONSTANTS.HIT_POINTS.SETTING.APPLY_MASSIVE_DAMAGE.KEY) ) return false;
+  const applyMassiveDamage = getSetting(CONSTANTS.HIT_POINTS.SETTING.APPLY_MASSIVE_DAMAGE.KEY);
+  if ( !applyMassiveDamage || applyMassiveDamage === "neither" ) return false;
+  if ( !["character", "npc"].includes(actor.type) ) return false;
+  if ( applyMassiveDamage !== "both" && actor.type !== applyMassiveDamage ) return false;
 
   Logger.debug("Updating Massive Damage...");
 
@@ -1007,9 +1032,10 @@ function applyMassiveDamage(actor, updates) {
 
   const diffHp = previousHp - currentHp;
   const maxHp = actor?.system?.attributes?.hp?.effectiveMax ?? actor?.system?.attributes?.hp?.max ?? 0;
-  const halfMaxHp = Math.floor(maxHp / 2);
+  const threshold = getSetting(CONSTANTS.HIT_POINTS.SETTING.MASSIVE_DAMAGE_THRESHOLD.KEY) ?? 50;
+  const thresholdHp = Math.floor(maxHp * (threshold / 100));
 
-  if ( diffHp >= halfMaxHp ) {
+  if ( thresholdHp > 0 && diffHp >= thresholdHp ) {
     createMassiveDamageCard(actor, updates);
     Logger.debug("Massive Death updated", { massiveDamage: true });
     return true;
@@ -1064,8 +1090,18 @@ function playMassiveDamageAnimation(actor) {
 /* -------------------------------------------- */
 
 /**
+ * Get the DC for the massive damage saving throw.
+ * @returns {number} The DC
+ */
+function getMassiveDamageDc() {
+  return getSetting(CONSTANTS.HIT_POINTS.SETTING.MASSIVE_DAMAGE_DC.KEY) || 15;
+}
+
+/* -------------------------------------------- */
+
+/**
  * Triggered by the 'applyMassiveDamage' function.
- * Create a chat message with a button to make a CON save against a DC of 15.
+ * Create a request chat message with a button to make a CON save against the configured DC.
  * @param {object} actor The actor
  * @param {object} data The data
  * @returns {Promise<void>} The created chat message
@@ -1076,18 +1112,13 @@ async function createMassiveDamageCard(actor, data) {
     await actor.setFlag("custom-dnd5e", "pendingMassiveDamageSave", true);
   }
 
-  const dataset = { ability: "con", dc: "15", type: "save" };
-  let label = game.i18n.format("EDITOR.DND5E.Inline.DC", { dc: 15, check: game.i18n.localize(CONFIG.DND5E.abilities.con.label) });
-  label = game.i18n.format("EDITOR.DND5E.Inline.SaveLong", { save: label });
-  const content = await foundry.applications.handlebars.renderTemplate(CONSTANTS.MESSAGE.TEMPLATE.ROLL_REQUEST_CARD, {
-    buttonLabel: `<i class="fas fa-shield-heart"></i>${label}`,
-    hiddenLabel: `<i class="fas fa-shield-heart"></i>${label}`,
-    description: game.i18n.format("CUSTOM_DND5E.message.massiveDamage", { name: actor.name }),
-    dataset: { ...dataset, action: "rollRequest" }
+  return createSaveRequestMessage({
+    actor,
+    ability: "con",
+    dc: getMassiveDamageDc(),
+    content: game.i18n.format("CUSTOM_DND5E.message.massiveDamage", { name: actor.name }),
+    source: "massiveDamage"
   });
-  const speaker = ChatMessage.getSpeaker({ user: game.user });
-  const flags = { "custom-dnd5e": { source: "massiveDamage" } };
-  return await ChatMessage.create({ content, speaker, flags });
 }
 
 /* -------------------------------------------- */
@@ -1108,8 +1139,7 @@ async function handleMassiveDamageSaveResult(rolls, data) {
   Logger.debug("Massive Damage save rolled", { actor: actor.name, ability: data.ability });
 
   // Trace back from the save card to the originating request card
-  const requestCard = rolls[0]?.parent?.getOriginatingMessage()
-    ?? game.messages.get(rolls[0]?.options?.originatingMessage);
+  const requestCard = getSaveRequestMessage(rolls);
 
   if ( requestCard?.flags?.["custom-dnd5e"]?.source !== "massiveDamage" ) {
     Logger.debug("Massive Damage originating message check failed", {
@@ -1123,9 +1153,10 @@ async function handleMassiveDamageSaveResult(rolls, data) {
   // Clear the flag regardless of result
   await actor.unsetFlag("custom-dnd5e", "pendingMassiveDamageSave");
 
+  const dc = getMassiveDamageDc();
   const total = rolls[0]?.total;
-  if ( total === undefined || total >= 15 ) {
-    Logger.debug("Massive Damage save passed", { total });
+  if ( total === undefined || total >= dc ) {
+    Logger.debug("Massive Damage save passed", { total, dc });
     return;
   }
 

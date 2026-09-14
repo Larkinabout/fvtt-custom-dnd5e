@@ -1,7 +1,9 @@
 import { CONSTANTS } from "../constants.js";
 import { animations } from "../animations.js";
 import {
+  createSaveRequestMessage,
   getFlag,
+  getSaveRequestMessage,
   setFlag,
   unsetFlag,
   getSetting,
@@ -223,25 +225,13 @@ function getExhaustionDc(actor) {
 async function createExhaustionSaveCard(actor) {
   await actor.setFlag("custom-dnd5e", "pendingExhaustionSave", true);
 
-  const dc = getExhaustionDc(actor);
-  const dataset = { ability: "con", dc: String(dc), type: "save" };
-  let label = game.i18n.format("EDITOR.DND5E.Inline.DC", {
-    dc,
-    check: game.i18n.localize(CONFIG.DND5E.abilities.con.label)
+  return createSaveRequestMessage({
+    actor,
+    ability: "con",
+    dc: getExhaustionDc(actor),
+    content: game.i18n.format("CUSTOM_DND5E.message.exhaustionSave", { name: actor.name }),
+    source: "exhaustion"
   });
-  label = game.i18n.format("EDITOR.DND5E.Inline.SaveLong", { save: label });
-  const content = await foundry.applications.handlebars.renderTemplate(
-    CONSTANTS.MESSAGE.TEMPLATE.ROLL_REQUEST_CARD,
-    {
-      buttonLabel: `<i class="fas fa-shield-heart"></i>${label}`,
-      hiddenLabel: `<i class="fas fa-shield-heart"></i>${label}`,
-      description: game.i18n.format("CUSTOM_DND5E.message.exhaustionSave", { name: actor.name }),
-      dataset: { ...dataset, action: "rollRequest" }
-    }
-  );
-  const speaker = ChatMessage.getSpeaker({ user: game.user });
-  const flags = { "custom-dnd5e": { source: "exhaustion" } };
-  return await ChatMessage.create({ content, speaker, flags });
 }
 
 /* -------------------------------------------- */
@@ -258,8 +248,7 @@ async function handleExhaustionSaveResult(rolls, data) {
   if ( data.ability !== "con" ) return;
 
   // Trace back from the save card to the originating request card
-  const requestCard = rolls[0]?.parent?.getOriginatingMessage()
-    ?? game.messages.get(rolls[0]?.options?.originatingMessage);
+  const requestCard = getSaveRequestMessage(rolls);
 
   if ( requestCard?.flags?.["custom-dnd5e"]?.source !== "exhaustion" ) return;
 

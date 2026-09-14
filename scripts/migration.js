@@ -66,6 +66,7 @@ export async function migrate() {
   if ( shouldRun("5.5.0") ) isSuccess &&= await migrateActivitiesClearTargets();
   if ( shouldRun("5.5.0") ) isSuccess &&= await migrateConditionLevels();
   if ( shouldRun("5.5.0") ) isSuccess &&= await migrateApplyDead();
+  if ( shouldRun("5.5.0") ) isSuccess &&= await migrateApplyMassiveDamage();
 
   if ( isSuccess ) {
     await setSetting(constants.VERSION.SETTING.KEY, moduleVersion);
@@ -1092,11 +1093,34 @@ export async function migrateApplyDead() {
 /* -------------------------------------------- */
 
 /**
+ * Convert the 'Apply Massive Damage' checkbox to the actor-type choice.
+ * @returns {Promise<boolean>} Whether the migration was successful
+ */
+export async function migrateApplyMassiveDamage() {
+  try {
+    const value = getSetting(CONSTANTS.HIT_POINTS.SETTING.APPLY_MASSIVE_DAMAGE.KEY);
+    if ( ["neither", "character", "npc", "both"].includes(value) ) return true;
+
+    Logger.debug("Migrating apply massive damage...");
+    await setSetting(CONSTANTS.HIT_POINTS.SETTING.APPLY_MASSIVE_DAMAGE.KEY,
+      (value === true || value === "true") ? "character" : "neither");
+    Logger.debug("Apply massive damage migrated.");
+    return true;
+  } catch (err) {
+    Logger.error(`Failed to migrate apply massive damage: ${err.message}`);
+    return false;
+  }
+}
+
+/* -------------------------------------------- */
+
+/**
  * All migration functions, exposed for testing via the module API.
  */
 export const migrations = {
   migrateActivitiesClearTargets,
   migrateApplyDead,
+  migrateApplyMassiveDamage,
   migrateActorCounters,
   migrateArmorCalculations,
   migrateBloodiedThreshold,

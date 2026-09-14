@@ -216,7 +216,6 @@ Hooks.on("init", async () => {
     CONSTANTS.CONFIG.TEMPLATE.FIELD_MACRO_DROP,
     CONSTANTS.ACTOR_SHEET.TEMPLATE.CHARACTER_SHEET_2,
     CONSTANTS.ACTOR_SHEET.TEMPLATE.CHARACTER_DETAILS,
-    CONSTANTS.MESSAGE.TEMPLATE.ROLL_REQUEST_CARD,
     "modules/custom-dnd5e/templates/footer.hbs"
   ];
   c5eLoadTemplates(templates);

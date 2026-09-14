@@ -114,7 +114,7 @@ Apply the Unconscious status effect when a PC is reduced to zero HP.
 ### Hit Points
 
 #### Massive Damage
-Apply Massive Damage as per the variant rule (DMG pg. 273).
+Apply Massive Damage as per the variant rule (DMG pg. 273) to player characters, NPCs, or both, with a configurable damage threshold.
 
 <details>
     <summary>See Video</summary>

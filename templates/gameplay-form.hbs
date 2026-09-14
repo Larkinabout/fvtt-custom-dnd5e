@@ -251,12 +251,36 @@
             <div class="form-group">
                 <label>{{localize "CUSTOM_DND5E.form.gameplay.hitPoints.applyMassiveDamage.label"}}</label>
                 <div class="form-fields">
-                    <dnd5e-checkbox
-                        id="custom-dnd5e-apply-massive-damage"
-                        name="applyMassiveDamage"
-                        {{checked applyMassiveDamage}}></dnd5e-checkbox>
+                    <select id="custom-dnd5e-apply-massive-damage" name="applyMassiveDamage">
+                        {{selectOptions selects.applyMassiveDamage.choices selected=applyMassiveDamage localize=true}}
+                    </select>
                 </div>
                 <p class="hint">{{localize "CUSTOM_DND5E.form.gameplay.hitPoints.applyMassiveDamage.note"}}</p>
+            </div>
+            <div class="form-group">
+                <label>{{localize "CUSTOM_DND5E.threshold"}}</label>
+                <div class="form-fields">
+                    <range-picker
+                        id="custom-dnd5e-massive-damage-threshold"
+                        name="massiveDamageThreshold"
+                        value="{{massiveDamageThreshold}}"
+                        min="5"
+                        max="100"
+                        step="5"></range-picker>
+                </div>
+                <p class="hint">{{localize "CUSTOM_DND5E.form.gameplay.hitPoints.massiveDamageThreshold.note"}}</p>
+            </div>
+            <div class="form-group">
+                <label>{{localize "CUSTOM_DND5E.form.gameplay.hitPoints.massiveDamageDc.label"}}</label>
+                <div class="form-fields">
+                    <input
+                        id="custom-dnd5e-massive-damage-dc"
+                        name="massiveDamageDc"
+                        type="number"
+                        min="1"
+                        value="{{massiveDamageDc}}">
+                </div>
+                <p class="hint">{{localize "CUSTOM_DND5E.form.gameplay.hitPoints.massiveDamageDc.note"}}</p>
             </div>
             <div class="form-group">
                 <label>{{localize "CUSTOM_DND5E.form.gameplay.hitPoints.massiveDamageTable.label"}}</label>

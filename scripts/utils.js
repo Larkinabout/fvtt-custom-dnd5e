@@ -783,6 +783,58 @@ export async function unmakeDead(actor) {
 /* -------------------------------------------- */
 
 /**
+ * Create a D&D 5e request chat message prompting an actor to make a saving throw.
+ * Clicking the message's button rolls the save for the target actor and links the
+ * roll back to the request via the 'dnd5e.requestResult' flag.
+ * @param {object} options
+ * @param {object} options.actor
+ * @param {string} options.ability
+ * @param {number} options.dc Saving throw DC
+ * @param {string} options.content Message content
+ * @param {string} options.source Source flag for tracing the result
+ * @returns {Promise<ChatMessage>} Created chat message
+ */
+export async function createSaveRequestMessage({ actor, ability, dc, content, source }) {
+  let label = game.i18n.format("EDITOR.DND5E.Inline.DC", {
+    dc,
+    check: game.i18n.localize(CONFIG.DND5E.abilities[ability]?.label ?? ability)
+  });
+  label = game.i18n.format("EDITOR.DND5E.Inline.SaveLong", { save: label });
+
+  return ChatMessage.create({
+    content,
+    speaker: ChatMessage.getSpeaker({ user: game.user }),
+    system: {
+      button: {
+        icon: "fa-solid fa-shield-heart",
+        label
+      },
+      data: { ability, target: dc },
+      handler: "save",
+      targets: [{ actor: actor.uuid }]
+    },
+    type: "request",
+    flags: { [MODULE.ID]: { source } }
+  });
+}
+
+/* -------------------------------------------- */
+
+/**
+ * Get the request chat message that originated a rolled saving throw.
+ * @param {object[]} rolls Rolls from the 'dnd5e.rollSavingThrow' hook
+ * @returns {ChatMessage|undefined} Originating request message, if found
+ */
+export function getSaveRequestMessage(rolls) {
+  const rollMessage = rolls?.[0]?.parent;
+  return game.messages.get(rollMessage?.getFlag?.("dnd5e", "requestResult")?.requestId)
+    ?? rollMessage?.getOriginatingMessage?.()
+    ?? game.messages.get(rolls?.[0]?.options?.originatingMessage);
+}
+
+/* -------------------------------------------- */
+
+/**
  * If the 'Apply Status on 0 HP' setting is set, set the D&D 5e system's 'Auto-Apply Downed'
  * setting to 'Never' to avoid both the module and the system applying statuses on 0 HP.
  */

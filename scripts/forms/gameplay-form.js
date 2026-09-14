@@ -88,6 +88,8 @@ export class GameplayForm extends CustomDnd5eForm {
       exhaustionSavingThrowDcScaling: getSetting(CONSTANTS.EXHAUSTION.SETTING.EXHAUSTION_SAVING_THROW_DC_SCALING.KEY),
       exhaustionAnimation: getSetting(CONSTANTS.EXHAUSTION.SETTING.EXHAUSTION_ANIMATION.KEY),
       applyMassiveDamage: getSetting(CONSTANTS.HIT_POINTS.SETTING.APPLY_MASSIVE_DAMAGE.KEY),
+      massiveDamageThreshold: getSetting(CONSTANTS.HIT_POINTS.SETTING.MASSIVE_DAMAGE_THRESHOLD.KEY),
+      massiveDamageDc: getSetting(CONSTANTS.HIT_POINTS.SETTING.MASSIVE_DAMAGE_DC.KEY),
       applyNegativeHp: getSetting(CONSTANTS.HIT_POINTS.SETTING.APPLY_NEGATIVE_HP.KEY),
       applyNegativeHpNpc: getSetting(CONSTANTS.HIT_POINTS.SETTING.APPLY_NEGATIVE_HP_NPC.KEY),
       negativeHpHealFromZero: getSetting(CONSTANTS.HIT_POINTS.SETTING.NEGATIVE_HP_HEAL_FROM_ZERO.KEY),
@@ -112,6 +114,14 @@ export class GameplayForm extends CustomDnd5eForm {
           }
         },
         averageDamage: {
+          choices: {
+            neither: "CUSTOM_DND5E.neither",
+            character: "CUSTOM_DND5E.playerCharacters",
+            npc: "CUSTOM_DND5E.npcs",
+            both: "CUSTOM_DND5E.both"
+          }
+        },
+        applyMassiveDamage: {
           choices: {
             neither: "CUSTOM_DND5E.neither",
             character: "CUSTOM_DND5E.playerCharacters",
@@ -256,6 +266,8 @@ export class GameplayForm extends CustomDnd5eForm {
         resetSetting(CONSTANTS.HIT_POINTS.SETTING.APPLY_MASSIVE_DAMAGE.KEY),
         resetSetting(CONSTANTS.HIT_POINTS.SETTING.MASSIVE_DAMAGE_ANIMATION.KEY),
         resetSetting(CONSTANTS.HIT_POINTS.SETTING.MASSIVE_DAMAGE_TABLE.KEY),
+        resetSetting(CONSTANTS.HIT_POINTS.SETTING.MASSIVE_DAMAGE_THRESHOLD.KEY),
+        resetSetting(CONSTANTS.HIT_POINTS.SETTING.MASSIVE_DAMAGE_DC.KEY),
         resetSetting(CONSTANTS.HIT_POINTS.SETTING.APPLY_NEGATIVE_HP.KEY),
         resetSetting(CONSTANTS.HIT_POINTS.SETTING.NEGATIVE_HP_HEAL_FROM_ZERO.KEY),
         resetSetting(CONSTANTS.INITIATIVE.SETTING.REROLL_INITIATIVE_EACH_ROUND.KEY),
@@ -344,6 +356,9 @@ export class GameplayForm extends CustomDnd5eForm {
       setSetting(CONSTANTS.HIT_POINTS.SETTING.APPLY_MASSIVE_DAMAGE.KEY, formData.object.applyMassiveDamage),
       setSetting(CONSTANTS.HIT_POINTS.SETTING.MASSIVE_DAMAGE_ANIMATION.KEY, formData.object.massiveDamageAnimation),
       setSetting(CONSTANTS.HIT_POINTS.SETTING.MASSIVE_DAMAGE_TABLE.KEY, formData.object.massiveDamageTableUuid),
+      setSetting(CONSTANTS.HIT_POINTS.SETTING.MASSIVE_DAMAGE_THRESHOLD.KEY,
+        formData.object.massiveDamageThreshold),
+      setSetting(CONSTANTS.HIT_POINTS.SETTING.MASSIVE_DAMAGE_DC.KEY, formData.object.massiveDamageDc),
       setSetting(CONSTANTS.HIT_POINTS.SETTING.APPLY_NEGATIVE_HP.KEY, formData.object.applyNegativeHp),
       setSetting(CONSTANTS.HIT_POINTS.SETTING.APPLY_NEGATIVE_HP_NPC.KEY, formData.object.applyNegativeHpNpc),
       setSetting(CONSTANTS.HIT_POINTS.SETTING.NEGATIVE_HP_HEAL_FROM_ZERO.KEY, formData.object.negativeHpHealFromZero),
