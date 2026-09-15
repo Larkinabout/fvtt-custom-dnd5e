@@ -1045,6 +1045,12 @@ export async function migrateConditionLevels() {
         }
 
         await effect.delete();
+
+        if ( statusId === "exhaustion" && actor.system?.attributes?.exhaustion !== undefined ) {
+          await actor.update({ "system.attributes.exhaustion": Number(level) || 1 });
+          continue;
+        }
+
         const isLeveled = Number.isFinite(CONFIG.DND5E.conditionTypes[statusId]?.levels);
         await actor.toggleStatusEffect(statusId, isLeveled
           ? { levels: Number(level) || 1 }
