@@ -9,13 +9,24 @@ export function patchD20Die() {
   if ( !isCustomRoll() ) return;
 
   libWrapper.register(MODULE.ID, "CONFIG.Dice.D20Die.prototype.applyAdvantage", applyAdvantagePatch, "OVERRIDE");
+  libWrapper.register(MODULE.ID, "CONFIG.Dice.D20Die.prototype.isValid", isValidPatch, "OVERRIDE");
+}
+
+/* -------------------------------------------- */
+
+/**
+ * Treat a custom die as a valid challenge die.
+ * @returns {boolean} Whether this is a valid challenge die
+ */
+function isValidPatch() {
+  return this.faces === 20 || !!this.options.customDie;
 }
 
 /* -------------------------------------------- */
 
 /**
  * Apply advantage or disadvantage to the roll.
- * @param {number} advantageMode The advantage mode
+ * @param {number} advantageMode
  */
 function applyAdvantagePatch(advantageMode) {
   const customDieParts = getDieParts(this.options.customDie);

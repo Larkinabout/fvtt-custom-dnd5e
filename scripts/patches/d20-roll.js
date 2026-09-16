@@ -7,7 +7,7 @@ import { isCustomRoll } from "../rolls.js";
 export function patchD20Roll() {
   if ( !isCustomRoll() ) return;
 
-  libWrapper.register(MODULE.ID, "CONFIG.Dice.D20Roll.fromConfig", fromConfigPatch, "OVERRIDE");
+  libWrapper.register(MODULE.ID, "CONFIG.Dice.D20Roll.fromConfig", fromConfigPatch, "WRAPPER");
   libWrapper.register(MODULE.ID, "CONFIG.Dice.D20Roll.prototype.configureModifiers", configureModifiersPatch, "WRAPPER");
   libWrapper.register(MODULE.ID, "CONFIG.Dice.D20Roll.prototype.validD20Roll", validD20RollPatch, "OVERRIDE");
 }
@@ -15,15 +15,21 @@ export function patchD20Roll() {
 /* -------------------------------------------- */
 
 /**
- * Override the fromConfig method to support custom dice.
- * @param {object} config The roll configuration
- * @param {object} process The process data
- * @returns {CONFIG.Dice.D20Roll} The configured D20Roll
+ * Wrap the fromConfig method to support custom dice.
+ * @param {Function} wrapped
+ * @param {object} config 
+ * @param {object} process
+ * @returns {CONFIG.Dice.D20Roll} Configured D20Roll
  */
-function fromConfigPatch(config, process) {
-  const baseDie = config.options?.customDie || new CONFIG.Dice.D20Die().formula;
-  const formula = [baseDie].concat(config.parts ?? []).join(" + ");
-  config.options.target ??= process.target;
+function fromConfigPatch(wrapped, config, process) {
+  const roll = wrapped(config, process);
+  const customDie = config.options?.customDie;
+  if ( !customDie ) return roll;
+
+  // Clear so the custom roll configures its own die.
+  delete config.options.configured;
+
+  const formula = [customDie].concat(config.parts ?? []).join(" + ");
   return new this(formula, config.data, config.options);
 }
 

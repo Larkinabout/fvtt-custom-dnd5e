@@ -39,6 +39,7 @@ import { register as registerTokenEffects } from "./token/token-effects.js";
 import { register as registerTokenHudImprovements } from "./token/token-hud-improvements.js";
 import { patchD20Die } from "./patches/d20-die.js";
 import { patchD20Roll } from "./patches/d20-roll.js";
+import { patchInitiativeRoll } from "./patches/initiative-roll.js";
 import { patchPrepareBaseData } from "./patches/prepare-base-data.js";
 import { patchPrepareEncumbrance } from "./patches/prepare-encumbrance.js";
 import { patchPrepareMovement } from "./patches/prepare-movement.js";
@@ -112,6 +113,7 @@ Hooks.on("init", async () => {
 
   patchD20Die();
   patchD20Roll();
+  patchInitiativeRoll();
   patchPrepareBaseData();
   patchPrepareEncumbrance();
   patchPrepareMovement();
