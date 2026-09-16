@@ -68,6 +68,18 @@ export function checkEmpty(data) {
 /* -------------------------------------------- */
 
 /**
+ * Whether a value looks like a localization key (e.g. `DND5E.DAMAGE.Type.Acid`) that no longer resolves,
+ * as happens when the system renames its keys between versions.
+ * @param {*} value
+ * @returns {boolean}
+ */
+export function isUnresolvedI18nKey(value) {
+  return typeof value === "string" && /^[A-Z][A-Z0-9_]*\.\S+$/.test(value) && !game.i18n.has(value);
+}
+
+/* -------------------------------------------- */
+
+/**
  * Delete a property from an object using a dot-notated key.
  * @param {object} object
  * @param {string} key

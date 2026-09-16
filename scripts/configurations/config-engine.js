@@ -5,6 +5,7 @@ import {
   checkEmpty,
   getDefaultDnd5eConfig,
   getSetting,
+  isUnresolvedI18nKey,
   registerMenu,
   registerSetting,
   resetDnd5eConfig,
@@ -20,8 +21,8 @@ import {
  * @property {(value: *, data: object, key: string) => *} [transform]
  *   Transform the source value. Return `undefined` to omit the field from the built entry.
  * @property {boolean} [systemLabelFallback]
- *   Fall back to `CONFIG.CUSTOM_DND5E[configKey][key][field.key]` when the value is not a valid i18n key,
- *   unless the stored entry opts out via `data.system === false`.
+ *   Fall back to `CONFIG.CUSTOM_DND5E[configKey][key][field.key]` when the value looks like a localization
+ *   key that no longer resolves, unless the stored entry opts out via `data.system === false`.
  * @property {{entryType: "object"|"scalar", entry: *}} [children]
  *   Sub-definition for nested entries. When set, the field value is recursively shaped.
  * @property {boolean} [required] Skip the whole entry when this field's built value is empty.
@@ -284,10 +285,8 @@ function buildObjectEntry(def, key, data) {
 
     if ( value === undefined && field.default !== undefined ) value = field.default;
 
-    if ( field.systemLabelFallback && data?.system !== false ) {
-      if ( typeof value !== "string" || !game.i18n.has(value) ) {
-        value = CONFIG.CUSTOM_DND5E[def.configKey]?.[key]?.[field.key] ?? value;
-      }
+    if ( field.systemLabelFallback && data?.system !== false && isUnresolvedI18nKey(value) ) {
+      value = CONFIG.CUSTOM_DND5E[def.configKey]?.[key]?.[field.key] ?? value;
     }
 
     if ( field.children ) value = buildConfig(field.children, value);
