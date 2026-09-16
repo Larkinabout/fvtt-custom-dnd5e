@@ -61,9 +61,12 @@ class DamageTypesEditForm extends ConfigEditForm {
   static FIELDS = [
     { name: "label", type: "text", label: "CUSTOM_DND5E.label", localizeValue: true },
     { name: "icon", type: "filePicker", label: "CUSTOM_DND5E.icon" },
-    { name: "color", type: "colorPicker", label: "CUSTOM_DND5E.color" },
-    { name: "reference", type: "text", label: "CUSTOM_DND5E.reference" },
-    { name: "isPhysical", type: "checkbox", label: "CUSTOM_DND5E.physical" }
+    { name: "color", type: "colorPicker", label: "CUSTOM_DND5E.color",
+      hint: "CUSTOM_DND5E.form.damageTypes.color.hint" },
+    { name: "reference", type: "text", label: "CUSTOM_DND5E.reference",
+      hint: "CUSTOM_DND5E.form.damageTypes.reference.hint" },
+    { name: "isPhysical", type: "checkbox", label: "CUSTOM_DND5E.physical",
+      hint: "CUSTOM_DND5E.form.damageTypes.isPhysical.hint" }
   ];
 }
 
@@ -102,7 +105,7 @@ export default {
   form: DamageTypesForm,
   entryType: "object",
   entry: [
-    { key: "color", transform: v => Color.fromString(v || "#ffffff") },
+    { key: "color", transform: v => Color.from(v || "#ffffff") },
     { key: "icon" },
     { key: "isPhysical", conditional: "defined" },
     { key: "label", localize: true, systemLabelFallback: true },

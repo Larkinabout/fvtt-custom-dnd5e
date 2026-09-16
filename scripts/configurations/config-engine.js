@@ -17,7 +17,8 @@ import {
  * @property {*} [default] Fallback when the source value is undefined.
  * @property {"defined"|((data: object) => boolean)} [conditional]
  *   Whether to include the field. `"defined"` means include when the source value is not undefined.
- * @property {(value: *, data: object) => *} [transform] Transform the source value.
+ * @property {(value: *, data: object, key: string) => *} [transform]
+ *   Transform the source value. Return `undefined` to omit the field from the built entry.
  * @property {boolean} [systemLabelFallback]
  *   Fall back to `CONFIG.CUSTOM_DND5E[configKey][key][field.key]` when the value is not a valid i18n key,
  *   unless the stored entry opts out via `data.system === false`.
@@ -52,6 +53,8 @@ import {
  *   Field list for `"object"` entries, or a single descriptor for `"scalar"` entries.
  * @property {(key: string, data: *, helpers: {buildConfig: (data: object) => object}) => *} [buildEntry]
  *   When set, the engine calls it instead of `buildObjectEntry` / `buildScalarEntry`.
+ * @property {(data: object, key: string|null) => object} [normaliseDefault]
+ *   Make the cloned system default safe to store as JSON.
  */
 
 /* -------------------------------------------- */
@@ -124,7 +127,8 @@ function registerSettingsForConfig(def) {
  * @returns {object} Default config data
  */
 export function getSettingDefault(def, key = null) {
-  return getDefaultDnd5eConfig(def.configKey, key);
+  const data = getDefaultDnd5eConfig(def.configKey, key);
+  return def.normaliseDefault ? def.normaliseDefault(data, key) : data;
 }
 
 /* -------------------------------------------- */
@@ -288,7 +292,10 @@ function buildObjectEntry(def, key, data) {
 
     if ( field.children ) value = buildConfig(field.children, value);
 
-    if ( field.transform ) value = field.transform(value, data);
+    if ( field.transform ) {
+      value = field.transform(value, data, key);
+      if ( value === undefined ) continue;
+    }
 
     if ( field.localize && typeof value === "string" ) value = game.i18n.localize(value);
 

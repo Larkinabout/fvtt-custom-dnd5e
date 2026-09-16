@@ -67,6 +67,7 @@ export async function migrate() {
   if ( shouldRun("5.5.0") ) isSuccess &&= await migrateConditionLevels();
   if ( shouldRun("5.5.0") ) isSuccess &&= await migrateApplyDead();
   if ( shouldRun("5.5.0") ) isSuccess &&= await migrateApplyMassiveDamage();
+  if ( shouldRun("5.5.0") ) isSuccess &&= await migrateSkillsPace();
 
   if ( isSuccess ) {
     await setSetting(constants.VERSION.SETTING.KEY, moduleVersion);
@@ -1121,6 +1122,53 @@ export async function migrateApplyMassiveDamage() {
 /* -------------------------------------------- */
 
 /**
+ * Fix the travel pace lists stored on skills.
+ * @returns {Promise<boolean>} Whether the migration was successful
+ */
+export async function migrateSkillsPace() {
+  try {
+    const settingKey = configs.skills.SETTING.CONFIG.KEY;
+    const skills = getSetting(settingKey);
+    if ( !skills || typeof skills !== "object" ) return true;
+
+    const cloned = foundry.utils.deepClone(skills);
+    let changed = false;
+
+    for ( const [key, entry] of Object.entries(cloned) ) {
+      if ( !entry || typeof entry !== "object" ) continue;
+      const systemPace = CONFIG.CUSTOM_DND5E?.skills?.[key]?.pace;
+      const storedPace = (entry.pace && typeof entry.pace === "object") ? entry.pace : {};
+
+      const pace = {};
+      for ( const [mode, list] of Object.entries(systemPace ?? {}) ) {
+        pace[mode] = Array.isArray(storedPace[mode]) ? storedPace[mode] : [...list];
+      }
+      for ( const [mode, list] of Object.entries(storedPace) ) {
+        if ( !(mode in pace) && Array.isArray(list) ) pace[mode] = list;
+      }
+
+      const next = Object.keys(pace).length ? pace : undefined;
+      if ( JSON.stringify(entry.pace) === JSON.stringify(next) ) continue;
+      if ( next ) entry.pace = next;
+      else delete entry.pace;
+      changed = true;
+    }
+
+    if ( changed ) {
+      Logger.debug("Migrating skills travel pace...");
+      await setSetting(settingKey, cloned);
+      Logger.debug("Skills travel pace migrated.");
+    }
+    return true;
+  } catch (err) {
+    Logger.error(`Failed to migrate skills travel pace: ${err.message}`);
+    return false;
+  }
+}
+
+/* -------------------------------------------- */
+
+/**
  * All migration functions, exposed for testing via the module API.
  */
 export const migrations = {
@@ -1139,6 +1187,7 @@ export const migrations = {
   migrateRerollInitiative,
   migrateRestTypesHitDiceFormula,
   migrateRollMode,
+  migrateSkillsPace,
   migrateStaleSystemLabels,
   migrateTokenBorderEnable,
   migrateWorkflowTriggerEvents

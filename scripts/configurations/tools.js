@@ -58,8 +58,10 @@ class ToolsEditForm extends ConfigEditForm {
    * @type {object[]}
    */
   static FIELDS = [
-    { name: "id", type: "text", label: "CUSTOM_DND5E.id", localizeValue: true },
-    { name: "ability", type: "text", label: "CUSTOM_DND5E.ability", localizeValue: true }
+    { name: "id", type: "text", label: "CUSTOM_DND5E.id", localizeValue: true,
+      hint: "CUSTOM_DND5E.form.tools.id.hint" },
+    { name: "ability", type: "text", label: "CUSTOM_DND5E.ability", localizeValue: true,
+      hint: "CUSTOM_DND5E.form.tools.ability.hint" }
   ];
 }
 

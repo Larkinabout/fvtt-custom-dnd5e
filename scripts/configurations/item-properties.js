@@ -75,10 +75,13 @@ class ItemPropertiesEditForm extends ConfigEditForm {
     { name: "label", type: "text", label: "CUSTOM_DND5E.label", localizeValue: true },
     { name: "abbreviation", type: "text", label: "CUSTOM_DND5E.abbreviation", localizeValue: true },
     { name: "icon", type: "filePicker", label: "CUSTOM_DND5E.icon" },
-    { name: "isPhysical", type: "checkbox", label: "CUSTOM_DND5E.physical" },
-    { name: "isTag", type: "checkbox", label: "CUSTOM_DND5E.tag" },
-    { name: "reference", type: "text", label: "CUSTOM_DND5E.reference" },
-    { name: "itemTypes", type: "checkboxGrid", label: "CUSTOM_DND5E.itemTypes", items: form => form._getItemTypes() }
+    { name: "isPhysical", type: "checkbox", label: "CUSTOM_DND5E.physical",
+      hint: "CUSTOM_DND5E.form.itemProperties.isPhysical.hint" },
+    { name: "isTag", type: "checkbox", label: "CUSTOM_DND5E.tag", hint: "CUSTOM_DND5E.form.itemProperties.isTag.hint" },
+    { name: "reference", type: "text", label: "CUSTOM_DND5E.reference",
+      hint: "CUSTOM_DND5E.form.itemProperties.reference.hint" },
+    { name: "itemTypes", type: "checkboxGrid", label: "CUSTOM_DND5E.itemTypes", items: form => form._getItemTypes(),
+      hint: "CUSTOM_DND5E.form.itemProperties.itemTypes.hint" }
   ];
 
   /* -------------------------------------------- */

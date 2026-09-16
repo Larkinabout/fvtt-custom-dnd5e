@@ -59,12 +59,23 @@ class SkillsEditForm extends ConfigEditForm {
    * @type {object[]}
    */
   static FIELDS = [
-    { name: "fullKey", type: "text", label: "CUSTOM_DND5E.fullKey", localizeValue: true },
-    { name: "label", type: "text", label: "CUSTOM_DND5E.label", localizeValue: true },
-    { name: "ability", type: "text", label: "CUSTOM_DND5E.ability" },
-    { name: "icon", type: "filePicker", label: "CUSTOM_DND5E.icon" },
-    { name: "reference", type: "text", label: "CUSTOM_DND5E.reference" },
-    { name: "rollMode", type: "select", label: "CUSTOM_DND5E.rollMode", choices: "rollMode", localizeChoices: true }
+    { fields: [
+      { name: "fullKey", type: "text", label: "CUSTOM_DND5E.fullKey", localizeValue: true,
+        hint: "CUSTOM_DND5E.form.skills.fullKey.hint" },
+      { name: "label", type: "text", label: "CUSTOM_DND5E.label", localizeValue: true },
+      { name: "ability", type: "text", label: "CUSTOM_DND5E.ability", hint: "CUSTOM_DND5E.form.skills.ability.hint" },
+      { name: "icon", type: "filePicker", label: "CUSTOM_DND5E.icon" },
+      { name: "reference", type: "text", label: "CUSTOM_DND5E.reference",
+        hint: "CUSTOM_DND5E.form.skills.reference.hint" },
+      { name: "rollMode", type: "select", label: "CUSTOM_DND5E.rollMode", choices: "rollMode", localizeChoices: true,
+        hint: "CUSTOM_DND5E.form.skills.rollMode.hint" }
+    ] },
+    { legend: "CUSTOM_DND5E.form.skills.pace.legend", fields: [
+      { name: "pace.advantage", type: "multiSelect", label: "CUSTOM_DND5E.advantage",
+        hint: "CUSTOM_DND5E.form.skills.pace.advantageHint", choices: "travelPace" },
+      { name: "pace.disadvantage", type: "multiSelect", label: "CUSTOM_DND5E.disadvantage",
+        hint: "CUSTOM_DND5E.form.skills.pace.disadvantageHint", choices: "travelPace" }
+    ] }
   ];
 
   /* -------------------------------------------- */
@@ -84,7 +95,10 @@ class SkillsEditForm extends ConfigEditForm {
           publicroll: "CHAT.MODES.public",
           selfroll: "CHAT.MODES.self"
         }
-      }
+      },
+      travelPace: Object.fromEntries(
+        Object.entries(CONFIG.DND5E.travelPace ?? {}).map(([key, { label }]) => [key, label])
+      )
     };
   }
 }
@@ -117,17 +131,81 @@ class SkillsForm extends ConfigForm {
 /*  DEFINITION                                  */
 /* -------------------------------------------- */
 
+/**
+ * Travel pace modes.
+ * @type {string[]}
+ */
+const PACE_MODES = ["advantage", "disadvantage"];
+
+/* -------------------------------------------- */
+
+/**
+ * Convert a pace list into a Set.
+ * @param {Set<string>|string[]} value
+ * @returns {Set<string>}
+ */
+function toPaceSet(value) {
+  return new Set(value);
+}
+
+/* -------------------------------------------- */
+
+/**
+ * Convert the pace Sets on a skill entry to arrays so the entry can be stored as JSON.
+ * @param {object} entry
+ * @returns {object}
+ */
+function normalisePace(entry) {
+  if ( entry?.pace ) {
+    const pace = {};
+    for ( const mode of PACE_MODES ) {
+      if ( entry.pace[mode] !== undefined ) pace[mode] = [...entry.pace[mode]];
+    }
+    entry.pace = pace;
+  }
+  return entry;
+}
+
+/* -------------------------------------------- */
+
+/**
+ * Build stored pace data into Sets.
+ * @param {object|undefined} value
+ * @param {object|undefined} fallback
+ * @returns {object|undefined}
+ */
+function buildPace(value, fallback) {
+  const pace = {};
+  for ( const mode of PACE_MODES ) {
+    const stored = value?.[mode];
+    const hasStored = stored instanceof Set || Array.isArray(stored);
+    if ( hasStored ) pace[mode] = toPaceSet(stored);
+    else if ( fallback?.[mode] !== undefined ) pace[mode] = toPaceSet(fallback[mode]);
+  }
+  const hasAny = Object.values(pace).some(set => set.size);
+  return hasAny ? pace : undefined;
+}
+
+/* -------------------------------------------- */
+
 export default {
   configKey: "skills",
   constants,
   form: SkillsForm,
   configRequiresReload: true,
   entryType: "object",
+  normaliseDefault: (data, key) => {
+    if ( key ) return normalisePace(data);
+    Object.values(data ?? {}).forEach(normalisePace);
+    return data;
+  },
   entry: [
     { key: "ability" },
     { key: "fullKey" },
     { key: "icon" },
     { key: "label", localize: true },
+    { key: "pace", conditional: "defined",
+      transform: (v, data, key) => buildPace(v, CONFIG.CUSTOM_DND5E?.skills?.[key]?.pace) },
     { key: "reference" },
     { key: "rollMode", default: "default" }
   ]

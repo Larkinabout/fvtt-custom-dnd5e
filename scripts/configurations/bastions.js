@@ -79,7 +79,8 @@ class BastionsOrdersEditForm extends ConfigEditForm {
   static FIELDS = [
     { name: "label", type: "text", label: "CUSTOM_DND5E.label", localizeValue: true },
     { name: "icon", type: "filePicker", label: "CUSTOM_DND5E.icon" },
-    { name: "duration", type: "number", label: "CUSTOM_DND5E.bastions.duration", min: 0, placeholder: "—" },
+    { name: "duration", type: "number", label: "CUSTOM_DND5E.bastions.duration", min: 0, placeholder: "—",
+      hint: "CUSTOM_DND5E.form.bastions.orders.duration.hint" },
     { name: "basic", type: "checkbox", label: "CUSTOM_DND5E.bastions.basic",
       tooltip: "CUSTOM_DND5E.bastions.basicTooltip" },
     { name: "hidden", type: "checkbox", label: "CUSTOM_DND5E.bastions.hidden",
@@ -121,9 +122,12 @@ class BastionsSizesEditForm extends ConfigEditForm {
    */
   static FIELDS = [
     { name: "label", type: "text", label: "CUSTOM_DND5E.label", localizeValue: true },
-    { name: "days", type: "number", label: "CUSTOM_DND5E.bastions.days", min: 0 },
-    { name: "squares", type: "number", label: "CUSTOM_DND5E.bastions.squares", min: 0 },
-    { name: "value", type: "number", label: "CUSTOM_DND5E.bastions.value", min: 0 }
+    { name: "days", type: "number", label: "CUSTOM_DND5E.bastions.days", min: 0,
+      hint: "CUSTOM_DND5E.form.bastions.sizes.days.hint" },
+    { name: "squares", type: "number", label: "CUSTOM_DND5E.bastions.squares", min: 0,
+      hint: "CUSTOM_DND5E.form.bastions.sizes.squares.hint" },
+    { name: "value", type: "number", label: "CUSTOM_DND5E.bastions.value", min: 0,
+      hint: "CUSTOM_DND5E.form.bastions.sizes.value.hint" }
   ];
 }
 

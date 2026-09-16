@@ -60,10 +60,13 @@ class CreatureTypesEditForm extends ConfigEditForm {
    */
   static FIELDS = [
     { name: "label", type: "text", label: "CUSTOM_DND5E.label", localizeValue: true },
-    { name: "plural", type: "text", label: "CUSTOM_DND5E.plural", localizeValue: true },
+    { name: "plural", type: "text", label: "CUSTOM_DND5E.plural", localizeValue: true,
+      hint: "CUSTOM_DND5E.form.creatureTypes.plural.hint" },
     { name: "icon", type: "filePicker", label: "CUSTOM_DND5E.icon" },
-    { name: "reference", type: "text", label: "CUSTOM_DND5E.reference" },
-    { name: "detectAlignment", type: "checkbox", label: "CUSTOM_DND5E.detectAlignment" }
+    { name: "reference", type: "text", label: "CUSTOM_DND5E.reference",
+      hint: "CUSTOM_DND5E.form.creatureTypes.reference.hint" },
+    { name: "detectAlignment", type: "checkbox", label: "CUSTOM_DND5E.detectAlignment",
+      hint: "CUSTOM_DND5E.form.creatureTypes.detectAlignment.hint" }
   ];
 }
 

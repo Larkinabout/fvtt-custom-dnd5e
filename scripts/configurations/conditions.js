@@ -115,8 +115,10 @@ class ConditionsEditForm extends ConfigEditForm {
         hint: "CUSTOM_DND5E.form.conditions.statuses.hint" }
     ] },
     { legend: "CUSTOM_DND5E.macros", fields: [
-      { name: "macroUuid", type: "macroDrop", label: "CUSTOM_DND5E.macroOnApply" },
-      { name: "macroDisabledUuid", type: "macroDrop", label: "CUSTOM_DND5E.macroOnRemove" }
+      { name: "macroUuid", type: "macroDrop", label: "CUSTOM_DND5E.macroOnApply",
+        hint: "CUSTOM_DND5E.form.conditions.macroUuid.hint" },
+      { name: "macroDisabledUuid", type: "macroDrop", label: "CUSTOM_DND5E.macroOnRemove",
+        hint: "CUSTOM_DND5E.form.conditions.macroDisabledUuid.hint" }
     ] }
   ];
 
