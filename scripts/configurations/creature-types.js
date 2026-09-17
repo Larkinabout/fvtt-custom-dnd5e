@@ -79,7 +79,7 @@ class CreatureTypesForm extends ConfigForm {
     this.listTitle = `CUSTOM_DND5E.form.${constants.ID}.listTitle`;
     this.requiresReload = false;
     this.config = configs.creatureTypes;
-    this.actorProperties = ["system.traits.di.value", "system.traits.dr.value", "system.traits.dv.value"];
+    this.actorProperties = ["system.details.type.value"];
   }
 
   /* -------------------------------------------- */
@@ -88,7 +88,7 @@ class CreatureTypesForm extends ConfigForm {
    * @type {object}
    */
   static DEFAULT_OPTIONS = {
-    id: `${MODULE.ID}-damage-types-form`,
+    id: `${MODULE.ID}-creature-types-form`,
     window: {
       title: `CUSTOM_DND5E.form.${constants.ID}.title`
     }

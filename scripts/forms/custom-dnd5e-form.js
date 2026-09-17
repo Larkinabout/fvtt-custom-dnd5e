@@ -890,6 +890,15 @@ export class CustomDnd5eForm extends HandlebarsApplicationMixin(ApplicationV2) {
         let requiresUpdate = false;
         this.actorProperties.forEach(property => {
           const oldData = foundry.utils.getProperty(actor, property);
+
+          if ( typeof oldData === "string" ) {
+            if ( changedKeys[oldData] ) {
+              requiresUpdate = true;
+              updateData[property] = changedKeys[oldData];
+            }
+            return;
+          }
+
           if ( !Array.isArray(oldData) && !(oldData instanceof Set) ) return;
           const newData = [];
           oldData.forEach(value => {
