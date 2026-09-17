@@ -513,7 +513,7 @@ function playSound(action) {
   if ( !action.sound?.path ) return;
 
   const volume = action.sound.volume ?? 0.8;
-  AudioHelper.play({ src: action.sound.path, volume, autoplay: true, loop: false }, true);
+  foundry.audio.AudioHelper.play({ src: action.sound.path, volume, autoplay: true, loop: false }, true);
 }
 
 /* -------------------------------------------- */
