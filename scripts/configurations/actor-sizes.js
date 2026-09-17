@@ -67,12 +67,20 @@ class ActorSizesEditForm extends ConfigEditForm {
    * @type {object[]}
    */
   static FIELDS = [
+    { name: "fullKey", type: "text", label: "CUSTOM_DND5E.fullKey", localizeValue: true,
+      hint: "CUSTOM_DND5E.form.actorSizes.fullKey.hint" },
     { name: "label", type: "text", label: "CUSTOM_DND5E.label", localizeValue: true },
     { name: "abbreviation", type: "text", label: "CUSTOM_DND5E.abbreviation", localizeValue: true },
-    { name: "hitDie", type: "number", label: "CUSTOM_DND5E.hitDie", step: 1 },
-    { name: "token", type: "number", label: "CUSTOM_DND5E.tokenSize", step: 0.05 },
-    { name: "dynamicTokenScale", type: "number", label: "CUSTOM_DND5E.dynamicTokenScale", step: 0.05 },
-    { name: "capacityMultiplier", type: "number", label: "CUSTOM_DND5E.capacityMultiplier", step: 0.05 }
+    { name: "numerical", type: "number", label: "CUSTOM_DND5E.numericalSize", step: 1,
+      hint: "CUSTOM_DND5E.form.actorSizes.numerical.hint" },
+    { name: "hitDie", type: "number", label: "CUSTOM_DND5E.hitDie", step: 1,
+      hint: "CUSTOM_DND5E.form.actorSizes.hitDie.hint" },
+    { name: "token", type: "number", label: "CUSTOM_DND5E.tokenSize", step: 0.05,
+      hint: "CUSTOM_DND5E.form.actorSizes.token.hint" },
+    { name: "dynamicTokenScale", type: "number", label: "CUSTOM_DND5E.dynamicTokenScale", step: 0.05,
+      hint: "CUSTOM_DND5E.form.actorSizes.dynamicTokenScale.hint" },
+    { name: "capacityMultiplier", type: "number", label: "CUSTOM_DND5E.capacityMultiplier", step: 0.05,
+      hint: "CUSTOM_DND5E.form.actorSizes.capacityMultiplier.hint" }
   ];
 }
 
@@ -114,7 +122,9 @@ export default {
     { key: "capacityMultiplier", conditional: "defined" },
     { key: "hitDie" },
     { key: "dynamicTokenScale", conditional: "defined" },
+    { key: "fullKey", conditional: "defined" },
     { key: "label", localize: true },
+    { key: "numerical", conditional: "defined" },
     { key: "token", conditional: "defined" }
   ]
 };

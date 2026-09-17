@@ -1,6 +1,6 @@
 import { CONSTANTS, MODULE } from "../constants.js";
 import { configs } from "../configurations/registry.js";
-import { getSetting } from "../utils.js";
+import { getSetting, isPrimaryHandler } from "../utils.js";
 import { workflows } from "../workflows/workflows.js";
 import { applyRadialEffects } from "./radial-status-effects.js";
 
@@ -15,12 +15,17 @@ export function register() {
 /* -------------------------------------------- */
 
 /**
- * Register hooks and event listeners.
+ * Register hooks.
  */
 function registerHooks() {
-  document.addEventListener("click", onClickCondition, { capture: true });
-  document.addEventListener("contextmenu", onClickCondition, { capture: true });
   Hooks.on("renderTokenHUD", onRenderTokenHUD);
+  Hooks.on("customDnd5e.conditionsConfigApplied", onConditionsConfigApplied);
+  Hooks.on("createActiveEffect", effect => onConditionLevelChange(effect, effect.system?.level ?? 1));
+  Hooks.on("updateActiveEffect", (effect, changes) => {
+    if ( foundry.utils.getProperty(changes, "system.level") === undefined ) return;
+    onConditionLevelChange(effect, effect.system?.level);
+  });
+  Hooks.on("deleteActiveEffect", effect => onConditionLevelChange(effect, 0));
 }
 
 /* -------------------------------------------- */
@@ -35,128 +40,154 @@ function registerPatches() {
     refreshEffectsPatch,
     "WRAPPER"
   );
+
+  // The system derives a per-level icon path (e.g. exhaustion-3.svg), which only exists for
+  // conditions. Fall back to the condition's base icon for conditions made leveled through
+  // configuration.
+  libWrapper.register(
+    MODULE.ID,
+    "dnd5e.dataModels.activeEffect.ConditionData.getIconByLevel",
+    function(wrapped, type, level) {
+      const img = wrapped(type, level);
+      const defaults = CONFIG.CUSTOM_DND5E ?? CONFIG.DND5E;
+      if ( Number.isFinite(defaults?.conditionTypes?.[type]?.levels) ) return img;
+      return CONFIG.DND5E.conditionTypes[type]?.img ?? img;
+    },
+    "WRAPPER"
+  );
+
+  // Handle undefined `Infinite` in ConditionData#_onUpdate when a leveled condition changes level from no
+  // recorded level.
+  libWrapper.register(
+    MODULE.ID,
+    "dnd5e.dataModels.activeEffect.ConditionData.prototype._onUpdate",
+    function(wrapped, ...args) {
+      try {
+        return wrapped(...args);
+      } catch (err) {
+        if ( !(err instanceof ReferenceError) ) throw err;
+      }
+    },
+    "WRAPPER"
+  );
 }
 
 /* -------------------------------------------- */
 
 /**
- * On click condition.
- * @param {PointerEvent} event Pointer event
+ * Re-prepare actors with condition effects after the conditions config is applied.
  */
-async function onClickCondition(event) {
-  const target = event.target?.closest?.(".effect-control") ?? event.target;
-  if ( !target?.classList?.contains("effect-control") ) return;
+function onConditionsConfigApplied() {
+  const hasConditionEffects = actor => actor?.effects?.some(e => e.type === "condition");
 
+  for ( const actor of game.actors ?? [] ) {
+    if ( !hasConditionEffects(actor) ) continue;
+    actor.reset();
+    if ( actor.sheet?.rendered ) actor.sheet.render();
+  }
+
+  for ( const token of canvas?.tokens?.placeables ?? [] ) {
+    const actor = token.actor;
+    if ( !hasConditionEffects(actor) ) continue;
+    if ( !token.document.actorLink ) {
+      actor.reset();
+      if ( actor.sheet?.rendered ) actor.sheet.render();
+    }
+    token.renderFlags.set({ redrawEffects: true });
+  }
+}
+
+/* -------------------------------------------- */
+
+/**
+ * Actors currently having their level condition riders applied.
+ * @type {Set<string>}
+ */
+const applyingRiderActors = new Set();
+
+/* -------------------------------------------- */
+
+/**
+ * Handle a change to a leveled condition's level.
+ * @param {ActiveEffect} effect
+ * @param {number} level
+ */
+async function onConditionLevelChange(effect, level) {
   if ( !getSetting(configs.conditions.SETTING.ENABLE.KEY) ) return;
 
-  const statusId = target.dataset?.statusId;
-  if ( !statusId ) return;
+  const actor = effect.parent;
+  if ( actor?.documentName !== "Actor" || !isPrimaryHandler(actor) ) return;
 
-  if ( statusId === "exhaustion" || statusId === "concentrating" ) return;
+  const statusId = getLeveledStatusId(effect);
+  if ( !statusId || statusId === "exhaustion" ) return;
 
-  const conditionConfig = CONFIG.DND5E.conditionTypes[statusId];
-  if ( !conditionConfig?.levels || conditionConfig.levels <= 0 ) return;
+  if ( getSetting(CONSTANTS.WORKFLOWS.SETTING.ENABLE.KEY) ) {
+    workflows.processEvent("conditionLevelChanged", { actor, conditionId: statusId, counterValue: level ?? 0 });
+  }
 
-  const actor = canvas.hud.token?.object?.actor;
-  if ( !actor ) return;
-
-  event.preventDefault();
-  event.stopPropagation();
-
-  const effect = getConditionEffect(actor, statusId);
-  const currentLevel = getConditionLevel(effect);
-  const maxLevel = conditionConfig.levels;
-
-  await manageLeveledCondition(event, actor, statusId, currentLevel, maxLevel, effect);
+  await applyLevelConditionRiders(actor, statusId, level ?? 0);
 }
 
 /* -------------------------------------------- */
 
 /**
- * Increment/decrement a leveled condition.
- * @param {PointerEvent} event Pointer event
- * @param {Actor5e} actor Actor
- * @param {string} statusId Status ID
- * @param {number} currentLevel Current level
- * @param {number} maxLevel Max level
- * @param {ActiveEffect|undefined} effect Existing effect, if any
+ * Apply the conditions configured for each level of a leveled condition up to the current
+ * level as rider effects and remove for levels no longer reached.
+ * @param {Actor5e} actor
+ * @param {string} statusId
+ * @param {number} level
  */
-async function manageLeveledCondition(event, actor, statusId, currentLevel, maxLevel, effect) {
-  let newLevel = currentLevel;
+async function applyLevelConditionRiders(actor, statusId, level) {
+  if ( applyingRiderActors.has(actor.uuid) ) return;
+  applyingRiderActors.add(actor.uuid);
 
-  if ( event.button === 0 ) {
-    // Left-click: increment
-    if ( currentLevel === 0 ) {
-      await createConditionEffect(actor, statusId);
-      const newEffect = getConditionEffect(actor, statusId);
-      if ( newEffect ) {
-        await newEffect.setFlag(MODULE.ID, "conditionLevel", 1);
+  try {
+    const conditionsMap = CONFIG.DND5E.conditionTypes[statusId]?.conditions ?? {};
+    const desired = new Set();
+    for ( const [conditionLevel, ids] of Object.entries(conditionsMap) ) {
+      if ( Number(conditionLevel) > level ) continue;
+      for ( const id of ids ?? [] ) {
+        if ( id !== statusId ) desired.add(id);
       }
-      newLevel = 1;
-    } else if ( currentLevel < maxLevel ) {
-      await effect.setFlag(MODULE.ID, "conditionLevel", currentLevel + 1);
-      newLevel = currentLevel + 1;
     }
-  } else if ( event.button === 2 ) {
-    // Right-click: decrement
-    if ( currentLevel <= 1 && effect ) {
-      await deleteConditionEffect(actor, statusId);
-      newLevel = 0;
-    } else if ( currentLevel > 1 ) {
-      await effect.setFlag(MODULE.ID, "conditionLevel", currentLevel - 1);
-      newLevel = currentLevel - 1;
+
+    // Apply missing rider conditions
+    for ( const id of desired ) {
+      if ( actor.effects.get(dnd5e.utils.staticID(`dnd5e${id}`)) ) continue;
+      const rider = await actor.toggleStatusEffect(id, { active: true });
+      if ( rider?.setFlag ) await rider.setFlag(MODULE.ID, "riderOf", statusId);
     }
-  }
 
-  // Display scrolling status text and fire workflow event
-  if ( newLevel !== currentLevel ) {
-    const conditionName = CONFIG.DND5E.conditionTypes[statusId]?.name ?? statusId;
-    const increasing = newLevel > currentLevel;
-    const displayLevel = increasing ? newLevel : currentLevel;
-    displayScrollingText(actor, `${conditionName} ${displayLevel}`, increasing);
-
-    if ( getSetting(CONSTANTS.WORKFLOWS.SETTING.ENABLE.KEY) ) {
-      workflows.processEvent("conditionLevelChanged", { actor, conditionId: statusId, counterValue: newLevel });
+    // Remove rider conditions for levels no longer reached
+    for ( const rider of Array.from(actor.effects) ) {
+      if ( rider.getFlag(MODULE.ID, "riderOf") !== statusId ) continue;
+      const riderStatusId = [...(rider.statuses ?? [])][0];
+      if ( !desired.has(riderStatusId) ) await rider.delete();
     }
-  }
-
-  // Re-render the token HUD
-  if ( canvas.hud.token?.rendered ) {
-    canvas.hud.token.render();
+  } finally {
+    applyingRiderActors.delete(actor.uuid);
   }
 }
 
 /* -------------------------------------------- */
 
 /**
- * Display scrolling status text on the actor's tokens.
- * @param {Actor5e} actor Actor
- * @param {string} name Condition name and level
- * @param {boolean} increasing Whether the level is increasing
+ * Get the status id of an effect when it is a leveled condition.
+ * @param {ActiveEffect} effect
+ * @returns {string|null} Status id, or null when the effect is not a leveled condition
  */
-function displayScrollingText(actor, name, increasing) {
-  const tokens = actor.getActiveTokens(true);
-  const text = `${increasing ? "+" : "-"}(${name})`;
-  for ( const token of tokens ) {
-    if ( !token.visible || token.document.isSecret ) continue;
-    canvas.interface.createScrollingText(token.center, text, {
-      anchor: CONST.TEXT_ANCHOR_POINTS.CENTER,
-      direction: increasing ? CONST.TEXT_ANCHOR_POINTS.TOP : CONST.TEXT_ANCHOR_POINTS.BOTTOM,
-      distance: 2 * token.h,
-      fontSize: 28,
-      stroke: 0x000000,
-      strokeThickness: 4,
-      jitter: 0.25
-    });
-  }
+function getLeveledStatusId(effect) {
+  const statusId = [...(effect.statuses ?? [])][0];
+  const conditionConfig = CONFIG.DND5E.conditionTypes[statusId];
+  return (Number.isFinite(conditionConfig?.levels) && conditionConfig.levels > 0) ? statusId : null;
 }
 
 /* -------------------------------------------- */
 
 /**
  * Get the ActiveEffect for a condition on an actor.
- * @param {Actor5e} actor Actor
- * @param {string} statusId Condition status ID
+ * @param {Actor5e} actor
+ * @param {string} statusId
  * @returns {ActiveEffect|undefined} Effect, if found
  */
 function getConditionEffect(actor, statusId) {
@@ -171,37 +202,11 @@ function getConditionEffect(actor, statusId) {
 
 /**
  * Get the current level of a condition.
- * @param {ActiveEffect|undefined} effect Effect
+ * @param {ActiveEffect|undefined} effect
  * @returns {number} Current level, or 0
  */
 function getConditionLevel(effect) {
-  return effect?.getFlag(MODULE.ID, "conditionLevel") ?? 0;
-}
-
-/* -------------------------------------------- */
-
-/**
- * Create a condition effect on the actor.
- * @param {Actor5e} actor Actor
- * @param {string} statusId Condition status ID
- */
-async function createConditionEffect(actor, statusId) {
-  const ActiveEffect = getDocumentClass("ActiveEffect");
-  const effect = await ActiveEffect.fromStatusEffect(statusId);
-  await ActiveEffect.implementation.create(effect, { parent: actor, keepId: true, animate: false });
-}
-
-/* -------------------------------------------- */
-
-/**
- * Delete a condition effect from the actor.
- * @param {Actor5e} actor Actor
- * @param {string} statusId Condition status ID
- */
-async function deleteConditionEffect(actor, statusId) {
-  const effect = getConditionEffect(actor, statusId);
-  if ( !effect ) return;
-  await actor.deleteEmbeddedDocuments("ActiveEffect", [effect.id], { animate: false });
+  return effect?.system?.level ?? effect?.getFlag(MODULE.ID, "conditionLevel") ?? 0;
 }
 
 /* -------------------------------------------- */
@@ -209,8 +214,8 @@ async function deleteConditionEffect(actor, statusId) {
 /**
  * Patch for _refreshEffects to add level badges to leveled condition icons on the token.
  * Badges are added directly to the effects container, positioned at each sprite's corner.
- * @param {Function} wrapped The original function.
- * @param {...any} args The arguments.
+ * @param {Function} wrapped
+ * @param {...any} args
  */
 function refreshEffectsPatch(wrapped, ...args) {
   // Remove any previously added level badges
@@ -230,42 +235,21 @@ function refreshEffectsPatch(wrapped, ...args) {
   const actor = this.actor;
   if ( !actor ) return;
 
-  // Build a set of leveled conditions
-  const activeEffects = actor.temporaryEffects || [];
-  const overlayEffect = activeEffects.findLast(e => e.img && e.getFlag("core", "overlay"));
-  const levelMap = new Map();
+  const SHOW_ICON = CONST.ACTIVE_EFFECT_SHOW_ICON;
+  const activeEffects = actor.appliedEffects?.filter(e => (e.showIcon === SHOW_ICON.ALWAYS)
+    || ((e.showIcon === SHOW_ICON.CONDITIONAL) && e.isTemporary)) ?? [];
 
-  for ( const effect of activeEffects ) {
-    if ( !effect.img || effect === overlayEffect ) continue;
+  for ( const child of this.effects.children ) {
+    if ( child === this.effects.bg || child.customDnd5eLevelBadge ) continue;
 
-    const statusId = [...(effect.statuses || [])][0];
+    const effect = activeEffects[child.zIndex];
+    if ( !effect ) continue;
+
+    const statusId = getLeveledStatusId(effect);
     if ( !statusId || statusId === "exhaustion" ) continue;
-
-    const conditionConfig = CONFIG.DND5E.conditionTypes[statusId];
-    if ( !conditionConfig?.levels || conditionConfig.levels <= 0 ) continue;
 
     const level = getConditionLevel(effect);
     if ( level <= 0 ) continue;
-
-    levelMap.set(effect.img, level);
-  }
-
-  if ( !levelMap.size ) return;
-
-  // Add badges for leveled conditions
-  const bg = this.effects.bg;
-  let effectIndex = 0;
-  const nonOverlayEffects = activeEffects.filter(e => e.img && e !== overlayEffect);
-
-  for ( const child of this.effects.children ) {
-    if ( child === bg || child === this.effects.overlay || child.customDnd5eLevelBadge ) continue;
-
-    const activeEffect = nonOverlayEffects[effectIndex];
-    effectIndex++;
-
-    if ( !activeEffect ) continue;
-    const level = levelMap.get(activeEffect.img);
-    if ( !level ) continue;
 
     addLevelBadge(this.effects, child, level);
   }
@@ -275,14 +259,16 @@ function refreshEffectsPatch(wrapped, ...args) {
 
 /**
  * Add level badge.
- * @param {PIXI.Container} container Container
- * @param {PIXI.Sprite} sprite Sprite
- * @param {number} level Condition level
+ * @param {PIXI.Container} container
+ * @param {PIXI.Sprite} sprite
+ * @param {number} level
  */
 function addLevelBadge(container, sprite, level) {
+  const fontSize = Math.max(12, Math.round(sprite.width * 0.3));
+
   const style = new PIXI.TextStyle({
     fontFamily: "Signika",
-    fontSize: 12,
+    fontSize,
     fontWeight: "bold",
     fill: "#ff0000",
     stroke: "#000000",
@@ -309,8 +295,8 @@ function addLevelBadge(container, sprite, level) {
 
 /**
  * Render level badges on the token HUD status effects palette.
- * @param {TokenHUD} app TokenHUD app
- * @param {HTMLElement} html HTML element
+ * @param {TokenHUD} app
+ * @param {HTMLElement} html
  */
 function onRenderTokenHUD(app, html) {
   if ( !getSetting(configs.conditions.SETTING.ENABLE.KEY) ) return;
@@ -326,8 +312,8 @@ function onRenderTokenHUD(app, html) {
   const container = html.querySelector(".status-effects");
   if ( !container ) return;
 
-  for ( const [statusId, config] of Object.entries(conditionTypes) ) {
-    if ( !config.levels || config.levels <= 0 ) continue;
+  for ( const [statusId, conditionConfig] of Object.entries(conditionTypes) ) {
+    if ( !conditionConfig.levels || conditionConfig.levels <= 0 ) continue;
     if ( statusId === "exhaustion" ) continue;
 
     const elem = html.querySelector(`[data-status-id="${statusId}"]`);

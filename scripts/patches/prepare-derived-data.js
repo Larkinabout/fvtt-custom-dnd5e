@@ -38,15 +38,15 @@ export function patchPrepareDerivedData() {
  */
 function applyCustomMovement(wrapped, ...args) {
   try {
-    const movement = this.attributes?.movement;
+    const speeds = this.attributes?.movement?.speeds;
     const flagMovement = this.parent?.flags?.[MODULE.ID]?.movementTypes;
-    if ( movement && flagMovement ) {
+    if ( speeds && flagMovement ) {
       const systemMovementTypes = new Set(Object.keys(CONFIG.CUSTOM_DND5E?.movementTypes ?? {}));
       for ( const [key, value] of Object.entries(flagMovement) ) {
         if ( value === undefined || value === null || value === "" ) continue;
         if ( systemMovementTypes.has(key) ) continue;
         if ( !(key in CONFIG.DND5E.movementTypes) ) continue;
-        movement[key] = value;
+        speeds[key] = value;
       }
     }
   } catch {}

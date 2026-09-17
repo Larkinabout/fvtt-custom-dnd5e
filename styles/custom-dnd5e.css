@@ -128,10 +128,16 @@ button[data-custom-dnd5e="stop-animations"].fade-out {
     direction: rtl;
     gap: 0.25rem;
     font-family: var(--font-primary);
-    position: absolute;
     transform: translateX(-100%);
     visibility: hidden;
-    z-index: 9999;
+    position: fixed;
+    inset: unset;
+    margin: 0;
+    padding: 0;
+    border: none;
+    background: none;
+    overflow: visible;
+    z-index: calc(var(--z-index-tooltip, 9999) + 1);
 }
 
 #custom-dnd5e-cursor-label {
@@ -181,6 +187,11 @@ button[data-custom-dnd5e="stop-animations"].fade-out {
 }
 
 #custom-dnd5e-cursor-label-radial-delete {
+    color: var(--dnd5e-color-red);
+    font-size: 1.5em;
+}
+
+#custom-dnd5e-cursor-label-radial-blocked {
     color: var(--dnd5e-color-red);
     font-size: 1.5em;
 }

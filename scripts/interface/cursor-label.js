@@ -55,6 +55,75 @@ export function registerHooks() {
 function initializeCursorLabel() {
   createCursorLabelElement();
   attachCursorLabelListeners();
+  attachDocumentListeners(document);
+}
+
+/* -------------------------------------------- */
+
+/**
+ * Documents with cursor label key listeners attached.
+ * @type {WeakSet<Document>}
+ */
+const listenedDocuments = new WeakSet();
+
+/**
+ * Tooltip elements with cursor label toggle listeners attached.
+ * @type {WeakSet<HTMLElement>}
+ */
+const listenedTooltips = new WeakSet();
+
+/* -------------------------------------------- */
+
+/**
+ * Attach listeners to a document.
+ * @param {Document} doc
+ */
+function attachDocumentListeners(doc) {
+  if ( !listenedDocuments.has(doc) ) {
+    listenedDocuments.add(doc);
+    doc.addEventListener("keydown", updateCursorLabelVisibility, { passive: true, capture: true });
+    doc.addEventListener("keyup", updateCursorLabelVisibility, { passive: true, capture: true });
+  }
+
+  // Foundry shows its tooltip in the browser's top layer, so promote the label back above it
+  // whenever the tooltip opens.
+  const tooltip = (doc === document)
+    ? (game.tooltip?.tooltip ?? doc.getElementById("tooltip"))
+    : doc.getElementById("tooltip");
+  if ( tooltip && !listenedTooltips.has(tooltip) ) {
+    listenedTooltips.add(tooltip);
+    tooltip.addEventListener("toggle", onTooltipToggle);
+  }
+}
+
+/* -------------------------------------------- */
+
+/**
+ * Promote the cursor label above a tooltip that has just opened.
+ * @param {ToggleEvent} event
+ */
+function onTooltipToggle(event) {
+  if ( event.newState !== "open" ) return;
+  const container = window.customDnd5eCursorLabel?.container;
+  if ( container?.isConnected && container.style.visibility === "visible" ) promoteCursorLabel(container);
+}
+
+/* -------------------------------------------- */
+
+/**
+ * Move the cursor label into the given document if it is not already there.
+ * @param {Document} doc
+ */
+function ensureCursorLabelDocument(doc) {
+  const container = addCursorLabel();
+  if ( container.ownerDocument !== doc ) {
+    doc.body.appendChild(container);
+    promoteCursorLabel(container);
+  }
+
+  if ( !container.querySelector("#custom-dnd5e-cursor-label-skip-dialog") ) createCursorLabelElement();
+
+  attachDocumentListeners(doc);
 }
 
 /* -------------------------------------------- */
@@ -64,14 +133,33 @@ function initializeCursorLabel() {
  * @returns {HTMLElement} Cursor label container
  */
 export function addCursorLabel() {
-  let container = document.getElementById("custom-dnd5e-cursor-label");
-  if ( container ) return container;
-  container = document.createElement("div");
-  container.id = "custom-dnd5e-cursor-label";
-  document.body.appendChild(container);
+  let container = window.customDnd5eCursorLabel?.container;
+  if ( container?.isConnected ) return container;
+  container = document.getElementById("custom-dnd5e-cursor-label");
+  if ( !container ) {
+    container = document.createElement("div");
+    container.id = "custom-dnd5e-cursor-label";
+    container.popover = "manual";
+    document.body.appendChild(container);
+    promoteCursorLabel(container);
+  }
   if ( !window.customDnd5eCursorLabel ) window.customDnd5eCursorLabel = {};
   window.customDnd5eCursorLabel.container = container;
   return container;
+}
+
+/* -------------------------------------------- */
+
+/**
+ * Show the cursor label as a popover so it renders in the browser's top layer.
+ * Re-show to move the label above any tooltips.
+ * @param {HTMLElement} container Cursor label container
+ */
+function promoteCursorLabel(container) {
+  try {
+    if ( container.matches(":popover-open") ) container.hidePopover();
+    container.showPopover();
+  } catch {}
 }
 
 /* -------------------------------------------- */
@@ -85,7 +173,7 @@ export function addCursorLabel() {
  */
 export function addCursorLabelIcon(id, innerHTML, className = "custom-dnd5e-cursor-label-icon") {
   const container = addCursorLabel();
-  let icon = document.getElementById(id);
+  let icon = container.querySelector(`#${id}`);
   if ( !icon ) {
     icon = document.createElement("span");
     icon.id = id;
@@ -105,7 +193,7 @@ export function addCursorLabelIcon(id, innerHTML, className = "custom-dnd5e-curs
  * @param {boolean} visible Whether the icon should be visible
  */
 export function setCursorLabelIcon(id, visible) {
-  const icon = document.getElementById(id);
+  const icon = window.customDnd5eCursorLabel?.container?.querySelector(`#${id}`);
   if ( icon ) icon.style.display = visible ? "inline-block" : "none";
   refreshCursorLabelVisibility();
 }
@@ -141,10 +229,14 @@ export function setCursorLabelPosition(clientX, clientY, { mode = "tooltip" } = 
  * Show or hide the container based on whether any child icon is visible.
  */
 function refreshCursorLabelVisibility() {
-  const container = document.getElementById("custom-dnd5e-cursor-label");
-  if ( !container ) return;
+  const container = window.customDnd5eCursorLabel?.container;
+  if ( !container?.isConnected ) return;
   const anyVisible = Array.from(container.children).some(child => child.style.display && child.style.display !== "none");
+  const wasVisible = container.style.visibility === "visible";
   container.style.visibility = anyVisible ? "visible" : "hidden";
+
+  // If the label is appearing while a tooltip is already open, move it back above the tooltip.
+  if ( anyVisible && !wasVisible ) promoteCursorLabel(container);
 }
 
 /* -------------------------------------------- */
@@ -162,18 +254,18 @@ function createCursorLabelElement() {
   );
   skipDialogIcon.classList.add("fa-regular", "fa-forward");
 
-  addCursorLabelIcon(
+  const advantageIcon = addCursorLabelIcon(
     "custom-dnd5e-cursor-label-advantage",
     '<i class="fa-sharp fa-regular fa-dice-d20"></i><i class="fa-solid fa-up-long"></i>'
   );
 
-  addCursorLabelIcon(
+  const disadvantageIcon = addCursorLabelIcon(
     "custom-dnd5e-cursor-label-disadvantage",
     '<i class="fa-sharp fa-regular fa-dice-d20"></i><i class="fa-solid fa-down-long"></i>'
   );
 
-  window.customDnd5eCursorLabel.advantage = document.getElementById("custom-dnd5e-cursor-label-advantage");
-  window.customDnd5eCursorLabel.disadvantage = document.getElementById("custom-dnd5e-cursor-label-disadvantage");
+  window.customDnd5eCursorLabel.advantage = advantageIcon;
+  window.customDnd5eCursorLabel.disadvantage = disadvantageIcon;
   window.customDnd5eCursorLabel.skipDialog = skipDialogIcon;
 }
 
@@ -189,8 +281,6 @@ function attachCursorLabelListeners() {
   const chatLog = document.querySelector("#chat .chat-log");
   chatLog.addEventListener("pointermove", handleCursorMove);
   chatLog.addEventListener("pointermove", updateCursorLabelPosition);
-  document.addEventListener("keydown", updateCursorLabelVisibility, { passive: true, capture: true });
-  document.addEventListener("keyup", updateCursorLabelVisibility, { passive: true, capture: true });
 }
 
 /* -------------------------------------------- */
@@ -275,6 +365,7 @@ function updateCursorLabelVisibility(event) {
  * @param {PointerEvent} event
  */
 function updateCursorLabelPosition(event) {
+  ensureCursorLabelDocument(event.target?.ownerDocument ?? document);
   setCursorLabelPosition(event.clientX, event.clientY);
   updateCursorLabelVisibility(event);
 }

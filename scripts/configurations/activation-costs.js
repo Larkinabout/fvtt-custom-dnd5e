@@ -61,8 +61,14 @@ class ActivationCostsEditForm extends ConfigEditForm {
    */
   static FIELDS = [
     { name: "label", type: "text", label: "CUSTOM_DND5E.label", localizeValue: true },
-    { name: "group", type: "text", label: "CUSTOM_DND5E.group", localizeValue: true },
-    { name: "scalar", type: "checkbox", label: "CUSTOM_DND5E.scalar" }
+    { name: "header", type: "text", label: "CUSTOM_DND5E.header", localizeValue: true,
+      hint: "CUSTOM_DND5E.form.activationCosts.header.hint" },
+    { name: "group", type: "text", label: "CUSTOM_DND5E.group", localizeValue: true,
+      hint: "CUSTOM_DND5E.form.activationCosts.group.hint" },
+    { name: "scalar", type: "checkbox", label: "CUSTOM_DND5E.scalar",
+      hint: "CUSTOM_DND5E.form.activationCosts.scalar.hint" },
+    { name: "passive", type: "checkbox", label: "CUSTOM_DND5E.passive",
+      hint: "CUSTOM_DND5E.form.activationCosts.passive.hint" }
   ];
 }
 
@@ -113,8 +119,12 @@ const DEFINITION = {
   form: ActivationCostsForm,
   entryType: "object",
   entry: [
+    { key: "consume", conditional: "defined" },
+    { key: "counted", conditional: "defined", localize: true },
     { key: "group", conditional: "defined" },
+    { key: "header", conditional: "defined", localize: true },
     { key: "label", localize: true },
+    { key: "passive", conditional: "defined" },
     { key: "scalar", conditional: "defined" }
   ]
 };

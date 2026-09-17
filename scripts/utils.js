@@ -68,6 +68,18 @@ export function checkEmpty(data) {
 /* -------------------------------------------- */
 
 /**
+ * Whether a value looks like a localization key (e.g. `DND5E.DAMAGE.Type.Acid`) that no longer resolves,
+ * as happens when the system renames its keys between versions.
+ * @param {*} value
+ * @returns {boolean}
+ */
+export function isUnresolvedI18nKey(value) {
+  return typeof value === "string" && /^[A-Z][A-Z0-9_]*\.\S+$/.test(value) && !game.i18n.has(value);
+}
+
+/* -------------------------------------------- */
+
+/**
  * Delete a property from an object using a dot-notated key.
  * @param {object} object
  * @param {string} key
@@ -308,6 +320,27 @@ export async function setDnd5eSetting(key, value) {
 export function getFlag(entity, key) {
   const flag = entity.getFlag(MODULE.ID, key);
   return (flag || flag === 0) ? flag : null;
+}
+
+/* -------------------------------------------- */
+
+/**
+ * Whether negative HP applies to an actor.
+ * @param {object} actor
+ * @param {object} [options]
+ * @param {boolean} [options.includeInstantDeath=true] Whether 'Apply Instant Death' also enables
+ *   negative HP for non-NPC actors
+ * @param {string} [options.override] Resolve using this override value instead of the actor's
+ *   stored flag
+ * @returns {boolean} Whether negative HP applies
+ */
+export function hasNegativeHp(actor, { includeInstantDeath = true, override } = {}) {
+  override ??= actor ? getFlag(actor, "negativeHp") : null;
+  if ( override === "on" ) return true;
+  if ( override === "off" ) return false;
+  if ( actor?.type === "npc" ) return getSetting(CONSTANTS.HIT_POINTS.SETTING.APPLY_NEGATIVE_HP_NPC.KEY);
+  return getSetting(CONSTANTS.HIT_POINTS.SETTING.APPLY_NEGATIVE_HP.KEY)
+    || (includeInstantDeath && getSetting(CONSTANTS.DEAD.SETTING.APPLY_INSTANT_DEATH.KEY));
 }
 
 /* -------------------------------------------- */
@@ -719,7 +752,7 @@ export async function unmakeUnconscious(actor) {
  */
 export async function makeDead(actor, data = null) {
   Logger.debug("Making Dead...", actor);
-  const applyNegativeHp = getSetting(CONSTANTS.HIT_POINTS.SETTING.APPLY_NEGATIVE_HP.KEY);
+  const applyNegativeHp = hasNegativeHp(actor, { includeInstantDeath: false });
   if ( data ) {
     if ( !applyNegativeHp ) {
       if ( data["system.attributes.hp.value"] !== undefined ) {
@@ -757,6 +790,73 @@ export async function unmakeDead(actor) {
   const effect = actor.effects.get("dnd5edead0000000");
   await effect?.delete();
   Logger.debug("Dead unmade", actor);
+}
+
+/* -------------------------------------------- */
+
+/**
+ * Create a D&D 5e request chat message prompting an actor to make a saving throw.
+ * Clicking the message's button rolls the save for the target actor and links the
+ * roll back to the request via the 'dnd5e.requestResult' flag.
+ * @param {object} options
+ * @param {object} options.actor
+ * @param {string} options.ability
+ * @param {number} options.dc Saving throw DC
+ * @param {string} options.content Message content
+ * @param {string} options.source Source flag for tracing the result
+ * @returns {Promise<ChatMessage>} Created chat message
+ */
+export async function createSaveRequestMessage({ actor, ability, dc, content, source }) {
+  let label = game.i18n.format("EDITOR.DND5E.Inline.DC", {
+    dc,
+    check: game.i18n.localize(CONFIG.DND5E.abilities[ability]?.label ?? ability)
+  });
+  label = game.i18n.format("EDITOR.DND5E.Inline.SaveLong", { save: label });
+
+  return ChatMessage.create({
+    content,
+    speaker: ChatMessage.getSpeaker({ user: game.user }),
+    system: {
+      button: {
+        icon: "fa-solid fa-shield-heart",
+        label
+      },
+      data: { ability, target: dc },
+      handler: "save",
+      targets: [{ actor: actor.uuid }]
+    },
+    type: "request",
+    flags: { [MODULE.ID]: { source } }
+  });
+}
+
+/* -------------------------------------------- */
+
+/**
+ * Get the request chat message that originated a rolled saving throw.
+ * @param {object[]} rolls Rolls from the 'dnd5e.rollSavingThrow' hook
+ * @returns {ChatMessage|undefined} Originating request message, if found
+ */
+export function getSaveRequestMessage(rolls) {
+  const rollMessage = rolls?.[0]?.parent;
+  return game.messages.get(rollMessage?.getFlag?.("dnd5e", "requestResult")?.requestId)
+    ?? rollMessage?.getOriginatingMessage?.()
+    ?? game.messages.get(rolls?.[0]?.options?.originatingMessage);
+}
+
+/* -------------------------------------------- */
+
+/**
+ * If the 'Apply Status on 0 HP' setting is set, set the D&D 5e system's 'Auto-Apply Downed'
+ * setting to 'Never' to avoid both the module and the system applying statuses on 0 HP.
+ */
+export async function syncAutoApplyDowned() {
+  if ( !game.user.isGM ) return;
+  const applyDead = getSetting(CONSTANTS.DEAD.SETTING.APPLY_DEAD.KEY);
+  if ( !applyDead || applyDead === "none" ) return;
+  if ( game.settings.get("dnd5e", "autoApplyDowned") === "none" ) return;
+  await game.settings.set("dnd5e", "autoApplyDowned", "none");
+  Logger.debug("System's 'Auto-Apply Downed' setting set to 'Never'");
 }
 
 /* -------------------------------------------- */

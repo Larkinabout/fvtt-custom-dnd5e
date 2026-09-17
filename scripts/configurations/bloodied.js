@@ -454,18 +454,21 @@ export function updateBloodied(actor, updates, dead) {
 
   if ( typeof currentHp === "undefined" ) return null;
 
-  const halfHp = Math.ceil(maxHp * 0.5);
+  const threshold = (actor?.system?.attributes?.hp?.bloodied
+    ?? CONFIG.DND5E.bloodied?.threshold
+    ?? 50) / 100;
+  const bloodiedHp = Math.ceil(maxHp * threshold);
 
   if ( maxHp <= 1 ) {
     Logger.debug("Bloodied not updated. Max HP is 1 or less.");
     return false;
-  } else if ( currentHp <= halfHp
+  } else if ( currentHp <= bloodiedHp
         && !actor.effects.has("dnd5ebloodied000")
         && !(dead && getSetting(constants.SETTING.REMOVE_BLOODIED_ON_DEAD.KEY)) ) {
     makeBloodied(actor);
     Logger.debug("Bloodied updated", { bloodied: true });
     return true;
-  } else if ( (currentHp > halfHp && actor.effects.has("dnd5ebloodied000"))
+  } else if ( (currentHp > bloodiedHp && actor.effects.has("dnd5ebloodied000"))
         || (dead && getSetting(constants.SETTING.REMOVE_BLOODIED_ON_DEAD.KEY)) ) {
     unmakeBloodied(actor);
     Logger.debug("Bloodied updated", { bloodied: false });

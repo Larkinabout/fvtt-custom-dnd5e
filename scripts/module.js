@@ -1,5 +1,5 @@
 import { CONSTANTS, MODULE } from "./constants.js";
-import { c5eLoadTemplates, getSetting, registerSetting } from "./utils.js";
+import { c5eLoadTemplates, getSetting, registerSetting, syncAutoApplyDowned } from "./utils.js";
 import { animations } from "./animations.js";
 import { configs, getConfigKeys } from "./configurations/registry.js";
 import { register as registerGameplay, registerNegativeHp } from "./gameplay/gameplay.js";
@@ -39,6 +39,7 @@ import { register as registerTokenEffects } from "./token/token-effects.js";
 import { register as registerTokenHudImprovements } from "./token/token-hud-improvements.js";
 import { patchD20Die } from "./patches/d20-die.js";
 import { patchD20Roll } from "./patches/d20-roll.js";
+import { patchInitiativeRoll } from "./patches/initiative-roll.js";
 import { patchPrepareBaseData } from "./patches/prepare-base-data.js";
 import { patchPrepareEncumbrance } from "./patches/prepare-encumbrance.js";
 import { patchPrepareMovement } from "./patches/prepare-movement.js";
@@ -112,6 +113,7 @@ Hooks.on("init", async () => {
 
   patchD20Die();
   patchD20Roll();
+  patchInitiativeRoll();
   patchPrepareBaseData();
   patchPrepareEncumbrance();
   patchPrepareMovement();
@@ -216,7 +218,6 @@ Hooks.on("init", async () => {
     CONSTANTS.CONFIG.TEMPLATE.FIELD_MACRO_DROP,
     CONSTANTS.ACTOR_SHEET.TEMPLATE.CHARACTER_SHEET_2,
     CONSTANTS.ACTOR_SHEET.TEMPLATE.CHARACTER_DETAILS,
-    CONSTANTS.MESSAGE.TEMPLATE.ROLL_REQUEST_CARD,
     "modules/custom-dnd5e/templates/footer.hbs"
   ];
   c5eLoadTemplates(templates);
@@ -253,6 +254,7 @@ Hooks.on("ready", async () => {
   configs.conditions.setConfig();
   configs.conditionEffects.setConfig();
   configs.bloodied.addBloodiedCondition();
+  syncAutoApplyDowned();
   configs.consumableTypes.setConfig();
   configs.creatureTypes.setConfig();
   configs.damageTypes.setConfig();

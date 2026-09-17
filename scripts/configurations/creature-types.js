@@ -60,10 +60,13 @@ class CreatureTypesEditForm extends ConfigEditForm {
    */
   static FIELDS = [
     { name: "label", type: "text", label: "CUSTOM_DND5E.label", localizeValue: true },
-    { name: "plural", type: "text", label: "CUSTOM_DND5E.plural", localizeValue: true },
+    { name: "plural", type: "text", label: "CUSTOM_DND5E.plural", localizeValue: true,
+      hint: "CUSTOM_DND5E.form.creatureTypes.plural.hint" },
     { name: "icon", type: "filePicker", label: "CUSTOM_DND5E.icon" },
-    { name: "reference", type: "text", label: "CUSTOM_DND5E.reference" },
-    { name: "detectAlignment", type: "checkbox", label: "CUSTOM_DND5E.detectAlignment" }
+    { name: "reference", type: "text", label: "CUSTOM_DND5E.reference",
+      hint: "CUSTOM_DND5E.form.creatureTypes.reference.hint" },
+    { name: "detectAlignment", type: "checkbox", label: "CUSTOM_DND5E.detectAlignment",
+      hint: "CUSTOM_DND5E.form.creatureTypes.detectAlignment.hint" }
   ];
 }
 
@@ -76,7 +79,7 @@ class CreatureTypesForm extends ConfigForm {
     this.listTitle = `CUSTOM_DND5E.form.${constants.ID}.listTitle`;
     this.requiresReload = false;
     this.config = configs.creatureTypes;
-    this.actorProperties = ["system.traits.di.value", "system.traits.dr.value", "system.traits.dv.value"];
+    this.actorProperties = ["system.details.type.value"];
   }
 
   /* -------------------------------------------- */
@@ -85,7 +88,7 @@ class CreatureTypesForm extends ConfigForm {
    * @type {object}
    */
   static DEFAULT_OPTIONS = {
-    id: `${MODULE.ID}-damage-types-form`,
+    id: `${MODULE.ID}-creature-types-form`,
     window: {
       title: `CUSTOM_DND5E.form.${constants.ID}.title`
     }

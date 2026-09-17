@@ -1,5 +1,5 @@
 import { CONSTANTS, MODULE, SETTING_BY_ENTITY_TYPE, SHEET_TYPE } from "../constants.js";
-import { c5eLoadTemplates, compareValues, executeMacro, getFlag, setFlag, unsetFlag, getSetting, setSetting, isPrimaryHandler, Logger, registerMenu, registerSetting, resolveFormula } from "../utils.js";
+import { c5eLoadTemplates, compareValues, executeMacro, getFlag, unsetFlag, getSetting, setSetting, isPrimaryHandler, Logger, registerMenu, registerSetting, resolveFormula } from "../utils.js";
 import { WorkflowsForm } from "../forms/workflows/workflows-form.js";
 import { WorkflowsFormEntity } from "../forms/workflows/workflows-form-entity.js";
 import {
@@ -513,7 +513,7 @@ function playSound(action) {
   if ( !action.sound?.path ) return;
 
   const volume = action.sound.volume ?? 0.8;
-  AudioHelper.play({ src: action.sound.path, volume, autoplay: true, loop: false }, true);
+  foundry.audio.AudioHelper.play({ src: action.sound.path, volume, autoplay: true, loop: false }, true);
 }
 
 /* -------------------------------------------- */
@@ -534,43 +534,15 @@ async function conditionAction(actor, action, active) {
     return;
   }
 
-  // Check if this is a leveled condition
+  // Leveled conditions change by one level at a time via the system's native handling,
+  // which creates the effect at level 1, clamps at the max level and deletes at level 0
   const conditionConfig = CONFIG.DND5E.conditionTypes[action.conditionId];
   if ( conditionConfig?.levels > 0 && action.conditionId !== "exhaustion" ) {
     const staticId = dnd5e.utils.staticID(`dnd5e${action.conditionId}`);
     const effect = actor.effects.get(staticId) ?? actor.effects.find(e => e.statuses.has(action.conditionId));
-    const currentLevel = effect?.getFlag(MODULE.ID, "conditionLevel") ?? 0;
-    const maxLevel = conditionConfig.levels;
-
-    if ( active === true ) {
-      // Apply: create at level 1, or increment if already active
-      if ( currentLevel === 0 ) {
-        await actor.toggleStatusEffect(action.conditionId, { active: true });
-        const newEffect = actor.effects.get(staticId) ?? actor.effects.find(e => e.statuses.has(action.conditionId));
-        if ( newEffect ) await newEffect.setFlag(MODULE.ID, "conditionLevel", 1);
-      } else if ( currentLevel < maxLevel ) {
-        await effect.setFlag(MODULE.ID, "conditionLevel", currentLevel + 1);
-      }
-    } else if ( active === false ) {
-      // Remove: decrement if level > 1, or remove entirely
-      if ( currentLevel > 1 ) {
-        await effect.setFlag(MODULE.ID, "conditionLevel", currentLevel - 1);
-      } else if ( effect ) {
-        await actor.toggleStatusEffect(action.conditionId, { active: false });
-      }
-    } else if ( currentLevel > 0 ) {
-      // Toggle off: decrement if level > 1, or remove entirely
-      if ( currentLevel > 1 ) {
-        await effect.setFlag(MODULE.ID, "conditionLevel", currentLevel - 1);
-      } else {
-        await actor.toggleStatusEffect(action.conditionId, { active: false });
-      }
-    } else {
-      // Toggle on: create at level 1
-      await actor.toggleStatusEffect(action.conditionId, { active: true });
-      const newEffect = actor.effects.get(staticId) ?? actor.effects.find(e => e.statuses.has(action.conditionId));
-      if ( newEffect ) await newEffect.setFlag(MODULE.ID, "conditionLevel", 1);
-    }
+    const increase = active ?? !effect;
+    if ( !increase && !effect ) return;
+    await actor.toggleStatusEffect(action.conditionId, { levels: increase ? 1 : -1 });
     return;
   }
 
@@ -1452,7 +1424,7 @@ function checkTriggerState(trigger, entity) {
     case "conditionLevelChanged": {
       if ( !trigger.conditionId || trigger.value === undefined || trigger.value === "" || trigger.value === null ) return true;
       const effect = actor?.effects?.find(e => e.statuses.has(trigger.conditionId));
-      const level = effect?.getFlag("custom-dnd5e", "conditionLevel") ?? 0;
+      const level = effect?.system?.level ?? effect?.getFlag(MODULE.ID, "conditionLevel") ?? 0;
       const targetValue = Number(trigger.value);
       return compareValues(level, trigger.operator, targetValue);
     }

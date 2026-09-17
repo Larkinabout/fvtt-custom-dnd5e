@@ -27,7 +27,7 @@ For full attribution and licensing details, see [ATTRIBUTION.md](ATTRIBUTION.md)
 - [Item Sheet](#item-sheet)
 - [Item Interactions](#item-interactions)
 - [Smaller Form Character Sheet](#smaller-form-character-sheet)
-- [Chat Commands](#chat-commands)
+- [Chat Command Shorthands](#chat-command-shorthands)
 - [Show Pressed Keys](#show-pressed-keys)
 - [Ruler Travel Time](#ruler-travel-time)
 - [Animations](#animations)
@@ -79,7 +79,7 @@ Apply Instant Death when a character suffers damage equal to or greater than the
 </details>
 
 ### Dead
-- Apply the Dead status effect when an NPC is reduced to zero HP.
+- Apply the Dead or Unconscious status effect when an NPC is reduced to zero HP, with an option to apply Unconscious only to NPCs with the Important trait.
 - Tint and/or rotate the token when it gains the Dead status effect.
 
 <details>
@@ -114,7 +114,7 @@ Apply the Unconscious status effect when a PC is reduced to zero HP.
 ### Hit Points
 
 #### Massive Damage
-Apply Massive Damage as per the variant rule (DMG pg. 273).
+Apply Massive Damage as per the variant rule (DMG pg. 273) to player characters, NPCs, or both, with a configurable damage threshold.
 
 <details>
     <summary>See Video</summary>
@@ -282,7 +282,7 @@ Add counters to character sheets with four types: checkbox, fraction, number and
 
 ![Custom D&D 5e Counters](./.github/readme/custom-dnd5e-counters.gif)
 
-Set triggers to automatically change counter values based on HP thresholds, combat events, or item attack rolls. Triggers can execute macros with custom operators. Counter actions include increasing or decreasing values, destroying items, and reducing item quantities. Counters can also be added to items and group actor sheets, and are compatible with Tidy5e character sheets.
+Set triggers to automatically change counter values based on HP thresholds, combat events, or item attack rolls. Triggers can execute macros with custom operators. Counter actions include increasing or decreasing values, destroying items, and reducing item quantities. Counters can also be added to items and group actor sheets, and are compatible with Tidy5e character sheets. Item counters can optionally be displayed on the owning actor's sheet, always or only while the item is equipped.
 
 <details>
     <summary>See Video</summary>
@@ -437,7 +437,7 @@ Customise encumbrance labels, icons, thresholds and weight modifiers. Includes a
 
 ## Configure Interface
 
-Group of UI and canvas settings for tokens, canvas overlays, and chat. Includes Token Border Shape, Radial Status Effects, Token HUD Improvements, Token Distance, Apply Elevation to Selected Tokens, Toggle Status Effects on Selected Tokens, Ruler Travel Time, Show Pressed Keys, and Chat Commands.
+Group of UI and canvas settings for tokens, canvas overlays, and chat. Includes Token Border Shape, Radial Status Effects, Token HUD Improvements, Token Distance, Apply Elevation to Selected Tokens, Toggle Status Effects on Selected Tokens, Ruler Travel Time, Show Pressed Keys, and Chat Command Shorthands.
 
 For help and advice on interface settings, either click the info buttons in the Configure Interface window or open the Interface journal within the Custom D&D 5e compendium.
 
@@ -537,16 +537,9 @@ Select 'Custom D&D 5e Character Sheet' from the Sheet Configuration dialog (cog 
 
 ---
 
-## Chat Commands
+## Chat Command Shorthands
 
-Enable additional chat commands to roll an attack, roll damage or request checks and saving throws. For a list of available commands, view the **Chat Commands** journal within the **Custom D&D 5e** compendium.
-
-<details>
-    <summary>See Video</summary>
-
-![Custom D&D 5e Chat Commands](./.github/readme/custom-dnd5e-chat-commands.gif)
-
-</details>
+Enable shorthand aliases for the D&D 5e system's chat commands, such as `/a` for `/attack` and `/s` for `/save`. For the full list of commands and their options, see the [D&D 5e system's Enrichers wiki page](https://github.com/foundryvtt/dnd5e/wiki/Enrichers). The shorthand aliases are listed in the **Interface** journal within the **Custom D&D 5e** compendium.
 
 <p align="right">(<a href="#custom-dd-5e">back to top</a>)</p>
 

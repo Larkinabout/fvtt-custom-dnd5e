@@ -14,6 +14,7 @@
     <div class="standard-form scrollable">
         <fieldset>
             <legend>{{localize "DND5E.Effects"}}</legend>
+            <p class="hint">{{localize "CUSTOM_DND5E.form.encumbrance.effects.hint"}}</p>
             <fieldset>
                 <legend>{{localize "EFFECT.DND5E.StatusEncumbered"}}</legend>
                 <div class="form-group">
@@ -86,6 +87,7 @@
         </fieldset>
         <fieldset>
             <legend>{{localize "CUSTOM_DND5E.thresholds"}}</legend>
+            <p class="hint">{{localize "CUSTOM_DND5E.form.encumbrance.threshold.hint"}}</p>
             <div class="form-group">
                 <label>{{localize "EFFECT.DND5E.StatusEncumbered"}}</label>
                 <div class="form-fields">
@@ -131,7 +133,9 @@
                             {{#if (customDnd5eEq speedReductionMode "multiplier")}}selected{{/if}}>{{localize "CUSTOM_DND5E.multiplier"}}</option>
                     </select>
                 </div>
+                <p class="hint">{{localize "CUSTOM_DND5E.form.encumbrance.speedReductionMode.hint"}}</p>
             </div>
+            <p class="custom-dnd5e-advice notes speed-reduction-flat{{#unless (customDnd5eEq speedReductionMode "flat")}} hidden{{/unless}}">{{localize "CUSTOM_DND5E.form.encumbrance.speedReductionFlat.hint"}}</p>
             <div class="form-group speed-reduction-flat{{#unless (customDnd5eEq speedReductionMode "flat")}} hidden{{/unless}}">
                 <label>{{localize "EFFECT.DND5E.StatusEncumbered"}}</label>
                 <div class="form-fields">
@@ -227,6 +231,7 @@
                         type="number"
                         value="{{#if metric}}{{currencyPerWeight.metric}}{{else}}{{currencyPerWeight.imperial}}{{/if}}">
                 </div>
+                <p class="hint">{{localize "CUSTOM_DND5E.form.encumbrance.currencyPerWeight.hint"}}</p>
             </div>
         </fieldset>
         <fieldset>
@@ -243,6 +248,7 @@
                         step="0.01"
                         value="{{equippedItemWeightModifier}}">
                 </div>
+                <p class="hint">{{localize "CUSTOM_DND5E.form.encumbrance.equippedItemWeightModifier.hint"}}</p>
             </div>
             <div class="form-group">
                 <label>{{localize "CUSTOM_DND5E.proficientEquippedItemWeightModifier"}}</label>
@@ -254,6 +260,7 @@
                         step="0.01"
                         value="{{proficientEquippedItemWeightModifier}}">
                 </div>
+                <p class="hint">{{localize "CUSTOM_DND5E.form.encumbrance.proficientEquippedItemWeightModifier.hint"}}</p>
             </div>
             <div class="form-group">
                 <label>{{localize "CUSTOM_DND5E.unequippedItemWeightModifier"}}</label>
@@ -265,6 +272,7 @@
                         step="0.01"
                         value="{{unequippedItemWeightModifier}}">
                 </div>
+                <p class="hint">{{localize "CUSTOM_DND5E.form.encumbrance.unequippedItemWeightModifier.hint"}}</p>
             </div>
         </fieldset>
     </div>

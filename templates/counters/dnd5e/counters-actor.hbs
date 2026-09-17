@@ -24,9 +24,12 @@
                     {{else}}
                     {{counter.label}}
                     {{/if}}
+                    {{#if counter.isItemCounter}}
+                    <img class="custom-dnd5e-counters-item-icon" src="{{counter.itemImg}}" data-tooltip="{{counter.itemName}}" alt="{{counter.itemName}}">
+                    {{/if}}
                 </h4>
                 <dnd5e-checkbox
-                    name="flags.custom-dnd5e.{{counter.property}}"
+                    {{#unless counter.isItemCounter}}name="flags.custom-dnd5e.{{counter.property}}"{{/unless}}
                     {{checked counter.value}}
                     {{#unless counter.canEdit}}disabled{{/unless}}></dnd5e-checkbox>
             </div>
@@ -41,12 +44,15 @@
                 {{else}}
                 {{counter.label}}
                 {{/if}}
+                {{#if counter.isItemCounter}}
+                <img class="custom-dnd5e-counters-item-icon" src="{{counter.itemImg}}" data-tooltip="{{counter.itemName}}" alt="{{counter.itemName}}">
+                {{/if}}
             </h4>
             <div class="custom-dnd5e-counters-counter-value">
                 <input
                     type="number"
                     data-input="value"
-                    name="flags.custom-dnd5e.{{counter.property}}"
+                    {{#unless counter.isItemCounter}}name="flags.custom-dnd5e.{{counter.property}}"{{/unless}}
                     value="{{counter.value}}"
                     placeholder="0"
                     data-dtype="Number"
@@ -64,13 +70,16 @@
                 {{else}}
                 {{counter.label}}
                 {{/if}}
+                {{#if counter.isItemCounter}}
+                <img class="custom-dnd5e-counters-item-icon" src="{{counter.itemImg}}" data-tooltip="{{counter.itemName}}" alt="{{counter.itemName}}">
+                {{/if}}
             </h4>
             <div class="custom-dnd5e-counters-counter-value">
                 <div class="custom-dnd5e-counters-fraction-group">
                     <input
                         type="number"
                         data-input="value"
-                        name="flags.custom-dnd5e.{{counter.property}}.value"
+                        {{#unless counter.isItemCounter}}name="flags.custom-dnd5e.{{counter.property}}.value"{{/unless}}
                         value="{{counter.value}}"
                         placeholder="0"
                         data-dtype="Number"
@@ -79,7 +88,7 @@
                     <input
                         type="number"
                         data-input="max"
-                        name="flags.custom-dnd5e.{{counter.property}}.max"
+                        {{#unless counter.isItemCounter}}name="flags.custom-dnd5e.{{counter.property}}.max"{{/unless}}
                         value="{{counter.max}}"
                         placeholder="0"
                         data-dtype="Number"
@@ -91,7 +100,12 @@
 
         {{#if (eq counter.type "pips")}}
         <li class="custom-dnd5e-counters-counter custom-dnd5e-counters-pips flexrow" data-id="{{key}}">
-            <h4>{{counter.label}}</h4>
+            <h4>
+                {{counter.label}}
+                {{#if counter.isItemCounter}}
+                <img class="custom-dnd5e-counters-item-icon" src="{{counter.itemImg}}" data-tooltip="{{counter.itemName}}" alt="{{counter.itemName}}">
+                {{/if}}
+            </h4>
             <div class="pips">
                 {{#each counter.pips}}
                 <button type="button" class="pip{{#if filled}} filled{{/if}}"
@@ -103,7 +117,12 @@
 
         {{#if (eq counter.type "successFailure")}}
         <li class="custom-dnd5e-counters-counter custom-dnd5e-counters-success-failure flexrow" data-id="{{key}}">
-            <h4>{{counter.label}}</h4>
+            <h4>
+                {{counter.label}}
+                {{#if counter.isItemCounter}}
+                <img class="custom-dnd5e-counters-item-icon" src="{{counter.itemImg}}" data-tooltip="{{counter.itemName}}" alt="{{counter.itemName}}">
+                {{/if}}
+            </h4>
             <div class="custom-dnd5e-counters-counter-value">
                 {{#if canEdit}}
                 <a class="custom-dnd5e-counters-link" data-input="success"><i class="fas fa-check"></i></a>
@@ -113,7 +132,7 @@
                 <input
                     type="number"
                     data-input="success"
-                    name="flags.custom-dnd5e.{{counter.property}}.success"
+                    {{#unless counter.isItemCounter}}name="flags.custom-dnd5e.{{counter.property}}.success"{{/unless}}
                     value="{{counter.success}}"
                     placeholder="0"
                     data-dtype="Number"
@@ -127,7 +146,7 @@
                 <input
                     type="number"
                     data-input="failure"
-                    name="flags.custom-dnd5e.{{counter.property}}.failure"
+                    {{#unless counter.isItemCounter}}name="flags.custom-dnd5e.{{counter.property}}.failure"{{/unless}}
                     value="{{counter.failure}}"
                     placeholder="0"
                     data-dtype="Number"

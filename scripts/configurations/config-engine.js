@@ -1,9 +1,11 @@
 import {
+  Logger,
   assignDnd5eConfig,
   c5eLoadTemplates,
   checkEmpty,
   getDefaultDnd5eConfig,
   getSetting,
+  isUnresolvedI18nKey,
   registerMenu,
   registerSetting,
   resetDnd5eConfig,
@@ -16,12 +18,14 @@ import {
  * @property {*} [default] Fallback when the source value is undefined.
  * @property {"defined"|((data: object) => boolean)} [conditional]
  *   Whether to include the field. `"defined"` means include when the source value is not undefined.
- * @property {(value: *, data: object) => *} [transform] Transform the source value.
+ * @property {(value: *, data: object, key: string) => *} [transform]
+ *   Transform the source value. Return `undefined` to omit the field from the built entry.
  * @property {boolean} [systemLabelFallback]
- *   Fall back to `CONFIG.CUSTOM_DND5E[configKey][key][field.key]` when the value is not a valid i18n key,
- *   unless the stored entry opts out via `data.system === false`.
+ *   Fall back to `CONFIG.CUSTOM_DND5E[configKey][key][field.key]` when the value looks like a localization
+ *   key that no longer resolves, unless the stored entry opts out via `data.system === false`.
  * @property {{entryType: "object"|"scalar", entry: *}} [children]
  *   Sub-definition for nested entries. When set, the field value is recursively shaped.
+ * @property {boolean} [required] Skip the whole entry when this field's built value is empty.
  */
 
 /**
@@ -29,6 +33,7 @@ import {
  * @property {"labelOrSelf"|"key"} [source] Where to read the value from. `"labelOrSelf"` means `data.label ?? data`.
  * @property {string} [key] When `source === "key"`, the field on `data` to read.
  * @property {boolean} [localize] Pass the value through `game.i18n.localize`.
+ * @property {boolean} [required] Skip the entry when the built value is empty.
  */
 
 /**
@@ -49,6 +54,8 @@ import {
  *   Field list for `"object"` entries, or a single descriptor for `"scalar"` entries.
  * @property {(key: string, data: *, helpers: {buildConfig: (data: object) => object}) => *} [buildEntry]
  *   When set, the engine calls it instead of `buildObjectEntry` / `buildScalarEntry`.
+ * @property {(data: object, key: string|null) => object} [normaliseDefault]
+ *   Make the cloned system default safe to store as JSON.
  */
 
 /* -------------------------------------------- */
@@ -121,7 +128,8 @@ function registerSettingsForConfig(def) {
  * @returns {object} Default config data
  */
 export function getSettingDefault(def, key = null) {
-  return getDefaultDnd5eConfig(def.configKey, key);
+  const data = getDefaultDnd5eConfig(def.configKey, key);
+  return def.normaliseDefault ? def.normaliseDefault(data, key) : data;
 }
 
 /* -------------------------------------------- */
@@ -200,7 +208,8 @@ function mergeSettingData(def, settingData) {
 /* -------------------------------------------- */
 
 /**
- * Build the config object from merged setting data. Filters out hidden entries.
+ * Build the config object from merged setting data. Filters out hidden entries and entries
+ * missing required values.
  * @param {ConfigDefinition} def
  * @param {object} settingData
  * @returns {object} Config data
@@ -210,7 +219,27 @@ function buildConfig(def, settingData) {
     Object.keys(settingData)
       .filter(key => settingData[key]?.visible || settingData[key]?.visible === undefined)
       .map(key => [key, buildEntry(def, key, settingData[key])])
+      .filter(([key, entry]) => {
+        if ( hasRequiredEntryValues(def, entry) ) return true;
+        Logger.info(`Skipped '${def.configKey}' entry '${key}' because it is missing required values`);
+        return false;
+      })
   );
+}
+
+/* -------------------------------------------- */
+
+/**
+ * Whether a built entry has values for all fields marked as required in the entry descriptors.
+ * @param {ConfigDefinition} def
+ * @param {object|string} entry
+ * @returns {boolean}
+ */
+function hasRequiredEntryValues(def, entry) {
+  const isEmpty = value => value === undefined || value === null || value === "";
+  if ( def.entryType === "scalar" ) return !def.entry?.required || !isEmpty(entry);
+  if ( !Array.isArray(def.entry) ) return true;
+  return def.entry.every(field => !field.required || !isEmpty(entry?.[field.key]));
 }
 
 /* -------------------------------------------- */
@@ -256,15 +285,16 @@ function buildObjectEntry(def, key, data) {
 
     if ( value === undefined && field.default !== undefined ) value = field.default;
 
-    if ( field.systemLabelFallback && data?.system !== false ) {
-      if ( typeof value !== "string" || !game.i18n.has(value) ) {
-        value = CONFIG.CUSTOM_DND5E[def.configKey]?.[key]?.[field.key] ?? value;
-      }
+    if ( field.systemLabelFallback && data?.system !== false && isUnresolvedI18nKey(value) ) {
+      value = CONFIG.CUSTOM_DND5E[def.configKey]?.[key]?.[field.key] ?? value;
     }
 
     if ( field.children ) value = buildConfig(field.children, value);
 
-    if ( field.transform ) value = field.transform(value, data);
+    if ( field.transform ) {
+      value = field.transform(value, data, key);
+      if ( value === undefined ) continue;
+    }
 
     if ( field.localize && typeof value === "string" ) value = game.i18n.localize(value);
 

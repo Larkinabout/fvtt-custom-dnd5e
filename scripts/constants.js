@@ -149,6 +149,9 @@ export const CONSTANTS = {
       APPLY_INSTANT_DEATH: {
         KEY: "apply-instant-death"
       },
+      NEGATIVE_HP_DEATH_THRESHOLD: {
+        KEY: "negative-hp-death-threshold"
+      },
       DEAD_ROTATION: {
         KEY: "dead-rotation"
       },
@@ -219,8 +222,14 @@ export const CONSTANTS = {
       MASSIVE_DAMAGE_ANIMATION: {
         KEY: "massive-damage-animation"
       },
+      MASSIVE_DAMAGE_DC: {
+        KEY: "massive-damage-dc"
+      },
       MASSIVE_DAMAGE_TABLE: {
         KEY: "massive-damage-table"
+      },
+      MASSIVE_DAMAGE_THRESHOLD: {
+        KEY: "massive-damage-threshold"
       },
       APPLY_NEGATIVE_HP: {
         KEY: "apply-negative-hp"
@@ -477,11 +486,6 @@ export const CONSTANTS = {
       NAME: "CUSTOM_DND5E.setting.maxLevel.name"
     },
     UUID: "Compendium.custom-dnd5e.custom-dnd5e-journals.JournalEntry.B48iqFBddUikMMer.JournalEntryPage.4h10hYx01hjbUQL6"
-  },
-  MESSAGE: {
-    TEMPLATE: {
-      ROLL_REQUEST_CARD: "modules/custom-dnd5e/templates/roll-request-card.hbs"
-    }
   },
   MIGRATION: {
     VERSION: {
@@ -752,6 +756,11 @@ export const JOURNAL_HELP_BUTTON = {
   action: "help",
   uuid: null
 };
+
+/**
+ * Status effects the D&D 5e system applies automatically based on each token's own state.
+ */
+export const SYSTEM_MANAGED_STATUSES = new Set(["bloodied", "falling"]);
 
 export const SETTING_BY_ENTITY_TYPE = {
   COUNTERS: {

@@ -59,10 +59,12 @@ class SpellSchoolsEditForm extends ConfigEditForm {
    * @type {object[]}
    */
   static FIELDS = [
-    { name: "fullKey", type: "text", label: "CUSTOM_DND5E.fullKey", localizeValue: true },
+    { name: "fullKey", type: "text", label: "CUSTOM_DND5E.fullKey", localizeValue: true,
+      hint: "CUSTOM_DND5E.form.spellSchools.fullKey.hint" },
     { name: "label", type: "text", label: "CUSTOM_DND5E.label", localizeValue: true },
     { name: "icon", type: "filePicker", label: "CUSTOM_DND5E.icon" },
-    { name: "reference", type: "text", label: "CUSTOM_DND5E.reference" }
+    { name: "reference", type: "text", label: "CUSTOM_DND5E.reference",
+      hint: "CUSTOM_DND5E.form.spellSchools.reference.hint" }
   ];
 }
 

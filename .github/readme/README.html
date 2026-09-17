@@ -25,7 +25,7 @@
     <li><a href="#item-sheet">Item Sheet</a></li>
     <li><a href="#item-interactions">Item Interactions</a></li>
     <li><a href="#smaller-form-character-sheet">Smaller Form Character Sheet</a></li>
-    <li><a href="#chat-commands">Chat Commands</a></li>
+    <li><a href="#chat-command-shorthands">Chat Command Shorthands</a></li>
     <li><a href="#show-pressed-keys">Show Pressed Keys</a></li>
     <li><a href="#ruler-travel-time">Ruler Travel Time</a></li>
     <li><a href="#animations">Animations</a></li>
@@ -66,7 +66,7 @@
 
 <h3>Dead</h3>
 <ul>
-    <li>Apply the Dead status effect when an NPC is reduced to zero HP.</li>
+    <li>Apply the Dead or Unconscious status effect when an NPC is reduced to zero HP, with an option to apply Unconscious only to NPCs with the Important trait.</li>
     <li>Tint and/or rotate the token when it gains the Dead status effect.</li>
 </ul>
 
@@ -89,7 +89,7 @@
 <h3>Hit Points</h3>
 
 <h4>Massive Damage</h4>
-<p>Apply Massive Damage as per the variant rule (DMG pg. 273).</p>
+<p>Apply Massive Damage as per the variant rule (DMG pg. 273) to player characters, NPCs, or both, with a configurable damage threshold.</p>
 
 <p><img src="https://github.com/Larkinabout/fvtt-custom-dnd5e/blob/main/.github/readme/custom-dnd5e-massive-damage.gif?raw=true" alt="Custom D&amp;D 5e Massive Damage"></p>
 
@@ -211,7 +211,7 @@
 
 <p><img src="https://github.com/Larkinabout/fvtt-custom-dnd5e/blob/main/.github/readme/custom-dnd5e-counters.gif?raw=true" alt="Custom D&amp;D 5e Counters"></p>
 
-<p>Set triggers to automatically change counter values based on HP thresholds, combat events, or item attack rolls. Triggers can execute macros with custom operators. Counter actions include increasing or decreasing values, destroying items, and reducing item quantities. Counters can also be added to items and group actor sheets, and are compatible with Tidy5e character sheets.</p>
+<p>Set triggers to automatically change counter values based on HP thresholds, combat events, or item attack rolls. Triggers can execute macros with custom operators. Counter actions include increasing or decreasing values, destroying items, and reducing item quantities. Counters can also be added to items and group actor sheets, and are compatible with Tidy5e character sheets. Item counters can optionally be displayed on the owning actor's sheet, always or only while the item is equipped.</p>
 
 <p><img src="https://github.com/Larkinabout/fvtt-custom-dnd5e/blob/main/.github/readme/custom-dnd5e-counter-triggers.gif?raw=true" alt="Custom D&amp;D 5e Counter Triggers"></p>
 
@@ -354,7 +354,7 @@
 
 <h2 id="configure-interface">Configure Interface</h2>
 
-<p>Group of UI and canvas settings for tokens, canvas overlays, and chat. Includes Token Border Shape, Radial Status Effects, Token HUD Improvements, Token Distance, Apply Elevation to Selected Tokens, Toggle Status Effects on Selected Tokens, Ruler Travel Time, Show Pressed Keys, and Chat Commands.</p>
+<p>Group of UI and canvas settings for tokens, canvas overlays, and chat. Includes Token Border Shape, Radial Status Effects, Token HUD Improvements, Token Distance, Apply Elevation to Selected Tokens, Toggle Status Effects on Selected Tokens, Ruler Travel Time, Show Pressed Keys, and Chat Command Shorthands.</p>
 
 <p>For help and advice on interface settings, either click the info buttons in the Configure Interface window or open the Interface journal within the Custom D&amp;D 5e compendium.</p>
 
@@ -446,11 +446,9 @@
 
 <hr>
 
-<h2 id="chat-commands">Chat Commands</h2>
+<h2 id="chat-command-shorthands">Chat Command Shorthands</h2>
 
-<p>Enable additional chat commands to roll an attack, roll damage or request checks and saving throws. For a list of available commands, view the <strong>Chat Commands</strong> journal within the <strong>Custom D&amp;D 5e</strong> compendium.</p>
-
-<p><img src="https://github.com/Larkinabout/fvtt-custom-dnd5e/blob/main/.github/readme/custom-dnd5e-chat-commands.gif?raw=true" alt="Custom D&amp;D 5e Chat Commands"></p>
+<p>Enable shorthand aliases for the D&amp;D 5e system's chat commands, such as <code>/a</code> for <code>/attack</code> and <code>/s</code> for <code>/save</code>. For the full list of commands and their options, see the <a href="https://github.com/foundryvtt/dnd5e/wiki/Enrichers">D&amp;D 5e system's Enrichers wiki page</a>. The shorthand aliases are listed in the <strong>Interface</strong> journal within the <strong>Custom D&amp;D 5e</strong> compendium.</p>
 
 <p align="right">(<a href="#custom-dd-5e">back to top</a>)</p>
 

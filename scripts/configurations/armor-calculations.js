@@ -60,8 +60,29 @@ class ArmorCalculationsEditForm extends ConfigEditForm {
    */
   static FIELDS = [
     { name: "label", type: "text", label: "CUSTOM_DND5E.label", localizeValue: true },
-    { name: "formula", type: "text", label: "CUSTOM_DND5E.formula" }
+    { name: "formula", type: "text", label: "CUSTOM_DND5E.formula",
+      hint: "CUSTOM_DND5E.form.armorCalculations.formula.hint" },
+    { name: "shielded", type: "select", label: "CUSTOM_DND5E.shield", choices: "shielded", localizeChoices: true,
+      hint: "CUSTOM_DND5E.form.armorCalculations.shielded.hint" }
   ];
+
+  /* -------------------------------------------- */
+
+  /**
+   * Get the select options for the form.
+   * @returns {object} Select options
+   */
+  _getSelects() {
+    return {
+      shielded: {
+        choices: {
+          "": "CUSTOM_DND5E.any",
+          true: "CUSTOM_DND5E.shieldEquipped",
+          false: "CUSTOM_DND5E.noShield"
+        }
+      }
+    };
+  }
 }
 
 /* -------------------------------------------- */
@@ -101,6 +122,9 @@ export default {
   entryType: "object",
   entry: [
     { key: "formula" },
-    { key: "label", localize: true }
+    { key: "label", localize: true, systemLabelFallback: true },
+    { key: "armored", conditional: "defined" },
+    { key: "shielded", conditional: "defined",
+      transform: v => ((v === "" || v === null || v === undefined) ? undefined : (v === true || v === "true")) }
   ]
 };

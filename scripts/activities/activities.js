@@ -154,7 +154,7 @@ export function register() {
         swap: false,
         targeting: false,
         fallbackTarget: false,
-        clearTargetsAfterUse: false
+        clearTargets: "none"
       }
     }
   );
@@ -200,6 +200,9 @@ export function register() {
 
       const targeting = _getTargetingRequirements(activity, { fallback });
       if ( !targeting ) return true;
+
+      if ( setting.clearTargets === "before" ) _clearUserTargets();
+
       if ( game.user.targets.size >= targeting.count ) return true;
 
       const options = { activity, ...targeting, usageConfig, dialogConfig, messageConfig };
@@ -212,14 +215,38 @@ export function register() {
     });
   }
 
-  if ( setting?.clearTargetsAfterUse ) {
-    // For non-attack activities, clear immediately after use.
-    // For attack activities, defer until the attack roll completes.
+  if ( setting?.clearTargets === "after" ) {
+    // Whether a later damage or healing roll will need the targets.
+    const hasDamage = activity => !!(activity?.damage?.parts?.length
+      || activity?.healing?.formula
+      || activity?.item?.system?.properties?.has("amm"));
+
+    let clearAfterDamage = false;
+
+    // For activities without damage, clear immediately after use or after the attack roll.
+    // For activities with damage, defer clearing until damage is rolled.
     Hooks.on("dnd5e.postUseActivity", activity => {
       if ( activity.type === "attack" ) return;
+      if ( hasDamage(activity) ) {
+        clearAfterDamage = true;
+        return;
+      }
       _clearUserTargets();
     });
-    Hooks.on("dnd5e.rollAttack", () => _clearUserTargets());
+
+    Hooks.on("dnd5e.rollAttack", (rolls, data) => {
+      if ( hasDamage(data?.subject) ) {
+        clearAfterDamage = true;
+        return;
+      }
+      _clearUserTargets();
+    });
+
+    Hooks.on("dnd5e.rollDamageV2", () => {
+      if ( !clearAfterDamage ) return;
+      clearAfterDamage = false;
+      _clearUserTargets();
+    });
   }
 
   c5eLoadTemplates([

@@ -79,7 +79,7 @@ class RestTypesEditForm extends ConfigEditForm {
         { name: "label", type: "text", label: "CUSTOM_DND5E.label", localizeValue: true,
           labelClass: "custom-dnd5e-edit-label-flex2" },
         { name: "icon", type: "text", label: "CUSTOM_DND5E.icon", placeholder: "fa-solid fa-bench-tree",
-          labelClass: "custom-dnd5e-edit-label-flex2" },
+          hint: "CUSTOM_DND5E.form.restTypes.icon.hint", labelClass: "custom-dnd5e-edit-label-flex2" },
         { name: "hint", type: "textarea", label: "CUSTOM_DND5E.restHint.label", hint: "CUSTOM_DND5E.restHint.hint",
           labelClass: "custom-dnd5e-edit-label-flex2" }
       ]
@@ -88,11 +88,11 @@ class RestTypesEditForm extends ConfigEditForm {
       legend: "CUSTOM_DND5E.durationMinutes",
       fields: [
         { name: "durationGritty", type: "number", label: "CUSTOM_DND5E.gritty", step: 1, min: 0,
-          labelClass: "custom-dnd5e-edit-label-flex2" },
+          hint: "CUSTOM_DND5E.form.restTypes.durationGritty.hint", labelClass: "custom-dnd5e-edit-label-flex2" },
         { name: "durationNormal", type: "number", label: "CUSTOM_DND5E.normal", step: 1, min: 0,
-          labelClass: "custom-dnd5e-edit-label-flex2" },
+          hint: "CUSTOM_DND5E.form.restTypes.durationNormal.hint", labelClass: "custom-dnd5e-edit-label-flex2" },
         { name: "durationEpic", type: "number", label: "CUSTOM_DND5E.epic", step: 1, min: 0,
-          labelClass: "custom-dnd5e-edit-label-flex2" }
+          hint: "CUSTOM_DND5E.form.restTypes.durationEpic.hint", labelClass: "custom-dnd5e-edit-label-flex2" }
       ]
     },
     {
@@ -127,7 +127,7 @@ class RestTypesEditForm extends ConfigEditForm {
       legend: "DND5E.HitPoints",
       fields: [
         { name: "recoverHitPoints", type: "checkbox", label: "CUSTOM_DND5E.recoverHitPoints",
-          labelClass: "custom-dnd5e-edit-label-flex2" },
+          hint: "CUSTOM_DND5E.form.restTypes.recoverHitPoints.hint", labelClass: "custom-dnd5e-edit-label-flex2" },
         { name: "hitPointsFraction", type: "number", label: "CUSTOM_DND5E.hitPointsFraction.label",
           hint: "CUSTOM_DND5E.hitPointsFraction.hint", step: 0.05, min: 0, max: 1,
           labelClass: "custom-dnd5e-edit-label-flex2" }
@@ -139,7 +139,7 @@ class RestTypesEditForm extends ConfigEditForm {
         { name: "hitDice", type: "checkbox", label: "CUSTOM_DND5E.spendHitDice.label",
           hint: "CUSTOM_DND5E.spendHitDice.hint" },
         { name: "recoverHitDice", type: "checkbox", label: "CUSTOM_DND5E.recoverHitDice",
-          labelClass: "custom-dnd5e-edit-label-flex2" },
+          hint: "CUSTOM_DND5E.form.restTypes.recoverHitDice.hint", labelClass: "custom-dnd5e-edit-label-flex2" },
         { name: "hitDiceFormula", type: "text", label: "CUSTOM_DND5E.hitDiceFormula.label",
           hint: "CUSTOM_DND5E.hitDiceFormula.hint", placeholder: "@attributes.hd.max * 0.5",
           labelClass: "custom-dnd5e-edit-label-flex2" },
@@ -151,9 +151,9 @@ class RestTypesEditForm extends ConfigEditForm {
       legend: "CUSTOM_DND5E.temporaryHitPoints",
       fields: [
         { name: "recoverTemp", type: "checkbox", label: "CUSTOM_DND5E.removeTemp",
-          labelClass: "custom-dnd5e-edit-label-flex2" },
+          hint: "CUSTOM_DND5E.form.restTypes.recoverTemp.hint", labelClass: "custom-dnd5e-edit-label-flex2" },
         { name: "recoverTempMax", type: "checkbox", label: "CUSTOM_DND5E.removeTempMax",
-          labelClass: "custom-dnd5e-edit-label-flex2" }
+          hint: "CUSTOM_DND5E.form.restTypes.recoverTempMax.hint", labelClass: "custom-dnd5e-edit-label-flex2" }
       ]
     },
     {

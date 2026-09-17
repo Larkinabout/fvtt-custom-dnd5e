@@ -43,6 +43,21 @@
     margin: 0;
 }
 
+.custom-dnd5e-counters-item-icon {
+    border: 1px solid var(--dnd5e-color-gold);
+    border-radius: 2px;
+    cursor: pointer;
+    flex: 0 0 14px;
+    height: 14px;
+    margin-left: 4px;
+    opacity: 0.8;
+    width: 14px;
+}
+
+.custom-dnd5e-counters-item-icon:hover {
+    opacity: 1;
+}
+
 /*
  * INPUTS
  */

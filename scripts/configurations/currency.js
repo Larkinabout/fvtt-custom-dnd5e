@@ -63,7 +63,8 @@ class CurrencyEditForm extends ConfigEditForm {
   static FIELDS = [
     { name: "label", type: "text", label: "CUSTOM_DND5E.label", localizeValue: true },
     { name: "abbreviation", type: "text", label: "CUSTOM_DND5E.abbreviation", localizeValue: true },
-    { name: "conversion", type: "number", label: "CUSTOM_DND5E.conversion", step: "any" },
+    { name: "conversion", type: "number", label: "CUSTOM_DND5E.conversion", step: "any",
+      hint: "CUSTOM_DND5E.form.currency.conversion.hint" },
     { name: "icon", type: "filePicker", label: "CUSTOM_DND5E.icon" }
   ];
 }

@@ -54,14 +54,19 @@ class AbilitiesEditForm extends ConfigEditForm {
    * @type {object[]}
    */
   static FIELDS = [
-    { name: "fullKey", type: "text", label: "CUSTOM_DND5E.fullKey", localizeValue: true },
+    { name: "fullKey", type: "text", label: "CUSTOM_DND5E.fullKey", localizeValue: true,
+      hint: "CUSTOM_DND5E.form.abilities.fullKey.hint" },
     { name: "label", type: "text", label: "CUSTOM_DND5E.label", localizeValue: true },
     { name: "abbreviation", type: "text", label: "CUSTOM_DND5E.abbreviation", localizeValue: true },
-    { name: "improvement", type: "checkbox", label: "Include for ASI", default: true },
+    { name: "icon", type: "filePicker", label: "CUSTOM_DND5E.icon" },
+    { name: "improvement", type: "checkbox", label: "CUSTOM_DND5E.form.abilities.improvement.label", default: true,
+      hint: "CUSTOM_DND5E.form.abilities.improvement.hint" },
     { name: "type", type: "select", label: "CUSTOM_DND5E.type", choices: "type", localizeChoices: true,
-      disabledWhenSystem: true },
-    { name: "reference", type: "text", label: "CUSTOM_DND5E.reference" },
-    { name: "rollMode", type: "select", label: "CUSTOM_DND5E.rollMode", choices: "rollMode", localizeChoices: true }
+      disabledWhenSystem: true, hint: "CUSTOM_DND5E.form.abilities.type.hint" },
+    { name: "reference", type: "text", label: "CUSTOM_DND5E.reference",
+      hint: "CUSTOM_DND5E.form.abilities.reference.hint" },
+    { name: "rollMode", type: "select", label: "CUSTOM_DND5E.rollMode", choices: "rollMode", localizeChoices: true,
+      hint: "CUSTOM_DND5E.form.abilities.rollMode.hint" }
   ];
 
   /* -------------------------------------------- */
@@ -126,6 +131,7 @@ export default {
     { key: "abbreviation", localize: true },
     { key: "defaults", conditional: "defined", transform: v => ({ ...v }) },
     { key: "fullKey" },
+    { key: "icon", conditional: "defined" },
     { key: "improvement", conditional: data => data?.improvement === false },
     { key: "label", localize: true },
     { key: "reference" },

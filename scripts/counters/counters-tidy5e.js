@@ -1,6 +1,6 @@
 import { CONSTANTS } from "../constants.js";
 import { getSetting } from "../utils.js";
-import { mergeCounters, setupCounterInteractions } from "./counters.js";
+import { getActorSheetCounters, mergeCounters, setupCounterInteractions } from "./counters.js";
 
 /**
  * Register Tidy 5e Sheets integration for counters.
@@ -37,14 +37,14 @@ function registerTab(api, method, settingKey, classes = "") {
     enabled: context => getSetting(CONSTANTS.COUNTERS.SETTING.COUNTERS.KEY),
     getData: context => {
       const actor = context.actor;
-      const counters = mergeCounters(actor, settingKey);
+      const counters = getActorSheetCounters(actor, settingKey);
       return { ...context, counters, unlocked: context.unlocked, classes };
     },
     onRender: ({ app, tabContentsElement }) => {
       const actor = app.actor;
       const container = tabContentsElement.querySelector("#custom-dnd5e-counters");
       if ( !container ) return;
-      const counters = mergeCounters(actor, settingKey);
+      const counters = getActorSheetCounters(actor, settingKey);
       setupCounterInteractions(actor, counters, container, app.isEditable);
     }
   });

@@ -1,4 +1,4 @@
-import { CONSTANTS } from "./constants.js";
+import { CONSTANTS, SYSTEM_MANAGED_STATUSES } from "./constants.js";
 import { registerSettings as registerChatCommandsSetting, registerHooks as registerChatCommandsHooks } from "./chat-commands.js";
 import { registerSettings as registerCursorLabelSettings, registerHooks as registerCursorLabelHooks } from "./interface/cursor-label.js";
 import { getSetting, registerSetting } from "./utils.js";
@@ -106,6 +106,7 @@ function registerHooks() {
  */
 async function toggleEffectOnSelected(active, activeEffect) {
   if ( canvas.tokens.controlled.length <= 1 || activeEffect.origin || activeEffect?.flags["custom-dnd5e"]?.ignore ) return;
+  if ( [...activeEffect.statuses].some(status => SYSTEM_MANAGED_STATUSES.has(status)) ) return;
 
   const statusId = [...activeEffect.statuses][0];
   const overlay = activeEffect?.flags?.core?.overlay ?? false;

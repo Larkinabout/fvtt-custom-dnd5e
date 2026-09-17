@@ -1,4 +1,4 @@
-import { CONSTANTS, SHEET_TYPE } from "../constants.js";
+import { CONSTANTS, MODULE, SHEET_TYPE } from "../constants.js";
 import { configs } from "../configurations/registry.js";
 import { register as registerAverageDamage } from "./average-damage.js";
 import { register as registerMobDamage } from "./mob-damage.js";
@@ -7,10 +7,15 @@ import { animations } from "../animations.js";
 import {
   c5eLoadTemplates,
   Logger,
+  createSaveRequestMessage,
   getDefaultSetting,
+  getFlag,
+  getSaveRequestMessage,
   getSetting,
+  hasNegativeHp,
   registerMenu,
   registerSetting,
+  resolveFormula,
   makeDead,
   unmakeDead,
   makeUnconscious,
@@ -118,8 +123,8 @@ function registerSettings() {
     {
       scope: "world",
       config: false,
-      type: Boolean,
-      default: false
+      type: String,
+      default: "none"
     }
   );
 
@@ -130,6 +135,16 @@ function registerSettings() {
       config: false,
       type: Boolean,
       default: false
+    }
+  );
+
+  registerSetting(
+    CONSTANTS.DEAD.SETTING.NEGATIVE_HP_DEATH_THRESHOLD.KEY,
+    {
+      scope: "world",
+      config: false,
+      type: String,
+      default: ""
     }
   );
 
@@ -190,8 +205,28 @@ function registerSettings() {
     {
       scope: "world",
       config: false,
-      type: Boolean,
-      default: false
+      type: String,
+      default: "neither"
+    }
+  );
+
+  registerSetting(
+    CONSTANTS.HIT_POINTS.SETTING.MASSIVE_DAMAGE_THRESHOLD.KEY,
+    {
+      scope: "world",
+      config: false,
+      type: Number,
+      default: 50
+    }
+  );
+
+  registerSetting(
+    CONSTANTS.HIT_POINTS.SETTING.MASSIVE_DAMAGE_DC.KEY,
+    {
+      scope: "world",
+      config: false,
+      type: Number,
+      default: 15
     }
   );
 
@@ -306,7 +341,8 @@ function registerHooks() {
   Hooks.on("dnd5e.preApplyDamage", (actor, amount, updates, options) => {
     if ( options.isDelta === false ) _skipHealFromZero = true;
     recalculateDamage(actor, amount, updates, options);
-    const instantDeath = applyInstantDeath(actor, updates);
+    const instantDeath = applyInstantDeath(actor, updates)
+      || applyDeathOnNegativeHpThreshold(actor, updates);
     updateHp(actor, updates);
     if ( !instantDeath ) {
       const dead = updateDead(actor, updates);
@@ -413,14 +449,30 @@ export function modifyHitPointsFlowDialog(app, html, data) {
 
 /**
  * If 'Apply Negative HP' is enabled, set the min HP value in the schema to undefined.
- * This will allow HP to go below 0.
+ * This will allow HP to go below 0. Actors with the Negative HP override flag set to 'on'
+ * remove the min HP value from their data model's schema regardless of the world settings.
  */
 export function registerNegativeHp() {
+  Hooks.on("preUpdateActor", (actor, data) => {
+    const override = foundry.utils.getProperty(data, `flags.${MODULE.ID}.negativeHp`);
+    if ( override === undefined ) return;
+    const hp = actor.system?.attributes?.hp?.value ?? 0;
+    if ( hp >= 0 ) return;
+    const allowed = hasNegativeHp(actor, { override });
+    foundry.utils.setProperty(data, "system.attributes.hp.value", allowed ? hp : 0);
+  });
+
+  Hooks.on("updateActor", (actor, data) => {
+    if ( foundry.utils.getProperty(data, `flags.${MODULE.ID}.negativeHp`) === "on" ) {
+      removeHpMin(actor);
+    }
+  });
+
+  Hooks.on("renderHitPointsConfig", addNegativeHpToConfig);
+
   const applyNegativeHp = getSetting(CONSTANTS.HIT_POINTS.SETTING.APPLY_NEGATIVE_HP.KEY)
         || getSetting(CONSTANTS.DEAD.SETTING.APPLY_INSTANT_DEATH.KEY);
   const applyNegativeHpNpc = getSetting(CONSTANTS.HIT_POINTS.SETTING.APPLY_NEGATIVE_HP_NPC.KEY);
-
-  if ( !applyNegativeHp && !applyNegativeHpNpc ) return;
 
   Logger.debug("Registering Negative HP...");
 
@@ -432,7 +484,68 @@ export function registerNegativeHp() {
     dnd5e.dataModels.actor.NPCData.schema.fields.attributes.fields.hp.fields.value.min = undefined;
   }
 
+  for ( const actor of game.actors ?? [] ) {
+    if ( getFlag(actor, "negativeHp") === "on" ) removeHpMin(actor);
+  }
+  Hooks.on("canvasReady", () => {
+    for ( const token of canvas.scene?.tokens ?? [] ) {
+      if ( !token.actorLink && token.actor && getFlag(token.actor, "negativeHp") === "on" ) {
+        removeHpMin(token.actor);
+      }
+    }
+  });
+
   Logger.debug("Negative HP registered");
+}
+
+/* -------------------------------------------- */
+
+/**
+ * Remove the minimum HP value from the schema, allowing HP to go below 0.
+ * @param {object} actor
+ */
+function removeHpMin(actor) {
+  const field = actor?.system?.constructor?.schema?.fields?.attributes?.fields?.hp?.fields?.value;
+  if ( field ) field.min = undefined;
+}
+
+/* -------------------------------------------- */
+
+/**
+ * Add the Negative HP override to the Hit Points Configuration sheet.
+ * Triggered by the 'renderHitPointsConfig' hook.
+ * @param {object} app
+ * @param {HTMLElement} html
+ */
+function addNegativeHpToConfig(app, html) {
+  if ( !game.user.isGM ) return;
+
+  const actor = app.document;
+  if ( actor?.documentName !== "Actor" ) return;
+  if ( html.querySelector("#custom-dnd5e-negative-hp") ) return;
+
+  const value = getFlag(actor, "negativeHp") ?? "default";
+  const choices = [
+    { key: "default", label: game.i18n.localize("CUSTOM_DND5E.default") },
+    { key: "on", label: game.i18n.localize("CUSTOM_DND5E.on") },
+    { key: "off", label: game.i18n.localize("CUSTOM_DND5E.off") }
+  ];
+  const options = choices.map(choice =>
+    `<option value="${choice.key}"${(choice.key === value) ? " selected" : ""}>${choice.label}</option>`
+  ).join("");
+
+  const fieldset = document.createElement("fieldset");
+  fieldset.classList.add("card");
+  fieldset.innerHTML = `
+    <legend>${MODULE.NAME}</legend>
+    <div class="form-group">
+        <label>${game.i18n.localize("CUSTOM_DND5E.negativeHp.label")}</label>
+        <div class="form-fields">
+            <select id="custom-dnd5e-negative-hp" name="flags.${MODULE.ID}.negativeHp">${options}</select>
+        </div>
+        <p class="hint">${game.i18n.localize("CUSTOM_DND5E.negativeHp.hint")}</p>
+    </div>`;
+  (html.querySelector("section.flexcol") ?? html).appendChild(fieldset);
 }
 
 /* -------------------------------------------- */
@@ -598,13 +711,8 @@ function healActor(actor, data, options) {
 
   if ( !foundry.utils.hasProperty(data,"system.attributes.hp.value") ) return;
 
-  const applyNegativeHp = getSetting(CONSTANTS.HIT_POINTS.SETTING.APPLY_NEGATIVE_HP.KEY);
-  const applyNegativeHpNpc = getSetting(CONSTANTS.HIT_POINTS.SETTING.APPLY_NEGATIVE_HP_NPC.KEY);
-  const applyInstantDeath = getSetting(CONSTANTS.DEAD.SETTING.APPLY_INSTANT_DEATH.KEY);
   const healFromZero = getSetting(CONSTANTS.HIT_POINTS.SETTING.NEGATIVE_HP_HEAL_FROM_ZERO.KEY);
-
-  const hasNegativeHp = (actor.type === "npc") ? applyNegativeHpNpc : (applyNegativeHp || applyInstantDeath);
-  if ( !hasNegativeHp || !healFromZero ) return;
+  if ( !hasNegativeHp(actor) || !healFromZero ) return;
 
   if ( _skipHealFromZero ) {
     _skipHealFromZero = false;
@@ -630,11 +738,7 @@ function healActor(actor, data, options) {
  * @param {object} options The options
  */
 function recalculateDamage(actor, amount, updates, options) {
-  const hasNegativeHp = (actor.type === "npc")
-    ? getSetting(CONSTANTS.HIT_POINTS.SETTING.APPLY_NEGATIVE_HP_NPC.KEY)
-    : (getSetting(CONSTANTS.HIT_POINTS.SETTING.APPLY_NEGATIVE_HP.KEY)
-        || getSetting(CONSTANTS.DEAD.SETTING.APPLY_INSTANT_DEATH.KEY));
-  if ( !hasNegativeHp ) return;
+  if ( !hasNegativeHp(actor) ) return;
 
   const hpValue = actor?.system?.attributes?.hp?.value ?? 0;
 
@@ -670,14 +774,17 @@ function recalculateDamage(actor, amount, updates, options) {
 
 /**
  * Triggered by the 'dnd5e.preApplyDamage' hook.
- * If 'Apply Dead' is enabled, apply or remove the Dead condition and other token effects based on the HP change.
+ * If 'Apply Status on 0 HP' is set, apply or remove the Dead or Unconscious condition and other
+ * token effects based on the HP change. With the 'Dead unless Important' option, NPCs with the
+ * D&D 5e system's Important trait become Unconscious instead of Dead.
  * @param {object} actor The actor
  * @param {object} updates The updates
- * @returns {boolean} Whether the Dead condition was updated
+ * @returns {boolean} Whether the Dead condition was applied
  */
 function updateDead(actor, updates) {
   if ( actor.type !== "npc" ) return false;
-  if ( !getSetting(CONSTANTS.DEAD.SETTING.APPLY_DEAD.KEY) ) return false;
+  const applyDead = getSetting(CONSTANTS.DEAD.SETTING.APPLY_DEAD.KEY);
+  if ( !applyDead || applyDead === "none" ) return false;
 
   Logger.debug("Updating Dead...");
 
@@ -689,15 +796,28 @@ function updateDead(actor, updates) {
   if ( maxHp === 0 ) {
     Logger.debug("Dead not updated. Max HP is 0.");
     return false;
-  } else if ( currentHp <= 0 ) {
-    makeDead(actor, updates);
-    Logger.debug("Dead updated", { dead: true });
-    return true;
-  } else {
-    unmakeDead(actor, updates);
-    Logger.debug("Dead updated", { dead: false });
+  }
+
+  const status = (applyDead === "unconscious"
+    || (applyDead === "deadUnlessImportant" && actor.system?.traits?.important))
+    ? "unconscious"
+    : "dead";
+
+  if ( currentHp <= 0 ) {
+    if ( status === "dead" ) {
+      makeDead(actor, updates);
+      Logger.debug("Dead updated", { dead: true });
+      return true;
+    }
+    makeUnconscious(actor);
+    Logger.debug("Dead updated", { unconscious: true });
     return false;
   }
+
+  unmakeDead(actor, updates);
+  unmakeUnconscious(actor);
+  Logger.debug("Dead updated", { dead: false });
+  return false;
 }
 
 /* -------------------------------------------- */
@@ -793,8 +913,7 @@ function updateDeathSaves(source, actor, data, options) {
  * @param {object} updates The updates
  */
 function updateHp(actor, updates) {
-  if ( getSetting(CONSTANTS.HIT_POINTS.SETTING.APPLY_NEGATIVE_HP.KEY) && actor.type === "character" ) return;
-  if ( getSetting(CONSTANTS.HIT_POINTS.SETTING.APPLY_NEGATIVE_HP_NPC.KEY) && actor.type === "npc" ) return;
+  if ( hasNegativeHp(actor, { includeInstantDeath: false }) ) return;
 
   Logger.debug("Updating HP...");
 
@@ -823,7 +942,7 @@ function updateHpMeter(app, html, data) {
   const sheetType = SHEET_TYPE[app.constructor.name];
 
   if ( !sheetType || sheetType.legacy ) return;
-  if ( !sheetType.character && !(sheetType.npc && getSetting(CONSTANTS.HIT_POINTS.SETTING.APPLY_NEGATIVE_HP_NPC.KEY)) ) return;
+  if ( !sheetType.character && !(sheetType.npc && hasNegativeHp(app.actor)) ) return;
 
   Logger.debug("Updating HP meter...");
 
@@ -903,15 +1022,60 @@ function applyInstantDeath(actor, updates) {
 /* -------------------------------------------- */
 
 /**
+ * Triggered by the 'dnd5e.preApplyDamage' hook.
+ * If a Negative HP Death Threshold is set, apply the Dead status effect when a character's
+ * HP drops to or below the negative of the resolved threshold.
+ * @param {object} actor
+ * @param {object} updates
+ * @returns {boolean} Whether death is applied
+ */
+function applyDeathOnNegativeHpThreshold(actor, updates) {
+  if ( actor.type !== "character" ) return false;
+  const formula = getSetting(CONSTANTS.DEAD.SETTING.NEGATIVE_HP_DEATH_THRESHOLD.KEY);
+  if ( !formula || !hasNegativeHp(actor) ) return false;
+
+  Logger.debug("Updating Negative HP Death Threshold...");
+
+  const currentHp = foundry.utils.getProperty(updates, "system.attributes.hp.value");
+  if ( typeof currentHp !== "number" || currentHp >= 0 ) return false;
+
+  const threshold = resolveFormula(actor, formula);
+  if ( !threshold || threshold <= 0 ) return false;
+
+  const previousHp = actor?.system?.attributes?.hp?.value;
+  if ( typeof previousHp === "number" && previousHp <= -threshold ) return true;
+
+  if ( currentHp <= -threshold ) {
+    const tokenEffects = makeDead(actor, updates);
+    ChatMessage.create({
+      content: game.i18n.format("CUSTOM_DND5E.message.negativeHpDeath", { name: actor.name })
+    });
+
+    configs.bloodied.updateBloodied(actor, updates, true);
+
+    return tokenEffects;
+  }
+
+  Logger.debug("Negative HP Death Threshold updated...");
+
+  return false;
+}
+
+/* -------------------------------------------- */
+
+/**
  * Triggered by the 'updateActor' hook and called by the 'recalculateDamage' function.
- * If the difference between the previous HP and the current HP is greater than or equal to half the max HP,
- * create a massive damage card.
+ * If the difference between the previous HP and the current HP is greater than or equal to
+ * the configured percentage of max HP, create a massive damage card.
  * @param {object} actor The actor
  * @param {object} updates The updates
  * @returns {boolean} Whether massive damage is applied
  */
 function applyMassiveDamage(actor, updates) {
-  if ( actor.type !== "character"|| !getSetting(CONSTANTS.HIT_POINTS.SETTING.APPLY_MASSIVE_DAMAGE.KEY) ) return false;
+  const applyMassiveDamage = getSetting(CONSTANTS.HIT_POINTS.SETTING.APPLY_MASSIVE_DAMAGE.KEY);
+  if ( !applyMassiveDamage || applyMassiveDamage === "neither" ) return false;
+  if ( !["character", "npc"].includes(actor.type) ) return false;
+  if ( applyMassiveDamage !== "both" && actor.type !== applyMassiveDamage ) return false;
 
   Logger.debug("Updating Massive Damage...");
 
@@ -922,9 +1086,10 @@ function applyMassiveDamage(actor, updates) {
 
   const diffHp = previousHp - currentHp;
   const maxHp = actor?.system?.attributes?.hp?.effectiveMax ?? actor?.system?.attributes?.hp?.max ?? 0;
-  const halfMaxHp = Math.floor(maxHp / 2);
+  const threshold = getSetting(CONSTANTS.HIT_POINTS.SETTING.MASSIVE_DAMAGE_THRESHOLD.KEY) ?? 50;
+  const thresholdHp = Math.floor(maxHp * (threshold / 100));
 
-  if ( diffHp >= halfMaxHp ) {
+  if ( thresholdHp > 0 && diffHp >= thresholdHp ) {
     createMassiveDamageCard(actor, updates);
     Logger.debug("Massive Death updated", { massiveDamage: true });
     return true;
@@ -979,8 +1144,18 @@ function playMassiveDamageAnimation(actor) {
 /* -------------------------------------------- */
 
 /**
+ * Get the DC for the massive damage saving throw.
+ * @returns {number} The DC
+ */
+function getMassiveDamageDc() {
+  return getSetting(CONSTANTS.HIT_POINTS.SETTING.MASSIVE_DAMAGE_DC.KEY) || 15;
+}
+
+/* -------------------------------------------- */
+
+/**
  * Triggered by the 'applyMassiveDamage' function.
- * Create a chat message with a button to make a CON save against a DC of 15.
+ * Create a request chat message with a button to make a CON save against the configured DC.
  * @param {object} actor The actor
  * @param {object} data The data
  * @returns {Promise<void>} The created chat message
@@ -991,18 +1166,13 @@ async function createMassiveDamageCard(actor, data) {
     await actor.setFlag("custom-dnd5e", "pendingMassiveDamageSave", true);
   }
 
-  const dataset = { ability: "con", dc: "15", type: "save" };
-  let label = game.i18n.format("EDITOR.DND5E.Inline.DC", { dc: 15, check: game.i18n.localize(CONFIG.DND5E.abilities.con.label) });
-  label = game.i18n.format("EDITOR.DND5E.Inline.SaveLong", { save: label });
-  const content = await foundry.applications.handlebars.renderTemplate(CONSTANTS.MESSAGE.TEMPLATE.ROLL_REQUEST_CARD, {
-    buttonLabel: `<i class="fas fa-shield-heart"></i>${label}`,
-    hiddenLabel: `<i class="fas fa-shield-heart"></i>${label}`,
-    description: game.i18n.format("CUSTOM_DND5E.message.massiveDamage", { name: actor.name }),
-    dataset: { ...dataset, action: "rollRequest" }
+  return createSaveRequestMessage({
+    actor,
+    ability: "con",
+    dc: getMassiveDamageDc(),
+    content: game.i18n.format("CUSTOM_DND5E.message.massiveDamage", { name: actor.name }),
+    source: "massiveDamage"
   });
-  const speaker = ChatMessage.getSpeaker({ user: game.user });
-  const flags = { "custom-dnd5e": { source: "massiveDamage" } };
-  return await ChatMessage.create({ content, speaker, flags });
 }
 
 /* -------------------------------------------- */
@@ -1023,8 +1193,7 @@ async function handleMassiveDamageSaveResult(rolls, data) {
   Logger.debug("Massive Damage save rolled", { actor: actor.name, ability: data.ability });
 
   // Trace back from the save card to the originating request card
-  const requestCard = rolls[0]?.parent?.getOriginatingMessage()
-    ?? game.messages.get(rolls[0]?.options?.originatingMessage);
+  const requestCard = getSaveRequestMessage(rolls);
 
   if ( requestCard?.flags?.["custom-dnd5e"]?.source !== "massiveDamage" ) {
     Logger.debug("Massive Damage originating message check failed", {
@@ -1038,9 +1207,10 @@ async function handleMassiveDamageSaveResult(rolls, data) {
   // Clear the flag regardless of result
   await actor.unsetFlag("custom-dnd5e", "pendingMassiveDamageSave");
 
+  const dc = getMassiveDamageDc();
   const total = rolls[0]?.total;
-  if ( total === undefined || total >= 15 ) {
-    Logger.debug("Massive Damage save passed", { total });
+  if ( total === undefined || total >= dc ) {
+    Logger.debug("Massive Damage save passed", { total, dc });
     return;
   }
 
