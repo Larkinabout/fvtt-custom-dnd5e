@@ -103,7 +103,7 @@
         "id": "dnd5e",
         "compatibility":{
           "minimum": "6.0.0",
-          "verified": "6.0.1",
+          "verified": "6.0.3",
           "maximum": "6.99"
         }
       }
