@@ -162,8 +162,11 @@
     width: 100%;
 }
 
-.dnd5e-theme-dark .custom-dnd5e.dnd5e2.sheet.actor.character .ability-scores {
-    top: 0px;
+@scope (.theme-dark) to (.themed) {
+    .custom-dnd5e.dnd5e2.sheet.actor.character .ability-scores,
+    :where(:scope).custom-dnd5e.dnd5e2.sheet.actor.character .ability-scores {
+        top: 0px;
+    }
 }
 
 .custom-dnd5e.dnd5e2.sheet.actor.character .ability-scores .top {
@@ -228,13 +231,18 @@
     height: 44px;
 }
 
-.dnd5e-theme-dark .custom-dnd5e.dnd5e2.sheet.actor.character
-    .ability-scores
-    .ability-score::before {
-    background: unset;
-    background-color: var(--dnd5e-color-iron-gray);
-    border: 2px solid var(--dnd5e-color-blue-gray-3);
-    height: 44px;
+@scope (.theme-dark) to (.themed) {
+    .custom-dnd5e.dnd5e2.sheet.actor.character
+        .ability-scores
+        .ability-score::before,
+    :where(:scope).custom-dnd5e.dnd5e2.sheet.actor.character
+        .ability-scores
+        .ability-score::before {
+        background: unset;
+        background-color: var(--dnd5e-color-iron-gray);
+        border: 2px solid var(--dnd5e-color-blue-gray-3);
+        height: 44px;
+    }
 }
 
 

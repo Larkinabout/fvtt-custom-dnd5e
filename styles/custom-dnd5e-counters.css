@@ -95,11 +95,13 @@
     border-bottom: 2px solid var(--t5e-color-text-gold);
 }
 
-.dnd5e-theme-dark :is(.character, .npc)
-    .custom-dnd5e-counters-counter input:disabled,
-.dnd5e-theme-dark .dnd5e2:is(.character, .npc)
-    .custom-dnd5e-counters-counter input:disabled {
-    color: var(--color-text-dark-6);
+@scope (.theme-dark) to (.themed) {
+    :is(.character, .npc)
+        .custom-dnd5e-counters-counter input:disabled,
+    :where(:scope):is(.character, .npc)
+        .custom-dnd5e-counters-counter input:disabled {
+        color: var(--color-text-dark-6);
+    }
 }
 
 .custom-dnd5e-counters-link {
@@ -119,9 +121,13 @@
     justify-content: center;
 }
 
-.dnd5e-theme-dark :is(.character, .npc)
-    .custom-dnd5e-counters-counter i {
-    color: var(--color-text-dark-secondary);
+@scope (.theme-dark) to (.themed) {
+    :is(.character, .npc)
+        .custom-dnd5e-counters-counter i,
+    :where(:scope):is(.character, .npc)
+        .custom-dnd5e-counters-counter i {
+        color: var(--color-text-dark-secondary);
+    }
 }
 
 /*
@@ -135,9 +141,13 @@
     justify-content: center;
 }
 
-.dnd5e-theme-dark :is(.character, .npc)
-    .dnd5e-custom-counters-separator {
-    color: var(--color-text-dark-secondary);
+@scope (.theme-dark) to (.themed) {
+    :is(.character, .npc)
+        .dnd5e-custom-counters-separator,
+    :where(:scope):is(.character, .npc)
+        .dnd5e-custom-counters-separator {
+        color: var(--color-text-dark-secondary);
+    }
 }
 
 /*
@@ -213,16 +223,16 @@
     opacity: 0.5;
 }
 
-.dnd5e-theme-dark
+@scope (.theme-dark) to (.themed) {
     .custom-dnd5e-counters-pips .pip {
-    background: var(--dnd5e-color-iron-gray, #3c3c3c);
-    border-color: var(--dnd5e-color-gold, #c9a95e);
-    box-shadow: none;
-}
+        background: var(--dnd5e-color-iron-gray, #3c3c3c);
+        border-color: var(--dnd5e-color-gold, #c9a95e);
+        box-shadow: none;
+    }
 
-.dnd5e-theme-dark
     .custom-dnd5e-counters-pips .pip.filled {
-    background: var(--dnd5e-color-gold, #c9a95e);
+        background: var(--dnd5e-color-gold, #c9a95e);
+    }
 }
 
 /*
