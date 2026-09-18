@@ -196,6 +196,11 @@ button[data-custom-dnd5e="stop-animations"].fade-out {
     font-size: 1.5em;
 }
 
+#custom-dnd5e-cursor-label-radial-fall {
+    color: #ff9500;
+    font-size: 1.5em;
+}
+
 #custom-dnd5e-cursor-label-give-item,
 #custom-dnd5e-cursor-label-drop-item,
 #custom-dnd5e-cursor-label-drop-container {

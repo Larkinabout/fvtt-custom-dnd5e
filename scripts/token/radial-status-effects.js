@@ -5,6 +5,7 @@ import { addCursorLabelIcon, setCursorLabelIcon, setCursorLabelPosition } from "
 const DISABLE_ICON_ID = "custom-dnd5e-cursor-label-radial-disable";
 const DELETE_ICON_ID = "custom-dnd5e-cursor-label-radial-delete";
 const BLOCKED_ICON_ID = "custom-dnd5e-cursor-label-radial-blocked";
+const FALL_ICON_ID = "custom-dnd5e-cursor-label-radial-fall";
 const HOVER_SCALE_FACTOR = 1.2;
 const HOVER_ANIM_DURATION = 120;
 
@@ -81,7 +82,7 @@ function registerStatePatch() {
 function onCanvasReady() {
   hoveredEntry = null;
   stageListenerInstalled = false;
-  if ( !getSetting(constants.SETTING.CLICK_TO_TOGGLE.KEY) ) return;
+  if ( !getSetting(constants.SETTING.KEY) ) return;
   if ( !canvas?.app?.stage ) return;
   canvas.app.stage.eventMode = "static";
   canvas.app.stage.addEventListener("pointerdown", onStagePointerDown, { capture: true });
@@ -125,20 +126,24 @@ function isSelectToolActive() {
  */
 function onStagePointerDown(event) {
   if ( event.button !== undefined && event.button !== 0 ) return;
-  if ( !getSetting(constants.SETTING.CLICK_TO_TOGGLE.KEY) ) return;
+  if ( !getSetting(constants.SETTING.KEY) ) return;
   if ( !isSelectToolActive() ) return;
   if ( !isPointerOverCanvas(event) ) return;
 
   const hit = hitTestRegistry(event.global);
   if ( !hit ) return;
+
+  const action = actionVariant(hit.ae, event.shiftKey);
+  if ( !action ) return;
+
   event.stopPropagation?.();
   event.stopImmediatePropagation?.();
   event.nativeEvent?.stopPropagation?.();
 
-  if ( isSystemManaged(hit.ae) ) return;
+  if ( action === "blocked" ) return;
 
-  const isCondition = (hit.ae.statuses?.size ?? 0) > 0;
-  if ( isCondition || event.shiftKey ) hit.ae.delete();
+  if ( action === "fall" ) hit.token.document.plummet?.();
+  else if ( action === "delete" ) hit.ae.delete();
   else hit.ae.update({ disabled: !hit.ae.disabled });
   clearHoverState();
 }
@@ -191,7 +196,7 @@ function hitTestRegistry(globalPoint) {
  * @param {PIXI.FederatedPointerEvent} event
  */
 function onStagePointerMove(event) {
-  if ( !getSetting(constants.SETTING.CLICK_TO_TOGGLE.KEY) ) {
+  if ( !getSetting(constants.SETTING.KEY) ) {
     if ( hoveredEntry ) clearHoverState();
     return;
   }
@@ -204,7 +209,8 @@ function onStagePointerMove(event) {
     return;
   }
   const hit = hitTestRegistry(event.global);
-  if ( hit ) {
+  const action = hit ? actionVariant(hit.ae, event.shiftKey) : null;
+  if ( action ) {
     if ( hoveredEntry?.sprite !== hit.sprite ) {
       if ( hoveredEntry?.sprite ) animateHoverScale(hoveredEntry.sprite, false);
       animateHoverScale(hit.sprite, true);
@@ -212,7 +218,7 @@ function onStagePointerMove(event) {
     hoveredEntry = hit;
     setCanvasCursor("pointer");
     const ne = event.nativeEvent;
-    showCursorLabel(actionVariant(hit.ae, event.shiftKey), ne?.clientX, ne?.clientY);
+    showCursorLabel(action, ne?.clientX, ne?.clientY);
   } else if ( hoveredEntry ) {
     clearHoverState();
   }
@@ -275,6 +281,17 @@ function onShiftKeyChange(event) {
 /* -------------------------------------------- */
 
 /**
+ * Whether the effect has the falling status.
+ * @param {ActiveEffect} ae
+ * @returns {boolean}
+ */
+function isFalling(ae) {
+  return !!ae?.statuses?.has("falling");
+}
+
+/* -------------------------------------------- */
+
+/**
  * Whether the effect applies a status the D&D 5e system manages automatically.
  * @param {ActiveEffect} ae
  * @returns {boolean}
@@ -289,9 +306,16 @@ function isSystemManaged(ae) {
  * Determine which action a click would perform.
  * @param {ActiveEffect} ae
  * @param {boolean} shift
- * @returns {"delete"|"disable"|"blocked"}
+ * @returns {"fall"|"delete"|"disable"|"blocked"|null}
  */
 function actionVariant(ae, shift) {
+  if ( !ae ) return null;
+  const clickToToggle = getSetting(constants.SETTING.CLICK_TO_TOGGLE.KEY);
+  if ( isFalling(ae) ) {
+    if ( game.user.isGM ) return "fall";
+    return clickToToggle ? "blocked" : null;
+  }
+  if ( !clickToToggle ) return null;
   if ( isSystemManaged(ae) ) return "blocked";
   const isCondition = (ae.statuses?.size ?? 0) > 0;
   return (isCondition || shift) ? "delete" : "disable";
@@ -309,6 +333,7 @@ function clearHoverState() {
   setCursorLabelIcon(DISABLE_ICON_ID, false);
   setCursorLabelIcon(DELETE_ICON_ID, false);
   setCursorLabelIcon(BLOCKED_ICON_ID, false);
+  setCursorLabelIcon(FALL_ICON_ID, false);
 }
 
 /* -------------------------------------------- */
@@ -331,13 +356,14 @@ function addCursorLabels() {
   addCursorLabelIcon(DISABLE_ICON_ID, '<i class="fa-solid fa-toggle-off"></i>');
   addCursorLabelIcon(DELETE_ICON_ID, '<i class="fa-sharp fa-solid fa-xmark"></i>');
   addCursorLabelIcon(BLOCKED_ICON_ID, '<i class="fa-solid fa-ban"></i>');
+  addCursorLabelIcon(FALL_ICON_ID, '<i class="fa-solid fa-person-falling"></i>');
 }
 
 /* -------------------------------------------- */
 
 /**
  * Show the radial cursor label.
- * @param {"delete"|"disable"|"blocked"} variant
+ * @param {"fall"|"delete"|"disable"|"blocked"} variant
  * @param {number|undefined} clientX
  * @param {number|undefined} clientY
  */
@@ -351,12 +377,13 @@ function showCursorLabel(variant, clientX, clientY) {
 
 /**
  * Set which icon is visible in the cursor label.
- * @param {"delete"|"disable"|"blocked"} variant
+ * @param {"fall"|"delete"|"disable"|"blocked"} variant
  */
 function setCursorLabel(variant) {
   setCursorLabelIcon(DISABLE_ICON_ID, variant === "disable");
   setCursorLabelIcon(DELETE_ICON_ID, variant === "delete");
   setCursorLabelIcon(BLOCKED_ICON_ID, variant === "blocked");
+  setCursorLabelIcon(FALL_ICON_ID, variant === "fall");
 }
 
 /* -------------------------------------------- */
@@ -415,12 +442,10 @@ export function applyRadialEffects(token) {
 
   const clickEnabled = getSetting(constants.SETTING.CLICK_TO_TOGGLE.KEY) && !!token.actor?.isOwner;
   const SHOW_ICON = CONST.ACTIVE_EFFECT_SHOW_ICON;
-  const activeEffects = clickEnabled
-    ? (token.actor?.appliedEffects.filter(e =>
-      (e.showIcon === SHOW_ICON.ALWAYS) || ((e.showIcon === SHOW_ICON.CONDITIONAL) && e.isTemporary)
-    ) ?? [])
-    : [];
-  if ( clickEnabled && !stageListenerInstalled ) onCanvasReady();
+  const activeEffects = token.actor?.appliedEffects.filter(e =>
+    (e.showIcon === SHOW_ICON.ALWAYS) || ((e.showIcon === SHOW_ICON.CONDITIONAL) && e.isTemporary)
+  ) ?? [];
+  if ( !stageListenerInstalled ) onCanvasReady();
 
   if ( useDropShadow === null ) useDropShadow = shouldUseDropShadow();
   if ( useDropShadow && !bg.filters?.length ) {
@@ -461,7 +486,8 @@ export function applyRadialEffects(token) {
     effect.customDnd5eBgParams = { gridScale, slotSize: scaledSize };
     drawBackground(effect, bg, gridScale, scaledSize);
 
-    effect.customDnd5eAe = clickEnabled ? (activeEffects[effect.zIndex] ?? null) : null;
+    const ae = activeEffects[effect.zIndex] ?? null;
+    effect.customDnd5eAe = (clickEnabled || isFalling(ae)) ? ae : null;
 
     i++;
   }
