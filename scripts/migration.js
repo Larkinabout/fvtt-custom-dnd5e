@@ -68,6 +68,9 @@ export async function migrate() {
   if ( shouldRun("5.5.0") ) isSuccess &&= await migrateApplyDead();
   if ( shouldRun("5.5.0") ) isSuccess &&= await migrateApplyMassiveDamage();
   if ( shouldRun("5.5.0") ) isSuccess &&= await migrateSkillsPace();
+  if ( shouldRun("5.6.0") ) isSuccess &&= await migrateSensesToObjects();
+  if ( shouldRun("5.6.0") ) isSuccess &&= await migrateCustomMovementTypesToSystemData();
+  if ( shouldRun("5.6.0") ) isSuccess &&= await migrateCustomSensesToSystemData();
 
   if ( isSuccess ) {
     await setSetting(constants.VERSION.SETTING.KEY, moduleVersion);
@@ -1169,6 +1172,122 @@ export async function migrateSkillsPace() {
 /* -------------------------------------------- */
 
 /**
+ * Convert senses entries stored as plain label strings into `{ label }` objects.
+ * @returns {Promise<boolean>} Whether the migration was successful
+ */
+export async function migrateSensesToObjects() {
+  try {
+    const senses = getSetting(configs.senses.SETTING.CONFIG.KEY);
+    if ( !senses || typeof senses !== "object" ) return true;
+    if ( !Object.values(senses).some(value => typeof value === "string") ) return true;
+
+    Logger.debug("Migrating senses entries to objects...");
+    const migrated = foundry.utils.deepClone(senses);
+    for ( const [key, value] of Object.entries(migrated) ) {
+      if ( typeof value === "string" ) migrated[key] = { label: value, visible: true };
+    }
+
+    await setSetting(configs.senses.SETTING.CONFIG.KEY, migrated);
+    Logger.debug("Senses entries migrated.");
+    return true;
+  } catch (err) {
+    Logger.error(`Failed to migrate senses entries: ${err.message}`);
+    return false;
+  }
+}
+
+/* -------------------------------------------- */
+
+/**
+ * Move custom movement types and senses from flags into system data.
+ * @param {object} args
+ * @param {object} args.config
+ * @param {string} args.flagNamespace
+ * @param {string} args.systemPath
+ * @param {(value: *) => *} args.convert Changes a flag value to the type the system field expects
+ * @param {string} args.label Name used in log messages
+ * @returns {Promise<boolean>} Whether the migration was successful
+ */
+async function migrateCustomKeysToSystemData({ config, flagNamespace, systemPath, convert, label }) {
+  try {
+    const setting = getSetting(config.SETTING.CONFIG.KEY);
+    if ( !setting || typeof setting !== "object" ) return true;
+
+    const systemKeys = new Set(Object.keys(CONFIG.CUSTOM_DND5E?.[config.configKey] ?? {}));
+    const customKeys = Object.keys(setting).filter(key => !systemKeys.has(key));
+    if ( !customKeys.length ) return true;
+
+    Logger.debug(`Migrating custom ${label} to system data...`);
+
+    const migrateActor = async actor => {
+      const updates = {};
+      for ( const key of customKeys ) {
+        const value = getFlag(actor, `${flagNamespace}.${key}`);
+        if ( value === undefined || value === null || value === "" ) continue;
+        if ( foundry.utils.getProperty(actor, `_source.${systemPath}.${key}`) ) continue;
+        const converted = convert(value);
+        if ( converted === undefined || converted === null ) continue;
+        updates[`${systemPath}.${key}`] = converted;
+      }
+      if ( !foundry.utils.isEmpty(updates) ) await actor.update(updates);
+      if ( getFlag(actor, flagNamespace) ) await unsetFlag(actor, flagNamespace);
+    };
+
+    for ( const actor of game.actors ?? [] ) {
+      await migrateActor(actor);
+    }
+    for ( const scene of game.scenes ?? [] ) {
+      for ( const token of scene.tokens ) {
+        if ( !token.actorLink && token.actor ) await migrateActor(token.actor);
+      }
+    }
+
+    Logger.debug(`Custom ${label} migrated.`);
+    return true;
+  } catch (err) {
+    Logger.error(`Failed to migrate custom ${label}: ${err.message}`);
+    return false;
+  }
+}
+
+/* -------------------------------------------- */
+
+/**
+ * Move custom movement types from flags into `system.attributes.movement.speeds`.
+ * @returns {Promise<boolean>} Whether the migration was successful
+ */
+export async function migrateCustomMovementTypesToSystemData() {
+  return migrateCustomKeysToSystemData({
+    config: configs.movementTypes,
+    flagNamespace: "movementTypes",
+    systemPath: "system.attributes.movement.speeds",
+    convert: value => `${value}`,
+    label: "movement types"
+  });
+}
+
+/* -------------------------------------------- */
+
+/**
+ * Move custom senses from flags into `system.attributes.senses.ranges`.
+ * @returns {Promise<boolean>} Whether the migration was successful
+ */
+export async function migrateCustomSensesToSystemData() {
+  return migrateCustomKeysToSystemData({
+    config: configs.senses,
+    flagNamespace: "senses",
+    systemPath: "system.attributes.senses.ranges",
+    convert: value => {
+      const number = Number(value);
+      return Number.isFinite(number) ? Math.round(number) : null;
+    },
+    label: "senses"
+  });
+}
+
+/* -------------------------------------------- */
+
+/**
  * All migration functions, exposed for testing via the module API.
  */
 export const migrations = {
@@ -1182,11 +1301,14 @@ export const migrations = {
   migrateConditionLevels,
   migrateConditions,
   migrateAwardInspirationRollType,
+  migrateCustomMovementTypesToSystemData,
   migrateCustomSensesToNamespace,
+  migrateCustomSensesToSystemData,
   migrateDamageTypeLabels,
   migrateRerollInitiative,
   migrateRestTypesHitDiceFormula,
   migrateRollMode,
+  migrateSensesToObjects,
   migrateSkillsPace,
   migrateStaleSystemLabels,
   migrateTokenBorderEnable,

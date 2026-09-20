@@ -410,12 +410,33 @@ export function assignDnd5eConfig(property, data) {
 /* -------------------------------------------- */
 
 /**
+ * Resolve any i18n keys in config data in place.
+ * @param {*} data
+ * @returns {*} Data with i18n keys resolved
+ */
+export function localizeConfigData(data) {
+  if ( typeof data === "string" ) {
+    return (/^[A-Z][A-Z0-9_]*\.\S+$/.test(data) && game.i18n.has(data))
+      ? game.i18n.localize(data)
+      : data;
+  }
+  if ( Array.isArray(data) ) return data.map(localizeConfigData);
+  if ( foundry.utils.getType(data) === "Object" ) {
+    for ( const [key, value] of Object.entries(data) ) data[key] = localizeConfigData(value);
+  }
+  return data;
+}
+
+/* -------------------------------------------- */
+
+/**
  * Reset the dnd5e config to its default.
  * @param {string} property
  * @returns {object}
  */
 export function resetDnd5eConfig(property) {
-  const result = assignDnd5eConfig(property, foundry.utils.deepClone(CONFIG.CUSTOM_DND5E[property]));
+  const defaults = localizeConfigData(foundry.utils.deepClone(CONFIG.CUSTOM_DND5E[property]));
+  const result = assignDnd5eConfig(property, defaults);
   Logger.debug(`Config 'CONFIG.DND5E.${property}' reset to default`);
   return result;
 }
@@ -465,6 +486,16 @@ export async function addHelpButton(element, uuid) {
   button.setAttribute("data-action", "help");
   button.addEventListener("click", () => openDocument(uuid));
   windowHeader.insertBefore(button, closeButton);
+}
+
+/* -------------------------------------------- */
+
+/**
+ * Get the markup for the icon that marks an element as injected by this module.
+ * @returns {string} Icon HTML
+ */
+export function getModuleMarker() {
+  return `<i class="custom-dnd5e-module-marker fa-solid fa-plug" data-tooltip="${MODULE.NAME}" aria-label="${MODULE.NAME}"></i>`;
 }
 
 /* -------------------------------------------- */

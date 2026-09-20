@@ -1,5 +1,5 @@
 import { CONSTANTS, MODULE } from "./constants.js";
-import { c5eLoadTemplates, getSetting, registerSetting, syncAutoApplyDowned } from "./utils.js";
+import { c5eLoadTemplates, getModuleMarker, getSetting, registerSetting, syncAutoApplyDowned } from "./utils.js";
 import { animations } from "./animations.js";
 import { configs, getConfigKeys } from "./configurations/registry.js";
 import { register as registerGameplay, registerNegativeHp } from "./gameplay/gameplay.js";
@@ -45,7 +45,6 @@ import { patchPrepareEncumbrance } from "./patches/prepare-encumbrance.js";
 import { patchPrepareMovement } from "./patches/prepare-movement.js";
 import { patchPrepareDerivedData } from "./patches/prepare-derived-data.js";
 import { patchPrepareMovementAttribution } from "./patches/prepare-movement-attribution.js";
-import { patchPrepareSenses } from "./patches/prepare-senses.js";
 import { patchPrepareSkillsTools } from "./patches/prepare-skills-tools.js";
 import { registerCharacterSheet } from "./sheets/character-sheet.js";
 
@@ -119,7 +118,6 @@ Hooks.on("init", async () => {
   patchPrepareMovement();
   patchPrepareDerivedData();
   patchPrepareMovementAttribution();
-  patchPrepareSenses();
   patchPrepareSkillsTools();
 
   registerMigration();
@@ -199,7 +197,7 @@ Hooks.on("init", async () => {
   await configs.encumbrance.setConfig();
   configs.itemRarity.setConfig();
   configs.languages.setConfig();
-  // configs.senses.setConfig();
+  configs.senses.setConfig();
   configs.skills.setConfig();
 
   // Must be registered after abilities and skills are set
@@ -231,6 +229,7 @@ Hooks.on("ready", async () => {
     customDnd5eBoolFalse: function(value) { return value === false; },
     customDnd5eChecked: function(value) { return value !== false ? "checked" : ""; },
     customDnd5eEq: function(a, b) { return a === b; },
+    customDnd5eModuleMarker: function() { return new Handlebars.SafeString(getModuleMarker()); },
     customDnd5eDotNotateChild: function(childType, parent, child) {
       if ( parent ) {
         return `${parent}.${childType}.${child}`;

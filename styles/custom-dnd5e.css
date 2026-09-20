@@ -45,6 +45,27 @@ button[data-custom-dnd5e="stop-animations"].fade-out {
 }
 
 /* -------------------------------------------- */
+/* MODULE MARKER                                */
+/* -------------------------------------------- */
+.custom-dnd5e-module-marker {
+    color: var(--color-text-subtle, var(--color-text-dark-secondary));
+    cursor: help;
+    flex: none;
+    font-size: var(--font-size-11);
+    margin-inline-end: 0.25rem;
+    opacity: 0.7;
+    vertical-align: baseline;
+}
+
+.custom-dnd5e-module-marker:hover {
+    opacity: 1;
+}
+
+legend > .custom-dnd5e-module-marker {
+    font-size: inherit;
+}
+
+/* -------------------------------------------- */
 /* CAMP SUPPLIES                                */
 /* -------------------------------------------- */
  .custom-dnd5e-camp-supplies {

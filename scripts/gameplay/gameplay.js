@@ -10,6 +10,7 @@ import {
   createSaveRequestMessage,
   getDefaultSetting,
   getFlag,
+  getModuleMarker,
   getSaveRequestMessage,
   getSetting,
   hasNegativeHp,
@@ -537,7 +538,7 @@ function addNegativeHpToConfig(app, html) {
   const fieldset = document.createElement("fieldset");
   fieldset.classList.add("card");
   fieldset.innerHTML = `
-    <legend>${MODULE.NAME}</legend>
+    <legend>${getModuleMarker()}${MODULE.NAME}</legend>
     <div class="form-group">
         <label>${game.i18n.localize("CUSTOM_DND5E.negativeHp.label")}</label>
         <div class="form-fields">

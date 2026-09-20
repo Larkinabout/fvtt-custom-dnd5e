@@ -23,7 +23,7 @@ import languages from "./languages.js";
 import lootTypes from "./loot-types.js";
 import miscEquipmentTypes from "./misc-equipment-types.js";
 import movementTypes, { register as registerMovementTypes } from "./movement-types.js";
-import senses, { register as registerSenses } from "./senses.js";
+import senses from "./senses.js";
 import skills from "./skills.js";
 import spellSchools from "./spell-schools.js";
 import tools from "./tools.js";
@@ -93,7 +93,7 @@ export const configs = {
     }
   }),
   movementTypes: bind(movementTypes, { register: registerMovementTypes }),
-  senses: bind(senses, { register: registerSenses }),
+  senses: bind(senses),
   skills: bind(skills),
   spellSchools: bind(spellSchools),
   tools: bind(tools),

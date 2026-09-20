@@ -1,6 +1,6 @@
 import { registerConfig } from "./config-engine.js";
 import { MODULE } from "../constants.js";
-import { Logger, c5eLoadTemplates, getFlag, getSetting } from "../utils.js";
+import { getSetting } from "../utils.js";
 import { ConfigForm } from "../forms/config-form.js";
 import { ConfigEditForm } from "../forms/config-edit-form.js";
 import { configs } from "./registry.js";
@@ -25,9 +25,6 @@ const constants = {
     CONFIG: {
       KEY: "movement-types"
     }
-  },
-  TEMPLATE: {
-    CONFIG_FORM_GROUP: "modules/custom-dnd5e/templates/movement-config-form-group.hbs"
   },
   UUID: "Compendium.custom-dnd5e.custom-dnd5e-journals.JournalEntry.B48iqFBddUikMMer.JournalEntryPage.eB8rvEuqHwPK8NXd"
 };
@@ -161,23 +158,11 @@ class MovementTypesForm extends ConfigForm {
 /* -------------------------------------------- */
 
 /**
- * Register settings, hooks, and templates.
+ * Register settings and movement actions.
  */
 export function register() {
   registerConfig(DEFINITION);
-  registerHooks();
   registerMovementActions();
-  c5eLoadTemplates([DEFINITION.constants.TEMPLATE.CONFIG_FORM_GROUP]);
-}
-
-/* -------------------------------------------- */
-
-/**
- * Register hooks.
- */
-function registerHooks() {
-  if ( !getSetting(DEFINITION.constants.SETTING.ENABLE.KEY) ) return;
-  Hooks.on("renderMovementSensesConfig", addCustomMovementTypesToConfig);
 }
 
 /* -------------------------------------------- */
@@ -231,63 +216,6 @@ function registerMovementActions() {
 }
 
 /* -------------------------------------------- */
-/*  UI INJECTION                                */
-/* -------------------------------------------- */
-
-/**
- * Add custom movement types to the Movement Configuration sheet.
- * @param {object} app
- * @param {HTMLElement} html
- */
-async function addCustomMovementTypesToConfig(app, html) {
-  if ( app.options.type !== "movement" ) return;
-
-  Logger.debug("Adding custom movement types...");
-  const actor = app.document;
-  const movementTypes = getSetting(DEFINITION.constants.SETTING.CONFIG.KEY);
-  const systemMovementTypes = new Set(Object.keys(CONFIG.CUSTOM_DND5E?.movementTypes ?? {}));
-
-  const outerElement = html.querySelector("fieldset.card");
-  if ( !outerElement ) return;
-  let lastElement = null;
-
-  for ( const [key, value] of Object.entries(movementTypes) ) {
-    const existingElement = outerElement.querySelector(`[name$='movement.${key}']`)?.closest(".form-group");
-    if ( existingElement ) {
-      if ( value.visible === false ) {
-        existingElement.remove();
-      } else {
-        if ( lastElement ) {
-          lastElement.insertAdjacentElement("afterend", existingElement);
-        }
-        lastElement = existingElement;
-      }
-    } else if ( value.visible !== false && !systemMovementTypes.has(key) ) {
-      const data = {
-        label: value.label,
-        inputName: `flags.custom-dnd5e.movementTypes.${key}`,
-        inputValue: getFlag(actor, `movementTypes.${key}`)
-      };
-      const template = await foundry.applications.handlebars.renderTemplate(
-        DEFINITION.constants.TEMPLATE.CONFIG_FORM_GROUP, data
-      );
-
-      if ( lastElement ) {
-        lastElement.insertAdjacentHTML("afterend", template);
-      } else {
-        outerElement.insertAdjacentHTML("afterbegin", template);
-      }
-
-      const currentElement = outerElement.querySelector(`[name$='movementTypes.${key}']`)?.closest(".form-group");
-      if ( currentElement ) {
-        lastElement = currentElement;
-      }
-    }
-  }
-  Logger.debug("Custom movement types added");
-}
-
-/* -------------------------------------------- */
 /*  DEFINITION                                  */
 /* -------------------------------------------- */
 
@@ -295,7 +223,6 @@ const DEFINITION = {
   configKey: "movementTypes",
   constants,
   form: MovementTypesForm,
-  loadTemplates: false,
   configRequiresReload: true,
   entryType: "object",
   entry: [

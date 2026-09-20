@@ -1,7 +1,6 @@
-import { registerConfig } from "./config-engine.js";
 import { MODULE } from "../constants.js";
-import { Logger, c5eLoadTemplates, getFlag, getSetting } from "../utils.js";
 import { ConfigForm } from "../forms/config-form.js";
+import { ConfigEditForm } from "../forms/config-edit-form.js";
 import { configs } from "./registry.js";
 
 /* -------------------------------------------- */
@@ -25,14 +24,82 @@ const constants = {
       KEY: "senses"
     }
   },
-  TEMPLATE: {
-    CONFIG_FORM_GROUP: "modules/custom-dnd5e/templates/movement-senses-config-form-group.hbs"
-  },
   UUID: "Compendium.custom-dnd5e.custom-dnd5e-journals.JournalEntry.B48iqFBddUikMMer.JournalEntryPage.UC0cWoAGMtU6yISR"
 };
 
 /* -------------------------------------------- */
+
+/**
+ * Build select choices from a canvas mode registry.
+ * @param {object} registry `CONFIG.Canvas.visionModes` or `CONFIG.Canvas.detectionModes`
+ * @returns {object} Choices keyed by mode id
+ */
+function getCanvasModeChoices(registry) {
+  const choices = Object.values(registry ?? {})
+    .filter(mode => mode.tokenConfig)
+    .map(mode => [mode.id, game.i18n.localize(mode.label)])
+    .sort(([, a], [, b]) => a.localeCompare(b, game.i18n.lang));
+
+  return { "": game.i18n.localize("CUSTOM_DND5E.none"), ...Object.fromEntries(choices) };
+}
+
+/* -------------------------------------------- */
 /*  FORM CLASSES                                */
+/* -------------------------------------------- */
+
+class SensesEditForm extends ConfigEditForm {
+  /**
+   * Constructor for SensesEditForm.
+   * @param {object} args
+   */
+  constructor(args) {
+    super(args);
+    this.config = configs.senses;
+    this.requiresReload = true;
+  }
+
+  /* -------------------------------------------- */
+
+  /**
+   * @type {object}
+   */
+  static DEFAULT_OPTIONS = {
+    id: `${MODULE.ID}-senses-edit-form`,
+    window: {
+      title: `CUSTOM_DND5E.form.${constants.ID}.edit.title`
+    }
+  };
+
+  /* -------------------------------------------- */
+
+  /**
+   * @type {object[]}
+   */
+  static FIELDS = [
+    { name: "label", type: "text", label: "CUSTOM_DND5E.label", localizeValue: true },
+    {
+      name: "grantsSight",
+      type: "checkbox",
+      label: `CUSTOM_DND5E.form.${constants.ID}.grantsSight.label`,
+      hint: `CUSTOM_DND5E.form.${constants.ID}.grantsSight.hint`
+    },
+    {
+      name: "visionMode",
+      type: "select",
+      label: `CUSTOM_DND5E.form.${constants.ID}.visionMode.label`,
+      hint: `CUSTOM_DND5E.form.${constants.ID}.visionMode.hint`,
+      choices: () => getCanvasModeChoices(CONFIG.Canvas?.visionModes)
+    },
+    {
+      name: "detectionMode",
+      type: "select",
+      label: `CUSTOM_DND5E.form.${constants.ID}.detectionMode.label`,
+      hint: `CUSTOM_DND5E.form.${constants.ID}.detectionMode.hint`,
+      choices: () => getCanvasModeChoices(CONFIG.Canvas?.detectionModes)
+    }
+  ];
+}
+
 /* -------------------------------------------- */
 
 class SensesForm extends ConfigForm {
@@ -41,12 +108,10 @@ class SensesForm extends ConfigForm {
    */
   constructor() {
     super();
-    this.editInList = true;
+    this.editForm = SensesEditForm;
     this.listTitle = "CUSTOM_DND5E.form.senses.listTitle";
-    this.requiresReload = false;
+    this.requiresReload = true;
     this.config = configs.senses;
-    this.setConfig = null; // Temporarily disabled until custom senses is supported in the dnd5e system
-    this.includeConfig = false;
   }
 
   /* -------------------------------------------- */
@@ -65,93 +130,37 @@ class SensesForm extends ConfigForm {
 }
 
 /* -------------------------------------------- */
-/*  REGISTRATION                                */
-/* -------------------------------------------- */
-
-/**
- * Register settings, hooks, and templates.
- */
-export function register() {
-  registerConfig(DEFINITION);
-  registerHooks();
-  c5eLoadTemplates([DEFINITION.constants.TEMPLATE.CONFIG_FORM_GROUP]);
-}
-
-/* -------------------------------------------- */
-
-/**
- * Register hooks.
- */
-function registerHooks() {
-  if ( !getSetting(DEFINITION.constants.SETTING.ENABLE.KEY) ) return;
-  Hooks.on("renderMovementSensesConfig", addCustomSensesToConfig);
-}
-
-/* -------------------------------------------- */
-/*  UI INJECTION                                */
-/* -------------------------------------------- */
-
-/**
- * Add custom senses to the Senses Configuration sheet.
- * @param {object} app
- * @param {HTMLElement} html
- */
-async function addCustomSensesToConfig(app, html) {
-  if ( app.options.type !== "senses" ) return;
-
-  Logger.debug("Adding custom senses...");
-  const actor = app.document;
-  const systemSenses = new Set(Object.keys(CONFIG.CUSTOM_DND5E?.senses ?? {}));
-  const senses = getSetting(DEFINITION.constants.SETTING.CONFIG.KEY);
-  const outerElement = html.querySelector("fieldset.card");
-  let lastElement = null;
-
-  for (const [key, value] of Object.entries(senses)) {
-    const existingElement = html.querySelector(`input[name$='${key}']`)?.closest(".form-group");
-    if ( existingElement ) {
-      if ( value.visible === "false" ) {
-        existingElement.remove();
-      } else {
-        if ( lastElement ) {
-          lastElement.insertAdjacentElement("afterend", existingElement);
-        }
-        lastElement = existingElement;
-      }
-    } else if ( value.visible && value.visible !== undefined && !systemSenses.has(key) ) {
-      const data = {
-        label: value.label,
-        inputName: `flags.custom-dnd5e.senses.${key}`,
-        inputValue: getFlag(actor, `senses.${key}`)
-      };
-      const template = await foundry.applications.handlebars.renderTemplate(
-        DEFINITION.constants.TEMPLATE.CONFIG_FORM_GROUP, data
-      );
-
-      if ( lastElement ) {
-        lastElement.insertAdjacentHTML("afterend", template);
-      } else {
-        outerElement.insertAdjacentHTML("afterbegin", template);
-      }
-
-      const currentElement = html.querySelector(`input[name$='${key}']`)?.closest(".form-group");
-      if ( currentElement ) {
-        lastElement = currentElement;
-      }
-    }
-  }
-  Logger.debug("Custom senses added");
-}
-
-/* -------------------------------------------- */
 /*  DEFINITION                                  */
+/* -------------------------------------------- */
+
+/**
+ * Resolve a sense property.
+ * @param {string} property
+ * @returns {(value: *, data: *, key: string) => *}
+ */
+const senseProperty = property => (value, data, key) => {
+  if ( value === undefined ) return CONFIG.CUSTOM_DND5E?.senses?.[key]?.[property];
+  return (value === "" || value === null) ? undefined : value;
+};
+
 /* -------------------------------------------- */
 
 const DEFINITION = {
   configKey: "senses",
   constants,
   form: SensesForm,
-  loadTemplates: false,
-  entryType: "scalar",
-  entry: { source: "labelOrSelf", localize: true }
+  configRequiresReload: true,
+  entryType: "object",
+  entry: [
+    {
+      key: "label",
+      localize: true,
+      required: true,
+      transform: (value, data) => value ?? (typeof data === "string" ? data : undefined)
+    },
+    { key: "grantsSight", transform: senseProperty("grantsSight") },
+    { key: "visionMode", transform: senseProperty("visionMode") },
+    { key: "detectionMode", transform: senseProperty("detectionMode") }
+  ]
 };
 export default DEFINITION;
