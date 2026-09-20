@@ -48,11 +48,10 @@ button[data-custom-dnd5e="stop-animations"].fade-out {
 /* MODULE MARKER                                */
 /* -------------------------------------------- */
 .custom-dnd5e-module-marker {
-    color: var(--color-text-subtle, var(--color-text-dark-secondary));
+    color: var(--dnd5e-color-gold);
     cursor: help;
     flex: none;
-    font-size: var(--font-size-11);
-    margin-inline-end: 0.25rem;
+    font-size: var(--font-size-10);
     opacity: 0.7;
     vertical-align: baseline;
 }
@@ -61,8 +60,44 @@ button[data-custom-dnd5e="stop-animations"].fade-out {
     opacity: 1;
 }
 
+label > .custom-dnd5e-module-marker {
+    margin-inline-start: 0.25rem;
+}
+
 legend > .custom-dnd5e-module-marker {
     font-size: inherit;
+    margin-inline-end: 0.25rem;
+}
+
+button > .custom-dnd5e-module-marker {
+    pointer-events: auto;
+}
+
+.tidy5e-sheet.application:where(.quadrone) :is(button,.button) .custom-dnd5e-module-marker {
+    color: var(--dnd5e-color-gold);
+    font-size: var(--font-size-10);
+    vertical-align: baseline;
+}
+
+.tidy5e-sheet.application:where(.quadrone) :is(button,.button):hover .custom-dnd5e-module-marker {
+    color: var(--dnd5e-color-gold);
+}
+
+.dnd5e2 h3.icon > .custom-dnd5e-module-marker {
+    font-size: var(--font-size-10);
+}
+
+.tidy5e-sheet.application:where(.quadrone.actor) .sidebar :is(h3,h4) .custom-dnd5e-module-marker {
+    color: var(--dnd5e-color-gold);
+    font-size: var(--font-size-10);
+    height: auto;
+    margin-inline-end: 0;
+    margin-inline-start: 0.25rem;
+    width: auto;
+}
+
+.custom-dnd5e-marked-group > label {
+    flex: 1 1 auto;
 }
 
 /* -------------------------------------------- */

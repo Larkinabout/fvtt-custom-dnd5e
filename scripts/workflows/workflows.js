@@ -1,5 +1,5 @@
 import { CONSTANTS, MODULE, SETTING_BY_ENTITY_TYPE, SHEET_TYPE } from "../constants.js";
-import { c5eLoadTemplates, compareValues, executeMacro, getFlag, unsetFlag, getSetting, setSetting, isPrimaryHandler, Logger, registerMenu, registerSetting, resolveFormula } from "../utils.js";
+import { c5eLoadTemplates, compareValues, executeMacro, getFlag, unsetFlag, getModuleMarker, getSetting, setSetting, isPrimaryHandler, Logger, registerMenu, registerSetting, resolveFormula } from "../utils.js";
 import { WorkflowsForm } from "../forms/workflows/workflows-form.js";
 import { WorkflowsFormEntity } from "../forms/workflows/workflows-form-entity.js";
 import {
@@ -123,6 +123,7 @@ function addActorWorkflowsButton(app, html, data) {
 
   const buttonHtml = `<button type="button" class="custom-dnd5e-workflows-button">
     <i class="fas fa-bolt-lightning"></i> ${game.i18n.localize("CUSTOM_DND5E.form.workflows.title")}
+    ${getModuleMarker()}
   </button>`;
   tab.insertAdjacentHTML("afterbegin", buttonHtml);
 
@@ -154,6 +155,7 @@ function addGroupWorkflowsButton(app, html, data) {
 
   const buttonHtml = `<button type="button" class="custom-dnd5e-workflows-button">
     <i class="fas fa-bolt-lightning"></i> ${game.i18n.localize("CUSTOM_DND5E.form.workflows.title")}
+    ${getModuleMarker()}
   </button>`;
   tab.insertAdjacentHTML("afterbegin", buttonHtml);
 
@@ -185,6 +187,7 @@ function addItemWorkflowsButton(app, html, data) {
 
   const buttonHtml = `<button type="button" class="custom-dnd5e-workflows-button">
     <i class="fas fa-bolt-lightning"></i> ${game.i18n.localize("CUSTOM_DND5E.form.workflows.title")}
+    ${getModuleMarker()}
   </button>`;
   tab.insertAdjacentHTML("afterbegin", buttonHtml);
 

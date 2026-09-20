@@ -492,9 +492,10 @@ export async function addHelpButton(element, uuid) {
 
 /**
  * Get the markup for the icon that marks an element as injected by this module.
- * @returns {string} Icon HTML
+ * @returns {string} Icon HTML or an empty string for anyone but the GM
  */
 export function getModuleMarker() {
+  if ( !game.user?.isGM ) return "";
   return `<i class="custom-dnd5e-module-marker fa-solid fa-plug" data-tooltip="${MODULE.NAME}" aria-label="${MODULE.NAME}"></i>`;
 }
 

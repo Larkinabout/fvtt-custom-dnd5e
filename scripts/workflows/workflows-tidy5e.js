@@ -1,5 +1,5 @@
 import { CONSTANTS } from "../constants.js";
-import { getSetting } from "../utils.js";
+import { getModuleMarker, getSetting } from "../utils.js";
 import { WorkflowsFormEntity } from "../forms/workflows/workflows-form-entity.js";
 
 const constants = CONSTANTS.WORKFLOWS;
@@ -13,6 +13,7 @@ export function register() {
   Hooks.on("tidy5e-sheet.ready", api => {
     const buttonHtml = `<button type="button" class="custom-dnd5e-workflows-button">
       <i class="fas fa-bolt-lightning"></i> ${game.i18n.localize("CUSTOM_DND5E.form.workflows.title")}
+      ${getModuleMarker()}
     </button>`;
 
     const makeContent = () => new api.models.HtmlContent({
