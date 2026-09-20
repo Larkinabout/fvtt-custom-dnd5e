@@ -139,6 +139,12 @@ export const CONSTANTS = {
       DND5E_ITEM_GROUP: "modules/custom-dnd5e/templates/counters/dnd5e/counters-item-group.hbs",
       DND5E_ITEM_GROUP_LEGACY: "modules/custom-dnd5e/templates/counters/dnd5e/counters-item-group-legacy.hbs"
     },
+    TYPES: {
+      NUMERIC: ["fraction", "number", "pips"],
+      WITH_MAX: ["fraction", "number", "pips", "successFailure"],
+      WITH_MIN: ["fraction", "number"],
+      WITH_START: ["fraction", "number", "pips"]
+    },
     UUID: "Compendium.custom-dnd5e.custom-dnd5e-journals.JournalEntry.dR7kYmNpV3tZxW4q"
   },
   DEAD: {

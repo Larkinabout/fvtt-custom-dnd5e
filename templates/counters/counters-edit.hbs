@@ -86,7 +86,21 @@
                         <input id="custom-dnd5e-label" name="{{key}}.label" type="text" value="{{localize label}}">
                     </div>
                 </div>
-                <div class="form-group{{#if (customDnd5eEq type "checkbox")}} hidden{{/if}}">
+                <div class="form-group{{#unless showStart}} hidden{{/unless}}">
+                    <label>{{localize "CUSTOM_DND5E.form.counters.start.label"}}</label>
+                    <div class="form-fields">
+                        <input id="custom-dnd5e-start" name="{{key}}.start" type="text" value="{{start}}">
+                    </div>
+                    <p class="hint">{{localize "CUSTOM_DND5E.form.counters.start.note.1"}}</p>
+                </div>
+                <div class="form-group{{#unless showMin}} hidden{{/unless}}">
+                    <label>{{localize "CUSTOM_DND5E.form.counters.min.label"}}</label>
+                    <div class="form-fields">
+                        <input id="custom-dnd5e-min" name="{{key}}.min" type="text" value="{{min}}">
+                    </div>
+                    <p class="hint">{{localize "CUSTOM_DND5E.form.counters.min.note.1"}}</p>
+                </div>
+                <div class="form-group{{#unless showMax}} hidden{{/unless}}">
                     <label>{{localize "CUSTOM_DND5E.form.counters.max.label"}}</label>
                     <div class="form-fields">
                         <input id="custom-dnd5e-max" name="{{key}}.max" type="text" value="{{max}}">

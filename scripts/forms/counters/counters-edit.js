@@ -11,6 +11,7 @@ import {
 
 const id = CONSTANTS.COUNTERS.ID;
 const form = `${id}-edit`;
+const TYPES = CONSTANTS.COUNTERS.TYPES;
 
 /**
  * Get the workflows setting key for the given entity type.
@@ -149,6 +150,11 @@ export class CountersEditForm extends CustomDnd5eForm {
       viewRole: counterData?.viewRole || 1,
       editRole: counterData?.editRole || 1,
       max: counterData?.max,
+      showMax: TYPES.WITH_MAX.includes(type),
+      min: counterData?.min,
+      showMin: TYPES.WITH_MIN.includes(type),
+      start: counterData?.start,
+      showStart: TYPES.WITH_START.includes(type),
       type,
       workflows,
       selects: this.#getSelects(),
@@ -172,9 +178,13 @@ export class CountersEditForm extends CustomDnd5eForm {
 
     const typeSelect = this.element.querySelector("#custom-dnd5e-type");
     const maxGroup = this.element.querySelector("#custom-dnd5e-max")?.closest(".form-group");
+    const minGroup = this.element.querySelector("#custom-dnd5e-min")?.closest(".form-group");
+    const startGroup = this.element.querySelector("#custom-dnd5e-start")?.closest(".form-group");
     if ( typeSelect && maxGroup ) {
       typeSelect.addEventListener("change", () => {
-        maxGroup.classList.toggle("hidden", typeSelect.value === "checkbox");
+        maxGroup.classList.toggle("hidden", !TYPES.WITH_MAX.includes(typeSelect.value));
+        minGroup?.classList.toggle("hidden", !TYPES.WITH_MIN.includes(typeSelect.value));
+        startGroup?.classList.toggle("hidden", !TYPES.WITH_START.includes(typeSelect.value));
       });
     }
   }
@@ -405,9 +415,15 @@ export class CountersEditForm extends CustomDnd5eForm {
       foundry.utils.setProperty(this.setting, key, value);
     });
 
-    // Strip max for checkbox counters
-    if ( this.setting[this.key]?.type === "checkbox" ) {
-      delete this.setting[this.key].max;
+    const counter = this.setting[this.key];
+    if ( counter && !TYPES.WITH_MAX.includes(counter.type) ) {
+      delete counter.max;
+    }
+    if ( counter && (!TYPES.WITH_MIN.includes(counter.type) || !counter.min) ) {
+      delete counter.min;
+    }
+    if ( counter && (!TYPES.WITH_START.includes(counter.type) || !counter.start) ) {
+      delete counter.start;
     }
 
     // Build actorTypes array from checkboxes

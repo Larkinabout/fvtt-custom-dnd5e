@@ -341,6 +341,7 @@ export function setupCounterInteractions(entity, counters, container, editable) 
           input.addEventListener("click", selectInputContent);
           if ( input.dataset?.input === "value" ) {
             input.addEventListener("keyup", () => checkValue(input, target, counter.property), true);
+            input.addEventListener("change", () => checkMinValue(input, target, counter.property));
           }
         });
         break;
@@ -351,6 +352,7 @@ export function setupCounterInteractions(entity, counters, container, editable) 
           input.addEventListener("click", selectInputContent);
           if ( input.dataset?.input === "value" ) {
             input.addEventListener("keyup", () => checkValue(input, target, counter.property), true);
+            input.addEventListener("change", () => checkMinValue(input, target, counter.property));
           }
         });
         break;
@@ -439,8 +441,23 @@ function checkValue(input, entity, key) {
   const max = Number(getMaxValue(entity, key) ?? entity.getFlag(MODULE.ID, `${key}.max`));
   if ( max && Number(input.value) > max ) {
     input.value = max;
-    ui.notifications.info(game.i18n.localize("CUSTOM_DND5E.reachedCounterLimit"));
+    ui.notifications.info(game.i18n.localize("CUSTOM_DND5E.reachedCounterMax"));
   }
+}
+
+/* -------------------------------------------- */
+
+/**
+ * Check input value against min.
+ * @param {HTMLInputElement} input
+ * @param {Actor|Item} entity
+ * @param {string} key
+ */
+function checkMinValue(input, entity, key) {
+  const min = getMinValue(entity, key);
+  if ( min === null || input.value === "" || Number(input.value) >= min ) return;
+  input.value = min;
+  ui.notifications.info(game.i18n.localize("CUSTOM_DND5E.reachedCounterMin"));
 }
 
 /* -------------------------------------------- */
@@ -457,6 +474,7 @@ function checkValue(input, entity, key) {
 function handlePreUpdateActor(actor, data, options, userId) {
   if ( !getSetting(constants.SETTING.COUNTERS.KEY) ) return;
   if ( !actor.isOwner ) return;
+  clampCounterValues(actor, data);
   captureOldCounterValues(actor, data, options);
 }
 
@@ -472,7 +490,40 @@ function handlePreUpdateActor(actor, data, options, userId) {
 function handlePreUpdateItem(item, data, options, userId) {
   if ( !getSetting(constants.SETTING.COUNTERS.KEY) ) return;
   if ( !item.isOwner ) return;
+  clampCounterValues(item, data);
   captureOldCounterValues(item, data, options);
+}
+
+/* -------------------------------------------- */
+
+/**
+ * Keep updated counter within the counter's min and max.
+ * @param {Actor|Item} entity
+ * @param {object} data
+ */
+function clampCounterValues(entity, data) {
+  if ( !hasDataChanged(data) ) return;
+  const updates = data.flags[MODULE.ID].counters;
+  if ( foundry.utils.getType(updates) !== "Object" ) return;
+
+  for ( const [key, update] of Object.entries(updates) ) {
+    if ( foundry.utils.getType(update) !== "Object" ) continue;
+    if ( update.value === undefined || update.value === null || update.value === "" ) continue;
+    const value = Number(update.value);
+    if ( Number.isNaN(value) ) continue;
+
+    const counter = getCounters(entity, key);
+    if ( !constants.TYPES.NUMERIC.includes(counter?.type) ) continue;
+
+    const min = constants.TYPES.WITH_MIN.includes(counter.type) ? resolveMin(entity, counter.min) : null;
+    const max = resolveMax(entity, counter.max)
+      ?? (Number(update.max ?? entity.getFlag(MODULE.ID, `counters.${key}.max`)) || null);
+
+    let clamped = value;
+    if ( max && clamped > max ) clamped = max;
+    if ( min !== null && clamped < min ) clamped = min;
+    if ( clamped !== value ) update.value = clamped;
+  }
 }
 
 /* -------------------------------------------- */
@@ -489,7 +540,7 @@ function captureOldCounterValues(entity, data, options) {
   if ( !counters ) return;
   const previousValues = {};
   for ( const [counterKey, counter] of Object.entries(counters) ) {
-    if ( !["fraction", "number", "pips"].includes(counter.type) ) continue;
+    if ( !constants.TYPES.NUMERIC.includes(counter.type) ) continue;
     previousValues[counterKey] = counter.value ?? 0;
   }
   options.customDnd5ePreviousCounterValues = previousValues;
@@ -618,14 +669,16 @@ function processCounters(type, counters, entity, actorType) {
       const flagKey = `counters.${key}`;
       counter.property = ["checkbox", "number", "pips"].includes(counter.type) ? `${flagKey}.value` : flagKey;
       counter.canEdit = (!counter.editRole || game.user.role >= counter.editRole);
-      if ( ["checkbox", "number", "pips"].includes(counter.type) ) {
+      if ( counter.type === "checkbox" ) {
         counter.value = entity.getFlag(MODULE.ID, counter.property) ?? 0;
       }
       if ( counter.type === "number" ) {
         counter.max = resolveMax(entity, counter.max) ?? null;
+        counter.value = getNumericValue(entity, flagKey, counter);
       }
       if ( counter.type === "pips" ) {
         counter.max = resolveMax(entity, counter.max) ?? entity.getFlag(MODULE.ID, `${flagKey}.max`) ?? 0;
+        counter.value = getNumericValue(entity, flagKey, counter);
         counter.pips = Array.fromRange(counter.max, 1).map(n => ({
           n,
           filled: (counter.value ?? 0) >= n,
@@ -633,9 +686,9 @@ function processCounters(type, counters, entity, actorType) {
         }));
       }
       if ( counter.type === "fraction" ) {
-        counter.value = entity.getFlag(MODULE.ID, `${flagKey}.value`) ?? 0;
         counter.canEditMax = (!counter.max && counter.canEdit);
         counter.max = resolveMax(entity, counter.max) ?? entity.getFlag(MODULE.ID, `${flagKey}.max`) ?? 0;
+        counter.value = getNumericValue(entity, flagKey, counter);
       }
       if ( counter.type === "successFailure" ) {
         counter.success = entity.getFlag(MODULE.ID, `${flagKey}.success`) ?? 0;
@@ -703,7 +756,7 @@ export function togglePip(entity, counterKey, n) {
   if ( !counterKey.startsWith("counters.") ) counterKey = `counters.${counterKey}`;
   const baseKey = counterKey;
   if ( !counterKey.endsWith(".value") ) counterKey = `${counterKey}.value`;
-  const currentValue = entity.getFlag(MODULE.ID, counterKey) ?? 0;
+  const currentValue = getNumericValue(entity, baseKey, getCounters(entity, baseKey));
   const max = getMaxValue(entity, baseKey);
   const newValue = (currentValue === n) ? n - 1 : n;
   if ( max && newValue > max ) return;
@@ -734,10 +787,15 @@ export function increaseFraction(entity, counterKey, actionValue = 1) {
  */
 export function decreaseFraction(entity, counterKey, actionValue = 1) {
   if ( !counterKey.startsWith("counters.") ) counterKey = `counters.${counterKey}`;
-  const oldValue = entity.getFlag(MODULE.ID, `${counterKey}.value`) ?? 0;
-  const newValue = Math.max(oldValue - actionValue, 0);
-  if ( oldValue > 0 ) {
+  const minValue = getMinValue(entity, counterKey);
+  const lowest = minValue ?? 0;
+  const oldValue = getNumericValue(entity, counterKey, getCounters(entity, counterKey));
+  const newValue = Math.max(oldValue - actionValue, lowest);
+  if ( oldValue > lowest ) {
     entity.setFlag(MODULE.ID, `${counterKey}.value`, newValue);
+  }
+  if ( minValue !== null && (oldValue - actionValue) < minValue ) {
+    ui.notifications.info(game.i18n.localize("CUSTOM_DND5E.reachedCounterMin"));
   }
 }
 
@@ -764,17 +822,19 @@ export function setFraction(entity, counterKey, actionValue = 0) {
  */
 export function modifyFraction(entity, counterKey, actionValue = 1) {
   if ( !counterKey.startsWith("counters.") ) counterKey = `counters.${counterKey}`;
-  const oldValue = entity.getFlag(MODULE.ID, `${counterKey}.value`) ?? 0;
+  const minValue = getMinValue(entity, counterKey) ?? 0;
+  const oldValue = getNumericValue(entity, counterKey, getCounters(entity, counterKey));
   const maxValue = getMaxValue(entity, counterKey) ?? entity.getFlag(MODULE.ID, `${counterKey}.max`);
   const newValue = oldValue + actionValue;
 
-  if ( newValue >= 0 && (!maxValue || newValue <= maxValue) ) {
+  if ( newValue >= minValue && (!maxValue || newValue <= maxValue) ) {
     entity.setFlag(MODULE.ID, `${counterKey}.value`, newValue);
   } else {
-    if ( newValue >= 0 && oldValue < maxValue ) {
+    if ( newValue >= minValue && oldValue < maxValue ) {
       entity.setFlag(MODULE.ID, `${counterKey}.value`, maxValue);
     }
-    ui.notifications.info(game.i18n.localize("CUSTOM_DND5E.reachedCounterLimit"));
+    const message = (newValue < minValue) ? "reachedCounterMin" : "reachedCounterMax";
+    ui.notifications.info(game.i18n.localize(`CUSTOM_DND5E.${message}`));
   }
 }
 
@@ -802,11 +862,17 @@ export function increaseNumber(entity, counterKey, actionValue = 1) {
  */
 export function decreaseNumber(entity, counterKey, actionValue = 1) {
   if ( !counterKey.startsWith("counters.") ) counterKey = `counters.${counterKey}`;
+  const baseKey = counterKey.endsWith(".value") ? counterKey.slice(0, -6) : counterKey;
   if ( !counterKey.endsWith(".value") ) counterKey = `${counterKey}.value`;
-  const oldValue = entity.getFlag(MODULE.ID, counterKey) ?? 0;
-  const newValue = Math.max(oldValue - actionValue, 0);
-  if ( oldValue > 0 ) {
+  const minValue = getMinValue(entity, baseKey);
+  const lowest = minValue ?? 0;
+  const oldValue = getNumericValue(entity, baseKey, getCounters(entity, baseKey));
+  const newValue = Math.max(oldValue - actionValue, lowest);
+  if ( oldValue > lowest ) {
     entity.setFlag(MODULE.ID, counterKey, newValue);
+  }
+  if ( minValue !== null && (oldValue - actionValue) < minValue ) {
+    ui.notifications.info(game.i18n.localize("CUSTOM_DND5E.reachedCounterMin"));
   }
 }
 
@@ -836,17 +902,19 @@ export function modifyNumber(entity, counterKey, actionValue = 1) {
   if ( !counterKey.startsWith("counters.") ) counterKey = `counters.${counterKey}`;
   const baseKey = counterKey.endsWith(".value") ? counterKey.slice(0, -6) : counterKey;
   if ( !counterKey.endsWith(".value") ) counterKey = `${counterKey}.value`;
-  const oldValue = entity.getFlag(MODULE.ID, counterKey) ?? 0;
+  const minValue = getMinValue(entity, baseKey) ?? 0;
+  const oldValue = getNumericValue(entity, baseKey, getCounters(entity, baseKey));
   const maxValue = getMaxValue(entity, baseKey) ?? entity.getFlag(MODULE.ID, `${baseKey}.max`);
   const newValue = oldValue + actionValue;
 
-  if ( newValue >= 0 && (!maxValue || newValue <= maxValue) ) {
+  if ( newValue >= minValue && (!maxValue || newValue <= maxValue) ) {
     entity.setFlag(MODULE.ID, counterKey, newValue);
   } else {
-    if ( newValue >= 0 && oldValue < maxValue ) {
+    if ( newValue >= minValue && oldValue < maxValue ) {
       entity.setFlag(MODULE.ID, counterKey, maxValue);
     }
-    ui.notifications.info(game.i18n.localize("CUSTOM_DND5E.reachedCounterLimit"));
+    const message = (newValue < minValue) ? "reachedCounterMin" : "reachedCounterMax";
+    ui.notifications.info(game.i18n.localize(`CUSTOM_DND5E.${message}`));
   }
 }
 
@@ -901,7 +969,7 @@ export function modifySuccess(entity, counterKey, actionValue = 1) {
     if ( newValue >= 0 && oldValue < maxValue ) {
       entity.setFlag(MODULE.ID, `${counterKey}.success`, maxValue);
     }
-    ui.notifications.info(game.i18n.localize("CUSTOM_DND5E.reachedCounterLimit"));
+    ui.notifications.info(game.i18n.localize("CUSTOM_DND5E.reachedCounterMax"));
   }
 }
 
@@ -954,12 +1022,39 @@ export function modifyFailure(entity, counterKey, actionValue = 1) {
     if ( newValue >= 0 && oldValue < maxValue ) {
       entity.setFlag(MODULE.ID, `${counterKey}.failure`, maxValue);
     }
-    ui.notifications.info(game.i18n.localize("CUSTOM_DND5E.reachedCounterLimit"));
+    ui.notifications.info(game.i18n.localize("CUSTOM_DND5E.reachedCounterMax"));
   }
 }
 
 /* -------------------------------------------- */
-/*  MAX & VALUE RESOLUTION                      */
+/*  RESET                                       */
+/* -------------------------------------------- */
+
+/**
+ * Reset a counter to its starting value.
+ * @param {Actor|Item} entity
+ * @param {string} counterKey
+ */
+export function resetCounter(entity, counterKey) {
+  if ( !counterKey.startsWith("counters.") ) counterKey = `counters.${counterKey}`;
+  if ( counterKey.endsWith(".value") ) counterKey = counterKey.slice(0, -6);
+  const counter = getCounters(entity, counterKey);
+  if ( !counter ) return;
+
+  switch (counter.type) {
+    case "checkbox":
+      entity.setFlag(MODULE.ID, `${counterKey}.value`, false);
+      break;
+    case "successFailure":
+      entity.setFlag(MODULE.ID, counterKey, { success: 0, failure: 0 });
+      break;
+    default:
+      entity.setFlag(MODULE.ID, `${counterKey}.value`, getStartValue(entity, counterKey) ?? 0);
+  }
+}
+
+/* -------------------------------------------- */
+/*  MIN, MAX & VALUE RESOLUTION                 */
 /* -------------------------------------------- */
 
 /**
@@ -1000,7 +1095,11 @@ export function getCurrentValue(entity, key) {
   if ( entity.document ) entity = entity.document;
   if ( !key.startsWith("counters.") ) key = `counters.${key}`;
   if ( !key.endsWith(".value") ) key = `${key}.value`;
-  return entity.getFlag(MODULE.ID, key) ?? null;
+  const stored = entity.getFlag(MODULE.ID, key);
+  if ( stored !== undefined && stored !== null ) return stored;
+  const baseKey = key.slice(0, -6);
+  if ( getStartValue(entity, baseKey) === null ) return null;
+  return getNumericValue(entity, baseKey, getCounters(entity, baseKey));
 }
 
 /* -------------------------------------------- */
@@ -1032,16 +1131,95 @@ function resolveMax(entity, max) {
 /* -------------------------------------------- */
 
 /**
- * Resolve a trigger value, handling attribute paths (e.g. @abilities.str.mod).
+ * Get the minimum value set for a fraction or number counter.
  * @param {Actor|Item} entity
- * @param {number|string} value Trigger value or attribute path
+ * @param {string} key
+ * @returns {number|null} Min value
+ */
+function getMinValue(entity, key) {
+  const setting = getCounters(entity, key);
+  if ( !constants.TYPES.WITH_MIN.includes(setting?.type) ) return null;
+  return resolveMin(entity, setting?.min);
+}
+
+/* -------------------------------------------- */
+
+/**
+ * Resolve a min value.
+ * @param {Actor|Item} entity
+ * @param {number|string} min Number, attribute path or calculation
+ * @returns {number|null} Resolved min value
+ */
+function resolveMin(entity, min) {
+  if ( min === undefined || min === null || min === "" ) return null;
+  return resolveFormula(entity, min);
+}
+
+/* -------------------------------------------- */
+
+/**
+ * Get the starting value set for a fraction, number or pips counter.
+ * @param {Actor|Item} entity
+ * @param {string} key
+ * @returns {number|null} Starting value
+ */
+function getStartValue(entity, key) {
+  const setting = getCounters(entity, key);
+  if ( !constants.TYPES.WITH_START.includes(setting?.type) ) return null;
+  return resolveStart(entity, setting?.start);
+}
+
+/* -------------------------------------------- */
+
+/**
+ * Resolve a starting value.
+ * @param {Actor|Item} entity
+ * @param {number|string} start Number, attribute path or calculation
+ * @returns {number|null} Resolved starting value
+ */
+function resolveStart(entity, start) {
+  if ( start === undefined || start === null || start === "" ) return null;
+  return resolveFormula(entity, start);
+}
+
+/* -------------------------------------------- */
+
+/**
+ * Get a counter's value.
+ * @param {Actor|Item} entity
+ * @param {string} flagKey
+ * @param {object} counter
+ * @returns {number} Counter value
+ */
+function getNumericValue(entity, flagKey, counter) {
+  let value = entity.getFlag(MODULE.ID, `${flagKey}.value`);
+  if ( value === undefined || value === null ) {
+    value = resolveStart(entity, counter?.start) ?? 0;
+    const max = resolveMax(entity, counter?.max) ?? entity.getFlag(MODULE.ID, `${flagKey}.max`);
+    if ( max ) value = Math.min(value, max);
+  }
+  const min = constants.TYPES.WITH_MIN.includes(counter?.type) ? resolveMin(entity, counter.min) : null;
+  return (min === null) ? value : Math.max(value, min);
+}
+
+/* -------------------------------------------- */
+
+/**
+ * Resolve a trigger value.
+ * @param {Actor|Item} entity
+ * @param {number|string} value Number, attribute path or calculation
  * @returns {number|null} Resolved trigger value
  */
 export function resolveTriggerValue(entity, value) {
-  if ( typeof value === "string" && value.startsWith("@") ) {
-    return foundry.utils.getProperty(entity.system, value.substring(1)) ?? null;
+  if ( typeof value !== "string" || !value.includes("@") ) return value;
+  if ( !entity ) return null;
+
+  if ( /^@[-.\w]+$/.test(value) ) {
+    const systemValue = foundry.utils.getProperty(entity.system, value.substring(1));
+    if ( systemValue !== undefined && systemValue !== null ) return systemValue;
   }
-  return value;
+
+  return resolveFormula(entity, value);
 }
 
 /* -------------------------------------------- */
@@ -1072,6 +1250,7 @@ export const counters = {
   increaseFailure,
   decreaseFailure,
   modifyFailure,
+  resetCounter,
   // Read helpers
   getCurrentValue,
   getSuccessFailureValue,

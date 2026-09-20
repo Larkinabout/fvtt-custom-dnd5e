@@ -13,6 +13,7 @@ import {
   increaseFraction,
   increaseNumber,
   mergeCounters,
+  resetCounter,
   resolveTriggerValue,
   setFraction,
   setNumber,
@@ -232,6 +233,21 @@ function resolveUpdateValue(entity, value) {
 /* -------------------------------------------- */
 
 /**
+ * Resolve a counter action value.
+ * @param {Actor|Item} entity
+ * @param {number|string} value Number, attribute path or calculation
+ * @returns {number|undefined} Resolved value, or undefined when empty or not a number
+ */
+function resolveActionValue(entity, value) {
+  if ( value === undefined || value === null || value === "" ) return undefined;
+  if ( typeof value === "string" && value.includes("@") ) return resolveFormula(entity, value) ?? undefined;
+  const number = Number(value);
+  return Number.isNaN(number) ? undefined : number;
+}
+
+/* -------------------------------------------- */
+
+/**
  * Execute all actions in a workflow.
  * @param {object} actions Actions
  * @param {object} options Options
@@ -353,6 +369,7 @@ function handleAction(action, {
     case "check":
     case "uncheck":
     case "toggle":
+    case "reset":
       executeCounterAction(entity, action);
       break;
     case "destroy":
@@ -444,19 +461,20 @@ function executeCounterAction(entity, action) {
 
   // Prefix with "counters." so counter functions store values at counters.{key}.value
   const counterKey = `counters.${key}`;
+  const actionValue = resolveActionValue(entity, action.actionValue);
 
   switch (action.type) {
     case "increase":
-      if ( counter.type === "fraction" ) increaseFraction(entity, counterKey, action.actionValue);
-      else increaseNumber(entity, counterKey, action.actionValue);
+      if ( counter.type === "fraction" ) increaseFraction(entity, counterKey, actionValue);
+      else increaseNumber(entity, counterKey, actionValue);
       break;
     case "decrease":
-      if ( counter.type === "fraction" ) decreaseFraction(entity, counterKey, action.actionValue);
-      else decreaseNumber(entity, counterKey, action.actionValue);
+      if ( counter.type === "fraction" ) decreaseFraction(entity, counterKey, actionValue);
+      else decreaseNumber(entity, counterKey, actionValue);
       break;
     case "set":
-      if ( counter.type === "fraction" ) setFraction(entity, counterKey, action.actionValue);
-      else setNumber(entity, counterKey, action.actionValue);
+      if ( counter.type === "fraction" ) setFraction(entity, counterKey, actionValue);
+      else setNumber(entity, counterKey, actionValue);
       break;
     case "check":
       checkCheckbox(entity, counterKey);
@@ -466,6 +484,9 @@ function executeCounterAction(entity, action) {
       break;
     case "toggle":
       toggleCheckbox(entity, counterKey);
+      break;
+    case "reset":
+      resetCounter(entity, counterKey);
       break;
   }
 }
@@ -1016,7 +1037,7 @@ function handleUpdateActor(actor, data, options, userId) {
   const previousCounterValues = options.customDnd5ePreviousCounterValues;
 
   for ( const [counterKey, counter] of Object.entries(merged) ) {
-    if ( ["fraction", "number", "pips"].includes(counter.type) ) {
+    if ( CONSTANTS.COUNTERS.TYPES.NUMERIC.includes(counter.type) ) {
       const value = getCounterValue(data, counterKey);
       if ( value !== null && value !== undefined ) {
         processEvent("counterValue", { actor, data, counterKey, counterValue: value, userId });
@@ -1073,7 +1094,7 @@ function handleUpdateItem(item, data, options, userId) {
   const previousCounterValues = options.customDnd5ePreviousCounterValues;
 
   for ( const [counterKey, counter] of Object.entries(merged) ) {
-    if ( ["fraction", "number", "pips"].includes(counter.type) ) {
+    if ( CONSTANTS.COUNTERS.TYPES.NUMERIC.includes(counter.type) ) {
       const value = getCounterValue(data, counterKey);
       if ( value !== null && value !== undefined ) {
         processItemEvent("counterValue", { item, data, counterKey, counterValue: value, userId });
@@ -1384,7 +1405,7 @@ function matchTriggerAgainstEvent(trigger, event, {
   // Determine actual value for comparison
   const isCounterValueTrigger = ["counterValue", "successValue", "failureValue", "conditionLevelChanged"].includes(trigger.event);
   const actualValue = isCounterValueTrigger ? counterValue : dieTotal;
-  const targetValue = (typeof trigger.value === "string" && trigger.value.startsWith("@"))
+  const targetValue = (typeof trigger.value === "string" && trigger.value.includes("@"))
     ? resolveTriggerValue(actor, trigger.value) : Number(trigger.value);
 
   const result = compareValues(actualValue, trigger.operator, targetValue);
@@ -1463,7 +1484,7 @@ function checkTriggerState(trigger, entity) {
       } else {
         actualValue = getCounterValue(entity, rawKey);
       }
-      const targetValue = (typeof trigger.value === "string" && trigger.value.startsWith("@"))
+      const targetValue = (typeof trigger.value === "string" && trigger.value.includes("@"))
         ? resolveTriggerValue(entity, trigger.value) : Number(trigger.value);
       return compareValues(actualValue, trigger.operator, targetValue);
     }

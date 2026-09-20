@@ -45,7 +45,7 @@ export const SUCCESS_FAILURE_TRIGGERS = ["successValue", "failureValue"];
 /*  Action Constants                            */
 /* -------------------------------------------- */
 
-export const COUNTER_ACTIONS = ["increase", "decrease", "set", "check", "uncheck", "toggle"];
+export const COUNTER_ACTIONS = ["increase", "decrease", "set", "check", "uncheck", "toggle", "reset"];
 
 export const ACTIONS_WITH_VALUE = ["increase", "decrease", "set"];
 
@@ -294,7 +294,8 @@ export function getActionChoices(entityType = "actor") {
     { value: "set", label: "CUSTOM_DND5E.setCounter", group: countersGroup },
     { value: "check", label: "CUSTOM_DND5E.checkCounter", group: countersGroup },
     { value: "uncheck", label: "CUSTOM_DND5E.uncheckCounter", group: countersGroup },
-    { value: "toggle", label: "CUSTOM_DND5E.toggleCounter", group: countersGroup }
+    { value: "toggle", label: "CUSTOM_DND5E.toggleCounter", group: countersGroup },
+    { value: "reset", label: "CUSTOM_DND5E.resetCounter", group: countersGroup }
   );
 
   const conditionsGroup = game.i18n.localize("CUSTOM_DND5E.form.workflows.action.group.conditions");
@@ -1249,7 +1250,9 @@ export class WorkflowsEditForm extends CustomDnd5eForm {
     // Coerce numeric fields
     for ( const action of Object.values(group.actions) ) {
       if ( action.sound?.volume !== undefined ) action.sound.volume = Number(action.sound.volume);
-      if ( action.actionValue !== undefined && action.actionValue !== "" ) action.actionValue = Number(action.actionValue);
+      if ( action.actionValue !== undefined && action.actionValue !== "" && !isNaN(Number(action.actionValue)) ) {
+        action.actionValue = Number(action.actionValue);
+      }
     }
 
     // Merge sub-action data (On Success / On Failure)
