@@ -1,5 +1,5 @@
 import { CONSTANTS, MODULE, SETTING_BY_ENTITY_TYPE, SHEET_TYPE } from "../constants.js";
-import { c5eLoadTemplates, checkEmpty, getFlag, getSetting, registerMenu, registerSetting, resolveFormula } from "../utils.js";
+import { c5eLoadTemplates, checkEmpty, getFlag, getSetting, parseNumber, registerMenu, registerSetting, resolveFormula } from "../utils.js";
 import { CountersForm } from "../forms/counters/counters-form.js";
 import { CountersFormEntity } from "../forms/counters/counters-form-entity.js";
 
@@ -508,9 +508,8 @@ function clampCounterValues(entity, data) {
 
   for ( const [key, update] of Object.entries(updates) ) {
     if ( foundry.utils.getType(update) !== "Object" ) continue;
-    if ( update.value === undefined || update.value === null || update.value === "" ) continue;
-    const value = Number(update.value);
-    if ( Number.isNaN(value) ) continue;
+    const value = parseNumber(update.value);
+    if ( value === null ) continue;
 
     const counter = getCounters(entity, key);
     if ( !constants.TYPES.NUMERIC.includes(counter?.type) ) continue;

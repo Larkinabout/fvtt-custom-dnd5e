@@ -1563,6 +1563,44 @@
       "category": null,
       "_id": "pR5kYmNpV3tZbW7f",
       "_key": "!journal.pages!B48iqFBddUikMMer.pR5kYmNpV3tZbW7f"
+    },
+    {
+      "sort": 1950000,
+      "name": "Spellcasting",
+      "type": "text",
+      "system": {},
+      "title": {
+        "show": true,
+        "level": 1
+      },
+      "image": {},
+      "text": {
+        "format": 1,
+        "content": "<p>Located in <strong>Settings</strong> &gt; <strong>Game Settings</strong> &gt; <strong>Custom D&amp;D 5e</strong> &gt; <strong>Configure Spellcasting</strong></p><p>Check <strong>Enable Configuration</strong> to apply your custom configuration. The form contains a <strong>Spell Levels</strong> tab and a slots tab for each spellcasting method that grants spell slots, such as <strong>Spellcasting Slots</strong> and <strong>Pact Magic Slots</strong>.</p><h2 class=\"custom-dnd5e-h2\">Add a Spell Level</h2><ol><li><p>Select the <strong>Spell Levels</strong> tab.</p></li><li><p>Click <strong>Add Spell Level</strong>.</p></li><li><p>Enter a label, such as 10th Level.</p></li><li><p>Click <strong>Save Changes</strong>.</p></li><li><p>Reload Foundry VTT when prompted.</p></li></ol><p>Added levels appear in the level menu on spell sheets and as columns in the slot tables. Only the highest added level can be removed and levels provided by the system can be renamed but not removed.</p><h2 class=\"custom-dnd5e-h2\">Set the Spell Slots</h2><ol><li><p>Select a slots tab.</p></li><li><p>Find the row for the caster level at which the slots are gained.</p></li><li><p>Enter the number of slots under the spell level.</p></li><li><p>Click <strong>Save Changes</strong>.</p></li><li><p>Reload Foundry VTT when prompted.</p></li></ol><p>Leave a cell blank to keep the value from the level above, shown greyed out in the field. Enter 0 to remove the slots from that level onward.</p><table><caption><p>Example: a 10th level slot gained at level 19</p></caption><thead><tr><th><p><strong>Caster Level</strong></p></th><th><p><strong>9th</strong></p></th><th><p><strong>10th</strong></p></th></tr></thead><tbody><tr><td><p>Level 18</p></td><td><p>1</p></td><td><p></p></td></tr><tr><td><p>Level 19</p></td><td><p>1</p></td><td><p>1</p></td></tr><tr><td><p>Level 20</p></td><td><p>1</p></td><td><p>1</p></td></tr></tbody></table><h2 class=\"custom-dnd5e-h2\">Notes</h2><ul><li><p>Rows are listed up to the <strong>Max Level</strong> setting. Raise it to set slots for levels above 20.</p></li><li><p>A caster level cannot skip a spell level. Every lower spell level needs at least one slot.</p></li><li><p>The caster level is the combined spellcasting level, so a half caster reaches a row at twice the class level.</p></li><li><p>Pact Magic uses a single slot level. Enter the number of slots and the slot level at the caster levels where they change.</p></li><li><p>Spell scrolls created from a spell of an added level use the highest spell scroll the system provides.</p></li></ul>"
+      },
+      "video": {
+        "controls": true,
+        "volume": 0.5
+      },
+      "src": null,
+      "ownership": {
+        "default": -1
+      },
+      "flags": {},
+      "_stats": {
+        "compendiumSource": null,
+        "duplicateSource": null,
+        "coreVersion": "14.368",
+        "systemId": "dnd5e",
+        "systemVersion": "6.0.3",
+        "createdTime": 1790026504662,
+        "modifiedTime": 1790524529633,
+        "lastModifiedBy": "A9B1HvNBg9rKYqtb",
+        "exportSource": null
+      },
+      "category": null,
+      "_id": "sP3kYmNpV3tZbW2c",
+      "_key": "!journal.pages!B48iqFBddUikMMer.sP3kYmNpV3tZbW2c"
     }
   ],
   "folder": null,

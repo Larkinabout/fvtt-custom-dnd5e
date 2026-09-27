@@ -408,6 +408,7 @@ Customise D&D 5e system configurations. For help and advice on modifying a confi
 - **Senses**: Blindsight, Darkvision, Tremorsense, etc.
 - **Skills**: Athletics, Acrobatics, Stealth, etc.
 - **Spell Schools**: Abjuration, Conjuration, Divination, etc.
+- **Spellcasting**: Spell levels above 9th and spell slot tables for each caster level.
 - **Tools**: Alchemist's Supplies, Bagpipes, Brewer's Supplies, etc.
 - **Tool Proficiencies/Types**: Artisan's Tools, Gaming Set, Musical Instrument, etc.
 - **Weapons**: Dagger, Longsword, Shortbow, etc.

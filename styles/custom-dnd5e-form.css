@@ -516,17 +516,35 @@
 }
 
 /*************************************
-    CALENDAR EDIT FORM
+    TABLE
 **************************************/
 
-#custom-dnd5e-calendar-edit-form .scrollable {
+.custom-dnd5e-app .scrollable:has(.custom-dnd5e-table),
+#custom-dnd5e-calendar-edit-form .scrollable.fieldset-list {
     padding-top: 5px;
 }
 
-#custom-dnd5e-calendar-edit-form .items-header.header {
+.custom-dnd5e-app .custom-dnd5e-table .items-header.header {
     gap: 0.5rem;
     padding: 0 0.25rem;
 }
+
+.custom-dnd5e-app .custom-dnd5e-table .item-row {
+    gap: 0.5rem;
+}
+
+.custom-dnd5e-app .custom-dnd5e-table .item-row > div:not(.item-controls) {
+    display: flex;
+    min-width: 0;
+}
+
+.custom-dnd5e-app .custom-dnd5e-table .item-row input[type="number"] {
+    text-align: center;
+}
+
+/*************************************
+    CALENDAR EDIT FORM
+**************************************/
 
 #custom-dnd5e-calendar-edit-form .item-name {
     flex: 2;
@@ -539,12 +557,10 @@
 #custom-dnd5e-calendar-edit-form .item-ordinal,
 #custom-dnd5e-calendar-edit-form .item-days {
     flex: 0 0 3rem;
-    text-align: center;
 }
 
 #custom-dnd5e-calendar-edit-form .item-leap-days {
     flex: 0 0 4.5rem;
-    text-align: center;
 }
 
 #custom-dnd5e-calendar-edit-form .item-day-start,
@@ -552,20 +568,27 @@
 #custom-dnd5e-calendar-edit-form .item-month,
 #custom-dnd5e-calendar-edit-form .item-day {
     flex: 1;
-    text-align: center;
 }
 
-#custom-dnd5e-calendar-edit-form .item-row {
-    gap: 0.5rem;
+/*************************************
+    SPELLCASTING FORM
+**************************************/
+
+#custom-dnd5e-spellcasting-form .item-name .form-group label {
+    flex: 0 0 5rem;
 }
 
-#custom-dnd5e-calendar-edit-form .item-row > div:not(.item-controls) {
-    display: flex;
-    min-width: 0;
+#custom-dnd5e-spellcasting-form .custom-dnd5e-table .items-header.header,
+#custom-dnd5e-spellcasting-form .custom-dnd5e-table .item-row {
+    gap: 0.25rem;
 }
 
-#custom-dnd5e-calendar-edit-form .item-row input[type="number"] {
-    text-align: center;
+#custom-dnd5e-spellcasting-form .custom-dnd5e-table .item-name {
+    flex: 0 0 4.5rem;
+}
+
+#custom-dnd5e-spellcasting-form .custom-dnd5e-table .item-slots {
+    flex: 1 1 2rem;
 }
 
 .custom-dnd5e-drop-area {

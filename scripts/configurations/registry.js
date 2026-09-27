@@ -40,6 +40,7 @@ import * as conditionsMod from "./conditions.js";
 import * as encumbranceMod from "./encumbrance.js";
 import * as itemPropertiesMod from "./item-properties.js";
 import * as restTypesMod from "./rest-types.js";
+import * as spellcastingMod from "./spellcasting.js";
 import * as toolProficienciesMod from "./tool-proficiencies.js";
 import * as weaponProficienciesMod from "./weapon-proficiencies.js";
 
@@ -110,6 +111,7 @@ export const configs = {
   encumbrance: {...encumbranceMod, ...encumbranceMod.constants},
   itemProperties: {...itemPropertiesMod, ...itemPropertiesMod.constants},
   restTypes: {...restTypesMod, ...restTypesMod.constants},
+  spellcasting: {...spellcastingMod, ...spellcastingMod.constants},
   toolProficiencies: {...toolProficienciesMod, ...toolProficienciesMod.constants},
   weaponProficiencies: {...weaponProficienciesMod, ...weaponProficienciesMod.constants}
 };

@@ -1,5 +1,5 @@
 import { CONSTANTS, MODULE, SETTING_BY_ENTITY_TYPE, SHEET_TYPE } from "../constants.js";
-import { c5eLoadTemplates, compareValues, executeMacro, getFlag, unsetFlag, getModuleMarker, getSetting, setSetting, isPrimaryHandler, Logger, registerMenu, registerSetting, resolveFormula } from "../utils.js";
+import { c5eLoadTemplates, compareValues, executeMacro, getFlag, unsetFlag, getModuleMarker, getSetting, setSetting, isPrimaryHandler, Logger, parseNumber, registerMenu, registerSetting, resolveFormula } from "../utils.js";
 import { WorkflowsForm } from "../forms/workflows/workflows-form.js";
 import { WorkflowsFormEntity } from "../forms/workflows/workflows-form-entity.js";
 import {
@@ -241,8 +241,7 @@ function resolveUpdateValue(entity, value) {
 function resolveActionValue(entity, value) {
   if ( value === undefined || value === null || value === "" ) return undefined;
   if ( typeof value === "string" && value.includes("@") ) return resolveFormula(entity, value) ?? undefined;
-  const number = Number(value);
-  return Number.isNaN(number) ? undefined : number;
+  return parseNumber(value) ?? undefined;
 }
 
 /* -------------------------------------------- */

@@ -1,0 +1,135 @@
+<div class="standard-form custom-dnd5e-tabbed">
+    <div class="form-group">
+        <label
+            class="flex1"
+            style="min-width:80px; max-width:200px;">{{localize "CUSTOM_DND5E.enableConfiguration"}}</label>
+        <div class="form-fields">
+            <dnd5e-checkbox
+                id="custom-dnd5e-enable-config"
+                name="enableConfig"
+                {{customDnd5eChecked enableConfig}}></dnd5e-checkbox>
+        </div>
+    </div>
+    <hr>
+    <nav class="sheet-tabs tabs">
+        {{#each tabs}}
+        <a
+            class="item{{#if (customDnd5eEq ../activeTab id)}} active{{/if}}"
+            data-action="tab"
+            data-group="primary"
+            data-tab="{{id}}">
+            <span><i class="{{icon}}"></i> {{localize label}}</span>
+        </a>
+        {{/each}}
+    </nav>
+    <hr>
+    <div class="standard-form custom-dnd5e-tab-container">
+        {{!-- Spell Levels Tab --}}
+        <section
+            class="tab{{#if (customDnd5eEq activeTab spellLevelsTab)}} active{{/if}}"
+            data-group="primary"
+            data-tab="{{spellLevelsTab}}">
+            <p class="hint">{{localize "CUSTOM_DND5E.form.spellcasting.spellLevels.hint"}}</p>
+            <div class="scrollable">
+                <div class="custom-dnd5e-items-sections">
+                    <div class="items-section card">
+                        <div class="items-header header">
+                            <h3 class="item-name">{{localize "CUSTOM_DND5E.form.spellcasting.spellLevels.tab"}}</h3>
+                        </div>
+                        <ol class="item-list unlist custom-dnd5e-list">
+                            {{#each spellLevels}}
+                            <li class="item custom-dnd5e-item" data-level="{{level}}">
+                                <div class="item-row">
+                                    <div class="item-name">
+                                        <div class="form-group">
+                                            <label>{{levelLabel}}</label>
+                                            <div class="form-fields">
+                                                <input type="text" name="spellLevels.{{level}}.label" value="{{label}}">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="item-controls always-visible">
+                                        <button
+                                            type="button"
+                                            data-action="removeSpellLevel"
+                                            class="unbutton control-button item-control always-interactive{{#unless removable}} hidden{{/unless}}"
+                                            data-tooltip="{{localize 'CUSTOM_DND5E.form.button.delete.tooltip'}}"
+                                            aria-label="{{localize 'CUSTOM_DND5E.form.button.delete.tooltip'}}">
+                                            <i class="fas fa-trash" inert></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </li>
+                            {{/each}}
+                        </ol>
+                    </div>
+                    <button
+                        type="button"
+                        data-action="addSpellLevel"
+                        class="gold-button always-interactive"
+                        data-tooltip="{{localize 'CUSTOM_DND5E.form.spellcasting.spellLevels.add'}}"
+                        aria-label="{{localize 'CUSTOM_DND5E.form.spellcasting.spellLevels.add'}}">
+                        <i class="fas fa-plus" inert></i>
+                    </button>
+                </div>
+            </div>
+            <button type="button" data-action="reset" class="reset-button bright">
+                <i class="fas fa-arrow-rotate-left"></i>{{localize "CUSTOM_DND5E.form.button.reset.label"}}
+            </button>
+        </section>
+
+        {{!-- Slot Table Tabs --}}
+        {{#each slotTables}}
+        <section
+            class="tab{{#if (customDnd5eEq ../activeTab tab)}} active{{/if}}"
+            data-group="primary"
+            data-tab="{{tab}}">
+            <p class="hint">{{localize hint}}</p>
+            <div class="scrollable">
+                <div class="custom-dnd5e-items-sections">
+                    <div class="items-section card custom-dnd5e-table">
+                        <div class="items-header header">
+                            <h3 class="item-name">{{localize "CUSTOM_DND5E.form.spellcasting.slots.casterLevel"}}</h3>
+                            {{#each columns}}
+                            <div class="item-header item-slots">{{header}}</div>
+                            {{/each}}
+                        </div>
+                        <ol class="item-list unlist custom-dnd5e-list">
+                            {{#each rows}}
+                            <li class="item">
+                                <div class="item-row">
+                                    <div class="item-name">{{label}}</div>
+                                    {{#each cells}}
+                                    <div class="item-slots">
+                                        <input
+                                            type="number"
+                                            name="{{name}}"
+                                            value="{{value}}"
+                                            placeholder="{{placeholder}}"
+                                            min="{{min}}"
+                                            step="1">
+                                    </div>
+                                    {{/each}}
+                                </div>
+                            </li>
+                            {{/each}}
+                        </ol>
+                    </div>
+                </div>
+            </div>
+            <button type="button" data-action="reset" class="reset-button bright">
+                <i class="fas fa-arrow-rotate-left"></i>{{localize "CUSTOM_DND5E.form.button.reset.label"}}
+            </button>
+        </section>
+        {{/each}}
+    </div>
+    <hr>
+    <footer class="form-footer" data-application-part="footer">
+        <button type="button" data-action="resetAll" class="reset-button bright">
+            <i class="fas fa-arrow-rotate-left"></i>{{localize "CUSTOM_DND5E.form.button.resetAll.label"}}
+        </button>
+        <button type="submit" class="save-button">
+            <i class="fas fa-solid fa-floppy-disk"></i>{{localize "CUSTOM_DND5E.form.button.save.label"}}
+        </button>
+    </footer>
+</div>

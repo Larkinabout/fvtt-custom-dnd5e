@@ -172,6 +172,7 @@ Hooks.on("init", async () => {
   registerRolls();
   configs.senses.register();
   configs.skills.register();
+  configs.spellcasting.register();
   configs.spellSchools.register();
   configs.tools.register();
   configs.toolProficiencies.register();
@@ -194,6 +195,7 @@ Hooks.on("init", async () => {
     configs.activationCosts.setConfig();
   }
   configs.currency.setConfig();
+  configs.spellcasting.setConfig();
   await configs.encumbrance.setConfig();
   configs.itemRarity.setConfig();
   configs.languages.setConfig();

@@ -1,5 +1,5 @@
 import { CONSTANTS, JOURNAL_HELP_BUTTON, MODULE } from "../constants.js";
-import { getSetting, setSetting, resetSetting } from "../utils.js";
+import { getSetting, parseNumber, setSetting, resetSetting } from "../utils.js";
 import { CustomDnd5eForm } from "./custom-dnd5e-form.js";
 import { isProficiencyDiceMode } from "../patches/prepare-base-data.js";
 import { getMaxChallengeRating, getMaxLevel } from "../gameplay/proficiency-bonus.js";
@@ -227,9 +227,8 @@ export class ProficiencyBonusForm extends CustomDnd5eForm {
     for ( const [key, value] of Object.entries(formData.object) ) {
       const [actorType, property, level] = key.split(".");
       if ( property !== "table" || !tables[actorType] ) continue;
-      if ( value === "" || value === null || value === undefined ) continue;
-      const num = Number(value);
-      if ( Number.isNaN(num) ) continue;
+      const num = parseNumber(value);
+      if ( num === null ) continue;
       tables[actorType][level] = num;
     }
 

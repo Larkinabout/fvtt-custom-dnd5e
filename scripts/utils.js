@@ -111,6 +111,31 @@ export function parseBoolean(value) {
 /* -------------------------------------------- */
 
 /**
+ * Convert a value into a number.
+ * @param {*} value
+ * @returns {number|null}
+ */
+export function parseNumber(value) {
+  if ( value === "" || value === null || value === undefined ) return null;
+  const number = Number(value);
+  return Number.isFinite(number) ? number : null;
+}
+
+/* -------------------------------------------- */
+
+/**
+ * Convert a value into a whole number, rounding down.
+ * @param {*} value
+ * @returns {number|null}
+ */
+export function parseInteger(value) {
+  const number = parseNumber(value);
+  return (number === null) ? null : Math.floor(number);
+}
+
+/* -------------------------------------------- */
+
+/**
  * Resolve a formula string containing @attribute paths against an entity's roll data.
  * Supports plain numbers, attribute paths (e.g. @scale.monk.ki-points) and
  * calculations (e.g. @abilities.str.value / 2).
