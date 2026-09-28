@@ -696,7 +696,7 @@ export function calculateAttackBonus(activity) {
  * @returns {number} Probability between 0 and 1
  */
 export function calculateHitProbability(advantageMode, attackBonus, targetNumber = 20) {
-  const rollNeeded = Math.max(1, targetNumber - attackBonus);
+  const rollNeeded = Math.clamp(targetNumber - attackBonus, 1, 21);
   switch (advantageMode) {
     case "advantage":
       const failChance = (rollNeeded - 1) / 20;
@@ -707,6 +707,30 @@ export function calculateHitProbability(advantageMode, attackBonus, targetNumber
     default:
       return (21 - rollNeeded) / 20;
   }
+}
+
+/* -------------------------------------------- */
+
+/**
+ * Whether any key combination bound to one of this module's keybindings is currently held down.
+ * @param {string} action
+ * @param {Event} [event]
+ * @returns {boolean} Whether the keybinding is held
+ */
+export function isKeybindingHeld(action, event) {
+  const bindings = game.keybindings.get(MODULE.ID, action) ?? [];
+  const isKeyEvent = ["keydown", "keyup"].includes(event?.type);
+  const modifierStates = (event && ("shiftKey" in event))
+    ? { CONTROL: event.ctrlKey || event.metaKey, SHIFT: event.shiftKey, ALT: event.altKey }
+    : null;
+
+  return bindings.some(binding => {
+    const isKeyDown = (isKeyEvent && (event.code === binding.key))
+      ? event.type === "keydown"
+      : game.keyboard.downKeys.has(binding.key);
+    return isKeyDown && (binding.modifiers ?? []).every(modifier => modifierStates?.[modifier]
+      ?? game.keyboard.isModifierActive(modifier));
+  });
 }
 
 /* -------------------------------------------- */

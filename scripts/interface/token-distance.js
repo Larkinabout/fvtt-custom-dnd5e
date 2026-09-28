@@ -200,9 +200,7 @@ function refreshLabels() {
 function addLabel(target, source) {
   const text = formatDistance(source, target);
   const resolution = Math.max(4, Math.ceil(window.devicePixelRatio || 1) * 4);
-  const gridSize = target.scene?.grid?.size ?? canvas.dimensions?.size ?? 100;
-  const fontScale = (game.settings.get("core", "uiConfig")?.fontScale ?? 5) / 5;
-  const labelScale = 0.7 * (gridSize / 100) * fontScale;
+  const labelScale = getLabelScale(target);
   let label = labels.get(target.id);
   if ( !label ) {
     label = new PIXI.Container();
@@ -226,6 +224,31 @@ function addLabel(target, source) {
   const totalWidth = label.icon.width + gap + label.distance.width;
   label.pivot.set(totalWidth / 2, totalHeight / 2);
   label.position.set(target.w / 2, target.h / 2);
+}
+
+/* -------------------------------------------- */
+
+/**
+ * Get how much a distance label is scaled based on the grid size and the core font scale setting.
+ * @param {Token} target
+ * @returns {number} Label scale
+ */
+function getLabelScale(target) {
+  const gridSize = target.scene?.grid?.size ?? canvas.dimensions?.size ?? 100;
+  const fontScale = (game.settings.get("core", "uiConfig")?.fontScale ?? 5) / 5;
+  return 0.7 * (gridSize / 100) * fontScale;
+}
+
+/* -------------------------------------------- */
+
+/**
+ * Get the height a distance label takes up on a token.
+ * @param {Token} token
+ * @returns {number} Label height, or 0 when Token Distance is off
+ */
+export function getDistanceLabelHeight(token) {
+  if ( !isEnabled() ) return 0;
+  return PIXI.TextMetrics.measureText("0", createTextStyle()).height * getLabelScale(token);
 }
 
 /* -------------------------------------------- */

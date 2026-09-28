@@ -17,11 +17,37 @@
                 <p class="hint">{{ localize "CUSTOM_DND5E.activities.move.enable.hint" }}</p>
             </div>
             <div class="form-group">
+                <label>{{ localize "CUSTOM_DND5E.activities.multiattack.enable.label" }}</label>
+                <div class="form-fields">
+                    <dnd5e-checkbox name="multiattack" {{checked multiattack}}></dnd5e-checkbox>
+                </div>
+                <p class="hint">{{ localize "CUSTOM_DND5E.activities.multiattack.enable.hint" }}</p>
+            </div>
+            <div class="form-group">
                 <label>{{ localize "CUSTOM_DND5E.activities.swap.enable.label" }}</label>
                 <div class="form-fields">
                     <dnd5e-checkbox name="swap" {{checked swap}}></dnd5e-checkbox>
                 </div>
                 <p class="hint">{{ localize "CUSTOM_DND5E.activities.swap.enable.hint" }}</p>
+            </div>
+        </fieldset>
+        <fieldset>
+            <legend>{{ localize "CUSTOM_DND5E.activities.multiattack.title" }}</legend>
+            <div class="form-group">
+                <label>{{ localize "CUSTOM_DND5E.activities.multiattack.dice.label" }}</label>
+                <div class="form-fields">
+                    <select name="multiattackDice">
+                        {{selectOptions selects.multiattackDice.choices selected=multiattackDice localize=true}}
+                    </select>
+                </div>
+                <p class="hint">{{ localize "CUSTOM_DND5E.activities.multiattack.dice.hint" }}</p>
+            </div>
+            <div class="form-group">
+                <label>{{ localize "CUSTOM_DND5E.activities.multiattack.panToTargets.label" }}</label>
+                <div class="form-fields">
+                    <dnd5e-checkbox name="multiattackPanToTargets" {{checked multiattackPanToTargets}}></dnd5e-checkbox>
+                </div>
+                <p class="hint">{{ localize "CUSTOM_DND5E.activities.multiattack.panToTargets.hint" }}</p>
             </div>
         </fieldset>
         <fieldset>

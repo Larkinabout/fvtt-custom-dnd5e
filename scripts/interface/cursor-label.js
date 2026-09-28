@@ -1,5 +1,6 @@
 import { CONSTANTS } from "../constants.js";
 import { Logger, getDnd5eKeysPressed, getSetting, registerSetting } from "../utils.js";
+import { isUseKeyHeld } from "../gameplay/probalistic-damage.js";
 
 const constants = CONSTANTS.SHOW_PRESSED_KEYS;
 
@@ -264,9 +265,15 @@ function createCursorLabelElement() {
     '<i class="fa-sharp fa-regular fa-dice-d20"></i><i class="fa-solid fa-down-long"></i>'
   );
 
+  const probabilisticDamageIcon = addCursorLabelIcon(
+    "custom-dnd5e-cursor-label-probabilistic-damage",
+    '<i class="fa-solid fa-burst"></i><i class="fa-solid fa-percent"></i>'
+  );
+
   window.customDnd5eCursorLabel.advantage = advantageIcon;
   window.customDnd5eCursorLabel.disadvantage = disadvantageIcon;
   window.customDnd5eCursorLabel.skipDialog = skipDialogIcon;
+  window.customDnd5eCursorLabel.probabilisticDamage = probabilisticDamageIcon;
 }
 
 /* -------------------------------------------- */
@@ -356,6 +363,7 @@ function updateCursorLabelVisibility(event) {
   setCursorLabelIcon("custom-dnd5e-cursor-label-skip-dialog", !!(onButton && keysPressed.normal));
   setCursorLabelIcon("custom-dnd5e-cursor-label-advantage", !!(onButton && keysPressed.advantage));
   setCursorLabelIcon("custom-dnd5e-cursor-label-disadvantage", !!(onButton && keysPressed.disadvantage));
+  setCursorLabelIcon("custom-dnd5e-cursor-label-probabilistic-damage", !!(onButton && isUseKeyHeld(event)));
 }
 
 /* -------------------------------------------- */

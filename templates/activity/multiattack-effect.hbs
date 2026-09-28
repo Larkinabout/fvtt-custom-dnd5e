@@ -1,0 +1,54 @@
+<section class="tab activity-{{ tab.id }} {{ tab.cssClass }}" data-tab="{{ tab.id }}" data-group="{{ tab.group }}">
+    <fieldset>
+        <legend>
+            <span>{{ localize "CUSTOM_DND5E.activities.multiattack.attacks" }}</span>
+            {{#if attackOptions.length}}
+            <button type="button" class="unbutton control-button" data-action="addAttack" data-tooltip
+                    aria-label="{{ localize 'CUSTOM_DND5E.activities.multiattack.addAttack' }}">
+                <i class="fas fa-plus" inert></i>
+            </button>
+            {{/if}}
+        </legend>
+        <ul class="separated-list custom-dnd5e-multiattack-list flexcol unlist">
+            {{#each attacks}}
+            <li data-index="{{ index }}">
+                <div class="details flexrow">
+                    {{ dnd5e-icon img classes="gold-icon" }}
+                    <select data-attack-index="{{ index }}"
+                            aria-label="{{ localize 'CUSTOM_DND5E.activities.multiattack.attacks' }}">
+                        {{ selectOptions options selected=key }}
+                    </select>
+                    <div class="list-controls flexrow">
+                        <button type="button" class="unbutton control-button" data-action="deleteAttack"
+                                data-index="{{ index }}" data-tooltip
+                                aria-label="{{ localize 'CUSTOM_DND5E.activities.multiattack.deleteAttack' }}">
+                            <i class="fa-solid fa-trash" inert></i>
+                        </button>
+                    </div>
+                </div>
+            </li>
+            {{else}}
+            <li class="empty">{{ localize emptyLabel }}</li>
+            {{/each}}
+        </ul>
+        <p class="hint">{{ localize "CUSTOM_DND5E.activities.multiattack.attacksHint" }}</p>
+    </fieldset>
+    <fieldset>
+        <legend>{{ localize "CUSTOM_DND5E.activities.multiattack.title" }}</legend>
+        <div class="form-group">
+            <label>{{ localize "CUSTOM_DND5E.activities.multiattack.fields.probabilistic.label" }}</label>
+            <div class="form-fields">
+                <dnd5e-checkbox name="multiattack.probabilistic"
+                                {{checked source.multiattack.probabilistic}}></dnd5e-checkbox>
+            </div>
+            <p class="hint">{{ localize "CUSTOM_DND5E.activities.multiattack.fields.probabilistic.hint" }}</p>
+        </div>
+        <div class="form-group">
+            <label>{{ localize "CUSTOM_DND5E.activities.multiattack.fields.autoApply.label" }}</label>
+            <div class="form-fields">
+                <dnd5e-checkbox name="multiattack.autoApply" {{checked source.multiattack.autoApply}}></dnd5e-checkbox>
+            </div>
+            <p class="hint">{{ localize "CUSTOM_DND5E.activities.multiattack.fields.autoApply.hint" }}</p>
+        </div>
+    </fieldset>
+</section>

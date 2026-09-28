@@ -1,16 +1,120 @@
-import { CONSTANTS } from "../constants.js";
-import { calculateAttackBonus, calculateHitProbability, getAdvantageMode, getSetting, registerSetting } from "../utils.js";
+import { CONSTANTS, MODULE } from "../constants.js";
+import {
+  calculateAttackBonus,
+  calculateHitProbability,
+  getAdvantageMode,
+  getSetting,
+  isKeybindingHeld,
+  registerSetting
+} from "../utils.js";
 
 const constants = CONSTANTS.PROBABILISTIC_DAMAGE;
+
+/**
+ * Activity types that can use probabilistic damage.
+ * @type {string[]}
+ */
+const ACTIVITY_TYPES = ["attack", "save"];
+
+/**
+ * Share of the damage dealt when the target succeeds on its saving throw.
+ * @type {Record<string, number>}
+ */
+export const ON_SAVE_MULTIPLIER = { full: 1, half: 0.5, none: 0 };
 
 /* -------------------------------------------- */
 
 /**
- * Register setting and hooks.
+ * Register setting, keybinding and hooks.
  */
 export function register() {
   registerSettings();
+  registerKeybindings();
   registerHooks();
+}
+
+/* -------------------------------------------- */
+
+/**
+ * Register keybindings.
+ */
+function registerKeybindings() {
+  game.keybindings.register(MODULE.ID, constants.KEYBINDING.USE, {
+    name: "CUSTOM_DND5E.keybinding.useProbabilisticDamage.name",
+    hint: "CUSTOM_DND5E.keybinding.useProbabilisticDamage.hint",
+    editable: [],
+    precedence: CONST.KEYBINDING_PRECEDENCE.NORMAL
+  });
+}
+
+/* -------------------------------------------- */
+
+/**
+ * Whether the Use Probabilistic Damage key is held down.
+ * @param {Event} [event]
+ * @returns {boolean} Whether the key is held
+ */
+export function isUseKeyHeld(event) {
+  return isKeybindingHeld(constants.KEYBINDING.USE, event);
+}
+
+/* -------------------------------------------- */
+
+/**
+ * Whether average damage should be used instead of rolling.
+ * @param {Actor} actor
+ * @returns {boolean} Whether to use average damage
+ */
+export function useAverageDamageFor(actor) {
+  const useAverageDamage = getSetting(constants.SETTING.USE_AVERAGE_DAMAGE.KEY);
+  return (actor?.type === useAverageDamage || useAverageDamage === "both");
+}
+
+/* -------------------------------------------- */
+
+/**
+ * Work out what share of an activity's damage a target is expected to take.
+ * @param {Activity} activity Attack or save activity
+ * @param {Actor} [target]
+ * @param {Event} [event]
+ * @returns {{factor: number, result: object|null}} Share of the damage, the chance, AC or DC
+ *   and ability used
+ */
+export function getProbabilisticFactor(activity, target, event) {
+  if ( activity.type === "attack" ) {
+    const bonus = calculateAttackBonus(activity);
+    const ac = target?.system.attributes?.ac?.value ?? 10;
+    const factor = calculateHitProbability(getAdvantageMode(event), Number.isFinite(bonus) ? bonus : 0, ac);
+    return { factor, result: { type: "hitChance", chance: Math.round(factor * 100), ac } };
+  }
+
+  if ( activity.type === "save" ) {
+    const dc = activity.save.dc.value ?? 10;
+    const { ability, bonus } = getBestSave(activity, target);
+    const saveChance = calculateHitProbability("normal", bonus, dc);
+    const onSave = ON_SAVE_MULTIPLIER[activity.damage.onSave] ?? 0.5;
+    return {
+      factor: (1 - saveChance) + (saveChance * onSave),
+      result: { type: "saveChance", chance: Math.round(saveChance * 100), dc, ability }
+    };
+  }
+
+  return { factor: 1, result: null };
+}
+
+/* -------------------------------------------- */
+
+/**
+ * Get the saving throw the target is best at out of those the activity allows.
+ * @param {Activity} activity
+ * @param {Actor} [target]
+ * @returns {{ability: string, bonus: number}} Ability key and saving throw bonus
+ */
+export function getBestSave(activity, target) {
+  const abilities = activity.save.ability.size ? Array.from(activity.save.ability) : ["dex"];
+  return abilities
+    .map(ability => ({ ability, bonus: target?.system.abilities?.[ability]?.save?.value ?? 0 }))
+    .reduce((best, save) => (save.bonus > best.bonus ? save : best));
 }
 
 /* -------------------------------------------- */
@@ -19,7 +123,7 @@ export function register() {
  * Register hooks.
  */
 function registerHooks() {
-  Hooks.on("renderAttackSheet", addProbabilisticDamageField);
+  Hooks.on("renderActivitySheet", addProbabilisticDamageField);
   Hooks.on("dnd5e.preUseActivity", checkProbalisticDamageRoll);
   Hooks.on("customDnd5e.rollProbalisticDamage", rollProbalisticDamage);
 }
@@ -54,29 +158,29 @@ function registerSettings() {
 /* -------------------------------------------- */
 
 /**
- * Adds the probabilistic damage field to the attack sheet UI.
- * @param {object} sheet The attack sheet instance.
- * @param {HTMLElement} html The HTML element of the sheet.
+ * Add the Use Probabilistic Damage checkbox to the top of the Damage section of attack and save activity sheets.
+ * @param {ActivitySheet} sheet
+ * @param {HTMLElement} html
  */
 async function addProbabilisticDamageField(sheet, html) {
-  const enable = getSetting(constants.SETTING.ENABLE.KEY);
-  if ( sheet.activity.actor.type !== enable && enable !== "both" ) return;
-  if ( sheet.activity.type !== "attack" ) return;
-
   const activity = sheet.activity;
-  const item = activity.item;
-  const useProbabilisticDamage = item.getFlag("custom-dnd5e", `useProbabilisticDamage.${sheet.activity.id}`) ?? false;
-  const context = { useProbabilisticDamage };
+  if ( !ACTIVITY_TYPES.includes(activity?.type) ) return;
+  const enable = getSetting(constants.SETTING.ENABLE.KEY);
+  if ( activity.actor?.type !== enable && enable !== "both" ) return;
 
+  if ( html.querySelector("#custom-dnd5e-use-probabilistic-damage") ) return;
+  const legend = html.querySelector("[data-action='addDamagePart']")?.closest("fieldset")?.querySelector("legend");
+  if ( !legend ) return;
+
+  const useProbabilisticDamage = activity.item.getFlag("custom-dnd5e", `useProbabilisticDamage.${activity.id}`) ?? false;
   const template = await foundry.applications.handlebars.renderTemplate(
     constants.TEMPLATE.PROBABILISTIC_DAMAGE,
-    context
+    { useProbabilisticDamage }
   );
-  const baseDamageFormGroup = html.querySelector("[name='damage.includeBase']").closest(".form-group");
-  baseDamageFormGroup.insertAdjacentHTML("beforebegin", template);
+  legend.insertAdjacentHTML("afterend", template);
 
-  const useProbabilisticDamageCheckbox = html.querySelector("#custom-dnd5e-use-probabilistic-damage");
-  useProbabilisticDamageCheckbox.addEventListener("change", handleCheckboxToggle.bind(useProbabilisticDamageCheckbox, sheet));
+  const checkbox = html.querySelector("#custom-dnd5e-use-probabilistic-damage");
+  checkbox.addEventListener("change", handleCheckboxToggle.bind(checkbox, sheet));
 }
 
 /* -------------------------------------------- */
@@ -102,12 +206,20 @@ function handleCheckboxToggle(sheet) {
  * @returns {boolean|undefined} Returns true to allow the default roll, false to prevent it.
  */
 function checkProbalisticDamageRoll(activity, usageConfig, dialogConfig, messageConfig) {
+  if ( !ACTIVITY_TYPES.includes(activity.type) ) return true;
+
+  usageConfig.customDnd5eUseProbabilisticDamage ??= isUseKeyHeld();
+
   const enable = getSetting(constants.SETTING.ENABLE.KEY);
-  if ( activity.actor.type !== enable && enable !== "both" ) return true;
-  if ( !activity.item.getFlag("custom-dnd5e", `useProbabilisticDamage.${activity.id}`) ) return true;
-  if ( activity.type !== "attack" ) return true;
+  const isEnabled = (activity.actor.type === enable || enable === "both")
+    && !!activity.item.getFlag("custom-dnd5e", `useProbabilisticDamage.${activity.id}`);
+  if ( !isEnabled && !usageConfig.customDnd5eUseProbabilisticDamage ) return true;
   if ( game.user.targets.size !== 1 ) return true;
-  if ( canvas.tokens.controlled.length >= 4 && getSetting(CONSTANTS.MOB_DAMAGE.SETTING.ENABLE.KEY) ) return true;
+
+  // Mob Damage handles attacks from groups of four or more
+  const isMob = (activity.type === "attack") && (canvas.tokens.controlled.length >= 4)
+    && getSetting(CONSTANTS.MOB_DAMAGE.SETTING.ENABLE.KEY);
+  if ( isMob ) return true;
 
   Hooks.callAll("customDnd5e.rollProbalisticDamage", activity, usageConfig, dialogConfig, messageConfig);
   return false;
@@ -123,73 +235,84 @@ function checkProbalisticDamageRoll(activity, usageConfig, dialogConfig, message
  * @param {object} messageConfig Configuration info for the created chat message.
  */
 async function rollProbalisticDamage(activity, usageConfig, dialogConfig, messageConfig) {
-  let useAverageDamage = getSetting(constants.SETTING.USE_AVERAGE_DAMAGE.KEY);
-  useAverageDamage = (activity.actor.type === useAverageDamage || useAverageDamage === "both");
+  const useAverageDamage = useAverageDamageFor(activity.actor);
 
   // Additional chat message configuration
-  const rollMode = game.settings.get("core", "rollMode");
+  const messageMode = CONFIG.Dice.BasicRoll.getMessageMode();
   const speaker = ChatMessage.getSpeaker({ actor: activity.actor });
 
-  // Get hit probability
-  const attackBonus = calculateAttackBonus(activity);
-  const targetNumber = messageConfig.data?.flags?.dnd5e?.targets[0]?.ac ?? 10;
-  const advantageMode = getAdvantageMode(usageConfig.event);
-  const probability = calculateHitProbability(advantageMode, attackBonus, targetNumber) ?? 0;
+  const targets = messageConfig.data?.system?.targets ?? [];
+  const target = dnd5e.dataModels.chatMessage.fields.TargetsField.resolve(targets[0] ?? {}).actor
+    ?? game.user.targets.first()?.actor;
+  const { factor } = getProbabilisticFactor(activity, target, usageConfig.event);
 
-  if ( probability === 0 ) {
-    const content = `${activity.actor.name} missed its target.`;
-    ChatMessage.create({ content, rollMode, speaker });
+  if ( factor <= 0 ) {
+    const content = activity.type === "save"
+      ? game.i18n.format("CUSTOM_DND5E.probabilisticDamageNoDamage", {
+        name: target?.name ?? "", item: activity.item.name
+      })
+      : game.i18n.format("CUSTOM_DND5E.probabilisticDamageMissed", { name: activity.actor.name });
+    const messageData = { content, speaker };
+    ChatMessage.applyMode(messageData, messageMode);
+    ChatMessage.create(messageData);
     return;
   }
 
-  // Prepare damage rolls
-  const damageConfig = foundry.utils.deepClone(activity.getDamageConfig());
-  for ( const roll of damageConfig.rolls ) {
-    const formula = dnd5e.dice.simplifyRollFormula(
-      Roll.defaultImplementation.replaceFormulaData(roll.parts.join(" + "), roll.data)
-    );
-
-    if ( useAverageDamage ) {
-      const minRoll = Roll.create(formula).evaluate({ minimize: true });
-      const maxRoll = Roll.create(formula).evaluate({ maximize: true });
-      roll.parts = [Math.round(Math.floor(((await minRoll).total + (await maxRoll).total) / 2) * probability)];
-    } else {
-      roll.parts = [`round((${roll.parts[0]}) * ${probability})`];
-    }
-  }
+  const { rolls, damageConfig } = await evaluateProbabilisticDamage(activity, factor, { useAverageDamage });
 
   const newMessageConfig = {
     create: true,
     data: {
       flavor: `${activity.item.name} - ${activity.damageFlavor}`,
-      flags: {
-        dnd5e: {
-          ...activity.messageFlags,
-          messageType: "roll",
-          roll: { type: "damage" }
-        }
-      },
-      speaker
+      speaker,
+      system: { ...activity.messageSources, targets },
+      type: "damage"
     },
-    rollMode
+    rollMode: messageMode
   };
 
-  // Evaluate and post the damage rolls to chat
-  const rolls = buildRolls(damageConfig);
-  await CONFIG.Dice.DamageRoll.buildEvaluate(rolls, damageConfig );
   CONFIG.Dice.DamageRoll.buildPost(rolls, damageConfig, newMessageConfig);
 }
 
 /* -------------------------------------------- */
 
 /**
- * Build a roll from the provided configuration objects.
- * @param {object} config Roll configuration data.
- * @returns {Array} Array of built roll objects.
+ * Evaluate an activity's damage rolls with every part scaled by factor.
+ * @param {Activity} activity
+ * @param {number} factor Number between 0 and 1
+ * @param {object} [options]
+ * @param {boolean} [options.useAverageDamage=false] Use average damage instead of rolling
+ * @returns {Promise<{rolls: DamageRoll[], damageConfig: object}>} Evaluated rolls and the config used to build them
+ */
+export async function evaluateProbabilisticDamage(activity, factor, { useAverageDamage = false } = {}) {
+  const damageConfig = foundry.utils.deepClone(activity.getDamageConfig());
+  for ( const roll of damageConfig.rolls ) {
+    const formula = roll.parts.join(" + ");
+
+    if ( useAverageDamage ) {
+      const simplified = dnd5e.dice.simplifyRollFormula(
+        Roll.defaultImplementation.replaceFormulaData(formula, roll.data)
+      );
+      const minRoll = await Roll.create(simplified).evaluate({ minimize: true });
+      const maxRoll = await Roll.create(simplified).evaluate({ maximize: true });
+      roll.parts = [Math.round(Math.floor((minRoll.total + maxRoll.total) / 2) * factor)];
+    } else {
+      roll.parts = [`round((${formula}) * ${factor})`];
+    }
+  }
+
+  const rolls = buildRolls(damageConfig);
+  await CONFIG.Dice.DamageRoll.buildEvaluate(rolls, damageConfig);
+  return { rolls, damageConfig };
+}
+
+/* -------------------------------------------- */
+
+/**
+ * Build damage rolls from a damage roll configuration.
+ * @param {object} config
+ * @returns {DamageRoll[]} Unevaluated damage rolls
  */
 function buildRolls(config) {
-  const advantageMode = CONFIG.Dice.DamageRoll;
-  return config.rolls?.map((roll, index) =>
-    advantageMode.fromConfig(roll, config)
-  ) ?? [];
+  return config.rolls?.map(roll => CONFIG.Dice.DamageRoll.fromConfig(roll, config)) ?? [];
 }

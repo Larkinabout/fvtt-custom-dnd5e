@@ -26,6 +26,7 @@ The following icons are used in this module:
 |------|--------|---------|
 | Body swapping | Lorc | [CC BY 3.0](https://creativecommons.org/licenses/by/3.0/) |
 | Chest | Delapouite | [CC BY 3.0](https://creativecommons.org/licenses/by/3.0/) |
+| Claw slashes| Lorc | [CC BY 3.0](https://creativecommons.org/licenses/by/3.0/) |
 | Dice target | Delapouite | [CC BY 3.0](https://creativecommons.org/licenses/by/3.0/) |
 | Move | Delapouite | [CC BY 3.0](https://creativecommons.org/licenses/by/3.0/) |
 

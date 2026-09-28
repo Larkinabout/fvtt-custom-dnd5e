@@ -65,11 +65,21 @@ export class ActivitiesForm extends CustomDnd5eForm {
     return {
       macro: setting?.macro ?? false,
       move: setting?.move ?? false,
+      multiattack: setting?.multiattack ?? false,
+      multiattackDice: setting?.multiattackDice ?? "all",
+      multiattackPanToTargets: setting?.multiattackPanToTargets ?? false,
       swap: setting?.swap ?? false,
       targeting: setting?.targeting ?? false,
       fallbackTarget: setting?.fallbackTarget ?? false,
       clearTargets: setting?.clearTargets ?? "none",
       selects: {
+        multiattackDice: {
+          choices: {
+            all: "CUSTOM_DND5E.activities.multiattack.dice.all",
+            stagger: "CUSTOM_DND5E.activities.multiattack.dice.stagger",
+            none: "CUSTOM_DND5E.activities.multiattack.dice.none"
+          }
+        },
         clearTargets: {
           choices: {
             none: "CUSTOM_DND5E.none",
@@ -123,6 +133,9 @@ export class ActivitiesForm extends CustomDnd5eForm {
     await setSetting(constants.SETTING.CONFIG.KEY, {
       macro: formData.object.macro ?? false,
       move: formData.object.move ?? false,
+      multiattack: formData.object.multiattack ?? false,
+      multiattackDice: formData.object.multiattackDice ?? "all",
+      multiattackPanToTargets: formData.object.multiattackPanToTargets ?? false,
       swap: formData.object.swap ?? false,
       targeting: formData.object.targeting ?? false,
       fallbackTarget: formData.object.fallbackTarget ?? false,

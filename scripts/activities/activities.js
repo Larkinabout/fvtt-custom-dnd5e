@@ -3,6 +3,7 @@ import { c5eLoadTemplates, getSetting, registerMenu, registerSetting } from "../
 import { ActivitiesForm } from "../forms/activities-form.js";
 import { MacroActivity } from "./activity-macro.js";
 import { MoveActivity } from "./activity-move.js";
+import { MultiattackActivity, MultiattackMessageData, registerMultiattackQueries } from "./activity-multiattack.js";
 import { SwapActivity } from "./activity-swap.js";
 import { TargetingMode } from "./targeting-mode.js";
 
@@ -106,6 +107,9 @@ function _getTargetingRequirements(activity, { fallback = false } = {}) {
     CONFIG.DND5E.individualTargetTypes[type]?.label ?? "Creature"
   );
 
+  // Multiattack runs its own targeting prompt for each attack
+  if ( activity.type === "custom-dnd5e-multiattack" ) return null;
+
   // Custom activities that always need targets
   if ( activity.type === "custom-dnd5e-move" ) {
     return { count: 1, typeLabel: labelFor(rawType) };
@@ -151,6 +155,9 @@ export function register() {
       default: {
         macro: false,
         move: false,
+        multiattack: false,
+        multiattackDice: "all",
+        multiattackPanToTargets: false,
         swap: false,
         targeting: false,
         fallbackTarget: false,
@@ -183,6 +190,15 @@ export function register() {
   if ( setting?.move ) {
     CONFIG.DND5E.activityTypes["custom-dnd5e-move"] = {
       documentClass: MoveActivity
+    };
+  }
+
+  CONFIG.ChatMessage.dataModels[constants.MULTIATTACK_MESSAGE_TYPE] = MultiattackMessageData;
+  registerMultiattackQueries();
+
+  if ( setting?.multiattack ) {
+    CONFIG.DND5E.activityTypes["custom-dnd5e-multiattack"] = {
+      documentClass: MultiattackActivity
     };
   }
 
@@ -253,6 +269,8 @@ export function register() {
     constants.TEMPLATE.FORM,
     constants.TEMPLATE.MACRO_EFFECT,
     constants.TEMPLATE.MOVE_EFFECT,
+    constants.TEMPLATE.MULTIATTACK_CARD,
+    constants.TEMPLATE.MULTIATTACK_EFFECT,
     constants.TEMPLATE.SWAP_ACTIVATION,
     constants.TEMPLATE.SWAP_TARGETING,
     constants.TEMPLATE.SWAP_EFFECT

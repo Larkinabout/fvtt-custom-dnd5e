@@ -155,8 +155,10 @@
 <h3>Probabilistic Damage</h3>
 <ul>
     <li>When attacking a single token, the attack roll is replaced with a damage roll scaled by the chance to hit.</li>
+    <li>For saving throws against a single token, the saving throw is replaced with a damage roll scaled by the chance the target fails, plus any damage it takes on a success.</li>
     <li>Enable per activity and actor type (Player Characters, NPCs or both).</li>
     <li>Use average damage instead of rolling.</li>
+    <li>Hold the Use Probabilistic Damage key (set in Configure Controls) to use it for a single attack.</li>
 </ul>
 
 <p><img src="https://github.com/Larkinabout/fvtt-custom-dnd5e/blob/main/.github/readme/custom-dnd5e-probabilistic-damage.gif?raw=true" alt="Custom D&amp;D Probabilistic Damage"></p>
@@ -192,6 +194,10 @@
 <h3>Move Activity</h3>
 
 <p>The Move activity enables forced movement of targeted tokens on the map. Valid movement positions are highlighted based on direction (push, pull, or any) and distance constraints. Supports gridded and gridless scenes, respects wall collision, and handles multiple targets in sequence.</p>
+
+<h3>Multiattack Activity</h3>
+
+<p>The Multiattack activity makes several attacks in one go and shows all the results in a single chat card. Add a row for each attack the creature makes, then target a token for each attack in turn, choosing from the attacks still left. Optionally use Probabilistic Damage to skip attack rolls and saving throws, and apply damage automatically or with buttons on the chat card.</p>
 
 <h3>Swap Activity</h3>
 
@@ -457,7 +463,7 @@
 
 <h2 id="show-pressed-keys">Show Pressed Keys</h2>
 
-<p>Display an icon near the cursor when the Skip Dialog, Advantage or Disadvantage keys are pressed.</p>
+<p>Display an icon near the cursor when the Skip Dialog, Advantage, Disadvantage or Use Probabilistic Damage keys are pressed.</p>
 
 <p><img src="https://github.com/Larkinabout/fvtt-custom-dnd5e/blob/main/.github/readme/custom-dnd5e-show-pressed-keys.gif?raw=true" alt="Custom D&amp;D 5e Show Pressed Keys"></p>
 

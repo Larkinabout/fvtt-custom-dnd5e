@@ -14,11 +14,19 @@ export class TargetingMode {
    * @param {object} options.usageConfig The usage configuration
    * @param {object} options.dialogConfig The dialog configuration
    * @param {object} options.messageConfig The message configuration
+   * @param {string} [options.label] Text shown before the target count, e.g. "Attack 1/3"
+   * @param {boolean} [options.notify=true] Show the select targets notification
+   * @param {boolean} [options.hideApps=true] Hide application windows while targeting
    */
-  constructor({ activity, count, typeLabel, usageConfig, dialogConfig, messageConfig }) {
+  constructor({
+    activity, count, typeLabel, usageConfig, dialogConfig, messageConfig, label, notify = true, hideApps = true
+  }) {
     this.activity = activity;
     this.count = count;
     this.typeLabel = typeLabel;
+    this.label = label;
+    this.notify = notify;
+    this.hideApps = hideApps;
     this.usageConfig = usageConfig;
     this.dialogConfig = dialogConfig;
     this.messageConfig = messageConfig;
@@ -48,6 +56,9 @@ export class TargetingMode {
    * @param {object} options.usageConfig The usage configuration
    * @param {object} options.dialogConfig The dialog configuration
    * @param {object} options.messageConfig The message configuration
+   * @param {string} [options.label] Text shown before the target count
+   * @param {boolean} [options.notify=true] Show the select targets notification
+   * @param {boolean} [options.hideApps=true] Hide application windows while targeting
    * @returns {Promise<boolean>} Whether targeting was completed
    */
   static async activate(options) {
@@ -69,11 +80,11 @@ export class TargetingMode {
 
       this._previousControl = ui.controls.control?.name;
       this._previousTool = ui.controls.tool?.name;
-      this._restoreApplications = await hideApplications();
+      if ( this.hideApps ) this._restoreApplications = await hideApplications();
       this._createIndicator();
       ui.controls.activate({ control: "tokens", tool: "target" });
       this._attachListeners();
-      ui.notifications.info(game.i18n.localize("CUSTOM_DND5E.activities.targeting.selectTargets"));
+      if ( this.notify ) ui.notifications.info(game.i18n.localize("CUSTOM_DND5E.activities.targeting.selectTargets"));
     });
   }
 
@@ -145,7 +156,8 @@ export class TargetingMode {
    * @returns {string} The text, e.g. "0/1 Creature"
    */
   _getIndicatorText() {
-    return `${game.user.targets.size}/${this.count} ${this.typeLabel}`;
+    const text = `${game.user.targets.size}/${this.count} ${this.typeLabel}`;
+    return this.label ? `${this.label}: ${text}` : text;
   }
 
   /* -------------------------------------------- */
@@ -247,10 +259,11 @@ export class TargetingMode {
   /* -------------------------------------------- */
 
   /**
-   * Handle pointer move to reposition the indicator.
-   * @param {PointerEvent} event Pointer event
+   * Pan the canvas when near the edge of the screen and reposition the indicator.
+   * @param {PointerEvent} event
    */
   _onPointerMove(event) {
+    canvas._onDragCanvasPan(event);
     if ( this._indicator ) {
       this._indicator.style.left = `${event.clientX + 15}px`;
       this._indicator.style.top = `${event.clientY + 15}px`;

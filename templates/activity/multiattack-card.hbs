@@ -1,0 +1,65 @@
+<div class="chat-card custom-dnd5e-multiattack-card">
+    {{> "dnd5e.card-header" }}
+    <ul class="custom-dnd5e-multiattack-entries unlist">
+        {{#each entries}}
+        <li class="custom-dnd5e-multiattack-entry{{#if isMiss}} miss{{/if}}{{#if applied}} applied{{/if}}"
+            data-index="{{ index }}">
+            <img class="custom-dnd5e-multiattack-target" src="{{ target.img }}" alt="{{ target.name }}"
+                 data-token-uuid="{{ target.token }}" data-actor-uuid="{{ target.actor }}">
+            <div class="name-stacked">
+                <span class="title">{{ target.name }}</span>
+                <span class="subtitle">{{ attack }}</span>
+                {{#if resultLabel}}<span class="subtitle">{{ resultLabel }}</span>{{/if}}
+            </div>
+            {{#if die}}
+            <button type="button" class="unbutton custom-dnd5e-multiattack-roll"
+                    aria-label="{{ localize 'CUSTOM_DND5E.activities.multiattack.rollBreakdown' }}"
+                    {{ disabled (not d20Breakdown) }}>
+                <svg class="custom-dnd5e-multiattack-die{{#if die.isCritical}} critical{{else if die.isFumble}} fumble{{/if}}"
+                     viewBox="0 0 24 24" aria-hidden="true">
+                    <polygon points="12,2 20.66,7 20.66,17 12,22 3.34,17 3.34,7"></polygon>
+                    <text x="12" y="12" dy="0.35em">{{ die.natural }}</text>
+                </svg>
+            </button>
+            {{#if d20Breakdown}}<div class="roll-breakdown" popover>{{{ d20Breakdown }}}</div>{{/if}}
+            {{/if}}
+            {{#if damageBreakdown}}
+            <button type="button" class="unbutton custom-dnd5e-multiattack-total"
+                    aria-label="{{ localize 'CUSTOM_DND5E.activities.multiattack.damageBreakdown' }}">
+                {{ total }}
+            </button>
+            <div class="roll-breakdown" popover>{{{ damageBreakdown }}}</div>
+            {{else}}
+            <span class="custom-dnd5e-multiattack-total">{{ total }}</span>
+            {{/if}}
+            {{#if canRollSave}}
+            <button type="button" class="unbutton control-button" data-action="rollMultiattackSave"
+                    data-tooltip="{{ saveLabel }}" aria-label="{{ saveLabel }}">
+                <i class="fa-solid fa-shield-heart" inert></i>
+            </button>
+            {{else if ../canApply}}
+            {{#if applied}}
+            <button type="button" class="unbutton control-button" data-action="applyMultiattackDamage"
+                    data-tooltip="{{ localize 'CUSTOM_DND5E.activities.multiattack.undoDamage' }}"
+                    aria-label="{{ localize 'CUSTOM_DND5E.activities.multiattack.undoDamage' }}">
+                <i class="fa-solid fa-rotate-left" inert></i>
+            </button>
+            {{else if hasDamage}}
+            <button type="button" class="unbutton control-button" data-action="applyMultiattackDamage"
+                    data-tooltip="{{ localize 'CUSTOM_DND5E.activities.multiattack.applyDamage' }}"
+                    aria-label="{{ localize 'CUSTOM_DND5E.activities.multiattack.applyDamage' }}">
+                <i class="fa-solid fa-heart-crack" inert></i>
+            </button>
+            {{/if}}
+            {{/if}}
+        </li>
+        {{/each}}
+    </ul>
+    {{#if showApplyAll}}
+    <button type="button" class="custom-dnd5e-multiattack-apply-all" data-action="applyAllMultiattackDamage"
+            {{ disabled (not canApplyAll) }}>
+        <i class="fa-solid fa-heart-crack" inert></i>
+        <span>{{ localize "CUSTOM_DND5E.activities.multiattack.applyAll" }}</span>
+    </button>
+    {{/if}}
+</div>

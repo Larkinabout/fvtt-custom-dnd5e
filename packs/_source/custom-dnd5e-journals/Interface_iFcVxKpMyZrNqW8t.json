@@ -171,7 +171,7 @@
       "image": {},
       "text": {
         "format": 1,
-        "content": "<h2 class=\"custom-dnd5e-h2\">Ruler Travel Time</h2><p>When enabled, the measuring tool displays estimated D&amp;D 5e travel time below the distance measurement. Three travel paces are shown:</p><ul><li><span class=\"fa-solid fa-person-running\" style=\"display:inline-block;width:1.25em;text-align:center\">&#8203;</span> <strong>Fast pace</strong> &mdash; 400 feet per minute, 4 miles per hour, 30 miles per day</li><li><span class=\"fa-solid fa-person-walking\" style=\"display:inline-block;width:1.25em;text-align:center\">&#8203;</span> <strong>Normal pace</strong> &mdash; 300 feet per minute, 3 miles per hour, 24 miles per day</li><li><span class=\"fa-solid fa-person-hiking\" style=\"display:inline-block;width:1.25em;text-align:center\">&#8203;</span> <strong>Slow pace</strong> &mdash; 200 feet per minute, 2 miles per hour, 18 miles per day</li></ul><p>When the ruler is started from a hovered token, the travel time is based on the token's current movement action (Walk, Fly, Swim, etc.) and speed. The movement type is displayed above the paces. When the ruler is started from empty space, the standard 30 feet per round speed is used.</p><p>Travel time uses 8-hour travel days as per the standard D&amp;D 5e rules. Travel time is not displayed during combat. This setting only applies when the grid units are set to feet or miles.</p><p>Requires a reload when changed.</p><h2 class=\"custom-dnd5e-h2\">Show Pressed Keys</h2><p>When enabled, an icon appears near the cursor when the Skip Dialog, Advantage, or Disadvantage keys are pressed while hovering over a rollable element such as an attack button or item use button. This provides a visual indicator of the active modifier before clicking.</p><p>Requires a reload when changed.</p>"
+        "content": "<h2 class=\"custom-dnd5e-h2\">Ruler Travel Time</h2><p>When enabled, the measuring tool displays estimated D&amp;D 5e travel time below the distance measurement. Three travel paces are shown:</p><ul><li><p><span style=\"display:inline-block;width:1.25em;text-align:center\" class=\"fa-solid fa-person-running\">​</span> <strong>Fast pace</strong> — 400 feet per minute, 4 miles per hour, 30 miles per day</p></li><li><p><span style=\"display:inline-block;width:1.25em;text-align:center\" class=\"fa-solid fa-person-walking\">​</span> <strong>Normal pace</strong> — 300 feet per minute, 3 miles per hour, 24 miles per day</p></li><li><p><span style=\"display:inline-block;width:1.25em;text-align:center\" class=\"fa-solid fa-person-hiking\">​</span> <strong>Slow pace</strong> — 200 feet per minute, 2 miles per hour, 18 miles per day</p></li></ul><p>When the ruler is started from a hovered token, the travel time is based on the token's current movement action (Walk, Fly, Swim, etc.) and speed. The movement type is displayed above the paces. When the ruler is started from empty space, the standard 30 feet per round speed is used.</p><p>Travel time uses 8-hour travel days as per the standard D&amp;D 5e rules. Travel time is not displayed during combat. This setting only applies when the grid units are set to feet or miles.</p><p>Requires a reload when changed.</p><h2 class=\"custom-dnd5e-h2\">Show Pressed Keys</h2><p>When enabled, an icon appears near the cursor when the Skip Dialog, Advantage, Disadvantage, or Use Probabilistic Damage keys are pressed while hovering over a rollable element such as an attack button or item use button. This provides a visual indicator of the active modifier before clicking.</p><p>Requires a reload when changed.</p>"
       },
       "video": {
         "controls": true,
@@ -186,12 +186,12 @@
       "_stats": {
         "compendiumSource": null,
         "duplicateSource": null,
-        "coreVersion": "14.361",
+        "coreVersion": "14.368",
         "systemId": "dnd5e",
         "systemVersion": "5.2.5",
         "createdTime": 1778500000000,
-        "modifiedTime": 1779090868081,
-        "lastModifiedBy": "2Ab5BheRvt8es88G",
+        "modifiedTime": 1790624043454,
+        "lastModifiedBy": "A9B1HvNBg9rKYqtb",
         "exportSource": null
       },
       "category": null,

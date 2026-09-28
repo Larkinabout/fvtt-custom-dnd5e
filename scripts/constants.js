@@ -20,6 +20,7 @@ export const CONSTANTS = {
   },
   ACTIVITIES: {
     ID: "activities",
+    MULTIATTACK_MESSAGE_TYPE: "custom-dnd5e.multiattack",
     MENU: {
       KEY: "activities-menu",
       HINT: "CUSTOM_DND5E.menu.activities.hint",
@@ -36,6 +37,8 @@ export const CONSTANTS = {
       FORM: "modules/custom-dnd5e/templates/activities-form.hbs",
       MACRO_EFFECT: "modules/custom-dnd5e/templates/activity/macro-effect.hbs",
       MOVE_EFFECT: "modules/custom-dnd5e/templates/activity/move-effect.hbs",
+      MULTIATTACK_CARD: "modules/custom-dnd5e/templates/activity/multiattack-card.hbs",
+      MULTIATTACK_EFFECT: "modules/custom-dnd5e/templates/activity/multiattack-effect.hbs",
       SWAP_ACTIVATION: "modules/custom-dnd5e/templates/activity/swap-activation.hbs",
       SWAP_TARGETING: "modules/custom-dnd5e/templates/activity/swap-targeting.hbs",
       SWAP_EFFECT: "modules/custom-dnd5e/templates/activity/swap-effect.hbs"
@@ -44,6 +47,7 @@ export const CONSTANTS = {
     PAGE_UUID: {
       MACRO: "Compendium.custom-dnd5e.custom-dnd5e-journals.JournalEntry.xK7mNpV3tZwQ4rY2.JournalEntryPage.bS3oZvYxU5aEqL0d",
       MOVE: "Compendium.custom-dnd5e.custom-dnd5e-journals.JournalEntry.xK7mNpV3tZwQ4rY2.JournalEntryPage.cT4pAvZyV6bFrM1e",
+      MULTIATTACK: "Compendium.custom-dnd5e.custom-dnd5e-journals.JournalEntry.xK7mNpV3tZwQ4rY2.JournalEntryPage.fW7sDyCbY9eIuP4h",
       SWAP: "Compendium.custom-dnd5e.custom-dnd5e-journals.JournalEntry.xK7mNpV3tZwQ4rY2.JournalEntryPage.dU5qBwAzW7cGsN2f",
       TARGETING: "Compendium.custom-dnd5e.custom-dnd5e-journals.JournalEntry.xK7mNpV3tZwQ4rY2.JournalEntryPage.eV6rCxBaX8dHtO3g"
     }
@@ -511,6 +515,9 @@ export const CONSTANTS = {
     }
   },
   PROBABILISTIC_DAMAGE: {
+    KEYBINDING: {
+      USE: "useProbabilisticDamage"
+    },
     SETTING: {
       ENABLE: {
         KEY: "enable-probabilistic-damage"

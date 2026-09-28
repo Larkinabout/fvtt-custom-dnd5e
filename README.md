@@ -207,8 +207,10 @@ Award Inspiration when a set value is rolled for an ability check, attack roll, 
 
 ### Probabilistic Damage
 - When attacking a single token, the attack roll is replaced with a damage roll scaled by the chance to hit.
+- For saving throws against a single token, the saving throw is replaced with a damage roll scaled by the chance the target fails, plus any damage it takes on a success.
 - Enable per activity and actor type (Player Characters, NPCs or both).
 - Use average damage instead of rolling.
+- Hold the Use Probabilistic Damage key (set in Configure Controls) to use it for a single attack.
 
 <details>
     <summary>See Video</summary>
@@ -263,6 +265,10 @@ The Macro activity executes a macro when the activity is used. Macros can be con
 ### Move Activity
 
 The Move activity enables forced movement of targeted tokens on the map. Valid movement positions are highlighted based on direction (push, pull, or any) and distance constraints. Supports gridded and gridless scenes, respects wall collision, and handles multiple targets in sequence.
+
+### Multiattack Activity
+
+The Multiattack activity makes several attacks in one go and shows all the results in a single chat card. Add a row for each attack the creature makes, then target a token for each attack in turn, choosing from the attacks still left. Optionally use Probabilistic Damage to skip attack rolls and saving throws, and apply damage automatically or with buttons on the chat card.
 
 ### Swap Activity
 
@@ -548,7 +554,7 @@ Enable shorthand aliases for the D&D 5e system's chat commands, such as `/a` for
 
 ## Show Pressed Keys
 
-Display an icon near the cursor when the Skip Dialog, Advantage or Disadvantage keys are pressed.
+Display an icon near the cursor when the Skip Dialog, Advantage, Disadvantage or Use Probabilistic Damage keys are pressed.
 
 <details>
     <summary>See Video</summary>

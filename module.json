@@ -22,6 +22,9 @@
   "documentTypes": {
     "Actor": {
       "item": {}
+    },
+    "ChatMessage": {
+      "multiattack": {}
     }
   },
   "styles": [

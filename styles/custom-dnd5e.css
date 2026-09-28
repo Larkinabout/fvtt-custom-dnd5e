@@ -210,12 +210,14 @@ button > .custom-dnd5e-module-marker {
     position: relative;
 }
 
-.custom-dnd5e-cursor-label-icon .fa-dice-d20 {
+.custom-dnd5e-cursor-label-icon .fa-dice-d20,
+.custom-dnd5e-cursor-label-icon .fa-burst {
     font-size: 1.5em;
 }
 
 .custom-dnd5e-cursor-label-icon .fa-up-long,
-.custom-dnd5e-cursor-label-icon .fa-down-long {
+.custom-dnd5e-cursor-label-icon .fa-down-long,
+.custom-dnd5e-cursor-label-icon .fa-percent {
     color: white;
     font-size: 0.8em;
     left: 50%;
@@ -235,6 +237,10 @@ button > .custom-dnd5e-module-marker {
 #custom-dnd5e-cursor-label-skip-dialog {
     color: var(--dnd5e-color-gold);
     font-size: 1.5em;
+}
+
+#custom-dnd5e-cursor-label-probabilistic-damage {
+    color: var(--dnd5e-color-gold);
 }
 
 #custom-dnd5e-cursor-label-radial-disable {
@@ -285,6 +291,167 @@ button > .custom-dnd5e-module-marker {
         1px 0 1px rgba(0, 0, 0, 0.8),
         1px 1px 3px rgba(0, 0, 0, 0.8);
     z-index: 9999;
+}
+
+/* -------------------------------------------- */
+/* MULTIATTACK                                  */
+/* -------------------------------------------- */
+.custom-dnd5e-multiattack-activity .custom-dnd5e-multiattack-list .details {
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.custom-dnd5e-multiattack-activity .custom-dnd5e-multiattack-list img {
+    flex: 0 0 24px;
+    height: 24px;
+    width: 24px;
+}
+
+.custom-dnd5e-multiattack-activity .custom-dnd5e-multiattack-list select {
+    flex: 1;
+}
+
+.custom-dnd5e-multiattack-activity .custom-dnd5e-multiattack-list .list-controls {
+    flex: 0 0 auto;
+}
+
+.custom-dnd5e-attack-choice menu {
+    display: grid;
+    grid-template-columns: repeat(var(--custom-dnd5e-columns, 1), minmax(max-content, 1fr));
+}
+
+.custom-dnd5e-attack-choice menu button > .name {
+    white-space: nowrap;
+}
+
+.chat-log .message.compact .custom-dnd5e-multiattack-card button.unbutton:hover:not(:disabled),
+.chat-popout .message.compact .custom-dnd5e-multiattack-card button.unbutton:hover:not(:disabled),
+.chat-log .message.compact .custom-dnd5e-multiattack-card button.unbutton:focus,
+.chat-popout .message.compact .custom-dnd5e-multiattack-card button.unbutton:focus {
+    box-shadow: none;
+}
+
+.custom-dnd5e-multiattack-entry {
+    anchor-name: --custom-dnd5e-multiattack-row;
+    anchor-scope: --custom-dnd5e-multiattack-row;
+}
+
+.chat-log .message.compact .custom-dnd5e-multiattack-card .roll-breakdown,
+.chat-popout .message.compact .custom-dnd5e-multiattack-card .roll-breakdown {
+    position-anchor: --custom-dnd5e-multiattack-row;
+}
+
+.custom-dnd5e-multiattack-card .roll-breakdown .dice-tooltip .dice .total,
+.custom-dnd5e-multiattack-card .roll-breakdown .dice-tooltip .tooltip-part.constant-term .dice > .total {
+    align-items: flex-end;
+    flex: 0 0 60px;
+    margin-inline-end: 0;
+    padding-inline-end: 16px;
+}
+
+.custom-dnd5e-multiattack-card button.custom-dnd5e-multiattack-roll,
+.custom-dnd5e-multiattack-card button.custom-dnd5e-multiattack-total {
+    block-size: auto;
+    color: inherit;
+    font-family: inherit;
+    padding: 0;
+}
+
+.custom-dnd5e-multiattack-card button.custom-dnd5e-multiattack-roll:hover:not(:disabled) {
+    filter: drop-shadow(0 0 3px var(--dnd5e-color-gold));
+}
+
+.custom-dnd5e-multiattack-card button.custom-dnd5e-multiattack-total:hover {
+    text-shadow: 0 0 5px var(--color-shadow-primary);
+}
+
+.custom-dnd5e-multiattack-entries {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    margin: 0.5rem 0;
+}
+
+.custom-dnd5e-multiattack-entry {
+    align-items: center;
+    display: grid;
+    gap: 0.5rem;
+    grid-template-columns: 32px 1fr 20px minmax(2rem, auto) 24px;
+}
+
+.custom-dnd5e-multiattack-entry > .custom-dnd5e-multiattack-target { grid-column: 1; }
+.custom-dnd5e-multiattack-entry > .name-stacked { grid-column: 2; }
+.custom-dnd5e-multiattack-entry > .custom-dnd5e-multiattack-roll { grid-column: 3; }
+.custom-dnd5e-multiattack-entry > .custom-dnd5e-multiattack-total { grid-column: 4; }
+.custom-dnd5e-multiattack-entry > button[data-action] { grid-column: 5; }
+
+.custom-dnd5e-multiattack-entry > * {
+    grid-row: 1;
+}
+
+.custom-dnd5e-multiattack-entries:not(:has(button[data-action])) .custom-dnd5e-multiattack-entry {
+    grid-template-columns: 32px 1fr 20px minmax(2rem, auto);
+}
+
+.custom-dnd5e-multiattack-entry .name-stacked {
+    line-height: 1;
+    min-width: 0;
+}
+
+.custom-dnd5e-multiattack-entry .name-stacked .title {
+    font-size: var(--font-size-12);
+}
+
+.custom-dnd5e-multiattack-entry.miss .custom-dnd5e-multiattack-total {
+    color: var(--color-text-secondary);
+}
+
+.custom-dnd5e-multiattack-die {
+    display: block;
+    height: 20px;
+    overflow: visible;
+    width: 20px;
+}
+
+.custom-dnd5e-multiattack-die polygon {
+    fill: var(--dnd5e-chat-color-die);
+    stroke: var(--dnd5e-chat-color-die);
+    stroke-linejoin: round;
+    stroke-width: 2;
+}
+
+.custom-dnd5e-multiattack-die text {
+    fill: var(--dnd5e-color-black);
+    font-size: 14px;
+    font-variant-numeric: tabular-nums;
+    font-weight: bold;
+    text-anchor: middle;
+}
+
+.custom-dnd5e-multiattack-die.critical polygon {
+    fill: var(--color-level-success);
+    stroke: var(--color-level-success);
+}
+
+.custom-dnd5e-multiattack-die.fumble polygon {
+    fill: var(--color-level-error);
+    stroke: var(--color-level-error);
+}
+
+.custom-dnd5e-multiattack-target {
+    border: none;
+    cursor: var(--cursor-pointer);
+    height: 32px;
+    object-fit: contain;
+    width: 32px;
+}
+
+.custom-dnd5e-multiattack-card .custom-dnd5e-multiattack-total {
+    font-size: var(--font-size-18);
+    font-weight: bold;
+    justify-content: flex-end;
+    justify-self: end;
+    text-align: right;
 }
 
 /* -------------------------------------------- */
