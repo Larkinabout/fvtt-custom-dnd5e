@@ -1,5 +1,5 @@
 import { CONSTANTS, MODULE, SETTING_BY_ENTITY_TYPE, SHEET_TYPE } from "../constants.js";
-import { c5eLoadTemplates, compareValues, executeMacro, getFlag, unsetFlag, getModuleMarker, getSetting, setSetting, isPrimaryHandler, Logger, parseNumber, registerMenu, registerSetting, resolveFormula } from "../utils.js";
+import { c5eLoadTemplates, compareValues, executeMacro, getFlag, unsetFlag, getModuleMarker, getSetting, setSetting, isPrimaryHandler, Logger, parseNumber, queryUser, registerMenu, registerSetting, resolveFormula } from "../utils.js";
 import { WorkflowsForm } from "../forms/workflows/workflows-form.js";
 import { WorkflowsFormEntity } from "../forms/workflows/workflows-form-entity.js";
 import {
@@ -43,6 +43,7 @@ export function register() {
   Hooks.on("renderActorSheetV2", addActorWorkflowsButton);
   Hooks.on("renderGroupActorSheet", addGroupWorkflowsButton);
   Hooks.on("renderItemSheet5e", addItemWorkflowsButton);
+  Hooks.on("dnd5e.preRollV2", addWorkflowNameToRoll);
 
   const templates = Object.values(constants.TEMPLATE);
   c5eLoadTemplates(templates);
@@ -258,9 +259,12 @@ function resolveActionValue(entity, value) {
  * @param {string|null} [options.counterKey] Counter key
  * @param {number|null} [options.counterValue] Counter value
  * @param {string|null} [options.userId] ID of the user who triggered the event
+ * @param {string|null} [options.workflowName]
  */
-function executeWorkflowActions(actions,
-  {entity, event, dieTotal = null, rolls = null, data = null, counterKey = null, counterValue = null, userId = null}) {
+function executeWorkflowActions(actions, {
+  entity, event, dieTotal = null, rolls = null, data = null, counterKey = null, counterValue = null, userId = null,
+  workflowName = null
+}) {
   const actor = entity.documentName === "Item" ? entity.parent : entity;
   const actorUpdates = {};
   const tokenUpdates = {};
@@ -283,7 +287,7 @@ function executeWorkflowActions(actions,
         foundry.utils.setProperty(itemUpdates, action.updatePath, value);
       }
     } else {
-      handleAction(action, { entity, event, dieTotal, rolls, data, counterKey, counterValue, userId });
+      handleAction(action, { entity, event, dieTotal, rolls, data, counterKey, counterValue, userId, workflowName });
     }
   }
 
@@ -312,10 +316,11 @@ function executeWorkflowActions(actions,
  * @param {string|null} [options.counterKey] Counter key
  * @param {number|null} [options.counterValue] Counter value
  * @param {string|null} [options.userId] ID of the user who triggered the event
+ * @param {string|null} [options.workflowName]
  */
 function handleAction(action, {
   entity, event, dieTotal = null, rolls = null, data = null,
-  counterKey = null, counterValue = null, userId = null
+  counterKey = null, counterValue = null, userId = null, workflowName = null
 }) {
   Logger.debug(`${LOG_PREFIX} Executing action`, { entity: entity.name, event, actionType: action.type });
 
@@ -354,7 +359,7 @@ function handleAction(action, {
       distributeAward();
       break;
     case "requestRoll":
-      requestRoll(actor, action);
+      requestRoll(actor, action, workflowName);
       break;
     case "actorUpdate":
       actorUpdate(actor, action);
@@ -576,34 +581,43 @@ async function conditionAction(actor, action, active) {
 
 /**
  * Request a roll from an actor's player or execute locally.
- * @param {Actor} actor Actor
- * @param {object} action Action
+ * @param {Actor} actor
+ * @param {object} action
+ * @param {string|null} [workflowName]
  */
-function requestRoll(actor, action) {
+function requestRoll(actor, action, workflowName = null) {
   if ( !action.roll?.type ) return;
 
   const [category, key] = action.roll.type.split(":");
   if ( !category || !key ) return;
 
   const rollConfig = { category, key };
+  if ( workflowName ) rollConfig.workflowName = workflowName;
   const dc = Number(action.roll?.dc);
   if ( Number.isFinite(dc) ) rollConfig.target = dc;
   if ( action.onSuccess ) rollConfig.onSuccess = action.onSuccess;
   if ( action.onFailure ) rollConfig.onFailure = action.onFailure;
 
-  // Find an active player owner for this actor
+  // Request one active player owner to roll, so an actor with several owners is only rolled once
   const owner = game.users.find(u => u.active && !u.isGM && actor.testUserPermission(u, "OWNER"));
 
-  if ( owner ) {
-    // Socket the roll to the owner's client
-    game.socket.emit(`module.${MODULE.ID}`, {
-      action: "requestRoll",
-      options: { actorUuid: actor.uuid, rollConfig }
-    });
-  } else {
-    // No active player owner — execute locally (e.g., GM-owned NPC)
-    executeRequestedRoll(actor, rollConfig);
-  }
+  if ( owner ) queryUser(owner, "requestRoll", { actorUuid: actor.uuid, rollConfig });
+  else executeRequestedRoll(actor, rollConfig);
+}
+
+/* -------------------------------------------- */
+
+/**
+ * Roll a requested roll for the actor's owner on the requested player's client.
+ * @param {object} data
+ * @param {string} data.actorUuid
+ * @param {object} data.rollConfig
+ * @returns {Promise<void>}
+ */
+export async function onRequestRollQuery({ actorUuid, rollConfig }) {
+  const actor = await fromUuid(actorUuid);
+  if ( !actor?.isOwner ) return;
+  await executeRequestedRoll(actor, rollConfig);
 }
 
 /* -------------------------------------------- */
@@ -612,30 +626,45 @@ function requestRoll(actor, action) {
  * Execute a requested roll on an actor.
  * @param {Actor} actor Actor
  * @param {object} rollConfig Roll config
+ * @returns {Promise<D20Roll[]|null|void>} Rolls
  */
 export function executeRequestedRoll(actor, rollConfig) {
-  const { category, key, target, onSuccess, onFailure } = rollConfig;
+  const { category, key, target, onSuccess, onFailure, workflowName } = rollConfig;
   const config = {};
   if ( Number.isFinite(target) ) config.target = target;
 
   const options = {};
   if ( onSuccess ) options.workflowOnSuccess = onSuccess;
   if ( onFailure ) options.workflowOnFailure = onFailure;
+  if ( workflowName ) options.workflowName = workflowName;
   if ( Object.keys(options).length ) {
     config.rolls = [{ options }];
   }
 
   switch (category) {
     case "save":
-      actor.rollSavingThrow({ ...config, ability: key });
-      break;
+      return actor.rollSavingThrow({ ...config, ability: key });
     case "check":
-      actor.rollAbilityCheck({ ...config, ability: key });
-      break;
+      return actor.rollAbilityCheck({ ...config, ability: key });
     case "skill":
-      actor.rollSkill({ ...config, skill: key });
-      break;
+      return actor.rollSkill({ ...config, skill: key });
   }
+}
+
+/* -------------------------------------------- */
+
+/**
+ * Show the name of the workflow in the roll dialog and chat card.
+ * @param {object} config
+ * @param {object} dialog
+ * @param {object} message
+ */
+function addWorkflowNameToRoll(config, dialog, message) {
+  const workflowName = config.rolls?.[0]?.options?.workflowName;
+  if ( !workflowName ) return;
+  const dialogWindow = dialog.options?.window;
+  if ( dialogWindow ) dialogWindow.subtitle = [workflowName, dialogWindow.subtitle].filterJoin(" • ");
+  if ( message.data ) message.data.flavor = [workflowName, message.data.flavor].filterJoin(" • ");
 }
 
 /* -------------------------------------------- */
@@ -1611,13 +1640,14 @@ function processEvent(event, {
     if ( workflow.target === "members" && actor.type === "group" && actor.system?.members ) {
       for ( const { actor: memberActor } of actor.system.members ) {
         if ( !memberActor ) continue;
-        executeWorkflowActions(actions,
-          { entity: memberActor, event, dieTotal, rolls, data, counterKey, counterValue, userId }
-        );
+        executeWorkflowActions(actions, {
+          entity: memberActor, event, dieTotal, rolls, data, counterKey, counterValue, userId,
+          workflowName: workflow.name
+        });
       }
     } else {
       executeWorkflowActions(actions,
-        { entity: actor, event, dieTotal, rolls, data, counterKey, counterValue, userId }
+        { entity: actor, event, dieTotal, rolls, data, counterKey, counterValue, userId, workflowName: workflow.name }
       );
     }
   }
@@ -1697,13 +1727,14 @@ function workflowMatchesPreRollEvent(workflow, event, context) {
 
 /**
  * Execute the actions in a pre-roll workflow.
- * @param {object} actions Actions
- * @param {object} options Options
- * @param {Actor|Item} options.entity Entity (actor or item)
+ * @param {object} actions
+ * @param {object} options
+ * @param {Actor|Item} options.entity Actor or item
  * @param {object} options.context Pre-roll context
- * @param {object} options.rollConfig Roll config
+ * @param {object} options.rollConfig
+ * @param {string|null} [options.workflowName]
  */
-function executePreRollActions(actions, { entity, context, rollConfig }) {
+function executePreRollActions(actions, { entity, context, rollConfig, workflowName = null }) {
   for ( const action of Object.values(actions) ) {
     if ( action.type === "addRollBonus" ) {
       if ( !rollConfig ) continue;
@@ -1732,7 +1763,7 @@ function executePreRollActions(actions, { entity, context, rollConfig }) {
       continue;
     }
 
-    handleAction(action, { entity, event: "attackRoll", userId: game.user.id });
+    handleAction(action, { entity, event: "attackRoll", userId: game.user.id, workflowName });
   }
 }
 
@@ -1767,7 +1798,7 @@ function processPreRollEvent(event, { actor, item = null, context, rollConfig })
   for ( const workflow of [...worldWorkflows, ...actorWorkflows] ) {
     if ( workflow.actorTypes?.length && !workflow.actorTypes.includes(actor.type) ) continue;
     if ( !workflowMatchesPreRollEvent(workflow, event, context) ) continue;
-    executePreRollActions(workflow.actions || {}, { entity: actor, context, rollConfig });
+    executePreRollActions(workflow.actions || {}, { entity: actor, context, rollConfig, workflowName: workflow.name });
   }
 
   // World item workflows + per-item workflows
@@ -1783,7 +1814,7 @@ function processPreRollEvent(event, { actor, item = null, context, rollConfig })
 
     for ( const workflow of [...worldItemWorkflows, ...itemWorkflows] ) {
       if ( !workflowMatchesPreRollEvent(workflow, event, context) ) continue;
-      executePreRollActions(workflow.actions || {}, { entity: item, context, rollConfig });
+      executePreRollActions(workflow.actions || {}, { entity: item, context, rollConfig, workflowName: workflow.name });
     }
   }
 
@@ -1839,7 +1870,9 @@ function processItemEvent(event, { item, data = null, counterKey = null, counter
 
     // Execute ALL actions in the workflow
     const actions = workflow.actions || {};
-    executeWorkflowActions(actions, { entity: item, event, data, counterKey, counterValue, userId });
+    executeWorkflowActions(actions, {
+      entity: item, event, data, counterKey, counterValue, userId, workflowName: workflow.name
+    });
   }
 
   Logger.debug(`${LOG_PREFIX} processItemEvent complete`);
@@ -2162,10 +2195,10 @@ function executeWorkflow(identifier, entity, { event = "macro" } = {}) {
   if ( workflow.target === "members" && entity.type === "group" && entity.system?.members ) {
     for ( const { actor: memberActor } of entity.system.members ) {
       if ( !memberActor ) continue;
-      executeWorkflowActions(actions, { entity: memberActor, event });
+      executeWorkflowActions(actions, { entity: memberActor, event, workflowName: workflow.name });
     }
   } else {
-    executeWorkflowActions(actions, { entity, event });
+    executeWorkflowActions(actions, { entity, event, workflowName: workflow.name });
   }
 
   return true;

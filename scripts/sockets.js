@@ -8,7 +8,6 @@ import {
   handleTakeItem,
   handleConfirmTakeItem
 } from "./item-interactions/drop-items.js";
-import { executeRequestedRoll } from "./workflows/workflows.js";
 import { handleActionChosen, handleRequestAction } from "./gameplay/speed-factor-initiative.js";
 
 /**
@@ -18,24 +17,6 @@ import { handleActionChosen, handleRequestAction } from "./gameplay/speed-factor
 function _onAnimation(options) {
   const { type, options: animOptions } = options;
   playLocalAnimation(type, animOptions);
-}
-
-/* -------------------------------------------- */
-
-/**
- * Handle an incoming requestRoll socket event.
- * Only processed by non-GM clients that own the actor.
- * @param {object} data The socket data
- * @param {object} data.options The roll options
- * @param {string} data.options.actorUuid The actor UUID
- * @param {object} data.options.rollConfig The roll configuration
- */
-async function _onRequestRoll(data) {
-  if ( game.user.isGM ) return;
-  const { actorUuid, rollConfig } = data.options;
-  const actor = await fromUuid(actorUuid);
-  if ( !actor?.isOwner ) return;
-  executeRequestedRoll(actor, rollConfig);
 }
 
 /* -------------------------------------------- */
@@ -63,7 +44,6 @@ const HANDLERS = {
   dropItem: handleDropItem,
   takeItem: handleTakeItem,
   confirmTakeItem: handleConfirmTakeItem,
-  requestRoll: _onRequestRoll,
   sfRequestAction: handleRequestAction,
   sfActionChosen: handleActionChosen,
   stopAnimations: _onStopAnimations
