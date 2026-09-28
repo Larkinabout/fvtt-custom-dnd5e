@@ -1,7 +1,5 @@
 import { MODULE } from "./constants.js";
 import { animations, playLocalAnimation } from "./animations.js";
-import { MoveCanvasMode } from "./activities/move-canvas-mode.js";
-import { applySwapMoves } from "./activities/activity-swap.js";
 import { clearLocal3dDice } from "./activities/activity-multiattack.js";
 import { handleGiveItem, handleGiveItemRejected, handleGiveItemSource } from "./item-interactions/give-items.js";
 import {
@@ -20,66 +18,6 @@ import { handleActionChosen, handleRequestAction } from "./gameplay/speed-factor
 function _onAnimation(options) {
   const { type, options: animOptions } = options;
   playLocalAnimation(type, animOptions);
-}
-
-/* -------------------------------------------- */
-
-/**
- * Handle an incoming moveToken socket event.
- * Only processed by the GM client.
- * @param {object} data
- * @param {object} data.options
- * @param {string} data.options.sceneId
- * @param {string} data.options.tokenId
- * @param {number} data.options.x Destination x coordinate
- * @param {number} data.options.y Destination y coordinate
- * @param {boolean} [data.options.isTeleport] Whether to teleport (skip animation)
- */
-function _onMoveToken(data) {
-  if ( !game.user.isGM ) return;
-  const { sceneId, tokenId, x, y, isTeleport } = data.options;
-  const scene = game.scenes.get(sceneId);
-  const tokenDoc = scene?.tokens.get(tokenId);
-  if ( tokenDoc ) MoveCanvasMode._moveTokenDocument(tokenDoc, x, y, { isTeleport });
-}
-
-/* -------------------------------------------- */
-
-/**
- * Handle an incoming swapTokens socket event.
- * Only processed by the GM client.
- * @param {object} data The socket data
- * @param {object} data.options The swap options
- * @param {string} data.options.sceneId The scene id
- * @param {string} data.options.sourceTokenId The source token id
- * @param {number} data.options.sourceX The source destination x coordinate
- * @param {number} data.options.sourceY The source destination y coordinate
- * @param {string} data.options.targetTokenId The target token id
- * @param {number} data.options.targetX The target destination x coordinate
- * @param {number} data.options.targetY The target destination y coordinate
- * @param {number} data.options.sourceElevation The source destination elevation
- * @param {number} data.options.targetElevation The target destination elevation
- * @param {boolean} data.options.teleport Whether to teleport (skip animation and wall checks) or walk-animate
- */
-function _onSwapTokens(data) {
-  if ( !game.user.isGM ) return;
-  const {
-    sceneId, sourceTokenId, sourceX, sourceY, sourceElevation,
-    targetTokenId, targetX, targetY, targetElevation, teleport
-  } = data.options;
-  const scene = game.scenes.get(sceneId);
-  if ( !scene ) return;
-  const sourceDoc = scene.tokens.get(sourceTokenId);
-  const targetDoc = scene.tokens.get(targetTokenId);
-  if ( !sourceDoc || !targetDoc ) return;
-  applySwapMoves(scene, {
-    sourceDoc, targetDoc,
-    newSourcePos: { x: sourceX, y: sourceY },
-    newTargetPos: { x: targetX, y: targetY },
-    sourceElevation: targetElevation,
-    targetElevation: sourceElevation,
-    isTeleport: teleport
-  });
 }
 
 /* -------------------------------------------- */
@@ -125,12 +63,10 @@ const HANDLERS = {
   dropItem: handleDropItem,
   takeItem: handleTakeItem,
   confirmTakeItem: handleConfirmTakeItem,
-  moveToken: _onMoveToken,
   requestRoll: _onRequestRoll,
   sfRequestAction: handleRequestAction,
   sfActionChosen: handleActionChosen,
-  stopAnimations: _onStopAnimations,
-  swapTokens: _onSwapTokens
+  stopAnimations: _onStopAnimations
 };
 
 /* -------------------------------------------- */

@@ -3,7 +3,7 @@ import { c5eLoadTemplates, getSetting, registerMenu, registerSetting } from "../
 import { ActivitiesForm } from "../forms/activities-form.js";
 import { MacroActivity } from "./activity-macro.js";
 import { MoveActivity } from "./activity-move.js";
-import { MultiattackActivity, MultiattackMessageData, registerMultiattackQueries } from "./activity-multiattack.js";
+import { MultiattackActivity, MultiattackMessageData } from "./activity-multiattack.js";
 import { SwapActivity } from "./activity-swap.js";
 import { TargetingMode } from "./targeting-mode.js";
 
@@ -194,7 +194,6 @@ export function register() {
   }
 
   CONFIG.ChatMessage.dataModels[constants.MULTIATTACK_MESSAGE_TYPE] = MultiattackMessageData;
-  registerMultiattackQueries();
 
   if ( setting?.multiattack ) {
     CONFIG.DND5E.activityTypes["custom-dnd5e-multiattack"] = {

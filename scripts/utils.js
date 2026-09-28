@@ -1156,6 +1156,42 @@ export function findAppForElement(target, selector) {
 }
 
 /* -------------------------------------------- */
+/*  QUERIES                                     */
+/* -------------------------------------------- */
+
+/**
+ * Request another user's client to do something.
+ * @param {User} user
+ * @param {string} name
+ * @param {object} data
+ * @returns {Promise<*>} Response from the user
+ */
+export async function queryUser(user, name, data) {
+  try {
+    return await user.query(`${MODULE.ID}.${name}`, data);
+  } catch ( err ) {
+    ui.notifications.warn(game.i18n.format("CUSTOM_DND5E.query.failed", { name: user.name, error: err.message }));
+  }
+}
+
+/* -------------------------------------------- */
+
+/**
+ * Request the active GM's client to do something.
+ * @param {string} name
+ * @param {object} data
+ * @returns {Promise<*>} Response from the GM, or undefined if there was no GM or the query failed
+ */
+export async function queryGM(name, data) {
+  const gm = game.users.activeGM;
+  if ( !gm ) {
+    ui.notifications.warn("CUSTOM_DND5E.query.noGM", { localize: true });
+    return;
+  }
+  return queryUser(gm, name, data);
+}
+
+/* -------------------------------------------- */
 /*  FOLDERS                                     */
 /* -------------------------------------------- */
 

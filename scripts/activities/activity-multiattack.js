@@ -1,5 +1,5 @@
 import { CONSTANTS, MODULE } from "../constants.js";
-import { addHelpButton, getSetting, hideApplications } from "../utils.js";
+import { addHelpButton, getSetting, hideApplications, queryGM } from "../utils.js";
 import {
   evaluateProbabilisticDamage,
   getBestSave,
@@ -1002,7 +1002,7 @@ export async function applyMultiattackDamage(message, indices, { undo = false } 
   const canChangeAll = toChange.every(index => getTargetActor(entries[index])?.isOwner);
   const canUpdateMessage = message.canUserModify(game.user, "update");
   if ( !canChangeAll || !canUpdateMessage ) {
-    return askGM(QUERY.APPLY_DAMAGE, { messageId: message.id, indices: toChange, undo });
+    return queryGM("applyMultiattackDamage", { messageId: message.id, indices: toChange, undo });
   }
 
   for ( const index of toChange ) {
@@ -1126,7 +1126,7 @@ async function restoreHitPoints(actor, hpLost) {
  */
 export async function resolveMultiattackSave(message, index, saveRoll, { rolledBy = game.user.id } = {}) {
   if ( !message.canUserModify(game.user, "update") ) {
-    return askGM(QUERY.RESOLVE_SAVE, { messageId: message.id, index, saveRoll });
+    return queryGM("resolveMultiattackSave", { messageId: message.id, index, saveRoll });
   }
 
   const entries = message.system.toObject().entries;
@@ -1172,50 +1172,6 @@ async function rollSaveDamage(message, entry, diceMode) {
 /* -------------------------------------------- */
 
 /**
- * Names of the queries a player sends to the GM.
- * @type {Record<string, string>}
- */
-const QUERY = {
-  APPLY_DAMAGE: `${MODULE.ID}.applyMultiattackDamage`,
-  RESOLVE_SAVE: `${MODULE.ID}.resolveMultiattackSave`
-};
-
-/* -------------------------------------------- */
-
-/**
- * Register the multiiattack queries.
- */
-export function registerMultiattackQueries() {
-  CONFIG.queries[QUERY.APPLY_DAMAGE] = onApplyDamageQuery;
-  CONFIG.queries[QUERY.RESOLVE_SAVE] = onResolveSaveQuery;
-}
-
-/* -------------------------------------------- */
-
-/**
- * Ask the active GM to do something on a Multiattack card.
- * @param {string} queryName
- * @param {object} queryData
- * @returns {Promise<void>}
- */
-async function askGM(queryName, queryData) {
-  const gm = game.users.activeGM;
-  if ( !gm ) {
-    ui.notifications.warn("CUSTOM_DND5E.activities.multiattack.warning.noGM", { localize: true });
-    return;
-  }
-  try {
-    await gm.query(queryName, queryData);
-  } catch ( err ) {
-    ui.notifications.warn(game.i18n.format("CUSTOM_DND5E.activities.multiattack.warning.gmFailed", {
-      error: err.message
-    }));
-  }
-}
-
-/* -------------------------------------------- */
-
-/**
  * Apply or undo damage from a Multiattack chat card for a player.
  * @param {object} queryData
  * @param {string} queryData.messageId
@@ -1225,7 +1181,7 @@ async function askGM(queryName, queryData) {
  * @param {User} context.user User who asked
  * @returns {Promise<void>}
  */
-async function onApplyDamageQuery({ messageId, indices, undo }, { user }) {
+export async function onApplyDamageQuery({ messageId, indices, undo }, { user }) {
   const message = game.messages.get(messageId);
   if ( !message ) return;
   if ( !user.isGM && (message.author !== user) ) {
@@ -1246,7 +1202,7 @@ async function onApplyDamageQuery({ messageId, indices, undo }, { user }) {
  * @param {User} context.user User who rolled the save
  * @returns {Promise<void>}
  */
-async function onResolveSaveQuery({ messageId, index, saveRoll }, { user }) {
+export async function onResolveSaveQuery({ messageId, index, saveRoll }, { user }) {
   const message = game.messages.get(messageId);
   const entry = message?.system.entries?.[index];
   if ( !entry ) return;

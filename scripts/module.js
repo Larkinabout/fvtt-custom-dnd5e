@@ -7,6 +7,7 @@ import { register as registerGameplay, registerNegativeHp } from "./gameplay/gam
 import { register as registerSpeedFactorInitiative } from "./gameplay/speed-factor-initiative.js";
 import { register as registerActivities } from "./activities/activities.js";
 import { registerSockets } from "./sockets.js";
+import { registerQueries } from "./queries.js";
 import { register as registerActorSheet } from "./actor-sheet.js";
 import { register as registerActorSheetTidy5e } from "./actor-sheet-tidy5e.js";
 import { register as registerCampSupplies } from "./gameplay/camp-supplies.js";
@@ -99,6 +100,7 @@ Hooks.on("init", async () => {
   };
 
   registerSockets();
+  registerQueries();
 
   registerSetting(
     CONSTANTS.DEBUG.SETTING.KEY,

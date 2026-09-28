@@ -1,5 +1,5 @@
-import { CONSTANTS, MODULE } from "../constants.js";
-import { addHelpButton, Logger } from "../utils.js";
+import { CONSTANTS } from "../constants.js";
+import { addHelpButton, Logger, queryGM } from "../utils.js";
 import { applyBypassedMoves, getTargetedTokensFromMessage } from "./activities.js";
 
 const constants = CONSTANTS.ACTIVITIES;
@@ -356,27 +356,26 @@ export class SwapActivity extends dnd5e.documents.activity.ActivityMixin(BaseSwa
     const canModifyBoth = sourceDoc.canUserModify(game.user, "update")
       && targetDoc.canUserModify(game.user, "update");
 
-    if ( canModifyBoth ) {
-      await applySwapMoves(canvas.scene, {
+    const swapped = canModifyBoth
+      ? await applySwapMoves(canvas.scene, {
         sourceDoc, targetDoc, newSourcePos, newTargetPos,
         sourceElevation, targetElevation, isTeleport: this.swap.isTeleport
+      })
+      : await queryGM("swapTokens", {
+        sceneId: canvas.scene.id,
+        sourceTokenId: sourceDoc.id,
+        sourceX: newSourcePos.x,
+        sourceY: newSourcePos.y,
+        targetTokenId: targetDoc.id,
+        targetX: newTargetPos.x,
+        targetY: newTargetPos.y,
+        sourceElevation,
+        targetElevation,
+        isTeleport: this.swap.isTeleport
       });
-    } else {
-      game.socket.emit(`module.${MODULE.ID}`, {
-        action: "swapTokens",
-        options: {
-          sceneId: canvas.scene.id,
-          sourceTokenId: sourceDoc.id,
-          sourceX: newSourcePos.x,
-          sourceY: newSourcePos.y,
-          sourceElevation: targetElevation,
-          targetTokenId: targetDoc.id,
-          targetX: newTargetPos.x,
-          targetY: newTargetPos.y,
-          targetElevation: sourceElevation,
-          teleport: this.swap.isTeleport
-        }
-      });
+
+    if ( swapped === false ) {
+      Logger.info(game.i18n.localize("CUSTOM_DND5E.activities.swap.pathBlocked"), true, { prefix: false });
     }
   }
 
@@ -402,6 +401,7 @@ export class SwapActivity extends dnd5e.documents.activity.ActivityMixin(BaseSwa
 
 /**
  * Swap two tokens' positions on a scene.
+ * When the swap isn't a teleport and a wall is in the way, false is returned.
  * @param {Scene} scene
  * @param {object} args
  * @param {TokenDocument} args.sourceDoc
@@ -422,10 +422,7 @@ export async function applySwapMoves(scene, {
     if ( sourceObj && targetObj ) {
       const sourceBlocked = sourceObj.checkCollision(targetObj.center, { type: "move" });
       const targetBlocked = targetObj.checkCollision(sourceObj.center, { type: "move" });
-      if ( sourceBlocked || targetBlocked ) {
-        Logger.info(game.i18n.localize("CUSTOM_DND5E.activities.swap.pathBlocked"), true, { prefix: false });
-        return false;
-      }
+      if ( sourceBlocked || targetBlocked ) return false;
     }
   }
 
@@ -434,4 +431,37 @@ export async function applySwapMoves(scene, {
     { tokenDoc: targetDoc, x: newTargetPos.x, y: newTargetPos.y, elevation: sourceElevation }
   ], { animate: !isTeleport });
   return true;
+}
+
+/* -------------------------------------------- */
+
+/**
+ * Swap two tokens for a player who can't move them both themselves. Run on the active GM's client.
+ * @param {object} data
+ * @param {string} data.sceneId
+ * @param {string} data.sourceTokenId
+ * @param {number} data.sourceX
+ * @param {number} data.sourceY
+ * @param {string} data.targetTokenId
+ * @param {number} data.targetX
+ * @param {number} data.targetY
+ * @param {number} data.sourceElevation
+ * @param {number} data.targetElevation
+ * @param {boolean} data.isTeleport Whether to teleport (skip animation)
+ * @returns {Promise<boolean|void>} Whether the swap completed
+ */
+export async function onSwapTokensQuery({
+  sceneId, sourceTokenId, sourceX, sourceY, targetTokenId, targetX, targetY,
+  sourceElevation, targetElevation, isTeleport
+}) {
+  const scene = game.scenes.get(sceneId);
+  const sourceDoc = scene?.tokens.get(sourceTokenId);
+  const targetDoc = scene?.tokens.get(targetTokenId);
+  if ( !sourceDoc || !targetDoc ) return;
+  return applySwapMoves(scene, {
+    sourceDoc, targetDoc,
+    newSourcePos: { x: sourceX, y: sourceY },
+    newTargetPos: { x: targetX, y: targetY },
+    sourceElevation, targetElevation, isTeleport
+  });
 }

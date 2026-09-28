@@ -1,5 +1,4 @@
-import { MODULE } from "../constants.js";
-import { Logger } from "../utils.js";
+import { Logger, queryGM } from "../utils.js";
 import * as Highlight from "../canvas/highlight.js";
 import { addCursorLabelIcon, setCursorLabelIcon, setCursorLabelPosition } from "../interface/cursor-label.js";
 import { applyBypassedMoves } from "./activities.js";
@@ -67,7 +66,7 @@ export class MoveCanvasMode {
   /**
    * Move a token to a new position, bypassing Foundry's movement
    * pipeline. Uses `isPaste: true` to avoid movement constraints.
-   * Called directly or via socket by the GM.
+   * Called directly, or by the GM for a player who can't move the token.
    * @param {TokenDocument} tokenDoc Token document to move
    * @param {number} x x coordinate (top-left)
    * @param {number} y y coordinate (top-left)
@@ -776,26 +775,41 @@ export class MoveCanvasMode {
 
   /**
    * Move the target token. Apply the update directly if the user has
-   * permission; otherwise relay to an active GM via socket.
+   * permission; otherwise ask the active GM to do it.
    * @param {number} x
    * @param {number} y
+   * @returns {Promise<void>}
    */
-  _executeMovement(x, y) {
+  async _executeMovement(x, y) {
     const tokenDoc = this.targetToken.document;
 
     if ( tokenDoc.canUserModify(game.user, "update") ) {
-      MoveCanvasMode._moveTokenDocument(tokenDoc, x, y, { isTeleport: this.isTeleport });
+      await MoveCanvasMode._moveTokenDocument(tokenDoc, x, y, { isTeleport: this.isTeleport });
     } else {
-      game.socket.emit(`module.${MODULE.ID}`, {
-        action: "moveToken",
-        options: {
-          sceneId: canvas.scene.id,
-          tokenId: tokenDoc.id,
-          x,
-          y,
-          isTeleport: this.isTeleport
-        }
+      await queryGM("moveToken", {
+        sceneId: canvas.scene.id,
+        tokenId: tokenDoc.id,
+        x,
+        y,
+        isTeleport: this.isTeleport
       });
     }
   }
+}
+
+/* -------------------------------------------- */
+
+/**
+ * Move a token on the active GM'sclient.
+ * @param {object} data
+ * @param {string} data.sceneId
+ * @param {string} data.tokenId
+ * @param {number} data.x
+ * @param {number} data.y
+ * @param {boolean} [data.isTeleport] Whether to teleport (skip animation)
+ * @returns {Promise<void>}
+ */
+export async function onMoveTokenQuery({ sceneId, tokenId, x, y, isTeleport }) {
+  const tokenDoc = game.scenes.get(sceneId)?.tokens.get(tokenId);
+  if ( tokenDoc ) await MoveCanvasMode._moveTokenDocument(tokenDoc, x, y, { isTeleport });
 }
