@@ -1,4 +1,4 @@
-import { MODULE, CONSTANTS } from "../constants.js";
+import { CONSTANTS } from "../constants.js";
 import {
   c5eLoadTemplates,
   findStackableItem,
@@ -7,6 +7,7 @@ import {
   getTokenSourceCenter,
   Logger,
   measureDistance,
+  queryUser,
   registerSetting
 } from "../utils.js";
 import { addCursorLabelIcon, setCursorLabelIcon, setCursorLabelPosition } from "../interface/cursor-label.js";
@@ -15,12 +16,6 @@ import { GiveItemForm } from "../forms/item-interactions/give-item-form.js";
 
 const SETTING = CONSTANTS.GIVE_ITEMS.SETTING;
 const GIVE_ICON_ID = "custom-dnd5e-cursor-label-give-item";
-
-/**
- * Track pending gives keyed by request id.
- * @type {Map<string, {itemUuid: string, quantity: number, recipientActorUuid: string}>}
- */
-const pendingGives = new Map();
 
 const GIVEABLE_TYPES = new Set(["weapon", "equipment", "consumable", "tool", "loot"]);
 
@@ -262,11 +257,10 @@ function onGetItemContextOptions(item, menuItems) {
 /* -------------------------------------------- */
 
 /**
- * Route the give payload to the recipient's owning user if active, else
- * to an active GM. Records a pending entry so the giver-side handler can
- * verify the round-trip.
+ * Request for the recipient actor's owner, or an active GM if no owner is connected, to take an item.
+ * If they accept, the item is removed from the giving actor and the transer is posted to chat.
  * @param {Item} item
- * @param {Token|Actor} recipient The recipient Token (preferred) or Actor
+ * @param {Token|Actor} recipient Token (preferred) or Actor
  * @param {number} quantity
  * @returns {Promise<void>}
  */
@@ -291,76 +285,63 @@ export async function executeGive(item, recipient, quantity) {
     return;
   }
 
-  const requestId = foundry.utils.randomID(16);
-  pendingGives.set(requestId, {
-    itemUuid: item.uuid,
-    quantity: qty,
-    recipientActorUuid: recipientActor.uuid
-  });
-  // Delete request after a minute to avoid keep stale/orphaned requests.
-  setTimeout(() => pendingGives.delete(requestId), 60_000);
-
-  const payload = {
+  const data = {
     giverActorUuid: giverActor.uuid,
-    giverUserId: game.user.id,
     recipientActorUuid: recipientActor.uuid,
-    itemUuid: item.uuid,
     itemData: item.toObject(),
     quantity: qty,
-    requiresAcceptance: requiresAcceptance(recipient, giverActor),
-    requestId
+    requiresAcceptance: requiresAcceptance(recipient, giverActor)
   };
+  const result = targetUser.isSelf
+    ? await onGiveItemQuery(data)
+    : await queryUser(targetUser, "giveItem", data);
 
-  const message = { action: "giveItem", target: targetUser.id, payload };
-  if ( targetUser.id === game.user.id ) {
-    await handleGiveItem(message);
-  } else {
-    game.socket.emit(`module.${MODULE.ID}`, message);
-  }
-}
-
-/* -------------------------------------------- */
-/*  SOCKET HANDLERS                             */
-/* -------------------------------------------- */
-
-/**
- * Handle the recipient side of the transfer.
- * @param {object} data
- */
-export async function handleGiveItem(data) {
-  if ( data.target !== game.user.id ) return;
-
-  const {
-    recipientActorUuid, itemData, quantity, giverUserId, requiresAcceptance: needsAccept, giverActorUuid
-  } = data.payload;
-
-  const recipient = await fromUuid(recipientActorUuid);
-  if ( !recipient || (!recipient.testUserPermission(game.user, "OWNER") && !game.user.isGM) ) return;
-
-  if ( needsAccept ) {
-    const giver = await fromUuid(giverActorUuid);
-    const accepted = await confirmGiveAcceptance({ giver, recipient, itemData, quantity });
-    if ( !accepted ) {
-      await notifyRejection(giverUserId, data.payload);
-      return;
-    }
-  }
-
-  const applied = await applyItemToRecipient(recipient, itemData, quantity);
-  if ( !applied ) {
-    await notifyRejection(giverUserId, data.payload);
+  if ( !result ) return;
+  if ( !result.accepted ) {
+    ui.notifications.warn(game.i18n.format("CUSTOM_DND5E.giveItems.rejected", {
+      recipient: recipientActor.name,
+      item: item.name
+    }));
     return;
   }
 
-  const sourceMessage = { action: "giveItemSource", target: giverUserId, payload: data.payload };
-  if ( giverUserId === game.user.id ) await handleGiveItemSource(sourceMessage);
-  else game.socket.emit(`module.${MODULE.ID}`, sourceMessage);
+  await removeGivenItem(item, recipientActor, qty);
+}
+
+/* -------------------------------------------- */
+/*  RECIPIENT                                   */
+/* -------------------------------------------- */
+
+/**
+ * Give an item to another actor, asking the owner to accept it if needed.
+ * Run on the recipient actor's owner's client, or the GM's if no owner is connected.
+ * @param {object} data
+ * @param {string} data.giverActorUuid
+ * @param {string} data.recipientActorUuid
+ * @param {object} data.itemData Item being given
+ * @param {number} data.quantity
+ * @param {boolean} data.requiresAcceptance Whether the owner must accept the item first
+ * @returns {Promise<{accepted: boolean}>} Whether the item was accepted and added
+ */
+export async function onGiveItemQuery({ giverActorUuid, recipientActorUuid, itemData, quantity, requiresAcceptance }) {
+  const recipient = await fromUuid(recipientActorUuid);
+  if ( !recipient || (!recipient.testUserPermission(game.user, "OWNER") && !game.user.isGM) ) {
+    return { accepted: false };
+  }
+
+  if ( requiresAcceptance ) {
+    const giver = await fromUuid(giverActorUuid);
+    const accepted = await confirmGiveAcceptance({ giver, recipient, itemData, quantity });
+    if ( !accepted ) return { accepted: false };
+  }
+
+  return { accepted: await applyItemToRecipient(recipient, itemData, quantity) };
 }
 
 /* -------------------------------------------- */
 
 /**
- * Show the recipient's accept/reject dialog.
+ * Show the acceptance dialog to the recipient actor's owner.
  * @param {object} args
  * @param {Actor|null} args.giver
  * @param {Actor} args.recipient
@@ -424,54 +405,17 @@ async function applyItemToRecipient(recipient, itemData, quantity) {
 }
 
 /* -------------------------------------------- */
+/*  GIVER                                       */
+/* -------------------------------------------- */
 
 /**
- * Route a rejection back to the giver.
- * @param {string} giverUserId
- * @param {object} payload
+ * Remove the given quantity or item from the giving actor and post the tranfer to chat.
+ * @param {Item} item
+ * @param {Actor} recipient
+ * @param {number} quantity
  * @returns {Promise<void>}
  */
-async function notifyRejection(giverUserId, payload) {
-  const message = { action: "giveItemRejected", target: giverUserId, payload };
-  if ( giverUserId === game.user.id ) await handleGiveItemRejected(message);
-  else game.socket.emit(`module.${MODULE.ID}`, message);
-}
-
-/* -------------------------------------------- */
-
-/**
- * Notify the giver that the item was rejected.
- * @param {object} data
- */
-export async function handleGiveItemRejected(data) {
-  if ( data.target !== game.user.id ) return;
-  const { itemData, recipientActorUuid, requestId } = data.payload;
-  if ( requestId ) pendingGives.delete(requestId);
-  const recipient = await fromUuid(recipientActorUuid);
-  ui.notifications.warn(game.i18n.format("CUSTOM_DND5E.giveItems.rejected", {
-    recipient: recipient?.name ?? game.i18n.localize("CUSTOM_DND5E.unknown"),
-    item: itemData.name
-  }));
-}
-
-/* -------------------------------------------- */
-
-/**
- * Handle the giver side of the transfer.
- * @param {object} data
- */
-export async function handleGiveItemSource(data) {
-  if ( data.target !== game.user.id ) return;
-  const { itemUuid, quantity, recipientActorUuid, requestId } = data.payload;
-
-  const pending = requestId ? pendingGives.get(requestId) : null;
-  if ( !pending
-    || pending.itemUuid !== itemUuid
-    || pending.quantity !== quantity
-    || pending.recipientActorUuid !== recipientActorUuid ) return;
-  pendingGives.delete(requestId);
-
-  const item = await fromUuid(itemUuid);
+async function removeGivenItem(item, recipient, quantity) {
   if ( !item?.actor?.isOwner ) return;
 
   try {
@@ -486,7 +430,6 @@ export async function handleGiveItemSource(data) {
     return;
   }
 
-  const recipient = await fromUuid(recipientActorUuid);
   postGiveChat({ item, recipient, quantity });
 }
 

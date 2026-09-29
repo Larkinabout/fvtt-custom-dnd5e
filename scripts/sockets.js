@@ -1,13 +1,6 @@
 import { MODULE } from "./constants.js";
 import { animations, playLocalAnimation } from "./animations.js";
 import { clearLocal3dDice } from "./activities/activity-multiattack.js";
-import { handleGiveItem, handleGiveItemRejected, handleGiveItemSource } from "./item-interactions/give-items.js";
-import {
-  handleAddToContainer,
-  handleDropItem,
-  handleTakeItem,
-  handleConfirmTakeItem
-} from "./item-interactions/drop-items.js";
 import { handleActionChosen, handleRequestAction } from "./gameplay/speed-factor-initiative.js";
 
 /**
@@ -37,13 +30,6 @@ function _onStopAnimations(data) {
 const HANDLERS = {
   animation: _onAnimation,
   clear3dDice: clearLocal3dDice,
-  giveItem: handleGiveItem,
-  giveItemRejected: handleGiveItemRejected,
-  giveItemSource: handleGiveItemSource,
-  addToContainer: handleAddToContainer,
-  dropItem: handleDropItem,
-  takeItem: handleTakeItem,
-  confirmTakeItem: handleConfirmTakeItem,
   sfRequestAction: handleRequestAction,
   sfActionChosen: handleActionChosen,
   stopAnimations: _onStopAnimations

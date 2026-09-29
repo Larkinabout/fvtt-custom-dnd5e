@@ -1,4 +1,4 @@
-import { CONSTANTS, MODULE } from "../constants.js";
+import { CONSTANTS } from "../constants.js";
 import {
   c5eLoadTemplates,
   createOrStackItems,
@@ -9,6 +9,7 @@ import {
   getTokenSourceCenter,
   Logger,
   measureDistance,
+  queryGM,
   registerSetting,
   setSetting
 } from "../utils.js";
@@ -22,12 +23,6 @@ const ACTOR_TYPE = CONSTANTS.DROP_ITEMS.ACTOR_TYPE;
 
 const ICON_ID = "custom-dnd5e-cursor-label-drop-item";
 const CONTAINER_ICON_ID = "custom-dnd5e-cursor-label-drop-container";
-
-/**
- * Track pending takes keyed by request id.
- * @type {Map<string, {itemActorUuid: string, takerActorUuid: string, itemIds: string[]}>}
- */
-const pendingTakes = new Map();
 
 /* -------------------------------------------- */
 /*  REGISTRATION                                */
@@ -618,12 +613,7 @@ export async function executeDrop({ item, x, y, fromActor = null, quantity }) {
       scene
     }));
   } else {
-    const activeGM = game.users.activeGM;
-    if ( !activeGM ) {
-      Logger.error(game.i18n.localize("CUSTOM_DND5E.dropItems.error.noActiveGM"), true, { prefix: false });
-      return null;
-    }
-    const payload = {
+    const placed = await queryGM("dropItem", {
       itemDataList,
       name: item.name,
       img: item.img,
@@ -633,12 +623,8 @@ export async function executeDrop({ item, x, y, fromActor = null, quantity }) {
       droppedBy: fromActor?.uuid ?? "",
       itemUuid: compendiumSource,
       folderId: folder?.id ?? null
-    };
-    game.socket.emit(`module.${MODULE.ID}`, {
-      action: "dropItem",
-      target: activeGM.id,
-      payload
     });
+    if ( !placed ) return null;
   }
 
   if ( fromActor && sourceItems.length ) {
@@ -774,11 +760,26 @@ function postDropChat({ item, fromActor, quantity }) {
   const content = game.i18n.format("CUSTOM_DND5E.dropItems.chat.dropped", {
     actor: fromActor.name, qty, item: item.name
   });
-  ChatMessage.create({
-    speaker: ChatMessage.getSpeaker({ actor: fromActor }),
+  postChat({ speaker: ChatMessage.getSpeaker({ actor: fromActor }), content });
+}
+
+/* -------------------------------------------- */
+
+/**
+ * Post a message to chat.
+ * @param {object} args
+ * @param {object} [args.speaker]
+ * @param {string} args.content
+ * @returns {Promise<ChatMessage>} Created message
+ */
+function postChat({ speaker, content }) {
+  const chatData = {
+    speaker,
     content: `<p>${content}</p>`,
     flags: { "custom-dnd5e": { source: "dropItems" } }
-  });
+  };
+  if ( game.user.isGM ) ChatMessage.applyMode(chatData);
+  return ChatMessage.create(chatData);
 }
 
 /* -------------------------------------------- */
@@ -866,20 +867,13 @@ export async function addToContainer(itemActor, sourceItem, { quantity } = {}) {
     return data;
   });
 
-  // Loot actor is GM-owned, so non-GMs route through the socket.
+  // Loot actor is GM-owned, so non-GMs reuqest for the GM to add the item and only take the itemfrom the
+  // actor once it has been added.
   if ( game.user.isGM ) {
     await applyAddToContainer(itemActor.uuid, itemDataList);
   } else {
-    const activeGM = game.users.activeGM;
-    if ( !activeGM ) {
-      Logger.error(game.i18n.localize("CUSTOM_DND5E.dropItems.error.noActiveGM"), true, { prefix: false });
-      return;
-    }
-    game.socket.emit(`module.${MODULE.ID}`, {
-      action: "addToContainer",
-      target: activeGM.id,
-      payload: { itemActorUuid: itemActor.uuid, itemDataList }
-    });
+    const added = await queryGM("addToContainer", { itemActorUuid: itemActor.uuid, itemDataList });
+    if ( !added ) return;
   }
 
   if ( sourceItem.actor ) {
@@ -954,16 +948,15 @@ export async function populateEmptyItemActor(itemActor, sourceItem, { quantity }
 /* -------------------------------------------- */
 
 /**
- * Socket handler to add an item to a container item actor.
+ * Add items to a container item actor.
+ * Run on the active GM's client.
  * @param {object} data
+ * @param {string} data.itemActorUuid
+ * @param {object[]} data.itemDataList Items to add
+ * @returns {Promise<boolean>} Whether the items were added
  */
-export async function handleAddToContainer(data) {
-  if ( data.target !== game.user.id ) return;
-  if ( !game.user.isGM ) return;
-  const { itemActorUuid, itemDataList } = data.payload;
-  const itemActor = await fromUuid(itemActorUuid);
-  if ( !itemActor || itemActor.type !== ACTOR_TYPE ) return;
-  await applyAddToContainer(itemActorUuid, itemDataList);
+export async function onAddToContainerQuery({ itemActorUuid, itemDataList }) {
+  return applyAddToContainer(itemActorUuid, itemDataList);
 }
 
 /* -------------------------------------------- */
@@ -973,15 +966,17 @@ export async function handleAddToContainer(data) {
  * Caller must already have the permission to create on the loot actor.
  * @param {string} itemActorUuid
  * @param {object[]} itemDataList
- * @returns {Promise<void>}
+ * @returns {Promise<boolean>} Whether the items were added
  */
 async function applyAddToContainer(itemActorUuid, itemDataList) {
   const itemActor = await fromUuid(itemActorUuid);
-  if ( !itemActor || itemActor.type !== ACTOR_TYPE ) return;
+  if ( !itemActor || itemActor.type !== ACTOR_TYPE ) return false;
   try {
     await createOrStackItems(itemActor, itemDataList);
+    return true;
   } catch ( err ) {
     Logger.error(err);
+    return false;
   }
 }
 
@@ -1004,10 +999,9 @@ function postAddChat({ sourceItem, fromActor, itemActor, quantity }) {
     : game.i18n.format("CUSTOM_DND5E.dropItems.chat.addedToContainerAnon", {
       qty, item: sourceItem.name, container: itemActor.name
     });
-  ChatMessage.create({
+  postChat({
     speaker: fromActor ? ChatMessage.getSpeaker({ actor: fromActor }) : ChatMessage.getSpeaker(),
-    content: `<p>${content}</p>`,
-    flags: { "custom-dnd5e": { source: "dropItems" } }
+    content
   });
 }
 
@@ -1141,38 +1135,24 @@ export async function takeItem(token, { takerActor, itemIds, quantity, currency,
     }
   }
 
-  const requestId = foundry.utils.randomID(16);
-  pendingTakes.set(requestId, {
-    itemActorUuid: itemActor.uuid,
-    takerActorUuid: takerActor.uuid,
-    itemIds: itemIds ?? null
-  });
-  setTimeout(() => pendingTakes.delete(requestId), 60_000);
-
-  const payload = {
+  const data = {
     itemActorUuid: itemActor.uuid,
     tokenUuid: doc.uuid,
     takerActorUuid: takerActor.uuid,
-    takerActorUserId: game.user.id,
     itemIds: itemIds ?? null,
     currency: currency ?? null,
-    quantity: Number.isFinite(quantity) ? quantity : null,
-    requestId
+    quantity: Number.isFinite(quantity) ? quantity : null
   };
+  const result = game.user.isGM
+    ? await onTakeItemQuery(data, { user: game.user })
+    : await queryGM("takeItem", data);
 
-  const activeGM = game.users.activeGM;
-  if ( game.user.isGM ) {
-    await handleTakeItem({ action: "takeItem", target: game.user.id, payload });
-  } else if ( activeGM ) {
-    game.socket.emit(`module.${MODULE.ID}`, {
-      action: "takeItem",
-      target: activeGM.id,
-      payload
-    });
-  } else {
-    Logger.error(game.i18n.localize("CUSTOM_DND5E.dropItems.error.noActiveGM"), true, { prefix: false });
-    pendingTakes.delete(requestId);
+  if ( !result ) return;
+  if ( result.error ) {
+    ui.notifications.warn(game.i18n.localize(result.error));
+    return;
   }
+  postTakeChat(result);
 }
 
 /* -------------------------------------------- */
@@ -1225,25 +1205,22 @@ async function confirmTakeOverrides(itemActor, { itemIds, currency, skipOverride
 }
 
 /* -------------------------------------------- */
-/*  SOCKET HANDLERS                             */
+/*  QUERY HANDLERS                              */
 /* -------------------------------------------- */
 
 /**
- * GM-side handler that performs the item transfer, then
- * deletes the item token and actor.
+ * Add items and currency on the taker and remove from the item actor.
+ * Run on the GM's client.
  * @param {object} data
+ * @param {object} context
+ * @param {User} context.user
+ * @returns {Promise<object>} What was taken, or error
  */
-export async function handleTakeItem(data) {
-  if ( data.target !== game.user.id ) return;
-  if ( !game.user.isGM ) return;
+export async function onTakeItemQuery(data, { user }) {
+  const { tokenUuid } = data;
 
-  const { tokenUuid, takerActorUserId, requestId } = data.payload;
-
-  const ctx = await resolveTakeContext(data.payload);
-  if ( ctx.error ) {
-    notifyTaker(takerActorUserId, requestId, { error: ctx.error });
-    return;
-  }
+  const ctx = await resolveTakeContext(data, user);
+  if ( ctx.error ) return { error: ctx.error };
   const {
     itemActor, takerActor, itemsToTransfer, rootItem, available, partialQty, isPartial,
     containerRoot, currencyToTake
@@ -1253,19 +1230,13 @@ export async function handleTakeItem(data) {
     const transferred = await transferItemsToTaker({
       takerActor, itemsToTransfer, rootItem, partialQty
     });
-    if ( !transferred ) {
-      notifyTaker(takerActorUserId, requestId, { error: "CUSTOM_DND5E.dropItems.error.takeFailed" });
-      return;
-    }
+    if ( !transferred ) return { error: "CUSTOM_DND5E.dropItems.error.takeFailed" };
   }
 
   let currencyTransferred = false;
   if ( currencyToTake ) {
     currencyTransferred = await transferCurrencyToTaker({ takerActor, currency: currencyToTake });
-    if ( !currencyTransferred ) {
-      notifyTaker(takerActorUserId, requestId, { error: "CUSTOM_DND5E.dropItems.error.takeFailed" });
-      return;
-    }
+    if ( !currencyTransferred ) return { error: "CUSTOM_DND5E.dropItems.error.takeFailed" };
   }
 
   if ( currencyTransferred ) await deductItemActorCurrency(containerRoot, currencyToTake);
@@ -1276,7 +1247,7 @@ export async function handleTakeItem(data) {
     });
   }
 
-  notifyTaker(takerActorUserId, requestId, {
+  return {
     takerActorName: takerActor.name,
     lootName: itemActor.name,
     singletonName: itemsToTransfer.length === 1 ? itemsToTransfer[0].name : null,
@@ -1284,28 +1255,28 @@ export async function handleTakeItem(data) {
     itemCount: itemsToTransfer.length,
     takenQty: partialQty ?? itemsToTransfer.reduce((s, i) => s + (i.system?.quantity ?? 1), 0),
     takenCurrency: currencyTransferred ? formatCurrency(currencyToTake) : null
-  });
+  };
 }
 
 /* -------------------------------------------- */
 
 /**
- * Resolve the payload into a context.
- * @param {object} payload
- * @returns {Promise<object>}
+ * Resolve what is being taken, checking the user owns the taker and the loot is not locked or affixed.
+ * @param {object} data
+ * @param {User} user
+ * @returns {Promise<object>} Take context or error
  */
-async function resolveTakeContext(payload) {
-  const { itemActorUuid, takerActorUuid, takerActorUserId, itemIds, currency, quantity } = payload;
+async function resolveTakeContext(data, user) {
+  const { itemActorUuid, takerActorUuid, itemIds, currency, quantity } = data;
   const itemActor = await fromUuid(itemActorUuid);
   const takerActor = await fromUuid(takerActorUuid);
-  if ( !itemActor || itemActor.type !== ACTOR_TYPE || !takerActor ) {
+  if ( !itemActor || itemActor.type !== ACTOR_TYPE || !takerActor?.testUserPermission(user, "OWNER") ) {
     return { error: "CUSTOM_DND5E.dropItems.error.takeFailed" };
   }
 
   const takingContainer = !Array.isArray(itemIds) && !currency;
 
-  const takerActorIsGM = !!game.users.get(takerActorUserId)?.isGM;
-  if ( !takerActorIsGM ) {
+  if ( !user.isGM ) {
     if ( itemActor.system?.locked && !takingContainer ) {
       return { error: "CUSTOM_DND5E.dropItems.error.containerLocked" };
     }
@@ -1532,39 +1503,13 @@ async function deductItemActorCurrency(containerItem, currencyTaken) {
 /* -------------------------------------------- */
 
 /**
- * Send the confirm response either locally or over the socket.
- * @param {string} takerActorUserId
- * @param {string} requestId
- * @param {object} payload
+ * Post a chat message saying what the taker picked up, if chat notifications are enabled.
+ * @param {object} result
  */
-function notifyTaker(takerActorUserId, requestId, payload) {
-  const message = {
-    action: "confirmTakeItem",
-    target: takerActorUserId,
-    payload: { requestId, ...payload }
-  };
-  if ( takerActorUserId === game.user.id ) handleConfirmTakeItem(message);
-  else game.socket.emit(`module.${MODULE.ID}`, message);
-}
-
-/* -------------------------------------------- */
-
-/**
- * Taker-side handler that posts a chat message (if enabled).
- * @param {object} data
- */
-export async function handleConfirmTakeItem(data) {
-  if ( data.target !== game.user.id ) return;
+function postTakeChat(result) {
   const {
-    requestId, takerActorName, lootName, singletonName, containerInTransfer, itemCount, takenQty,
-    takenCurrency, error
-  } = data.payload;
-  if ( requestId ) pendingTakes.delete(requestId);
-
-  if ( error ) {
-    ui.notifications.warn(game.i18n.localize(error));
-    return;
-  }
+    takerActorName, lootName, singletonName, containerInTransfer, itemCount, takenQty, takenCurrency
+  } = result;
 
   if ( !getSetting(SETTING.CHAT_NOTIFICATIONS.KEY) ) return;
 
@@ -1600,28 +1545,26 @@ export async function handleConfirmTakeItem(data) {
     return;
   }
 
-  ChatMessage.create({
-    content: `<p>${content}</p>`,
-    flags: { "custom-dnd5e": { source: "dropItems" } }
-  });
+  postChat({ content });
 }
 
 /* -------------------------------------------- */
 
 /**
- * GM-side handler that creates a item actor and token.
+ * Create the item actor and place its token in the scene.
+ * Run on the GM's client.
  * @param {object} data
+ * @returns {Promise<boolean>} Whether the item was placed
  */
-export async function handleDropItem(data) {
-  if ( data.target !== game.user.id ) return;
-  if ( !game.user.isGM ) return;
-  const { itemDataList, name, img, sceneId, x, y, isContainer, droppedBy, itemUuid, folderId } = data.payload;
+export async function onDropItemQuery(data) {
+  const { itemDataList, name, img, sceneId, x, y, isContainer, droppedBy, itemUuid, folderId } = data;
   const scene = game.scenes.get(sceneId);
-  if ( !scene ) return;
+  if ( !scene ) return false;
   const folder = folderId ? game.folders.get(folderId) : await getOrCreateDropItemsFolder();
   await createItemActor({
     name, img, itemDataList, x, y, folder, droppedBy, isContainer, itemUuid, scene
   });
+  return true;
 }
 
 /* -------------------------------------------- */
@@ -1695,11 +1638,7 @@ function postReturnChat({ itemActor, sourceActor, quantity }) {
   const content = game.i18n.format("CUSTOM_DND5E.dropItems.chat.returned", {
     actor: sourceActor.name, qty, item: itemActor.name
   });
-  ChatMessage.create({
-    speaker: ChatMessage.getSpeaker({ actor: sourceActor }),
-    content: `<p>${content}</p>`,
-    flags: { "custom-dnd5e": { source: "dropItems" } }
-  });
+  postChat({ speaker: ChatMessage.getSpeaker({ actor: sourceActor }), content });
 }
 
 /* -------------------------------------------- */

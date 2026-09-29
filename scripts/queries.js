@@ -2,17 +2,23 @@ import { MODULE } from "./constants.js";
 import { onApplyDamageQuery, onResolveSaveQuery } from "./activities/activity-multiattack.js";
 import { onMoveTokenQuery } from "./activities/move-canvas-mode.js";
 import { onSwapTokensQuery } from "./activities/activity-swap.js";
+import { onAddToContainerQuery, onDropItemQuery, onTakeItemQuery } from "./item-interactions/drop-items.js";
+import { onGiveItemQuery } from "./item-interactions/give-items.js";
 import { onRequestRollQuery } from "./workflows/workflows.js";
 
 /**
  * Query handlers by query name.
  */
 const QUERIES = {
+  addToContainer: onAddToContainerQuery,
   applyMultiattackDamage: onApplyDamageQuery,
+  dropItem: onDropItemQuery,
+  giveItem: onGiveItemQuery,
   moveToken: onMoveTokenQuery,
   requestRoll: onRequestRollQuery,
   resolveMultiattackSave: onResolveSaveQuery,
-  swapTokens: onSwapTokensQuery
+  swapTokens: onSwapTokensQuery,
+  takeItem: onTakeItemQuery
 };
 
 /* -------------------------------------------- */

@@ -263,7 +263,6 @@
     "CUSTOM_DND5E.dropItems.error.containerAffixed": "This container is affixed in place and can't be picked up.",
     "CUSTOM_DND5E.dropItems.error.containerLocked": "This container is locked.",
     "CUSTOM_DND5E.dropItems.error.dropOutOfRange": "You are too far away to drop the item here.",
-    "CUSTOM_DND5E.dropItems.error.noActiveGM": "An active GM is required to manage dropped items.",
     "CUSTOM_DND5E.dropItems.error.noActor": "Select a character to take the item.",
     "CUSTOM_DND5E.dropItems.error.notAllowed": "Players are not allowed to drop items.",
     "CUSTOM_DND5E.dropItems.error.notContainer": "This item isn't a container.",
