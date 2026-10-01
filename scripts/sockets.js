@@ -1,7 +1,6 @@
 import { MODULE } from "./constants.js";
 import { animations, playLocalAnimation } from "./animations.js";
 import { clearLocal3dDice } from "./activities/activity-multiattack.js";
-import { handleActionChosen, handleRequestAction } from "./gameplay/speed-factor-initiative.js";
 
 /**
  * Handle an incoming animation socket event.
@@ -30,8 +29,6 @@ function _onStopAnimations(data) {
 const HANDLERS = {
   animation: _onAnimation,
   clear3dDice: clearLocal3dDice,
-  sfRequestAction: handleRequestAction,
-  sfActionChosen: handleActionChosen,
   stopAnimations: _onStopAnimations
 };
 

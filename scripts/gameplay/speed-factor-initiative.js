@@ -1,5 +1,7 @@
 import { CONSTANTS, MODULE } from "../constants.js";
-import { c5eLoadTemplates, getSetting, isPrimaryHandler, registerMenu, registerSetting } from "../utils.js";
+import {
+  c5eLoadTemplates, getSetting, isPrimaryHandler, queryGM, queryUser, registerMenu, registerSetting
+} from "../utils.js";
 import { SpeedFactorInitiativeForm } from "../forms/speed-factor-initiative-form.js";
 
 const constants = CONSTANTS.SPEED_FACTOR_INITIATIVE;
@@ -802,10 +804,7 @@ async function beginGather(combat) {
       combatantsByOwner.get(owner.id).push(combatant.id);
     }
     for ( const [userId, combatantIds] of combatantsByOwner ) {
-      game.socket.emit(`module.${MODULE.ID}`, {
-        action: "sfRequestAction",
-        options: { combatId: combat.id, combatantIds, userId }
-      });
+      queryUser(game.users.get(userId), "requestSpeedFactorAction", { combatId: combat.id, combatantIds });
     }
 
     manualSkipped.clear();
@@ -1013,7 +1012,7 @@ function needsChoice(combatant) {
  * @param {string} combatantId
  * @returns {void}
  */
-export function enqueuePrompt(combatId, combatantId) {
+export function queuePrompt(combatId, combatantId) {
   if ( activeCombatantId !== combatantId && !promptQueue.some(p => p.combatantId === combatantId) ) {
     promptQueue.push({ combatId, combatantId });
   }
@@ -1201,61 +1200,51 @@ function resolveTrackerText(choice, { revealed, revealRole, isOwner }) {
 }
 
 /* -------------------------------------------- */
-/*  SOCKET HANDLERS                             */
+/*  QUERY HANDLERS                              */
 /* -------------------------------------------- */
 
 /**
- * Handle an incoming `sfRequestAction` socket event.
- * Only processed by the targeted non-GM owner.
+ * Request to choose actions for each combatant.
  * @param {object} data
- * @param {object} data.options
- * @param {string} data.options.combatId
- * @param {string[]} data.options.combatantIds
- * @param {string} data.options.userId
- * @returns {void}
+ * @param {string} data.combatId
+ * @param {string[]} data.combatantIds
+ * @returns {boolean} True once the prompts are queued
  */
-export function handleRequestAction(data) {
-  if ( game.user.isGM ) return;
-  const { combatId, combatantIds, userId } = data.options;
-  if ( game.user.id !== userId ) return;
-
-  for ( const combatantId of combatantIds ) enqueuePrompt(combatId, combatantId);
+export function onRequestActionQuery({ combatId, combatantIds }) {
+  for ( const combatantId of combatantIds ) queuePrompt(combatId, combatantId);
+  return true;
 }
 
 /* -------------------------------------------- */
 
 /**
- * Handle an incoming `sfActionChosen` socket event.
- * Only processed by the primary GM.
+ * Record a chosen action for a combatant.
  * @param {object} data
- * @param {object} data.options
- * @param {string} data.options.combatId
- * @param {string} data.options.combatantId
- * @param {object} data.options.choice
- * @returns {Promise<void>}
+ * @param {string} data.combatId
+ * @param {string} data.combatantId
+ * @param {object} data.choice
+ * @param {object} context
+ * @param {User} context.user
+ * @returns {Promise<boolean>} Whether the choice was recorded
  */
-export async function handleActionChosen(data) {
-  if ( !game.user.isGM || !isPrimaryHandler() ) return;
-  const { combatId, combatantId, choice } = data.options;
+export async function onChooseActionQuery({ combatId, combatantId, choice }, { user }) {
+  const combatant = game.combats.get(combatId)?.combatants.get(combatantId);
+  if ( !combatant?.actor?.testUserPermission(user, "OWNER") ) return false;
   await recordChoice(combatId, combatantId, choice);
+  return true;
 }
 
 /* -------------------------------------------- */
 
 /**
- * Submit a chosen action.
+ * Submit a chosen action for a combatant.
+ * Runs on the GM's client.
  * @param {string} combatId
  * @param {string} combatantId
  * @param {object} choice
  * @returns {Promise<void>}
  */
 export async function submitChoice(combatId, combatantId, choice) {
-  if ( game.user.isGM ) {
-    await recordChoice(combatId, combatantId, choice);
-  } else {
-    game.socket.emit(`module.${MODULE.ID}`, {
-      action: "sfActionChosen",
-      options: { combatId, combatantId, choice }
-    });
-  }
+  if ( game.user.isGM ) await recordChoice(combatId, combatantId, choice);
+  else await queryGM("chooseSpeedFactorAction", { combatId, combatantId, choice });
 }

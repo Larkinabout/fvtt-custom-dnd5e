@@ -1067,6 +1067,23 @@ body.theme-dark .dnd5e2.sheet.custom-dnd5e-drop-items-sheet {
     border-radius: 3px;
 }
 
+#ui-bottom > .custom-dnd5e-speed-factor-bar {
+    position: relative;
+    flex: none;
+    margin: 0 0 8px;
+    pointer-events: all;
+    transform: translateX(var(--offset, 0px));
+    transition: opacity var(--ui-fade-delay) var(--ui-fade-duration), transform 250ms ease;
+}
+
+#ui-bottom > .custom-dnd5e-speed-factor-bar:hover {
+    transition: opacity var(--ui-fade-duration), transform 250ms ease;
+}
+
+.custom-dnd5e-speed-factor-bar .custom-dnd5e-speed-factor-group-popover {
+    position: absolute;
+}
+
 .custom-dnd5e-speed-factor-action-bar {
     display: flex;
     flex-direction: column;

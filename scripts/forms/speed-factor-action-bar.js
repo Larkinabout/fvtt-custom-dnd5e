@@ -133,13 +133,62 @@ export class SpeedFactorActionBar extends HandlebarsApplicationMixin(Application
   /* -------------------------------------------- */
 
   /**
-   * Pan to the combatant's token and dock the bar above the hotbar after rendering.
+   * Watches the hotbar so the bar can match its width.
+   * @type {ResizeObserver|null}
+   */
+  #resizeObserver = null;
+
+  /**
+   * Watches the hotbar so the bar can move with it when the chat notifications push it left.
+   * @type {MutationObserver|null}
+   */
+  #mutationObserver = null;
+
+  /* -------------------------------------------- */
+
+  /**
+   * Place the bar in above the hotbar.
+   * @param {HTMLElement} element
+   * @param {object} [options]
+   * @returns {Promise<void>}
+   */
+  async _insertElement(element, options) {
+    const uiBottom = document.getElementById("ui-bottom");
+    if ( !uiBottom ) return super._insertElement(element, options);
+    const existing = document.getElementById(element.id);
+    const hotbar = this.#getHotbar();
+    if ( existing ) existing.replaceWith(element);
+    else if ( hotbar?.parentElement === uiBottom ) hotbar.before(element);
+    else uiBottom.append(element);
+  }
+
+  /* -------------------------------------------- */
+
+  /**
+   * Start following the hotbar.
+   * @param {object} context
+   * @param {object} options
+   */
+  _onFirstRender(context, options) {
+    const hotbar = this.#getHotbar();
+    if ( !hotbar ) return;
+    this.#resizeObserver = new ResizeObserver(() => this.#onHotbarResize());
+    this.#resizeObserver.observe(hotbar);
+    this.#mutationObserver = new MutationObserver(() => this.#followHotbarOffset());
+    this.#mutationObserver.observe(hotbar, { attributes: true, attributeFilter: ["class", "style"] });
+  }
+
+  /* -------------------------------------------- */
+
+  /**
+   * Pan to the combatant's token and fit the bar to the hotbar after rendering.
    * @param {object} context
    * @param {object} options
    */
   _onRender(context, options) {
     panToCombatant(this.combatant);
-    this.#dockAboveHotbar();
+    this.#fitColumns();
+    this.#followHotbarOffset();
     this.#markSelected();
     this.#updateDone();
   }
@@ -147,34 +196,56 @@ export class SpeedFactorActionBar extends HandlebarsApplicationMixin(Application
   /* -------------------------------------------- */
 
   /**
-   * Position the bar above the hotbar.
-   * Falls back to a centred position near the bottom when the hotbar is unavailable.
+   * Refit the columns and move any open group popover back over its button.
    */
-  #dockAboveHotbar() {
+  #onHotbarResize() {
+    if ( !this.rendered ) return;
+    this.#fitColumns();
+    const popover = this.element.querySelector(".custom-dnd5e-speed-factor-group-popover:not(.hidden)");
+    const button = popover && this.element.querySelector(
+      `[data-action="toggleGroup"][data-group-key="${popover.dataset.groupKey}"]`);
+    if ( button ) this.#positionPopover(popover, button);
+  }
+
+  /* -------------------------------------------- */
+
+  /**
+   * Get the hotbar element.
+   * @returns {HTMLElement|null}
+   */
+  #getHotbar() {
+    return (ui.hotbar?.element instanceof HTMLElement) ? ui.hotbar.element : document.getElementById("hotbar");
+  }
+
+  /* -------------------------------------------- */
+
+  /**
+   * Set the number of button columns so the bar is no wider than the hotbar.
+   */
+  #fitColumns() {
     const el = this.element;
     if ( !el ) return;
-    el.style.position = "fixed";
-    el.style.width = "fit-content";
-    el.style.transform = "";
-
-    const hotbar = (ui.hotbar?.element instanceof HTMLElement) ? ui.hotbar.element : document.getElementById("hotbar");
-    const rect = hotbar?.getBoundingClientRect();
-    const available = (rect && rect.width > 50) ? rect.width : Math.min(window.innerWidth * 0.9, 600);
+    const hotbarWidth = this.#getHotbar()?.offsetWidth ?? 0;
+    const available = hotbarWidth > 50 ? hotbarWidth : (el.parentElement?.clientWidth ?? 600);
     const grid = el.querySelector(".custom-dnd5e-speed-factor-grid");
     const total = el.querySelectorAll(".custom-dnd5e-speed-factor-action-button").length || 1;
     const { CELL, GAP } = SpeedFactorActionBar;
     const columns = Math.max(1, Math.min(total, Math.floor((available - 20 + GAP) / (CELL + GAP))));
     if ( grid ) grid.style.gridTemplateColumns = `repeat(${columns}, ${CELL}px)`;
+  }
 
-    if ( rect && rect.width > 50 ) {
-      el.style.maxWidth = `${rect.width}px`;
-      el.style.left = `${rect.left + Math.max(0, (rect.width - el.offsetWidth) / 2)}px`;
-      el.style.top = `${rect.top - el.offsetHeight - 8}px`;
-    } else {
-      el.style.maxWidth = "92vw";
-      el.style.left = `${Math.max(0, (window.innerWidth - el.offsetWidth) / 2)}px`;
-      el.style.top = `${window.innerHeight - el.offsetHeight - 96}px`;
-    }
+  /* -------------------------------------------- */
+
+  /**
+   * Shift the bar sideways by the same amount as the hotbar.
+   */
+  #followHotbarOffset() {
+    const hotbar = this.#getHotbar();
+    if ( !this.element || !hotbar ) return;
+    let offset = "0px";
+    if ( hotbar.classList.contains("min") ) offset = "-70px";
+    else if ( hotbar.matches(".offset:not(.lg)") ) offset = hotbar.style.getPropertyValue("--offset") || "0px";
+    this.element.style.setProperty("--offset", offset);
   }
 
   /* -------------------------------------------- */
@@ -196,6 +267,10 @@ export class SpeedFactorActionBar extends HandlebarsApplicationMixin(Application
    * @returns {Promise<void>}
    */
   async _onClose(options) {
+    this.#resizeObserver?.disconnect();
+    this.#resizeObserver = null;
+    this.#mutationObserver?.disconnect();
+    this.#mutationObserver = null;
     await super._onClose(options);
     onActionBarClosed(this);
   }
@@ -316,11 +391,11 @@ export class SpeedFactorActionBar extends HandlebarsApplicationMixin(Application
    * @param {HTMLElement} button
    */
   #positionPopover(popover, button) {
-    const rect = button.getBoundingClientRect();
-    const pop = popover.getBoundingClientRect();
-    popover.style.position = "fixed";
-    popover.style.left = `${Math.max(4, rect.left + ((rect.width - pop.width) / 2))}px`;
-    popover.style.top = `${rect.top - pop.height - 6}px`;
+    const maxLeft = this.element.clientWidth - popover.offsetWidth;
+    const centred = button.offsetLeft + ((button.offsetWidth - popover.offsetWidth) / 2);
+    const left = maxLeft < 0 ? maxLeft / 2 : Math.min(Math.max(0, centred), maxLeft);
+    popover.style.left = `${left}px`;
+    popover.style.top = `${button.offsetTop - popover.offsetHeight - 6}px`;
   }
 
   /* -------------------------------------------- */
