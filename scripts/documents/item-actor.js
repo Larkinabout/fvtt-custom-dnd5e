@@ -1,3 +1,5 @@
+import { getLockedName } from "../item-interactions/container-lock.js";
+
 /**
  * Data model for the Item Actor used by the Drop Items feature.
  */
@@ -31,5 +33,16 @@ export class ItemActorDataModel extends foundry.abstract.TypeDataModel {
       actor.sourcedItems = map;
     }
     if ( !actor.identifiedItems ) actor.identifiedItems = new Map();
+  }
+
+  /* -------------------------------------------- */
+
+  /**
+   * Show a locked container's name with the Locked prefix.
+   * @inheritdoc
+   */
+  prepareDerivedData() {
+    const actor = this.parent;
+    if ( actor && this.isContainer && this.locked ) actor.name = getLockedName(actor._source.name);
   }
 }

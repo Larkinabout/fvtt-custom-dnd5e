@@ -751,6 +751,35 @@ button > .custom-dnd5e-module-marker {
     padding: 0.5rem;
 }
 
+.dnd5e2.sheet.item .sheet-header > .left:has(> .custom-dnd5e-locked) {
+    position: relative;
+}
+
+.dnd5e2.sheet.item .sheet-header > .left > .custom-dnd5e-locked,
+.dnd5e2.sheet.actor .tab[data-tab=inventory] .containers .container .custom-dnd5e-locked {
+    background: var(--dnd5e-color-black);
+    border: 1px solid var(--dnd5e-color-gold);
+    border-radius: 50%;
+    box-shadow: 0 0 8px var(--dnd5e-shadow-15);
+    color: var(--dnd5e-color-gold);
+    font-size: var(--font-size-12);
+    inset: -3px auto auto -3px;
+    position: absolute;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 20px;
+    height: 20px;
+}
+
+.dnd5e2.sheet.actor .tab[data-tab=inventory] .containers .container .custom-dnd5e-locked {
+    inset: auto -3px -3px auto;
+}
+
+.dnd5e2.sheet.actor .tab[data-tab=inventory] .containers .container .equipped ~ .custom-dnd5e-locked {
+    right: 19px;
+}
+
 /* -------------------------------------------- */
 /* ITEM ACTOR SHEET                             */
 /* -------------------------------------------- */

@@ -144,7 +144,7 @@ export class GiveItemForm extends CustomDnd5eForm {
       recipients,
       hasRecipients: recipients.length > 0,
       showPicker: !lockedToken,
-      showQuantity: available > 1,
+      showQuantity: available > 1 && item.type !== "container",
       maxQuantity: available,
       selectedTokenId: this._selectedTokenId ?? "",
       canSubmit: recipients.length > 0 && !!this._selectedTokenId

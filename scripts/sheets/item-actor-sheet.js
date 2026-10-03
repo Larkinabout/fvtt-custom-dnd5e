@@ -111,7 +111,7 @@ export class ItemActorSheet extends HandlebarsApplicationMixin(ActorSheetV2) {
     const showTakeAll = isOnCanvas && !!root && (!isAffixed || game.user.isGM);
 
     const showFooter = showTakeAll || (isOnCanvas && showTakeContents);
-    const canOpenRoot = !isLocked || game.user.isGM;
+    const canOpenRoot = !!root;
     const canRemove = !isOnCanvas && game.user.isGM;
 
     return {
@@ -393,8 +393,9 @@ export class ItemActorSheet extends HandlebarsApplicationMixin(ActorSheetV2) {
   static async #onOpenItem(_event, target) {
     const itemId = target?.dataset?.itemId;
     if ( !itemId ) return;
-    if ( this.actor?.system?.locked && !game.user.isGM ) return;
     const item = this.actor.items.get(itemId);
+
+    if ( this.actor?.system?.locked && !game.user.isGM && item?.system?.container ) return;
     item?.sheet?.render(true);
   }
 

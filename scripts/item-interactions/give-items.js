@@ -17,7 +17,7 @@ import { GiveItemForm } from "../forms/item-interactions/give-item-form.js";
 const SETTING = CONSTANTS.GIVE_ITEMS.SETTING;
 const GIVE_ICON_ID = "custom-dnd5e-cursor-label-give-item";
 
-const GIVEABLE_TYPES = new Set(["weapon", "equipment", "consumable", "tool", "loot"]);
+const GIVEABLE_TYPES = new Set(["weapon", "equipment", "consumable", "tool", "loot", "container"]);
 
 /* -------------------------------------------- */
 /*  REGISTRATION                                */
@@ -142,6 +142,7 @@ function isEligibleDropTarget(target, item) {
  */
 export function isGiveable(item) {
   if ( !item || !GIVEABLE_TYPES.has(item.type) ) return false;
+  if ( item.type === "container" ) return true;
   return (item.system?.quantity ?? 0) >= 1;
 }
 
@@ -239,7 +240,7 @@ async function onDropCanvasData(canvas, data, event) {
 /* -------------------------------------------- */
 
 /**
- * Add 'Give...' option to context menu.
+ * Add 'Give' option to context menu.
  * @param {Item} item
  * @param {object[]} menuItems
  */
@@ -269,8 +270,9 @@ export async function executeGive(item, recipient, quantity) {
   const recipientActor = recipient.actor ?? recipient;
   if ( !recipientActor ) return;
   const giverActor = item.actor;
+  const isContainer = item.type === "container";
   const available = item.system?.quantity ?? 1;
-  const qty = Math.max(1, Math.min(Number(quantity) || 1, available));
+  const qty = isContainer ? available : Math.max(1, Math.min(Number(quantity) || 1, available));
 
   const ownerUser = game.users.find(u =>
     u.active && !u.isGM && recipientActor.testUserPermission(u, "OWNER")
@@ -285,10 +287,15 @@ export async function executeGive(item, recipient, quantity) {
     return;
   }
 
+  const [itemData, ...contents] = isContainer
+    ? await Item.implementation.createWithContents([item])
+    : [item.toObject()];
+
   const data = {
     giverActorUuid: giverActor.uuid,
     recipientActorUuid: recipientActor.uuid,
-    itemData: item.toObject(),
+    itemData,
+    contents,
     quantity: qty,
     requiresAcceptance: requiresAcceptance(recipient, giverActor)
   };
@@ -319,11 +326,14 @@ export async function executeGive(item, recipient, quantity) {
  * @param {string} data.giverActorUuid
  * @param {string} data.recipientActorUuid
  * @param {object} data.itemData Item being given
+ * @param {object[]} [data.contents] Items inside the container
  * @param {number} data.quantity
  * @param {boolean} data.requiresAcceptance Whether the owner must accept the item first
  * @returns {Promise<{accepted: boolean}>} Whether the item was accepted and added
  */
-export async function onGiveItemQuery({ giverActorUuid, recipientActorUuid, itemData, quantity, requiresAcceptance }) {
+export async function onGiveItemQuery({
+  giverActorUuid, recipientActorUuid, itemData, contents = [], quantity, requiresAcceptance
+}) {
   const recipient = await fromUuid(recipientActorUuid);
   if ( !recipient || (!recipient.testUserPermission(game.user, "OWNER") && !game.user.isGM) ) {
     return { accepted: false };
@@ -335,7 +345,7 @@ export async function onGiveItemQuery({ giverActorUuid, recipientActorUuid, item
     if ( !accepted ) return { accepted: false };
   }
 
-  return { accepted: await applyItemToRecipient(recipient, itemData, quantity) };
+  return { accepted: await applyItemToRecipient(recipient, itemData, quantity, contents) };
 }
 
 /* -------------------------------------------- */
@@ -371,16 +381,18 @@ async function confirmGiveAcceptance({ giver, recipient, itemData, quantity }) {
  * @param {Actor} recipient
  * @param {object} itemData
  * @param {number} quantity
+ * @param {object[]} [contents] Items inside the container
  * @returns {Promise<boolean>} Whether the apply succeeded
  */
-async function applyItemToRecipient(recipient, itemData, quantity) {
+async function applyItemToRecipient(recipient, itemData, quantity, contents = []) {
   try {
     const create = foundry.utils.deepClone(itemData);
     foundry.utils.setProperty(create, "system.quantity", quantity);
 
-    const existing = findStackableItem(recipient, create);
+    const isContainer = create.type === "container";
+    const existing = isContainer ? null : findStackableItem(recipient, create);
 
-    delete create._id;
+    if ( !isContainer ) delete create._id;
     const compendiumSource = create._stats?.compendiumSource;
     delete create._stats;
     if ( compendiumSource ) create._stats = { compendiumSource };
@@ -390,6 +402,8 @@ async function applyItemToRecipient(recipient, itemData, quantity) {
 
     if ( existing ) {
       await existing.update({ "system.quantity": (existing.system?.quantity ?? 0) + quantity });
+    } else if ( isContainer ) {
+      await recipient.createEmbeddedDocuments("Item", [create, ...contents], { keepId: true });
     } else {
       await recipient.createEmbeddedDocuments("Item", [create]);
     }
@@ -420,7 +434,8 @@ async function removeGivenItem(item, recipient, quantity) {
 
   try {
     const current = item.system?.quantity ?? 1;
-    if ( current - quantity <= 0 ) await item.delete();
+    if ( item.type === "container" ) await item.delete({ deleteContents: true });
+    else if ( current - quantity <= 0 ) await item.delete();
     else await item.update({ "system.quantity": current - quantity });
   } catch ( err ) {
     Logger.error(err);

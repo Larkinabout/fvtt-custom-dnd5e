@@ -14,6 +14,7 @@ import {
   setSetting
 } from "../utils.js";
 import { ItemDialog } from "../applications/item-dialog.js";
+import { getUnlockedName, isContainerLocked, registerContainerLock, setContainerLockData } from "./container-lock.js";
 import { addCursorLabelIcon, setCursorLabelIcon, setCursorLabelPosition } from "../interface/cursor-label.js";
 import { inventoryDragAppHider, registerInventoryDragHandler } from "./inventory-drag.js";
 import * as DropItemsHighlight from "./drop-items-highlight.js";
@@ -163,6 +164,7 @@ function registerHooks() {
   Hooks.on("updateToken", onTokenPositionChange);
   Hooks.on("refreshToken", onRefreshToken);
   Hooks.on("destroyToken", onDestroyTokenAppearance);
+  registerContainerLock();
 
   Hooks.once("ready", () => {
     addCursorLabelIcon(ICON_ID, '<i class="fa-solid fa-hand-holding-box"></i>');
@@ -354,7 +356,7 @@ async function tryCreateAtPoint(item, x, y, qty) {
 /* -------------------------------------------- */
 
 /**
- * Add a 'Drop…' option to the item context menu.
+ * Add a 'Drop' option to the item context menu.
  * @param {Item} item
  * @param {object[]} menuItems
  */
@@ -596,30 +598,33 @@ export async function executeDrop({ item, x, y, fromActor = null, quantity }) {
   });
 
   const compendiumSource = item._stats?.compendiumSource ?? item.uuid;
+  const locked = isContainerLocked(item);
   const folder = await getOrCreateDropItemsFolder();
 
   let actor;
   let tokenDoc;
   if ( game.user.isGM || game.user.hasPermission?.("ACTOR_CREATE") ) {
     ({ actor, tokenDoc } = await createItemActor({
-      name: item.name,
+      name: getUnlockedName(item),
       img: item.img,
       itemDataList,
       x, y,
       folder,
       droppedBy: fromActor?.uuid ?? "",
       isContainer,
+      locked,
       itemUuid: compendiumSource,
       scene
     }));
   } else {
     const placed = await queryGM("dropItem", {
       itemDataList,
-      name: item.name,
+      name: getUnlockedName(item),
       img: item.img,
       sceneId: scene.id,
       x, y,
       isContainer,
+      locked,
       droppedBy: fromActor?.uuid ?? "",
       itemUuid: compendiumSource,
       folderId: folder?.id ?? null
@@ -652,12 +657,13 @@ export async function executeDrop({ item, x, y, fromActor = null, quantity }) {
  * @param {Folder|null} args.folder
  * @param {string} args.droppedBy Source actor UUID
  * @param {boolean} args.isContainer
+ * @param {boolean} [args.locked]
  * @param {string} args.itemUuid
  * @param {Scene} args.scene
  * @returns {Promise<{actor: Actor, tokenDoc: TokenDocument}>}
  */
 async function createItemActor({
-  name, img, itemDataList, x, y, folder, droppedBy, isContainer, itemUuid, scene
+  name, img, itemDataList, x, y, folder, droppedBy, isContainer, locked, itemUuid, scene
 }) {
   const resolvedImg = img || CONSTANTS.DROP_ITEMS.DEFAULT_ICON;
   const tokenScale = Number(getSetting(SETTING.TOKEN_SCALE.KEY)) || 1;
@@ -671,7 +677,8 @@ async function createItemActor({
       droppedBy: droppedBy ?? "",
       droppedAt: Date.now(),
       itemUuid: itemUuid ?? "",
-      isContainer: !!isContainer
+      isContainer: !!isContainer,
+      locked: !!locked
     },
     prototypeToken: {
       name,
@@ -713,6 +720,7 @@ function prepareItemForActor(item, isRoot) {
   delete data.folder;
   delete data.sort;
   if ( isRoot && data.system ) data.system.container = null;
+  if ( isRoot ) setContainerLockData(data, false);
   return data;
 }
 
@@ -929,11 +937,12 @@ export async function populateEmptyItemActor(itemActor, sourceItem, { quantity }
 
   const compendiumSource = sourceItem._stats?.compendiumSource ?? sourceItem.uuid;
   await itemActor.update({
-    name: sourceItem.name,
+    name: getUnlockedName(sourceItem),
     img: sourceItem.img,
-    "prototypeToken.name": sourceItem.name,
+    "prototypeToken.name": getUnlockedName(sourceItem),
     "prototypeToken.texture.src": sourceItem.img,
     "system.isContainer": isContainer,
+    "system.locked": !!itemActor.system.locked || isContainerLocked(sourceItem),
     "system.itemUuid": compendiumSource,
     "system.droppedAt": Date.now()
   });
@@ -1228,7 +1237,7 @@ export async function onTakeItemQuery(data, { user }) {
 
   if ( itemsToTransfer.length ) {
     const transferred = await transferItemsToTaker({
-      takerActor, itemsToTransfer, rootItem, partialQty
+      takerActor, itemsToTransfer, rootItem, partialQty, locked: !!itemActor.system?.locked
     });
     if ( !transferred ) return { error: "CUSTOM_DND5E.dropItems.error.takeFailed" };
   }
@@ -1319,15 +1328,18 @@ async function resolveTakeContext(data, user) {
  * @param {Item[]} args.itemsToTransfer
  * @param {Item} args.rootItem
  * @param {number|null} args.partialQty
+ * @param {boolean} [args.locked] Whether to lock the container
  * @returns {Promise<boolean>} Whether the create succeeded
  */
-async function transferItemsToTaker({ takerActor, itemsToTransfer, rootItem, partialQty }) {
+async function transferItemsToTaker({ takerActor, itemsToTransfer, rootItem, partialQty, locked = false }) {
   const transferIds = new Set(itemsToTransfer.map(i => i.id));
   const createData = itemsToTransfer.map(i => {
     const data = i.toObject();
     delete data.ownership;
     delete data.folder;
     delete data.sort;
+
+    if ( locked && (i.type === "container") && !i.system?.container ) setContainerLockData(data, true);
 
     if ( data.system?.container && !transferIds.has(data.system.container) ) {
       data.system.container = null;
@@ -1557,12 +1569,12 @@ function postTakeChat(result) {
  * @returns {Promise<boolean>} Whether the item was placed
  */
 export async function onDropItemQuery(data) {
-  const { itemDataList, name, img, sceneId, x, y, isContainer, droppedBy, itemUuid, folderId } = data;
+  const { itemDataList, name, img, sceneId, x, y, isContainer, locked, droppedBy, itemUuid, folderId } = data;
   const scene = game.scenes.get(sceneId);
   if ( !scene ) return false;
   const folder = folderId ? game.folders.get(folderId) : await getOrCreateDropItemsFolder();
   await createItemActor({
-    name, img, itemDataList, x, y, folder, droppedBy, isContainer, itemUuid, scene
+    name, img, itemDataList, x, y, folder, droppedBy, isContainer, locked, itemUuid, scene
   });
   return true;
 }
@@ -1614,7 +1626,8 @@ async function returnDroppedItemsToSource(itemActor) {
     takerActor: sourceActor,
     itemsToTransfer,
     rootItem,
-    partialQty: null
+    partialQty: null,
+    locked: !!itemActor.system?.locked
   });
   if ( !transferred ) return;
 
