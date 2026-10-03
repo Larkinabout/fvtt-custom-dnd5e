@@ -753,7 +753,7 @@ export function toggleCheckbox(entity, counterKey) {
  */
 export function togglePip(entity, counterKey, n) {
   if ( !counterKey.startsWith("counters.") ) counterKey = `counters.${counterKey}`;
-  const baseKey = counterKey;
+  const baseKey = counterKey.endsWith(".value") ? counterKey.slice(0, -6) : counterKey;
   if ( !counterKey.endsWith(".value") ) counterKey = `${counterKey}.value`;
   const currentValue = getNumericValue(entity, baseKey, getCounters(entity, baseKey));
   const max = getMaxValue(entity, baseKey);
