@@ -700,7 +700,7 @@ async function createItemActor({
 
   const tokenData = await actor.getTokenDocument({}, { parent: scene });
   const position = CONFIG.Token.objectClass._getDropActorPosition(tokenData, { x, y }, { snap: true });
-  tokenData.updateSource(position);
+  tokenData.updateSource({ ...position, sight: { enabled: false } });
 
   const [tokenDoc] = await scene.createEmbeddedDocuments("Token", [tokenData.toObject()]);
   return { actor, tokenDoc };
