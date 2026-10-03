@@ -1,5 +1,5 @@
-import { CONSTANTS } from "../constants.js";
-import { c5eLoadTemplates, getSetting, registerMenu, registerSetting } from "../utils.js";
+import { CONSTANTS, MODULE } from "../constants.js";
+import { c5eLoadTemplates, getModuleMarker, getSetting, registerMenu, registerSetting } from "../utils.js";
 import { ActivitiesForm } from "../forms/activities-form.js";
 import { MacroActivity } from "./activity-macro.js";
 import { MoveActivity } from "./activity-move.js";
@@ -139,6 +139,24 @@ function _getTargetingRequirements(activity, { fallback = false } = {}) {
 }
 
 /* -------------------------------------------- */
+
+/**
+ * Add the module marker to activities in the Create Activity list.
+ * @param {ApplicationV2} app
+ * @param {HTMLElement} html
+ */
+function addActivityMarkers(app, html) {
+  const marker = getModuleMarker();
+  if ( !marker ) return;
+
+  html.querySelectorAll(`input[name="type"][value^="${MODULE.ID}-"]`).forEach(input => {
+    const label = input.closest("label")?.querySelector("span");
+    if ( !label || label.querySelector(".custom-dnd5e-module-marker") ) return;
+    label.insertAdjacentHTML("beforeend", ` ${marker}`);
+  });
+}
+
+/* -------------------------------------------- */
 /*  REGISTRATION                                */
 /* -------------------------------------------- */
 
@@ -263,6 +281,8 @@ export function register() {
       _clearUserTargets();
     });
   }
+
+  Hooks.on("renderCreateDocumentDialog", addActivityMarkers);
 
   c5eLoadTemplates([
     constants.TEMPLATE.FORM,
