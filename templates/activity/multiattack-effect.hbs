@@ -19,6 +19,13 @@
                         {{ selectOptions options selected=key }}
                     </select>
                     <div class="list-controls flexrow">
+                        {{#if ../canAddAlternative}}
+                        <button type="button" class="unbutton control-button" data-action="addAlternative"
+                                data-index="{{ index }}" data-tooltip
+                                aria-label="{{ localize 'CUSTOM_DND5E.activities.multiattack.addAlternative' }}">
+                            <i class="fa-solid fa-right-left" inert></i>
+                        </button>
+                        {{/if}}
                         <button type="button" class="unbutton control-button" data-action="deleteAttack"
                                 data-index="{{ index }}" data-tooltip
                                 aria-label="{{ localize 'CUSTOM_DND5E.activities.multiattack.deleteAttack' }}">
@@ -26,6 +33,23 @@
                         </button>
                     </div>
                 </div>
+                {{#each alternatives}}
+                <div class="details flexrow">
+                    <span class="custom-dnd5e-multiattack-or">{{ localize "CUSTOM_DND5E.or" }}</span>
+                    {{ dnd5e-icon img classes="gold-icon" }}
+                    <select data-attack-index="{{ ../index }}" data-alternative-index="{{ index }}"
+                            aria-label="{{ localize 'CUSTOM_DND5E.activities.multiattack.alternative' }}">
+                        {{ selectOptions options selected=key }}
+                    </select>
+                    <div class="list-controls flexrow">
+                        <button type="button" class="unbutton control-button" data-action="deleteAlternative"
+                                data-index="{{ ../index }}" data-alternative-index="{{ index }}" data-tooltip
+                                aria-label="{{ localize 'CUSTOM_DND5E.activities.multiattack.deleteAlternative' }}">
+                            <i class="fa-solid fa-trash" inert></i>
+                        </button>
+                    </div>
+                </div>
+                {{/each}}
             </li>
             {{else}}
             <li class="empty">{{ localize emptyLabel }}</li>

@@ -311,6 +311,19 @@ button > .custom-dnd5e-module-marker {
     flex: 1;
 }
 
+.custom-dnd5e-multiattack-activity .custom-dnd5e-multiattack-list .details + .details {
+    margin-top: 0.25rem;
+}
+
+.custom-dnd5e-multiattack-activity .custom-dnd5e-multiattack-list .custom-dnd5e-multiattack-or {
+    color: var(--dnd5e-color-gold);
+    flex: 0 0 24px;
+    font-size: var(--font-size-12);
+    font-weight: bold;
+    text-align: center;
+    text-transform: uppercase;
+}
+
 .custom-dnd5e-multiattack-activity .custom-dnd5e-multiattack-list .list-controls {
     flex: 0 0 auto;
 }
@@ -400,6 +413,7 @@ button > .custom-dnd5e-module-marker {
 
 .custom-dnd5e-multiattack-entry .name-stacked .title {
     font-size: var(--font-size-12);
+    line-height: 1.5;
 }
 
 .custom-dnd5e-multiattack-entry.miss .custom-dnd5e-multiattack-total {

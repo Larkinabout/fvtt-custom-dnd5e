@@ -44,7 +44,11 @@ class BaseMultiattackActivityData extends dnd5e.dataModels.activity.BaseActivity
       multiattack: new SchemaField({
         attacks: new ArrayField(new SchemaField({
           item: new StringField(),
-          activity: new StringField()
+          activity: new StringField(),
+          alternatives: new ArrayField(new SchemaField({
+            item: new StringField(),
+            activity: new StringField()
+          }))
         })),
         probabilistic: new BooleanField({ initial: false }),
         autoApply: new BooleanField({ initial: false })
@@ -65,7 +69,9 @@ class MultiattackActivitySheet extends dnd5e.applications.activity.ForwardSheet 
   static DEFAULT_OPTIONS = {
     classes: ["custom-dnd5e-multiattack-activity"],
     actions: {
+      addAlternative: MultiattackActivitySheet.addAlternative,
       addAttack: MultiattackActivitySheet.addAttack,
+      deleteAlternative: MultiattackActivitySheet.deleteAlternative,
       deleteAttack: MultiattackActivitySheet.deleteAttack
     }
   };
@@ -101,7 +107,7 @@ class MultiattackActivitySheet extends dnd5e.applications.activity.ForwardSheet 
     context = await super._prepareEffectContext(context, options);
     const choices = getAttackChoices(this.item.actor);
     context.attackOptions = choices.map(choice => ({ value: choice.key, label: choice.label }));
-    context.attacks = this.activity.multiattack.attacks.map((attack, index) => {
+    const prepareAttack = (attack, index) => {
       const key = attackKey(attack);
       const choice = choices.find(c => c.key === key);
       const unknown = { value: key, label: game.i18n.localize("CUSTOM_DND5E.activities.multiattack.unknownAttack") };
@@ -111,7 +117,12 @@ class MultiattackActivitySheet extends dnd5e.applications.activity.ForwardSheet 
         img: choice?.img ?? "icons/svg/hazard.svg",
         options: choice ? context.attackOptions : [unknown, ...context.attackOptions]
       };
-    });
+    };
+    context.attacks = this.activity.multiattack.attacks.map((attack, index) => ({
+      ...prepareAttack(attack, index),
+      alternatives: attack.alternatives.map(prepareAttack)
+    }));
+    context.canAddAlternative = choices.length > 1;
     context.emptyLabel = this.item.actor
       ? "CUSTOM_DND5E.activities.multiattack.noAttacks"
       : "CUSTOM_DND5E.activities.multiattack.noActor";
@@ -139,17 +150,19 @@ class MultiattackActivitySheet extends dnd5e.applications.activity.ForwardSheet 
    */
   async #onChangeAttack(event) {
     event.stopPropagation();
-    const index = Number(event.currentTarget.dataset.attackIndex);
+    const { attackIndex, alternativeIndex } = event.currentTarget.dataset;
     const [item, activity] = event.currentTarget.value.split(".");
     const attacks = foundry.utils.deepClone(this.activity._source.multiattack.attacks);
-    attacks[index] = { item, activity };
+    const row = attacks[Number(attackIndex)];
+    if ( alternativeIndex === undefined ) Object.assign(row, { item, activity });
+    else row.alternatives[Number(alternativeIndex)] = { item, activity };
     await this.activity.update({ "multiattack.attacks": attacks });
   }
 
   /* -------------------------------------------- */
 
   /**
-   * Add an attack row, copying the last row so repeated attacks only need a click each.
+   * Add an attack row, copying the last row's attack so repeated attacks only need a click each.
    * @param {Event} event
    * @param {HTMLElement} target
    */
@@ -157,14 +170,32 @@ class MultiattackActivitySheet extends dnd5e.applications.activity.ForwardSheet 
     const attacks = foundry.utils.deepClone(this.activity._source.multiattack.attacks);
     const next = attacks.at(-1) ?? getAttackChoices(this.item.actor)[0];
     if ( !next ) return;
-    attacks.push({ item: next.item, activity: next.activity });
+    attacks.push({ item: next.item, activity: next.activity, alternatives: [] });
     await this.activity.update({ "multiattack.attacks": attacks });
   }
 
   /* -------------------------------------------- */
 
   /**
-   * Remove an attack row.
+   * Add an alternative to an attack row
+   * @param {Event} event
+   * @param {HTMLElement} target
+   */
+  static async addAlternative(event, target) {
+    const attacks = foundry.utils.deepClone(this.activity._source.multiattack.attacks);
+    const row = attacks[Number(target.dataset.index)];
+    row.alternatives ??= [];
+    const used = [row, ...row.alternatives].map(attackKey);
+    const next = getAttackChoices(this.item.actor).find(choice => !used.includes(choice.key));
+    if ( !next ) return;
+    row.alternatives.push({ item: next.item, activity: next.activity });
+    await this.activity.update({ "multiattack.attacks": attacks });
+  }
+
+  /* -------------------------------------------- */
+
+  /**
+   * Remove an attack row and its alternatives.
    * @param {Event} event
    * @param {HTMLElement} target
    */
@@ -172,6 +203,19 @@ class MultiattackActivitySheet extends dnd5e.applications.activity.ForwardSheet 
     const index = Number(target.dataset.index);
     const attacks = foundry.utils.deepClone(this.activity._source.multiattack.attacks);
     attacks.splice(index, 1);
+    await this.activity.update({ "multiattack.attacks": attacks });
+  }
+
+  /* -------------------------------------------- */
+
+  /**
+   * Remove an alternative from an attack row.
+   * @param {Event} event
+   * @param {HTMLElement} target
+   */
+  static async deleteAlternative(event, target) {
+    const attacks = foundry.utils.deepClone(this.activity._source.multiattack.attacks);
+    attacks[Number(target.dataset.index)].alternatives.splice(Number(target.dataset.alternativeIndex), 1);
     await this.activity.update({ "multiattack.attacks": attacks });
   }
 }
@@ -215,14 +259,14 @@ export class MultiattackActivity extends dnd5e.documents.activity.ActivityMixin(
   async use(usage = {}, dialog = {}, message = {}) {
     if ( !this.item.isEmbedded || !this.item.isOwner || !this.canUse ) return super.use(usage, dialog, message);
 
-    const pool = this.multiattack.attacks.filter(attack => getAttackActivity(this.actor, attack));
-    if ( !pool.length ) {
+    const slots = getAttackSlots(this.actor, this.multiattack.attacks);
+    if ( !slots.length ) {
       ui.notifications.warn("CUSTOM_DND5E.activities.multiattack.warning.noAttacks", { localize: true });
       return;
     }
 
     const probabilistic = this.multiattack.probabilistic || isUseKeyHeld();
-    const selections = await chooseAttacks(this.actor, pool);
+    const selections = await chooseAttacks(this.actor, slots);
     if ( !selections?.length ) return;
 
     return super.use(
@@ -315,19 +359,74 @@ function getAttackActivity(actor, { item, activity }) {
 }
 
 /* -------------------------------------------- */
+/*  ATTACK SLOTS                                */
+/* -------------------------------------------- */
+
+/**
+ * Turn each attack row into a slot listing the attacks that can be made with it.
+ * @param {Actor} actor
+ * @param {object[]} attacks Attack rows
+ * @returns {object[][]} Slots
+ */
+function getAttackSlots(actor, attacks) {
+  return attacks.map(row => {
+    const options = new Map();
+    for ( const { item, activity } of [row, ...(row.alternatives ?? [])] ) {
+      const attack = { item, activity };
+      if ( getAttackActivity(actor, attack) ) options.set(attackKey(attack), attack);
+    }
+    return [...options.values()];
+  }).filter(slot => slot.length);
+}
+
+/* -------------------------------------------- */
+
+/**
+ * Whether every chosen attack can be given a slot of its own that allows it.
+ * @param {object[][]} slots
+ * @param {string[]} keys Keys of the chosen attacks
+ * @returns {boolean}
+ */
+function canFillSlots(slots, keys) {
+  if ( !keys.length ) return true;
+  const [key, ...rest] = keys;
+  return slots.some((slot, index) => slot.some(attack => attackKey(attack) === key)
+    && canFillSlots(slots.filter((s, i) => i !== index), rest));
+}
+
+/* -------------------------------------------- */
+
+/**
+ * Count how many more times an attack can be made alongside the attacks chosen.
+ * @param {object[][]} slots
+ * @param {string[]} chosen Keys of the attacks chosen
+ * @param {string} key Key of the attack to count
+ * @returns {number} Times the attack can still be made
+ */
+function countAvailable(slots, chosen, key) {
+  const keys = [...chosen, key];
+  let count = 0;
+  while ( canFillSlots(slots, keys) ) {
+    count++;
+    keys.push(key);
+  }
+  return count;
+}
+
+/* -------------------------------------------- */
 /*  TARGET SELECTION                            */
 /* -------------------------------------------- */
 
 /**
- * Pair each attack in the pool with a target using the targeting prompt or the user's current targets.
+ * Pair each attack slot with an attack and a target using the targeting prompt or the user's current targets.
  * @param {Actor} actor
- * @param {object[]} pool Attack rows
+ * @param {object[][]} slots
  * @returns {Promise<object[]|null>} Selections of item id, activity id and token UUID, or null if cancelled
  */
-async function chooseAttacks(actor, pool) {
+async function chooseAttacks(actor, slots) {
   const setting = getSetting(constants.SETTING.CONFIG.KEY);
-  if ( setting?.targeting && canvas.ready ) return chooseAttacksWithPrompt(actor, pool, setting);
-  return chooseAttacksFromTargets(actor, pool);
+  if ( setting?.targeting && canvas.ready ) return chooseAttacksWithPrompt(actor, slots, setting);
+  return chooseAttacksFromTargets(actor, slots);
 }
 
 /* -------------------------------------------- */
@@ -335,14 +434,14 @@ async function chooseAttacks(actor, pool) {
 /**
  * Target one token at a time, then pick which of the remaining attacks to make against it.
  * @param {Actor} actor
- * @param {object[]} pool Attack rows
+ * @param {object[][]} slots
  * @param {object} setting Activities setting
  * @returns {Promise<object[]|null>} Selections, or null if cancelled
  */
-async function chooseAttacksWithPrompt(actor, pool, setting) {
+async function chooseAttacksWithPrompt(actor, slots, setting) {
   const restoreApplications = await hideApplications();
   try {
-    return await targetEachAttack(actor, pool, setting);
+    return await targetEachAttack(actor, slots, setting);
   } finally {
     restoreApplications();
   }
@@ -351,24 +450,23 @@ async function chooseAttacksWithPrompt(actor, pool, setting) {
 /* -------------------------------------------- */
 
 /**
- * Run the targeting prompt once for each attack, asking which attack to use when more than one kind is left.
+ * Run the targeting prompt once for each slot, asking which attack to use when more than one kind is left.
  * @param {Actor} actor
- * @param {object[]} pool Attack rows
+ * @param {object[][]} slots
  * @param {object} setting Activities setting
  * @returns {Promise<object[]|null>} Selections, or null if cancelled
  */
-async function targetEachAttack(actor, pool, setting) {
-  const remaining = [...pool];
+async function targetEachAttack(actor, slots, setting) {
   const selections = [];
   const markers = createAttackMarkers();
   const typeLabel = game.i18n.localize(CONFIG.DND5E.individualTargetTypes.creature?.label ?? "Creature");
   ui.notifications.info(game.i18n.localize("CUSTOM_DND5E.activities.multiattack.selectTargets"));
 
   try {
-    while ( remaining.length ) {
+    while ( selections.length < slots.length ) {
       canvas.tokens.setTargets([]);
       const label = game.i18n.format("CUSTOM_DND5E.activities.multiattack.attackCount", {
-        current: selections.length + 1, total: pool.length
+        current: selections.length + 1, total: slots.length
       });
       const completed = await TargetingMode.activate({ count: 1, typeLabel, label, notify: false, hideApps: false });
       if ( !completed ) return null;
@@ -377,9 +475,8 @@ async function targetEachAttack(actor, pool, setting) {
       const token = game.user.targets.first();
       if ( !token ) break;
 
-      const attack = await chooseAttack(actor, remaining, token);
+      const attack = await chooseAttack(actor, slots, selections, token);
       if ( !attack ) return null;
-      remaining.splice(remaining.indexOf(attack), 1);
       selections.push({ ...attack, tokenUuid: token.document.uuid });
       markers.add(token, selections.length);
     }
@@ -508,19 +605,23 @@ function createAttackMarkers() {
 /* -------------------------------------------- */
 
 /**
- * Ask which of the remaining attacks to make against a target. Skips the question when only one kind is left.
+ * Ask which of the attacks to make against a target. Skips the question when only one kind is left.
  * @param {Actor} actor
- * @param {object[]} remaining Attack rows not yet used
+ * @param {object[][]} slots
+ * @param {object[]} chosen Attacks chosen
  * @param {Token} token Target token
- * @returns {Promise<object|null>} Chosen attack row, or null if the dialog was closed
+ * @returns {Promise<object|null>} Chosen attack , or null if the dialog was closed
  */
-async function chooseAttack(actor, remaining, token) {
-  const distinct = [...new Map(remaining.map(attack => [attackKey(attack), attack])).values()];
-  if ( distinct.length === 1 ) return distinct[0];
+async function chooseAttack(actor, slots, chosen, token) {
+  const chosenKeys = chosen.map(attackKey);
+  const distinct = [...new Map(slots.flat().map(attack => [attackKey(attack), attack])).values()];
+  const available = distinct
+    .map(attack => ({ attack, count: countAvailable(slots, chosenKeys, attackKey(attack)) }))
+    .filter(({ count }) => count);
+  if ( available.length === 1 ) return available[0].attack;
 
-  const choices = distinct.map(attack => {
+  const choices = available.map(({ attack, count }) => {
     const activity = getAttackActivity(actor, attack);
-    const count = remaining.filter(a => attackKey(a) === attackKey(attack)).length;
     return { id: attackKey(attack), name: `${getAttackLabel(activity)} (${count})`, img: activity?.item.img };
   });
   const key = await AttackChoiceDialog.create(choices, {
@@ -529,38 +630,49 @@ async function chooseAttack(actor, remaining, token) {
       icon: token.document.texture?.src
     }
   });
-  return distinct.find(attack => attackKey(attack) === key) ?? null;
+  return available.find(({ attack }) => attackKey(attack) === key)?.attack ?? null;
 }
 
 /* -------------------------------------------- */
 
 /**
- * Use the current targets. With one target every attack goes to it,
- * otherwise a dialog asks which target each attack is made against.
+ * Use the current targets. With one target and no alternatives every attack goes to it,
+ * otherwise a dialog asks which attack to make with each slot and which target it is made against.
  * @param {Actor} actor
- * @param {object[]} pool Attack rows
+ * @param {object[][]} slots
  * @returns {Promise<object[]|null>} Selections, or null if cancelled
  */
-async function chooseAttacksFromTargets(actor, pool) {
+async function chooseAttacksFromTargets(actor, slots) {
   const targets = Array.from(game.user.targets);
   if ( !targets.length ) {
     ui.notifications.warn("CUSTOM_DND5E.activities.multiattack.warning.noTargets", { localize: true });
     return null;
   }
 
-  if ( targets.length === 1 ) return pool.map(attack => ({ ...attack, tokenUuid: targets[0].document.uuid }));
+  if ( (targets.length === 1) && slots.every(slot => slot.length === 1) ) {
+    return slots.map(([attack]) => ({ ...attack, tokenUuid: targets[0].document.uuid }));
+  }
 
   const { createFormGroup, createSelectInput } = foundry.applications.fields;
   const options = targets.map(token => ({ value: token.document.uuid, label: token.document.name }));
-  const content = pool.map((attack, index) => createFormGroup({
-    label: getAttackLabel(getAttackActivity(actor, attack)),
-    input: createSelectInput({
+  const content = slots.map((slot, index) => {
+    const attackOptions = slot.map(attack => ({
+      value: attackKey(attack), label: getAttackLabel(getAttackActivity(actor, attack))
+    }));
+    const input = [createSelectInput({
       name: `target${index}`,
       options,
       value: options[index % options.length].value,
       blank: game.i18n.localize("CUSTOM_DND5E.none")
-    })
-  }).outerHTML).join("");
+    })];
+    if ( slot.length > 1 ) {
+      input.unshift(createSelectInput({ name: `attack${index}`, options: attackOptions, value: attackOptions[0].value }));
+    }
+    return createFormGroup({
+      label: attackOptions.map(option => option.label).join(` ${game.i18n.localize("CUSTOM_DND5E.or")} `),
+      input
+    }).outerHTML;
+  }).join("");
 
   const result = await foundry.applications.api.DialogV2.input({
     window: { title: game.i18n.localize("CUSTOM_DND5E.activities.multiattack.assignTargets") },
@@ -570,8 +682,11 @@ async function chooseAttacksFromTargets(actor, pool) {
   });
   if ( !result ) return null;
 
-  return pool
-    .map((attack, index) => ({ ...attack, tokenUuid: result[`target${index}`] }))
+  return slots
+    .map((slot, index) => {
+      const attack = slot.find(option => attackKey(option) === result[`attack${index}`]) ?? slot[0];
+      return { ...attack, tokenUuid: result[`target${index}`] };
+    })
     .filter(selection => selection.tokenUuid);
 }
 

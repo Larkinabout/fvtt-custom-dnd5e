@@ -268,7 +268,7 @@ The Move activity enables forced movement of targeted tokens on the map. Valid m
 
 ### Multiattack Activity
 
-The Multiattack activity makes several attacks in one go and shows all the results in a single chat card. Add a row for each attack the creature makes, then target a token for each attack in turn, choosing from the attacks still left. Optionally use Probabilistic Damage to skip attack rolls and saving throws, and apply damage automatically or with buttons on the chat card.
+The Multiattack activity makes several attacks in one go and shows all the results in a single chat card. Add a row for each attack the creature can make, then target a token for each attack in turn, choosing from the attacks still left. Optionally use Probabilistic Damage to skip attack rolls and saving throws, and apply damage automatically or with buttons on the chat card.
 
 ### Swap Activity
 
