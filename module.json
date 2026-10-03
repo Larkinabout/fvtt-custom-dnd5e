@@ -2,12 +2,12 @@
   "id": "custom-dnd5e",
   "title": "Custom D&D 5e",
   "description": "A Foundry VTT utility to customise the D&D 5e system",
-  "version": "This is auto replaced",
+  "version": "5.6.0",
   "library": "false",
   "socket": true,
   "compatibility": {
     "minimum": 14.367,
-    "verified": 14.367,
+    "verified": 14.368,
     "maximum": 14.999
   },
   "authors": [
@@ -106,7 +106,7 @@
         "id": "dnd5e",
         "compatibility":{
           "minimum": "6.0.0",
-          "verified": "6.0.3",
+          "verified": "6.0.5",
           "maximum": "6.99"
         }
       }
