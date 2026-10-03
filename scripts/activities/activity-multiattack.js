@@ -741,15 +741,19 @@ async function rollMultiattack(multiattack, selections, { probabilistic, event }
   const messageData = {
     type: constants.MULTIATTACK_MESSAGE_TYPE,
     speaker: ChatMessage.getSpeaker({ actor }),
-    system: { ...multiattack.messageSources, probabilistic, autoApply, diceMode, entries }
+    system: { ...multiattack.messageSources, probabilistic, autoApply, diceMode }
   };
   ChatMessage.applyMode(messageData);
 
-  if ( diceMode === "all" ) await showDice(entryRolls.flat(), messageData);
-  else if ( diceMode === "stagger" ) {
-    await showDiceInTurn(entries, entryRolls, messageData, { panToTargets: !!setting?.multiattackPanToTargets });
+  if ( (diceMode === "stagger") && game.dice3d ) {
+    await postEntriesInTurn(entries, entryRolls, messageData, {
+      autoApply, panToTargets: !!setting?.multiattackPanToTargets
+    });
+    return;
   }
 
+  if ( diceMode === "all" ) await showDice(entryRolls.flat(), messageData);
+  messageData.system.entries = entries;
   const message = await ChatMessage.create(messageData);
 
   if ( message && autoApply ) {
@@ -765,26 +769,34 @@ async function rollMultiattack(multiattack, selections, { probabilistic, event }
  * @param {Roll[][]} entryRolls Rolls for each row
  * @param {object} messageData
  * @param {object} [options]
- * @param {boolean} [options.panToTargets=false] Wheher to pan the canvas to each target
+ * @param {boolean} [options.autoApply=false] Whether to apply each row's damage as it is added
+ * @param {boolean} [options.panToTargets=false] Whether to pan the canvas to each target
  * @returns {Promise<void>}
  */
-async function showDiceInTurn(entries, entryRolls, messageData, { panToTargets = false } = {}) {
-  if ( !game.dice3d ) return;
+async function postEntriesInTurn(entries, entryRolls, messageData, { autoApply = false, panToTargets = false } = {}) {
+  let message = null;
   let hasThrown = false;
-  for ( const [index, rolls] of entryRolls.entries() ) {
-    if ( !rolls.some(roll => roll.dice.length) ) continue;
+  for ( const [index, entry] of entries.entries() ) {
+    const rolls = entryRolls[index];
+    if ( rolls.some(roll => roll.dice.length) ) {
+      if ( hasThrown ) {
+        await new Promise(resolve => {
+          setTimeout(resolve, DICE_PAUSE);
+        });
+        await clear3dDice();
+      }
+      hasThrown = true;
 
-    if ( hasThrown ) {
-      await new Promise(resolve => {
-        setTimeout(resolve, DICE_PAUSE);
-      });
-      await clear3dDice();
+      const token = getTargetToken(entry);
+      if ( panToTargets && token ) await canvas.animatePan({ x: token.center.x, y: token.center.y, duration: 250 });
+      await showDice(rolls, messageData);
     }
-    hasThrown = true;
 
-    const token = getTargetToken(entries[index]);
-    if ( panToTargets && token ) await canvas.animatePan({ x: token.center.x, y: token.center.y, duration: 250 });
-    await showDice(rolls, messageData);
+    if ( message ) await message.update({ "system.entries": [...message.system.toObject().entries, entry] });
+    else message = await ChatMessage.create({ ...messageData, system: { ...messageData.system, entries: [entry] } });
+    if ( !message ) return;
+
+    if ( autoApply ) await applyMultiattackDamage(message, [index]);
   }
 }
 

@@ -54,7 +54,7 @@
     "CUSTOM_DND5E.activities.multiattack.deleteAlternative": "Remove Alternative Attack",
     "CUSTOM_DND5E.activities.multiattack.deleteAttack": "Remove Attack",
     "CUSTOM_DND5E.activities.multiattack.dice.all": "All at Once",
-    "CUSTOM_DND5E.activities.multiattack.dice.hint": "How Dice So Nice shows a Multiattack's 3D dice. 'One Attack at a Time' shows each attack's dice in turn, then posts the chat card. 'Off' shows no 3D dice.",
+    "CUSTOM_DND5E.activities.multiattack.dice.hint": "How Dice So Nice shows a Multiattack's 3D dice. 'One Attack at a Time' shows each attack's dice in turn and adds each result to the chat card as its dice settle. 'Off' shows no 3D dice.",
     "CUSTOM_DND5E.activities.multiattack.dice.label": "3D Dice",
     "CUSTOM_DND5E.activities.multiattack.dice.none": "Off",
     "CUSTOM_DND5E.activities.multiattack.dice.stagger": "One Attack at a Time",
