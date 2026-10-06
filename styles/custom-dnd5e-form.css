@@ -674,6 +674,7 @@
 
 .tidy5e-sheet.application:where(.quadrone) :is(button,.button):where(:not(.header-control):not(.controls-dropdown .control)).custom-dnd5e-disposition-button:active:not(:disabled),
 .tidy5e-sheet.application:where(.quadrone) :is(button,.button):where(:not(.header-control):not(.controls-dropdown .control)).custom-dnd5e-disposition-button:active:not(:disabled):hover,
+.tidy5e-sheet.application:where(.quadrone) :is(button,.button):where(:not(.header-control):not(.controls-dropdown .control)).custom-dnd5e-disposition-button.active:hover:not(:disabled),
 .tidy5e-sheet.application:where(.quadrone) :is(button,.button).custom-dnd5e-disposition-button:focus-within:not(.button-toggle):not(:disabled) {
     background: transparent;
     border: none;

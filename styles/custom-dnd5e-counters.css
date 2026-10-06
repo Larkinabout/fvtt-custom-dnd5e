@@ -3,9 +3,7 @@
 }
 
 .tidy5e-sheet.application:where(.quadrone) .main-content>.tidy-tab.custom-dnd5e-counters {
-    padding-top: var(--padding-vertical);
-    padding-right: var(--padding-horizontal);
-    padding-bottom: var(--padding-vertical);
+    padding: var(--padding-vertical) var(--padding-horizontal);
 }
 
 #custom-dnd5e-counters h3 {
