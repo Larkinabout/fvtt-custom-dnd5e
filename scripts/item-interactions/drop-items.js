@@ -18,6 +18,7 @@ import { getUnlockedName, isContainerLocked, registerContainerLock, setContainer
 import { addCursorLabelIcon, setCursorLabelIcon, setCursorLabelPosition } from "../interface/cursor-label.js";
 import { inventoryDragAppHider, registerInventoryDragHandler } from "./inventory-drag.js";
 import * as DropItemsHighlight from "./drop-items-highlight.js";
+import { patchVisibleTreeContents } from "../patches/visible-tree-contents.js";
 
 const SETTING = CONSTANTS.DROP_ITEMS.SETTING;
 const ACTOR_TYPE = CONSTANTS.DROP_ITEMS.ACTOR_TYPE;
@@ -164,6 +165,7 @@ function registerHooks() {
   Hooks.on("updateToken", onTokenPositionChange);
   Hooks.on("refreshToken", onRefreshToken);
   Hooks.on("destroyToken", onDestroyTokenAppearance);
+  patchVisibleTreeContents();
   registerContainerLock();
 
   Hooks.once("ready", () => {
@@ -1720,6 +1722,7 @@ function applyItemTokenAppearance(token) {
     border.sortLayer = mesh.sortLayer ?? 700;
     border.sort = (mesh.sort || 0) + 1;
     border.zIndex = mesh.zIndex || 0;
+    border.visible = mesh.visible;
     canvas.primary.addChild(border);
     canvas.primary.sortDirty = true;
     token._customDnd5eImageBorder = border;
