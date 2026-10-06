@@ -1720,10 +1720,11 @@ function applyItemTokenAppearance(token) {
     else border.drawRect(center.x - halfW, center.y - halfH, halfW * 2, halfH * 2);
     border.elevation = mesh.elevation;
     border.sortLayer = mesh.sortLayer ?? 700;
-    border.sort = (mesh.sort || 0) + 1;
+    border.sort = mesh.sort || 0;
     border.zIndex = mesh.zIndex || 0;
     border.visible = mesh.visible;
-    canvas.primary.addChild(border);
+    if ( mesh.parent === canvas.primary ) canvas.primary.addChildAt(border, canvas.primary.getChildIndex(mesh) + 1);
+    else canvas.primary.addChild(border);
     canvas.primary.sortDirty = true;
     token._customDnd5eImageBorder = border;
   }
