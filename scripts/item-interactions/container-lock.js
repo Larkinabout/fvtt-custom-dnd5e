@@ -22,7 +22,7 @@ export function registerContainerLock() {
   libWrapper.register(MODULE.ID, `${CONTAINER_DATA}.toEmbed`, toEmbedPatch, "MIXED");
   libWrapper.register(MODULE.ID, "dnd5e.documents.Item5e.prototype.getChatData", getChatDataPatch, "WRAPPER");
   Hooks.on("dnd5e.getItemContextOptions", onGetItemContextOptions);
-  Hooks.on("getHeaderControlsContainerSheet", onGetHeaderControls);
+  Hooks.on("getHeaderControlsDocumentSheetV2", onGetHeaderControls);
   Hooks.on("renderActorSheetV2", addLockIcons);
   Hooks.on("renderContainerSheet", addLockIcons);
   Hooks.on("renderContainerSheet", addLockedDescription);
@@ -241,8 +241,8 @@ function onGetItemContextOptions(item, menuItems) {
  * @param {object[]} controls
  */
 function onGetHeaderControls(app, controls) {
-  const item = app.item;
-  if ( !game.user.isGM || !item?.isOwner ) return;
+  const item = app.document;
+  if ( !game.user.isGM || (item?.documentName !== "Item") || (item.type !== "container") || !item.isOwner ) return;
   const locked = isContainerLocked(item);
   controls.push({
     action: "customDnd5eToggleLock",
