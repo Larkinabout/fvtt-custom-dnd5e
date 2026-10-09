@@ -246,10 +246,10 @@ async function onDropCanvasData(canvas, data, event) {
  */
 function onGetItemContextOptions(item, menuItems) {
   menuItems.push({
-    name: "CUSTOM_DND5E.giveItems.context.give",
+    label: "CUSTOM_DND5E.giveItems.context.give",
     icon: '<i class="fas fa-hand-holding-hand"></i>',
-    condition: () => isGiveable(item) && !!item.actor?.isOwner,
-    callback: () => GiveItemForm.open({ item })
+    visible: () => isGiveable(item) && !!item.actor?.isOwner,
+    onClick: () => GiveItemForm.open({ item })
   });
 }
 

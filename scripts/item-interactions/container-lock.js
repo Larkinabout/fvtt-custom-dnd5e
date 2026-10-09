@@ -227,9 +227,9 @@ function onGetItemContextOptions(item, menuItems) {
   if ( !game.user.isGM || (item.type !== "container") ) return;
   const locked = isContainerLocked(item);
   menuItems.push({
-    name: locked ? "CUSTOM_DND5E.dropItems.context.unlock" : "CUSTOM_DND5E.dropItems.context.lock",
+    label: locked ? "CUSTOM_DND5E.dropItems.context.unlock" : "CUSTOM_DND5E.dropItems.context.lock",
     icon: `<i class="fas ${locked ? "fa-lock-open" : "fa-lock"}"></i>`,
-    callback: () => toggleContainerLock(item)
+    onClick: () => toggleContainerLock(item)
   });
 }
 

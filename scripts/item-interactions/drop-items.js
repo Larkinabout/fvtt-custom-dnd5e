@@ -364,12 +364,12 @@ async function tryCreateAtPoint(item, x, y, qty) {
  */
 function onGetItemContextOptions(item, menuItems) {
   menuItems.push({
-    name: "CUSTOM_DND5E.dropItems.context.drop",
+    label: "CUSTOM_DND5E.dropItems.context.drop",
     icon: '<i class="fas fa-arrow-down"></i>',
-    condition: () => isDroppable(item)
+    visible: () => isDroppable(item)
       && !!item.actor?.isOwner
       && (game.user.isGM || getSetting(SETTING.ALLOW_PLAYER_DROPS.KEY)),
-    callback: () => beginPlacement(item).catch(err => Logger.error(err))
+    onClick: () => beginPlacement(item).catch(err => Logger.error(err))
   });
 }
 
