@@ -1,4 +1,4 @@
-import { Logger, queryGM } from "../utils.js";
+import { Logger, measureDistance, queryGM } from "../utils.js";
 import * as Highlight from "../canvas/highlight.js";
 import { addCursorLabelIcon, setCursorLabelIcon, setCursorLabelPosition } from "../interface/cursor-label.js";
 import { applyBypassedMoves } from "./activities.js";
@@ -7,6 +7,13 @@ const HIGHLIGHT_LAYER_NAME = "custom-dnd5e-move";
 const PATH_HIGHLIGHT_LAYER_NAME = "custom-dnd5e-move-path";
 const MOVE_ICON_ID = "custom-dnd5e-cursor-label-move";
 const MOVE_ICON_HTML = '<i class="fa-solid fa-arrows-up-down-left-right"></i>';
+
+/**
+ * Build a lookup key for a grid space.
+ * @param {{ i: number, j: number }} offset
+ * @returns {string} Key in the form "i,j"
+ */
+const getSpaceKey = offset => `${offset.i},${offset.j}`;
 
 /**
  * Canvas interaction mode for forced movement.
@@ -32,6 +39,9 @@ export class MoveCanvasMode {
     this.distanceMax = distanceMax;
     this.isTeleport = isTeleport;
     this.validPositions = [];
+    this._spacePositions = new Map();
+    this._targetSpaces = [];
+    this._anchorOffset = null;
     this._resolve = null;
     this._previewClone = null;
     this._onPointerDown = this._onPointerDown.bind(this);
@@ -175,96 +185,128 @@ export class MoveCanvasMode {
     const distPerGrid = canvas.scene.dimensions.distance;
     const maxSteps = Math.ceil(this.distanceMax / distPerGrid);
 
+    const targetTopLeft = this.targetToken.document.getSnappedPosition();
     const targetCenter = this._getSnappedCenter(this.targetToken);
     const sourceCenter = this._getSnappedCenter(this.sourceToken);
-    const sourceDistToTarget = this._measureDistance(sourceCenter, targetCenter);
+    const sourceDistToTarget = measureDistance(sourceCenter, targetCenter);
 
-    const candidateOffsets = this._getCandidateOffsets(targetCenter, maxSteps);
+    // The whole token is shifted by the same number of spaces as the space under its centre
+    this._anchorOffset = canvas.grid.getOffset(targetCenter);
+    this._targetSpaces = this._getOccupiedSpaces(this.targetToken);
+    const anchorCenter = canvas.grid.getCenterPoint(this._anchorOffset);
 
     // The target token cannot be moved onto a grid space occupied by the source token
-    const sourceOccupied = new Set(
-      this.sourceToken.document.getOccupiedGridSpaceOffsets().map(o => `${o.i},${o.j}`)
-    );
+    const sourceSpaces = this._getOccupiedSpaces(this.sourceToken);
+    const sourceOccupied = new Set(sourceSpaces.map(getSpaceKey));
+    const isPull = ["pull", "pushOrPull"].includes(this.direction);
+    const gap = isPull ? this._getGap(sourceSpaces, this._targetSpaces) : 0;
 
-    for ( const candidateOffset of candidateOffsets ) {
-      if ( sourceOccupied.has(`${candidateOffset.i},${candidateOffset.j}`) ) continue;
+    for ( const candidateOffset of Highlight.candidateOffsets(this._anchorOffset, maxSteps) ) {
+      if ( getSpaceKey(candidateOffset) === getSpaceKey(this._anchorOffset) ) continue;
+      const spaces = this._targetSpaces.map(o => this._shiftOffset(o, this._anchorOffset, candidateOffset));
+      if ( spaces.some(o => sourceOccupied.has(getSpaceKey(o))) ) continue;
 
-      const candidateTopLeft = canvas.grid.getTopLeftPoint(candidateOffset);
-      const candidateCenter = canvas.grid.getCenterPoint(candidateOffset);
+      const shiftedAnchor = canvas.grid.getCenterPoint(candidateOffset);
+      const dx = shiftedAnchor.x - anchorCenter.x;
+      const dy = shiftedAnchor.y - anchorCenter.y;
+      const candidateCenter = { x: targetCenter.x + dx, y: targetCenter.y + dy };
 
-      const distance = this._measureDistance(targetCenter, candidateCenter);
+      const distance = measureDistance(anchorCenter, shiftedAnchor);
       if ( distance < this.distanceMin || distance > this.distanceMax ) continue;
-      if ( !this._checkDirection(sourceCenter, targetCenter, candidateCenter, sourceDistToTarget) ) continue;
+
+      // Every space of a pull must bringthe target a space closer to the source
+      const steps = isPull ? canvas.grid.measurePath([this._anchorOffset, candidateOffset]).spaces : 0;
+      const pullsCloser = isPull && ((gap - this._getGap(sourceSpaces, spaces)) >= steps);
+      if ( !this._checkDirection(sourceCenter, targetCenter, candidateCenter, sourceDistToTarget, pullsCloser) ) {
+        continue;
+      }
       if ( !this.isTeleport && this._checkWallCollision(targetCenter, candidateCenter) ) continue;
 
-      positions.push({ x: candidateTopLeft.x, y: candidateTopLeft.y });
+      positions.push({ x: targetTopLeft.x + dx, y: targetTopLeft.y + dy, spaces, length: Math.hypot(dx, dy) });
     }
 
+    this._mapSpacesToPositions(positions);
     return positions;
   }
 
   /* -------------------------------------------- */
 
   /**
-   * Enumerate every grid cell within `maxSteps` of the target. Hex grids
-   * use cube coordinates to enumerate the hex neighbourhood correctly;
-   * square grids use the simple di/dj bounding box.
-   * @param {{ x: number, y: number }} targetCenter Target token center
-   * @param {number} maxSteps Maximum grid steps from the target
-   * @returns {object[]} Array of { i, j } offset objects
+   * Work out which position each grid space selects.
+   * @param {object[]} positions Valid positions
    */
-  _getCandidateOffsets(targetCenter, maxSteps) {
-    const offsets = [];
-    const targetGridPos = canvas.grid.getOffset(targetCenter);
-    const isHex = canvas.grid.isHexagonal;
+  _mapSpacesToPositions(positions) {
+    this._spacePositions = new Map();
+    const occupied = new Set(this._targetSpaces.map(getSpaceKey));
 
-    if ( isHex ) {
-      const targetCube = canvas.grid.offsetToCube(targetGridPos);
-      for ( let dq = -maxSteps; dq <= maxSteps; dq++ ) {
-        const rMin = Math.max(-maxSteps, -dq - maxSteps);
-        const rMax = Math.min(maxSteps, -dq + maxSteps);
-        for ( let dr = rMin; dr <= rMax; dr++ ) {
-          if ( dq === 0 && dr === 0 ) continue;
-          const ds = -dq - dr;
-          const cube = { q: targetCube.q + dq, r: targetCube.r + dr, s: targetCube.s + ds };
-          offsets.push(canvas.grid.cubeToOffset(cube));
-        }
-      }
-    } else {
-      for ( let di = -maxSteps; di <= maxSteps; di++ ) {
-        for ( let dj = -maxSteps; dj <= maxSteps; dj++ ) {
-          if ( di === 0 && dj === 0 ) continue;
-          offsets.push({ i: targetGridPos.i + di, j: targetGridPos.j + dj });
-        }
+    for ( const position of positions ) {
+      for ( const offset of position.spaces ) {
+        const key = getSpaceKey(offset);
+        if ( occupied.has(key) ) continue;
+        const entry = this._spacePositions.get(key);
+        const shortest = entry?.positions[0].length ?? Infinity;
+        if ( position.length < (shortest - 0.5) ) this._spacePositions.set(key, { offset, positions: [position] });
+        else if ( position.length < (shortest + 0.5) ) entry.positions.push(position);
       }
     }
-
-    return offsets;
   }
 
   /* -------------------------------------------- */
 
   /**
-   * Get the center point of a token snapped to its grid cell.
+   * Count the grid spaces between the two nearest spaces of two tokens.
+   * @param {object[]} spacesA First token's occupied grid spaces
+   * @param {object[]} spacesB Second token's occupied grid spaces
+   * @returns {number} Number of grid spaces
+   */
+  _getGap(spacesA, spacesB) {
+    let gap = Infinity;
+    for ( const a of spacesA ) {
+      for ( const b of spacesB ) gap = Math.min(gap, canvas.grid.measurePath([a, b]).spaces);
+    }
+    return gap;
+  }
+
+  /* -------------------------------------------- */
+
+  /**
+   * Get the grid spaces a token occupis.
+   * @param {Token} token
+   * @returns {object[]} Array of { i, j } offset objects
+   */
+  _getOccupiedSpaces(token) {
+    const spaces = new Map();
+    for ( const { i, j } of token.document.getOccupiedGridSpaceOffsets() ) spaces.set(getSpaceKey({ i, j }), { i, j });
+    return Array.from(spaces.values());
+  }
+
+  /* -------------------------------------------- */
+
+  /**
+   * Shift a grid space by the same number of spaces as the move between two
+   * other grid spaces.
+   * @param {{ i: number, j: number }} offset Grid space to shift
+   * @param {{ i: number, j: number }} from Grid space the move starts on
+   * @param {{ i: number, j: number }} to Grid space the move ends on
+   * @returns {{ i: number, j: number }} Shifted grid space
+   */
+  _shiftOffset(offset, from, to) {
+    if ( !canvas.grid.isHexagonal ) return { i: offset.i + to.i - from.i, j: offset.j + to.j - from.j };
+    const [o, f, t] = [offset, from, to].map(c => canvas.grid.offsetToCube(c));
+    const { i, j } = canvas.grid.cubeToOffset({ q: o.q + t.q - f.q, r: o.r + t.r - f.r, s: o.s + t.s - f.s });
+    return { i, j };
+  }
+
+  /* -------------------------------------------- */
+
+  /**
+   * Get the center point of a token once it is snapped to the grid.
    * @param {Token} token Token
    * @returns {{ x: number, y: number }}
    */
   _getSnappedCenter(token) {
-    const offset = canvas.grid.getOffset(token.center);
-    return canvas.grid.getCenterPoint(offset);
-  }
-
-  /* -------------------------------------------- */
-
-  /**
-   * Measure the distance between two points in game units.
-   * @param {{ x: number, y: number }} a First point
-   * @param {{ x: number, y: number }} b Second point
-   * @returns {number} Distance in game units
-   */
-  _measureDistance(a, b) {
-    const result = canvas.grid.measurePath([a, b]);
-    return result.distance;
+    const { x, y } = token.document.getCenterPoint(token.document.getSnappedPosition());
+    return { x, y };
   }
 
   /* -------------------------------------------- */
@@ -275,22 +317,24 @@ export class MoveCanvasMode {
    * @param {{ x: number, y: number }} targetCenter Target token center
    * @param {{ x: number, y: number }} candidateCenter Candidate position center
    * @param {number} sourceDistToTarget Distance from source to target
+   * @param {boolean} pullsCloser Whether every space of the move brings the target closer to the source
    * @returns {boolean} Whether the direction constraint is met
    */
-  _checkDirection(sourceCenter, targetCenter, candidateCenter, sourceDistToTarget) {
+  _checkDirection(sourceCenter, targetCenter, candidateCenter, sourceDistToTarget, pullsCloser) {
     if ( this.direction === "any" ) return true;
 
-    const sourceDistToCandidate = this._measureDistance(sourceCenter, candidateCenter);
+    const sourceDistToCandidate = measureDistance(sourceCenter, candidateCenter);
 
     if ( this.direction === "pushOrPull" ) {
       return this._checkDirectionalMove(
-        "push", sourceCenter, targetCenter, candidateCenter, sourceDistToTarget, sourceDistToCandidate
+        "push", sourceCenter, targetCenter, candidateCenter, sourceDistToTarget, sourceDistToCandidate, pullsCloser
       ) || this._checkDirectionalMove(
-        "pull", sourceCenter, targetCenter, candidateCenter, sourceDistToTarget, sourceDistToCandidate
+        "pull", sourceCenter, targetCenter, candidateCenter, sourceDistToTarget, sourceDistToCandidate, pullsCloser
       );
     }
     return this._checkDirectionalMove(
-      this.direction, sourceCenter, targetCenter, candidateCenter, sourceDistToTarget, sourceDistToCandidate
+      this.direction, sourceCenter, targetCenter, candidateCenter, sourceDistToTarget, sourceDistToCandidate,
+      pullsCloser
     );
   }
 
@@ -304,24 +348,18 @@ export class MoveCanvasMode {
    * @param {{ x: number, y: number }} candidateCenter
    * @param {number} sourceDistToTarget
    * @param {number} sourceDistToCandidate
+   * @param {boolean} pullsCloser
    * @returns {boolean} Whether the candidate is a valid destination
    */
   _checkDirectionalMove(direction, sourceCenter, targetCenter, candidateCenter, sourceDistToTarget,
-    sourceDistToCandidate) {
-    if ( direction === "push" && (sourceDistToCandidate <= sourceDistToTarget) ) return false;
-    if ( direction === "pull" && (sourceDistToCandidate >= sourceDistToTarget) ) return false;
+    sourceDistToCandidate, pullsCloser) {
+    if ( direction === "pull" ) return pullsCloser;
+    if ( sourceDistToCandidate <= sourceDistToTarget ) return false;
 
     if ( (sourceCenter.x === targetCenter.x) && (sourceCenter.y === targetCenter.y) ) return true;
 
-    if ( direction === "pull" ) {
-      const alongLine = ((candidateCenter.x - sourceCenter.x) * (targetCenter.x - sourceCenter.x))
-        + ((candidateCenter.y - sourceCenter.y) * (targetCenter.y - sourceCenter.y));
-      if ( alongLine < 0 ) return false;
-    }
-
     const Ray = foundry.canvas.geometry.Ray;
-    let lineAngle = new Ray(sourceCenter, targetCenter).angle;
-    if ( direction === "pull" ) lineAngle += Math.PI;
+    const lineAngle = new Ray(sourceCenter, targetCenter).angle;
     const moveAngle = new Ray(targetCenter, candidateCenter).angle;
     const deviation = Math.abs(Math.normalizeRadians(moveAngle - lineAngle));
     const maxDeviation = canvas.grid.isHexagonal ? (Math.PI / 3) : (Math.PI / 4);
@@ -331,17 +369,13 @@ export class MoveCanvasMode {
   /* -------------------------------------------- */
 
   /**
-   * Whether the movement polygon backend reports a wall between the two
-   * points. Uses `mode: "any"` so a single intersecting wall is enough.
-   * @param {{ x: number, y: number }} from Starting point
-   * @param {{ x: number, y: number }} to Ending point
+   * Whether a wall blocks the target token from moving between the two points.
+   * @param {{ x: number, y: number }} from Starting center point
+   * @param {{ x: number, y: number }} to Ending center point
    * @returns {boolean} Whether a wall blocks the path
    */
   _checkWallCollision(from, to) {
-    return CONFIG.Canvas.polygonBackends.move.testCollision(from, to, {
-      type: "move",
-      mode: "any"
-    });
+    return this.targetToken.checkCollision(to, { origin: from, type: "move", mode: "any" });
   }
 
   /* -------------------------------------------- */
@@ -356,7 +390,7 @@ export class MoveCanvasMode {
     Highlight.addLayer(HIGHLIGHT_LAYER_NAME);
     if ( canvas.grid.type === CONST.GRID_TYPES.GRIDLESS ) this._drawGridlessHighlight();
     else {
-      for ( const pos of this.validPositions ) Highlight.highlightCell(HIGHLIGHT_LAYER_NAME, pos);
+      for ( const { offset } of this._spacePositions.values() ) Highlight.highlightCell(HIGHLIGHT_LAYER_NAME, offset);
       Highlight.addLayer(PATH_HIGHLIGHT_LAYER_NAME);
     }
   }
@@ -402,7 +436,10 @@ export class MoveCanvasMode {
       Highlight.highlightLine(HIGHLIGHT_LAYER_NAME, targetCenter, sourceCenter, { ...lineOpts, reverse: true });
     }
     if ( this.direction === "pull" || this.direction === "pushOrPull" ) {
-      Highlight.highlightLine(HIGHLIGHT_LAYER_NAME, targetCenter, sourceCenter, lineOpts);
+      const sourceDist = Math.hypot(sourceCenter.x - targetCenter.x, sourceCenter.y - targetCenter.y);
+      Highlight.highlightLine(HIGHLIGHT_LAYER_NAME, targetCenter, sourceCenter, {
+        ...lineOpts, outerDist: Math.min(outerRadius, sourceDist)
+      });
     }
   }
 
@@ -520,7 +557,16 @@ export class MoveCanvasMode {
     if ( !isGridless ) {
       canvas.interface.grid.clearHighlightLayer(PATH_HIGHLIGHT_LAYER_NAME);
       const color = game.user.color;
-      for ( const offset of canvas.grid.getDirectPath([from, to]) ) {
+      const anchorCenter = canvas.grid.getCenterPoint(this._anchorOffset);
+      const shiftedAnchor = { x: anchorCenter.x + to.x - from.x, y: anchorCenter.y + to.y - from.y };
+      const spaces = new Map();
+      for ( const step of canvas.grid.getDirectPath([anchorCenter, shiftedAnchor]) ) {
+        for ( const space of this._targetSpaces ) {
+          const offset = this._shiftOffset(space, this._anchorOffset, step);
+          spaces.set(getSpaceKey(offset), offset);
+        }
+      }
+      for ( const offset of spaces.values() ) {
         Highlight.highlightCell(PATH_HIGHLIGHT_LAYER_NAME, offset, {
           fill: color, fillAlpha: 0.5, border: null
         });
@@ -630,14 +676,16 @@ export class MoveCanvasMode {
   /* -------------------------------------------- */
 
   /**
-   * Snap the point to its cell's top-left and return it when that cell is in
-   * the precomputed valid-positions set.
+   * Get the valid position selected by the grid space under the point.
    * @param {{ x: number, y: number }} pos
    * @returns {{ x: number, y: number }|null} Destination top-left point, or null
    */
   _getGridDestination(pos) {
-    const snapped = canvas.grid.getTopLeftPoint(canvas.grid.getOffset(pos));
-    return this.validPositions.find(p => p.x === snapped.x && p.y === snapped.y) ?? null;
+    const entry = this._spacePositions.get(getSpaceKey(canvas.grid.getOffset(pos)));
+    if ( !entry ) return null;
+    const { w, h } = this.targetToken;
+    const centerDistance = p => Math.hypot(p.x + (w / 2) - pos.x, p.y + (h / 2) - pos.y);
+    return entry.positions.reduce((a, b) => (centerDistance(b) < centerDistance(a) ? b : a));
   }
 
   /* -------------------------------------------- */
@@ -668,7 +716,7 @@ export class MoveCanvasMode {
     const pixelsPerUnit = canvas.grid.size / canvas.scene.dimensions.distance;
     const tolerance = this._getGridlessTolerance();
 
-    const distance = this._measureDistance(targetCenter, pos);
+    const distance = measureDistance(targetCenter, pos);
     if ( distance < (this.distanceMin - tolerance) || distance > (this.distanceMax + tolerance) ) return null;
 
     // Clamp to min/max if within tolerance but outside actual range
@@ -720,7 +768,7 @@ export class MoveCanvasMode {
       directions.push({ ux: -(dx / sourceDist), uy: -(dy / sourceDist) });
     }
     if ( this.direction === "pull" || this.direction === "pushOrPull" ) {
-      directions.push({ ux: dx / sourceDist, uy: dy / sourceDist });
+      directions.push({ ux: dx / sourceDist, uy: dy / sourceDist, isPull: true });
     }
 
     const clickDx = pos.x - targetCenter.x;
@@ -747,6 +795,7 @@ export class MoveCanvasMode {
       };
 
       if ( !this.isTeleport && this._checkWallCollision(targetCenter, clampedPos) ) continue;
+      if ( dir.isPull && (clampedPx >= sourceDist) ) continue;
       if ( this._overlapsSourceToken(clampedPos) ) continue;
 
       return this._centerToTopLeft(clampedPos);
@@ -763,10 +812,9 @@ export class MoveCanvasMode {
    * @returns {boolean} Whether the moved target token would overlap the source token
    */
   _overlapsSourceToken(center) {
-    const topLeft = this._centerToTopLeft(center);
-    const source = this.sourceToken;
-    return (topLeft.x < source.x + source.w) && (topLeft.x + this.targetToken.w > source.x)
-      && (topLeft.y < source.y + source.h) && (topLeft.y + this.targetToken.h > source.y);
+    const { x, y } = this._centerToTopLeft(center);
+    const moved = new PIXI.Rectangle(x, y, this.targetToken.w, this.targetToken.h);
+    return this.sourceToken.bounds.intersects(moved);
   }
 
   /* -------------------------------------------- */

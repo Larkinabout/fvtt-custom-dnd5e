@@ -207,7 +207,7 @@ export function highlightRange({ name, sourceToken, rangeUnits, colors }) {
  * @param {number} maxSteps
  * @yields {object} A grid offset.
  */
-function* candidateOffsets(sourceOffset, maxSteps) {
+export function* candidateOffsets(sourceOffset, maxSteps) {
   const grid = canvas.grid;
   if ( grid.isHexagonal ) {
     const sourceCube = grid.offsetToCube(sourceOffset);
