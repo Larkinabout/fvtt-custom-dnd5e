@@ -571,6 +571,8 @@
     "CUSTOM_DND5E.form.featureTypes.edit.title": "Edit Feature Type",
     "CUSTOM_DND5E.form.featureTypes.listTitle": "Feature Types",
     "CUSTOM_DND5E.form.featureTypes.title": "Configure Feature Types",
+    "CUSTOM_DND5E.form.gameplay.averageDamage.showDialog.label": "Show Damage Roll Dialog",
+    "CUSTOM_DND5E.form.gameplay.averageDamage.showDialog.note": "Show the damage roll dialog to choose between critical and normal damage and add a situational bonus, otherwise critical damage is applied automatically when the attack roll is a critical hit",
     "CUSTOM_DND5E.form.gameplay.averageDamage.use.label": "Use Average Damage",
     "CUSTOM_DND5E.form.gameplay.averageDamage.use.note": "Use average damage instead of rolling",
     "CUSTOM_DND5E.form.gameplay.dead.applyDead.deadUnlessImportant": "Dead unless Important",

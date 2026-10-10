@@ -96,6 +96,9 @@ export const CONSTANTS = {
     SETTING: {
       USE: {
         KEY: "use-average-damage"
+      },
+      SHOW_DIALOG: {
+        KEY: "average-damage-show-dialog"
       }
     }
   },

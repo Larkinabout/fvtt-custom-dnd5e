@@ -19,8 +19,9 @@ export function register() {
  * Register hooks.
  */
 function registerHooks() {
-  Hooks.on("dnd5e.preRollDamageV2", checkAverageDamageRoll);
-  Hooks.on("customDnd5e.rollAverageDamage", rollAverageDamage);
+  Hooks.on("dnd5e.preRollDamageV2", skipDamageDialog);
+  Hooks.on("dnd5e.postDamageRollConfiguration", applyAverageDamage);
+  Hooks.on("renderDamageRollConfigurationDialog", showAverageDamageInDialog);
 }
 
 /* -------------------------------------------- */
@@ -38,101 +39,90 @@ function registerSettings() {
       default: "neither"
     }
   );
-}
 
+  registerSetting(
+    constants.SETTING.SHOW_DIALOG.KEY,
+    {
+      scope: "world",
+      config: false,
+      type: Boolean,
+      default: false
+    }
+  );
+}
 
 /* -------------------------------------------- */
 
 /**
- * Checks if an average damage roll should be performed.
- * @param {object} config Configuration information for the roll.
- * @param {object} usageConfig Configuration info for the activation.
- * @param {object} dialogConfig Configuration info for the usage dialog.
- * @param {object} messageConfig Configuration info for the created chat message.
- * @returns {boolean|undefined} Returns true to allow the default roll, false to prevent it.
+ * Whether to use average damage.
+ * @param {object} config
+ * @returns {boolean}
  */
-function checkAverageDamageRoll(config, usageConfig, dialogConfig, messageConfig) {
+function useAverageDamage(config) {
   const activity = config.subject;
-  if ( !activity ) return true;
+  if ( !activity ) return false;
   const useAverageDamage = getSetting(constants.SETTING.USE.KEY);
-  if ( activity.actor?.type !== useAverageDamage && useAverageDamage !== "both" ) return true;
-  if ( canvas.tokens.controlled.length >= 4 && getSetting(CONSTANTS.MOB_DAMAGE.SETTING.ENABLE.KEY) ) return true;
-
-  Hooks.callAll("customDnd5e.rollAverageDamage", config, usageConfig, dialogConfig, messageConfig);
-  return false;
+  if ( activity.actor?.type !== useAverageDamage && useAverageDamage !== "both" ) return false;
+  if ( canvas.tokens.controlled.length >= 4 && getSetting(CONSTANTS.MOB_DAMAGE.SETTING.ENABLE.KEY) ) return false;
+  return true;
 }
 
 /* -------------------------------------------- */
 
 /**
- * Roll average damage.
- * @param {object} config Configuration information for the roll.
- * @param {object} usageConfig Configuration info for the activation.
- * @param {object} dialogConfig Configuration info for the usage dialog.
- * @param {object} messageConfig Configuration info for the created chat message.
+ * Skip the damage roll dialog for average damage unless the Show Damage Roll Dialog setting is on.
+ * @param {object} config
+ * @param {object} dialog
  */
-async function rollAverageDamage(config, usageConfig, dialogConfig, messageConfig) {
-  const activity = config.subject;
-  const isCritical = config.isCritical;
+function skipDamageDialog(config, dialog) {
+  if ( !useAverageDamage(config) ) return;
+  if ( getSetting(constants.SETTING.SHOW_DIALOG.KEY) ) return;
+  dialog.configure ??= false;
+}
 
-  // Damage config
-  const damageConfig = activity.getDamageConfig();
-  damageConfig.isCritical = isCritical;
-  damageConfig.critical ??= {};
-  damageConfig.critical.multiplyNumeric ??= game.settings.get("dnd5e", "criticalDamageModifiers");
-  damageConfig.critical.powerfulCritical ??= game.settings.get("dnd5e", "criticalDamageMaxDice");
+/* -------------------------------------------- */
 
-  // Message config
-  const rollMode = game.settings.get("core", "rollMode");
-  const speaker = ChatMessage.getSpeaker({ actor: activity.actor });
-  const newMessageConfig = {
-    create: true,
-    data: {
-      flavor: `${activity.item.name} - ${activity.damageFlavor}`,
-      flags: {
-        dnd5e: {
-          ...activity.messageFlags,
-          messageType: "roll",
-          roll: { type: "damage" }
-        }
-      },
-      speaker
-    },
-    rollMode
-  };
+/**
+ * Replace each damage roll with its average before it is rolled.
+ * @param {DamageRoll[]} rolls
+ * @param {object} config
+ */
+function applyAverageDamage(rolls, config) {
+  if ( !useAverageDamage(config) ) return;
 
-  // Roll damage using average values
-  const rolls = buildRolls(damageConfig);
   for ( const roll of rolls ) {
-    const formula = dnd5e.dice.simplifyRollFormula(
-      Roll.defaultImplementation.replaceFormulaData(roll.formula, roll)
-    );
-
-    const minRoll = Roll.create(formula).evaluate({ minimize: true });
-    const maxRoll = Roll.create(formula).evaluate({ maximize: true });
-
-    const result = Math.round(Math.floor(((await minRoll).total + (await maxRoll).total) / 2));
-    const nt = new foundry.dice.terms.NumericTerm({ number: result });
-    roll._formula = result.toString();
-    roll.terms = [nt];
+    roll.terms = [new foundry.dice.terms.NumericTerm({ number: getAverageDamage(roll) })];
+    roll.resetFormula();
   }
-
-  await CONFIG.Dice.DamageRoll.buildEvaluate(rolls, damageConfig );
-  CONFIG.Dice.DamageRoll.buildPost(rolls, damageConfig, newMessageConfig);
 }
 
 /* -------------------------------------------- */
 
 /**
- * Build a roll from the provided configuration objects.
- * @param {object} config Roll configuration data.
- * @returns {Array} Array of built roll objects.
+ * Show the average damage in the damage roll dialog.
+ * @param {ApplicationV2} app
+ * @param {HTMLElement} html
  */
-function buildRolls(config) {
-  const advantageMode = CONFIG.Dice.DamageRoll;
-  return config.rolls?.map((roll, index) => {
-    roll.options.critical = config.critical;
-    roll.options.isCritical = config.isCritical;
-    return advantageMode.fromConfig(roll, config);
-  }) ?? [];
+function showAverageDamageInDialog(app, html) {
+  if ( !useAverageDamage(app.config) ) return;
+
+  html.querySelector(".rolls .dice")?.replaceChildren();
+  html.querySelectorAll(".rolls .formulas .formula").forEach((formula, index) => {
+    const roll = app.rolls[index];
+    if ( roll ) formula.textContent = getAverageDamage(roll);
+  });
+}
+
+/* -------------------------------------------- */
+
+/**
+ * Get the average of a damage roll.
+ * @param {DamageRoll} roll
+ * @returns {number} Average damage
+ */
+function getAverageDamage(roll) {
+  const formula = dnd5e.dice.simplifyRollFormula(roll.formula);
+  const min = Roll.create(formula).evaluateSync({ minimize: true }).total;
+  const max = Roll.create(formula).evaluateSync({ maximize: true }).total;
+  return Math.floor((min + max) / 2);
 }

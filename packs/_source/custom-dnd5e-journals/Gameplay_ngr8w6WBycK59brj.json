@@ -564,7 +564,7 @@
       "image": {},
       "text": {
         "format": 1,
-        "content": "<h2 class=\"custom-dnd5e-h2\">Use Average Damage</h2><p>Choose whether character, NPCs or both will deal average damage, otherwise damage wil be rolled instead.</p>"
+        "content": "<h2 class=\"custom-dnd5e-h2\">Use Average Damage</h2><p>Choose whether character, NPCs or both will deal average damage, otherwise damage wil be rolled instead.</p><h2 class=\"custom-dnd5e-h2\">Show Damage Roll Dialog</h2><p>Show the damage roll dialog when dealing average damage, so you can choose between critical and normal damage and add a situational bonus. Otherwise, critical damage is applied automatically when the attack roll is a critical hit.</p>"
       },
       "video": {
         "controls": true,

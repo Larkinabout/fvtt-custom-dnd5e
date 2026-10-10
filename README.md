@@ -185,7 +185,8 @@ Award Inspiration when a set value is rolled for an ability check, attack roll, 
 ### Average Damage
 - When rolling damage, the average result is used.
 - Enable per actor type (Player Characters, NPCs or both).
-- When the associated attack roll is a critical hit, the average damage includes the critical damage.
+- Show the damage roll dialog to choose between critical and normal damage and add a situational bonus.
+- Without the dialog, the average damage includes the critical damage when the associated attack roll is a critical hit.
 
 <details>
     <summary>See Video</summary>
