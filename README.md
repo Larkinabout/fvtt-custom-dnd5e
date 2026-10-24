@@ -195,6 +195,13 @@ Award Inspiration when a set value is rolled for an ability check, attack roll, 
 
 </details>
 
+### Hazards
+- Adds a **Hazard** region behaviour that uses a hazard's activity on creatures that move into the region, start their turn there or end their turn there. The hazard's chat card is posted with the creature set as the target.
+- Drop a hazard actor (creature type **Hazard**, such as those in the Dungeon Master's Guide) onto the canvas to place its token with a region attached. The region follows the token and is deleted with it.
+- Drop the hazard onto an existing region and you are asked whether to attach that region to the token instead.
+- Choose which activity each trigger uses, whether a creature is affected once per turn, and who is affected: everyone, player characters only or NPCs only, with lists of actors that are always or never affected.
+- Set defaults for hazard tokens (hidden, scale, image shape and border) and regions (distance, visibility, colour, which can be taken from the token image, and whether walls constrain them) in **Configure Hazards**.
+
 ### Mob Damage
 - When attacking a single token with four or more identical tokens selected, the attack roll is replaced with a damage roll based on the **Mobs Average Results** table (Dungeon Master's Guide (2024), page 82).
 - Use average damage instead of rolling.

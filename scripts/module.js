@@ -16,6 +16,7 @@ import { register as registerCounters, counters } from "./counters/counters.js";
 import { register as registerDebug } from "./debug.js";
 import { register as registerDetachedSheets } from "./detached-sheets.js";
 import { register as registerExhaustion } from "./gameplay/exhaustion.js";
+import { register as registerHazards } from "./hazards/hazards.js";
 import { register as registerGiveItems } from "./item-interactions/give-items.js";
 import { register as registerDropItems } from "./item-interactions/drop-items.js";
 import { register as registerInventoryDrag } from "./item-interactions/inventory-drag.js";
@@ -159,6 +160,7 @@ Hooks.on("init", async () => {
   registerExhaustion();
   registerGiveItems();
   registerDropItems();
+  registerHazards();
   registerInventoryDrag();
   configs.featureTypes.register();
   configs.itemActionTypes.register();

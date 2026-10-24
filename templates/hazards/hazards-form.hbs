@@ -1,0 +1,180 @@
+<div id="custom-dnd5e-form" class="standard-form">
+    <div class="standard-form scrollable">
+        <fieldset>
+            <legend>
+                <span>{{localize "CUSTOM_DND5E.hazards.title"}}</span>
+            </legend>
+            <div class="form-group">
+                <label>{{localize "CUSTOM_DND5E.setting.hazards.enable.name"}}</label>
+                <div class="form-fields">
+                    <dnd5e-checkbox
+                        id="custom-dnd5e-hazards-enable"
+                        name="enable"
+                        {{checked enable}}></dnd5e-checkbox>
+                </div>
+                <p class="hint">{{localize "CUSTOM_DND5E.setting.hazards.enable.hint"}}</p>
+            </div>
+        </fieldset>
+        <fieldset>
+            <legend>
+                <span>{{localize "CUSTOM_DND5E.token"}}</span>
+            </legend>
+            <div class="form-group">
+                <label>{{localize "CUSTOM_DND5E.setting.hazards.tokenHidden.name"}}</label>
+                <div class="form-fields">
+                    <dnd5e-checkbox
+                        id="custom-dnd5e-hazards-token-hidden"
+                        name="tokenHidden"
+                        {{checked tokenHidden}}></dnd5e-checkbox>
+                </div>
+                <p class="hint">{{localize "CUSTOM_DND5E.setting.hazards.tokenHidden.hint"}}</p>
+            </div>
+            <div class="form-group">
+                <label>{{localize "CUSTOM_DND5E.setting.hazards.tokenScale.name"}}</label>
+                <div class="form-fields">
+                    <input
+                        id="custom-dnd5e-hazards-token-scale"
+                        name="tokenScale"
+                        type="number"
+                        value="{{tokenScale}}"
+                        min="0.1"
+                        step="0.05">
+                </div>
+                <p class="hint">{{localize "CUSTOM_DND5E.setting.hazards.tokenScale.hint"}}</p>
+            </div>
+            <div class="form-group">
+                <label>{{localize "CUSTOM_DND5E.setting.hazards.imageShape.name"}}</label>
+                <div class="form-fields">
+                    <select id="custom-dnd5e-hazards-image-shape" name="imageShape">
+                        {{selectOptions imageShapeChoices selected=imageShape localize=true}}
+                    </select>
+                </div>
+                <p class="hint">{{localize "CUSTOM_DND5E.setting.hazards.imageShape.hint"}}</p>
+            </div>
+            <div class="form-group">
+                <label>{{localize "CUSTOM_DND5E.setting.hazards.imageBorderColor.name"}}</label>
+                <div class="form-fields">
+                    <color-picker
+                        id="custom-dnd5e-hazards-image-border-color"
+                        name="imageBorderColor"
+                        value="{{imageBorderColor}}"></color-picker>
+                </div>
+                <p class="hint">{{localize "CUSTOM_DND5E.setting.hazards.imageBorderColor.hint"}}</p>
+            </div>
+            <div class="form-group">
+                <label>{{localize "CUSTOM_DND5E.setting.hazards.imageBorderThickness.name"}} <span class="units">(px)</span></label>
+                <div class="form-fields">
+                    <range-picker
+                        id="custom-dnd5e-hazards-image-border-thickness"
+                        name="imageBorderThickness"
+                        value="{{imageBorderThickness}}"
+                        min="0"
+                        max="20"
+                        step="1"></range-picker>
+                </div>
+                <p class="hint">{{localize "CUSTOM_DND5E.setting.hazards.imageBorderThickness.hint"}}</p>
+            </div>
+        </fieldset>
+        <fieldset>
+            <legend>
+                <span>{{localize "CUSTOM_DND5E.hazards.region"}}</span>
+            </legend>
+            <div class="form-group">
+                <label>{{localize "CUSTOM_DND5E.setting.hazards.regionDistance.name"}}{{#if regionDistanceUnits}} <span class="units">({{regionDistanceUnits}})</span>{{/if}}</label>
+                <div class="form-fields">
+                    <input
+                        id="custom-dnd5e-hazards-region-distance"
+                        name="regionDistance"
+                        type="number"
+                        value="{{regionDistance}}"
+                        min="0"
+                        step="any">
+                </div>
+                <p class="hint">{{localize "CUSTOM_DND5E.setting.hazards.regionDistance.hint"}}</p>
+            </div>
+            <div class="form-group">
+                <label>{{localize "CUSTOM_DND5E.setting.hazards.promptDistance.name"}}</label>
+                <div class="form-fields">
+                    <dnd5e-checkbox
+                        id="custom-dnd5e-hazards-prompt-distance"
+                        name="promptDistance"
+                        {{checked promptDistance}}></dnd5e-checkbox>
+                </div>
+                <p class="hint">{{localize "CUSTOM_DND5E.setting.hazards.promptDistance.hint"}}</p>
+            </div>
+            <div class="form-group">
+                <label>{{localize "CUSTOM_DND5E.setting.hazards.affects.name"}}</label>
+                <div class="form-fields">
+                    <select id="custom-dnd5e-hazards-affects" name="affects">
+                        {{selectOptions affectsChoices selected=affects localize=true}}
+                    </select>
+                </div>
+                <p class="hint">{{localize "CUSTOM_DND5E.setting.hazards.affects.hint"}}</p>
+            </div>
+            <div class="form-group">
+                <label>{{localize "CUSTOM_DND5E.setting.hazards.regionVisibility.name"}}</label>
+                <div class="form-fields">
+                    <select id="custom-dnd5e-hazards-region-visibility" name="regionVisibility">
+                        {{selectOptions regionVisibilityChoices selected=regionVisibility localize=true}}
+                    </select>
+                </div>
+                <p class="hint">{{localize "CUSTOM_DND5E.setting.hazards.regionVisibility.hint"}}</p>
+            </div>
+            <div class="form-group">
+                <label>{{localize "CUSTOM_DND5E.setting.hazards.regionColorFromImage.name"}}</label>
+                <div class="form-fields">
+                    <dnd5e-checkbox
+                        id="custom-dnd5e-hazards-region-color-from-image"
+                        name="regionColorFromImage"
+                        {{checked regionColorFromImage}}></dnd5e-checkbox>
+                </div>
+                <p class="hint">{{localize "CUSTOM_DND5E.setting.hazards.regionColorFromImage.hint"}}</p>
+            </div>
+        </fieldset>
+        <fieldset>
+            <legend>
+                <span>{{localize "REGION.SECTIONS.restriction"}}</span>
+            </legend>
+            <div class="form-group">
+                <label>{{localize "REGION.FIELDS.restriction.enabled.label"}}</label>
+                <div class="form-fields">
+                    <dnd5e-checkbox
+                        id="custom-dnd5e-hazards-region-restricted"
+                        name="regionRestricted"
+                        {{checked regionRestricted}}></dnd5e-checkbox>
+                </div>
+                <p class="hint">{{localize "REGION.FIELDS.restriction.enabled.hint"}}</p>
+            </div>
+            <div class="form-group">
+                <label>{{localize "REGION.FIELDS.restriction.type.label"}}</label>
+                <div class="form-fields">
+                    <select id="custom-dnd5e-hazards-region-restriction-type" name="regionRestrictionType">
+                        {{selectOptions regionRestrictionTypeChoices selected=regionRestrictionType localize=true}}
+                    </select>
+                </div>
+                <p class="hint">{{localize "CUSTOM_DND5E.setting.hazards.regionRestrictionType.hint"}}</p>
+            </div>
+            <div class="form-group">
+                <label>{{localize "REGION.FIELDS.restriction.priority.label"}}</label>
+                <div class="form-fields">
+                    <input
+                        id="custom-dnd5e-hazards-region-restriction-priority"
+                        name="regionRestrictionPriority"
+                        type="number"
+                        value="{{regionRestrictionPriority}}"
+                        min="0"
+                        step="1">
+                </div>
+                <p class="hint">{{localize "CUSTOM_DND5E.setting.hazards.regionRestrictionPriority.hint"}}</p>
+            </div>
+        </fieldset>
+    </div>
+    <footer class="form-footer" data-application-part="footer">
+        <button type="button" data-action="reset" class="reset-button bright">
+            <i class="fas fa-arrow-rotate-left"></i>{{localize "CUSTOM_DND5E.form.button.reset.label"}}
+        </button>
+        <button type="submit" class="save-button">
+            <i class="fas fa-solid fa-floppy-disk"></i>{{localize "CUSTOM_DND5E.form.button.save.label"}}
+        </button>
+    </footer>
+</div>

@@ -1,0 +1,17 @@
+<section class="standard-form scrollable">
+    {{#if hint}}
+    <p class="hint">{{localize hint}}</p>
+    {{/if}}
+    {{#each fields as |fieldset|}}
+    <fieldset>
+        <legend>{{localize fieldset.legend}}</legend>
+        {{#each fieldset.fields as |f|}}
+        {{#if f.options}}
+        {{formField f.field value=f.value options=f.options localize=true}}
+        {{else}}
+        {{formField f.field value=f.value localize=true}}
+        {{/if}}
+        {{/each}}
+    </fieldset>
+    {{/each}}
+</section>

@@ -507,6 +507,45 @@ export const CONSTANTS = {
       }
     }
   },
+  HAZARDS: {
+    AFFECTS: {
+      all: "CUSTOM_DND5E.hazards.affects.all",
+      character: "CUSTOM_DND5E.hazards.affects.character",
+      npc: "CUSTOM_DND5E.hazards.affects.npc"
+    },
+    BEHAVIOR_TYPE: "custom-dnd5e.hazard",
+    ICON: "fa-solid fa-triangle-exclamation",
+    MENU: {
+      KEY: "hazards-menu",
+      HINT: "CUSTOM_DND5E.menu.hazards.hint",
+      ICON: "fas fa-triangle-exclamation",
+      LABEL: "CUSTOM_DND5E.menu.hazards.label",
+      NAME: "CUSTOM_DND5E.menu.hazards.name"
+    },
+    SETTING: {
+      ENABLE: { KEY: "enable-hazards" },
+      TOKEN_SCALE: { KEY: "hazards-token-scale" },
+      TOKEN_HIDDEN: { KEY: "hazards-token-hidden" },
+      IMAGE_SHAPE: {
+        CHOICES: { none: "CUSTOM_DND5E.none", square: "CUSTOM_DND5E.square", circle: "CUSTOM_DND5E.circle" },
+        KEY: "hazards-image-shape"
+      },
+      IMAGE_BORDER_COLOR: { KEY: "hazards-image-border-color" },
+      IMAGE_BORDER_THICKNESS: { KEY: "hazards-image-border-thickness" },
+      REGION_DISTANCE: { KEY: "hazards-region-distance" },
+      PROMPT_DISTANCE: { KEY: "hazards-prompt-distance" },
+      REGION_VISIBILITY: { KEY: "hazards-region-visibility" },
+      REGION_RESTRICTED: { KEY: "hazards-region-restricted" },
+      REGION_RESTRICTION_TYPE: { KEY: "hazards-region-restriction-type" },
+      REGION_RESTRICTION_PRIORITY: { KEY: "hazards-region-restriction-priority" },
+      REGION_COLOR_FROM_IMAGE: { KEY: "hazards-region-color-from-image" },
+      AFFECTS: { KEY: "hazards-affects" }
+    },
+    TEMPLATE: {
+      CONFIG: "modules/custom-dnd5e/templates/hazards/hazard-config.hbs",
+      FORM: "modules/custom-dnd5e/templates/hazards/hazards-form.hbs"
+    }
+  },
   MOB_DAMAGE: {
     SETTING: {
       ENABLE: {

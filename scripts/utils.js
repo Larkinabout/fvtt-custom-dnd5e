@@ -1070,6 +1070,107 @@ export function measureDistance(from, to) {
 }
 
 /* -------------------------------------------- */
+
+/**
+ * Aplpy shape and border on matching tokens and remove when the token is destroyed.
+ * @param {(token: Token) => boolean} matches Whether a token should get the shape and border
+ * @param {object} setting
+ */
+export function registerTokenAppearance(matches, setting) {
+  Hooks.on("refreshToken", token => {
+    if ( !matches(token) ) return;
+    applyTokenAppearance(token, {
+      shape: getSetting(setting.IMAGE_SHAPE.KEY),
+      borderThickness: getSetting(setting.IMAGE_BORDER_THICKNESS.KEY),
+      borderColor: getSetting(setting.IMAGE_BORDER_COLOR.KEY),
+      scale: token.document.texture.scaleX
+    });
+  });
+  Hooks.on("destroyToken", token => {
+    if ( matches(token) ) clearTokenAppearance(token);
+  });
+}
+
+/* -------------------------------------------- */
+
+/**
+ * Mask a token image to a shape and draw a border around it.
+ * @param {Token} token
+ * @param {object} [options]
+ * @param {string} [options.shape] none, square or circle
+ * @param {number} [options.borderThickness] Border width in pixels
+ * @param {string} [options.borderColor]
+ * @param {number} [options.scale] Scale of the token image
+ */
+function applyTokenAppearance(token, { shape, borderThickness, borderColor, scale } = {}) {
+  clearTokenAppearance(token);
+
+  shape ||= "none";
+  borderThickness = Math.max(0, Number(borderThickness) || 0);
+  if ( shape === "none" && borderThickness <= 0 ) return;
+
+  const mesh = token.mesh;
+  if ( !mesh ) return;
+
+  const center = token.center;
+  const w = token.w;
+  const h = token.h;
+  const tokenScale = Number(scale) || 1;
+  const halfW = (w / 2) * tokenScale;
+  const halfH = (h / 2) * tokenScale;
+  const radius = Math.min(halfW, halfH);
+
+  if ( shape !== "none" ) {
+    const mask = new PIXI.Graphics();
+    mask.beginFill(0xFFFFFF);
+    if ( shape === "circle" ) mask.drawCircle(center.x, center.y, radius);
+    else mask.drawRect(center.x - halfW, center.y - halfH, halfW * 2, halfH * 2);
+    mask.endFill();
+    mask.renderable = false;
+    canvas.primary.addChild(mask);
+    mesh.mask = mask;
+    token._customDnd5eMask = mask;
+  }
+
+  if ( borderThickness > 0 && shape !== "none" ) {
+    const border = new PIXI.Graphics();
+    const colorHex = Color.from(borderColor || "#9f9275").valueOf();
+    border.lineStyle({ width: borderThickness, color: colorHex, alignment: 0.5, join: PIXI.LINE_JOIN.ROUND });
+    if ( shape === "circle" ) border.drawCircle(center.x, center.y, radius);
+    else border.drawRect(center.x - halfW, center.y - halfH, halfW * 2, halfH * 2);
+    border.elevation = mesh.elevation;
+    border.sortLayer = mesh.sortLayer ?? 700;
+    border.sort = mesh.sort || 0;
+    border.zIndex = mesh.zIndex || 0;
+    border.visible = mesh.visible;
+    if ( mesh.parent === canvas.primary ) canvas.primary.addChildAt(border, canvas.primary.getChildIndex(mesh) + 1);
+    else canvas.primary.addChild(border);
+    canvas.primary.sortDirty = true;
+    token._customDnd5eImageBorder = border;
+  }
+}
+
+/* -------------------------------------------- */
+
+/**
+ * Clear mask/border applied to a token.
+ * @param {Token} token
+ */
+function clearTokenAppearance(token) {
+  const prevMask = token._customDnd5eMask;
+  if ( prevMask ) {
+    if ( token.mesh && token.mesh.mask === prevMask ) token.mesh.mask = null;
+    if ( !prevMask.destroyed ) prevMask.destroy();
+    token._customDnd5eMask = null;
+  }
+  const prevBorder = token._customDnd5eImageBorder;
+  if ( prevBorder ) {
+    if ( !prevBorder.destroyed ) prevBorder.destroy();
+    token._customDnd5eImageBorder = null;
+  }
+}
+
+/* -------------------------------------------- */
 /*  UI                                          */
 /* -------------------------------------------- */
 
