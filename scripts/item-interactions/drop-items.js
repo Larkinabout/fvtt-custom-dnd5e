@@ -16,6 +16,7 @@ import {
 } from "../utils.js";
 import { ItemDialog } from "../applications/item-dialog.js";
 import { getUnlockedName, isContainerLocked, registerContainerLock, setContainerLockData } from "./container-lock.js";
+import { registerContainerLockTidy5e } from "./container-lock-tidy5e.js";
 import { addCursorLabelIcon, setCursorLabelIcon, setCursorLabelPosition } from "../interface/cursor-label.js";
 import { inventoryDragAppHider, registerInventoryDragHandler } from "./inventory-drag.js";
 import * as DropItemsHighlight from "./drop-items-highlight.js";
@@ -168,6 +169,7 @@ function registerHooks() {
   registerTokenAppearance(isItemToken, SETTING);
   patchVisibleTreeContents();
   registerContainerLock();
+  registerContainerLockTidy5e();
 
   Hooks.once("ready", () => {
     addCursorLabelIcon(ICON_ID, '<i class="fa-solid fa-hand-holding-box"></i>');

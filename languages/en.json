@@ -295,6 +295,7 @@
     "CUSTOM_DND5E.dropItems.locked": "Locked",
     "CUSTOM_DND5E.dropItems.lockedDescription": "Locked Description",
     "CUSTOM_DND5E.dropItems.lockedName": "Locked {name}",
+    "CUSTOM_DND5E.dropItems.lockedNotice": "You must unlock this item to learn its details.",
     "CUSTOM_DND5E.dropItems.placePrompt": "Left-click to drop {item}. Press Esc to cancel.",
     "CUSTOM_DND5E.dropItems.populate.title": "Populate Item Actor",
     "CUSTOM_DND5E.dropItems.promptQuantity.add": "How many {item} to place in {container}?",

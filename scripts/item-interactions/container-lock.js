@@ -3,7 +3,8 @@ import { Logger } from "../utils.js";
 
 const FLAG = "locked";
 const DESCRIPTION_FLAG = "lockedDescription";
-const DESCRIPTION_PATH = `flags.${MODULE.ID}.${DESCRIPTION_FLAG}`;
+export const LOCKED_PATH = `flags.${MODULE.ID}.${FLAG}`;
+export const DESCRIPTION_PATH = `flags.${MODULE.ID}.${DESCRIPTION_FLAG}`;
 const CONTAINER_DATA = "dnd5e.dataModels.item.ContainerData.prototype";
 
 /* -------------------------------------------- */
@@ -38,7 +39,7 @@ export function registerContainerLock() {
  * @returns {boolean}
  */
 export function isContainerLocked(item) {
-  return (item?.type === "container") && !!foundry.utils.getProperty(item, `flags.${MODULE.ID}.${FLAG}`);
+  return (item?.type === "container") && !!foundry.utils.getProperty(item, LOCKED_PATH);
 }
 
 /* -------------------------------------------- */
@@ -49,7 +50,7 @@ export function isContainerLocked(item) {
  * @param {boolean} locked
  */
 export function setContainerLockData(data, locked) {
-  if ( locked ) foundry.utils.setProperty(data, `flags.${MODULE.ID}.${FLAG}`, true);
+  if ( locked ) foundry.utils.setProperty(data, LOCKED_PATH, true);
   else if ( data.flags?.[MODULE.ID] ) delete data.flags[MODULE.ID][FLAG];
 }
 
@@ -98,7 +99,7 @@ function isLocked(item) {
  * @param {Item} item
  * @returns {boolean}
  */
-function isHiddenFromUser(item) {
+export function isHiddenFromUser(item) {
   return !game.user.isGM && isLocked(item);
 }
 
